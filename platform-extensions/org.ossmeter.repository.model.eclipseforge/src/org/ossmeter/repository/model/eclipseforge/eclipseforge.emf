@@ -1,0 +1,111 @@
+package org.ossmeter.repository.model.eclipseforge;
+
+@stub(javaClass="org.ossmeter.repository.model.Project")
+class Project {
+   
+}
+
+@stub(javaClass="org.ossmeter.repository.model.Person")
+class Person {
+   
+}
+
+@stub(javaClass="org.ossmeter.repository.model.CommunicationChannel")
+class CommunicationChannel {
+   
+}
+
+
+@stub(javaClass="org.ossmeter.repository.model.BugTrackingSystem")
+class BugTrackingSystem {
+   
+}
+
+@stub(javaClass="org.ossmeter.repository.model.VcsRepository")
+class VcsRepository {
+   
+}
+
+class EclipseForgeProject extends Project {
+	attr String shortName;
+	attr String paragraphUrl;
+	attr String descriptionUrl;
+	attr String downloadsUrl;
+	attr String homePage;
+	attr String projectplanUrl;
+	attr String updatesiteUrl;
+	val  Person[*] committers;
+	val  Person[*] leaders;
+	val  Person[*] mentors;
+	val  Review[*] reviews;
+	val  Article[*] articles;
+	val  Release[*] releases;
+}
+
+
+class SvnRepository extends VcsRepository {
+  attr String browse;
+}
+
+
+class Release {
+	attr ReleaseType type;
+	attr String date;   
+}
+
+
+class Article {
+   attr String url;
+}
+
+class NewsGroup extends CommunicationChannel{
+	attr String name;
+	attr String description;
+	attr NewsGroupType type;
+}
+
+class MailingList extends CommunicationChannel{
+   attr String name;
+   attr String description;
+   attr MailingListType type;
+}
+
+class Wiki extends CommunicationChannel{
+
+}
+
+class Documentation extends CommunicationChannel{
+
+}
+
+class Review {
+   attr ReviewType type;
+   attr ReviewState state;
+   attr String endDate;
+}
+
+class Bugzilla extends BugTrackingSystem {
+
+}
+
+enum NewsGroupType {
+  main = 0;
+}
+
+enum MailingListType {
+  main = 0;
+}
+
+enum ReviewType {
+   creation = 0;
+}
+
+enum ReviewState {
+   successful = 0;
+}
+
+enum ReleaseType {
+   scheduled = 0;
+   completed = 1;
+   tentative = 2;
+}

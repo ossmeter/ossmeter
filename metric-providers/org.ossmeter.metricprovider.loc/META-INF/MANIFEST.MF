@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Loc
+Bundle-SymbolicName: org.ossmeter.metricprovider.loc;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.ossmeter.metricprovider.loc.Activator
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.ui.workbench,
+ com.googlecode.pongo.runtime,
+ org.ossmeter.platform
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: org.ossmeter.metricprovider.loc,
+ org.ossmeter.metricprovider.loc.model
+Import-Package: org.ossmeter.repository.model

@@ -1,0 +1,67 @@
+package org.ossmeter.metricprovider.totaldownloadcounter;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.ossmeter.metricprovider.downloadcounter.model.Download;
+import org.ossmeter.metricprovider.downloadcounter.model.DownloadCounter;
+import org.ossmeter.metricprovider.downloadcounter.sourceforge.SourceForgeDownloadCounterMetricProvider;
+import org.ossmeter.metricprovider.totaldownloadcounter.model.TotalDownloadCounter;
+import org.ossmeter.platform.IHistoricalMetricProvider;
+import org.ossmeter.platform.IMetricProvider;
+import org.ossmeter.platform.MetricProviderContext;
+import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.sourceforge.SourceForgeProject;
+
+import com.googlecode.pongo.runtime.Pongo;
+
+public class TotalDownloadCounterMetricProvider implements IHistoricalMetricProvider{
+
+	protected MetricProviderContext context;
+	protected SourceForgeDownloadCounterMetricProvider downloadCounterMetricProvider;
+	
+	@Override
+	public String getIdentifier() {
+		return "TotalDownloadCounter";
+	}
+
+	@Override
+	public boolean appliesTo(Project project) {
+		return project instanceof SourceForgeProject;
+	}
+
+	@Override
+	public void setUses(List<IMetricProvider> uses) {
+		// TODO Auto-generated method stub
+		this.downloadCounterMetricProvider = (SourceForgeDownloadCounterMetricProvider)uses.get(0);
+	}
+
+	@Override
+	public List<String> getIdentifiersOfUses() {
+		// TODO Auto-generated method stub
+		return Arrays.asList("DownloadCounterMetricProvider");
+	}
+
+	@Override
+	public void setMetricProviderContext(MetricProviderContext context) {
+		this.context = context;
+	}
+	
+	@Override
+	public Pongo measure(Project project) {
+		
+		DownloadCounter downloadCounter =  new DownloadCounter(context.getProjectDB(project));
+		int totalCounter = 0;
+		
+		for (Download download : downloadCounter.getDownloads()) {
+			totalCounter = totalCounter + download.getCounter();
+		}
+		
+		TotalDownloadCounter totalDownloadCounter = new TotalDownloadCounter();
+		totalDownloadCounter.setDownloads(totalCounter);
+		
+		return totalDownloadCounter;
+	}
+
+}

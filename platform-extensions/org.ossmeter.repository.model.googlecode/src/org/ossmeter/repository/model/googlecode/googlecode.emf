@@ -1,0 +1,116 @@
+package org.ossmeter.repository.model.googlecode;
+
+@stub(javaClass="org.ossmeter.repository.model.Project")
+class Project {
+   
+}
+
+@stub(javaClass="org.ossmeter.repository.model.NamedElement")
+class NamedElement {
+   
+}
+
+@stub(javaClass="org.ossmeter.repository.model.Person")
+class Person {
+   
+}
+
+@stub(javaClass="org.ossmeter.repository.model.VcsRepository")
+class VcsRepository {
+   
+}
+
+@stub(javaClass="org.ossmeter.repository.model.BugTrackingSystem")
+class BugTrackingSystem {
+   
+}
+
+
+class GoogleForgeProject extends Project {
+  val GoogleWiki wiki;
+  val GoogleUser[*] owners;
+  val GoogleUser[*] committers;
+  val GoogleUser[*] contributors;
+  val GoogleDownload[*] downloads;
+  val GoogleIssueTracker issueTracker;
+  attr Integer stars = 0;
+}
+
+class SvnRepository extends VcsRepository {
+  attr String browse;
+}
+
+class MercurialRepository extends VcsRepository {
+}
+
+
+@stub(javaClass="org.ossmeter.repository.model.github.GITRepository")
+class GITRepository {
+   
+}
+
+class GoogleWiki {
+  attr String url;
+}
+
+class GoogleIssueTracker extends BugTrackingSystem {
+  attr String url;
+  val GoogleIssue[*] issues;
+}
+
+
+class GoogleIssue {
+  val GoogleUser[1] owner;
+  attr String created_at;
+  attr String updated_at;
+  attr GoogleIssuePriority priority;
+  attr GoogleIssueType type;
+  attr String component;
+  attr GoogleIssueStatus status;
+  val GoogleIssueComment[*] comments;
+  val GoogleLabel[*] labels;
+  attr Integer stars;
+  attr String summary;
+}
+
+enum GoogleIssuePriority {
+  Low = 1;
+  Medium = 2;
+  High = 2;
+}
+
+enum GoogleIssueType {
+  Defect = 1;
+  Enhancement = 2;
+}
+
+enum GoogleIssueStatus {
+  New = 1;
+  Started = 2;
+  Accepted = 3;
+  Reviewed = 4;
+  Acknowledged = 5;
+}
+
+class GoogleIssueComment {
+  attr String text;
+}
+
+class GoogleLabel extends NamedElement {
+}
+
+class GoogleDownload {
+  attr Boolean starred;
+  attr String fileName;
+  val GoogleLabel[*] labels;
+  attr String uploaded_at;
+  attr String updated_at;
+  attr Integer size;
+  attr Integer downloadCounts;
+}
+
+class GoogleUser extends Person {
+  attr String email;
+}
+
+

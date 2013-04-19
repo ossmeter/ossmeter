@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Nntp
+Bundle-SymbolicName: org.ossmeter.platform.communicationchannel.nntp
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.ossmeter.platform.communicationchannel.nntp.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.ossmeter.platform,
+ com.googlecode.pongo.runtime,
+ org.apache.commons.net
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Import-Package: org.apache.commons.net.nntp,
+ org.ossmeter.repository.model
+Export-Package: org.ossmeter.platform.communicationchannel.nntp

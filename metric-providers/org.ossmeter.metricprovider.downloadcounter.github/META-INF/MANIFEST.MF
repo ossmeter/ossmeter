@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Github
+Bundle-SymbolicName: org.ossmeter.metricprovider.downloadcounter.github
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.ossmeter.metricprovider.downloadcounter.github.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.ossmeter.platform,
+ com.googlecode.pongo.runtime,
+ org.ossmeter.metricprovider.downloadcounter.sourceforge,
+ org.ossmeter.metricprovider.downloadcounter.github.dependencies,
+ org.ossmeter.repository.model.github,
+ org.ossmeter.metricprovider.downloadcounter,
+ org.ossmeter.repository.model
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

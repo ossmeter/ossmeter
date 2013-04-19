@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: DownloadCounter
+Bundle-SymbolicName: org.ossmeter.metricprovider.downloadcounter.sourceforge
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.ossmeter.metricprovider.downloadcounter.sourceforge.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ com.googlecode.pongo.runtime;bundle-version="0.5.0",
+ org.ossmeter.platform;bundle-version="1.0.0",
+ org.ossmeter.metricprovider.downloadcounter,
+ org.ossmeter.repository.model.sourceforge,
+ org.ossmeter.repository.model
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: org.ossmeter.metricprovider.downloadcounter.sourceforge

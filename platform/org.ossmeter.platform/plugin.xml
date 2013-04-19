@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="org.ossmeter.repository.metricprovider" name="metricProvider" schema="schema/org.ossmeter.repository.metricprovider.exsd"/>
+   <extension-point id="org.ossmeter.repository.vcsmanager" name="vcsManager" schema="schema/org.ossmeter.repository.vcsmanager.exsd"/>
+  <extension
+         id="application"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="org.ossmeter.platform.App">
+         </run>
+      </application>
+   </extension>
+</plugin>

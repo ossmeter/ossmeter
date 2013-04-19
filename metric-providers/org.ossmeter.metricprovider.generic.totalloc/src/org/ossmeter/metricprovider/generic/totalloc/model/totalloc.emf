@@ -1,0 +1,12 @@
+package org.ossmeter.metricprovider.generic.totalloc.model;
+
+class TotalLoc {
+	val TLocRepositoryData[*] repositories;
+}
+
+class TLocRepositoryData {
+   attr String url;
+   attr String repoType;
+   attr String revision;
+   attr long totalLines;
+}

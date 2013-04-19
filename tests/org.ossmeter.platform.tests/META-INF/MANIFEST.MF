@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tests
+Bundle-SymbolicName: org.ossmeter.platform.tests
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: org.junit,
+ org.ossmeter.platform,
+ com.googlecode.pongo.runtime,
+ org.ossmeter.repository.model.github,
+ com.googlecode.pongo.runtime.osgi,
+ org.mapdb,
+ org.ossmeter.repository.model
