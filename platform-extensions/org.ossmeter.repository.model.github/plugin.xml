@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="com.googlecode.pongo.runtime.osgi">
+         
+	  <class
+            name="org.ossmeter.repository.model.github.GitHubProject">
+      </class>
+	  <class
+            name="org.ossmeter.repository.model.github.GitHubRepository">
+      </class>
+	  <class
+            name="org.ossmeter.repository.model.github.GitHubContent">
+      </class>
+	  <class
+            name="org.ossmeter.repository.model.github.GitHubDownload">
+      </class>
+	  <class
+            name="org.ossmeter.repository.model.github.GitHubCommit">
+      </class>
+	  <class
+            name="org.ossmeter.repository.model.github.GitHubBugTracker">
+      </class>
+	  <class
+            name="org.ossmeter.repository.model.github.GitHubIssue">
+      </class>
+	  <class
+            name="org.ossmeter.repository.model.github.GitHubComment">
+      </class>
+	  <class
+            name="org.ossmeter.repository.model.github.GitHubMilestone">
+      </class>
+	  <class
+            name="org.ossmeter.repository.model.github.GitHubUser">
+      </class>
+   
+   </extension>
+
+</plugin>

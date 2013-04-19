@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="com.googlecode.pongo.runtime.osgi">
+         
+	  <class
+            name="org.ossmeter.repository.model.sourceforge.SourceForgeProject">
+      </class>
+	  <class
+            name="org.ossmeter.repository.model.sourceforge.Discussion">
+      </class>
+	  <class
+            name="org.ossmeter.repository.model.sourceforge.SvnRepository">
+      </class>
+	  <class
+            name="org.ossmeter.repository.model.sourceforge.MercurialRepository">
+      </class>
+	  <class
+            name="org.ossmeter.repository.model.sourceforge.OS">
+      </class>
+	  <class
+            name="org.ossmeter.repository.model.sourceforge.Topic">
+      </class>
+	  <class
+            name="org.ossmeter.repository.model.sourceforge.ProgrammingLanguage">
+      </class>
+	  <class
+            name="org.ossmeter.repository.model.sourceforge.Audience">
+      </class>
+	  <class
+            name="org.ossmeter.repository.model.sourceforge.Environment">
+      </class>
+	  <class
+            name="org.ossmeter.repository.model.sourceforge.Category">
+      </class>
+	  <class
+            name="org.ossmeter.repository.model.sourceforge.Donation">
+      </class>
+	  <class
+            name="org.ossmeter.repository.model.sourceforge.SourceForgeBugTrackingSystem">
+      </class>
+	  <class
+            name="org.ossmeter.repository.model.sourceforge.Bug">
+      </class>
+	  <class
+            name="org.ossmeter.repository.model.sourceforge.FeatureRequest">
+      </class>
+	  <class
+            name="org.ossmeter.repository.model.sourceforge.SupportRequest">
+      </class>
+	  <class
+            name="org.ossmeter.repository.model.sourceforge.Patch">
+      </class>
+   
+   </extension>
+
+</plugin>

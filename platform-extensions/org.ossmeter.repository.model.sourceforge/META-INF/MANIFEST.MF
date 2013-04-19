@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.ossmeter.repository.model.sourceforge
+Bundle-SymbolicName: org.ossmeter.repository.model.sourceforge; singleton:=true
+Bundle-Version: 0.1.0
+Require-Bundle: org.eclipse.emf.ecore,
+ org.ossmeter.repository.model,
+ com.googlecode.pongo.runtime.dependencies,
+ com.googlecode.pongo.runtime
+Import-Package: com.googlecode.pongo
+Export-Package: org.ossmeter.repository.model.sourceforge
