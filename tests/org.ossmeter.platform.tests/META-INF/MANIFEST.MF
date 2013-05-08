@@ -10,4 +10,5 @@ Require-Bundle: org.junit,
  org.ossmeter.repository.model.github,
  com.googlecode.pongo.runtime.osgi,
  org.mapdb,
- org.ossmeter.repository.model
+ org.ossmeter.repository.model,
+ org.mockito;bundle-version="1.0.0"
