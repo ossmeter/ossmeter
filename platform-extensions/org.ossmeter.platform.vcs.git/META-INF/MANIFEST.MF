@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Git VCS Manager for OSSMETER
+Bundle-SymbolicName: org.ossmeter.platform.vcs.git
+Bundle-Version: 0.0.1.qualifier
+Bundle-Activator: org.ossmeter.platform.vcs.git.Activator
+Bundle-Vendor: OSSMETER
+Require-Bundle: org.eclipse.core.runtime,
+ org.ossmeter.platform,
+ org.ossmeter.repository.model,
+ com.googlecode.pongo.runtime,
+ org.eclipse.jgit,
+ com.jcraft.jsch
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
+Export-Package: org.ossmeter.platform.vcs.git
