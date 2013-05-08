@@ -21,6 +21,10 @@ public class Date {
 		_date = formatter.parse(date);
 	}
 	
+	public Date(long epoch) {
+		this(new java.util.Date(epoch));
+	}
+	
 	public Date(java.util.Date date) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);

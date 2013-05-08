@@ -3,6 +3,7 @@
 <plugin>
    <extension-point id="org.ossmeter.repository.metricprovider" name="metricProvider" schema="schema/org.ossmeter.repository.metricprovider.exsd"/>
    <extension-point id="org.ossmeter.repository.vcsmanager" name="vcsManager" schema="schema/org.ossmeter.repository.vcsmanager.exsd"/>
+   <extension-point id="org.ossmeter.platform.metricprovider.rascal" name="Rascal Metric Provider" schema="schema/org.ossmeter.platform.metricprovider.rascal.exsd"/>
   <extension
          id="application"
          point="org.eclipse.core.runtime.applications">
