@@ -56,8 +56,8 @@ public class NoaMetricProvider implements ITransientMetricProvider<Noa>{
 
 	@Override
 	public void measure(Project project, ProjectDelta projectDelta, Noa db) {
-		CommunicationChannelProjectDelta delta = projectDelta.getCommunicationChannelDelta();
-		for (CommunicationChannelDelta communicationChannelDelta : delta.getNewsgroupDeltas()) {
+		 CommunicationChannelProjectDelta delta = projectDelta.getCommunicationChannelDelta();
+		for ( CommunicationChannelDelta communicationChannelDelta: delta.getCommunicationChannelSystemDeltas()) {
 			CommunicationChannel communicationChannel = communicationChannelDelta.getCommunicationChannel();
 			if (!(communicationChannel instanceof NntpNewsGroup)) continue;
 			NntpNewsGroup newsgroup = (NntpNewsGroup) communicationChannel;
