@@ -1,0 +1,10 @@
+package org.ossmeter.metricprovider.generic.overalldailynumberofbugzillacomments.model;
+
+class DailyNobc {
+	val DailyBugzillaData[*] bugzillas;
+}
+
+class DailyBugzillaData {
+   attr int numberOfComments;
+}
+

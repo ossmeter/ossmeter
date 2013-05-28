@@ -1,0 +1,10 @@
+package org.ossmeter.metricprovider.generic.overalldailynumberofarticles.model;
+
+class DailyNoa {
+	val DailyNewsgroupData[*] newsgroups;
+}
+
+class DailyNewsgroupData {
+   attr int numberOfArticles;
+}
+
