@@ -1,7 +1,6 @@
 package org.ossmeter.platform.cache.communicationchannel;
 import org.ossmeter.platform.Date;
 import org.ossmeter.platform.delta.communicationchannel.CommunicationChannelDelta;
-import org.ossmeter.repository.model.CommunicationChannel;
 
 
 public interface ICommunicationChannelDeltaCache {

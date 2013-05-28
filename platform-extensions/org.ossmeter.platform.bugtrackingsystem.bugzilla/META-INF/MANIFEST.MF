@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Bugzilla
+Bundle-SymbolicName: org.ossmeter.platform.bugtrackingsystem.bugzilla
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.ossmeter.platform.bugtrackingsystem.bugzilla.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.ossmeter.platform,
+ com.googlecode.pongo.runtime
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Import-Package: org.ossmeter.repository.model
+Export-Package: org.ossmeter.platform.bugtrackingsystem.bugzilla

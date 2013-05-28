@@ -20,6 +20,9 @@
             name="org.ossmeter.repository.model.NntpNewsGroup">
       </class>
 	  <class
+            name="org.ossmeter.repository.model.Bugzilla">
+      </class>
+	  <class
             name="org.ossmeter.repository.model.SvnRepository">
       </class>
 	  <class

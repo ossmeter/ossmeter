@@ -20,7 +20,10 @@ public class ServiceLoaderMetricProviderManager implements IMetricProviderManage
 			providers.add(it.next());
 		}
 		
-		System.out.println("MPs: " + providers);
+		System.out.println("MPs: ");
+		for (IMetricProvider provider: providers) {
+			System.out.println("\t" + provider.getIdentifier());
+		}
 		return providers;
 	}
 }

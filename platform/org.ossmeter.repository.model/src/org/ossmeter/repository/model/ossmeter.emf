@@ -18,7 +18,7 @@ class Project extends NamedElement {
   attr String lastExecuted;
   val VcsRepository[*] vcsRepositories;
   val CommunicationChannel[*] communicationChannels;
-  val BugTrackingSystem[*] bugTrackingSystems;
+  val BugTrackingSystem[*] bugTrackingSystems;  
   val Person[*] persons;
   val License[*] licenses;
   val NntpNewsGroup[*] newsgroups;
@@ -51,6 +51,11 @@ abstract class VcsRepository {
   attr String created_at;
   attr String updated_at;
   attr String url;
+}
+
+class Bugzilla extends BugTrackingSystem {
+  attr String product;
+  attr String component;
 }
 
 class SvnRepository extends VcsRepository {

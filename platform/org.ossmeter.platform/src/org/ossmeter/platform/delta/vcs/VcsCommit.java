@@ -6,6 +6,11 @@ import java.util.List;
 
 public class VcsCommit implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	protected String author;
 	protected String message;
 	protected List<VcsCommitItem> items = new ArrayList<VcsCommitItem>();

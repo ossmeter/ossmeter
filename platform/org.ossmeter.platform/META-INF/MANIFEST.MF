@@ -14,9 +14,11 @@ Require-Bundle: org.eclipse.ui,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.platform,
+ org.ossmeter.platform.cache.bugtrackingsystem,
  org.ossmeter.platform.cache.communicationchannel,
  org.ossmeter.platform.cache.vcs,
  org.ossmeter.platform.delta,
+ org.ossmeter.platform.delta.bugtrackingsystem,
  org.ossmeter.platform.delta.communicationchannel,
  org.ossmeter.platform.delta.vcs,
  org.ossmeter.platform.logging,

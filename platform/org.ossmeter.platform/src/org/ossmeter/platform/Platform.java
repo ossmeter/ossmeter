@@ -4,6 +4,8 @@ import org.ossmeter.platform.delta.vcs.ExtensionPointVcsManager;
 import org.ossmeter.platform.delta.vcs.PlatformVcsManager;
 import org.ossmeter.platform.delta.communicationchannel.ExtensionPointCommunicationChannelManager;
 import org.ossmeter.platform.delta.communicationchannel.PlatformCommunicationChannelManager;
+import org.ossmeter.platform.delta.bugtrackingsystem.ExtensionPointBugTrackingSystemManager;
+import org.ossmeter.platform.delta.bugtrackingsystem.PlatformBugTrackingSystemManager;
 import org.ossmeter.repository.model.Project;
 
 import com.mongodb.Mongo;
@@ -15,6 +17,7 @@ public class Platform {
 	protected SimpleMetricProviderScheduler scheduler = null;
 	protected PlatformVcsManager vcsManager = null;
 	protected PlatformCommunicationChannelManager communicationChannelManager = null;
+	protected PlatformBugTrackingSystemManager bugTrackingSystemManager = null;
 	protected MetricProviderContext metricProviderContext = null;
 	protected Mongo mongo;
 	
@@ -25,6 +28,7 @@ public class Platform {
 		scheduler = new SimpleMetricProviderScheduler(this);
 		vcsManager = new ExtensionPointVcsManager();
 		communicationChannelManager = new ExtensionPointCommunicationChannelManager();
+		bugTrackingSystemManager = new ExtensionPointBugTrackingSystemManager();
 		metricProviderContext = new MetricProviderContext(this);
 	}
 	
@@ -62,6 +66,14 @@ public class Platform {
 	
 	public void setPlatformCommunicationChannelManager(PlatformCommunicationChannelManager communicationChannelManager) {
 		this.communicationChannelManager = communicationChannelManager;
+	}
+	
+	public PlatformBugTrackingSystemManager getBugTrackingSystemManager() {
+		return bugTrackingSystemManager;
+	}
+	
+	public void setPlatformBugTrackingSystemManager(PlatformBugTrackingSystemManager bugTrackingSystemManager) {
+		this.bugTrackingSystemManager = bugTrackingSystemManager;
 	}
 	
 	public MetricProviderContext getMetricProviderContext() {

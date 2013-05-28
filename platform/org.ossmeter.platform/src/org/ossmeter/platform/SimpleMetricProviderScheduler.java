@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.platform.delta.communicationchannel.CommunicationChannelDelta;
+import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.VcsRepository;
@@ -65,6 +66,10 @@ public class SimpleMetricProviderScheduler {
 				// This needs to be the day BEFORE the first day! (Hence the addDays(-1))
 				project.setLastExecuted(platform.getCommunicationChannelManager().getFirstDate(communicationChannel).toString());
 			}
+			for (BugTrackingSystem bugTrackingSystem : project.getBugTrackingSystems()) {
+				// This needs to be the day BEFORE the first day! (Hence the addDays(-1))
+				project.setLastExecuted(platform.getBugTrackingSystemManager().getFirstDate(bugTrackingSystem).toString());
+			}
 		}
 		
 		Date last = new Date(project.getLastExecuted());
@@ -72,7 +77,10 @@ public class SimpleMetricProviderScheduler {
 		Date[] dates = Date.range(last.addDays(1), today);
 		
 		for (Date date : dates) {
-			ProjectDelta delta = new ProjectDelta(project, date, platform.getVcsManager(), platform.getCommunicationChannelManager());
+			ProjectDelta delta = new ProjectDelta(project, date, 
+													platform.getVcsManager(), 
+														platform.getCommunicationChannelManager(), 
+															platform.getBugTrackingSystemManager());
 			delta.create();
 
 			// 2. Execute transient MPs

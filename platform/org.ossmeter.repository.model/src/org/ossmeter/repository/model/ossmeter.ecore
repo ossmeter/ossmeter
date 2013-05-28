@@ -76,6 +76,14 @@
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Bugzilla" eSuperTypes="//BugTrackingSystem">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="product">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="component">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SvnRepository" eSuperTypes="//VcsRepository"/>
   <eClassifiers xsi:type="ecore:EClass" name="GitRepository" eSuperTypes="//VcsRepository"/>
   <eClassifiers xsi:type="ecore:EClass" name="BugTrackingSystem" abstract="true">

@@ -1,5 +1,6 @@
 package org.ossmeter.platform;
 
+import org.ossmeter.platform.delta.bugtrackingsystem.PlatformBugTrackingSystemManager;
 import org.ossmeter.platform.delta.communicationchannel.PlatformCommunicationChannelManager;
 import org.ossmeter.platform.delta.vcs.PlatformVcsManager;
 import org.ossmeter.repository.model.Project;
@@ -24,6 +25,10 @@ public class MetricProviderContext {
 	
 	public PlatformCommunicationChannelManager getPlatformCommunicationChannelManager() {
 		return platform.getCommunicationChannelManager();
+	}
+	
+	public PlatformBugTrackingSystemManager getPlatformBugTrackingSystemManager() {
+		return platform.getBugTrackingSystemManager();
 	}
 	
 	public DB getProjectDB(Project project) {

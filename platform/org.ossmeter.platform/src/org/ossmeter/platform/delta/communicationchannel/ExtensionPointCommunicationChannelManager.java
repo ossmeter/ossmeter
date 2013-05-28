@@ -9,14 +9,14 @@ import org.ossmeter.platform.util.ExtensionPointHelper;
 
 public class ExtensionPointCommunicationChannelManager extends PlatformCommunicationChannelManager {
 	
-	protected final String vcsManagerExtensionPointId = "";
+	protected final String communicationChannelManagerExtensionPointId = "";
 	
 	public List<ICommunicationChannelManager> getCommunicationChannelManagers() {
 		if (communicationChannelManagers == null) {
 			communicationChannelManagers = new ArrayList<ICommunicationChannelManager>();
 			
 			for (IConfigurationElement confElement : 
-				ExtensionPointHelper.getConfigurationElementsForExtensionPoint(vcsManagerExtensionPointId)) {
+				ExtensionPointHelper.getConfigurationElementsForExtensionPoint(communicationChannelManagerExtensionPointId)) {
 				try {
 					communicationChannelManagers.add((ICommunicationChannelManager) 
 							confElement.createExecutableExtension("communicationChannelManager"));

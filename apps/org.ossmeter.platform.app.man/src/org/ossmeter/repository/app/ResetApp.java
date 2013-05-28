@@ -13,7 +13,7 @@ public class ResetApp {
 		mongo.dropDatabase("hamcrest");
 		mongo.dropDatabase("jMonkeyEngine");
 		mongo.dropDatabase("thunderbird");
-		
+		mongo.dropDatabase("fedora");
 	}
 	
 }

@@ -3,10 +3,8 @@ import java.util.concurrent.ConcurrentNavigableMap;
 
 import org.mapdb.DBMaker;
 import org.mapdb.Fun;
-import org.mapdb.Fun.Tuple2;
 import org.ossmeter.platform.Date;
 import org.ossmeter.platform.delta.communicationchannel.CommunicationChannelDelta;
-import org.ossmeter.repository.model.CommunicationChannel;
 
 public class CommunicationChannelDeltaCache implements ICommunicationChannelDeltaCache {
 	
