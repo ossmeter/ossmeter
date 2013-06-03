@@ -1,6 +1,5 @@
 package org.ossmeter.metricprovider.totaldownloadcounter;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class TotalDownloadCounterMetricProvider implements IHistoricalMetricProv
 	
 	@Override
 	public String getIdentifier() {
-		return "TotalDownloadCounter";
+		return TotalDownloadCounterMetricProvider.class.getCanonicalName();
 	}
 
 	@Override
