@@ -23,7 +23,7 @@ public abstract class PlatformCommunicationChannelManager implements ICommunicat
 	}
 
 	protected ICommunicationChannelManager getCommunicationChannelManager(CommunicationChannel communicationChannel) {
-		for (ICommunicationChannelManager communicationChannelManager : communicationChannelManagers) {
+		for (ICommunicationChannelManager communicationChannelManager : getCommunicationChannelManagers()) {
 			if (communicationChannelManager.appliesTo(communicationChannel)) {
 				return communicationChannelManager;
 			}
@@ -34,7 +34,7 @@ public abstract class PlatformCommunicationChannelManager implements ICommunicat
 	@Override
 	public Date getFirstDate(CommunicationChannel communicationChannel)
 			throws Exception {
-		for (ICommunicationChannelManager communicationChannelManager : communicationChannelManagers) {
+		for (ICommunicationChannelManager communicationChannelManager : getCommunicationChannelManagers()) {
 			if (communicationChannelManager.appliesTo(communicationChannel)) {
 				return communicationChannelManager.getFirstDate(communicationChannel);
 			}

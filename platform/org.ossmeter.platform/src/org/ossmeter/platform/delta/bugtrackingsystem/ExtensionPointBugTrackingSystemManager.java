@@ -9,20 +9,22 @@ import org.ossmeter.platform.util.ExtensionPointHelper;
 
 public class ExtensionPointBugTrackingSystemManager extends PlatformBugTrackingSystemManager {
 	
-	protected final String bugTrackingSystemExtensionPointId = "";
+	protected final String bugTrackingSystemExtensionPointId = "org.ossmeter.platform.managers.bugtracking";
 	
 	public List<IBugTrackingSystemManager> getBugTrackingSystemManagers() {
 		if (bugTrackingSystemManagers == null) {
 			bugTrackingSystemManagers = new ArrayList<IBugTrackingSystemManager>();
 			
-			for (IConfigurationElement confElement : 
-				ExtensionPointHelper.getConfigurationElementsForExtensionPoint(bugTrackingSystemExtensionPointId)) {
+			for (IConfigurationElement confElement : ExtensionPointHelper.getConfigurationElementsForExtensionPoint(bugTrackingSystemExtensionPointId)) {
 				try {
-					bugTrackingSystemManagers.add((IBugTrackingSystemManager) 
-							confElement.createExecutableExtension("communicationChannelManager"));
+					bugTrackingSystemManagers.add((IBugTrackingSystemManager) confElement.createExecutableExtension("manager"));
 				} catch (CoreException e) {
 					e.printStackTrace();
 				}
+			}
+			System.err.println("Registered bug tracking managers: ");
+			for (IBugTrackingSystemManager man : bugTrackingSystemManagers) {
+				System.err.println("\t" + man.getClass());
 			}
 		}
 		

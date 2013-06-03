@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
-<plugin>
-   <extension-point id="org.ossmeter.repository.metricprovider" name="metricProvider" schema="schema/org.ossmeter.repository.metricprovider.exsd"/>
-   <extension-point id="org.ossmeter.repository.vcsmanager" name="vcsManager" schema="schema/org.ossmeter.repository.vcsmanager.exsd"/>
-   <extension-point id="org.ossmeter.platform.metricprovider.rascal" name="Rascal Metric Provider" schema="schema/org.ossmeter.platform.metricprovider.rascal.exsd"/>
-  <extension
-         id="application"
-         point="org.eclipse.core.runtime.applications">
-      <application>
-         <run
-               class="org.ossmeter.platform.App">
-         </run>
-      </application>
-   </extension>
+<plugin id="org.ossmeter.platform">
+   <extension-point id="org.ossmeter.platform.metricprovider" name="metricProvider" schema="schema/org.ossmeter.platform.metricprovider.exsd"/>
+   <extension-point id="org.ossmeter.platform.managers.vcs" name="vcsManager" schema="schema/org.ossmeter.platform.managers.vcs.exsd"/>
+   <extension-point id="org.ossmeter.platform.managers.metricprovider" name="metricProviderManager" schema="schema/org.ossmeter.platform.managers.metricprovider.exsd"/>
+   <extension-point id="org.ossmeter.platform.managers.bugtracking" name="bugtracker" schema="schema/org.ossmeter.platform.managers.bugtracking.exsd"/>
+   <extension-point id="org.ossmeter.platform.managers.communicationchannel" name="communcationChannel" schema="schema/org.ossmeter.platform.managers.communicationchannel.exsd"/>
 </plugin>

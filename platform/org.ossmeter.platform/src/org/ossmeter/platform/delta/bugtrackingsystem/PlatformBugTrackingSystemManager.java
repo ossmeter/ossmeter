@@ -23,7 +23,7 @@ public abstract class PlatformBugTrackingSystemManager implements IBugTrackingSy
 	}
 
 	protected IBugTrackingSystemManager getBugTrackingSystemManager(BugTrackingSystem bugTrackingSystem) {
-		for (IBugTrackingSystemManager bugTrackingSystemManager : bugTrackingSystemManagers) {
+		for (IBugTrackingSystemManager bugTrackingSystemManager : getBugTrackingSystemManagers()) {
 			if (bugTrackingSystemManager.appliesTo(bugTrackingSystem)) {
 				return bugTrackingSystemManager;
 			}
@@ -34,7 +34,7 @@ public abstract class PlatformBugTrackingSystemManager implements IBugTrackingSy
 	@Override
 	public Date getFirstDate(BugTrackingSystem bugTrackingSystem)
 			throws Exception {
-		for (IBugTrackingSystemManager bugTrackingSystemManager : bugTrackingSystemManagers) {
+		for (IBugTrackingSystemManager bugTrackingSystemManager : getBugTrackingSystemManagers()) {
 			if (bugTrackingSystemManager.appliesTo(bugTrackingSystem)) {
 				return bugTrackingSystemManager.getFirstDate(bugTrackingSystem);
 			}

@@ -1,5 +1,7 @@
 package org.ossmeter.platform;
 
+import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.ossmeter.platform.delta.bugtrackingsystem.PlatformBugTrackingSystemManager;
 import org.ossmeter.platform.delta.communicationchannel.PlatformCommunicationChannelManager;
 import org.ossmeter.platform.delta.vcs.PlatformVcsManager;
@@ -10,9 +12,11 @@ import com.mongodb.DB;
 public class MetricProviderContext {
 	
 	protected Platform platform;
+	protected Logger logger;
 	
-	public MetricProviderContext(Platform platform) {
+	public MetricProviderContext(Platform platform, Logger logger) {
 		this.platform = platform;
+		this.logger = logger;
 	}
 	
 	public void setPlatform(Platform platform) {
@@ -33,5 +37,13 @@ public class MetricProviderContext {
 	
 	public DB getProjectDB(Project project) {
 		return platform.getMetricsRepository(project).getDb();
+	}
+	
+	public Logger getLogger() {
+		return logger;
+	}
+	
+	public IProgressMonitor getProgressMonitor() {
+		return null; // TODO
 	}
 }

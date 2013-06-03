@@ -68,7 +68,7 @@ public abstract class PlatformVcsManager extends AbstractVcsManager {
 	}
 
 	protected IVcsManager getVcsManager(VcsRepository repository) {
-		for (IVcsManager vcsManager : vcsManagers) {
+		for (IVcsManager vcsManager : getVcsManagers()) {
 			if (vcsManager.appliesTo(repository)) {
 				return vcsManager;
 			}

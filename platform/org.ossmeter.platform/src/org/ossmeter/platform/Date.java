@@ -15,6 +15,11 @@ public class Date {
 		_date = new java.util.Date();
 	}
 	
+	/**
+	 * 
+	 * @param date YYYMMDD
+	 * @throws ParseException
+	 */
 	public Date(String date) throws ParseException {
 		// YYYYMMDD
 		DateFormat formatter = new SimpleDateFormat("yyyyMMdd");

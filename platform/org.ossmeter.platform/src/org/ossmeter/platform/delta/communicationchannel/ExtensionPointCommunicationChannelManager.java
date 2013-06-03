@@ -9,7 +9,7 @@ import org.ossmeter.platform.util.ExtensionPointHelper;
 
 public class ExtensionPointCommunicationChannelManager extends PlatformCommunicationChannelManager {
 	
-	protected final String communicationChannelManagerExtensionPointId = "";
+	protected final String communicationChannelManagerExtensionPointId = "org.ossmeter.platform.managers.communicationchannel";
 	
 	public List<ICommunicationChannelManager> getCommunicationChannelManagers() {
 		if (communicationChannelManagers == null) {
@@ -19,10 +19,14 @@ public class ExtensionPointCommunicationChannelManager extends PlatformCommunica
 				ExtensionPointHelper.getConfigurationElementsForExtensionPoint(communicationChannelManagerExtensionPointId)) {
 				try {
 					communicationChannelManagers.add((ICommunicationChannelManager) 
-							confElement.createExecutableExtension("communicationChannelManager"));
+							confElement.createExecutableExtension("manager"));
 				} catch (CoreException e) {
 					e.printStackTrace();
 				}
+			}
+			System.err.println("Registered communication channel managers: ");
+			for (ICommunicationChannelManager man : communicationChannelManagers) {
+				System.err.println("\t" + man.getClass());
 			}
 		}
 		return communicationChannelManagers;

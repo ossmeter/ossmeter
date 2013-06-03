@@ -24,21 +24,17 @@ public class Platform {
 	protected PlatformVcsManager vcsManager = null;
 	protected PlatformCommunicationChannelManager communicationChannelManager = null;
 	protected PlatformBugTrackingSystemManager bugTrackingSystemManager = null;
-	protected MetricProviderContext metricProviderContext = null;
 	protected Mongo mongo;
 	protected final Path localStorageHomeDirectory = get(System.getProperty("user.home"), "ossmeter");
-	
-	
 
 	public Platform(Mongo mongo) {
 		this.mongo = mongo;
 		projectRepositoryManager = new ProjectRepositoryManager(mongo);
-		metricProviderManager = new ExtensionMetricProviderManager();
+		metricProviderManager = new ExtensionPointMetricProviderManager();
 		scheduler = new SimpleMetricProviderScheduler(this);
 		vcsManager = new ExtensionPointVcsManager();
 		communicationChannelManager = new ExtensionPointCommunicationChannelManager();
 		bugTrackingSystemManager = new ExtensionPointBugTrackingSystemManager();
-		metricProviderContext = new MetricProviderContext(this);
 		initialisePlatformLocalStorage();
 	}
 	
@@ -88,14 +84,6 @@ public class Platform {
 	
 	public void setPlatformBugTrackingSystemManager(PlatformBugTrackingSystemManager bugTrackingSystemManager) {
 		this.bugTrackingSystemManager = bugTrackingSystemManager;
-	}
-	
-	public MetricProviderContext getMetricProviderContext() {
-		return metricProviderContext;
-	}
-	
-	public void setMetricProviderContext(MetricProviderContext metricProviderContext) {
-		this.metricProviderContext = metricProviderContext;
 	}
 	
 	private void initialisePlatformLocalStorage() {

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ossmeter.platform.delta.ProjectDelta;
-import org.ossmeter.platform.delta.communicationchannel.CommunicationChannelDelta;
+import org.ossmeter.platform.logging.OssmeterLoggerFactory;
 import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.LocalStorage;
@@ -63,21 +63,29 @@ public class SimpleMetricProviderScheduler {
 	protected void executeMetricProviders(List<IMetricProvider> providers, Project project) throws Exception {
 		
 		// 1. Calculate Project Delta
-		if (project.getLastExecuted().equals("-1") || project.getLastExecuted().equals("null")) {
-			// TODO need updating with other repos (comms, bug) - move to separate method
+		if (project.getLastExecuted().equals("-1") || project.getLastExecuted().equals("null") || project.getLastExecuted() == null) {
+			// TODO: refactor this block
+			Date lastExec = new Date("19700101");
 			for (VcsRepository repo : project.getVcsRepositories()) {
 				// This needs to be the day BEFORE the first day! (Hence the addDays(-1))
-				project.setLastExecuted(platform.getVcsManager().
-						getDateForRevision(repo, platform.getVcsManager().getFirstRevision(repo)).addDays(-1).toString());
+				Date d = platform.getVcsManager().getDateForRevision(repo, platform.getVcsManager().getFirstRevision(repo)).addDays(-1);
+				if (lastExec.compareTo(d) < 0) {
+					lastExec = d;
+				}
 			}
 			for (CommunicationChannel communicationChannel : project.getCommunicationChannels()) {
-				// This needs to be the day BEFORE the first day! (Hence the addDays(-1))
-				project.setLastExecuted(platform.getCommunicationChannelManager().getFirstDate(communicationChannel).toString());
+				Date d = platform.getCommunicationChannelManager().getFirstDate(communicationChannel).addDays(-1);
+				if (lastExec.compareTo(d) < 0) {
+					lastExec = d;
+				}
 			}
 			for (BugTrackingSystem bugTrackingSystem : project.getBugTrackingSystems()) {
-				// This needs to be the day BEFORE the first day! (Hence the addDays(-1))
-				project.setLastExecuted(platform.getBugTrackingSystemManager().getFirstDate(bugTrackingSystem).toString());
+				Date d = platform.getBugTrackingSystemManager().getFirstDate(bugTrackingSystem).addDays(-1);
+				if (lastExec.compareTo(d) < 0) {
+					lastExec = d;
+				}
 			}
+			project.setLastExecuted(lastExec.toString());
 		}
 		
 		Date last = new Date(project.getLastExecuted());
@@ -85,16 +93,17 @@ public class SimpleMetricProviderScheduler {
 		Date[] dates = Date.range(last.addDays(1), today);
 		
 		for (Date date : dates) {
-			ProjectDelta delta = new ProjectDelta(project, date, 
+			ProjectDelta delta = new ProjectDelta(	project, 
+													date, 
 													platform.getVcsManager(), 
-														platform.getCommunicationChannelManager(), 
-															platform.getBugTrackingSystemManager());
+													platform.getCommunicationChannelManager(), 
+													platform.getBugTrackingSystemManager());
 			delta.create();
 
 			// 2. Execute transient MPs
 			for (ITransientMetricProvider provider : getOrderedTransientMetricProviders(providers)) {
 				if (provider.appliesTo(project)) {
-					provider.setMetricProviderContext(platform.getMetricProviderContext());
+					provider.setMetricProviderContext(new MetricProviderContext(platform, new OssmeterLoggerFactory().makeNewLoggerInstance(provider.getIdentifier())));
 					addDependenciesToMetricProvider(provider);
 					provider.measure(project, delta, provider.adapt(platform.getMetricsRepository(project).getDb()));
 				}
@@ -104,7 +113,7 @@ public class SimpleMetricProviderScheduler {
 			MetricHistoryManager historyManager = new MetricHistoryManager(platform);
 			for (IMetricProvider  provider : providers) {
 				if (provider instanceof IHistoricalMetricProvider && provider.appliesTo(project)) {
-					provider.setMetricProviderContext(platform.getMetricProviderContext());
+					provider.setMetricProviderContext(new MetricProviderContext(platform, new OssmeterLoggerFactory().makeNewLoggerInstance(provider.getIdentifier())));
 					addDependenciesToMetricProvider(provider);
 					historyManager.store(project, date, (IHistoricalMetricProvider) provider);
 				}

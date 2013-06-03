@@ -1,5 +1,6 @@
 package org.ossmeter.platform;
 
+import org.ossmeter.platform.logging.OssmeterLoggerFactory;
 import org.ossmeter.repository.model.Project;
 
 import com.googlecode.pongo.runtime.Pongo;
@@ -19,7 +20,7 @@ public class MetricHistoryManager {
 		DB db = platform.getMetricsRepository(project).getDb();
 		DBCollection collection = db.getCollection(provider.getIdentifier());
 
-		provider.setMetricProviderContext(platform.getMetricProviderContext());
+		provider.setMetricProviderContext(new MetricProviderContext(platform, new OssmeterLoggerFactory().makeNewLoggerInstance(provider.getIdentifier())));
 		Pongo metric = provider.measure(project);
 		DBObject dbObject = metric.getDbObject();
 		
