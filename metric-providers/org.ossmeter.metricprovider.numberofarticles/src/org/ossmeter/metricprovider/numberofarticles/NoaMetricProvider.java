@@ -23,7 +23,7 @@ public class NoaMetricProvider implements ITransientMetricProvider<Noa>{
 
 	@Override
 	public String getIdentifier() {
-		return NoaMetricProvider.class.getSimpleName();
+		return NoaMetricProvider.class.getCanonicalName();
 	}
 
 	@Override
