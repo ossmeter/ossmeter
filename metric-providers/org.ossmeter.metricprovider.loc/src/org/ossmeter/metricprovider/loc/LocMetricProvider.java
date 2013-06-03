@@ -28,7 +28,7 @@ public class LocMetricProvider implements ITransientMetricProvider<Loc> {
 	
 	@Override
 	public String getIdentifier() {
-		return LocMetricProvider.class.getSimpleName();
+		return LocMetricProvider.class.getCanonicalName();
 	}
 	
 	@Override

@@ -7,7 +7,8 @@ Bundle-Activator: org.ossmeter.metricprovider.loc.Activator
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.workbench,
  com.googlecode.pongo.runtime,
- org.ossmeter.platform
+ org.ossmeter.platform,
+ com.googlecode.pongo.runtime.osgi
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.metricprovider.loc,
