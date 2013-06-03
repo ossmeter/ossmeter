@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Git VCS Manager for OSSMETER
-Bundle-SymbolicName: org.ossmeter.platform.vcs.git
+Bundle-SymbolicName: org.ossmeter.platform.vcs.git;singleton:=true
 Bundle-Version: 0.0.1.qualifier
 Bundle-Activator: org.ossmeter.platform.vcs.git.Activator
 Bundle-Vendor: OSSMETER
