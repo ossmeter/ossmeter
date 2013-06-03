@@ -28,17 +28,17 @@ public abstract class PlatformBugTrackingSystemManager implements IBugTrackingSy
 				return bugTrackingSystemManager;
 			}
 		}
-		return null;
+		throw new RuntimeException("No bug tracking system manager found for " + bugTrackingSystem);
 	}
 	
 	@Override
 	public Date getFirstDate(BugTrackingSystem bugTrackingSystem)
 			throws Exception {
-		for (IBugTrackingSystemManager bugTrackingSystemManager : getBugTrackingSystemManagers()) {
-			if (bugTrackingSystemManager.appliesTo(bugTrackingSystem)) {
-				return bugTrackingSystemManager.getFirstDate(bugTrackingSystem);
-			}
+		IBugTrackingSystemManager bugTrackingSystemManager = getBugTrackingSystemManager(bugTrackingSystem);
+		if (bugTrackingSystemManager != null) {
+			return bugTrackingSystemManager.getFirstDate(bugTrackingSystem);
 		}
+		
 		return null;
 	}
 	
