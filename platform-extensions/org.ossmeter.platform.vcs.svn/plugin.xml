@@ -2,7 +2,7 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="org.ossmeter.repository.vcsmanager">
+         point="org.ossmeter.platform.managers.vcs">
       <vcsManager
             manager="org.ossmeter.platform.vcs.svn.SvnManager">
       </vcsManager>
