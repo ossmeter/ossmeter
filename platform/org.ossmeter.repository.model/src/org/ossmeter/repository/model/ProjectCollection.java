@@ -25,6 +25,7 @@ public class ProjectCollection extends PongoCollection<Project> {
 		}
 		return project;
 	}
+	
 
 	public long countByName(String q) {
 		return dbCollection.count(new BasicDBObject("name", q + ""));

@@ -12,14 +12,7 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.metricprovider.loc,
  org.ossmeter.platform.vcs.svn,
  org.ossmeter.metricprovider.numberofarticles,
- org.ossmeter.platform.communicationchannel.nntp,
- org.ossmeter.metricprovider.generic.numberofarticlesperdaypernewsgroup,
- org.ossmeter.metricprovider.generic.overalldailynumberofarticles,
- org.ossmeter.platform.bugtrackingsystem.bugzilla,
- org.ossmeter.metricprovider.numberofbugzillacomments,
- org.ossmeter.metricprovider.generic.overalldailynumberofnewbugzillabugs,
- org.ossmeter.metricprovider.numberofnewbugzillabugs,
- org.ossmeter.metricprovider.generic.overalldailynumberofbugzillacomments
+ org.ossmeter.platform.communicationchannel.nntp
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.repository.app

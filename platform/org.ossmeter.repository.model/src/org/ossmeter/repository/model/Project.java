@@ -14,7 +14,9 @@ public class Project extends NamedElement {
 	protected List<License> licenses = null;
 	protected List<NntpNewsGroup> newsgroups = null;
 	protected List<MetricProviderData> metricProviderData = null;
-	protected LocalStorage storage = null;
+				
+		protected LocalStorage storage = null;
+				
 	
 	
 	public Project() { 

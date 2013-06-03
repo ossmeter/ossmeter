@@ -1,11 +1,17 @@
 package org.ossmeter.platform;
 
-import org.ossmeter.platform.delta.vcs.ExtensionPointVcsManager;
-import org.ossmeter.platform.delta.vcs.PlatformVcsManager;
-import org.ossmeter.platform.delta.communicationchannel.ExtensionPointCommunicationChannelManager;
-import org.ossmeter.platform.delta.communicationchannel.PlatformCommunicationChannelManager;
+import static java.nio.file.Paths.get;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import org.ossmeter.platform.delta.bugtrackingsystem.ExtensionPointBugTrackingSystemManager;
 import org.ossmeter.platform.delta.bugtrackingsystem.PlatformBugTrackingSystemManager;
+import org.ossmeter.platform.delta.communicationchannel.ExtensionPointCommunicationChannelManager;
+import org.ossmeter.platform.delta.communicationchannel.PlatformCommunicationChannelManager;
+import org.ossmeter.platform.delta.vcs.ExtensionPointVcsManager;
+import org.ossmeter.platform.delta.vcs.PlatformVcsManager;
 import org.ossmeter.repository.model.Project;
 
 import com.mongodb.Mongo;
@@ -20,7 +26,10 @@ public class Platform {
 	protected PlatformBugTrackingSystemManager bugTrackingSystemManager = null;
 	protected MetricProviderContext metricProviderContext = null;
 	protected Mongo mongo;
+	protected final Path localStorageHomeDirectory = get(System.getProperty("user.home"), "ossmeter");
 	
+	
+
 	public Platform(Mongo mongo) {
 		this.mongo = mongo;
 		projectRepositoryManager = new ProjectRepositoryManager(mongo);
@@ -30,10 +39,15 @@ public class Platform {
 		communicationChannelManager = new ExtensionPointCommunicationChannelManager();
 		bugTrackingSystemManager = new ExtensionPointBugTrackingSystemManager();
 		metricProviderContext = new MetricProviderContext(this);
+		initialisePlatformLocalStorage();
 	}
 	
 	public void run() throws Exception {
 		scheduler.run();
+	}
+	
+	public Path getLocalStorageHomeDirectory() {
+		return localStorageHomeDirectory;
 	}
 	
 	public MetricsRepository getMetricsRepository(Project project) {
@@ -82,5 +96,15 @@ public class Platform {
 	
 	public void setMetricProviderContext(MetricProviderContext metricProviderContext) {
 		this.metricProviderContext = metricProviderContext;
+	}
+	
+	private void initialisePlatformLocalStorage() {
+		try{	
+			if (Files.notExists(localStorageHomeDirectory)) {
+					Files.createDirectory(localStorageHomeDirectory);
+			}
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -34,7 +34,7 @@ class MetricProviderData {
 
 @customize
 class LocalStorage {
-	
+	attr String path;
 }
 
 class NntpNewsGroup extends  CommunicationChannel{

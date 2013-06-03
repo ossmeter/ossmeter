@@ -1,5 +1,11 @@
 package org.ossmeter.platform;
 
+import static java.nio.file.Paths.get;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +13,7 @@ import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.platform.delta.communicationchannel.CommunicationChannelDelta;
 import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.CommunicationChannel;
+import org.ossmeter.repository.model.LocalStorage;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.VcsRepository;
 
@@ -34,6 +41,7 @@ public class SimpleMetricProviderScheduler {
 //			@Override
 //			public void run() {
 				for (Project project : platform.getProjectRepositoryManager().getProjectRepository().getProjects()) {
+					initialiseProjectLocalStorage(project);
 					executeMetricProviders(platform.getMetricProviderManager().getMetricProviders(), project);
 				}
 //			}
@@ -120,5 +128,18 @@ public class SimpleMetricProviderScheduler {
 			}
 		}
 		mp.setUses(uses);
+	}
+	
+	protected void initialiseProjectLocalStorage (Project project) {
+		try{	
+			Path projectLocalStoragePath = Paths.get(platform.getLocalStorageHomeDirectory().toString(), project.getName());		
+			if (Files.notExists(projectLocalStoragePath)) {
+					Files.createDirectory(projectLocalStoragePath);
+					LocalStorage projectLocalStorage = new LocalStorage();
+					projectLocalStorage.setPath(projectLocalStoragePath.toString());
+			}
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

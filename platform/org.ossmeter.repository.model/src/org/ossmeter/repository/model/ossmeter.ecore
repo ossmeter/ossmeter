@@ -43,6 +43,9 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="LocalStorage">
     <eAnnotations source="customize"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="path">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NntpNewsGroup" eSuperTypes="//CommunicationChannel">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="authenticationRequired">

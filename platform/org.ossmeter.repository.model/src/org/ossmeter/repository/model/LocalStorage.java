@@ -17,6 +17,15 @@ public class LocalStorage extends Pongo {
 		super();
 	}
 	
+	public String getPath() {
+		return parseString(dbObject.get("path")+"", "");
+	}
+	
+	public LocalStorage setPath(String path) {
+		dbObject.put("path", path + "");
+		notifyChanged();
+		return this;
+	}
 	
 	
 	
