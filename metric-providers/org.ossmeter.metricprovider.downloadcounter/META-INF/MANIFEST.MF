@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Downloadcounter
-Bundle-SymbolicName: org.ossmeter.metricprovider.downloadcounter
+Bundle-SymbolicName: org.ossmeter.metricprovider.downloadcounter;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.metricprovider.downloadcounter.Activator
 Require-Bundle: org.eclipse.ui,
