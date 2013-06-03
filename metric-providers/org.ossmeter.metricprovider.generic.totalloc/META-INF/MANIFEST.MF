@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Totalloc
-Bundle-SymbolicName: org.ossmeter.metricprovider.generic.totalloc
+Bundle-SymbolicName: org.ossmeter.metricprovider.generic.totalloc;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.metricprovider.generic.totalloc.Activator
 Require-Bundle: org.eclipse.core.runtime,
