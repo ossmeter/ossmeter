@@ -1,0 +1,14 @@
+package org.ossmeter.metricprovider.numberofnewbugzillabugs.model;
+
+@db(qualifiedCollectionNames="true")
+@customize
+class Nonbb {
+	val BugzillaData[*] bugzillas;
+}
+
+class BugzillaData {
+   @searchable
+   attr String url_prod_comp;
+   attr int numberOfBugs;
+}
+

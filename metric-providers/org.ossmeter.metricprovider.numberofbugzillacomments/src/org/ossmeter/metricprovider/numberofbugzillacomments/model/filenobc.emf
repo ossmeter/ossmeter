@@ -1,0 +1,14 @@
+package org.ossmeter.metricprovider.numberofbugzillacomments.model;
+
+@db(qualifiedCollectionNames="true")
+@customize
+class Nobc {
+	val BugzillaData[*] bugzillas;
+}
+
+class BugzillaData {
+   @searchable
+   attr String url_prod_comp;
+   attr int numberOfComments;
+}
+
