@@ -1,0 +1,10 @@
+package org.ossmeter.metricprovider.rascal.history.model;
+
+class HistoricRascalMetrics {
+	val Measurement[*] measurements;
+} 
+
+@stub(javaClass="org.ossmeter.metricprovider.rascal.trans.model.Measurement")
+abstract class Measurement {
+}
+

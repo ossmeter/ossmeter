@@ -1,0 +1,25 @@
+package org.ossmeter.metricprovider.rascal.trans.model;
+
+@db
+class RascalMetrics {
+	val Measurement[*] measurements;
+} 
+
+abstract class Measurement {
+    @searchable
+	attr String uri;
+	@searchable
+	attr String metric;
+}
+
+class IntegerMeasurement extends Measurement {
+	attr long value;
+}
+
+class RealMeasurement extends Measurement {
+    attr float value;
+}
+
+class BooleanMeasurement extends Measurement {
+    attr boolean value;
+}

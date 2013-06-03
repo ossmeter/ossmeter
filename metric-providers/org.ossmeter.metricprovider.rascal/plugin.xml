@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="org.ossmeter.metricprovider.rascal" name="org.ossmeter.metricprovider.rascal" schema="schema/org.ossmeter.metricprovider.rascal.exsd"/>
+   <extension
+         point="org.ossmeter.platform.managers.metricprovider">
+      <metricProviderManager
+            manager="org.ossmeter.metricprovider.rascal.RascalMetricProviderManager">
+      </metricProviderManager>
+   </extension>
+
+</plugin>
