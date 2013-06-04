@@ -1,13 +1,8 @@
 package org.ossmeter.metricprovider.loc.model;
 
-import java.util.Iterator;
-
-import com.googlecode.pongo.runtime.IteratorIterable;
-import com.googlecode.pongo.runtime.PongoCollection;
-import com.googlecode.pongo.runtime.PongoCursorIterator;
-import com.googlecode.pongo.runtime.PongoFactory;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
+import com.googlecode.pongo.runtime.*;
+import java.util.*;
+import com.mongodb.*;
 
 public class LinesOfCodeDataCollection extends PongoCollection<LinesOfCodeData> {
 	
@@ -31,12 +26,12 @@ public class LinesOfCodeDataCollection extends PongoCollection<LinesOfCodeData> 
 		}
 		return linesOfCodeData;
 	}
+	
 
 	public long countByFile(String q) {
 		return dbCollection.count(new BasicDBObject("file", q + ""));
 	}
 	
-
 	@Override
 	public Iterator<LinesOfCodeData> iterator() {
 		return new PongoCursorIterator<LinesOfCodeData>(this, dbCollection.find());

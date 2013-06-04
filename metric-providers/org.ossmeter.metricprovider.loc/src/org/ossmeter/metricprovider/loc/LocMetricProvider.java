@@ -78,7 +78,7 @@ public class LocMetricProvider implements ITransientMetricProvider<Loc> {
 					if (locData == null) {
 						locData = new LinesOfCodeData();
 						locData.setFile(vcsRepository.getUrl() + item.getPath());
-						locData.setRevisionNumber(Long.valueOf(item.getCommit().getRevision()));
+						locData.setRevisionNumber(item.getCommit().getRevision());
 						db.getLinesOfCode().add(locData);
 						repositoryData.getLinesOfCode().add(locData);
 					}

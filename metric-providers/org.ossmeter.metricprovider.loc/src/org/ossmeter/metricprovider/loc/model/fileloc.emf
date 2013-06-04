@@ -20,5 +20,5 @@ class LinesOfCodeData {
    @searchable
    attr String file;
    attr long lines;
-   attr long revisionNumber;
+   attr String revisionNumber;
 }

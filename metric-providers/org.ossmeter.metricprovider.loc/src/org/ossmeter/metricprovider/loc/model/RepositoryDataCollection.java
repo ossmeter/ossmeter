@@ -1,13 +1,8 @@
 package org.ossmeter.metricprovider.loc.model;
 
-import java.util.Iterator;
-
-import com.googlecode.pongo.runtime.IteratorIterable;
-import com.googlecode.pongo.runtime.PongoCollection;
-import com.googlecode.pongo.runtime.PongoCursorIterator;
-import com.googlecode.pongo.runtime.PongoFactory;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
+import com.googlecode.pongo.runtime.*;
+import java.util.*;
+import com.mongodb.*;
 
 public class RepositoryDataCollection extends PongoCollection<RepositoryData> {
 	
@@ -32,6 +27,7 @@ public class RepositoryDataCollection extends PongoCollection<RepositoryData> {
 		}
 		return repositoryData;
 	}
+	
 
 	public long countByUrl(String q) {
 		return dbCollection.count(new BasicDBObject("url", q + ""));
@@ -47,11 +43,12 @@ public class RepositoryDataCollection extends PongoCollection<RepositoryData> {
 		}
 		return repositoryData;
 	}
+	
 
 	public long countByRepoType(String q) {
 		return dbCollection.count(new BasicDBObject("repoType", q + ""));
 	}
-
+	
 	@Override
 	public Iterator<RepositoryData> iterator() {
 		return new PongoCursorIterator<RepositoryData>(this, dbCollection.find());
