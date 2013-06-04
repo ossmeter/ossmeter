@@ -41,6 +41,7 @@ public class App implements IApplication {
 		Project skim = ProjectCreationUtil.createSourceForgeProject("skim-app");
 		Project epsilon = ProjectCreationUtil.createProjectWithNewsGroup("epsilon", "news.eclipse.org", "eclipse.epsilon", true, "exquisitus", "flinder1f7", 80, 10000);
 		
+		
 		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(pongo);
 		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(saf);
 		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(fedora);

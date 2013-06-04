@@ -2,7 +2,7 @@ package org.ossmeter.repository.app;
 
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
-import org.ossmeter.platform.ExtensionMetricProviderManager;
+import org.ossmeter.platform.ExtensionPointMetricProviderManager;
 import org.ossmeter.platform.IMetricProviderManager;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.delta.vcs.ExtensionPointVcsManager;
@@ -11,7 +11,6 @@ import org.ossmeter.repository.model.github.GitHubProject;
 import org.ossmeter.repository.model.github.GitHubRepository;
 import org.ossmeter.repository.model.github.GitHubUser;
 import org.ossmeter.repository.model.sourceforge.SourceForgeProject;
-import org.ossmeter.repository.model.sourceforge.SvnRepository;
 
 import com.mongodb.Mongo;
 
@@ -102,7 +101,7 @@ public class App implements IApplication {
 	
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
-		run(new ExtensionMetricProviderManager(), new ExtensionPointVcsManager());
+		run(new ExtensionPointMetricProviderManager(), new ExtensionPointVcsManager());
 		return IApplication.EXIT_OK;
 	}
 

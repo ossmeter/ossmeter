@@ -3,8 +3,7 @@ package org.ossmeter.repository.app;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
-import org.ossmeter.metricprovider.generic.totalloc.GenericTotalLocMetricProvider;
-import org.ossmeter.platform.ExtensionMetricProviderManager;
+import org.ossmeter.platform.ExtensionPointMetricProviderManager;
 import org.ossmeter.platform.IMetricProviderManager;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.delta.bugtrackingsystem.ExtensionPointBugTrackingSystemManager;
@@ -16,9 +15,9 @@ import org.ossmeter.platform.delta.communicationchannel.ServiceCommunicationChan
 import org.ossmeter.platform.delta.vcs.ExtensionPointVcsManager;
 import org.ossmeter.platform.delta.vcs.PlatformVcsManager;
 import org.ossmeter.platform.delta.vcs.ServiceVcsManager;
+import org.ossmeter.repository.model.Bugzilla;
 import org.ossmeter.repository.model.GitRepository;
 import org.ossmeter.repository.model.NntpNewsGroup;
-import org.ossmeter.repository.model.Bugzilla;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.SvnRepository;
 
@@ -133,7 +132,7 @@ public class App implements IApplication {
 	
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
-		run(new ExtensionMetricProviderManager(), 
+		run(new ExtensionPointMetricProviderManager(), 
 				new ExtensionPointVcsManager(), 
 				new ExtensionPointCommunicationChannelManager(),
 				new ExtensionPointBugTrackingSystemManager());

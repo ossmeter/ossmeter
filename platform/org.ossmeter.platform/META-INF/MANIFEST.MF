@@ -9,7 +9,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.e4.core.di,
  com.googlecode.pongo.runtime,
  org.mapdb;bundle-version="1.0.0",
- org.ossmeter.repository.model;bundle-version="1.0.0",
+ org.ossmeter.repository.model,
  org.apache.log4j.1.2.17;visibility:=reexport
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
@@ -23,4 +23,5 @@ Export-Package: org.ossmeter.platform,
  org.ossmeter.platform.delta.vcs,
  org.ossmeter.platform.logging,
  org.ossmeter.platform.util
-Import-Package: javax.inject
+Import-Package: javax.inject,
+ org.ossmeter.repository.model

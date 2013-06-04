@@ -7,7 +7,8 @@ Bundle-Activator: org.ossmeter.platform.vcs.svn.tests.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.ossmeter.platform.vcs.svn,
- org.junit
+ org.junit,
+ org.mockito
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: org.ossmeter.repository.model

@@ -11,6 +11,8 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.metricprovider.downloadcounter.github.dependencies,
  org.ossmeter.repository.model.github,
  org.ossmeter.metricprovider.downloadcounter,
- org.ossmeter.repository.model
+ org.ossmeter.repository.model,
+ org.eclipse.egit
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Import-Package: org.eclipse.egit.github.core
