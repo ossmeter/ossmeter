@@ -64,7 +64,7 @@ public class OverallDailyNumberOfNewBugzillaBugsProvider implements IHistoricalM
 	
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return Arrays.asList(NonbbMetricProvider.class.getSimpleName());
+		return Arrays.asList(NonbbMetricProvider.class.getCanonicalName());
 	}
 
 	@Override

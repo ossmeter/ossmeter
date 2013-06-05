@@ -64,7 +64,7 @@ public class OverallDailyNumberOfBugzillaCommentsProvider implements IHistorical
 	
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return Arrays.asList(NobcMetricProvider.class.getSimpleName());
+		return Arrays.asList(NobcMetricProvider.class.getCanonicalName());
 	}
 
 	@Override

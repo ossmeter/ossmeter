@@ -65,7 +65,7 @@ public class OverallDailyNumberOfArticlesProvider implements IHistoricalMetricPr
 	
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return Arrays.asList(NoaMetricProvider.class.getSimpleName());
+		return Arrays.asList(NoaMetricProvider.class.getCanonicalName());
 	}
 
 	@Override

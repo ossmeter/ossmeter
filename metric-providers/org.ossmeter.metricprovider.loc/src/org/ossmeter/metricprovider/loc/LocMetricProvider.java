@@ -38,6 +38,7 @@ public class LocMetricProvider implements ITransientMetricProvider<Loc> {
 	
 	@Override
 	public boolean appliesTo(Project project) {
+		System.out.println("project.getVcsRepositories().size(): " + project.getVcsRepositories().size());
 		return project.getVcsRepositories().size() > 0;
 	}
 	

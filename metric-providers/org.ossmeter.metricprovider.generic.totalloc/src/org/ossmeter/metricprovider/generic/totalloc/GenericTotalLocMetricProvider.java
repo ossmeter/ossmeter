@@ -82,7 +82,7 @@ public class GenericTotalLocMetricProvider implements IHistoricalMetricProvider{
 	
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return Arrays.asList(LocMetricProvider.class.getSimpleName());
+		return Arrays.asList(LocMetricProvider.class.getCanonicalName());
 	}
 
 	@Override
