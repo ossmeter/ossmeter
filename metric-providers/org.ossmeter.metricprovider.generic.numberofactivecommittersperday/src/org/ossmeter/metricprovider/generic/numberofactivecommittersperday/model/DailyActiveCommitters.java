@@ -1,4 +1,4 @@
-package org.ossmeter.metricprovider.generic.numberofactivecommittersperdaypernewsgroup.model;
+package org.ossmeter.metricprovider.generic.numberofactivecommittersperday.model;
 
 import com.mongodb.*;
 import java.util.*;
@@ -6,12 +6,12 @@ import com.googlecode.pongo.runtime.*;
 import com.googlecode.pongo.runtime.querying.*;
 
 
-public class DailyNoa extends Pongo {
+public class DailyActiveCommitters extends Pongo {
 	
 	protected List<DailyNewsgroupData> newsgroups = null;
 	
 	
-	public DailyNoa() { 
+	public DailyActiveCommitters() { 
 		super();
 		dbObject.put("newsgroups", new BasicDBList());
 	}

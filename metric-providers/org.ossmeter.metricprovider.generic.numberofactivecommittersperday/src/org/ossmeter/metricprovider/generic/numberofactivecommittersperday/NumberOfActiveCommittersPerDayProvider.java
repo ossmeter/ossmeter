@@ -1,13 +1,13 @@
-package org.ossmeter.metricprovider.generic.numberofactivecommittersperdaypernewsgroup;
+package org.ossmeter.metricprovider.generic.numberofactivecommittersperday;
 
 import java.util.Arrays;
 import java.util.List;
 
-import org.ossmeter.metricprovider.generic.numberofactivecommittersperdaypernewsgroup.model.DailyNewsgroupData;
-import org.ossmeter.metricprovider.generic.numberofactivecommittersperdaypernewsgroup.model.DailyActiveCommitters;
 import org.ossmeter.metricprovider.activecommitters.ActiveCommittersMetricProvider;
 import org.ossmeter.metricprovider.activecommitters.model.ActiveCommitters;
 import org.ossmeter.metricprovider.activecommitters.model.NewsgroupData;
+import org.ossmeter.metricprovider.generic.numberofactivecommittersperday.model.DailyActiveCommitters;
+import org.ossmeter.metricprovider.generic.numberofactivecommittersperday.model.DailyNewsgroupData;
 import org.ossmeter.platform.IHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
@@ -17,10 +17,10 @@ import org.ossmeter.repository.model.Project;
 
 import com.googlecode.pongo.runtime.Pongo;
 
-public class NumberOfActiveCommittersPerDayPerNewsgroupProvider implements IHistoricalMetricProvider{
+public class NumberOfActiveCommittersPerDayProvider implements IHistoricalMetricProvider{
 
 	public final static String IDENTIFIER = 
-			"org.ossmeter.metricprovider.generic.numberofactivecommittersperdaypernewsgroup";
+			"org.ossmeter.metricprovider.generic.numberofactivecommitersperday";
 
 	protected MetricProviderContext context;
 	
@@ -45,17 +45,19 @@ public class NumberOfActiveCommittersPerDayPerNewsgroupProvider implements IHist
 
 	@Override
 	public Pongo measure(Project project) {
-		DailyActiveCommitters dailyNoa = new DailyActiveCommitters();
+
+		 DailyActiveCommitters dailyActiveCommitters = new DailyActiveCommitters();
 		for (IMetricProvider used : uses) {
-			  ActiveCommitters activeCommitters = ((ActiveCommittersMetricProvider)used).adapt(context.getProjectDB(project));
-			 for (NewsgroupData newsgroup: activeCommitters.getNewsgroups()) {
-				 DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
-				 dailyNewsgroupData.setUrl_name(newsgroup.getUrl_name());
-				 dailyNewsgroupData.setNumberOfActiveCommitters(newsgroup.getNumberOfActiveCommiters());
-				 dailyNoa.getNewsgroups().add(dailyNewsgroupData);
-			 }
+			
+			ActiveCommitters activeCommitters = ((ActiveCommittersMetricProvider)used).adapt(context.getProjectDB(project));
+			for (NewsgroupData newsgroup: activeCommitters.getNewsgroups()) {
+				DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
+				dailyNewsgroupData.setUrl_name(newsgroup.getUrl_name());
+				dailyNewsgroupData.setNumberOfActiveCommitters(newsgroup.getNumberOfActiveCommiters());
+				dailyActiveCommitters.getNewsgroups().add(dailyNewsgroupData);
+			}
 		}
-		return dailyNoa;
+		return dailyActiveCommitters;
 	}
 			
 	@Override

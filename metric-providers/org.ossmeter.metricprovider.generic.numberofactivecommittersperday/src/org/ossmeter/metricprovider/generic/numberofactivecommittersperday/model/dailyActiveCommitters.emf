@@ -1,4 +1,4 @@
-package org.ossmeter.metricprovider.generic.numberofactivecommittersperdaypernewsgroup.model;
+package org.ossmeter.metricprovider.generic.numberofactivecommittersperday.model;
 
 class DailyActiveCommitters {
 	val DailyNewsgroupData[*] newsgroups;
