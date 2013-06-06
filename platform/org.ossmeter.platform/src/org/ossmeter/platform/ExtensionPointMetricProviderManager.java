@@ -31,11 +31,11 @@ public class ExtensionPointMetricProviderManager implements IMetricProviderManag
 			}
 			
 			// Load extension points via custom managers 
-			System.err.println("Custom Extension Point managers: ");
+			System.out.println("Custom Extension Point managers: ");
 			for(IConfigurationElement configurationElement : ExtensionPointHelper.getConfigurationElementsForExtensionPoint(metricProviderManagerExtensionPointId)){
 				try {
 					IMetricProviderManager impm = (IMetricProviderManager) configurationElement.createExecutableExtension("manager");
-					System.err.println("\t" + impm.getClass().toString());
+					System.out.println("\t" + impm.getClass().toString());
 					
 					//metricProviders.addAll(impm.getMetricProviders()); // FIXME: Commented out whilst determining how to properly resolve rascal URIs
 				} catch (CoreException e) {
@@ -44,9 +44,9 @@ public class ExtensionPointMetricProviderManager implements IMetricProviderManag
 			}
 		}
 		
-		System.err.println("Registered metric providers: ");
+		System.out.println("Registered metric providers: ");
 		for (IMetricProvider imp : metricProviders) {
-			System.err.println("\t"+ imp.getIdentifier());
+			System.out.println("\t"+ imp.getIdentifier());
 		}
 		
 		return metricProviders;

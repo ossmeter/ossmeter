@@ -11,6 +11,8 @@ import org.ossmeter.metricprovider.numberofarticles.model.Noa;
 import org.ossmeter.platform.IHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
+import org.ossmeter.repository.model.CommunicationChannel;
+import org.ossmeter.repository.model.NntpNewsGroup;
 import org.ossmeter.repository.model.Project;
 
 import com.googlecode.pongo.runtime.Pongo;
@@ -35,10 +37,10 @@ public class OverallDailyNumberOfArticlesProvider implements IHistoricalMetricPr
 	
 	@Override
 	public boolean appliesTo(Project project) {
-		return true; // FIXME: This should really check whether there are any providers
-					 // for this MP. Otherwise it'll create an empty DB for every project.
-					 // This is not possible in the current implementation because the 'uses'
-					 // property is set AFTER this method is called.
+		for (CommunicationChannel communicationChannel: project.getCommunicationChannels()) {
+			if (communicationChannel instanceof NntpNewsGroup) return true;
+		}
+		return false;
 	}
 
 	@Override

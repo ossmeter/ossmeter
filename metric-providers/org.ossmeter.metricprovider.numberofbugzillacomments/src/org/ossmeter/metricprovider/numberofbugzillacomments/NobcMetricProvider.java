@@ -23,7 +23,7 @@ public class NobcMetricProvider implements ITransientMetricProvider<Nobc>{
 
 	@Override
 	public String getIdentifier() {
-		return NobcMetricProvider.class.getSimpleName();
+		return NobcMetricProvider.class.getCanonicalName();
 	}
 
 	@Override

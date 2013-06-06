@@ -11,6 +11,8 @@ import org.ossmeter.metricprovider.numberofnewbugzillabugs.model.Nonbb;
 import org.ossmeter.platform.IHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
+import org.ossmeter.repository.model.BugTrackingSystem;
+import org.ossmeter.repository.model.Bugzilla;
 import org.ossmeter.repository.model.Project;
 
 import com.googlecode.pongo.runtime.Pongo;
@@ -35,10 +37,10 @@ public class OverallDailyNumberOfNewBugzillaBugsProvider implements IHistoricalM
 	
 	@Override
 	public boolean appliesTo(Project project) {
-		return true; // FIXME: This should really check whether there are any providers
-					 // for this MP. Otherwise it'll create an empty DB for every project.
-					 // This is not possible in the current implementation because the 'uses'
-					 // property is set AFTER this method is called.
+		for (BugTrackingSystem bugTrackingSystem: project.getBugTrackingSystems()) {
+			if (bugTrackingSystem instanceof Bugzilla) return true;
+		}
+		return false;
 	}
 
 	@Override

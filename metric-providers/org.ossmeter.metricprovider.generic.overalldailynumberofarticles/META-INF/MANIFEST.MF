@@ -8,7 +8,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  com.googlecode.pongo.runtime,
  org.ossmeter.platform,
- org.ossmeter.metricprovider.numberofarticles;bundle-version="1.0.0"
+ org.ossmeter.metricprovider.numberofarticles
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: org.ossmeter.repository.model

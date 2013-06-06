@@ -12,5 +12,11 @@
       </class>
    
    </extension>
+   <extension
+         point="org.ossmeter.platform.metricprovider">
+      <metricProvider
+            provider="org.ossmeter.metricprovider.generic.overalldailynumberofnewbugzillabugs.OverallDailyNumberOfNewBugzillaBugsProvider">
+      </metricProvider>
+   </extension>
 
 </plugin>

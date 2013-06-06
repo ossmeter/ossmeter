@@ -36,10 +36,7 @@ public class GenericTotalLocMetricProvider implements IHistoricalMetricProvider{
 	
 	@Override
 	public boolean appliesTo(Project project) {
-		return true; // FIXME: This should really check whether there are any providers
-					 // for this MP. Otherwise it'll create an empty DB for every project.
-					 // This is not possible in the current implementation because the 'uses'
-					 // property is set AFTER this method is called.
+		return project.getVcsRepositories().size() > 0;
 	}
 
 	@Override
@@ -82,6 +79,7 @@ public class GenericTotalLocMetricProvider implements IHistoricalMetricProvider{
 	
 	@Override
 	public List<String> getIdentifiersOfUses() {
+		System.out.println("LocMetricProvider.class.getCanonicalName(): " + LocMetricProvider.class.getCanonicalName());
 		return Arrays.asList(LocMetricProvider.class.getCanonicalName());
 	}
 

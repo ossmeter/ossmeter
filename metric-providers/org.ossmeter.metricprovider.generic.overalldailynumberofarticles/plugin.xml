@@ -12,11 +12,5 @@
       </class>
    
    </extension>
-   <extension
-         point="org.ossmeter.platform.metricprovider">
-      <metricProvider
-            provider="org.ossmeter.metricprovider.generic.overalldailynumberofarticles.OverallDailyNumberOfArticlesProvider">
-      </metricProvider>
-   </extension>
 
 </plugin>

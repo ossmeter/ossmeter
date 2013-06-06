@@ -23,7 +23,7 @@ public class NonbbMetricProvider implements ITransientMetricProvider<Nonbb>{
 
 	@Override
 	public String getIdentifier() {
-		return NonbbMetricProvider.class.getSimpleName();
+		return NonbbMetricProvider.class.getCanonicalName();
 	}
 
 	@Override
