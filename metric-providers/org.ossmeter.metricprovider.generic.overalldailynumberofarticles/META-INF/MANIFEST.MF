@@ -11,4 +11,6 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.metricprovider.numberofarticles
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Import-Package: org.ossmeter.repository.model
+Import-Package: org.ossmeter.metricprovider.numberofarticles,
+ org.ossmeter.metricprovider.numberofarticles.model,
+ org.ossmeter.repository.model

@@ -34,19 +34,19 @@ public class App implements IApplication {
 		
 		// FIXME: Needs to check Mongo for projects, not keep registering the same ones!
 		
-		Project pongo = ProjectCreationUtil.createSvnProject("pongo", "https://pongo.googlecode.com/svn");
-		Project saf = ProjectCreationUtil.createGitProject("saf", "https://code.google.com/p/super-awesome-fighter");
-		Project fedora = ProjectCreationUtil.createProjectWithBugTrackingSystem("fedora", "https://bugzilla.redhat.com/xmlrpc.cgi", "Fedora", "acpi"); // "acpi", platform);
+//		Project pongo = ProjectCreationUtil.createSvnProject("pongo", "https://pongo.googlecode.com/svn");
+//		Project saf = ProjectCreationUtil.createGitProject("saf", "https://code.google.com/p/super-awesome-fighter");
+//		Project fedora = ProjectCreationUtil.createProjectWithBugTrackingSystem("fedora", "https://bugzilla.redhat.com/xmlrpc.cgi", "Fedora", "acpi"); // "acpi", platform);
 		//Project mojambo = ProjectCreationUtil.createGitHubProject("mojambo", "grit");
-		Project skim = ProjectCreationUtil.createSourceForgeProject("skim-app");
+//		Project skim = ProjectCreationUtil.createSourceForgeProject("skim-app");
 		Project epsilon = ProjectCreationUtil.createProjectWithNewsGroup("epsilon", "news.eclipse.org", "eclipse.epsilon", true, "exquisitus", "flinder1f7", 80, 10000);
 		
 		
-		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(pongo);
-		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(saf);
-		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(fedora);
-		//platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(mojambo);
-		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(skim);
+//		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(pongo);
+//		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(saf);
+//		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(fedora);
+//		//platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(mojambo);
+//		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(skim);
 		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(epsilon);
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 		

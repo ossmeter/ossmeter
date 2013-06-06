@@ -1,0 +1,21 @@
+package org.ossmeter.metricprovider.activecommitters.model;
+
+@db(qualifiedCollectionNames="true")
+@customize
+class ActiveCommitters {
+	val NewsgroupData[*] newsgroups;
+}
+
+class NewsgroupData {
+	@searchable
+   	attr String url_name;
+   	attr int numberOfActiveCommiters;
+    val Committer[*] committers;
+}
+
+class Committer {
+   @searchable
+   attr String committerId;
+   attr String lastActivityDate;
+}
+

@@ -1,0 +1,12 @@
+package org.ossmeter.metricprovider.generic.numberofactivecommittersperdaypernewsgroup.model;
+
+class DailyNoa {
+	val DailyNewsgroupData[*] newsgroups;
+}
+
+class DailyNewsgroupData {
+   @searchable
+   attr String url_name;
+   attr int numberOfActiveCommitters;
+}
+
