@@ -1,0 +1,12 @@
+package org.ossmeter.metricprovider.generic.numberofactiveusersperdaypernewsgroup.model;
+
+class DailyActiveUsers {
+	val DailyNewsgroupData[*] newsgroups;
+}
+
+class DailyNewsgroupData {
+   @searchable
+   attr String url_name;
+   attr int numberOfActiveUsers;
+}
+

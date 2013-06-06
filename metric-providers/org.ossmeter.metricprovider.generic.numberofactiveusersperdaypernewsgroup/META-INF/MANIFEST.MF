@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Numberofactiveusersperdaypernewsgroup
+Bundle-SymbolicName: org.ossmeter.metricprovider.generic.numberofactiveusersperdaypernewsgroup;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.ossmeter.metricprovider.generic.numberofactiveusersperdaypernewsgroup.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ com.googlecode.pongo.runtime,
+ org.ossmeter.platform,
+ org.ossmeter.metricprovider.activeusers
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Import-Package: org.ossmeter.repository.model
+Export-Package: org.ossmeter.metricprovider.generic.numberofactiveusersperdaypernewsgroup

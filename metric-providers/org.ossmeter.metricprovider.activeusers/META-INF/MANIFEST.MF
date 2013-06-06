@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: NumberOfActiveUsers
+Bundle-SymbolicName: org.ossmeter.metricprovider.activeusers;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.ossmeter.metricprovider.activeusers.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ com.googlecode.pongo.runtime,
+ org.ossmeter.platform,
+ org.ossmeter.repository.model,
+ org.ossmeter.platform.communicationchannel.nntp
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Import-Package: org.ossmeter.platform.communicationchannel.nntp
+Export-Package: org.ossmeter.metricprovider.activeusers,
+ org.ossmeter.metricprovider.activeusers.model
