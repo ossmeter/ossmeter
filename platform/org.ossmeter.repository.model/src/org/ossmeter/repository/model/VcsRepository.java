@@ -5,7 +5,7 @@ import java.util.*;
 import com.googlecode.pongo.runtime.*;
 
 
-public abstract class VcsRepository extends Pongo {
+public class VcsRepository extends Pongo {
 	
 	
 	

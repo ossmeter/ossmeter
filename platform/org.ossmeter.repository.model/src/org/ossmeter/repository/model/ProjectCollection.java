@@ -19,13 +19,8 @@ public class ProjectCollection extends PongoCollection<Project> {
 	}
 	
 	public Project findOneByName(String q) {
-		Project project = (Project) PongoFactory.getInstance().createPongo(dbCollection.findOne(new BasicDBObject("name", q + "")));
-		if (project != null) {
-			project.setPongoCollection(this);
-		}
-		return project;
+		return (Project) PongoFactory.getInstance().createPongo(dbCollection.findOne(new BasicDBObject("name", q + "")));
 	}
-	
 
 	public long countByName(String q) {
 		return dbCollection.count(new BasicDBObject("name", q + ""));

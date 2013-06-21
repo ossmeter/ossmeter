@@ -5,7 +5,7 @@ import java.util.*;
 import com.googlecode.pongo.runtime.*;
 
 
-public abstract class BugTrackingSystem extends Pongo {
+public class BugTrackingSystem extends Pongo {
 	
 	
 	

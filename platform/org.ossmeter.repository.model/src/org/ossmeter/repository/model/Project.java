@@ -13,10 +13,8 @@ public class Project extends NamedElement {
 	protected List<Person> persons = null;
 	protected List<License> licenses = null;
 	protected List<NntpNewsGroup> newsgroups = null;
-	protected List<MetricProviderData> metricProviderData = null;
-				
-		protected LocalStorage storage = null;
-				
+	protected List<MetricProvider> metricProvider = null;
+	protected LocalStorage storage = null;
 	
 	
 	public Project() { 
@@ -27,7 +25,7 @@ public class Project extends NamedElement {
 		dbObject.put("persons", new BasicDBList());
 		dbObject.put("licenses", new BasicDBList());
 		dbObject.put("newsgroups", new BasicDBList());
-		dbObject.put("metricProviderData", new BasicDBList());
+		dbObject.put("metricProvider", new BasicDBList());
 	}
 	
 	public String getDescription() {
@@ -104,11 +102,11 @@ public class Project extends NamedElement {
 		}
 		return newsgroups;
 	}
-	public List<MetricProviderData> getMetricProviderData() {
-		if (metricProviderData == null) {
-			metricProviderData = new PongoList<MetricProviderData>(this, "metricProviderData", true);
+	public List<MetricProvider> getMetricProvider() {
+		if (metricProvider == null) {
+			metricProvider = new PongoList<MetricProvider>(this, "metricProvider", true);
 		}
-		return metricProviderData;
+		return metricProvider;
 	}
 	
 	

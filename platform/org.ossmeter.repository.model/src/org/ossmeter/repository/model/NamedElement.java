@@ -5,7 +5,7 @@ import java.util.*;
 import com.googlecode.pongo.runtime.*;
 
 
-public abstract class NamedElement extends Pongo {
+public class NamedElement extends Pongo {
 	
 	
 	

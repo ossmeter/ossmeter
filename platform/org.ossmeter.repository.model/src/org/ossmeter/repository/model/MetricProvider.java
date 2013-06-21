@@ -5,11 +5,11 @@ import java.util.*;
 import com.googlecode.pongo.runtime.*;
 
 
-public class MetricProviderData extends Pongo {
+public class MetricProvider extends NamedElement {
 	
 	
 	
-	public MetricProviderData() { 
+	public MetricProvider() { 
 		super();
 	}
 	
@@ -17,8 +17,22 @@ public class MetricProviderData extends Pongo {
 		return parseString(dbObject.get("metricProviderId")+"", "");
 	}
 	
-	public MetricProviderData setMetricProviderId(String metricProviderId) {
+	public MetricProvider setMetricProviderId(String metricProviderId) {
 		dbObject.put("metricProviderId", metricProviderId + "");
+		notifyChanged();
+		return this;
+	}
+	public MetricProviderType getType() {
+		MetricProviderType type = null;
+		try {
+			type = MetricProviderType.valueOf(dbObject.get("type")+"");
+		}
+		catch (Exception ex) {}
+		return type;
+	}
+	
+	public MetricProvider setType(MetricProviderType type) {
+		dbObject.put("type", type + "");
 		notifyChanged();
 		return this;
 	}
@@ -26,7 +40,7 @@ public class MetricProviderData extends Pongo {
 		return parseString(dbObject.get("lastExecuted")+"", "-1");
 	}
 	
-	public MetricProviderData setLastExecuted(String lastExecuted) {
+	public MetricProvider setLastExecuted(String lastExecuted) {
 		dbObject.put("lastExecuted", lastExecuted + "");
 		notifyChanged();
 		return this;

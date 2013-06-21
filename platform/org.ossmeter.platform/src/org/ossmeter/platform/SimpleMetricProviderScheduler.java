@@ -1,7 +1,5 @@
 package org.ossmeter.platform;
 
-import static java.nio.file.Paths.get;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -66,6 +64,8 @@ public class SimpleMetricProviderScheduler {
 		if (project.getLastExecuted().equals("-1") || project.getLastExecuted().equals("null") || project.getLastExecuted() == null) {
 			// TODO: refactor this block
 			Date lastExec = new Date("19700101");
+			
+
 			for (VcsRepository repo : project.getVcsRepositories()) {
 				// This needs to be the day BEFORE the first day! (Hence the addDays(-1))
 				Date d = platform.getVcsManager().getDateForRevision(repo, platform.getVcsManager().getFirstRevision(repo)).addDays(-1);

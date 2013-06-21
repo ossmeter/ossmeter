@@ -5,7 +5,7 @@ import java.util.*;
 import com.googlecode.pongo.runtime.*;
 
 
-public abstract class CommunicationChannel extends Pongo {
+public class CommunicationChannel extends Pongo {
 	
 	
 	

@@ -1,5 +1,6 @@
 package org.ossmeter.repository.model;
 
+// TODO: Need to use subpackages to organise metamodel information
 
 @db
 class ProjectRepository extends NamedElement{
@@ -23,12 +24,13 @@ class Project extends NamedElement {
   val License[*] licenses;
   val NntpNewsGroup[*] newsgroups;
   val LocalStorage storage;
-  val MetricProviderData[*] metricProviderData;
+  val MetricProvider[*] metricProvider;
 }
 
-class MetricProviderData {
+class MetricProvider  extends NamedElement{
 	@searchable
 	attr String metricProviderId;
+	attr MetricProviderType type;
 	attr String lastExecuted = "-1";
 }
 
@@ -93,4 +95,9 @@ enum LicenseType {
   Mozilla = 8;
   BSD = 9;
   Other = 10;
+}
+
+enum MetricProviderType {
+	HISTORIC;
+	TRANSIENT;
 }

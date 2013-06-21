@@ -5,7 +5,7 @@ import java.util.*;
 import com.googlecode.pongo.runtime.*;
 
 
-public abstract class Person extends NamedElement {
+public class Person extends NamedElement {
 	
 	
 	
