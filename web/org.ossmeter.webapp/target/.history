@@ -1,0 +1,16 @@
+run
+eclipsify
+eclipse
+install mongodb
+play eclipse with-source=true
+eclipse with-source=true
+clean
+compile
+eclipse
+clean
+compile
+~compile
+run
+clean
+compile
+eclipse
