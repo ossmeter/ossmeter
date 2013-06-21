@@ -1,0 +1,14 @@
+@(project: org.ossmeter.repository.model.Project)
+
+@main("@project.name | OSSMETER") {
+    
+    <h1>@project.getName()</h1>
+    <p class="lead">@project.getDescription()</p>
+
+ @*	@for (metric <- project.getMetrics()) {
+ 		@.ajax(
+ 			@routes.ClientAPIController.getMetric(project.getName(), metric.getName())
+ 		)
+ 	}  *@
+
+}

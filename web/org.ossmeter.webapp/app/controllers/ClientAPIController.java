@@ -3,11 +3,13 @@ package controllers;
 import java.net.UnknownHostException;
 
 import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.node.ObjectNode;
 
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
@@ -15,15 +17,17 @@ import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 
 public class ClientAPIController extends Controller {
-  
-    public static Result projects() {
+
+    private static int pageSize = 1; // FIXME querystring? uri?
+    
+    public static Result projects(int page) {
     	try {
- 			String projectsJson = "[";
  			Mongo mongo = new Mongo();
 			DB db = mongo.getDB("ossmeter");
 			DBCollection projects = db.getCollection("projects");
 			
-			DBCursor cursor = projects.find();
+			String projectsJson = "[";
+			DBCursor cursor = projects.find().skip(pageSize*(page-1)).limit(pageSize);
 			while (cursor.hasNext()) {
 				DBObject obj = cursor.next();
 				projectsJson += obj.toString();
@@ -36,12 +40,31 @@ public class ClientAPIController extends Controller {
 			
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
-			return badRequest(e.getMessage()).as("application/json");// TODO: more detail / as Json
+			ObjectNode response = Json.newObject();
+			response.put("status","error");
+			response.put("message", e.getMessage());
+			return badRequest(response);
 		}
     }
  
+    
+    
  	public static Result getProject(String name) {
- 		return TODO;
+ 		Mongo mongo;
+		try {
+			mongo = new Mongo();
+			DB db = mongo.getDB("ossmeter");
+			DBCollection projects = db.getCollection("projects");
+
+			DBObject obj = projects.findOne(new BasicDBObject("name", name));
+			return ok(Json.parse(obj.toString()));
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+			ObjectNode response = Json.newObject();
+			response.put("status","error");
+			response.put("message", e.getMessage());
+			return badRequest(response);
+		}
  	} 
  	
  	public static Result getMetric(String proj, String id) {

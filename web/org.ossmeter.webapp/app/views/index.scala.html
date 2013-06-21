@@ -1,7 +1,12 @@
-@(message: String)
+@(projects: List[org.ossmeter.repository.model.Project])
 
-@main("Welcome to Play 2.1") {
-    
-    @play20.welcome(message, style = "Java")
-    
+@main("OSSMETER Project List") {
+    <h1>OSSMETER</h1>
+    <h4>Automated Measurement and Analysis of Open Source Software</h4>
+    <ul>
+    @for(project <- projects) {
+    	<li><a href="@routes.Application.getProject(project.getName())">@project.getName()</a> (@project.getYear())
+    	<br/><small>@project.getDescription()</small></li>
+    }
+    </ul>
 }
