@@ -1,14 +1,57 @@
 @(project: org.ossmeter.repository.model.Project)
 
-@main("@project.name | OSSMETER") {
-    
-    <h1>@project.getName()</h1>
-    <p class="lead">@project.getDescription()</p>
+@main(project.getName() + " | OSSMETER") {
 
  @*	@for (metric <- project.getMetrics()) {
  		@.ajax(
  			@routes.ClientAPIController.getMetric(project.getName(), metric.getName())
  		)
  	}  *@
+
+<div class="row">
+  	<div class="span3">
+  		<div class="card">
+			<p class="card-title-small">Information</p>
+			<p>Lovely information here.</p>
+		</div>
+  	</div>
+  	<div class="span6">
+  		<div class="card">
+			<p class="card-title">@project.getName()</p>
+			<p>@project.getDescription()</p>
+			<p class="url"><a href="http://www.eclipse.org/epsilon">Website</a></p>
+		</div>
+  	</div>
+  	<div class="span3">
+  		<div class="card">
+			<p>born <span class="card-title">@project.getYear()</span></p>
+			<p>status <span class="card-title">@if(!project.getActive()) { NOT } ACTIVE</span></p>
+		</div>
+  	</div>
+</div>
+&nbsp;
+<div class="row">
+  	<div class="span4">
+  		<div class="card">
+			<p class="card-title-small">Communication</p>
+			<p><span class="card-title">100%</span> of questions answered</p>
+			<p><span class="card-title">1.2 day</span> response time</p>
+		</div>
+  	</div>
+  	<div class="span4">
+  		<div class="card">
+			<p class="card-title-small">Bug Tracking</p>
+			<p><span class="card-title">152</span> bugs reported</p>
+			<p><span class="card-title">143</span> bugs closed</p>
+			<p><span class="card-title">2 wk</span> average fix time</p>
+		</div>
+  	</div>
+  	<div class="span4">
+  		<div class="card">
+			<p class="card-title-small">Version Control</p>
+			<p>Lovely information here.</p>
+		</div>
+  	</div>
+</div>
 
 }
