@@ -5,24 +5,23 @@ class Project {
    
 }
 
+@stub(javaClass="org.ossmeter.repository.model.base.NamedElement")
+class NamedElement {
+   
+}
+
 @stub(javaClass="org.ossmeter.repository.model.Person")
 class Person {
    
 }
 
 @stub(javaClass="org.ossmeter.repository.model.CommunicationChannel")
-class CommunicationChannel {
+abstract class CommunicationChannel {
    
 }
 
-
-@stub(javaClass="org.ossmeter.repository.model.BugTrackingSystem")
-class BugTrackingSystem {
-   
-}
-
-@stub(javaClass="org.ossmeter.repository.model.VcsRepository")
-class VcsRepository {
+@stub(javaClass="org.ossmeter.repository.model.cc.nntp.NntpNewsGroup")
+class NntpNewsGroup {
    
 }
 
@@ -34,6 +33,11 @@ class EclipseForgeProject extends Project {
 	attr String homePage;
 	attr String projectplanUrl;
 	attr String updatesiteUrl;
+	attr ProjectStatus status;
+	ref  EclipseForgeProject[1] parent; 
+	ref  EclipsePlatform[*] platforms;
+	
+//Probably the following references should be dropped and in case considerd by specific metric providers
 	val  Person[*] committers;
 	val  Person[*] leaders;
 	val  Person[*] mentors;
@@ -42,25 +46,30 @@ class EclipseForgeProject extends Project {
 	val  Release[*] releases;
 }
 
-
-class SvnRepository extends VcsRepository {
-  attr String browse;
+//E.g., Ganymede, Galileo, Helios, Indigo, Juno, Kepler, Luna, ...
+class EclipsePlatform extends NamedElement {
+	
 }
 
+enum ProjectStatus {
+	prepoposal = 0;
+	proposal = 1;
+	incubation = 2;
+	mature = 3;
+	toplevel = 4;
+	archived = 5;
+}
 
 class Release {
 	attr ReleaseType type;
 	attr String date;   
 }
 
-
 class Article {
    attr String url;
 }
 
-class NewsGroup extends CommunicationChannel{
-	attr String name;
-	attr String description;
+class EclipseNewsGroup extends NntpNewsGroup {
 	attr NewsGroupType type;
 }
 
@@ -84,10 +93,6 @@ class Review {
    attr String endDate;
 }
 
-class Bugzilla extends BugTrackingSystem {
-
-}
-
 enum NewsGroupType {
   main = 0;
 }
@@ -98,6 +103,11 @@ enum MailingListType {
 
 enum ReviewType {
    creation = 0;
+   graduation = 1;
+   release = 2;
+   promotion = 3;
+   continuation = 4;
+   termination = 5;
 }
 
 enum ReviewState {

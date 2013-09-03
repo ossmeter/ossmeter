@@ -1,0 +1,10 @@
+package org.ossmeter.repository.model.vcs.svn;
+
+@stub(javaClass="org.ossmeter.repository.model.base.VcsRepository")
+abstract class VcsRepository {
+   
+}
+
+class SvnRepository extends VcsRepository {
+  attr String browse;
+}

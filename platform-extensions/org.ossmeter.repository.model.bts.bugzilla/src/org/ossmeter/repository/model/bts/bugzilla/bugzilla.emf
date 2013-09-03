@@ -1,0 +1,11 @@
+package org.ossmeter.repository.model.bts.bugzilla;
+
+@stub(javaClass="org.ossmeter.repository.model.base.BugTrackingSystem")
+abstract class BugTrackingSystem {
+   
+}
+
+class Bugzilla extends BugTrackingSystem {
+  attr String product;
+  attr String component;
+}

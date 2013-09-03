@@ -2,55 +2,41 @@ package org.ossmeter.repository.model.googlecode;
 
 @stub(javaClass="org.ossmeter.repository.model.Project")
 class Project {
-   
 }
 
 @stub(javaClass="org.ossmeter.repository.model.NamedElement")
 class NamedElement {
-   
+}
+
+@stub(javaClass="org.ossmeter.repository.model.CommunicationChannel")
+class CommunicationChannel {
 }
 
 @stub(javaClass="org.ossmeter.repository.model.Person")
 class Person {
-   
-}
-
-@stub(javaClass="org.ossmeter.repository.model.VcsRepository")
-class VcsRepository {
-   
 }
 
 @stub(javaClass="org.ossmeter.repository.model.BugTrackingSystem")
-class BugTrackingSystem {
-   
+class BugTrackingSystem {   
 }
 
-
-class GoogleForgeProject extends Project {
+class GoogleCodeProject extends Project {
   val GoogleWiki wiki;
+  val GoogleForum forum;
   val GoogleUser[*] owners;
   val GoogleUser[*] committers;
   val GoogleUser[*] contributors;
   val GoogleDownload[*] downloads;
   val GoogleIssueTracker issueTracker;
+
+  //The following attributes will be droped since they are considered by dedicated metric providers
   attr Integer stars = 0;
 }
 
-class SvnRepository extends VcsRepository {
-  attr String browse;
+class GoogleWiki extends CommunicationChannel {
 }
 
-class MercurialRepository extends VcsRepository {
-}
-
-
-@stub(javaClass="org.ossmeter.repository.model.github.GITRepository")
-class GITRepository {
-   
-}
-
-class GoogleWiki {
-  attr String url;
+class GoogleForum extends CommunicationChannel{
 }
 
 class GoogleIssueTracker extends BugTrackingSystem {
@@ -94,6 +80,7 @@ enum GoogleIssueStatus {
 
 class GoogleIssueComment {
   attr String text;
+  attr String date; 
 }
 
 class GoogleLabel extends NamedElement {

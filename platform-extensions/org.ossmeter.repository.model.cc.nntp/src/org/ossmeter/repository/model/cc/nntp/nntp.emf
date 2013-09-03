@@ -1,0 +1,16 @@
+package org.ossmeter.repository.model.cc.nntp;
+
+@stub(javaClass="org.ossmeter.repository.model.base.CommunicationChannel")
+abstract class CommunicationChannel {
+   
+}
+
+class NntpNewsGroup extends  CommunicationChannel {
+	@searchable
+	attr Boolean authenticationRequired;
+	attr String username;
+	attr String password;
+	attr int interval;
+	attr int port;
+	attr String lastArticleChecked;
+}

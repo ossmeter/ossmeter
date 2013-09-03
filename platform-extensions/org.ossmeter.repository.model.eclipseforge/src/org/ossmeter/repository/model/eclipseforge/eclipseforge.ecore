@@ -6,24 +6,24 @@
       <details key="javaClass" value="org.ossmeter.repository.model.Project"/>
     </eAnnotations>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NamedElement">
+    <eAnnotations source="stub">
+      <details key="javaClass" value="org.ossmeter.repository.model.base.NamedElement"/>
+    </eAnnotations>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Person">
     <eAnnotations source="stub">
       <details key="javaClass" value="org.ossmeter.repository.model.Person"/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CommunicationChannel">
+  <eClassifiers xsi:type="ecore:EClass" name="CommunicationChannel" abstract="true">
     <eAnnotations source="stub">
       <details key="javaClass" value="org.ossmeter.repository.model.CommunicationChannel"/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="BugTrackingSystem">
+  <eClassifiers xsi:type="ecore:EClass" name="NntpNewsGroup">
     <eAnnotations source="stub">
-      <details key="javaClass" value="org.ossmeter.repository.model.BugTrackingSystem"/>
-    </eAnnotations>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="VcsRepository">
-    <eAnnotations source="stub">
-      <details key="javaClass" value="org.ossmeter.repository.model.VcsRepository"/>
+      <details key="javaClass" value="org.ossmeter.repository.model.cc.nntp.NntpNewsGroup"/>
     </eAnnotations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EclipseForgeProject" eSuperTypes="#//Project">
@@ -34,6 +34,11 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="homePage" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="projectplanUrl" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="updatesiteUrl" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="#//ProjectStatus"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" lowerBound="1"
+        eType="#//EclipseForgeProject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="platforms" upperBound="-1"
+        eType="#//EclipsePlatform"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="committers" upperBound="-1"
         eType="#//Person" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="leaders" upperBound="-1"
@@ -47,8 +52,14 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="releases" upperBound="-1"
         eType="#//Release" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SvnRepository" eSuperTypes="#//VcsRepository">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="browse" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  <eClassifiers xsi:type="ecore:EClass" name="EclipsePlatform" eSuperTypes="#//NamedElement"/>
+  <eClassifiers xsi:type="ecore:EEnum" name="ProjectStatus">
+    <eLiterals name="prepoposal"/>
+    <eLiterals name="proposal" value="1"/>
+    <eLiterals name="incubation" value="2"/>
+    <eLiterals name="mature" value="3"/>
+    <eLiterals name="toplevel" value="4"/>
+    <eLiterals name="archived" value="5"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Release">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//ReleaseType"/>
@@ -57,9 +68,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="Article">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="url" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="NewsGroup" eSuperTypes="#//CommunicationChannel">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  <eClassifiers xsi:type="ecore:EClass" name="EclipseNewsGroup" eSuperTypes="#//NntpNewsGroup">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//NewsGroupType"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MailingList" eSuperTypes="#//CommunicationChannel">
@@ -74,7 +83,6 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="state" eType="#//ReviewState"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="endDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Bugzilla" eSuperTypes="#//BugTrackingSystem"/>
   <eClassifiers xsi:type="ecore:EEnum" name="NewsGroupType">
     <eLiterals name="main"/>
   </eClassifiers>
@@ -83,6 +91,11 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="ReviewType">
     <eLiterals name="creation"/>
+    <eLiterals name="graduation" value="1"/>
+    <eLiterals name="release" value="2"/>
+    <eLiterals name="promotion" value="3"/>
+    <eLiterals name="continuation" value="4"/>
+    <eLiterals name="termination" value="5"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="ReviewState">
     <eLiterals name="successful"/>

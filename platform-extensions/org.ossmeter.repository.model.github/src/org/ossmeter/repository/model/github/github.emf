@@ -5,6 +5,11 @@ class Project {
    
 }
 
+@stub(javaClass="org.ossmeter.repository.model.Person")
+class Person {
+   
+}
+
 @stub(javaClass="org.ossmeter.repository.model.VcsRepository")
 class VcsRepository {
    
@@ -136,7 +141,7 @@ enum GitHubMilestoneState {
    closed = 1;
 }
 
-class GitHubUser {
+class GitHubUser extends Person {
 
   @key
   attr String login;
