@@ -23,7 +23,7 @@ public class Application extends Controller {
 	}
 
 	public static Result projects(Integer page) {
-		String url ="http://localhost:9000/api/projects";
+		String url ="http://localhost:8182/projects";
 		
 		if (page > 0) {
 			url += "/" + page;
@@ -47,7 +47,7 @@ public class Application extends Controller {
 	}
 	
 	public static Result getProject(String name) {
-		return async(WS.url("http://localhost:9000/api/project/"+name).get()
+		return async(WS.url("http://localhost:8182/projects/p/"+name).get()
 				.map(new Function<WS.Response, Result>() {
 					public Result apply(WS.Response response) {
 						JsonNode projectJson = Json.parse(response.getBody());

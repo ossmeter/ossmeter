@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: OsgiUsageTest1
+Bundle-SymbolicName: org.ossmeter.platform.client.api
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.ossmeter.platform.client.api.Activator
+Require-Bundle: org.eclipse.core.runtime,
+ org.restlet,
+ org.ossmeter.platform,
+ org.ossmeter.repository.model,
+ org.jackson.all;bundle-version="1.0.0",
+ com.googlecode.pongo.runtime
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: org.ossmeter.platform.client.api
