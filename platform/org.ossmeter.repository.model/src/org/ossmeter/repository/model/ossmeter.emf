@@ -30,7 +30,7 @@ class Project extends NamedElement {
 class MetricProvider  extends NamedElement{
 	@searchable
 	attr String metricProviderId;
-	attrBug MetricProviderType type;
+	attr MetricProviderType type;
 	attr String lastExecuted = "-1";
 }
 
