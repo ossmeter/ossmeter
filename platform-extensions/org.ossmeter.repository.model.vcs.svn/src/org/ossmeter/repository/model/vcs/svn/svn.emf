@@ -6,5 +6,7 @@ abstract class VcsRepository {
 }
 
 class SvnRepository extends VcsRepository {
-  attr String browse;
+    attr String browse;
+  	attr String username;
+	attr String password;
 }

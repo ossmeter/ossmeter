@@ -8,5 +8,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SvnRepository" eSuperTypes="#//VcsRepository">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="browse" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="username" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="password" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
 </ecore:EPackage>

@@ -23,7 +23,7 @@ class BugTrackingSystem {
 class GoogleCodeProject extends Project {
   val GoogleWiki wiki;
   val GoogleForum forum;
-  val GoogleUser[*] owners;
+  val GoogleUser owner;
   val GoogleUser[*] committers;
   val GoogleUser[*] contributors;
   val GoogleDownload[*] downloads;

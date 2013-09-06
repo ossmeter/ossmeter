@@ -15,10 +15,9 @@ class Person {
    
 }
 
-@stub(javaClass="org.ossmeter.repository.model.VcsRepository")
-class VcsRepository {
-   
-}
+//@stub(javaClass="org.ossmeter.repository.model.VcsRepository")
+//class VcsRepository {
+//}
 
 @stub(javaClass="org.ossmeter.repository.model.NamedElement")
 class NamedElement {
@@ -62,12 +61,12 @@ class Discussion extends CommunicationChannel {
    
 }
 
-class SvnRepository extends VcsRepository {
-  attr String browse;
-}
+//class SvnRepository extends VcsRepository {
+//  attr String browse;
+//}
 
-class MercurialRepository extends VcsRepository {
-}
+//class MercurialRepository extends VcsRepository {
+//}
 
 class OS extends NamedElement {
 }

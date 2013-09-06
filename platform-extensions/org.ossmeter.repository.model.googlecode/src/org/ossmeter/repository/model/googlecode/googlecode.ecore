@@ -11,14 +11,14 @@
       <details key="javaClass" value="org.ossmeter.repository.model.NamedElement"/>
     </eAnnotations>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CommunicationChannel">
+    <eAnnotations source="stub">
+      <details key="javaClass" value="org.ossmeter.repository.model.CommunicationChannel"/>
+    </eAnnotations>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Person">
     <eAnnotations source="stub">
       <details key="javaClass" value="org.ossmeter.repository.model.Person"/>
-    </eAnnotations>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="VcsRepository">
-    <eAnnotations source="stub">
-      <details key="javaClass" value="org.ossmeter.repository.model.VcsRepository"/>
     </eAnnotations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BugTrackingSystem">
@@ -26,11 +26,13 @@
       <details key="javaClass" value="org.ossmeter.repository.model.BugTrackingSystem"/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="GoogleForgeProject" eSuperTypes="#//Project">
+  <eClassifiers xsi:type="ecore:EClass" name="GoogleCodeProject" eSuperTypes="#//Project">
     <eStructuralFeatures xsi:type="ecore:EReference" name="wiki" eType="#//GoogleWiki"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="owners" upperBound="-1"
-        eType="#//GoogleUser" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="forum" eType="#//GoogleForum"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="owner" lowerBound="1" eType="#//GoogleUser"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="committers" upperBound="-1"
         eType="#//GoogleUser" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="contributors" upperBound="-1"
@@ -42,18 +44,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="stars" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject"
         defaultValueLiteral="0"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SvnRepository" eSuperTypes="#//VcsRepository">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="browse" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="MercurialRepository" eSuperTypes="#//VcsRepository"/>
-  <eClassifiers xsi:type="ecore:EClass" name="GITRepository">
-    <eAnnotations source="stub">
-      <details key="javaClass" value="org.ossmeter.repository.model.github.GITRepository"/>
-    </eAnnotations>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="GoogleWiki">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GoogleWiki" eSuperTypes="#//CommunicationChannel"/>
+  <eClassifiers xsi:type="ecore:EClass" name="GoogleForum" eSuperTypes="#//CommunicationChannel"/>
   <eClassifiers xsi:type="ecore:EClass" name="GoogleIssueTracker" eSuperTypes="#//BugTrackingSystem">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="url" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="issues" upperBound="-1"
@@ -93,6 +85,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GoogleIssueComment">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="date" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GoogleLabel" eSuperTypes="#//NamedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="GoogleDownload">
