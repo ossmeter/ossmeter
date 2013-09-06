@@ -1,801 +1,814 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmi:id="_cRGhIHadEeKSEev3QtmCtw" type="EcoreTools" measurementUnit="Pixel">
-  <children xmi:type="notation:Node" xmi:id="_cRGhInadEeKSEev3QtmCtw" type="1001">
-    <children xmi:type="notation:Node" xmi:id="_cRGhJXadEeKSEev3QtmCtw" type="4001"/>
-    <children xmi:type="notation:Node" xmi:id="_cRGhJnadEeKSEev3QtmCtw" type="5001">
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_cRGhJ3adEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_cRGhKHadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_cRGhKXadEeKSEev3QtmCtw"/>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmi:id="_YzOzkRY0EeO4YdECGt8KIg" type="EcoreTools" measurementUnit="Pixel">
+  <children xmi:type="notation:Node" xmi:id="_YzhugBY0EeO4YdECGt8KIg" type="1001">
+    <children xmi:type="notation:Node" xmi:id="_YziVkBY0EeO4YdECGt8KIg" type="4001"/>
+    <children xmi:type="notation:Node" xmi:id="_YziVkRY0EeO4YdECGt8KIg" type="5001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_YziVkhY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_YziVkxY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_YziVlBY0EeO4YdECGt8KIg"/>
     </children>
-    <children xmi:type="notation:Node" xmi:id="_cRGhKnadEeKSEev3QtmCtw" type="5002">
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_cRGhK3adEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_cRGhLHadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_cRGhLXadEeKSEev3QtmCtw"/>
+    <children xmi:type="notation:Node" xmi:id="_YziVlRY0EeO4YdECGt8KIg" type="5002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_YziVlhY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_YziVlxY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_YziVmBY0EeO4YdECGt8KIg"/>
     </children>
-    <styles xmi:type="notation:ShapeStyle" xmi:id="_cRGhI3adEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
-    <element xmi:type="ecore:EClass" href="github.ecore#//Project"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_cRGhJHadEeKSEev3QtmCtw" x="805" y="500"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_YzhugRY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EClass" href="github.ecore#//Person"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_YzhughY0EeO4YdECGt8KIg" x="436" y="440"/>
   </children>
-  <children xmi:type="notation:Node" xmi:id="_cRGhLnadEeKSEev3QtmCtw" type="1001">
-    <children xmi:type="notation:Node" xmi:id="_cRGhMXadEeKSEev3QtmCtw" type="4001"/>
-    <children xmi:type="notation:Node" xmi:id="_cRGhMnadEeKSEev3QtmCtw" type="5001">
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_cRGhM3adEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_cRGhNHadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_cRGhNXadEeKSEev3QtmCtw"/>
+  <children xmi:type="notation:Node" xmi:id="_Yzi8oBY0EeO4YdECGt8KIg" type="1001">
+    <children xmi:type="notation:Node" xmi:id="_YzjjsBY0EeO4YdECGt8KIg" type="4001"/>
+    <children xmi:type="notation:Node" xmi:id="_YzjjsRY0EeO4YdECGt8KIg" type="5001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_YzjjshY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_YzjjsxY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_YzjjtBY0EeO4YdECGt8KIg"/>
     </children>
-    <children xmi:type="notation:Node" xmi:id="_cRGhNnadEeKSEev3QtmCtw" type="5002">
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_cRGhN3adEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_cRGhOHadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_cRGhOXadEeKSEev3QtmCtw"/>
+    <children xmi:type="notation:Node" xmi:id="_YzjjtRY0EeO4YdECGt8KIg" type="5002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_YzjjthY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_YzjjtxY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_YzjjuBY0EeO4YdECGt8KIg"/>
     </children>
-    <styles xmi:type="notation:ShapeStyle" xmi:id="_cRGhL3adEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_Yzi8oRY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
     <element xmi:type="ecore:EClass" href="github.ecore#//VcsRepository"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_cRGhMHadEeKSEev3QtmCtw" y="128"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Yzi8ohY0EeO4YdECGt8KIg" x="366" y="770"/>
   </children>
-  <children xmi:type="notation:Node" xmi:id="_cRGhOnadEeKSEev3QtmCtw" type="1001">
-    <children xmi:type="notation:Node" xmi:id="_cRPrEHadEeKSEev3QtmCtw" type="4001"/>
-    <children xmi:type="notation:Node" xmi:id="_cRPrEXadEeKSEev3QtmCtw" type="5001">
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_cRPrEnadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_cRPrE3adEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_cRPrFHadEeKSEev3QtmCtw"/>
+  <children xmi:type="notation:Node" xmi:id="_YzkKwBY0EeO4YdECGt8KIg" type="1001">
+    <children xmi:type="notation:Node" xmi:id="_Yzkx0BY0EeO4YdECGt8KIg" type="4001"/>
+    <children xmi:type="notation:Node" xmi:id="_Yzkx0RY0EeO4YdECGt8KIg" type="5001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_Yzkx0hY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_Yzkx0xY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_Yzkx1BY0EeO4YdECGt8KIg"/>
     </children>
-    <children xmi:type="notation:Node" xmi:id="_cRPrFXadEeKSEev3QtmCtw" type="5002">
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_cRPrFnadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_cRPrF3adEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_cRPrGHadEeKSEev3QtmCtw"/>
+    <children xmi:type="notation:Node" xmi:id="_YzlY4BY0EeO4YdECGt8KIg" type="5002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_YzlY4RY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_YzlY4hY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_YzlY4xY0EeO4YdECGt8KIg"/>
     </children>
-    <styles xmi:type="notation:ShapeStyle" xmi:id="_cRGhO3adEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
-    <element xmi:type="ecore:EClass" href="github.ecore#//NamedElement"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_cRGhPHadEeKSEev3QtmCtw" x="2064" y="30"/>
-  </children>
-  <children xmi:type="notation:Node" xmi:id="_cRPrGXadEeKSEev3QtmCtw" type="1001">
-    <children xmi:type="notation:Node" xmi:id="_cRPrHHadEeKSEev3QtmCtw" type="4001"/>
-    <children xmi:type="notation:Node" xmi:id="_cRPrHXadEeKSEev3QtmCtw" type="5001">
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_cRPrHnadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_cRPrH3adEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_cRPrIHadEeKSEev3QtmCtw"/>
-    </children>
-    <children xmi:type="notation:Node" xmi:id="_cRPrIXadEeKSEev3QtmCtw" type="5002">
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_cRPrInadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_cRPrI3adEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_cRPrJHadEeKSEev3QtmCtw"/>
-    </children>
-    <styles xmi:type="notation:ShapeStyle" xmi:id="_cRPrGnadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_YzkKwRY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
     <element xmi:type="ecore:EClass" href="github.ecore#//BugTrackingSystem"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_cRPrG3adEeKSEev3QtmCtw" x="1395" y="445"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_YzkKwhY0EeO4YdECGt8KIg" x="1061" y="180"/>
   </children>
-  <children xmi:type="notation:Node" xmi:id="_cRPrJXadEeKSEev3QtmCtw" type="1001">
-    <children xmi:type="notation:Node" xmi:id="_cRPrKHadEeKSEev3QtmCtw" type="4001"/>
-    <children xmi:type="notation:Node" xmi:id="_cRPrKXadEeKSEev3QtmCtw" type="5001">
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_cRPrKnadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_cRPrK3adEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_cRPrLHadEeKSEev3QtmCtw"/>
+  <children xmi:type="notation:Node" xmi:id="_Yzl_-xY0EeO4YdECGt8KIg" type="1001">
+    <children xmi:type="notation:Node" xmi:id="_Yzl__hY0EeO4YdECGt8KIg" type="4001"/>
+    <children xmi:type="notation:Node" xmi:id="_YzmnABY0EeO4YdECGt8KIg" type="5001">
+      <children xmi:type="notation:Node" xmi:id="_YznOEBY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubRepository/name"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_YznOERY0EeO4YdECGt8KIg"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_Yzn1IBY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubRepository/private"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yzn1IRY0EeO4YdECGt8KIg"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_Yzn1IhY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubRepository/fork"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yzn1IxY0EeO4YdECGt8KIg"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_YzocMBY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubRepository/html_url"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_YzocMRY0EeO4YdECGt8KIg"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_YzocMhY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubRepository/clone_url"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_YzocMxY0EeO4YdECGt8KIg"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_YzocNBY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubRepository/git_url"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_YzocNRY0EeO4YdECGt8KIg"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_YzocNhY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubRepository/ssh_url"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_YzpDQBY0EeO4YdECGt8KIg"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_YzpDQRY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubRepository/svn_url"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_YzpDQhY0EeO4YdECGt8KIg"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_YzpDQxY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubRepository/mirror_url"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_YzpDRBY0EeO4YdECGt8KIg"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_YzpDRRY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubRepository/homepage"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_YzpDRhY0EeO4YdECGt8KIg"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_YzpqUBY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubRepository/language"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_YzpqURY0EeO4YdECGt8KIg"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_YzpqUhY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubRepository/size"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_YzpqUxY0EeO4YdECGt8KIg"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_YzqRYBY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubRepository/master_branch"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_YzqRYRY0EeO4YdECGt8KIg"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_YzmnARY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_YzmnAhY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_YzmnAxY0EeO4YdECGt8KIg"/>
     </children>
-    <children xmi:type="notation:Node" xmi:id="_cRPrLXadEeKSEev3QtmCtw" type="5002">
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_cRPrLnadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_cRPrL3adEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_cRPrMHadEeKSEev3QtmCtw"/>
+    <children xmi:type="notation:Node" xmi:id="_YzmnBBY0EeO4YdECGt8KIg" type="5002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_YzmnBRY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_YzmnBhY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_YzmnBxY0EeO4YdECGt8KIg"/>
     </children>
-    <styles xmi:type="notation:ShapeStyle" xmi:id="_cRPrJnadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
-    <element xmi:type="ecore:EClass" href="github.ecore#//GITProject"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_cRPrJ3adEeKSEev3QtmCtw" x="910" y="656"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_Yzl__BY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EClass" href="github.ecore#//GitHubRepository"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Yzl__RY0EeO4YdECGt8KIg" x="596" y="615"/>
   </children>
-  <children xmi:type="notation:Node" xmi:id="_cRPrMXadEeKSEev3QtmCtw" type="1001">
-    <children xmi:type="notation:Node" xmi:id="_cRPrNHadEeKSEev3QtmCtw" type="4001"/>
-    <children xmi:type="notation:Node" xmi:id="_cRPrNXadEeKSEev3QtmCtw" type="5001">
-      <children xmi:type="notation:Node" xmi:id="_cRPrPXadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITRepository/full_name"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRPrPnadEeKSEev3QtmCtw"/>
+  <children xmi:type="notation:Node" xmi:id="_YzqRYhY0EeO4YdECGt8KIg" type="1001">
+    <children xmi:type="notation:Node" xmi:id="_Yzq4cBY0EeO4YdECGt8KIg" type="4001"/>
+    <children xmi:type="notation:Node" xmi:id="_Yzq4cRY0EeO4YdECGt8KIg" type="5001">
+      <children xmi:type="notation:Node" xmi:id="_YzrfgxY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubContent/type"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_YzrfhBY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRPrP3adEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITRepository/private"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRPrQHadEeKSEev3QtmCtw"/>
+      <children xmi:type="notation:Node" xmi:id="_YzrfhRY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubContent/envoding"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_YzrfhhY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRPrQXadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITRepository/fork"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRPrQnadEeKSEev3QtmCtw"/>
+      <children xmi:type="notation:Node" xmi:id="_YzsGkBY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubContent/size"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_YzstoBY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRPrQ3adEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITRepository/html_url"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRPrRHadEeKSEev3QtmCtw"/>
+      <children xmi:type="notation:Node" xmi:id="_YzstoRY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubContent/name"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_YzstohY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRPrRXadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITRepository/clone_url"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRPrRnadEeKSEev3QtmCtw"/>
+      <children xmi:type="notation:Node" xmi:id="_YzstoxY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubContent/path"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_YzstpBY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRPrR3adEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITRepository/git_url"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRPrSHadEeKSEev3QtmCtw"/>
+      <children xmi:type="notation:Node" xmi:id="_YztUsBY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubContent/sha"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_YztUsRY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRPrSXadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITRepository/ssh_url"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRPrSnadEeKSEev3QtmCtw"/>
-      </children>
-      <children xmi:type="notation:Node" xmi:id="_cRPrS3adEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITRepository/svn_url"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRPrTHadEeKSEev3QtmCtw"/>
-      </children>
-      <children xmi:type="notation:Node" xmi:id="_cRPrTXadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITRepository/mirror_url"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRPrTnadEeKSEev3QtmCtw"/>
-      </children>
-      <children xmi:type="notation:Node" xmi:id="_cRPrT3adEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITRepository/homepage"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRPrUHadEeKSEev3QtmCtw"/>
-      </children>
-      <children xmi:type="notation:Node" xmi:id="_cRPrUXadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITRepository/language"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRPrUnadEeKSEev3QtmCtw"/>
-      </children>
-      <children xmi:type="notation:Node" xmi:id="_cRPrU3adEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITRepository/size"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRPrVHadEeKSEev3QtmCtw"/>
-      </children>
-      <children xmi:type="notation:Node" xmi:id="_cRPrVXadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITRepository/master_branch"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRPrVnadEeKSEev3QtmCtw"/>
-      </children>
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_cRPrNnadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_cRPrN3adEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_cRPrOHadEeKSEev3QtmCtw"/>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_Yzq4chY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_Yzq4cxY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_Yzq4dBY0EeO4YdECGt8KIg"/>
     </children>
-    <children xmi:type="notation:Node" xmi:id="_cRPrOXadEeKSEev3QtmCtw" type="5002">
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_cRPrOnadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_cRPrO3adEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_cRPrPHadEeKSEev3QtmCtw"/>
+    <children xmi:type="notation:Node" xmi:id="_Yzq4dRY0EeO4YdECGt8KIg" type="5002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_YzrfgBY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_YzrfgRY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_YzrfghY0EeO4YdECGt8KIg"/>
     </children>
-    <styles xmi:type="notation:ShapeStyle" xmi:id="_cRPrMnadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
-    <element xmi:type="ecore:EClass" href="github.ecore#//GITRepository"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_cRPrM3adEeKSEev3QtmCtw" x="973" y="341"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_YzqRYxY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EClass" href="github.ecore#//GitHubContent"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_YzqRZBY0EeO4YdECGt8KIg" x="137" y="610"/>
   </children>
-  <children xmi:type="notation:Node" xmi:id="_cRPrV3adEeKSEev3QtmCtw" type="1001">
-    <children xmi:type="notation:Node" xmi:id="_cRPrWnadEeKSEev3QtmCtw" type="4001"/>
-    <children xmi:type="notation:Node" xmi:id="_cRPrW3adEeKSEev3QtmCtw" type="5001">
-      <children xmi:type="notation:Node" xmi:id="_cRPrY3adEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITContent/type"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRPrZHadEeKSEev3QtmCtw"/>
+  <children xmi:type="notation:Node" xmi:id="_Yzui0BY0EeO4YdECGt8KIg" type="1005">
+    <children xmi:type="notation:Node" xmi:id="_Yzvw8BY0EeO4YdECGt8KIg" type="4010"/>
+    <children xmi:type="notation:Node" xmi:id="_YzwYABY0EeO4YdECGt8KIg" type="5008">
+      <children xmi:type="notation:Node" xmi:id="_Yzw_EBY0EeO4YdECGt8KIg" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="github.ecore#//GitHubContentType/file"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yzw_ERY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRPrZXadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITContent/envoding"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRPrZnadEeKSEev3QtmCtw"/>
+      <children xmi:type="notation:Node" xmi:id="_Yzw_EhY0EeO4YdECGt8KIg" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="github.ecore#//GitHubContentType/dir"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yzw_ExY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRPrZ3adEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITContent/size"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRPraHadEeKSEev3QtmCtw"/>
-      </children>
-      <children xmi:type="notation:Node" xmi:id="_cRPraXadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITContent/name"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRPranadEeKSEev3QtmCtw"/>
-      </children>
-      <children xmi:type="notation:Node" xmi:id="_cRPra3adEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITContent/path"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRPrbHadEeKSEev3QtmCtw"/>
-      </children>
-      <children xmi:type="notation:Node" xmi:id="_cRPrbXadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITContent/sha"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRPrbnadEeKSEev3QtmCtw"/>
-      </children>
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_cRPrXHadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_cRPrXXadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_cRPrXnadEeKSEev3QtmCtw"/>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_YzwYARY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_YzwYAhY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_YzwYAxY0EeO4YdECGt8KIg"/>
     </children>
-    <children xmi:type="notation:Node" xmi:id="_cRPrX3adEeKSEev3QtmCtw" type="5002">
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_cRPrYHadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_cRPrYXadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_cRPrYnadEeKSEev3QtmCtw"/>
-    </children>
-    <styles xmi:type="notation:ShapeStyle" xmi:id="_cRPrWHadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
-    <element xmi:type="ecore:EClass" href="github.ecore#//GITContent"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_cRPrWXadEeKSEev3QtmCtw" x="165" y="128"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_Yzui0RY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EEnum" href="github.ecore#//GitHubContentType"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Yzui0hY0EeO4YdECGt8KIg" x="156" y="285"/>
   </children>
-  <children xmi:type="notation:Node" xmi:id="_cRPrb3adEeKSEev3QtmCtw" type="1001">
-    <children xmi:type="notation:Node" xmi:id="_cRPrcnadEeKSEev3QtmCtw" type="4001"/>
-    <children xmi:type="notation:Node" xmi:id="_cRPrc3adEeKSEev3QtmCtw" type="5001">
-      <children xmi:type="notation:Node" xmi:id="_cRPre3adEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITDownload/url"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRPrfHadEeKSEev3QtmCtw"/>
+  <children xmi:type="notation:Node" xmi:id="_YzxmIBY0EeO4YdECGt8KIg" type="1001">
+    <children xmi:type="notation:Node" xmi:id="_YzyNMBY0EeO4YdECGt8KIg" type="4001"/>
+    <children xmi:type="notation:Node" xmi:id="_YzyNMRY0EeO4YdECGt8KIg" type="5001">
+      <children xmi:type="notation:Node" xmi:id="_Yzy0QBY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubDownload/url"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yzy0QRY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRPrfXadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITDownload/html_url"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRPrfnadEeKSEev3QtmCtw"/>
+      <children xmi:type="notation:Node" xmi:id="_Yzy0QhY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubDownload/html_url"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yzy0QxY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRPrf3adEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITDownload/name"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRPrgHadEeKSEev3QtmCtw"/>
+      <children xmi:type="notation:Node" xmi:id="_YzzbUBY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubDownload/name"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_YzzbURY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRPrgXadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITDownload/description"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRPrgnadEeKSEev3QtmCtw"/>
+      <children xmi:type="notation:Node" xmi:id="_YzzbUhY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubDownload/description"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_YzzbUxY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRZcEHadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITDownload/size"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRZcEXadEeKSEev3QtmCtw"/>
+      <children xmi:type="notation:Node" xmi:id="_Yz0CYBY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubDownload/size"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yz0CYRY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRZcEnadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITDownload/download_count"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRZcE3adEeKSEev3QtmCtw"/>
+      <children xmi:type="notation:Node" xmi:id="_Yz0CYhY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubDownload/download_count"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yz0CYxY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRZcFHadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITDownload/content_type"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRZcFXadEeKSEev3QtmCtw"/>
+      <children xmi:type="notation:Node" xmi:id="_Yz0CZBY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubDownload/content_type"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yz0CZRY0EeO4YdECGt8KIg"/>
       </children>
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_cRPrdHadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_cRPrdXadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_cRPrdnadEeKSEev3QtmCtw"/>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_YzyNMhY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_YzyNMxY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_YzyNNBY0EeO4YdECGt8KIg"/>
     </children>
-    <children xmi:type="notation:Node" xmi:id="_cRPrd3adEeKSEev3QtmCtw" type="5002">
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_cRPreHadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_cRPreXadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_cRPrenadEeKSEev3QtmCtw"/>
+    <children xmi:type="notation:Node" xmi:id="_YzyNNRY0EeO4YdECGt8KIg" type="5002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_YzyNNhY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_YzyNNxY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_YzyNOBY0EeO4YdECGt8KIg"/>
     </children>
-    <styles xmi:type="notation:ShapeStyle" xmi:id="_cRPrcHadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
-    <element xmi:type="ecore:EClass" href="github.ecore#//GITDownload"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_cRPrcXadEeKSEev3QtmCtw" x="376" y="128"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_YzxmIRY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EClass" href="github.ecore#//GitHubDownload"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_YzxmIhY0EeO4YdECGt8KIg" x="111" y="375"/>
   </children>
-  <children xmi:type="notation:Node" xmi:id="_cRZcFnadEeKSEev3QtmCtw" type="1001">
-    <children xmi:type="notation:Node" xmi:id="_cRZcGXadEeKSEev3QtmCtw" type="4001"/>
-    <children xmi:type="notation:Node" xmi:id="_cRZcGnadEeKSEev3QtmCtw" type="5001">
-      <children xmi:type="notation:Node" xmi:id="_cRZcInadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITCommit/url"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRZcI3adEeKSEev3QtmCtw"/>
+  <children xmi:type="notation:Node" xmi:id="_Yz0CZhY0EeO4YdECGt8KIg" type="1001">
+    <children xmi:type="notation:Node" xmi:id="_Yz0pchY0EeO4YdECGt8KIg" type="4001"/>
+    <children xmi:type="notation:Node" xmi:id="_Yz0pcxY0EeO4YdECGt8KIg" type="5001">
+      <children xmi:type="notation:Node" xmi:id="_Yz1QgxY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubCommit/url"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yz1QhBY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRZcJHadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITCommit/sha"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRZcJXadEeKSEev3QtmCtw"/>
+      <children xmi:type="notation:Node" xmi:id="_Yz1QhRY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubCommit/sha"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yz1QhhY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRZcJnadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITCommit/message"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRZcJ3adEeKSEev3QtmCtw"/>
+      <children xmi:type="notation:Node" xmi:id="_Yz1QhxY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubCommit/message"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yz13kBY0EeO4YdECGt8KIg"/>
       </children>
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_cRZcG3adEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_cRZcHHadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_cRZcHXadEeKSEev3QtmCtw"/>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_Yz0pdBY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_Yz0pdRY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_Yz0pdhY0EeO4YdECGt8KIg"/>
     </children>
-    <children xmi:type="notation:Node" xmi:id="_cRZcHnadEeKSEev3QtmCtw" type="5002">
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_cRZcH3adEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_cRZcIHadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_cRZcIXadEeKSEev3QtmCtw"/>
+    <children xmi:type="notation:Node" xmi:id="_Yz0pdxY0EeO4YdECGt8KIg" type="5002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_Yz1QgBY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_Yz1QgRY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_Yz1QghY0EeO4YdECGt8KIg"/>
     </children>
-    <styles xmi:type="notation:ShapeStyle" xmi:id="_cRZcF3adEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
-    <element xmi:type="ecore:EClass" href="github.ecore#//GITCommit"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_cRZcGHadEeKSEev3QtmCtw" x="660" y="128"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_Yz0pcBY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EClass" href="github.ecore#//GitHubCommit"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Yz0pcRY0EeO4YdECGt8KIg" x="351" y="95"/>
   </children>
-  <children xmi:type="notation:Node" xmi:id="_cRZcKHadEeKSEev3QtmCtw" type="1001">
-    <children xmi:type="notation:Node" xmi:id="_cRZcK3adEeKSEev3QtmCtw" type="4001"/>
-    <children xmi:type="notation:Node" xmi:id="_cRZcLHadEeKSEev3QtmCtw" type="5001">
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_cRZcLXadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_cRZcLnadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_cRZcL3adEeKSEev3QtmCtw"/>
+  <children xmi:type="notation:Node" xmi:id="_Yz13kRY0EeO4YdECGt8KIg" type="1001">
+    <children xmi:type="notation:Node" xmi:id="_Yz13lBY0EeO4YdECGt8KIg" type="4001"/>
+    <children xmi:type="notation:Node" xmi:id="_Yz2eoBY0EeO4YdECGt8KIg" type="5001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_Yz2eoRY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_Yz2eohY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_Yz2eoxY0EeO4YdECGt8KIg"/>
     </children>
-    <children xmi:type="notation:Node" xmi:id="_cRZcMHadEeKSEev3QtmCtw" type="5002">
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_cRZcMXadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_cRZcMnadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_cRZcM3adEeKSEev3QtmCtw"/>
+    <children xmi:type="notation:Node" xmi:id="_Yz2epBY0EeO4YdECGt8KIg" type="5002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_Yz2epRY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_Yz2ephY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_Yz2epxY0EeO4YdECGt8KIg"/>
     </children>
-    <styles xmi:type="notation:ShapeStyle" xmi:id="_cRZcKXadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
-    <element xmi:type="ecore:EClass" href="github.ecore#//GITBugTracker"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_cRZcKnadEeKSEev3QtmCtw" x="1660" y="570"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_Yz13khY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EClass" href="github.ecore#//GitHubBugTracker"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Yz13kxY0EeO4YdECGt8KIg" x="1066" y="265"/>
   </children>
-  <children xmi:type="notation:Node" xmi:id="_cRZcNHadEeKSEev3QtmCtw" type="1001">
-    <children xmi:type="notation:Node" xmi:id="_cRZcN3adEeKSEev3QtmCtw" type="4001"/>
-    <children xmi:type="notation:Node" xmi:id="_cRZcOHadEeKSEev3QtmCtw" type="5001">
-      <children xmi:type="notation:Node" xmi:id="_cRZcQHadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITIssue/url"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRZcQXadEeKSEev3QtmCtw"/>
+  <children xmi:type="notation:Node" xmi:id="_Yz2eqBY0EeO4YdECGt8KIg" type="1001">
+    <children xmi:type="notation:Node" xmi:id="_Yz3FsBY0EeO4YdECGt8KIg" type="4001"/>
+    <children xmi:type="notation:Node" xmi:id="_Yz3FsRY0EeO4YdECGt8KIg" type="5001">
+      <children xmi:type="notation:Node" xmi:id="_Yz3sxBY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubIssue/number"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yz3sxRY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRZcQnadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITIssue/html_url"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRZcQ3adEeKSEev3QtmCtw"/>
+      <children xmi:type="notation:Node" xmi:id="_Yz4T0BY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubIssue/state"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yz4T0RY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRZcRHadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITIssue/number"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRZcRXadEeKSEev3QtmCtw"/>
+      <children xmi:type="notation:Node" xmi:id="_Yz4T0hY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubIssue/title"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yz4T0xY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRZcRnadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITIssue/state"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRZcR3adEeKSEev3QtmCtw"/>
+      <children xmi:type="notation:Node" xmi:id="_Yz4T1BY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubIssue/body"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yz4T1RY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRZcSHadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITIssue/title"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRZcSXadEeKSEev3QtmCtw"/>
+      <children xmi:type="notation:Node" xmi:id="_Yz464BY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubIssue/created_at"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yz464RY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRZcSnadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITIssue/body"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRZcS3adEeKSEev3QtmCtw"/>
+      <children xmi:type="notation:Node" xmi:id="_Yz464hY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubIssue/updated_at"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yz464xY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRZcTHadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITIssue/created_at"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRZcTXadEeKSEev3QtmCtw"/>
+      <children xmi:type="notation:Node" xmi:id="_Yz465BY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubIssue/closed_at"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yz465RY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRZcTnadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITIssue/updated_at"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRZcT3adEeKSEev3QtmCtw"/>
-      </children>
-      <children xmi:type="notation:Node" xmi:id="_cRZcUHadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITIssue/closed_at"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRZcUXadEeKSEev3QtmCtw"/>
-      </children>
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_cRZcOXadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_cRZcOnadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_cRZcO3adEeKSEev3QtmCtw"/>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_Yz3FshY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_Yz3FsxY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_Yz3FtBY0EeO4YdECGt8KIg"/>
     </children>
-    <children xmi:type="notation:Node" xmi:id="_cRZcPHadEeKSEev3QtmCtw" type="5002">
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_cRZcPXadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_cRZcPnadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_cRZcP3adEeKSEev3QtmCtw"/>
+    <children xmi:type="notation:Node" xmi:id="_Yz3swBY0EeO4YdECGt8KIg" type="5002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_Yz3swRY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_Yz3swhY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_Yz3swxY0EeO4YdECGt8KIg"/>
     </children>
-    <styles xmi:type="notation:ShapeStyle" xmi:id="_cRZcNXadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
-    <element xmi:type="ecore:EClass" href="github.ecore#//GITIssue"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_cRZcNnadEeKSEev3QtmCtw" x="1816" y="341"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_Yz2eqRY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EClass" href="github.ecore#//GitHubIssue"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Yz2eqhY0EeO4YdECGt8KIg" x="1047" y="375"/>
   </children>
-  <children xmi:type="notation:Node" xmi:id="_cRZcUnadEeKSEev3QtmCtw" type="1001">
-    <children xmi:type="notation:Node" xmi:id="_cRZcVXadEeKSEev3QtmCtw" type="4001"/>
-    <children xmi:type="notation:Node" xmi:id="_cRZcVnadEeKSEev3QtmCtw" type="5001">
-      <children xmi:type="notation:Node" xmi:id="_cRZcXnadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITComment/url"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRZcX3adEeKSEev3QtmCtw"/>
+  <children xmi:type="notation:Node" xmi:id="_Yz5h8BY0EeO4YdECGt8KIg" type="1005">
+    <children xmi:type="notation:Node" xmi:id="_Yz6JABY0EeO4YdECGt8KIg" type="4010"/>
+    <children xmi:type="notation:Node" xmi:id="_Yz6JARY0EeO4YdECGt8KIg" type="5008">
+      <children xmi:type="notation:Node" xmi:id="_Yz6wEBY0EeO4YdECGt8KIg" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="github.ecore#//GitHubIssueState/open"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yz6wERY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRZcYHadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITComment/body"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRZcYXadEeKSEev3QtmCtw"/>
+      <children xmi:type="notation:Node" xmi:id="_Yz6wEhY0EeO4YdECGt8KIg" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="github.ecore#//GitHubIssueState/closed"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yz6wExY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRZcYnadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITComment/created_at"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRZcY3adEeKSEev3QtmCtw"/>
-      </children>
-      <children xmi:type="notation:Node" xmi:id="_cRZcZHadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITComment/updated_at"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRZcZXadEeKSEev3QtmCtw"/>
-      </children>
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_cRZcV3adEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_cRZcWHadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_cRZcWXadEeKSEev3QtmCtw"/>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_Yz6JAhY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_Yz6JAxY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_Yz6JBBY0EeO4YdECGt8KIg"/>
     </children>
-    <children xmi:type="notation:Node" xmi:id="_cRZcWnadEeKSEev3QtmCtw" type="5002">
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_cRZcW3adEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_cRZcXHadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_cRZcXXadEeKSEev3QtmCtw"/>
-    </children>
-    <styles xmi:type="notation:ShapeStyle" xmi:id="_cRZcU3adEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
-    <element xmi:type="ecore:EClass" href="github.ecore#//GITComment"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_cRZcVHadEeKSEev3QtmCtw" x="1455" y="215"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_Yz5h8RY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EEnum" href="github.ecore#//GitHubIssueState"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Yz5h8hY0EeO4YdECGt8KIg" x="164" y="200"/>
   </children>
-  <children xmi:type="notation:Node" xmi:id="_cRZcZnadEeKSEev3QtmCtw" type="1001">
-    <children xmi:type="notation:Node" xmi:id="_cRZcaXadEeKSEev3QtmCtw" type="4001"/>
-    <children xmi:type="notation:Node" xmi:id="_cRZcanadEeKSEev3QtmCtw" type="5001">
-      <children xmi:type="notation:Node" xmi:id="_cRZccnadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//IssueLabel/url"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRZcc3adEeKSEev3QtmCtw"/>
+  <children xmi:type="notation:Node" xmi:id="_Yz6wFBY0EeO4YdECGt8KIg" type="1001">
+    <children xmi:type="notation:Node" xmi:id="_Yz7XIBY0EeO4YdECGt8KIg" type="4001"/>
+    <children xmi:type="notation:Node" xmi:id="_Yz7XIRY0EeO4YdECGt8KIg" type="5001">
+      <children xmi:type="notation:Node" xmi:id="_Yz7-NBY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubComment/url"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yz7-NRY0EeO4YdECGt8KIg"/>
       </children>
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_cRZca3adEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_cRZcbHadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_cRZcbXadEeKSEev3QtmCtw"/>
+      <children xmi:type="notation:Node" xmi:id="_Yz8lQBY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubComment/body"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yz8lQRY0EeO4YdECGt8KIg"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_Yz8lQhY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubComment/path"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yz8lQxY0EeO4YdECGt8KIg"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_Yz9MUBY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubComment/position"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yz9MURY0EeO4YdECGt8KIg"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_Yz9MUhY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubComment/line"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yz9MUxY0EeO4YdECGt8KIg"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_Yz9MVBY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubComment/created_at"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yz9MVRY0EeO4YdECGt8KIg"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_Yz9zYBY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubComment/updated_at"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yz9zYRY0EeO4YdECGt8KIg"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_Yz7XIhY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_Yz7XIxY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_Yz7XJBY0EeO4YdECGt8KIg"/>
     </children>
-    <children xmi:type="notation:Node" xmi:id="_cRZcbnadEeKSEev3QtmCtw" type="5002">
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_cRZcb3adEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_cRZccHadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_cRZccXadEeKSEev3QtmCtw"/>
+    <children xmi:type="notation:Node" xmi:id="_Yz7-MBY0EeO4YdECGt8KIg" type="5002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_Yz7-MRY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_Yz7-MhY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_Yz7-MxY0EeO4YdECGt8KIg"/>
     </children>
-    <styles xmi:type="notation:ShapeStyle" xmi:id="_cRZcZ3adEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
-    <element xmi:type="ecore:EClass" href="github.ecore#//IssueLabel"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_cRZcaHadEeKSEev3QtmCtw" x="2065" y="130"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_Yz6wFRY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EClass" href="github.ecore#//GitHubComment"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Yz6wFhY0EeO4YdECGt8KIg" x="586" y="95"/>
   </children>
-  <children xmi:type="notation:Node" xmi:id="_cRZcdHadEeKSEev3QtmCtw" type="1001">
-    <children xmi:type="notation:Node" xmi:id="_cRZcd3adEeKSEev3QtmCtw" type="4001"/>
-    <children xmi:type="notation:Node" xmi:id="_cRZceHadEeKSEev3QtmCtw" type="5001">
-      <children xmi:type="notation:Node" xmi:id="_cRZcgHadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//IssueMilestone/url"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRZcgXadEeKSEev3QtmCtw"/>
+  <children xmi:type="notation:Node" xmi:id="_Yz9zYhY0EeO4YdECGt8KIg" type="1001">
+    <children xmi:type="notation:Node" xmi:id="_Yz-acBY0EeO4YdECGt8KIg" type="4001"/>
+    <children xmi:type="notation:Node" xmi:id="_Yz-acRY0EeO4YdECGt8KIg" type="5001">
+      <children xmi:type="notation:Node" xmi:id="_Yz_BgBY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubMilestone/url"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yz_BgRY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRimAHadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//IssueMilestone/number"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimAXadEeKSEev3QtmCtw"/>
+      <children xmi:type="notation:Node" xmi:id="_Yz_BghY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubMilestone/number"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yz_BgxY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRimAnadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//IssueMilestone/state"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimA3adEeKSEev3QtmCtw"/>
+      <children xmi:type="notation:Node" xmi:id="_Yz_okBY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubMilestone/state"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yz_okRY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRimBHadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//IssueMilestone/title"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimBXadEeKSEev3QtmCtw"/>
+      <children xmi:type="notation:Node" xmi:id="_Yz_okhY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubMilestone/title"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yz_okxY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRimBnadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//IssueMilestone/description"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimB3adEeKSEev3QtmCtw"/>
+      <children xmi:type="notation:Node" xmi:id="_Yz_olBY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubMilestone/description"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Yz_olRY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRimCHadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//IssueMilestone/created_at"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimCXadEeKSEev3QtmCtw"/>
+      <children xmi:type="notation:Node" xmi:id="_Y0APoBY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubMilestone/created_at"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0APoRY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRimCnadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//IssueMilestone/due_on"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimC3adEeKSEev3QtmCtw"/>
+      <children xmi:type="notation:Node" xmi:id="_Y0APohY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubMilestone/due_on"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0APoxY0EeO4YdECGt8KIg"/>
       </children>
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_cRZceXadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_cRZcenadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_cRZce3adEeKSEev3QtmCtw"/>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_Yz-achY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_Yz-acxY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_Yz-adBY0EeO4YdECGt8KIg"/>
     </children>
-    <children xmi:type="notation:Node" xmi:id="_cRZcfHadEeKSEev3QtmCtw" type="5002">
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_cRZcfXadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_cRZcfnadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_cRZcf3adEeKSEev3QtmCtw"/>
+    <children xmi:type="notation:Node" xmi:id="_Yz-adRY0EeO4YdECGt8KIg" type="5002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_Yz-adhY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_Yz-adxY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_Yz-aeBY0EeO4YdECGt8KIg"/>
     </children>
-    <styles xmi:type="notation:ShapeStyle" xmi:id="_cRZcdXadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
-    <element xmi:type="ecore:EClass" href="github.ecore#//IssueMilestone"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_cRZcdnadEeKSEev3QtmCtw" x="1805" y="-35"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_Yz9zYxY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EClass" href="github.ecore#//GitHubMilestone"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Yz9zZBY0EeO4YdECGt8KIg" x="1036" y="620"/>
   </children>
-  <children xmi:type="notation:Node" xmi:id="_cRimDHadEeKSEev3QtmCtw" type="1001">
-    <children xmi:type="notation:Node" xmi:id="_cRimD3adEeKSEev3QtmCtw" type="4001"/>
-    <children xmi:type="notation:Node" xmi:id="_cRimEHadEeKSEev3QtmCtw" type="5001">
-      <children xmi:type="notation:Node" xmi:id="_cRimGHadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITUser/login"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimGXadEeKSEev3QtmCtw"/>
+  <children xmi:type="notation:Node" xmi:id="_Y0A2sBY0EeO4YdECGt8KIg" type="1005">
+    <children xmi:type="notation:Node" xmi:id="_Y0A2sxY0EeO4YdECGt8KIg" type="4010"/>
+    <children xmi:type="notation:Node" xmi:id="_Y0A2tBY0EeO4YdECGt8KIg" type="5008">
+      <children xmi:type="notation:Node" xmi:id="_Y0A2uBY0EeO4YdECGt8KIg" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="github.ecore#//GitHubMilestoneState/open"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0A2uRY0EeO4YdECGt8KIg"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_cRimGnadEeKSEev3QtmCtw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="github.ecore#//GITUser/url"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimG3adEeKSEev3QtmCtw"/>
+      <children xmi:type="notation:Node" xmi:id="_Y0BdwBY0EeO4YdECGt8KIg" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="github.ecore#//GitHubMilestoneState/closed"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0BdwRY0EeO4YdECGt8KIg"/>
       </children>
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_cRimEXadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_cRimEnadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_cRimE3adEeKSEev3QtmCtw"/>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_Y0A2tRY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_Y0A2thY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_Y0A2txY0EeO4YdECGt8KIg"/>
     </children>
-    <children xmi:type="notation:Node" xmi:id="_cRimFHadEeKSEev3QtmCtw" type="5002">
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_cRimFXadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_cRimFnadEeKSEev3QtmCtw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_cRimF3adEeKSEev3QtmCtw"/>
-    </children>
-    <styles xmi:type="notation:ShapeStyle" xmi:id="_cRimDXadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
-    <element xmi:type="ecore:EClass" href="github.ecore#//GITUser"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_cRimDnadEeKSEev3QtmCtw" x="1317"/>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_Y0A2sRY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EEnum" href="github.ecore#//GitHubMilestoneState"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Y0A2shY0EeO4YdECGt8KIg" x="150" y="115"/>
   </children>
-  <styles xmi:type="notation:DiagramStyle" xmi:id="_cRGhIXadEeKSEev3QtmCtw"/>
+  <children xmi:type="notation:Node" xmi:id="_Y0BdwhY0EeO4YdECGt8KIg" type="1001">
+    <children xmi:type="notation:Node" xmi:id="_Y0CE0BY0EeO4YdECGt8KIg" type="4001"/>
+    <children xmi:type="notation:Node" xmi:id="_Y0CE0RY0EeO4YdECGt8KIg" type="5001">
+      <children xmi:type="notation:Node" xmi:id="_Y0Cr4BY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubUser/login"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0Cr4RY0EeO4YdECGt8KIg"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_Y0Cr4hY0EeO4YdECGt8KIg" type="2001">
+        <element xmi:type="ecore:EAttribute" href="github.ecore#//GitHubUser/html_url"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0Cr4xY0EeO4YdECGt8KIg"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_Y0CE0hY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_Y0CE0xY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_Y0CE1BY0EeO4YdECGt8KIg"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Y0CE1RY0EeO4YdECGt8KIg" type="5002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_Y0CE1hY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_Y0CE1xY0EeO4YdECGt8KIg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_Y0CE2BY0EeO4YdECGt8KIg"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_Y0BdwxY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EClass" href="github.ecore#//GitHubUser"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Y0BdxBY0EeO4YdECGt8KIg" x="606" y="430" width="143"/>
+  </children>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="_YzOzkhY0EeO4YdECGt8KIg"/>
   <element xmi:type="ecore:EPackage" href="github.ecore#/"/>
-  <edges xmi:type="notation:Edge" xmi:id="_cRimHHadEeKSEev3QtmCtw" type="3002" source="_cRPrJXadEeKSEev3QtmCtw" target="_cRPrMXadEeKSEev3QtmCtw">
-    <children xmi:type="notation:Node" xmi:id="_cRimIHadEeKSEev3QtmCtw" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimIXadEeKSEev3QtmCtw" x="-10" y="-43"/>
+  <edges xmi:type="notation:Edge" xmi:id="_Y0GWQBY0EeO4YdECGt8KIg" type="3002" source="_Yzl_-xY0EeO4YdECGt8KIg" target="_Y0BdwhY0EeO4YdECGt8KIg">
+    <children xmi:type="notation:Node" xmi:id="_Y0G9UBY0EeO4YdECGt8KIg" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0G9URY0EeO4YdECGt8KIg" x="-41" y="13"/>
     </children>
-    <children xmi:type="notation:Node" xmi:id="_cRimInadEeKSEev3QtmCtw" type="4012">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimI3adEeKSEev3QtmCtw" x="-10" y="17"/>
+    <children xmi:type="notation:Node" xmi:id="_Y0HkYBY0EeO4YdECGt8KIg" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0HkYRY0EeO4YdECGt8KIg" x="10" y="10"/>
     </children>
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_cRimHXadEeKSEev3QtmCtw" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_cRimHnadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
-    <element xmi:type="ecore:EReference" href="github.ecore#//GITProject/gitRepositories"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_cRimH3adEeKSEev3QtmCtw" points="[0, 0, 0, 60]$[0, -60, 0, 0]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cT7LsHadEeKSEev3QtmCtw" id="(0.6666666666666666,0.0)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8oHadEeKSEev3QtmCtw" id="(0.02857142857142857,1.0)"/>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_Y0GWQRY0EeO4YdECGt8KIg" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Y0GWQhY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="github.ecore#//GitHubRepository/owner"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Y0GWQxY0EeO4YdECGt8KIg" points="[6, 0, 56, 171]$[111, 0, 161, 171]$[111, -60, 161, 111]$[-50, -171, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4Uu8RY0EeO4YdECGt8KIg" id="(0.9657142857142857,0.20784313725490197)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4VWABY0EeO4YdECGt8KIg" id="(0.765625,1.0)"/>
   </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_cRimJHadEeKSEev3QtmCtw" type="3003" source="_cRPrJXadEeKSEev3QtmCtw" target="_cRGhInadEeKSEev3QtmCtw">
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_cRimJXadEeKSEev3QtmCtw" routing="Rectilinear" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_cRimJnadEeKSEev3QtmCtw" fontName="Segoe UI"/>
+  <edges xmi:type="notation:Edge" xmi:id="_Y0HkYhY0EeO4YdECGt8KIg" type="3002" source="_Yzl_-xY0EeO4YdECGt8KIg" target="_Y0BdwhY0EeO4YdECGt8KIg">
+    <children xmi:type="notation:Node" xmi:id="_Y0HkZhY0EeO4YdECGt8KIg" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0HkZxY0EeO4YdECGt8KIg" x="-88" y="34"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Y0ILcBY0EeO4YdECGt8KIg" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0ILcRY0EeO4YdECGt8KIg" x="-32" y="13"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_Y0HkYxY0EeO4YdECGt8KIg" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Y0HkZBY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="github.ecore#//GitHubRepository/stargazers"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Y0HkZRY0EeO4YdECGt8KIg" points="[3, -1, 2, 131]$[43, -26, 42, 106]$[6, -120, 5, 12]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4UH4RY0EeO4YdECGt8KIg" id="(0.6514285714285715,0.00784313725490196)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4Uu8BY0EeO4YdECGt8KIg" id="(0.6923076923076923,0.9411764705882353)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_Y0ILchY0EeO4YdECGt8KIg" type="3002" source="_Yzl_-xY0EeO4YdECGt8KIg" target="_Y0BdwhY0EeO4YdECGt8KIg">
+    <children xmi:type="notation:Node" xmi:id="_Y0ILdhY0EeO4YdECGt8KIg" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0ILdxY0EeO4YdECGt8KIg" x="-59" y="-42"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Y0ILeBY0EeO4YdECGt8KIg" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0ILeRY0EeO4YdECGt8KIg" x="-40" y="-13"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_Y0ILcxY0EeO4YdECGt8KIg" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Y0ILdBY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="github.ecore#//GitHubRepository/collaborators"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Y0ILdRY0EeO4YdECGt8KIg" points="[3, -4, 0, 122]$[3, -59, 0, 67]$[3, -123, 0, 3]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4S5wRY0EeO4YdECGt8KIg" id="(0.19428571428571428,0.0196078431372549)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4Tg0BY0EeO4YdECGt8KIg" id="(0.1888111888111888,0.9558823529411765)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_Y0IygBY0EeO4YdECGt8KIg" type="3002" source="_Yzl_-xY0EeO4YdECGt8KIg" target="_Yz0CZhY0EeO4YdECGt8KIg">
+    <children xmi:type="notation:Node" xmi:id="_Y0IyhBY0EeO4YdECGt8KIg" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0IyhRY0EeO4YdECGt8KIg" x="67" y="-26"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Y0IyhhY0EeO4YdECGt8KIg" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0IyhxY0EeO4YdECGt8KIg" x="47" y="-16"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_Y0IygRY0EeO4YdECGt8KIg" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Y0IyghY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="github.ecore#//GitHubRepository/commits"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Y0IygxY0EeO4YdECGt8KIg" points="[-5, -2, 194, 453]$[-199, -107, 0, 348]$[-199, -439, 0, 16]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4QdgBY0EeO4YdECGt8KIg" id="(0.08571428571428572,0.011764705882352941)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4QdgRY0EeO4YdECGt8KIg" id="(0.45185185185185184,0.8117647058823529)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_Y0IyiBY0EeO4YdECGt8KIg" type="3002" source="_Yzl_-xY0EeO4YdECGt8KIg" target="_YzqRYhY0EeO4YdECGt8KIg">
+    <children xmi:type="notation:Node" xmi:id="_Y0JZkBY0EeO4YdECGt8KIg" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0JZkRY0EeO4YdECGt8KIg" x="-10" y="-10"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Y0JZkhY0EeO4YdECGt8KIg" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0JZkxY0EeO4YdECGt8KIg" x="10" y="10"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_Y0IyiRY0EeO4YdECGt8KIg" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Y0IyihY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="github.ecore#//GitHubRepository/contents"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Y0IyixY0EeO4YdECGt8KIg" points="[0, 0, 618, 77]$[-558, -61, 60, 16]$[-618, -77, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4JIwBY0EeO4YdECGt8KIg" id="(0.05714285714285714,0.43529411764705883)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4JIwRY0EeO4YdECGt8KIg" id="(0.95,0.8308823529411765)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_Y0JZlBY0EeO4YdECGt8KIg" type="3002" source="_Yzl_-xY0EeO4YdECGt8KIg" target="_YzxmIBY0EeO4YdECGt8KIg">
+    <children xmi:type="notation:Node" xmi:id="_Y0KAoBY0EeO4YdECGt8KIg" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0KAoRY0EeO4YdECGt8KIg" x="-37" y="25"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Y0KAohY0EeO4YdECGt8KIg" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0KAoxY0EeO4YdECGt8KIg" x="10" y="10"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_Y0JZlRY0EeO4YdECGt8KIg" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Y0JZlhY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="github.ecore#//GitHubRepository/downloads"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Y0JZlxY0EeO4YdECGt8KIg" points="[-5, 0, 374, 98]$[-230, 0, 149, 98]$[-379, -98, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4Jv0BY0EeO4YdECGt8KIg" id="(0.03428571428571429,0.0392156862745098)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4Jv0RY0EeO4YdECGt8KIg" id="(0.5,1.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_Y0KApBY0EeO4YdECGt8KIg" type="3002" source="_Yzl_-xY0EeO4YdECGt8KIg" target="_Yzl_-xY0EeO4YdECGt8KIg">
+    <children xmi:type="notation:Node" xmi:id="_Y0KAqBY0EeO4YdECGt8KIg" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0KAqRY0EeO4YdECGt8KIg" x="60" y="11"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Y0KAqhY0EeO4YdECGt8KIg" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0KnsBY0EeO4YdECGt8KIg" x="10" y="11"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_Y0KApRY0EeO4YdECGt8KIg" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Y0KAphY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="github.ecore#//GitHubRepository/forks"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Y0KApxY0EeO4YdECGt8KIg" points="[87, 0, 87, 0]$[150, 0, 150, 0]$[150, 155, 150, 155]$[9, 155, 9, 155]$[9, 135, 9, 135]"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_Y0KnsRY0EeO4YdECGt8KIg" type="3002" source="_Yzl_-xY0EeO4YdECGt8KIg" target="_Y0BdwhY0EeO4YdECGt8KIg">
+    <children xmi:type="notation:Node" xmi:id="_Y0KntRY0EeO4YdECGt8KIg" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0KnthY0EeO4YdECGt8KIg" x="-59" y="30"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Y0KntxY0EeO4YdECGt8KIg" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0KnuBY0EeO4YdECGt8KIg" x="1" y="14"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_Y0KnshY0EeO4YdECGt8KIg" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Y0KnsxY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="github.ecore#//GitHubRepository/watchers"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Y0KntBY0EeO4YdECGt8KIg" points="[-3, 0, 0, 127]$[-3, -119, 0, 8]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4Tg0RY0EeO4YdECGt8KIg" id="(0.44571428571428573,0.03529411764705882)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4UH4BY0EeO4YdECGt8KIg" id="(0.46153846153846156,0.8676470588235294)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_Y0KnuRY0EeO4YdECGt8KIg" type="3002" source="_Yzl_-xY0EeO4YdECGt8KIg" target="_Yz9zYhY0EeO4YdECGt8KIg">
+    <children xmi:type="notation:Node" xmi:id="_Y0LOwxY0EeO4YdECGt8KIg" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0LOxBY0EeO4YdECGt8KIg" x="-10" y="-10"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Y0LOxRY0EeO4YdECGt8KIg" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0LOxhY0EeO4YdECGt8KIg" x="10" y="10"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_Y0LOwBY0EeO4YdECGt8KIg" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Y0LOwRY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="github.ecore#//GitHubRepository/milestones"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Y0LOwhY0EeO4YdECGt8KIg" points="[0, 0, 851, 60]$[-851, -60, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4KW4BY0EeO4YdECGt8KIg" id="(0.9371428571428572,0.30196078431372547)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4KW4RY0EeO4YdECGt8KIg" id="(0.0663265306122449,0.5032679738562091)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_Y0LOxxY0EeO4YdECGt8KIg" type="3003" source="_Yzl_-xY0EeO4YdECGt8KIg" target="_Yzi8oBY0EeO4YdECGt8KIg">
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_Y0L10BY0EeO4YdECGt8KIg" routing="Rectilinear" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Y0L10RY0EeO4YdECGt8KIg" fontName="Segoe UI"/>
     <element xsi:nil="true"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_cRimJ3adEeKSEev3QtmCtw" points="[0, 0, 82, 272]$[0, -30, 82, 242]$[-82, -30, 0, 242]$[-82, -272, 0, 0]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8oXadEeKSEev3QtmCtw" id="(0.3333333333333333,0.0)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8onadEeKSEev3QtmCtw" id="(0.5,1.0)"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Y0L10hY0EeO4YdECGt8KIg" points="[-13, 179, 169, -17]$[-130, 179, 52, -17]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4K98BY0EeO4YdECGt8KIg" id="(0.08,0.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4K98RY0EeO4YdECGt8KIg" id="(0.49523809523809526,1.0)"/>
   </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_cRimKHadEeKSEev3QtmCtw" type="3002" source="_cRPrMXadEeKSEev3QtmCtw" target="_cRimDHadEeKSEev3QtmCtw">
-    <children xmi:type="notation:Node" xmi:id="_cRimLHadEeKSEev3QtmCtw" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimLXadEeKSEev3QtmCtw" x="-152" y="-11"/>
+  <edges xmi:type="notation:Edge" xmi:id="_Y0L10xY0EeO4YdECGt8KIg" type="3002" source="_Yz0CZhY0EeO4YdECGt8KIg" target="_Y0BdwhY0EeO4YdECGt8KIg">
+    <children xmi:type="notation:Node" xmi:id="_Y0Mc4BY0EeO4YdECGt8KIg" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0Mc4RY0EeO4YdECGt8KIg" x="-30" y="-18"/>
     </children>
-    <children xmi:type="notation:Node" xmi:id="_cRimLnadEeKSEev3QtmCtw" type="4012">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimL3adEeKSEev3QtmCtw" x="-149" y="7"/>
+    <children xmi:type="notation:Node" xmi:id="_Y0Mc4hY0EeO4YdECGt8KIg" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0Mc4xY0EeO4YdECGt8KIg" x="-20" y="8"/>
     </children>
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_cRimKXadEeKSEev3QtmCtw" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_cRimKnadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
-    <element xmi:type="ecore:EReference" href="github.ecore#//GITRepository/owner"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_cRimK3adEeKSEev3QtmCtw" points="[-10, 0, -300, 275]$[-10, -181, -300, 94]$[290, -275, 0, 0]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8tXadEeKSEev3QtmCtw" id="(0.5028571428571429,0.0)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8tnadEeKSEev3QtmCtw" id="(0.29464285714285715,1.0)"/>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_Y0L11BY0EeO4YdECGt8KIg" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Y0L11RY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="github.ecore#//GitHubCommit/author"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Y0L11hY0EeO4YdECGt8KIg" points="[8, 7, -179, -271]$[8, 184, -179, -94]$[168, 268, -19, -10]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4V9ERY0EeO4YdECGt8KIg" id="(0.6592592592592592,0.9176470588235294)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4WkIBY0EeO4YdECGt8KIg" id="(0.13986013986013987,0.29411764705882354)"/>
   </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_cRimMHadEeKSEev3QtmCtw" type="3002" source="_cRPrMXadEeKSEev3QtmCtw" target="_cRimDHadEeKSEev3QtmCtw">
-    <children xmi:type="notation:Node" xmi:id="_cRimNHadEeKSEev3QtmCtw" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimNXadEeKSEev3QtmCtw" x="-94" y="-27"/>
+  <edges xmi:type="notation:Edge" xmi:id="_Y0Mc5BY0EeO4YdECGt8KIg" type="3002" source="_Yz0CZhY0EeO4YdECGt8KIg" target="_Y0BdwhY0EeO4YdECGt8KIg">
+    <children xmi:type="notation:Node" xmi:id="_Y0ND8BY0EeO4YdECGt8KIg" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0ND8RY0EeO4YdECGt8KIg" x="-44" y="-30"/>
     </children>
-    <children xmi:type="notation:Node" xmi:id="_cRimNnadEeKSEev3QtmCtw" type="4012">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimN3adEeKSEev3QtmCtw" x="10" y="10"/>
+    <children xmi:type="notation:Node" xmi:id="_Y0ND8hY0EeO4YdECGt8KIg" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0ND8xY0EeO4YdECGt8KIg" x="-25" y="-14"/>
     </children>
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_cRimMXadEeKSEev3QtmCtw" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_cRimMnadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
-    <element xmi:type="ecore:EReference" href="github.ecore#//GITRepository/stargazers"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_cRimM3adEeKSEev3QtmCtw" points="[0, 0, -279, 275]$[121, -92, -158, 183]$[279, -275, 0, 0]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8t3adEeKSEev3QtmCtw" id="(0.6285714285714286,0.0)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8uHadEeKSEev3QtmCtw" id="(0.39285714285714285,1.0)"/>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_Y0Mc5RY0EeO4YdECGt8KIg" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Y0Mc5hY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="github.ecore#//GitHubCommit/committer"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Y0Mc5xY0EeO4YdECGt8KIg" points="[-78, 10, 460, -62]$[-528, 70, 10, -2]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4WkIRY0EeO4YdECGt8KIg" id="(0.5925925925925926,0.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4WkIhY0EeO4YdECGt8KIg" id="(0.16783216783216784,0.17647058823529413)"/>
   </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_cRimOHadEeKSEev3QtmCtw" type="3002" source="_cRPrMXadEeKSEev3QtmCtw" target="_cRimDHadEeKSEev3QtmCtw">
-    <children xmi:type="notation:Node" xmi:id="_cRimPHadEeKSEev3QtmCtw" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimPXadEeKSEev3QtmCtw" x="-103" y="-22"/>
+  <edges xmi:type="notation:Edge" xmi:id="_Y0ND9BY0EeO4YdECGt8KIg" type="3002" source="_Yz0CZhY0EeO4YdECGt8KIg" target="_Yz6wFBY0EeO4YdECGt8KIg">
+    <children xmi:type="notation:Node" xmi:id="_Y0NrABY0EeO4YdECGt8KIg" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0NrARY0EeO4YdECGt8KIg" x="-20" y="-13"/>
     </children>
-    <children xmi:type="notation:Node" xmi:id="_cRimPnadEeKSEev3QtmCtw" type="4012">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimP3adEeKSEev3QtmCtw" x="10" y="10"/>
+    <children xmi:type="notation:Node" xmi:id="_Y0NrAhY0EeO4YdECGt8KIg" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0NrAxY0EeO4YdECGt8KIg" x="-1" y="12"/>
     </children>
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_cRimOXadEeKSEev3QtmCtw" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_cRimOnadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
-    <element xmi:type="ecore:EReference" href="github.ecore#//GITRepository/collaborators"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_cRimO3adEeKSEev3QtmCtw" points="[0, 0, -292, 275]$[-131, -62, -423, 213]$[-131, -215, -423, 60]$[-131, -215, -423, 60]$[292, -275, 0, 0]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8s3adEeKSEev3QtmCtw" id="(0.4228571428571429,0.0)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8tHadEeKSEev3QtmCtw" id="(0.19642857142857142,1.0)"/>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_Y0ND9RY0EeO4YdECGt8KIg" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Y0ND9hY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="github.ecore#//GitHubCommit/comments"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Y0ND9xY0EeO4YdECGt8KIg" points="[0, 0, 577, 60]$[-577, -60, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4P2cBY0EeO4YdECGt8KIg" id="(0.9407407407407408,0.788235294117647)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4P2cRY0EeO4YdECGt8KIg" id="(0.022727272727272728,0.47058823529411764)"/>
   </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_cRimQHadEeKSEev3QtmCtw" type="3002" source="_cRPrMXadEeKSEev3QtmCtw" target="_cRZcUnadEeKSEev3QtmCtw">
-    <children xmi:type="notation:Node" xmi:id="_cRimRHadEeKSEev3QtmCtw" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimRXadEeKSEev3QtmCtw" x="-17" y="-26"/>
+  <edges xmi:type="notation:Edge" xmi:id="_Y0NrBBY0EeO4YdECGt8KIg" type="3002" source="_Yz0CZhY0EeO4YdECGt8KIg" target="_Yz0CZhY0EeO4YdECGt8KIg">
+    <children xmi:type="notation:Node" xmi:id="_Y0OSEBY0EeO4YdECGt8KIg" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0OSERY0EeO4YdECGt8KIg" x="38" y="-9"/>
     </children>
-    <children xmi:type="notation:Node" xmi:id="_cRimRnadEeKSEev3QtmCtw" type="4012">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimR3adEeKSEev3QtmCtw" x="10" y="10"/>
+    <children xmi:type="notation:Node" xmi:id="_Y0OSEhY0EeO4YdECGt8KIg" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0OSExY0EeO4YdECGt8KIg" x="10" y="10"/>
     </children>
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_cRimQXadEeKSEev3QtmCtw" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_cRimQnadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
-    <element xmi:type="ecore:EReference" href="github.ecore#//GITRepository/comments"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_cRimQ3adEeKSEev3QtmCtw" points="[22, 13, -357, 39]$[385, 13, 6, 39]$[385, -26, 6, 0]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cT7LqHadEeKSEev3QtmCtw" id="(0.8742857142857143,0.0)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cT7LqXadEeKSEev3QtmCtw" id="(0.3310810810810811,1.0)"/>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_Y0NrBRY0EeO4YdECGt8KIg" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Y0NrBhY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="github.ecore#//GitHubCommit/parents"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Y0NrBxY0EeO4YdECGt8KIg" points="[67, 0, 67, 0]$[103, 0, 103, 0]$[103, -62, 103, -62]$[8, -62, 8, -62]$[8, -41, 8, -41]"/>
   </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_cRimSHadEeKSEev3QtmCtw" type="3002" source="_cRPrMXadEeKSEev3QtmCtw" target="_cRZcFnadEeKSEev3QtmCtw">
-    <children xmi:type="notation:Node" xmi:id="_cRimTHadEeKSEev3QtmCtw" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimTXadEeKSEev3QtmCtw" x="16" y="-36"/>
+  <edges xmi:type="notation:Edge" xmi:id="_Y0O5IBY0EeO4YdECGt8KIg" type="3002" source="_Yz13kRY0EeO4YdECGt8KIg" target="_Yz2eqBY0EeO4YdECGt8KIg">
+    <children xmi:type="notation:Node" xmi:id="_Y0O5JBY0EeO4YdECGt8KIg" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0O5JRY0EeO4YdECGt8KIg" x="-7" y="-24"/>
     </children>
-    <children xmi:type="notation:Node" xmi:id="_cRimTnadEeKSEev3QtmCtw" type="4012">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimT3adEeKSEev3QtmCtw" x="10" y="10"/>
+    <children xmi:type="notation:Node" xmi:id="_Y0PgMBY0EeO4YdECGt8KIg" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0PgMRY0EeO4YdECGt8KIg" x="-7" y="14"/>
     </children>
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_cRimSXadEeKSEev3QtmCtw" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_cRimSnadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
-    <element xmi:type="ecore:EReference" href="github.ecore#//GITRepository/commits"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_cRimS3adEeKSEev3QtmCtw" points="[0, 0, 305, 130]$[-311, -57, -6, 73]$[-311, -130, -6, 0]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cT7LqnadEeKSEev3QtmCtw" id="(0.33714285714285713,0.0)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cT7Lq3adEeKSEev3QtmCtw" id="(0.4962962962962963,1.0)"/>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_Y0O5IRY0EeO4YdECGt8KIg" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Y0O5IhY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="github.ecore#//GitHubBugTracker/issues"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Y0O5IxY0EeO4YdECGt8KIg" points="[0, 0, -311, 60]$[311, -60, 0, 0]"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4LlAhY0EeO4YdECGt8KIg" id="(0.47701149425287354,0.0915032679738562)"/>
   </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_cRimUHadEeKSEev3QtmCtw" type="3002" source="_cRPrMXadEeKSEev3QtmCtw" target="_cRPrV3adEeKSEev3QtmCtw">
-    <children xmi:type="notation:Node" xmi:id="_cRimVHadEeKSEev3QtmCtw" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimVXadEeKSEev3QtmCtw" x="-10" y="-10"/>
-    </children>
-    <children xmi:type="notation:Node" xmi:id="_cRimVnadEeKSEev3QtmCtw" type="4012">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimV3adEeKSEev3QtmCtw" x="10" y="10"/>
-    </children>
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_cRimUXadEeKSEev3QtmCtw" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_cRimUnadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
-    <element xmi:type="ecore:EReference" href="github.ecore#//GITRepository/contens"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_cRimU3adEeKSEev3QtmCtw" points="[-28, 13, 734, 92]$[-762, 13, 0, 92]$[-762, -79, 0, 0]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cT7LrnadEeKSEev3QtmCtw" id="(0.1657142857142857,0.0)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cT7Lr3adEeKSEev3QtmCtw" id="(0.4966887417218543,1.0)"/>
-  </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_cRimWHadEeKSEev3QtmCtw" type="3002" source="_cRPrMXadEeKSEev3QtmCtw" target="_cRPrb3adEeKSEev3QtmCtw">
-    <children xmi:type="notation:Node" xmi:id="_cRimXHadEeKSEev3QtmCtw" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimXXadEeKSEev3QtmCtw" x="109" y="2"/>
-    </children>
-    <children xmi:type="notation:Node" xmi:id="_cRimXnadEeKSEev3QtmCtw" type="4012">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimX3adEeKSEev3QtmCtw" x="10" y="10"/>
-    </children>
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_cRimWXadEeKSEev3QtmCtw" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_cRimWnadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
-    <element xmi:type="ecore:EReference" href="github.ecore#//GITRepository/downloads"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_cRimW3adEeKSEev3QtmCtw" points="[0, 0, 529, 62]$[-529, -32, 0, 30]$[-529, -62, 0, 0]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cT7LpnadEeKSEev3QtmCtw" id="(0.25142857142857145,0.0)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cT7Lp3adEeKSEev3QtmCtw" id="(0.5,1.0)"/>
-  </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_cRimYHadEeKSEev3QtmCtw" type="3002" source="_cRPrMXadEeKSEev3QtmCtw" target="_cRPrMXadEeKSEev3QtmCtw">
-    <children xmi:type="notation:Node" xmi:id="_cRimZHadEeKSEev3QtmCtw" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimZXadEeKSEev3QtmCtw" x="-13" y="39"/>
-    </children>
-    <children xmi:type="notation:Node" xmi:id="_cRimZnadEeKSEev3QtmCtw" type="4012">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimZ3adEeKSEev3QtmCtw" x="10" y="10"/>
-    </children>
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_cRimYXadEeKSEev3QtmCtw" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_cRimYnadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
-    <element xmi:type="ecore:EReference" href="github.ecore#//GITRepository/forks"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_cRimY3adEeKSEev3QtmCtw" points="[87, 0, 87, 0]$[150, 0, 150, 0]$[150, 190, 150, 190]$[0, 190, 0, 190]$[0, 127, 0, 127]"/>
-  </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_cRimaHadEeKSEev3QtmCtw" type="3002" source="_cRPrMXadEeKSEev3QtmCtw" target="_cRimDHadEeKSEev3QtmCtw">
-    <children xmi:type="notation:Node" xmi:id="_cRimbHadEeKSEev3QtmCtw" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimbXadEeKSEev3QtmCtw" x="-84" y="-25"/>
-    </children>
-    <children xmi:type="notation:Node" xmi:id="_cRimbnadEeKSEev3QtmCtw" type="4012">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimb3adEeKSEev3QtmCtw" x="-114" y="9"/>
-    </children>
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_cRimaXadEeKSEev3QtmCtw" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_cRimanadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
-    <element xmi:type="ecore:EReference" href="github.ecore#//GITRepository/watchers"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_cRima3adEeKSEev3QtmCtw" points="[0, 0, -267, 273]$[267, -61, 0, 212]$[267, -273, 0, 0]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8uXadEeKSEev3QtmCtw" id="(0.7542857142857143,0.0)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8unadEeKSEev3QtmCtw" id="(0.49107142857142855,1.0)"/>
-  </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_cRimcHadEeKSEev3QtmCtw" type="3003" source="_cRPrMXadEeKSEev3QtmCtw" target="_cRGhLnadEeKSEev3QtmCtw">
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_cRimcXadEeKSEev3QtmCtw" routing="Rectilinear" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_cRimcnadEeKSEev3QtmCtw" fontName="Segoe UI"/>
+  <edges xmi:type="notation:Edge" xmi:id="_Y0PgMhY0EeO4YdECGt8KIg" type="3003" source="_Yz13kRY0EeO4YdECGt8KIg" target="_YzkKwBY0EeO4YdECGt8KIg">
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_Y0PgMxY0EeO4YdECGt8KIg" routing="Rectilinear" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Y0PgNBY0EeO4YdECGt8KIg" fontName="Segoe UI"/>
     <element xsi:nil="true"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_cRimc3adEeKSEev3QtmCtw" points="[-13, 123, 922, 295]$[-935, 123, 0, 295]$[-935, -172, 0, 0]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cT7LrHadEeKSEev3QtmCtw" id="(0.08,0.0)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cT7LrXadEeKSEev3QtmCtw" id="(0.49523809523809526,1.0)"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Y0PgNRY0EeO4YdECGt8KIg" points="[3, 0, 4, 44]$[3, -44, 4, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4K98hY0EeO4YdECGt8KIg" id="(0.5,0.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4LlABY0EeO4YdECGt8KIg" id="(0.5,1.0)"/>
   </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_cRimdHadEeKSEev3QtmCtw" type="3002" source="_cRZcFnadEeKSEev3QtmCtw" target="_cRimDHadEeKSEev3QtmCtw">
-    <children xmi:type="notation:Node" xmi:id="_cRimeHadEeKSEev3QtmCtw" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimeXadEeKSEev3QtmCtw" x="-10" y="-10"/>
+  <edges xmi:type="notation:Edge" xmi:id="_Y0QHQBY0EeO4YdECGt8KIg" type="3002" source="_Yz2eqBY0EeO4YdECGt8KIg" target="_Y0BdwhY0EeO4YdECGt8KIg">
+    <children xmi:type="notation:Node" xmi:id="_Y0QHRBY0EeO4YdECGt8KIg" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0QHRRY0EeO4YdECGt8KIg" x="-105" y="8"/>
     </children>
-    <children xmi:type="notation:Node" xmi:id="_cRimenadEeKSEev3QtmCtw" type="4012">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRime3adEeKSEev3QtmCtw" x="10" y="10"/>
+    <children xmi:type="notation:Node" xmi:id="_Y0QHRhY0EeO4YdECGt8KIg" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0QHRxY0EeO4YdECGt8KIg" x="10" y="10"/>
     </children>
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_cRimdXadEeKSEev3QtmCtw" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_cRimdnadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
-    <element xmi:type="ecore:EReference" href="github.ecore#//GITCommit/author"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_cRimd3adEeKSEev3QtmCtw" points="[-6, 0, -607, 62]$[-6, -74, -607, -12]$[591, -74, -10, -12]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cT7LpHadEeKSEev3QtmCtw" id="(0.4962962962962963,0.0)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cT7LpXadEeKSEev3QtmCtw" id="(0.09821428571428571,1.0)"/>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_Y0QHQRY0EeO4YdECGt8KIg" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Y0QHQhY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="github.ecore#//GitHubIssue/creator"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Y0QHQxY0EeO4YdECGt8KIg" points="[-18, 2, 399, -38]$[-318, 30, 99, -10]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4SSshY0EeO4YdECGt8KIg" id="(0.10919540229885058,0.5424836601307189)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4S5wBY0EeO4YdECGt8KIg" id="(0.958041958041958,0.47058823529411764)"/>
   </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_cRimfHadEeKSEev3QtmCtw" type="3002" source="_cRZcFnadEeKSEev3QtmCtw" target="_cRZcFnadEeKSEev3QtmCtw">
-    <children xmi:type="notation:Node" xmi:id="_cRimgHadEeKSEev3QtmCtw" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimgXadEeKSEev3QtmCtw" x="-10" y="-10"/>
+  <edges xmi:type="notation:Edge" xmi:id="_Y0QuUBY0EeO4YdECGt8KIg" type="3002" source="_Yz2eqBY0EeO4YdECGt8KIg" target="_Y0BdwhY0EeO4YdECGt8KIg">
+    <children xmi:type="notation:Node" xmi:id="_Y0R8cBY0EeO4YdECGt8KIg" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0R8cRY0EeO4YdECGt8KIg" x="-138" y="-58"/>
     </children>
-    <children xmi:type="notation:Node" xmi:id="_cRimgnadEeKSEev3QtmCtw" type="4012">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimg3adEeKSEev3QtmCtw" x="-4" y="11"/>
+    <children xmi:type="notation:Node" xmi:id="_Y0SjgBY0EeO4YdECGt8KIg" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0SjgRY0EeO4YdECGt8KIg" x="10" y="10"/>
     </children>
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_cRimfXadEeKSEev3QtmCtw" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_cRimfnadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
-    <element xmi:type="ecore:EReference" href="github.ecore#//GITCommit/parents"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_cRimf3adEeKSEev3QtmCtw" points="[67, 0, 67, 0]$[130, 0, 130, 0]$[130, 71, 130, 71]$[58, 65, 58, 65]$[58, 65, 58, 65]$[37, 42, 37, 42]"/>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_Y0QuURY0EeO4YdECGt8KIg" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Y0QuUhY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="github.ecore#//GitHubIssue/assignee"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Y0QuUxY0EeO4YdECGt8KIg" points="[-28, 0, 432, -121]$[-294, 0, 166, -121]$[-370, 55, 90, -66]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4REkBY0EeO4YdECGt8KIg" id="(0.16666666666666666,0.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4REkRY0EeO4YdECGt8KIg" id="(0.0703125,1.0)"/>
   </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_cRimhHadEeKSEev3QtmCtw" type="3002" source="_cRZcKHadEeKSEev3QtmCtw" target="_cRZcNHadEeKSEev3QtmCtw">
-    <children xmi:type="notation:Node" xmi:id="_cRimiHadEeKSEev3QtmCtw" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimiXadEeKSEev3QtmCtw" x="9" y="-37"/>
+  <edges xmi:type="notation:Edge" xmi:id="_Y0SjghY0EeO4YdECGt8KIg" type="3002" source="_Yz2eqBY0EeO4YdECGt8KIg" target="_Y0BdwhY0EeO4YdECGt8KIg">
+    <children xmi:type="notation:Node" xmi:id="_Y0TKkBY0EeO4YdECGt8KIg" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0TKkRY0EeO4YdECGt8KIg" x="-109" y="-28"/>
     </children>
-    <children xmi:type="notation:Node" xmi:id="_cRiminadEeKSEev3QtmCtw" type="4012">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRimi3adEeKSEev3QtmCtw" x="10" y="10"/>
+    <children xmi:type="notation:Node" xmi:id="_Y0TKkhY0EeO4YdECGt8KIg" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0TKkxY0EeO4YdECGt8KIg" x="10" y="10"/>
     </children>
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_cRimhXadEeKSEev3QtmCtw" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_cRimhnadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
-    <element xmi:type="ecore:EReference" href="github.ecore#//GITBugTracker/open_issues"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_cRimh3adEeKSEev3QtmCtw" points="[4, 6, -124, 91]$[135, 6, 7, 91]$[135, -57, 7, 28]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8q3adEeKSEev3QtmCtw" id="(0.9619047619047619,0.32558139534883723)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8rHadEeKSEev3QtmCtw" id="(0.41379310344827586,0.8502673796791443)"/>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_Y0SjgxY0EeO4YdECGt8KIg" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Y0SjhBY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="github.ecore#//GitHubIssue/subscribed_users"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Y0SjhRY0EeO4YdECGt8KIg" points="[-4, 0, 314, -31]$[-245, 0, 73, -31]$[-304, 25, 14, -6]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4RroBY0EeO4YdECGt8KIg" id="(0.028735632183908046,0.24836601307189543)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4RroRY0EeO4YdECGt8KIg" id="(0.9020979020979021,0.20588235294117646)"/>
   </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_cRimjHadEeKSEev3QtmCtw" type="3003" source="_cRZcKHadEeKSEev3QtmCtw" target="_cRPrGXadEeKSEev3QtmCtw">
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_cRimjXadEeKSEev3QtmCtw" routing="Rectilinear" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_cRimjnadEeKSEev3QtmCtw" fontName="Segoe UI"/>
+  <edges xmi:type="notation:Edge" xmi:id="_Y0TKlBY0EeO4YdECGt8KIg" type="3002" source="_Yz2eqBY0EeO4YdECGt8KIg" target="_Y0BdwhY0EeO4YdECGt8KIg">
+    <children xmi:type="notation:Node" xmi:id="_Y0TxoBY0EeO4YdECGt8KIg" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0TxoRY0EeO4YdECGt8KIg" x="-109" y="-4"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Y0TxohY0EeO4YdECGt8KIg" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0TxoxY0EeO4YdECGt8KIg" x="10" y="10"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_Y0TKlRY0EeO4YdECGt8KIg" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Y0TKlhY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="github.ecore#//GitHubIssue/mentioned_users"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Y0TKlxY0EeO4YdECGt8KIg" points="[-6, 0, 371, -25]$[-237, 0, 140, -25]$[-306, 12, 71, -13]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4SSsBY0EeO4YdECGt8KIg" id="(0.040229885057471264,0.41830065359477125)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_Y0TxpBY0EeO4YdECGt8KIg" type="3002" source="_Yz2eqBY0EeO4YdECGt8KIg" target="_Yz6wFBY0EeO4YdECGt8KIg">
+    <children xmi:type="notation:Node" xmi:id="_Y0TxqBY0EeO4YdECGt8KIg" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0TxqRY0EeO4YdECGt8KIg" x="-10" y="-10"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Y0TxqhY0EeO4YdECGt8KIg" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0UYsBY0EeO4YdECGt8KIg" x="10" y="10"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_Y0TxpRY0EeO4YdECGt8KIg" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Y0TxphY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="github.ecore#//GitHubIssue/comments"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Y0TxpxY0EeO4YdECGt8KIg" points="[-1, -1, 341, 175]$[-89, -166, 253, 10]$[-340, -166, 2, 10]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4H6oBY0EeO4YdECGt8KIg" id="(0.25287356321839083,0.013071895424836602)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4IhsBY0EeO4YdECGt8KIg" id="(0.9886363636363636,0.6993464052287581)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_Y0UYsRY0EeO4YdECGt8KIg" type="3002" source="_Yz6wFBY0EeO4YdECGt8KIg" target="_Y0BdwhY0EeO4YdECGt8KIg">
+    <children xmi:type="notation:Node" xmi:id="_Y0UYtRY0EeO4YdECGt8KIg" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0UYthY0EeO4YdECGt8KIg" x="6" y="-18"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Y0UYtxY0EeO4YdECGt8KIg" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0UYuBY0EeO4YdECGt8KIg" x="10" y="10"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_Y0UYshY0EeO4YdECGt8KIg" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Y0UYsxY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="github.ecore#//GitHubComment/user"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Y0UYtBY0EeO4YdECGt8KIg" points="[0, 0, 214, 60]$[-214, -60, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4MzIRY0EeO4YdECGt8KIg" id="(0.5,0.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4NaMBY0EeO4YdECGt8KIg" id="(0.4609375,1.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_Y0U_wBY0EeO4YdECGt8KIg" type="3002" source="_Yz9zYhY0EeO4YdECGt8KIg" target="_Y0BdwhY0EeO4YdECGt8KIg">
+    <children xmi:type="notation:Node" xmi:id="_Y0U_xBY0EeO4YdECGt8KIg" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0U_xRY0EeO4YdECGt8KIg" x="-81" y="19"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Y0U_xhY0EeO4YdECGt8KIg" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0U_xxY0EeO4YdECGt8KIg" x="10" y="10"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_Y0U_wRY0EeO4YdECGt8KIg" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Y0U_whY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="github.ecore#//GitHubMilestone/creator"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Y0U_wxY0EeO4YdECGt8KIg" points="[-97, -54, 377, 145]$[-383, -211, 91, -12]$[-386, -211, 88, -12]"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4V9EBY0EeO4YdECGt8KIg" id="(0.3828125,1.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_Y0Vm0BY0EeO4YdECGt8KIg" type="3002" source="_Yz9zYhY0EeO4YdECGt8KIg" target="_Yz2eqBY0EeO4YdECGt8KIg">
+    <children xmi:type="notation:Node" xmi:id="_Y0Vm1BY0EeO4YdECGt8KIg" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0Vm1RY0EeO4YdECGt8KIg" x="2" y="-41"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Y0Vm1hY0EeO4YdECGt8KIg" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0WN4BY0EeO4YdECGt8KIg" x="2" y="18"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_Y0Vm0RY0EeO4YdECGt8KIg" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Y0Vm0hY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="github.ecore#//GitHubMilestone/open_issues"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Y0Vm0xY0EeO4YdECGt8KIg" points="[0, 0, 0, 60]$[0, -60, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4PPYBY0EeO4YdECGt8KIg" id="(0.22448979591836735,0.05228758169934641)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4PPYRY0EeO4YdECGt8KIg" id="(0.1781609195402299,0.9019607843137255)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_Y0WN4RY0EeO4YdECGt8KIg" type="3002" source="_Yz9zYhY0EeO4YdECGt8KIg" target="_Yz2eqBY0EeO4YdECGt8KIg">
+    <children xmi:type="notation:Node" xmi:id="_Y0WN5RY0EeO4YdECGt8KIg" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0WN5hY0EeO4YdECGt8KIg" x="-10" y="-10"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Y0WN5xY0EeO4YdECGt8KIg" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0WN6BY0EeO4YdECGt8KIg" x="2" y="18"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_Y0WN4hY0EeO4YdECGt8KIg" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Y0WN4xY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="github.ecore#//GitHubMilestone/closed_issues"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Y0WN5BY0EeO4YdECGt8KIg" points="[0, 0, 0, 60]$[0, -60, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4OoUBY0EeO4YdECGt8KIg" id="(0.7448979591836735,0.1568627450980392)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4OoURY0EeO4YdECGt8KIg" id="(0.7298850574712644,0.8169934640522876)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_Y0XcABY0EeO4YdECGt8KIg" type="3002" source="_Y0BdwhY0EeO4YdECGt8KIg" target="_Y0BdwhY0EeO4YdECGt8KIg">
+    <children xmi:type="notation:Node" xmi:id="_Y0YDEBY0EeO4YdECGt8KIg" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0YDERY0EeO4YdECGt8KIg" x="-30" y="-1"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_Y0YDEhY0EeO4YdECGt8KIg" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_Y0YDExY0EeO4YdECGt8KIg" x="-64" y="-32"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_Y0XcARY0EeO4YdECGt8KIg" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Y0XcAhY0EeO4YdECGt8KIg" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="github.ecore#//GitHubUser/followers"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Y0XcAxY0EeO4YdECGt8KIg" points="[0, 10, -70, 18]$[-63, 10, -133, 18]$[-62, 43, -132, 51]$[-20, 43, -90, 51]$[11, 25, -59, 33]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_33SSwBY6EeOrYfSqfjEWCg" id="(0.006993006993006993,0.6323529411764706)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_Y0YDFBY0EeO4YdECGt8KIg" type="3003" source="_Y0BdwhY0EeO4YdECGt8KIg" target="_YzhugBY0EeO4YdECGt8KIg">
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_Y0YDFRY0EeO4YdECGt8KIg" routing="Rectilinear" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_Y0YDFhY0EeO4YdECGt8KIg" fontName="Segoe UI"/>
     <element xsi:nil="true"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_cRimj3adEeKSEev3QtmCtw" points="[-34, 24, 199, 108]$[-197, 24, 36, 108]$[-197, -84, 36, 0]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8qXadEeKSEev3QtmCtw" id="(0.3333333333333333,0.0)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8qnadEeKSEev3QtmCtw" id="(0.5,1.0)"/>
-  </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_cRsXAHadEeKSEev3QtmCtw" type="3002" source="_cRZcNHadEeKSEev3QtmCtw" target="_cRimDHadEeKSEev3QtmCtw">
-    <children xmi:type="notation:Node" xmi:id="_cRsXBHadEeKSEev3QtmCtw" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRsXBXadEeKSEev3QtmCtw" x="14" y="-13"/>
-    </children>
-    <children xmi:type="notation:Node" xmi:id="_cRsXBnadEeKSEev3QtmCtw" type="4012">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRsXB3adEeKSEev3QtmCtw" x="-44" y="12"/>
-    </children>
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_cRsXAXadEeKSEev3QtmCtw" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_cRsXAnadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
-    <element xmi:type="ecore:EReference" href="github.ecore#//GITIssue/user"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_cRsXA3adEeKSEev3QtmCtw" points="[-49, -32, 407, 275]$[-456, -307, 0, 0]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8vXadEeKSEev3QtmCtw" id="(0.3218390804597701,0.17647058823529413)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8vnadEeKSEev3QtmCtw" id="(0.8928571428571429,1.0)"/>
-  </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_cRsXCHadEeKSEev3QtmCtw" type="3002" source="_cRZcNHadEeKSEev3QtmCtw" target="_cRZcZnadEeKSEev3QtmCtw">
-    <children xmi:type="notation:Node" xmi:id="_cRsXDHadEeKSEev3QtmCtw" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRsXDXadEeKSEev3QtmCtw" x="-10" y="-10"/>
-    </children>
-    <children xmi:type="notation:Node" xmi:id="_cRsXDnadEeKSEev3QtmCtw" type="4012">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRsXD3adEeKSEev3QtmCtw" x="10" y="10"/>
-    </children>
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_cRsXCXadEeKSEev3QtmCtw" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_cRsXCnadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
-    <element xmi:type="ecore:EReference" href="github.ecore#//GITIssue/labels"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_cRsXC3adEeKSEev3QtmCtw" points="[24, 9, -110, 283]$[156, 9, 22, 283]$[134, -274, 0, 0]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8p3adEeKSEev3QtmCtw" id="(0.8620689655172413,0.5989304812834224)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8qHadEeKSEev3QtmCtw" id="(0.5,1.0)"/>
-  </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_cRsXEHadEeKSEev3QtmCtw" type="3002" source="_cRZcNHadEeKSEev3QtmCtw" target="_cRimDHadEeKSEev3QtmCtw">
-    <children xmi:type="notation:Node" xmi:id="_cRsXFHadEeKSEev3QtmCtw" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRsXFXadEeKSEev3QtmCtw" x="-46" y="13"/>
-    </children>
-    <children xmi:type="notation:Node" xmi:id="_cRsXFnadEeKSEev3QtmCtw" type="4012">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRsXF3adEeKSEev3QtmCtw" x="14" y="12"/>
-    </children>
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_cRsXEXadEeKSEev3QtmCtw" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_cRsXEnadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
-    <element xmi:type="ecore:EReference" href="github.ecore#//GITIssue/assignee"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_cRsXE3adEeKSEev3QtmCtw" points="[0, 0, 457, 275]$[-77, -177, 380, 98]$[-457, -275, 0, 0]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8u3adEeKSEev3QtmCtw" id="(0.26436781609195403,0.0)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8vHadEeKSEev3QtmCtw" id="(0.7946428571428571,1.0)"/>
-  </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_cRsXGHadEeKSEev3QtmCtw" type="3002" source="_cRZcNHadEeKSEev3QtmCtw" target="_cRZcdHadEeKSEev3QtmCtw">
-    <children xmi:type="notation:Node" xmi:id="_cRsXHHadEeKSEev3QtmCtw" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRsXHXadEeKSEev3QtmCtw" x="17" y="-33"/>
-    </children>
-    <children xmi:type="notation:Node" xmi:id="_cRsXHnadEeKSEev3QtmCtw" type="4012">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRsXH3adEeKSEev3QtmCtw" x="12" y="14"/>
-    </children>
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_cRsXGXadEeKSEev3QtmCtw" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_cRsXGnadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
-    <element xmi:type="ecore:EReference" href="github.ecore#//GITIssue/milestone"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_cRsXG3adEeKSEev3QtmCtw" points="[0, 0, 0, -128]$[0, 128, 0, 0]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8o3adEeKSEev3QtmCtw" id="(0.5,1.0)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8pHadEeKSEev3QtmCtw" id="(0.5,0.0)"/>
-  </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_cRsXIHadEeKSEev3QtmCtw" type="3002" source="_cRZcNHadEeKSEev3QtmCtw" target="_cRZcUnadEeKSEev3QtmCtw">
-    <children xmi:type="notation:Node" xmi:id="_cRsXJHadEeKSEev3QtmCtw" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRsXJXadEeKSEev3QtmCtw" x="50" y="34"/>
-    </children>
-    <children xmi:type="notation:Node" xmi:id="_cRsXJnadEeKSEev3QtmCtw" type="4012">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRsXJ3adEeKSEev3QtmCtw" x="10" y="10"/>
-    </children>
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_cRsXIXadEeKSEev3QtmCtw" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_cRsXInadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
-    <element xmi:type="ecore:EReference" href="github.ecore#//GITIssue/comments"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_cRsXI3adEeKSEev3QtmCtw" points="[-1, 0, 265, 133]$[-266, 0, 0, 133]$[-266, -133, 0, 0]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8pXadEeKSEev3QtmCtw" id="(0.011494252873563218,0.5828877005347594)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8pnadEeKSEev3QtmCtw" id="(0.6621621621621622,1.0)"/>
-  </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_cRsXKHadEeKSEev3QtmCtw" type="3002" source="_cRZcUnadEeKSEev3QtmCtw" target="_cRimDHadEeKSEev3QtmCtw">
-    <children xmi:type="notation:Node" xmi:id="_cRsXLHadEeKSEev3QtmCtw" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRsXLXadEeKSEev3QtmCtw" x="-21" y="13"/>
-    </children>
-    <children xmi:type="notation:Node" xmi:id="_cRsXLnadEeKSEev3QtmCtw" type="4012">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRsXL3adEeKSEev3QtmCtw" x="10" y="10"/>
-    </children>
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_cRsXKXadEeKSEev3QtmCtw" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_cRsXKnadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
-    <element xmi:type="ecore:EReference" href="github.ecore#//GITComment/user"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_cRsXK3adEeKSEev3QtmCtw" points="[0, 6, 63, 148]$[-71, 6, -8, 148]$[-71, -132, -8, 10]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8r3adEeKSEev3QtmCtw" id="(0.006756756756756757,0.6862745098039216)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8sHadEeKSEev3QtmCtw" id="(0.6875,0.8529411764705882)"/>
-  </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_cRsXMHadEeKSEev3QtmCtw" type="3003" source="_cRZcZnadEeKSEev3QtmCtw" target="_cRGhOnadEeKSEev3QtmCtw">
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_cRsXMXadEeKSEev3QtmCtw" routing="Rectilinear" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_cRsXMnadEeKSEev3QtmCtw" fontName="Segoe UI"/>
-    <element xsi:nil="true"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_cRsXM3adEeKSEev3QtmCtw" points="[0, 0, 0, 85]$[0, -85, 0, 0]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8rXadEeKSEev3QtmCtw" id="(0.5,0.0)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8rnadEeKSEev3QtmCtw" id="(0.4954954954954955,1.0)"/>
-  </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_cRsXNHadEeKSEev3QtmCtw" type="3002" source="_cRZcdHadEeKSEev3QtmCtw" target="_cRimDHadEeKSEev3QtmCtw">
-    <children xmi:type="notation:Node" xmi:id="_cRsXOHadEeKSEev3QtmCtw" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRsXOXadEeKSEev3QtmCtw" x="3" y="-8"/>
-    </children>
-    <children xmi:type="notation:Node" xmi:id="_cRsXOnadEeKSEev3QtmCtw" type="4012">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRsXO3adEeKSEev3QtmCtw" x="10" y="10"/>
-    </children>
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_cRsXNXadEeKSEev3QtmCtw" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_cRsXNnadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
-    <element xmi:type="ecore:EReference" href="github.ecore#//IssueMilestone/creator"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_cRsXN3adEeKSEev3QtmCtw" points="[-42, 9, 413, -92]$[-420, 93, 35, -8]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8sXadEeKSEev3QtmCtw" id="(0.06321839080459771,0.42483660130718953)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cUE8snadEeKSEev3QtmCtw" id="(0.9732142857142857,0.38235294117647056)"/>
-  </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_cRsXPHadEeKSEev3QtmCtw" type="3002" source="_cRZcdHadEeKSEev3QtmCtw" target="_cRZcNHadEeKSEev3QtmCtw">
-    <children xmi:type="notation:Node" xmi:id="_cRsXQHadEeKSEev3QtmCtw" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRsXQXadEeKSEev3QtmCtw" x="-5" y="-41"/>
-    </children>
-    <children xmi:type="notation:Node" xmi:id="_cRsXQnadEeKSEev3QtmCtw" type="4012">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRsXQ3adEeKSEev3QtmCtw" x="10" y="10"/>
-    </children>
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_cRsXPXadEeKSEev3QtmCtw" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_cRsXPnadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
-    <element xmi:type="ecore:EReference" href="github.ecore#//IssueMilestone/open_issues"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_cRsXP3adEeKSEev3QtmCtw" points="[86, 141, 75, -420]$[163, 269, 152, -292]$[97, 395, 86, -166]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cT7LoHadEeKSEev3QtmCtw" id="(0.5,0.0)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cT7LoXadEeKSEev3QtmCtw" id="(0.5,1.0)"/>
-  </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_cRsXRHadEeKSEev3QtmCtw" type="3002" source="_cRZcdHadEeKSEev3QtmCtw" target="_cRZcNHadEeKSEev3QtmCtw">
-    <children xmi:type="notation:Node" xmi:id="_cRsXSHadEeKSEev3QtmCtw" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRsXSXadEeKSEev3QtmCtw" x="-29" y="37"/>
-    </children>
-    <children xmi:type="notation:Node" xmi:id="_cRsXSnadEeKSEev3QtmCtw" type="4012">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRsXS3adEeKSEev3QtmCtw" x="10" y="10"/>
-    </children>
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_cRsXRXadEeKSEev3QtmCtw" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_cRsXRnadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
-    <element xmi:type="ecore:EReference" href="github.ecore#//IssueMilestone/closed_issues"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_cRsXR3adEeKSEev3QtmCtw" points="[55, 151, 44, -410]$[98, 269, 87, -292]$[66, 376, 55, -185]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cT7LonadEeKSEev3QtmCtw" id="(0.5,0.0)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_cT7Lo3adEeKSEev3QtmCtw" id="(0.5,1.0)"/>
-  </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_cRsXTHadEeKSEev3QtmCtw" type="3002" source="_cRimDHadEeKSEev3QtmCtw" target="_cRimDHadEeKSEev3QtmCtw">
-    <children xmi:type="notation:Node" xmi:id="_cRsXUHadEeKSEev3QtmCtw" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRsXUXadEeKSEev3QtmCtw" x="-49" y="-36"/>
-    </children>
-    <children xmi:type="notation:Node" xmi:id="_cRsXUnadEeKSEev3QtmCtw" type="4012">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_cRsXU3adEeKSEev3QtmCtw" x="-6" y="12"/>
-    </children>
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_cRsXTXadEeKSEev3QtmCtw" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_cRsXTnadEeKSEev3QtmCtw" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
-    <element xmi:type="ecore:EReference" href="github.ecore#//GITUser/followers"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_cRsXT3adEeKSEev3QtmCtw" points="[12, -33, 12, -33]$[12, -73, 12, -73]$[-108, -73, -108, -73]$[-108, -9, -108, -9]$[-55, -9, -55, -9]"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Y0YDFxY0EeO4YdECGt8KIg" points="[-9, 3, 120, -16]$[-79, 3, 50, -16]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4MMEBY0EeO4YdECGt8KIg" id="(0.06993006993006994,0.4852941176470588)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Y4MzIBY0EeO4YdECGt8KIg" id="(0.5,1.0)"/>
   </edges>
 </notation:Diagram>

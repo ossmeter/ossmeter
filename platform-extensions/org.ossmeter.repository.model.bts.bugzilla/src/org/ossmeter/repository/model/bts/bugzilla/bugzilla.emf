@@ -6,6 +6,8 @@ abstract class BugTrackingSystem {
 }
 
 class Bugzilla extends BugTrackingSystem {
-  attr String product;
-  attr String component;
+  	attr String username;
+	attr String password;
+ 	attr String product;
+ 	attr String component;
 }

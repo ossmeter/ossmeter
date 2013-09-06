@@ -1,9 +1,8 @@
 package org.ossmeter.repository.model.github;
 
-@stub(javaClass="org.ossmeter.repository.model.Project")
-class Project {
-   
-}
+//@stub(javaClass="org.ossmeter.repository.model.Project")
+//class Project {  
+//}
 
 @stub(javaClass="org.ossmeter.repository.model.Person")
 class Person {
@@ -20,20 +19,20 @@ class BugTrackingSystem {
    
 }
 
-class GitHubProject extends Project {
-   
-}
+//class GitHubProject extends Project {  
+//}
 
 class GitHubRepository extends VcsRepository {
 
   @key
-  val GitHubUser owner;
+  ref GitHubUser owner;
   attr String name;
+  attr String full_name;
   attr Boolean private;
   attr Boolean fork;
   attr String html_url;
   attr String clone_url;
-  attr String GitHub_url;
+  attr String git_url;
   attr String ssh_url;
   attr String svn_url;
   attr String mirror_url;
@@ -46,7 +45,7 @@ class GitHubRepository extends VcsRepository {
   val GitHubCommit[*] commits;
   val GitHubContent[*] contents;
   val GitHubDownload[*] downloads;
-  val GitHubRepository[*] forks;
+  ref GitHubRepository[*] forks;
   val GitHubUser[*] watchers;
   val GitHubMilestone[*] milestones;
 }
@@ -66,8 +65,7 @@ enum GitHubContentType {
 }
 
 class GitHubDownload {
-
-  @key
+  attr Integer _id;
   attr String url;
   attr String html_url;
   attr String name;
