@@ -50,6 +50,7 @@ public class ProjectCreationUtil {
 	public static Project createProjectWithBugTrackingSystem(String name, String url, String product, String component){
 		Project project = new Project();
 		project.setName(name);
+		project.setShortName(name);
 		
 		Bugzilla bugzilla = new Bugzilla();
 		bugzilla.setUrl(url);
@@ -63,6 +64,7 @@ public class ProjectCreationUtil {
 	public static Project createSvnProject(String name, String url) {
 		Project project = new Project();
 		project.setName(name);
+		project.setShortName(name);
 		SvnRepository svnRepository = new SvnRepository();
 		svnRepository.setUrl(url);
 		project.getVcsRepositories().add(svnRepository); 
@@ -70,12 +72,13 @@ public class ProjectCreationUtil {
 	}
 	
 	
-	public static Project createGitHubProject(String login, String repository) {
+	public static Project createGitHubProject(String login, String repository, String url) {
 		GitHubProject project = new GitHubProject();
 		project.setName(login + "-" + repository);
 		
 		GitHubRepository gitHubRepository = new GitHubRepository();
 		gitHubRepository.setName(repository);
+		gitHubRepository.setUrl(url);
 		
 		GitHubUser owner = new GitHubUser();
 		owner.setLogin(login);

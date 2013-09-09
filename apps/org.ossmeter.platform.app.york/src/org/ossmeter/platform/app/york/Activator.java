@@ -2,6 +2,8 @@ package org.ossmeter.platform.app.york;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.ossmeter.platform.client.api.ProjectListResource;
+
 
 public class Activator implements BundleActivator {
 
@@ -10,13 +12,14 @@ public class Activator implements BundleActivator {
 	static BundleContext getContext() {
 		return context;
 	}
-
+//	Server server;
 	/*
 	 * (non-Javadoc)
 	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
+		ProjectListResource f = new ProjectListResource(); // Starts
 	}
 
 	/*
@@ -25,6 +28,7 @@ public class Activator implements BundleActivator {
 	 */
 	public void stop(BundleContext bundleContext) throws Exception {
 		Activator.context = null;
+//		server.stop();
 	}
 
 }

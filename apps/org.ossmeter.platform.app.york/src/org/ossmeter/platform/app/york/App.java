@@ -21,7 +21,8 @@ import com.mongodb.Mongo;
 public class App implements IApplication {
 	
 	public void run(IMetricProviderManager metricProviderManager, PlatformVcsManager platformVcsManager,
-			PlatformCommunicationChannelManager communicationChannelManager, PlatformBugTrackingSystemManager bugTrackingSystemManager) throws Exception {
+						PlatformCommunicationChannelManager communicationChannelManager, PlatformBugTrackingSystemManager bugTrackingSystemManager) throws Exception {
+
 		Mongo mongo = new Mongo();
 		
 		PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
@@ -35,20 +36,24 @@ public class App implements IApplication {
 		// FIXME: Needs to check Mongo for projects, not keep registering the same ones!
 		
 //		Project pongo = ProjectCreationUtil.createSvnProject("pongo", "https://pongo.googlecode.com/svn");
-//		Project saf = ProjectCreationUtil.createGitProject("saf", "https://code.google.com/p/super-awesome-fighter");
-//		Project fedora = ProjectCreationUtil.createProjectWithBugTrackingSystem("fedora", "https://bugzilla.redhat.com/xmlrpc.cgi", "Fedora", "acpi"); // "acpi", platform);
-		//Project mojambo = ProjectCreationUtil.createGitHubProject("mojambo", "grit");
-//		Project skim = ProjectCreationUtil.createSourceForgeProject("skim-app");
-		Project epsilon = ProjectCreationUtil.createProjectWithNewsGroup("epsilon", "news.eclipse.org", "eclipse.epsilon", true, "exquisitus", "flinder1f7", 80, 10000);
-		
-		
 //		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(pongo);
+//		Project saf = ProjectCreationUtil.createGitProject("saf", "https://code.google.com/p/super-awesome-fighter");
 //		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(saf);
+//		Project fedora = ProjectCreationUtil.createProjectWithBugTrackingSystem("fedora", "https://bugzilla.redhat.com/xmlrpc.cgi", "Fedora", "acpi"); // "acpi", platform);
 //		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(fedora);
-//		//platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(mojambo);
+//		Project mojambo = ProjectCreationUtil.createGitHubProject("mojambo", "grit", "https://github.com/mojombo/grit.git");
+//		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(mojambo);
+//		Project skim = ProjectCreationUtil.createSourceForgeProject("skim-app");
 //		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(skim);
-		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(epsilon);
-		platform.getProjectRepositoryManager().getProjectRepository().sync();
+//		Project epsilon = ProjectCreationUtil.createProjectWithNewsGroup("epsilon", "news.eclipse.org", "eclipse.epsilon", true, "exquisitus", "flinder1f7", 80, 10000);
+//		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(epsilon);
+
+		
+//		platform.getProjectRepositoryManager().getProjectRepository().sync();
+		
+		while (true) {
+			if (1 > 2) break;
+		}
 		
 		platform.run();
 	}
