@@ -10,10 +10,10 @@ public class ApiApplication extends Application {
 	public Restlet createInboundRoot() {
 		Router router = new Router(getContext());
 
-		router.attach("/projects", ProjectsResource.class);
-		router.attach("/projects/", ProjectsResource.class);
-		router.attach("/projects/{page}", ProjectsResource.class);
-		router.attach("/projects/{page}/", ProjectsResource.class);
+		router.attach("/projects", ProjectListResource.class);
+		router.attach("/projects/", ProjectListResource.class);
+		router.attach("/projects/{page}", ProjectListResource.class);
+		router.attach("/projects/{page}/", ProjectListResource.class);
 		router.attach("/projects/p/{name}", ProjectResource.class);
 		router.attach("/projects/p/{name}/", ProjectResource.class);
 		router.attach("/projects/p/{name}/m/{metricId}", MetricsResource.class);

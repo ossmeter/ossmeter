@@ -1,19 +1,19 @@
 package org.ossmeter.platform.client.api;
 
-import java.io.StringWriter;
 import java.util.Iterator;
 
 import org.ossmeter.platform.Platform;
-import org.ossmeter.platform.client.api.mixins.ProjectMixin;
+import org.ossmeter.platform.client.api.mixins.PongoMixin;
+import org.ossmeter.platform.client.api.mixins.ProjectOverviewMixin;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectRepository;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.googlecode.pongo.runtime.Pongo;
 
-public class ProjectsResource extends ServerResource {
+public class ProjectListResource extends ServerResource {
 
 	@Get("json")
     public String represent() {
@@ -23,7 +23,10 @@ public class ProjectsResource extends ServerResource {
 		ProjectRepository projectRepo = platform.getProjectRepositoryManager().getProjectRepository();
 		
 		ObjectMapper mapper = new ObjectMapper();
-		mapper.addMixInAnnotations(Project.class, ProjectMixin.class);
+		//FIXME: this mixin isn't auto-generated. What shall we do about that?
+		// (It's not necessarily a bad thing)
+		mapper.addMixInAnnotations(Pongo.class, PongoMixin.class);
+		mapper.addMixInAnnotations(Project.class, ProjectOverviewMixin.class);
 		
 		Iterator<Project> it = projectRepo.getProjects().iterator();
 	

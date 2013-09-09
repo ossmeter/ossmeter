@@ -1,13 +1,17 @@
 package org.ossmeter.platform.client.api.mixins;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.googlecode.pongo.runtime.Pongo;
-import com.googlecode.pongo.runtime.PongoCollection;
-import com.mongodb.DBObject;
+import java.util.List;
+import org.ossmeter.repository.model.*;
 
-public abstract class ProjectMixin {
-	@JsonIgnore DBObject dbObject;
-	@JsonIgnore Pongo container;
-	@JsonIgnore String containingFeature;
-	@JsonIgnore PongoCollection pongoCollection;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+@JsonAutoDetect( fieldVisibility = JsonAutoDetect.Visibility.NONE, 
+				getterVisibility = JsonAutoDetect.Visibility.PUBLIC_ONLY, 
+				setterVisibility = JsonAutoDetect.Visibility.PUBLIC_ONLY)
+public abstract class ProjectMixin extends PongoMixin {
+
+	@JsonIgnore
+	abstract LocalStorage getStorage();
+	
 }

@@ -1,0 +1,22 @@
+import "mixinUtil.eol";
+
+rule ClassToMixin 
+	transform c : EClass {
+	
+	guard : c.eStructuralFeatures.select(sf | sf.isAnnotatedWith("invisible")).size() > 0
+	
+	template : "eclass2mixinclass.egl"
+	
+	target : c.name + "Mixin.java"
+	
+}
+
+rule PackageToExample
+	transform p : EPackage {
+	
+	guard: p.eSuperPackage.isUndefined() // Only want this to apply to the root package
+
+	template : "package2configurationClass.egl"
+	
+	target : "OssmeterMixins.java"	
+}
