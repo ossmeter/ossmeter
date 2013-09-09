@@ -1,128 +1,124 @@
+@namespace(uri="org.ossmeter.repository.model.redmine", prefix="redmine")
 package org.ossmeter.repository.model.redmine;
 
-
 @stub(javaClass="org.ossmeter.repository.model.base.Project")
-class Project {  
+class Project {
 }
 
 @stub(javaClass="org.ossmeter.repository.model.base.Person")
-class Person {  
+class Person {
 }
 
 @stub(javaClass="org.ossmeter.repository.model.base.BugTrackingSystem")
-class BugTrackingSystem {  
+class BugTrackingSystem {
 }
 
 @stub(javaClass="org.ossmeter.repository.model.base.CommunicationChannel")
-class CommunicationChannel {  
+class CommunicationChannel {
 }
 
-
-class RedmineProject extends Project{
-   @key
-   attr Integer _id;
-   attr String identifier;
-   attr String description;
-   attr String created_on;
-   attr String updated_on;
-   val RedmineWiki wiki;
-   val RedmineQueryManager queryManager;
-   val RedmineBugIssueTracker[*] issueTracker;
-   val RedmineUser[*] members;
-   val RedmineProjectVersion[*] versions;
+class RedmineProject extends Project {
+  attr String identifier;
+  attr String description;
+  attr String created_on;
+  attr String updated_on;
+  val RedmineWiki wiki;
+  val RedmineQueryManager queryManager;
+  val RedmineBugIssueTracker[*] issueTracker;
+  val RedmineUser[*] members;
+  val RedmineProjectVersion[*] versions;
 }
 
-class RedmineWiki extends CommunicationChannel{
- 	attr String url;  
+class RedmineWiki extends CommunicationChannel {
 }
 
 class RedmineQueryManager extends CommunicationChannel {
-   val RedmineQuery[*] queries;
+  val RedmineQuery[*] queries;
 }
 
 class RedmineQuery {
-   @key
-   attr Integer _id;
-   attr String name;
+  attr String name;
 }
 
 class RedmineProjectVersion {
-   @key
-   attr Integer _id;
-   attr String name;
-   attr String description;
-   attr String created_on;
-   attr String updated_on;
-   attr RedmineProjectVersionStatus status;
+  attr String name;
+  attr String description;
+  attr String created_on;
+  attr String updated_on;
+  attr RedmineProjectVersionStatus status;
 }
 
 enum RedmineProjectVersionStatus {
-	open = 0;
-	locked = 1;
-	closed = 2;   
+  open = 0;
+  locked = 1;
+  closed = 2;
 }
 
 class RedmineUser extends Person {
-   attr String login;
-   val RedmineUserRole[*] roles;
+  attr String login;
+  val RedmineUserRole[*] roles;
 }
 
 class RedmineUserRole {
-   attr String name;
+  attr String name;
 }
 
 class RedmineBugIssueTracker extends BugTrackingSystem {
-   @key 
-   attr Integer _id;
-   attr String name;
-   val RedmineIssue[*] issues;
+  attr String name;
+  val RedmineIssue[*] issues;
 }
 
 class RedmineIssue {
-   @key
-   attr Integer _id;
-   attr String category;
-   attr String description;
-   attr RedmineIssueStatus status;
-   val RedmineFeature feature;
-   attr RedmineIssuePriority priority;
-   ref Person author;
-   attr RedminIssueTemplate template;
-   val RedminIssueRelation[*] relations;
-   attr String start_date;
-   attr String update_date;
-   attr String due_date;
+  val RedmineCategory category;
+  attr String description;
+  attr RedmineIssueStatus status;
+  val RedmineFeature feature;
+  attr RedmineIssuePriority priority;
+  ref RedmineUser[1] author;
+  attr RedminIssueTemplate template;
+  val RedminIssueRelation[*] relations;
+  attr String start_date;
+  attr String update_date;
+  attr String due_date;
+
+  ref RedmineUser[1] assignedTo;
+}
+
+class RedmineCategory {
+  attr String name;
 }
 
 class RedminIssueRelation {
-   ref RedmineIssue relatedIssue;
-   attr RedminIssueRelationType type;
+  ref RedmineIssue relatedIssue;
+  attr RedminIssueRelationType type;
 }
 
 enum RedminIssueTemplate {
-   defectReportFromUser = 0;
-   defectReportFromDeveloper = 1;
-   reviewRequest = 2;
+  defectReportFromUser = 0;
+  defectReportFromDeveloper = 1;
+  reviewRequest = 2;
 }
 
 class RedmineFeature {
-    attr String name;
+  attr String name;
 }
 
 enum RedminIssueRelationType {
-   related = 0;
-   duplicates = 1;
-   duplicated = 2;
-   block = 3;
-   blocked = 4;
-   precedes = 5;
-   follows = 6;  
+  related = 0;
+  duplicates = 1;
+  duplicated = 2;
+  block = 3;
+  blocked = 4;
+  precedes = 5;
+  follows = 6;
 }
 
 enum RedmineIssueStatus {
-   new = 0;
+  new = 0;
+  closed = 1;
 }
 
 enum RedmineIssuePriority {
-   normal = 0;
+  normal = 0;
 }
+

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="org.ossmeter.repository.model.redmine">
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="org.ossmeter.repository.model.redmine" nsURI="org.ossmeter.repository.model.redmine"
+    nsPrefix="redmine">
   <eClassifiers xsi:type="ecore:EClass" name="Project">
     <eAnnotations source="stub">
       <details key="javaClass" value="org.ossmeter.repository.model.base.Project"/>
@@ -22,9 +23,6 @@
     </eAnnotations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RedmineProject" eSuperTypes="#//Project">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="_id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject">
-      <eAnnotations source="key"/>
-    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="identifier" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="created_on" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -40,23 +38,15 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="versions" upperBound="-1"
         eType="#//RedmineProjectVersion" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RedmineWiki" eSuperTypes="#//CommunicationChannel">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RedmineWiki" eSuperTypes="#//CommunicationChannel"/>
   <eClassifiers xsi:type="ecore:EClass" name="RedmineQueryManager" eSuperTypes="#//CommunicationChannel">
     <eStructuralFeatures xsi:type="ecore:EReference" name="queries" upperBound="-1"
         eType="#//RedmineQuery" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RedmineQuery">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="_id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject">
-      <eAnnotations source="key"/>
-    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RedmineProjectVersion">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="_id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject">
-      <eAnnotations source="key"/>
-    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="created_on" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -77,40 +67,40 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RedmineBugIssueTracker" eSuperTypes="#//BugTrackingSystem">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="_id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject">
-      <eAnnotations source="key"/>
-    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="issues" upperBound="-1"
         eType="#//RedmineIssue" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RedmineIssue">
-    <eOperations name="EOperation0"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="_id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject">
-      <eAnnotations source="key"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="category" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="category" eType="#//RedmineCategory"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="#//RedmineIssueStatus"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="feature" eType="#//RedmineFeature"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="priority" eType="#//RedmineIssuePriority"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="author" eType="#//Person"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="author" lowerBound="1"
+        eType="#//RedmineUser"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="template" eType="#//RedminIssueTemplate"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="relations" upperBound="-1"
         eType="#//RedminIssueRelation" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="start_date" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="update_date" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="due_date" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="assignedTo" lowerBound="1"
+        eType="#//RedmineUser"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RedmineCategory">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RedminIssueRelation">
     <eStructuralFeatures xsi:type="ecore:EReference" name="relatedIssue" eType="#//RedmineIssue"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//RedminIssueRelationType"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="RedminIssueTemplate">
-    <eLiterals name="reviewRequest" value="2"/>
     <eLiterals name="defectReportFromUser"/>
     <eLiterals name="defectReportFromDeveloper" value="1"/>
+    <eLiterals name="reviewRequest" value="2"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RedmineFeature">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -126,6 +116,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="RedmineIssueStatus">
     <eLiterals name="new"/>
+    <eLiterals name="closed" value="1"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="RedmineIssuePriority">
     <eLiterals name="normal"/>
