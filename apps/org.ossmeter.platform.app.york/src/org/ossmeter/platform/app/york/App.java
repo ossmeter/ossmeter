@@ -47,13 +47,11 @@ public class App implements IApplication {
 //		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(skim);
 //		Project epsilon = ProjectCreationUtil.createProjectWithNewsGroup("epsilon", "news.eclipse.org", "eclipse.epsilon", true, "exquisitus", "flinder1f7", 80, 10000);
 //		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(epsilon);
-
-		
 //		platform.getProjectRepositoryManager().getProjectRepository().sync();
 		
-		while (true) {
-			if (1 > 2) break;
-		}
+//		while (true) {
+//			if (1 > 2) break;
+//		}
 		
 		platform.run();
 	}

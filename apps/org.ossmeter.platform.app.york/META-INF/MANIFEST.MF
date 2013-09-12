@@ -11,6 +11,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.repository.model,
  com.googlecode.pongo.runtime,
  org.ossmeter.repository.model.github,
- org.ossmeter.repository.model.sourceforge
+ org.ossmeter.repository.model.sourceforge,
+ org.ossmeter.platform.client.api,
+ org.ossmeter.repository.model.eclipseforge
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
