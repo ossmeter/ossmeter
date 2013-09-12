@@ -3,6 +3,7 @@ package org.ossmeter.repository.model;
 import com.mongodb.*;
 import java.util.*;
 import com.googlecode.pongo.runtime.*;
+import com.googlecode.pongo.runtime.querying.*;
 
 // protected region custom-imports on begin
 // protected region custom-imports end
@@ -15,14 +16,18 @@ public class LocalStorage extends Pongo {
 	
 	public LocalStorage() { 
 		super();
+		PATH.setOwningType("org.ossmeter.repository.model.LocalStorage");
 	}
+	
+	public static StringQueryProducer PATH = new StringQueryProducer("path"); 
+	
 	
 	public String getPath() {
 		return parseString(dbObject.get("path")+"", "");
 	}
 	
 	public LocalStorage setPath(String path) {
-		dbObject.put("path", path + "");
+		dbObject.put("path", path);
 		notifyChanged();
 		return this;
 	}

@@ -8,6 +8,7 @@ public class ProjectCollection extends PongoCollection<Project> {
 	
 	public ProjectCollection(DBCollection dbCollection) {
 		super(dbCollection);
+		createIndex("shortName");
 	}
 	
 	public Iterable<Project> findById(String id) {
@@ -19,11 +20,32 @@ public class ProjectCollection extends PongoCollection<Project> {
 	}
 	
 	public Project findOneByName(String q) {
-		return (Project) PongoFactory.getInstance().createPongo(dbCollection.findOne(new BasicDBObject("name", q + "")));
+		Project project = (Project) PongoFactory.getInstance().createPongo(dbCollection.findOne(new BasicDBObject("name", q + "")));
+		if (project != null) {
+			project.setPongoCollection(this);
+		}
+		return project;
 	}
+	
 
 	public long countByName(String q) {
 		return dbCollection.count(new BasicDBObject("name", q + ""));
+	}
+	public Iterable<Project> findByShortName(String q) {
+		return new IteratorIterable<Project>(new PongoCursorIterator<Project>(this, dbCollection.find(new BasicDBObject("shortName", q + ""))));
+	}
+	
+	public Project findOneByShortName(String q) {
+		Project project = (Project) PongoFactory.getInstance().createPongo(dbCollection.findOne(new BasicDBObject("shortName", q + "")));
+		if (project != null) {
+			project.setPongoCollection(this);
+		}
+		return project;
+	}
+	
+
+	public long countByShortName(String q) {
+		return dbCollection.count(new BasicDBObject("shortName", q + ""));
 	}
 	
 	@Override

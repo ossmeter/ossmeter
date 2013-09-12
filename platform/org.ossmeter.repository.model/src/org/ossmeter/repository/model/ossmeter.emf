@@ -5,6 +5,7 @@ package org.ossmeter.repository.model;
 @db
 class ProjectRepository extends NamedElement{
 	val Project[*] projects;
+//	val Person[*] persons;
 }
 
 abstract class NamedElement {
@@ -13,6 +14,8 @@ abstract class NamedElement {
 }
 
 class Project extends NamedElement {
+  @searchable
+  attr String shortName;
   attr String description;
   attr int year;
   attr boolean active;
@@ -20,11 +23,12 @@ class Project extends NamedElement {
   val VcsRepository[*] vcsRepositories;
   val CommunicationChannel[*] communicationChannels;
   val BugTrackingSystem[*] bugTrackingSystems;  
-  val Person[*] persons;
+  val Person[*] persons; //TODO: This should be a ref
   val License[*] licenses;
   val NntpNewsGroup[*] newsgroups;
+  @invisible
   val LocalStorage storage;
-  val MetricProvider[*] metricProvider;
+  val MetricProvider[*] metricProviders;
 }
 
 class MetricProvider  extends NamedElement{
@@ -74,7 +78,9 @@ abstract class CommunicationChannel {
   attr String url;
 }
 
-abstract class Person extends NamedElement {
+// JW: made this concrete in order to store in DB for testing: EclipseForgeProjects define a number of
+// of Person references but no concrete implementations.
+class Person extends NamedElement {
   attr String homePage;
 }
 

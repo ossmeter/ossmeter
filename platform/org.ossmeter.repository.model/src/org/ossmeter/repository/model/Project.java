@@ -3,6 +3,7 @@ package org.ossmeter.repository.model;
 import com.mongodb.*;
 import java.util.*;
 import com.googlecode.pongo.runtime.*;
+import com.googlecode.pongo.runtime.querying.*;
 
 
 public class Project extends NamedElement {
@@ -13,7 +14,7 @@ public class Project extends NamedElement {
 	protected List<Person> persons = null;
 	protected List<License> licenses = null;
 	protected List<NntpNewsGroup> newsgroups = null;
-	protected List<MetricProvider> metricProvider = null;
+	protected List<MetricProvider> metricProviders = null;
 	protected LocalStorage storage = null;
 	
 	
@@ -25,15 +26,39 @@ public class Project extends NamedElement {
 		dbObject.put("persons", new BasicDBList());
 		dbObject.put("licenses", new BasicDBList());
 		dbObject.put("newsgroups", new BasicDBList());
-		dbObject.put("metricProvider", new BasicDBList());
+		dbObject.put("metricProviders", new BasicDBList());
+		super.setSuperTypes("org.ossmeter.repository.model.NamedElement");
+		NAME.setOwningType("org.ossmeter.repository.model.Project");
+		SHORTNAME.setOwningType("org.ossmeter.repository.model.Project");
+		DESCRIPTION.setOwningType("org.ossmeter.repository.model.Project");
+		YEAR.setOwningType("org.ossmeter.repository.model.Project");
+		ACTIVE.setOwningType("org.ossmeter.repository.model.Project");
+		LASTEXECUTED.setOwningType("org.ossmeter.repository.model.Project");
 	}
 	
+	public static StringQueryProducer NAME = new StringQueryProducer("name"); 
+	public static StringQueryProducer SHORTNAME = new StringQueryProducer("shortName"); 
+	public static StringQueryProducer DESCRIPTION = new StringQueryProducer("description"); 
+	public static NumericalQueryProducer YEAR = new NumericalQueryProducer("year");
+	public static StringQueryProducer ACTIVE = new StringQueryProducer("active"); 
+	public static StringQueryProducer LASTEXECUTED = new StringQueryProducer("lastExecuted"); 
+	
+	
+	public String getShortName() {
+		return parseString(dbObject.get("shortName")+"", "");
+	}
+	
+	public Project setShortName(String shortName) {
+		dbObject.put("shortName", shortName);
+		notifyChanged();
+		return this;
+	}
 	public String getDescription() {
 		return parseString(dbObject.get("description")+"", "");
 	}
 	
 	public Project setDescription(String description) {
-		dbObject.put("description", description + "");
+		dbObject.put("description", description);
 		notifyChanged();
 		return this;
 	}
@@ -42,7 +67,7 @@ public class Project extends NamedElement {
 	}
 	
 	public Project setYear(int year) {
-		dbObject.put("year", year + "");
+		dbObject.put("year", year);
 		notifyChanged();
 		return this;
 	}
@@ -51,7 +76,7 @@ public class Project extends NamedElement {
 	}
 	
 	public Project setActive(boolean active) {
-		dbObject.put("active", active + "");
+		dbObject.put("active", active);
 		notifyChanged();
 		return this;
 	}
@@ -60,7 +85,7 @@ public class Project extends NamedElement {
 	}
 	
 	public Project setLastExecuted(String lastExecuted) {
-		dbObject.put("lastExecuted", lastExecuted + "");
+		dbObject.put("lastExecuted", lastExecuted);
 		notifyChanged();
 		return this;
 	}
@@ -102,11 +127,11 @@ public class Project extends NamedElement {
 		}
 		return newsgroups;
 	}
-	public List<MetricProvider> getMetricProvider() {
-		if (metricProvider == null) {
-			metricProvider = new PongoList<MetricProvider>(this, "metricProvider", true);
+	public List<MetricProvider> getMetricProviders() {
+		if (metricProviders == null) {
+			metricProviders = new PongoList<MetricProvider>(this, "metricProviders", true);
 		}
-		return metricProvider;
+		return metricProviders;
 	}
 	
 	
