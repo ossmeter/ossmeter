@@ -16,7 +16,7 @@ public class VcsProjectDelta {
 			String[] revs = vcsManager.getRevisionsForDate(repo, date);
 			
 			if (revs == null) return;
-			if (revs[0] == null || revs[1] == null) return;
+			if (revs.length != 2 || revs[0] == null || revs[1] == null) return;
 			
 			repoDeltas.add(vcsManager.getDelta(repo, revs[0], revs[1]));
 		}

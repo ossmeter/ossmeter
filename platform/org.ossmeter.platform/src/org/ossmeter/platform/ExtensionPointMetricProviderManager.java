@@ -42,11 +42,10 @@ public class ExtensionPointMetricProviderManager implements IMetricProviderManag
 					e.printStackTrace();
 				}
 			}
-		}
-		
-		System.out.println("Registered metric providers: ");
-		for (IMetricProvider imp : metricProviders) {
-			System.out.println("\t"+ imp.getIdentifier());
+			System.err.println("Registered metric providers: ");
+			for (IMetricProvider imp : metricProviders) {
+				System.err.println("\t"+ imp.getIdentifier());
+			}
 		}
 		
 		return metricProviders;

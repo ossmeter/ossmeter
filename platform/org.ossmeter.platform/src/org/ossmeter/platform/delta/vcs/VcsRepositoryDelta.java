@@ -52,6 +52,7 @@ public class VcsRepositoryDelta implements Serializable {
 						break;
 					case UNKNOWN:
 						//ignore
+						System.err.println("Found unknnown commit kind: " + item.getChangeType());
 						break;
 				}
 			}

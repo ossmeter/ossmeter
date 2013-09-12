@@ -17,6 +17,16 @@ import org.ossmeter.repository.model.Project;
 import com.mongodb.Mongo;
 
 public class Platform {
+	
+	/*
+	 * We need a static reference so that we can get hold of the platform from the
+	 * client API.
+	 */
+	protected static Platform INSTANCE;
+	
+	public static Platform getInstance() {
+		return INSTANCE;
+	}
 
 	protected ProjectRepositoryManager projectRepositoryManager = null;
 	protected IMetricProviderManager metricProviderManager = null;
@@ -28,6 +38,7 @@ public class Platform {
 	protected final Path localStorageHomeDirectory = get(System.getProperty("user.home"), "ossmeter");
 
 	public Platform(Mongo mongo) {
+		INSTANCE = this;
 		this.mongo = mongo;
 		projectRepositoryManager = new ProjectRepositoryManager(mongo);
 		metricProviderManager = new ExtensionPointMetricProviderManager();

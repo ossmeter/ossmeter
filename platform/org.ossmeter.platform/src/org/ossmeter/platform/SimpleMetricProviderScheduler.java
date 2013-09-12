@@ -39,6 +39,7 @@ public class SimpleMetricProviderScheduler {
 //			@Override
 //			public void run() {
 				for (Project project : platform.getProjectRepositoryManager().getProjectRepository().getProjects()) {
+					System.out.println(project.getName());
 					initialiseProjectLocalStorage(project);
 					executeMetricProviders(platform.getMetricProviderManager().getMetricProviders(), project);
 				}
@@ -89,10 +90,22 @@ public class SimpleMetricProviderScheduler {
 		}
 		
 		Date last = new Date(project.getLastExecuted());
+		
+		//DEBUG
+		last = new Date("20130911");
+		//END DEBUG
+		
+		
 		Date today = new Date();
+		
+		//DEBUG
+		today = new Date("20130912");
+		//END DEBUG
+		
 		Date[] dates = Date.range(last.addDays(1), today);
 		
 		for (Date date : dates) {
+			System.out.println("\tDate: " + date + " (" + project.getName() + ")");
 			ProjectDelta delta = new ProjectDelta(	project, 
 													date, 
 													platform.getVcsManager(), 
@@ -103,6 +116,7 @@ public class SimpleMetricProviderScheduler {
 			// 2. Execute transient MPs
 			for (ITransientMetricProvider provider : getOrderedTransientMetricProviders(providers)) {
 				if (provider.appliesTo(project)) {
+					System.out.println("\t'\tTMP: " + provider.getIdentifier());
 					provider.setMetricProviderContext(new MetricProviderContext(platform, new OssmeterLoggerFactory().makeNewLoggerInstance(provider.getIdentifier())));
 					addDependenciesToMetricProvider(provider);
 					provider.measure(project, delta, provider.adapt(platform.getMetricsRepository(project).getDb()));
@@ -113,6 +127,7 @@ public class SimpleMetricProviderScheduler {
 			MetricHistoryManager historyManager = new MetricHistoryManager(platform);
 			for (IMetricProvider  provider : providers) {
 				if (provider instanceof IHistoricalMetricProvider && provider.appliesTo(project)) {
+					System.out.println("\t'\tHMP: " + provider.getIdentifier());
 					provider.setMetricProviderContext(new MetricProviderContext(platform, new OssmeterLoggerFactory().makeNewLoggerInstance(provider.getIdentifier())));
 					addDependenciesToMetricProvider(provider);
 					historyManager.store(project, date, (IHistoricalMetricProvider) provider);
