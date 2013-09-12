@@ -1,7 +1,6 @@
 package org.ossmeter.platform.client.api;
 
 import org.ossmeter.platform.Platform;
-import org.ossmeter.platform.client.api.mixins.bkp.MetricProviderMixin;
 import org.ossmeter.repository.model.MetricProvider;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectRepository;
@@ -14,6 +13,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class MetricsResource extends ServerResource {
 
+	/**
+	 * TODO: Incomplete. [12th Sept, 2013]
+	 * @return
+	 */
 	@Get
 	public String represent() {
 		String projectName = (String) getRequest().getAttributes().get("name");
@@ -42,7 +45,7 @@ public class MetricsResource extends ServerResource {
 		}
 		
 		ObjectMapper mapper = new ObjectMapper();
-		mapper.addMixInAnnotations(MetricProvider.class, MetricProviderMixin.class);
+//		mapper.addMixInAnnotations(MetricProvider.class, MetricProviderMixin.class);
 		try {
 			return mapper.writeValueAsString(metricProvider);
 		} catch (JsonProcessingException e) {
