@@ -29,7 +29,7 @@ public class MetricsResource extends ServerResource {
 		}
 
 		MetricProvider metricProvider = null;
-		for (MetricProvider mp : project.getMetricProvider()) {
+		for (MetricProvider mp : project.getMetricProviders()) {
 			if (mp.getId().equals(metricId)) {
 				metricProvider = mp;
 				break;

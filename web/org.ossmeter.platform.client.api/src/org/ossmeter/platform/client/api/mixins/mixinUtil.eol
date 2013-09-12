@@ -2,6 +2,9 @@ operation EModelElement isAnnotatedWith(anno : String) : Boolean {
 	return self.eAnnotations.selectOne(a | a.source = anno).isDefined();
 }
 
+operation EPackage getLastPackageName() {
+	return self.name.split("\\.").last().println();
+}
 
 operation EClass getJavaExtends() : String {
 	if (self.eSuperTypes.size() > 0) {

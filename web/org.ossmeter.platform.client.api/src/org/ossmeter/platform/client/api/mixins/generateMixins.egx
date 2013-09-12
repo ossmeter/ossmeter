@@ -7,7 +7,7 @@ rule ClassToMixin
 	
 	template : "eclass2mixinclass.egl"
 	
-	target : c.name + "Mixin.java"
+	target : c.ePackage.getLastPackageName() + "/" + c.name + "Mixin.java"
 	
 }
 

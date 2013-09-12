@@ -8,7 +8,6 @@ import org.restlet.data.Status;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ProjectResource extends ServerResource {
@@ -29,8 +28,8 @@ public class ProjectResource extends ServerResource {
 		}
 		
 		try {
-			return mapper.writeValueAsString(p);
-		} catch (JsonProcessingException e) {
+			return p.getDbObject().toString();//mapper.writeValueAsString(p);//
+		} catch (Exception e) {
 			e.printStackTrace();
 			return Util.generateErrorMessage(generateRequestJson(projectName), "An error occurred when converting the project to JSON: " + e.getMessage());
 		}

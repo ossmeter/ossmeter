@@ -3,6 +3,7 @@ package org.ossmeter.platform.client.api.mixins;
 
 import [%=p.name%].*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.googlecode.pongo.runtime.Pongo;
 
 public class OssmeterMixins {
 

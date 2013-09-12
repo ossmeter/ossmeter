@@ -1,5 +1,5 @@
 [%import "mixinUtil.eol";%]
-package org.ossmeter.platform.client.api.mixins;
+package org.ossmeter.platform.client.api.mixins.[%=c.ePackage.getLastPackageName()%];
 
 import java.util.List;
 import org.ossmeter.repository.model.*;
