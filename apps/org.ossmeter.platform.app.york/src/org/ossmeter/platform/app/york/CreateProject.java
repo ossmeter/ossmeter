@@ -2,18 +2,14 @@ package org.ossmeter.platform.app.york;
 
 import org.ossmeter.platform.Date;
 import org.ossmeter.platform.Platform;
-import org.ossmeter.repository.model.Bugzilla;
 import org.ossmeter.repository.model.MetricProvider;
 import org.ossmeter.repository.model.MetricProviderType;
-import org.ossmeter.repository.model.NntpNewsGroup;
 import org.ossmeter.repository.model.Person;
 import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.SvnRepository;
 import org.ossmeter.repository.model.eclipseforge.EclipseForgeProject;
-import org.ossmeter.repository.model.eclipseforge.EclipsePlatform;
-import org.ossmeter.repository.model.eclipseforge.ProjectStatus;
 import org.ossmeter.repository.model.eclipseforge.Release;
 import org.ossmeter.repository.model.eclipseforge.ReleaseType;
-import org.ossmeter.repository.model.SvnRepository;
 
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -68,7 +64,7 @@ public class CreateProject {
 			p.setUpdatesiteUrl("http://download.eclipse.org/epsilon/updates/");
 			p.setHomePage("http://eclipse.org/epsilon/");
 			p.setProjectplanUrl("http://eclipse.org/epsilon/projectplan.url");
-			p.setStatus(ProjectStatus.toplevel);
+//			p.setStatus(ProjectStatus.toplevel);
 			
 			Person dk = new Person();
 			dk.setName("Dimitrios Kolovos");
