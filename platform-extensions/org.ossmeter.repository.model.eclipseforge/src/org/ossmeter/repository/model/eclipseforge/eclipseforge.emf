@@ -1,6 +1,6 @@
 package org.ossmeter.repository.model.eclipseforge;
 
-@stub(javaClass="org.ossmeter.repository.model.Project")
+@stub(javaClass="org.ossmeter.repository.model.base.Project")
 class Project {
    
 }
@@ -10,12 +10,12 @@ class NamedElement {
    
 }
 
-@stub(javaClass="org.ossmeter.repository.model.Person")
+@stub(javaClass="org.ossmeter.repository.model.base.Person")
 class Person {
    
 }
 
-@stub(javaClass="org.ossmeter.repository.model.CommunicationChannel")
+@stub(javaClass="org.ossmeter.repository.model.base.CommunicationChannel")
 abstract class CommunicationChannel {
    
 }

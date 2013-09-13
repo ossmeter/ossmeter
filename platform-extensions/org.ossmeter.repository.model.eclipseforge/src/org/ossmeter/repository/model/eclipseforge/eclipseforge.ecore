@@ -3,7 +3,7 @@
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="org.ossmeter.repository.model.eclipseforge">
   <eClassifiers xsi:type="ecore:EClass" name="Project">
     <eAnnotations source="stub">
-      <details key="javaClass" value="org.ossmeter.repository.model.Project"/>
+      <details key="javaClass" value="org.ossmeter.repository.model.base.Project"/>
     </eAnnotations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NamedElement">
@@ -13,12 +13,12 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Person">
     <eAnnotations source="stub">
-      <details key="javaClass" value="org.ossmeter.repository.model.Person"/>
+      <details key="javaClass" value="org.ossmeter.repository.model.base.Person"/>
     </eAnnotations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CommunicationChannel" abstract="true">
     <eAnnotations source="stub">
-      <details key="javaClass" value="org.ossmeter.repository.model.CommunicationChannel"/>
+      <details key="javaClass" value="org.ossmeter.repository.model.base.CommunicationChannel"/>
     </eAnnotations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NntpNewsGroup">

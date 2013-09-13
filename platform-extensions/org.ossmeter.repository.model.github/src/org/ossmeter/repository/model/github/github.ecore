@@ -3,17 +3,17 @@
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="org.ossmeter.repository.model.github">
   <eClassifiers xsi:type="ecore:EClass" name="Person">
     <eAnnotations source="stub">
-      <details key="javaClass" value="org.ossmeter.repository.model.Person"/>
+      <details key="javaClass" value="org.ossmeter.repository.model.base.Person"/>
     </eAnnotations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VcsRepository">
     <eAnnotations source="stub">
-      <details key="javaClass" value="org.ossmeter.repository.model.VcsRepository"/>
+      <details key="javaClass" value="org.ossmeter.repository.model.base.VcsRepository"/>
     </eAnnotations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BugTrackingSystem">
     <eAnnotations source="stub">
-      <details key="javaClass" value="org.ossmeter.repository.model.BugTrackingSystem"/>
+      <details key="javaClass" value="org.ossmeter.repository.model.base.BugTrackingSystem"/>
     </eAnnotations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GitHubRepository" eSuperTypes="#//VcsRepository">

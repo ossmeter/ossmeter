@@ -4,17 +4,17 @@ package org.ossmeter.repository.model.github;
 //class Project {  
 //}
 
-@stub(javaClass="org.ossmeter.repository.model.Person")
+@stub(javaClass="org.ossmeter.repository.model.base.Person")
 class Person {
    
 }
 
-@stub(javaClass="org.ossmeter.repository.model.VcsRepository")
+@stub(javaClass="org.ossmeter.repository.model.base.VcsRepository")
 class VcsRepository {
    
 }
 
-@stub(javaClass="org.ossmeter.repository.model.BugTrackingSystem")
+@stub(javaClass="org.ossmeter.repository.model.base.BugTrackingSystem")
 class BugTrackingSystem {
    
 }
