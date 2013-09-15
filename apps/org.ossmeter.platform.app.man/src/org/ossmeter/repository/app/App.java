@@ -21,6 +21,8 @@ import org.ossmeter.repository.model.NntpNewsGroup;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.SvnRepository;
 
+import com.googlecode.pongo.runtime.PongoFactory;
+import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
 import com.mongodb.Mongo;
 
 public class App implements IApplication {
@@ -30,6 +32,8 @@ public class App implements IApplication {
 				PlatformCommunicationChannelManager platformCommunicationChannelManager, 
 				PlatformBugTrackingSystemManager platformBugTrackingSystemManager) throws Exception {
 		Mongo mongo = new Mongo();
+		PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
+		
 		Platform platform = new Platform(mongo);
 		platform.setMetricProviderManager(metricProviderManager);
 		platform.setPlatformVcsManager(platformVcsManager);

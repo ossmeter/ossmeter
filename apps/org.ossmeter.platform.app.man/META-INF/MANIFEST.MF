@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: App
-Bundle-SymbolicName: org.ossmeter.platform.app.man
+Bundle-SymbolicName: org.ossmeter.platform.app.man;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.repository.app.Activator
 Require-Bundle: org.eclipse.ui,
@@ -12,7 +12,8 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.metricprovider.loc,
  org.ossmeter.platform.vcs.svn,
  org.ossmeter.metricprovider.numberofarticles,
- org.ossmeter.platform.communicationchannel.nntp
+ org.ossmeter.platform.communicationchannel.nntp,
+ com.googlecode.pongo.runtime.osgi
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.repository.app
