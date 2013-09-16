@@ -3,6 +3,7 @@ package org.ossmeter.repository.app;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
+import org.ossmeter.metricprovider.generic.totalloc.GenericTotalLocMetricProvider;
 import org.ossmeter.platform.ExtensionPointMetricProviderManager;
 import org.ossmeter.platform.IMetricProviderManager;
 import org.ossmeter.platform.Platform;
@@ -32,8 +33,9 @@ public class App implements IApplication {
 				PlatformCommunicationChannelManager platformCommunicationChannelManager, 
 				PlatformBugTrackingSystemManager platformBugTrackingSystemManager) throws Exception {
 		Mongo mongo = new Mongo();
+
 		PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
-		
+
 		Platform platform = new Platform(mongo);
 		platform.setMetricProviderManager(metricProviderManager);
 		platform.setPlatformVcsManager(platformVcsManager);
@@ -99,15 +101,19 @@ public class App implements IApplication {
 	
 	protected void addSampleProjectWithBugTrackingSystem(
 			String name, String url, String product, String component, Platform platform){
+		
 		Project project = new Project();
 		project.setName(name);
-		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
+		
 		Bugzilla bugzilla = new Bugzilla();
 		bugzilla.setUrl(url);
 		bugzilla.setProduct(product);
+		
 		if (component!=null)
 			bugzilla.setComponent(component);
 		project.getBugTrackingSystems().add(bugzilla);
+		
+		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
 		platform.getProjectRepositoryManager().getProjectRepository().sync();		
 	}
 
@@ -130,6 +136,8 @@ public class App implements IApplication {
 		
 		IExtensionRegistry registry = org.eclipse.core.runtime.Platform.getExtensionRegistry();
 //		registry.getExtensionPoint("").
+
+		
 		
 	}
 	
