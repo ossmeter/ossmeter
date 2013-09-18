@@ -27,6 +27,21 @@ public class NoaMetricProvider implements ITransientMetricProvider<Noa>{
 	}
 
 	@Override
+	public String getShortIdentifier() {
+		return null;
+	}
+
+	@Override
+	public String getFriendlyName() {
+		return null;
+	}
+
+	@Override
+	public String getSummaryInformation() {
+		return null;
+	}
+	
+	@Override
 	public boolean appliesTo(Project project) {
 		for (CommunicationChannel communicationChannel: project.getCommunicationChannels()) {
 			if (communicationChannel instanceof NntpNewsGroup) return true;
@@ -71,5 +86,4 @@ public class NoaMetricProvider implements ITransientMetricProvider<Noa>{
 			db.sync();
 		}
 	}
-
 }

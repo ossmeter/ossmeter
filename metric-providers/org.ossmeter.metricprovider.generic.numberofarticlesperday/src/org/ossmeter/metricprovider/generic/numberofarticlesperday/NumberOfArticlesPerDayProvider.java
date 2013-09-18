@@ -34,6 +34,21 @@ public class NumberOfArticlesPerDayProvider implements IHistoricalMetricProvider
 	public String getIdentifier() {
 		return IDENTIFIER;
 	}
+
+	@Override
+	public String getShortIdentifier() {
+		return "noapd";
+	}
+
+	@Override
+	public String getFriendlyName() {
+		return "Number of articles/day";
+	}
+
+	@Override
+	public String getSummaryInformation() {
+		return "This metric illustrates the number of newsgroup articles that have been posted over time.";
+	}
 	
 	@Override
 	public boolean appliesTo(Project project) {

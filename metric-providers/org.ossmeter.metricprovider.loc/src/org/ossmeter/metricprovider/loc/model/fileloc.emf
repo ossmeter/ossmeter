@@ -21,4 +21,5 @@ class LinesOfCodeData {
    attr String file;
    attr long lines;
    attr String revisionNumber;
+   attr String date;
 }

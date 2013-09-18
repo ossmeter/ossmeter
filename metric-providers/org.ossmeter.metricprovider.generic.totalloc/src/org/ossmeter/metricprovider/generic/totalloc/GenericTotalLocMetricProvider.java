@@ -35,6 +35,23 @@ public class GenericTotalLocMetricProvider implements IHistoricalMetricProvider{
 	}
 	
 	@Override
+	public String getFriendlyName() {
+		return "Total L.O.C. over time";
+	}
+	@Override
+	public String getShortIdentifier() {
+		return "totalloc";
+	}
+	/**
+	 * {@inheritDoc}
+	 * Disclaimer: this summary information is taken from Wikipedia. It's only for illustrative purposes.
+	 */
+	@Override
+	public String getSummaryInformation() {
+		return "Lines of code is a software metric used to measure the size of a computer program by counting the number of lines in the text of the program's source code.";
+	}
+	
+	@Override
 	public boolean appliesTo(Project project) {
 		return project.getVcsRepositories().size() > 0;
 	}
@@ -79,7 +96,6 @@ public class GenericTotalLocMetricProvider implements IHistoricalMetricProvider{
 	
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		System.out.println("LocMetricProvider.class.getCanonicalName(): " + LocMetricProvider.class.getCanonicalName());
 		return Arrays.asList(LocMetricProvider.class.getCanonicalName());
 	}
 

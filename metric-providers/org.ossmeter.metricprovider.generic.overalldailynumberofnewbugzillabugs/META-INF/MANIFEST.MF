@@ -7,7 +7,8 @@ Bundle-Activator: org.ossmeter.metricprovider.generic.overalldailynumberofnewbug
 Require-Bundle: org.eclipse.core.runtime,
  com.googlecode.pongo.runtime,
  org.ossmeter.platform,
- org.ossmeter.metricprovider.numberofnewbugzillabugs;bundle-version="1.0.0"
+ org.ossmeter.metricprovider.numberofnewbugzillabugs;bundle-version="1.0.0",
+ org.ossmeter.platform.client.api
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.metricprovider.generic.overalldailynumberofnewbugzillabugs

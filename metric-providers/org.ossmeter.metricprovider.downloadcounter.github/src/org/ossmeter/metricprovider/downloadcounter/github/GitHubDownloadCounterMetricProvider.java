@@ -86,4 +86,19 @@ public class GitHubDownloadCounterMetricProvider extends AbstractTransientMetric
 		
 		return project;
 	}
+
+	@Override
+	public String getShortIdentifier() {
+		return "ghdc";
+	}
+
+	@Override
+	public String getFriendlyName() {
+		return "Download counter";
+	}
+
+	@Override
+	public String getSummaryInformation() {
+		return "Lorum ipsum";
+	}
 }

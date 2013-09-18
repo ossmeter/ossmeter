@@ -1,6 +1,8 @@
 package org.ossmeter.metricprovider.generic.totalloc.model;
 
+@viz(target="gcharts", chart="line")
 class TotalLoc {
+	@series(label="url")
 	val TLocRepositoryData[*] repositories;
 }
 
@@ -8,5 +10,7 @@ class TLocRepositoryData {
    attr String url;
    attr String repoType;
    attr String revision;
+   
+   @yaxis(title="Total lines of code")
    attr long totalLines;
 }

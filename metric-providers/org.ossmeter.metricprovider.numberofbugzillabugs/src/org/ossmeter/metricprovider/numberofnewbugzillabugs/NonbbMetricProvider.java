@@ -77,4 +77,19 @@ public class NonbbMetricProvider implements ITransientMetricProvider<Nonbb>{
 		}
 	}
 
+	@Override
+	public String getShortIdentifier() {
+		return "nonbb";
+	}
+
+	@Override
+	public String getFriendlyName() {
+		return "Number of bugs";
+	}
+
+	@Override
+	public String getSummaryInformation() {
+		return "The number of bugs over time. Lorum ipsum.";
+	}
+
 }

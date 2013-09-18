@@ -74,4 +74,19 @@ public class OverallDailyNumberOfArticlesProvider implements IHistoricalMetricPr
 	public void setMetricProviderContext(MetricProviderContext context) {
 		this.context = context;
 	}
+
+	@Override
+	public String getShortIdentifier() {
+		return "dnoap";
+	}
+
+	@Override
+	public String getFriendlyName() {
+		return "Daily articles";
+	}
+
+	@Override
+	public String getSummaryInformation() {
+		return "Lorum ipsum";
+	}
 }

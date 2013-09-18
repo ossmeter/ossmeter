@@ -7,5 +7,12 @@
             provider="org.ossmeter.metricprovider.generic.totalloc.GenericTotalLocMetricProvider">
       </metricProvider>
    </extension>
+   <extension
+         point="org.ossmeter.platform.client.api.pongoviz">
+      <visualiser
+            metricProviderId="org.ossmeter.metricprovider.generic.totalloc"
+            pongoVisualiser="org.ossmeter.metricprovider.generic.totalloc.model.TotalLocViz">
+      </visualiser>
+   </extension>
 
 </plugin>

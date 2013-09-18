@@ -73,4 +73,20 @@ public class NumberOfArticlesPerDayPerNewsgroupProvider implements IHistoricalMe
 	public void setMetricProviderContext(MetricProviderContext context) {
 		this.context = context;
 	}
+
+	@Override
+	public String getShortIdentifier() {
+		return "noapdpnp";
+	}
+
+	@Override
+	public String getFriendlyName() {
+		// TODO Auto-generated method stub
+		return "Articles/day/newsgroup";
+	}
+
+	@Override
+	public String getSummaryInformation() {
+		return "Lorum ipsum";
+	}
 }

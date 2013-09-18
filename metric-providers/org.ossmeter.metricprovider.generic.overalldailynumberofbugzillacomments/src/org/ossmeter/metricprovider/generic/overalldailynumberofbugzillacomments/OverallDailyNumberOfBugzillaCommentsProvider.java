@@ -73,4 +73,19 @@ public class OverallDailyNumberOfBugzillaCommentsProvider implements IHistorical
 	public void setMetricProviderContext(MetricProviderContext context) {
 		this.context = context;
 	}
+
+	@Override
+	public String getShortIdentifier() {
+		return "odnobc";
+	}
+
+	@Override
+	public String getFriendlyName() {
+		return "Overall number of comments";
+	}
+
+	@Override
+	public String getSummaryInformation() {
+		return "Lorum ipsum.";
+	}
 }

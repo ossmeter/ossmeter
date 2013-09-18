@@ -15,11 +15,13 @@ public class LinesOfCodeData extends Pongo {
 		FILE.setOwningType("org.ossmeter.metricprovider.loc.model.LinesOfCodeData");
 		LINES.setOwningType("org.ossmeter.metricprovider.loc.model.LinesOfCodeData");
 		REVISIONNUMBER.setOwningType("org.ossmeter.metricprovider.loc.model.LinesOfCodeData");
+		DATE.setOwningType("org.ossmeter.metricprovider.loc.model.LinesOfCodeData");
 	}
 	
 	public static StringQueryProducer FILE = new StringQueryProducer("file"); 
 	public static NumericalQueryProducer LINES = new NumericalQueryProducer("lines");
 	public static StringQueryProducer REVISIONNUMBER = new StringQueryProducer("revisionNumber"); 
+	public static StringQueryProducer DATE = new StringQueryProducer("date"); 
 	
 	
 	public String getFile() {
@@ -46,6 +48,15 @@ public class LinesOfCodeData extends Pongo {
 	
 	public LinesOfCodeData setRevisionNumber(String revisionNumber) {
 		dbObject.put("revisionNumber", revisionNumber);
+		notifyChanged();
+		return this;
+	}
+	public String getDate() {
+		return parseString(dbObject.get("date")+"", "");
+	}
+	
+	public LinesOfCodeData setDate(String date) {
+		dbObject.put("date", date);
 		notifyChanged();
 		return this;
 	}

@@ -34,7 +34,21 @@ public class OverallDailyNumberOfNewBugzillaBugsProvider implements IHistoricalM
 	public String getIdentifier() {
 		return IDENTIFIER;
 	}
-	
+
+	@Override
+	public String getShortIdentifier() {
+		return "odnonbb";
+	}
+
+	@Override
+	public String getFriendlyName() {
+		return "Number of bugs daily";
+	}
+
+	@Override
+	public String getSummaryInformation() {
+		return "The number of bugs daily. Lorum ipsum.";
+	}
 	@Override
 	public boolean appliesTo(Project project) {
 		for (BugTrackingSystem bugTrackingSystem: project.getBugTrackingSystems()) {

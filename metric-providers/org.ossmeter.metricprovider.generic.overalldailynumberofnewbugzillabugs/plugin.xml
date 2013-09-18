@@ -18,5 +18,12 @@
             provider="org.ossmeter.metricprovider.generic.overalldailynumberofnewbugzillabugs.OverallDailyNumberOfNewBugzillaBugsProvider">
       </metricProvider>
    </extension>
+   <extension
+         point="org.ossmeter.platform.client.api.pongoviz">
+      <visualiser
+            metricProviderId="org.ossmeter.metricprovider.generic.overalldailynumberofnewbugzillabugs"
+            pongoVisualiser="org.ossmeter.metricprovider.generic.overalldailynumberofnewbugzillabugs.model.DailyNonbbViz">
+      </visualiser>
+   </extension>
 
 </plugin>

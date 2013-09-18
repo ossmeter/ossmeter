@@ -65,5 +65,20 @@ public class SourceForgeDownloadCounterMetricProvider extends AbstractTransientM
 	public String toString(Date date) {
 		return new SimpleDateFormat("yyyy-MM-dd").format(date.toJavaDate());
 	}
+
+	@Override
+	public String getShortIdentifier() {
+		return "sfdc";
+	}
+
+	@Override
+	public String getFriendlyName() {
+		return "Download counter";
+	}
+
+	@Override
+	public String getSummaryInformation() {
+		return "Lorum ipsum";
+	}
 	
 }

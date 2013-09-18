@@ -63,4 +63,19 @@ public class TotalDownloadCounterMetricProvider implements IHistoricalMetricProv
 		return totalDownloadCounter;
 	}
 
+	@Override
+	public String getShortIdentifier() {
+		return "tdc";
+	}
+
+	@Override
+	public String getFriendlyName() {
+		return "Total downloads";
+	}
+
+	@Override
+	public String getSummaryInformation() {
+		return "Lorum";
+	}
+
 }

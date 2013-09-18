@@ -32,6 +32,18 @@ public class LocMetricProvider implements ITransientMetricProvider<Loc> {
 	}
 	
 	@Override
+	public String getFriendlyName() {
+		return "Lines of code";
+	}
+	public String getShortIdentifier() {
+		return "loc";
+	};
+	@Override
+	public String getSummaryInformation() {
+		return "Lines of code summary. Lorum ipsum.";
+	}
+	
+	@Override
 	public Loc adapt(DB db) {
 		return new Loc(db);
 	}

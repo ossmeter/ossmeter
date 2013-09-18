@@ -27,6 +27,21 @@ public class NobcMetricProvider implements ITransientMetricProvider<Nobc>{
 	}
 
 	@Override
+	public String getShortIdentifier() {
+		return "nobc";
+	}
+
+	@Override
+	public String getFriendlyName() {
+		return "Number of Bugzilla comments";
+	}
+
+	@Override
+	public String getSummaryInformation() {
+		return "The number of Bugzilla comments over time. Lorum ipsum.";
+	}
+	
+	@Override
 	public boolean appliesTo(Project project) {
 		for (BugTrackingSystem bugTrackingSystem: project.getBugTrackingSystems()) {
 			if (bugTrackingSystem instanceof Bugzilla) return true;
