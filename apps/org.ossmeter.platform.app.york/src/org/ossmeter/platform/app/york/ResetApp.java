@@ -9,7 +9,9 @@ public class ResetApp {
 		Mongo mongo = new Mongo();
 		mongo.dropDatabase("ossmeter");
 		mongo.dropDatabase("pongo");
-		mongo.dropDatabase("epsilon");
+		mongo.dropDatabase("fedora");
+//		mongo.dropDatabase("epsilon");
+		mongo.dropDatabase("Epsilon");
 		mongo.dropDatabase("hamcrest");
 		mongo.dropDatabase("jMonkeyEngine");
 		mongo.dropDatabase("thunderbird");

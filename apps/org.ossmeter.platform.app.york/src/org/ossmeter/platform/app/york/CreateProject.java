@@ -2,8 +2,8 @@ package org.ossmeter.platform.app.york;
 
 import org.ossmeter.platform.Date;
 import org.ossmeter.platform.Platform;
-import org.ossmeter.repository.model.MetricProvider;
-import org.ossmeter.repository.model.MetricProviderType;
+import org.ossmeter.repository.model.Bugzilla;
+import org.ossmeter.repository.model.NntpNewsGroup;
 import org.ossmeter.repository.model.Person;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.SvnRepository;
@@ -33,19 +33,19 @@ public class CreateProject {
 			project.setActive(true);
 			project.setLastExecuted(new Date().toString());
 			
-			MetricProvider mp = new MetricProvider();
-			mp.setName("loc-historic");
-			mp.setMetricProviderId("loc-historic");
-			mp.setType(MetricProviderType.HISTORIC);
-			mp.setLastExecuted(new Date().toString());
-			project.getMetricProviders().add(mp); 
-			
-			mp = new MetricProvider();
-			mp.setName("loc-transient");
-			mp.setMetricProviderId("loc-transient");
-			mp.setType(MetricProviderType.TRANSIENT); 
-			mp.setLastExecuted(new Date().toString());
-			project.getMetricProviders().add(mp);
+//			MetricProvider mp = new MetricProvider();
+//			mp.setName("loc-historic");
+//			mp.setMetricProviderId("loc-historic");
+//			mp.setType(MetricProviderType.HISTORIC);
+//			mp.setLastExecuted(new Date().toString());
+//			project.getMetricProviders().add(mp); 
+//			
+//			mp = new MetricProvider();
+//			mp.setName("loc-transient");
+//			mp.setMetricProviderId("loc-transient");
+//			mp.setType(MetricProviderType.TRANSIENT); 
+//			mp.setLastExecuted(new Date().toString());
+//			project.getMetricProviders().add(mp);
 			
 			platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
 		}
@@ -109,28 +109,70 @@ public class CreateProject {
 			svnRepository.setUrl("http://dev.eclipse.org/svnroot/modeling/org.eclipse.epsilon/");
 			p.getVcsRepositories().add(svnRepository); 
 			
+//			"fedora", "https://bugzilla.redhat.com/xmlrpc.cgi", "Fedora", "acpi", platform);
 //			Bugzilla bugzilla = new Bugzilla();
-//			bugzilla.setUrl("https://bugs.eclipse.org/bugs/buglist.cgi?product=epsilon");
-//			bugzilla.setProduct("Epsilon");
-//			bugzilla.setComponent("core");
+//			bugzilla.setUrl("https://bugzilla.redhat.com/xmlrpc.cgi");
+//			bugzilla.setProduct("Fedora");
+//			bugzilla.setComponent("acpi");
 //			p.getBugTrackingSystems().add(bugzilla);
 			
-			MetricProvider mp = new MetricProvider();
-			mp.setName("loc-historic");
-			mp.setMetricProviderId("loc-historic");
-			mp.setType(MetricProviderType.HISTORIC);
-			mp.setLastExecuted(new Date().toString());
-			p.getMetricProviders().add(mp); 
 			
-			mp = new MetricProvider();
-			mp.setName("loc-transient");
-			mp.setMetricProviderId("loc-transient");
-			mp.setType(MetricProviderType.TRANSIENT); 
-			mp.setLastExecuted(new Date().toString());
-			p.getMetricProviders().add(mp);
+			Bugzilla bugzilla = new Bugzilla();
+			bugzilla.setUrl("https://bugs.eclipse.org/bugs/xmlrpc.cgi");
+			bugzilla.setProduct("epsilon");
+//			bugzilla.setComponent("core");
+			p.getBugTrackingSystems().add(bugzilla);
+
+//			NntpNewsGroup newsGroup = new NntpNewsGroup();
+//			newsGroup.setUrl("news.eclipse.org"+'/' + "eclipse.epsilon");
+//			newsGroup.setAuthenticationRequired(true);
+//			newsGroup.setUsername("exquisitus");
+//			newsGroup.setPassword("flinder1f7");
+//			newsGroup.setPort(80);
+//			newsGroup.setInterval(10000);
+//			newsGroup.setLastArticleChecked("-1");
+//			p.getCommunicationChannels().add(newsGroup);
+//			
+//			MetricProvider mp = new MetricProvider();
+//			mp.setName("loc-historic");
+//			mp.setMetricProviderId("loc-historic");
+//			mp.setType(MetricProviderType.HISTORIC);
+//			mp.setLastExecuted(new Date().toString());
+//			p.getMetricProviders().add(mp); 
+//			
+//			mp = new MetricProvider();
+//			mp.setName("loc-transient");
+//			mp.setMetricProviderId("loc-transient");
+//			mp.setType(MetricProviderType.TRANSIENT); 
+//			mp.setLastExecuted(new Date().toString());
+//			p.getMetricProviders().add(mp);
 			
 			platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(p);
 		}
+		
+//		if (platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByShortName("epsilon") ==null) {
+//			EclipseForgeProject p = new EclipseForgeProject();
+//			p.setName("Xtext");
+//			p.setShortName("xtext");
+//			p.setDescription("Xtext is a framework for development of programming languages and domain specific languages.");
+//			p.setYear(2010);
+//			p.setActive(true);
+//			p.setLastExecuted(new Date().toString());
+//			
+//			SvnRepository svnRepository = new SvnRepository();
+//			svnRepository.setUrl("http://dev.eclipse.org/svnroot/modeling/org.eclipse.epsilon/");
+//			p.getVcsRepositories().add(svnRepository); 
+//			
+//			Bugzilla bugzilla = new Bugzilla();
+//			bugzilla.setUrl("https://bugs.eclipse.org/bugs/xmlrpc.cgi");
+//			bugzilla.setProduct("TMF");
+//			bugzilla.setComponent("Xtext");
+//			p.getBugTrackingSystems().add(bugzilla);
+//
+//			
+//			platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(p);
+//		}
+		
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 		
 //		ProjectCollection pc = new ProjectCollection(projects);

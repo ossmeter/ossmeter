@@ -49,10 +49,10 @@ public class App implements IApplication {
 //		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(epsilon);
 //		platform.getProjectRepositoryManager().getProjectRepository().sync();
 		
-//		while (true) {
-//			if (1 > 2) break;
-//		}
-		
+		while (true) {
+			if (1 > 2) break;
+		}
+
 		platform.run();
 	}
 	
