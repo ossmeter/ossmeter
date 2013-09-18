@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,8 @@ import org.ossmeter.platform.logging.OssmeterLoggerFactory;
 import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.LocalStorage;
+import org.ossmeter.repository.model.MetricProvider;
+import org.ossmeter.repository.model.MetricProviderType;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.VcsRepository;
 
@@ -33,7 +36,6 @@ public class SimpleMetricProviderScheduler {
 	}
 	
 	public void run() throws Exception {
-		
 //		TimerTask timerTask = new TimerTask() {
 //			
 //			@Override
@@ -92,7 +94,7 @@ public class SimpleMetricProviderScheduler {
 		Date last = new Date(project.getLastExecuted());
 		
 		//DEBUG
-		last = new Date("20130911");
+		last = new Date("20120909");
 		//END DEBUG
 		
 		
@@ -103,6 +105,7 @@ public class SimpleMetricProviderScheduler {
 		//END DEBUG
 		
 		Date[] dates = Date.range(last.addDays(1), today);
+		
 		
 		for (Date date : dates) {
 			System.out.println("\tDate: " + date + " (" + project.getName() + ")");
@@ -115,28 +118,66 @@ public class SimpleMetricProviderScheduler {
 
 			// 2. Execute transient MPs
 			for (ITransientMetricProvider provider : getOrderedTransientMetricProviders(providers)) {
-				if (provider.appliesTo(project)) {
+				if (provider.appliesTo(project) && !hasMetricProviderBeenExecutedForDate(project, provider, date)) {
 					System.out.println("\t'\tTMP: " + provider.getIdentifier());
 					provider.setMetricProviderContext(new MetricProviderContext(platform, new OssmeterLoggerFactory().makeNewLoggerInstance(provider.getIdentifier())));
 					addDependenciesToMetricProvider(provider);
 					provider.measure(project, delta, provider.adapt(platform.getMetricsRepository(project).getDb()));
+					
+					updateMetricProviderMetaData(project, provider, date, MetricProviderType.TRANSIENT);
 				}
 			}
 			
 			// 3. Execute historical MPs
 			MetricHistoryManager historyManager = new MetricHistoryManager(platform);
 			for (IMetricProvider  provider : providers) {
-				if (provider instanceof IHistoricalMetricProvider && provider.appliesTo(project)) {
+				if (provider instanceof IHistoricalMetricProvider && provider.appliesTo(project) && !hasMetricProviderBeenExecutedForDate(project, provider, date)) {
 					System.out.println("\t'\tHMP: " + provider.getIdentifier());
 					provider.setMetricProviderContext(new MetricProviderContext(platform, new OssmeterLoggerFactory().makeNewLoggerInstance(provider.getIdentifier())));
 					addDependenciesToMetricProvider(provider);
 					historyManager.store(project, date, (IHistoricalMetricProvider) provider);
+					
+					updateMetricProviderMetaData(project, provider, date, MetricProviderType.HISTORIC);
 				}
 			}
 			platform.getProjectRepositoryManager().projectRepository.sync();
 		}
 		project.setLastExecuted(today.toString());
 		platform.getProjectRepositoryManager().projectRepository.sync();
+	}
+	
+	protected boolean hasMetricProviderBeenExecutedForDate(Project project, IMetricProvider provider, Date date) {
+		MetricProvider mp = getProjectModelMetricProvider(project, provider);
+		if (mp != null) {
+			String last =  mp.getLastExecuted();
+			try {
+				return new Date(last).compareTo(date) > 0;
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
+	
+	protected void updateMetricProviderMetaData(Project project, IMetricProvider provider, Date date, MetricProviderType type) {
+		// Update project MP meta-data
+		MetricProvider mp = getProjectModelMetricProvider(project, provider);
+		if (mp == null) {
+			mp = new MetricProvider();
+			project.getMetricProviders().add(mp);
+			mp.setMetricProviderId(provider.getShortIdentifier());
+			mp.setType(type);
+		}
+		mp.setLastExecuted(date.toString()); 
+	}
+	
+	protected MetricProvider getProjectModelMetricProvider(Project project, IMetricProvider iProvider) {
+		for (MetricProvider mp : project.getMetricProviders()) {
+			if (mp.getMetricProviderId().equals(iProvider.getShortIdentifier())) {
+				return mp;
+			}
+		}
+		return null;
 	}
 	
 	protected void addDependenciesToMetricProvider(IMetricProvider mp) {

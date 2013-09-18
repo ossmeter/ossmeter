@@ -14,6 +14,24 @@ public interface IMetricProvider {
 	public String getIdentifier();
 
 	/**
+	 * Simple identifier string
+	 * @return
+	 */
+	public String getShortIdentifier();
+	
+	/**
+	 * 
+	 * @return A print-friendly name of the metric provider.
+	 */
+	public String getFriendlyName();
+	
+	/**
+	 * Provides a short summary of the metric provider.
+	 * @return
+	 */
+	public String getSummaryInformation();
+	
+	/**
 	 * Returns true if this metric provider is applicable to the given Project.
 	 * @param project
 	 * @return
