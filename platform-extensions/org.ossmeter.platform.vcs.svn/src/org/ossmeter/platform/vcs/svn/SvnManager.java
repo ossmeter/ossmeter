@@ -42,7 +42,7 @@ public class SvnManager extends AbstractVcsManager {
 		VcsRepositoryDelta delta = new VcsRepositoryDelta();
 		delta.setRepository(repository);
 		
-		if (!startRevision.equals(endRevision)) {
+//		if (!startRevision.equals(endRevision)) {
 			Collection<?> c = svnRepository.log(new String[]{""}, null, Long.valueOf(startRevision), Long.valueOf(endRevision), true, true);
 
 			for (Object o : c) {
@@ -60,7 +60,8 @@ public class SvnManager extends AbstractVcsManager {
 				for (String path : changedPaths.keySet()) {
 					SVNLogEntryPath svnLogEntryPath = changedPaths.get(path);
 
-					if (svnLogEntryPath.getKind() == SVNNodeKind.FILE) {
+					// FIXME: [12th Sept 2013] For epsilon, files are being assigned SVNNodeKind.UNKNOWN. Find out why.
+//					if (svnLogEntryPath.getKind() == SVNNodeKind.FILE) {
 						
 						VcsCommitItem commitItem = new VcsCommitItem();
 						commit.getItems().add(commitItem);
@@ -80,9 +81,9 @@ public class SvnManager extends AbstractVcsManager {
 							commitItem.setChangeType(VcsChangeType.UNKNOWN);
 						}
 					}
-				}
+//				}
 			}
-		}
+//		}
 
 		return delta;
 	}
