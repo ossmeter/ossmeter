@@ -61,11 +61,28 @@
 						$("#metric-"+contId+"-name").text(data.friendlyName);
 						$("#metric-"+contId+"-summary").text(data.summary);
 
+						var options = data.options;
+						options.fontName = "Helvetica";
+						options.lineWidth = 2;
+						options.width = "90%";
+						options.height = 200;
+						options.legend = {position:"in", textStyle : {color : "#bbb"}};
+
+						options.hAxis.baselineColor = '#ccc';
+						options.hAxis.textStyle = {color : '#ccc'};
+						options.hAxis.gridlines = {color : '#fff'};
+						options.hAxis.titleTextStyle = {color : "#aaa"};
+
+						options.vAxis.baselineColor = '#ccc';
+						options.vAxis.textStyle = {color : '#ccc'};
+						options.vAxis.gridlines = {color : '#fff'};
+						options.vAxis.titleTextStyle = {color : "#aaa"};
+
 						// Create and draw chart wrapper
 						var wrapper = new google.visualization.ChartWrapper({
 						    chartType: data.chartType,
 						    dataTable: data.datatable,
-						    options: data.options,
+						    options: options,
 						    containerId: contId+"-viz"
 						});
 						wrapper.draw();
