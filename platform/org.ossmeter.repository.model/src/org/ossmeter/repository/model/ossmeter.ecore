@@ -38,7 +38,7 @@
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="metricProviders" upperBound="-1" eType="//MetricProvider" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="MetricProvider" eSuperTypes="//NamedElement">
+  <eClassifiers xsi:type="ecore:EClass" name="MetricProvider">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="metricProviderId">
       <eAnnotations source="searchable"/>
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>

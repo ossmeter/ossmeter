@@ -31,7 +31,7 @@ class Project extends NamedElement {
   val MetricProvider[*] metricProviders;
 }
 
-class MetricProvider  extends NamedElement{
+class MetricProvider{
 	@searchable
 	attr String metricProviderId;
 	attr MetricProviderType type;
