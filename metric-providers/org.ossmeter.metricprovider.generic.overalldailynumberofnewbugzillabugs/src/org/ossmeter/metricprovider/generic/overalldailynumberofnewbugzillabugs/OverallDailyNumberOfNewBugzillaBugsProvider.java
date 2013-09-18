@@ -42,13 +42,14 @@ public class OverallDailyNumberOfNewBugzillaBugsProvider implements IHistoricalM
 
 	@Override
 	public String getFriendlyName() {
-		return "Number of bugs daily";
+		return "Number of new bugs per day";
 	}
 
 	@Override
 	public String getSummaryInformation() {
-		return "The number of bugs daily. Lorum ipsum.";
+		return "The number of new bugs filed per day during the period of interest.";
 	}
+	
 	@Override
 	public boolean appliesTo(Project project) {
 		for (BugTrackingSystem bugTrackingSystem: project.getBugTrackingSystems()) {

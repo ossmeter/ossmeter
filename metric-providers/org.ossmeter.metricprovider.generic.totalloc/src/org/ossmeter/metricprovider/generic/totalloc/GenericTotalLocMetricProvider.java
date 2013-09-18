@@ -36,7 +36,7 @@ public class GenericTotalLocMetricProvider implements IHistoricalMetricProvider{
 	
 	@Override
 	public String getFriendlyName() {
-		return "Total L.O.C. over time";
+		return "Total lines of code over time";
 	}
 	@Override
 	public String getShortIdentifier() {
