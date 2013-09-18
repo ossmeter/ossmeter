@@ -1,26 +1,26 @@
 package org.ossmeter.repository.model.eclipseforge;
 
-@stub(javaClass="org.ossmeter.repository.model.base.Project")
+@stub(javaClass="org.ossmeter.repository.model.Project")
 class Project {
    
 }
 
-@stub(javaClass="org.ossmeter.repository.model.base.NamedElement")
+@stub(javaClass="org.ossmeter.repository.model.NamedElement")
 class NamedElement {
    
 }
 
-@stub(javaClass="org.ossmeter.repository.model.base.Person")
+@stub(javaClass="org.ossmeter.repository.model.Person")
 class Person {
    
 }
 
-@stub(javaClass="org.ossmeter.repository.model.base.CommunicationChannel")
+@stub(javaClass="org.ossmeter.repository.model.CommunicationChannel")
 abstract class CommunicationChannel {
    
 }
 
-@stub(javaClass="org.ossmeter.repository.model.cc.nntp.NntpNewsGroup")
+@stub(javaClass="org.ossmeter.repository.model.NntpNewsGroup")
 class NntpNewsGroup {
    
 }

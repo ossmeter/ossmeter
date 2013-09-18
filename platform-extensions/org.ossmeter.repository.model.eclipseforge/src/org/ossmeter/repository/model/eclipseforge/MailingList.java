@@ -3,6 +3,7 @@ package org.ossmeter.repository.model.eclipseforge;
 import com.mongodb.*;
 import java.util.*;
 import com.googlecode.pongo.runtime.*;
+import com.googlecode.pongo.runtime.querying.*;
 
 
 public class MailingList extends org.ossmeter.repository.model.CommunicationChannel {
@@ -11,14 +12,23 @@ public class MailingList extends org.ossmeter.repository.model.CommunicationChan
 	
 	public MailingList() { 
 		super();
+		super.setSuperTypes("org.ossmeter.repository.model.eclipseforge.CommunicationChannel");
+		NAME.setOwningType("org.ossmeter.repository.model.eclipseforge.MailingList");
+		DESCRIPTION.setOwningType("org.ossmeter.repository.model.eclipseforge.MailingList");
+		TYPE.setOwningType("org.ossmeter.repository.model.eclipseforge.MailingList");
 	}
+	
+	public static StringQueryProducer NAME = new StringQueryProducer("name"); 
+	public static StringQueryProducer DESCRIPTION = new StringQueryProducer("description"); 
+	public static StringQueryProducer TYPE = new StringQueryProducer("type"); 
+	
 	
 	public String getName() {
 		return parseString(dbObject.get("name")+"", "");
 	}
 	
 	public MailingList setName(String name) {
-		dbObject.put("name", name + "");
+		dbObject.put("name", name);
 		notifyChanged();
 		return this;
 	}
@@ -27,7 +37,7 @@ public class MailingList extends org.ossmeter.repository.model.CommunicationChan
 	}
 	
 	public MailingList setDescription(String description) {
-		dbObject.put("description", description + "");
+		dbObject.put("description", description);
 		notifyChanged();
 		return this;
 	}
@@ -41,7 +51,7 @@ public class MailingList extends org.ossmeter.repository.model.CommunicationChan
 	}
 	
 	public MailingList setType(MailingListType type) {
-		dbObject.put("type", type + "");
+		dbObject.put("type", type.toString());
 		notifyChanged();
 		return this;
 	}

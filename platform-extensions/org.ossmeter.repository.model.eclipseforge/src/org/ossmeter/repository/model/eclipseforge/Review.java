@@ -3,6 +3,7 @@ package org.ossmeter.repository.model.eclipseforge;
 import com.mongodb.*;
 import java.util.*;
 import com.googlecode.pongo.runtime.*;
+import com.googlecode.pongo.runtime.querying.*;
 
 
 public class Review extends Pongo {
@@ -11,7 +12,15 @@ public class Review extends Pongo {
 	
 	public Review() { 
 		super();
+		TYPE.setOwningType("org.ossmeter.repository.model.eclipseforge.Review");
+		STATE.setOwningType("org.ossmeter.repository.model.eclipseforge.Review");
+		ENDDATE.setOwningType("org.ossmeter.repository.model.eclipseforge.Review");
 	}
+	
+	public static StringQueryProducer TYPE = new StringQueryProducer("type"); 
+	public static StringQueryProducer STATE = new StringQueryProducer("state"); 
+	public static StringQueryProducer ENDDATE = new StringQueryProducer("endDate"); 
+	
 	
 	public ReviewType getType() {
 		ReviewType type = null;
@@ -23,7 +32,7 @@ public class Review extends Pongo {
 	}
 	
 	public Review setType(ReviewType type) {
-		dbObject.put("type", type + "");
+		dbObject.put("type", type+"");
 		notifyChanged();
 		return this;
 	}
@@ -37,7 +46,7 @@ public class Review extends Pongo {
 	}
 	
 	public Review setState(ReviewState state) {
-		dbObject.put("state", state + "");
+		dbObject.put("state", state);
 		notifyChanged();
 		return this;
 	}
@@ -46,7 +55,7 @@ public class Review extends Pongo {
 	}
 	
 	public Review setEndDate(String endDate) {
-		dbObject.put("endDate", endDate + "");
+		dbObject.put("endDate", endDate);
 		notifyChanged();
 		return this;
 	}
