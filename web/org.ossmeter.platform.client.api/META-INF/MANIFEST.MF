@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: OsgiUsageTest1
-Bundle-SymbolicName: org.ossmeter.platform.client.api
+Bundle-SymbolicName: org.ossmeter.platform.client.api;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.platform.client.api.Activator
 Require-Bundle: org.eclipse.core.runtime,

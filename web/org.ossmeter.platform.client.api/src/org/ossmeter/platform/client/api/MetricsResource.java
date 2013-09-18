@@ -1,5 +1,9 @@
 package org.ossmeter.platform.client.api;
 
+import java.io.IOException;
+import java.util.List;
+
+import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.repository.model.MetricProvider;
 import org.ossmeter.repository.model.Project;
@@ -8,8 +12,14 @@ import org.restlet.data.Status;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.googlecode.pongo.runtime.viz.PongoViz;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
 
 public class MetricsResource extends ServerResource {
 
@@ -20,7 +30,7 @@ public class MetricsResource extends ServerResource {
 	@Get
 	public String represent() {
 		String projectName = (String) getRequest().getAttributes().get("name");
-		String metricId = (String) getRequest().getAttributes().get("metricId");
+		String metricName = (String) getRequest().getAttributes().get("metricId");
 		
 		Platform platform = Platform.getInstance();
 		ProjectRepository projectRepo = platform.getProjectRepositoryManager().getProjectRepository();
@@ -28,30 +38,52 @@ public class MetricsResource extends ServerResource {
 		Project project = projectRepo.getProjects().findOneByShortName(projectName);
 		if (project == null) {
 			getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			return Util.generateErrorMessage(generateRequestJson(projectName, metricId), "No project was found with the requested name.");
+			return Util.generateErrorMessage(generateRequestJson(projectName, metricName), "No project was found with the requested name.");
 		}
 
-		MetricProvider metricProvider = null;
+		IMetricProvider metricProvider = null;
 		for (MetricProvider mp : project.getMetricProviders()) {
-			if (mp.getId().equals(metricId)) {
-				metricProvider = mp;
-				break;
+			for (IMetricProvider imp : platform.getMetricProviderManager().getMetricProviders()) { // This is ugly. Required as repo.model.MetricProvider doesn't have the info
+				System.out.println(imp.getShortIdentifier() + " = " + metricName);
+				if (imp.getShortIdentifier().equals(metricName)) {
+					metricProvider = imp;
+					break;
+				}
 			}
 		}
 		
 		if (metricProvider == null) {
 			getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			return Util.generateErrorMessage(generateRequestJson(projectName, metricId), "No metric was found with the requested identifier.");
+			return Util.generateErrorMessage(generateRequestJson(projectName, metricName), "No metric was found with the requested identifier.");
+		}
+
+		// Get collection from DB
+		DB projectDB = platform.getMetricsRepository(project).getDb();
+		DBCollection collection = projectDB.getCollection(metricProvider.getIdentifier());
+		
+		List<PongoViz> vizs = VisualisationExtensionPointManager.getInstance().getVisualisersForMetricProvider(metricProvider.getIdentifier(), collection);
+		for (PongoViz v : vizs) {
+			String vizString = v.getViz("gcharts"); // FIXME hardcoded.
+			
+			ObjectMapper mapper = new ObjectMapper();
+			JsonFactory factory = mapper.getFactory();
+			JsonParser parser;
+			ObjectNode root;
+			try {
+				parser = factory.createParser(vizString);
+				root = parser.readValueAsTree();
+			} catch (IOException e) {
+				e.printStackTrace();
+				return Util.generateErrorMessage(generateRequestJson(projectName, metricName), "An error occurred during JSON generation: " + e.getMessage());
+			}
+			JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
+			root.set("friendlyName", nodeFactory.textNode(metricProvider.getFriendlyName()));
+			root.set("summary", nodeFactory.textNode(metricProvider.getSummaryInformation()));
+
+			return root.toString();// FIXME: only returns one.
 		}
 		
-		ObjectMapper mapper = new ObjectMapper();
-//		mapper.addMixInAnnotations(MetricProvider.class, MetricProviderMixin.class);
-		try {
-			return mapper.writeValueAsString(metricProvider);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-			return Util.generateErrorMessage(generateRequestJson(projectName, metricId), "An error occurred whilst converting the metric information to JSON: " + e.getMessage());
-		}
+		return Util.generateErrorMessage(generateRequestJson(projectName, metricName), "No visualiser found.");
 	}
 	
 	private String generateRequestJson(String projectName, String metricId) {
