@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.ossmeter.repository.model.Project;
 
 import play.libs.F.Function;
@@ -11,6 +12,7 @@ import play.libs.Json;
 import play.libs.WS;
 import play.mvc.Controller;
 import play.mvc.Result;
+import views.html.defaultpages.error;
 
 import com.googlecode.pongo.runtime.PongoFactory;
 import com.mongodb.DBObject;
@@ -35,10 +37,18 @@ public class Application extends Controller {
 						List<Project> projects = new ArrayList<Project>();
 						JsonNode projectsJson = Json.parse(response.getBody());
 						
-						for (JsonNode node : projectsJson) {
-							DBObject dbObject = (DBObject) JSON.parse(node.toString());
-							Project project = (Project) PongoFactory.getInstance().createPongo(dbObject);
-							projects.add(project);
+						JsonNode projs = projectsJson.get("projects");
+						
+						for (JsonNode node : projectsJson.get("projects")) {
+							
+							try {
+								ObjectMapper mapper = new ObjectMapper();
+								Project p = mapper.readValue(node.toString(), Project.class);
+								projects.add(p);
+							} catch (Exception e) {
+								e.printStackTrace(); //FIXME: handle better
+								return internalServerError(e.getMessage());
+							}
 						}
 						
 						return ok(views.html.index.render(projects));
@@ -51,16 +61,31 @@ public class Application extends Controller {
 				.map(new Function<WS.Response, Result>() {
 					public Result apply(WS.Response response) {
 						JsonNode projectJson = Json.parse(response.getBody());
-						DBObject dbObject = (DBObject) JSON.parse(projectJson.toString());
-						Project project = (Project) PongoFactory.getInstance().createPongo(dbObject);
 						
-						return ok(views.html.project.render(project));
+						try {
+							Project project = (Project)PongoFactory.getInstance().createPongo((DBObject)JSON.parse(projectJson.toString()));
+							
+//							ObjectMapper mapper = new ObjectMapper();
+//							Project project = mapper.readValue(projectJson.toString(), Project.class);
+							return ok(views.html.project.render(project));
+						} catch (Exception e) {
+							e.printStackTrace(); //FIXME: handle better
+							return internalServerError(e.getMessage());
+						}
 					}
 				}));
 	}
 
-	public static Result getMetrics(String projectName) {
-		return TODO;
+	public static Result getMetric(String projectName, String id) {
+		String url = "http://localhost:8182/projects/p/"+projectName+"/m/"+id;
+		return async(WS.url(url).get()
+				.map(new Function<WS.Response, Result>() {
+					public Result apply(WS.Response response) {
+						//TODO: check for error message.
+						JsonNode result = Json.parse(response.getBody());
+						return ok(result);
+					}
+				}));
 	}
 
 	public static Result search() {

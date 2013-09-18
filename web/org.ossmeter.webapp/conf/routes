@@ -9,16 +9,8 @@ GET		/projects/						controllers.Application.projects(page: Integer ?= 1)
 GET		/projects/all					controllers.Application.projects(page: Integer ?= -1)
 GET		/projects/:page					controllers.Application.projects(page : Integer)
 GET		/project/:name 					controllers.Application.getProject(name : String)
+GET		/project/:name/m/:id			controllers.Application.getMetric(name : String, id : String)
 GET		/search							controllers.Application.search()
-
-GET		/api/projects					controllers.ClientAPIController.projects(page: Integer ?= 1)
-GET		/api/projects/					controllers.ClientAPIController.projects(page: Integer ?= 1)
-GET		/api/projects/:page				controllers.ClientAPIController.projects(page: Integer)
-GET		/api/project/:name				controllers.ClientAPIController.getProject(name: String)
-GET		/api/project/:name/metric/:id	controllers.ClientAPIController.getMetric(name: String, id: String)
-
-
-# TODO: paging (of something, projects? a project's metrics?)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               	controllers.Assets.at(path="/public", file)
