@@ -1,0 +1,12 @@
+package org.ossmeter.metricprovider.generic.numberofrequestsrepliesperday.model;
+
+class DailyNorr {
+	val DailyNewsgroupData[*] newsgroups;
+}
+
+class DailyNewsgroupData {
+   @searchable
+   attr int numberOfRequests;
+   attr int numberOfReplies;
+}
+
