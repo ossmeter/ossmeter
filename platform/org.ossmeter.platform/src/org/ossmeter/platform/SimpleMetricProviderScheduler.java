@@ -206,6 +206,7 @@ public class SimpleMetricProviderScheduler {
 					Files.createDirectory(projectLocalStoragePath);
 					LocalStorage projectLocalStorage = new LocalStorage();
 					projectLocalStorage.setPath(projectLocalStoragePath.toString());
+					project.setStorage(projectLocalStorage);
 			}
 		} catch(IOException e) {
 			e.printStackTrace();
