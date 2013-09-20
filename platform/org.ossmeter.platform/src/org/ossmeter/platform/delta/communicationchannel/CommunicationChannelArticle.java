@@ -9,14 +9,16 @@ public class CommunicationChannelArticle implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	protected String articleId;
-	protected int articleNumber;
-	transient protected NntpNewsGroup newsgroup;
-	protected String messageThreadId;
-	protected String subject;
-	protected String user;
-	protected Date date;
-	protected String[] references;
+	private String articleId;
+	private int articleNumber;
+	transient private NntpNewsGroup newsgroup;
+	private String messageThreadId;
+	private String subject;
+	private String text;
+	private String user;
+	private Date date;
+	
+	private String[] references;
 	
 	
 	public String getArticleId() {
@@ -61,6 +63,14 @@ public class CommunicationChannelArticle implements Serializable {
 
 	public String getUser() {
 		return user;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public void setText(String text) {
+		this.text = text;
 	}
 
 	public void setUser(String user) {

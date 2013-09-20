@@ -12,7 +12,7 @@ public class BugTrackingSystemComment implements Serializable {
 	protected String commentId;
 	protected String creator;
 	protected Date creationTime;
-//	protected String text;
+	protected String text;
 	transient protected String bugId;
 	transient protected BugTrackingSystem bugTrackingSystem;	
 	
@@ -48,13 +48,13 @@ public class BugTrackingSystemComment implements Serializable {
 		this.creationTime = creationTime;
 	}
 
-//	public String getText() {
-//		return text;
-//	}
+	public String getText() {
+		return text;
+	}
 
-//	public void setText(String text) {
-//		this.text = text;
-//	}
+	public void setText(String text) {
+		this.text = text;
+	}
 
 	public BugTrackingSystem getBugTrackingSystem() {
 		return bugTrackingSystem;

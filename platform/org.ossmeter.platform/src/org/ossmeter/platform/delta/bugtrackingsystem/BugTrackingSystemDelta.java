@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.ossmeter.repository.model.BugTrackingSystem;
 
+
 public class BugTrackingSystemDelta  implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -14,6 +15,7 @@ public class BugTrackingSystemDelta  implements Serializable {
 	protected List<BugTrackingSystemBug> newBugs;
 	protected List<BugTrackingSystemBug> updatedBugs;
 	protected List<BugTrackingSystemComment> comments;
+	protected List<BugTrackingSystemAttachment> attachments;
 
 	
 	public BugTrackingSystemDelta() {
@@ -21,6 +23,7 @@ public class BugTrackingSystemDelta  implements Serializable {
 		newBugs = new ArrayList<BugTrackingSystemBug>();
 		updatedBugs = new ArrayList<BugTrackingSystemBug>();
 		comments = new ArrayList<BugTrackingSystemComment>();
+		attachments = new ArrayList<BugTrackingSystemAttachment>();
 	}
 
 	public BugTrackingSystem getBugTrackingSystem() {
@@ -41,6 +44,10 @@ public class BugTrackingSystemDelta  implements Serializable {
 	
 	public List<BugTrackingSystemComment> getComments() {
 		return comments;
+	}
+
+	public List<BugTrackingSystemAttachment> getAttachments() {
+		return attachments;
 	}
 
 }
