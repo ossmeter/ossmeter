@@ -77,19 +77,16 @@ public class NumberOfActiveUsersPerDayProvider implements IHistoricalMetricProvi
 
 	@Override
 	public String getShortIdentifier() {
-		// TODO Auto-generated method stub
-		return null;
+		return "numberofactiveusersperday";
 	}
 
 	@Override
 	public String getFriendlyName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Number Of ActiveUsers Per Day Provider";
 	}
 
 	@Override
 	public String getSummaryInformation() {
-		// TODO Auto-generated method stub
-		return null;
+		return "This metric computes the number of active users per day.";
 	}
 }
