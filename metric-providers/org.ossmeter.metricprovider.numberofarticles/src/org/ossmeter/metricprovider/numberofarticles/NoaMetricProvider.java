@@ -28,17 +28,17 @@ public class NoaMetricProvider implements ITransientMetricProvider<Noa>{
 
 	@Override
 	public String getShortIdentifier() {
-		return null;
+		return "noa";
 	}
 
 	@Override
 	public String getFriendlyName() {
-		return null;
+		return "Number of articles";
 	}
 
 	@Override
 	public String getSummaryInformation() {
-		return null;
+		return "Holds the number of articles";
 	}
 	
 	@Override
