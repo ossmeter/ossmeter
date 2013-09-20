@@ -1,7 +1,7 @@
 @(project: org.ossmeter.repository.model.Project)
 
 @import org.ossmeter.repository.model.MetricProviderType
-@import org.ossmeter.repository.model.eclipseforge.EclipseForgeProject
+@import org.ossmeter.repository.model.eclipse.EclipseProject
 
 @main(project.getName() + " | OSSMETER") {
 
@@ -16,11 +16,11 @@
 			<h3>Summary</h3>
 			<!--p>born: <span class="card-title">@project.getYear()</span></p>
 			<p>active: <span class="card-title">@if(!project.getActive()) { No } Yes</span></p-->
-		@if(project.isInstanceOf[EclipseForgeProject]) {
+		@if(project.isInstanceOf[EclipseProject]) {
 			<p><i class="icon-home"></i> <span class="card-title">Eclipse Foundation project</span></p>
-			<!--p>status: <span class="card-title">@project.asInstanceOf[EclipseForgeProject].getStatus()</span></p-->
-			<p><i class="icon-user"></i> <span class="card-title">@project.asInstanceOf[EclipseForgeProject].getCommitters().length committers</span></p>
-			<p class="url"><i class="icon-globe"></i> <a href="@project.asInstanceOf[EclipseForgeProject].getHomePage()">Website</a></p>
+			<!--p>status: <span class="card-title">@project.asInstanceOf[EclipseProject].getStatus()</span></p-->
+			<p><i class="icon-user"></i> <span class="card-title">@project.asInstanceOf[EclipseProject].getCommitters().length committers</span></p>
+			<p class="url"><i class="icon-globe"></i> <a href="@project.asInstanceOf[EclipseProject].getHomePage()">Website</a></p>
 		}
 		</div>
 	</section>
@@ -39,7 +39,7 @@
 		var data;
 		var containerId = 0;
 		function loadInitialMetrics() {
-			var mps = [@for(metric <- project.getMetricProviders()) {@if(metric.getType().equals(MetricProviderType.HISTORIC)){ "@metric.getMetricProviderId()", }}];
+			var mps = [@for(metric <- project.getMetricProviderData()) {@if(metric.getType().equals(MetricProviderType.HISTORIC)){ "@metric.getMetricProviderId()", }}];
 			// FIXME: This is here for debug only
 			// mps = ["totalloc","totalloc"]
 			for (mp in mps) {

@@ -1,0 +1,12 @@
+<project default="main">
+	<target name="main">
+		<jar destfile="all-dependencies.jar">
+			<fileset dir="../../com.googlecode.pongo.runtime/bin"/>
+			<fileset dir="../../org.ossmeter.repository.model/bin"/>
+			<fileset dir="../../org.ossmeter.repository.model.bts.bugzilla/bin"/>
+			<fileset dir="../../org.ossmeter.repository.model.cc.nntp/bin"/>
+			<fileset dir="../../org.ossmeter.repository.model.eclipse/bin"/>
+			<fileset dir="../../org.ossmeter.repository.model.vcs.svn/bin"/>			
+		</jar>	
+	</target>
+</project>
