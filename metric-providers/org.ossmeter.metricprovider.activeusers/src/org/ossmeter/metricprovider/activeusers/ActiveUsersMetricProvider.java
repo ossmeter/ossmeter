@@ -63,8 +63,8 @@ public class ActiveUsersMetricProvider implements ITransientMetricProvider<Activ
 
 	@Override
 	public void measure(Project project, ProjectDelta projectDelta, ActiveUsers db) {
-		
-		 CommunicationChannelProjectDelta delta = projectDelta.getCommunicationChannelDelta();
+		System.out.println("ActiveUsersMetric");
+		CommunicationChannelProjectDelta delta = projectDelta.getCommunicationChannelDelta();
 		for ( CommunicationChannelDelta communicationChannelDelta: delta.getCommunicationChannelSystemDeltas()) {
 			CommunicationChannel communicationChannel = communicationChannelDelta.getCommunicationChannel();
 			if (!(communicationChannel instanceof NntpNewsGroup)) continue;
@@ -77,45 +77,65 @@ public class ActiveUsersMetricProvider implements ITransientMetricProvider<Activ
 			} 
 			List<CommunicationChannelArticle> articles = communicationChannelDelta.getArticles();
 			for (CommunicationChannelArticle article: articles) {
-				User User = new User();
-				User.setUserId(article.getUser());
-				User.setLastActivityDate(article.getDate().toString());
-				newsgroupData.getUsers().add(User);
+				Iterable<User> usersIt = db.getUsers().
+						find(User.URL_NAME.eq(newsgroup.getUrl()), 
+								User.USERID.eq(article.getUser()));
+				User user = null;
+				for (User u:  usersIt) {
+					user = u;
+				}
+				if (user == null) {
+					user = new User();
+					user.setUrl_name(newsgroup.getUrl());
+					user.setUserId(article.getUser());
+					db.getUsers().add(user);
+					user.setLastActivityDate(article.getDate().toString());
+				} else {
+					java.util.Date javaDate = NntpUtil.parseDate(user.getLastActivityDate());
+					Date userDate = new Date(javaDate);
+					Date articleDate = new Date(article.getDate());
+					if (articleDate.compareTo(userDate)==1)
+						user.setLastActivityDate(article.getDate().toString());
+				}
+				db.sync();
 			}
-			List<User> Users = newsgroupData.getUsers();
 			
-			List<User> UsersToRemove = new ArrayList<User>();
-			for (User User: Users) {
-				java.util.Date javaDate = NntpUtil.parseDate(User.getLastActivityDate());
+			Iterable<User> usersIt = db.getUsers().findByUrl_name(newsgroup.getUrl());
+			List<User> usersToRemove = new ArrayList<User>();
+			int numberOfUsers = 0;
+			for (User user:  usersIt) {
+				numberOfUsers++;
+				java.util.Date javaDate = NntpUtil.parseDate(user.getLastActivityDate());
 				if (javaDate!=null) {
 					Date date = new Date(javaDate);
 					if (projectDelta.getDate().compareTo(date.addDays(STEP)) >0) {
-						UsersToRemove.add(User);
+						usersToRemove.add(user);
 					}
 				}
 			}
-			for (User User: UsersToRemove)
-				Users.remove(User);
-			newsgroupData.setNumberOfActiveUsers(newsgroupData.getUsers().size());
+			for (User user: usersToRemove) {
+				db.getUsers().remove(user);
+			}
+			
+			newsgroupData.setNumberOfActiveUsers(numberOfUsers - usersToRemove.size());
 			db.sync();
 		}
 	}
 
 	@Override
 	public String getShortIdentifier() {
-		// TODO Auto-generated method stub
-		return null;
+		return "activeusersmetricprovider";
 	}
 
 	@Override
 	public String getFriendlyName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Active Users Metric Provider";
 	}
 
 	@Override
 	public String getSummaryInformation() {
-		// TODO Auto-generated method stub
-		return null;
+		return "This metric keeps track of the users that submitted news comments " +
+				"in the last 15 days.";
 	}
+
 }
