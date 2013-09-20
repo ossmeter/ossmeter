@@ -1,9 +1,8 @@
 package org.ossmeter.metricprovider.generic.numberofactiveusersperdaypernewsgroup.model;
 
-import com.mongodb.*;
-import java.util.*;
-import com.googlecode.pongo.runtime.*;
-import com.googlecode.pongo.runtime.querying.*;
+import com.googlecode.pongo.runtime.Pongo;
+import com.googlecode.pongo.runtime.querying.NumericalQueryProducer;
+import com.googlecode.pongo.runtime.querying.StringQueryProducer;
 
 
 public class DailyNewsgroupData extends Pongo {

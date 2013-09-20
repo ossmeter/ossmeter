@@ -75,19 +75,18 @@ public class NumberOfActiveUsersPerDayPerNewsgroupProvider implements IHistorica
 
 	@Override
 	public String getShortIdentifier() {
-		// TODO Auto-generated method stub
-		return null;
+		return "numberofactiveusersperdaypernewsgroup";
 	}
 
 	@Override
 	public String getFriendlyName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Number Of ActiveUsers Per Day Per Newsgroup Provider";
 	}
 
 	@Override
 	public String getSummaryInformation() {
-		// TODO Auto-generated method stub
-		return null;
+		return "This metric computes the number of active users " +
+				"per day for each newsgroup separately.";
 	}
+
 }
