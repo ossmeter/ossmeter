@@ -77,7 +77,7 @@ public class OverallDailyNumberOfArticlesProvider implements IHistoricalMetricPr
 
 	@Override
 	public String getShortIdentifier() {
-		return "dnoap";
+		return "OverallDailyNumberOfArticlesProvider";
 	}
 
 	@Override
