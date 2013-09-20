@@ -26,6 +26,12 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 
 		NewsgroupInfo newsgroupInfo = NntpUtil.selectNewsgroup(nntpClient, newsgroup);
 		int lastArticle = newsgroupInfo.getLastArticle();
+
+		// The following statement is not really needed, but I added it to speed up running,
+		// in the date is far latter than the first day of the newsgroup.
+//		if (Integer.parseInt(newsgroup.getLastArticleChecked())<137500)
+//			newsgroup.setLastArticleChecked("137500");
+
 		int lastArticleChecked = Integer.parseInt(newsgroup.getLastArticleChecked());
 		if (lastArticleChecked<0) lastArticleChecked = newsgroupInfo.getFirstArticle();
 
@@ -34,18 +40,37 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 
 		int retrievalStep = RETRIEVAL_STEP;
 		Boolean dayCompleted = false;
+//		int counter=0;
 		while (!dayCompleted) {
+//			counter++;
 			if (lastArticleChecked + retrievalStep > lastArticle) {
 				retrievalStep = lastArticle - lastArticleChecked;
 				dayCompleted = true;
 			}
-			Article[] articles = NntpUtil.getArticleInfo(nntpClient, 
-					lastArticleChecked + 1, lastArticleChecked + retrievalStep);
+			Article[] articles;
+			Date articleDate;
+			// The following loop discards messages for days earlier than the required one.
+			do {
+				articles = NntpUtil.getArticleInfo(nntpClient, 
+						lastArticleChecked + 1, lastArticleChecked + retrievalStep);
+				Article lastArticleRetrieved = articles[articles.length-1];
+//				System.out.println(counter + ". getDelta (do while loop):\t" + articles.length + " articles retrieved");
+//				System.out.println("\tDate of last article (" + lastArticleRetrieved.getArticleNumber() + "):\t" 
+//						+ articles[0].getDate());
+				java.util.Date javaArticleDate = NntpUtil.parseDate(lastArticleRetrieved.getDate());
+				articleDate = new Date(javaArticleDate);
+				lastArticleChecked = lastArticleRetrieved.getArticleNumber();
+//				System.out.println("\t\t" + date.toString() + "\t" + articleDate.toString() + 
+//						"\tdate.compareTo(articleDate): " + date.compareTo(articleDate) );
+			} while (date.compareTo(articleDate) > 0);
+
 			for (Article article: articles) {
-				
 				java.util.Date javaArticleDate = NntpUtil.parseDate(article.getDate());
-				Date articleDate = new Date(javaArticleDate);
-				if (date.compareTo(articleDate) < 0) dayCompleted = true;
+				articleDate = new Date(javaArticleDate);
+				if (date.compareTo(articleDate) < 0) {
+					dayCompleted = true;
+//					System.out.println("dayCompleted");
+				}
 				else if (date.compareTo(articleDate) == 0) {
 					CommunicationChannelArticle communicationChannelArticle = new CommunicationChannelArticle();
 					communicationChannelArticle.setArticleId(article.getArticleId());
@@ -64,8 +89,11 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 					communicationChannelArticle.setReferences(article.getReferences());
 					communicationChannelArticle.setSubject(article.getSubject());
 					communicationChannelArticle.setUser(article.getFrom());
+					communicationChannelArticle.setSubject(
+							getContents(newNewsgroup, communicationChannelArticle));
 					delta.getArticles().add(communicationChannelArticle);
-					lastArticleChecked = article.getArticleNumber();
+//					lastArticleChecked = article.getArticleNumber();
+//					System.out.println("dayNOTCompleted");
 				} 
 				else {
 						//TODO: In this case, there are unprocessed articles whose date is earlier than the date requested.
@@ -76,6 +104,8 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 		}
 		nntpClient.disconnect(); 
 		newsgroup.setLastArticleChecked(lastArticleChecked+"");
+		System.out.println("delta ("+date.toString()+") contains:\t"+
+								delta.getArticles().size() + " nntp articles");
 		return delta;
 	}
 

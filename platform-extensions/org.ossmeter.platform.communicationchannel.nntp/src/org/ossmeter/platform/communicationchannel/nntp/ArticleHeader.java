@@ -58,7 +58,6 @@ public class ArticleHeader {
 	}
 	
 	protected void read(Reader r) {
-		StringBuffer sb = new StringBuffer();
 		try {
 			BufferedReader br = new BufferedReader(r);
 			String line = br.readLine();
