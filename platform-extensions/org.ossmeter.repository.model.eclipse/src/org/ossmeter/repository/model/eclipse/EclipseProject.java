@@ -9,22 +9,14 @@ import com.googlecode.pongo.runtime.querying.*;
 public class EclipseProject extends org.ossmeter.repository.model.Project {
 	
 	protected List<EclipsePlatform> platforms = null;
-	protected List<org.ossmeter.repository.model.Person> committers = null;
-	protected List<org.ossmeter.repository.model.Person> leaders = null;
-	protected List<org.ossmeter.repository.model.Person> mentors = null;
 	protected List<Review> reviews = null;
 	protected List<Article> articles = null;
 	protected List<Release> releases = null;
-	protected EclipseProject parent = null;
 	
 	
 	public EclipseProject() { 
 		super();
-		dbObject.put("parent", new BasicDBObject());
 		dbObject.put("platforms", new BasicDBList());
-		dbObject.put("committers", new BasicDBList());
-		dbObject.put("leaders", new BasicDBList());
-		dbObject.put("mentors", new BasicDBList());
 		dbObject.put("reviews", new BasicDBList());
 		dbObject.put("articles", new BasicDBList());
 		dbObject.put("releases", new BasicDBList());
@@ -130,27 +122,9 @@ public class EclipseProject extends org.ossmeter.repository.model.Project {
 	
 	public List<EclipsePlatform> getPlatforms() {
 		if (platforms == null) {
-			platforms = new PongoList<EclipsePlatform>(this, "platforms", false);
+			platforms = new PongoList<EclipsePlatform>(this, "platforms", true);
 		}
 		return platforms;
-	}
-	public List<org.ossmeter.repository.model.Person> getCommitters() {
-		if (committers == null) {
-			committers = new PongoList<org.ossmeter.repository.model.Person>(this, "committers", true);
-		}
-		return committers;
-	}
-	public List<org.ossmeter.repository.model.Person> getLeaders() {
-		if (leaders == null) {
-			leaders = new PongoList<org.ossmeter.repository.model.Person>(this, "leaders", true);
-		}
-		return leaders;
-	}
-	public List<org.ossmeter.repository.model.Person> getMentors() {
-		if (mentors == null) {
-			mentors = new PongoList<org.ossmeter.repository.model.Person>(this, "mentors", true);
-		}
-		return mentors;
 	}
 	public List<Review> getReviews() {
 		if (reviews == null) {
@@ -171,25 +145,5 @@ public class EclipseProject extends org.ossmeter.repository.model.Project {
 		return releases;
 	}
 	
-	public EclipseProject setParent(EclipseProject parent) {
-		if (this.parent != parent) {
-			if (parent == null) {
-				dbObject.put("parent", new BasicDBObject());
-			}
-			else {
-				createReference("parent", parent);
-			}
-			this.parent = parent;
-			notifyChanged();
-		}
-		return this;
-	}
-	
-	public EclipseProject getParent() {
-		if (parent == null) {
-			parent = (EclipseProject) resolveReference("parent");
-		}
-		return parent;
-	}
 	
 }

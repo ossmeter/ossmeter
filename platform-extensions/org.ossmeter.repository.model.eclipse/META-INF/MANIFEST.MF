@@ -6,6 +6,6 @@ Bundle-Version: 0.1.0
 Require-Bundle: org.eclipse.emf.ecore,
  com.googlecode.pongo.runtime.dependencies,
  com.googlecode.pongo.runtime,
- org.ossmeter.repository.model,
+ org.ossmeter.repository.model;visibility:=reexport,
  org.ossmeter.repository.model.cc.nntp
 Export-Package: org.ossmeter.repository.model.eclipse

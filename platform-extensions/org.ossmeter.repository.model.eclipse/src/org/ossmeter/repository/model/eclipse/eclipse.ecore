@@ -48,11 +48,7 @@
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="//ProjectStatus"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" lowerBound="1" eType="//EclipseProject"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="platforms" upperBound="-1" eType="//EclipsePlatform"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="committers" upperBound="-1" eType="//Person" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="leaders" upperBound="-1" eType="//Person" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="mentors" upperBound="-1" eType="//Person" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="platforms" upperBound="-1" eType="//EclipsePlatform" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="reviews" upperBound="-1" eType="//Review" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="articles" upperBound="-1" eType="//Article" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="releases" upperBound="-1" eType="//Release" containment="true"/>
@@ -66,9 +62,12 @@
     <eLiterals name="toplevel" value="4"/>
     <eLiterals name="archived" value="5"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Release">
+  <eClassifiers xsi:type="ecore:EClass" name="Release" eSuperTypes="//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="//ReleaseType"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="date">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="link">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
   </eClassifiers>

@@ -6,18 +6,21 @@ import com.googlecode.pongo.runtime.*;
 import com.googlecode.pongo.runtime.querying.*;
 
 
-public class Release extends Pongo {
+public class Release extends org.ossmeter.repository.model.NamedElement {
 	
 	
 	
 	public Release() { 
 		super();
+		super.setSuperTypes("org.ossmeter.repository.model.eclipse.NamedElement");
 		TYPE.setOwningType("org.ossmeter.repository.model.eclipse.Release");
 		DATE.setOwningType("org.ossmeter.repository.model.eclipse.Release");
+		LINK.setOwningType("org.ossmeter.repository.model.eclipse.Release");
 	}
 	
 	public static StringQueryProducer TYPE = new StringQueryProducer("type"); 
 	public static StringQueryProducer DATE = new StringQueryProducer("date"); 
+	public static StringQueryProducer LINK = new StringQueryProducer("link"); 
 	
 	
 	public ReleaseType getType() {
@@ -40,6 +43,15 @@ public class Release extends Pongo {
 	
 	public Release setDate(String date) {
 		dbObject.put("date", date);
+		notifyChanged();
+		return this;
+	}
+	public String getLink() {
+		return parseString(dbObject.get("link")+"", "");
+	}
+	
+	public Release setLink(String link) {
+		dbObject.put("link", link);
 		notifyChanged();
 		return this;
 	}
