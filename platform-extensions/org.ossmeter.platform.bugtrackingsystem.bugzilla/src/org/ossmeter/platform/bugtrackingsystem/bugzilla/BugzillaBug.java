@@ -8,36 +8,37 @@ public class BugzillaBug  extends BugTrackingSystemBug {
 
 	private static final long serialVersionUID = 1L;
 	
-	protected String product;
-	protected String operatingSystem;
-	protected String platform;
-	protected String resolution;
-	protected String priority;
-	protected String targetMilestone;
-	protected Date lastChangeTime;
-	protected Boolean isConfirmed;
-	protected String environment;
-	protected Boolean isOpen;
-	protected String storyPoints;
-	protected String documentationAction;
-	protected String crm;
-	protected String qualityAssuranceContact;
-	protected String category;
-	protected String mountType;
-	protected String fixedIn;
-	protected Boolean isCreatorAccessible;
-	protected Boolean isCcAccesible;
-	protected String verifiedBranch;
-	protected String releaseNotes;
-	protected String severity;
-	protected String docType;
-	protected String cloneOf;
-	protected String assignedTo;
-	protected Date lastClosed;
-	protected String whiteBoard;
-	protected String regressionStatus;
-	protected String classification;
-	protected String type;
+	private String product;
+	private String operatingSystem;
+	private String platform;
+	private String resolution;
+	private String priority;
+	private String targetMilestone;
+	private Date lastChangeTime;
+	private Boolean isConfirmed;
+	private String environment;
+	private Boolean isOpen;
+	private String storyPoints;
+	private String documentationAction;
+	private String crm;
+	private String qualityAssuranceContact;
+	private String category;
+	private String mountType;
+	private String fixedIn;
+	private Boolean isCreatorAccessible;
+	private Boolean isCcAccesible;
+	private String verifiedBranch;
+	private String releaseNotes;
+	private String severity;
+	private String docType;
+	private String cloneOf;
+	private String assignedTo;
+	private Date lastClosed;
+	private String whiteBoard;
+	private String regressionStatus;
+	private String classification;
+	private String type;
+	
 	public String getProduct() {
 		return product;
 	}

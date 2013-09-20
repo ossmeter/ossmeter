@@ -6,15 +6,15 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import utils.BugSearch.SearchLimiter;
+import utils.BugSearch.SearchQuery;
+
+import com.j2bugzilla.base.Attachment;
 import com.j2bugzilla.base.Bug;
 import com.j2bugzilla.base.BugzillaConnector;
 import com.j2bugzilla.base.BugzillaException;
 import com.j2bugzilla.base.ConnectionException;
-
-import utils.BugSearch;
-import utils.BugSearch.SearchQuery;
-import utils.BugSearch.SearchLimiter;
-
+import com.j2bugzilla.rpc.GetAttachments;
 import com.j2bugzilla.rpc.GetBug;
 import com.j2bugzilla.rpc.LogIn;
 
@@ -87,6 +87,19 @@ public class BugzillaSession {
 		return comments.getComments();
 	}
 	
+	public List<Attachment> getAttachmentForBugId(int bugId) throws BugzillaException {
+		GetAttachments getAttachments= new GetAttachments(bugId);
+		conn.executeMethod(getAttachments);
+		List<Attachment> attachments = getAttachments.getAttachments();
+		for(Attachment attachment: attachments) {
+			System.out.println("bugId: " + bugId 
+								+ "\tattachmentId: " + attachment.getAttachmentID() 
+								+ "\tattachmentMIMEtype: " + attachment.getFileName() 
+								+ "\tattachmentMIMEtype: " + attachment.getMIMEType());
+		}
+		return attachments;
+	}
+
 	public List<Comment> getCommentsForBugId(List<Integer> bugIdArray) //int[] bugIdArray)
 			throws BugzillaException {
 		BugComments comments = new BugComments(bugIdArray);
@@ -136,7 +149,7 @@ public class BugzillaSession {
 					new SearchQuery(SearchLimiter.PRODUCT,"Fedora"); //	"Pulp");
 //			searchQueries[1] = new SearchQuery(SearchLimiter.COMPONENT, "acpi");  // "acpi");
 			searchQueries[2] = 
-					new SearchQuery(SearchLimiter.LIMIT, "10");
+					new SearchQuery(SearchLimiter.LIMIT, "1000");
 
 			Calendar cal = Calendar.getInstance();
 		    cal.set(Calendar.YEAR, 2013);
@@ -170,26 +183,26 @@ public class BugzillaSession {
 				System.out.println("Id: "+ bug.getID());
 				System.out.println("\tProduct: "+ bug.getProduct());
 				System.out.println("\tStatus: "+ bug.getStatus());
-//				System.out.println("\tSummary: "+ bug.getSummary());
-////				System.out.println("Flags: "+ bug.getFlags());
-////				System.out.println("Components: "+ bug.getComponent());
+				System.out.println("\tSummary: "+ bug.getSummary());
+//				System.out.println("Flags: "+ bug.getFlags());
+//				System.out.println("Components: "+ bug.getComponent());
 //				System.out.println("\tOperating System: "+ bug.getOperatingSystem());
 //				System.out.println("\tPlatform: "+ bug.getPlatform());
-//				System.out.println("\tResolution: "+ bug.getResolution());
-////				System.out.println("Alias: "+ bug.getAlias());
-//				System.out.println("\tPriority: "+ bug.getPriority());
+				System.out.println("\tResolution: "+ bug.getResolution());
+//				System.out.println("Alias: "+ bug.getAlias());
+				System.out.println("\tPriority: "+ bug.getPriority());
 //				System.out.println("Version: "+ bug.getVersion());
 //				System.out.println("\tParameter - Target_milestone: "			+ session.getTargetMilestone(bug));
-				System.out.println("\tParameter - LastChangeTime: "			+ session.getLastChangeTime(bug));
+//				System.out.println("\tParameter - LastChangeTime: "			+ session.getLastChangeTime(bug));
 //				System.out.println("\tParameter - IsConfirmed: "				+ session.getIsConfirmed(bug));
 //				System.out.println("\tParameter - Environment: "				+ session.getEnvironment(bug));
-//				System.out.println("\tParameter - IsOpen: "					+ session.getIsOpen(bug));
+				System.out.println("\tParameter - IsOpen: "						+ session.getIsOpen(bug));
 //				System.out.println("\tParameter - StoryPoints: "				+ session.getStoryPoints(bug));
 //				System.out.println("\tParameter - DocumentationAction: "		+ session.getDocumentationAction(bug));
 //				System.out.println("\tParameter - Crm: "						+ session.getCrm(bug));
 //				System.out.println("\tParameter - Creator: "					+ session.getCreator(bug));
 //				System.out.println("\tParameter - QualityAssuranceContact: "	+ session.getQualityAssuranceContact(bug));
-				System.out.println("\tParameter - CreationTime: "				+ session.getCreationTime(bug));
+//				System.out.println("\tParameter - CreationTime: "				+ session.getCreationTime(bug));
 //				System.out.println("\tParameter - Category: "					+ session.getCategory(bug));
 //				System.out.println("\tParameter - MountType: "				+ session.getMountType(bug));
 //				System.out.println("\tParameter - FixedIn-parameter: "		+ session.getFixedIn(bug));
@@ -202,7 +215,7 @@ public class BugzillaSession {
 //				System.out.println("\tParameter - Url: "						+ session.getUrl(bug));
 //				System.out.println("\tParameter - CloneOf: "					+ session.getCloneOf(bug));
 //				System.out.println("\tParameter - AssignedTo: "				+ session.getAssignedTo(bug));
-				System.out.println("\tParameter - LastClosed: "				+ session.getLastClosed(bug));
+//				System.out.println("\tParameter - LastClosed: "				+ session.getLastClosed(bug));
 //				System.out.println("\tParameter - WhiteBoard: "				+ session.getWhiteBoard(bug));
 //				System.out.println("\tParameter - RegressionStatus: "			+ session.getRegressionStatus(bug));
 //				System.out.println("\tParameter - Classification: "			+ session.getClassification(bug));
@@ -223,26 +236,43 @@ public class BugzillaSession {
 //		    cal.set(Calendar.SECOND, 43);
 //		    Date dateRepresentation = cal.getTime();
 //		    
-//		    List<Integer> idArray = new ArrayList<Integer>();
-////		    idArray.add(bugId);
-//		    idArray.add(713616);
-//		    idArray.add(741542);
-//		    idArray.add(741547);
+		    List<Integer> idArray = new ArrayList<Integer>();
+//		    idArray.add(bugId);
+		    idArray.add(713616);
+		    idArray.add(741542);
+		    idArray.add(741547);
 //
-//		    List<Comment> comments = session.getCommentsForBugIds(idArray, dateRepresentation);
-//			
-//////			int commentNo = 1;
-//			for (Comment comment: comments) {
-//////				System.out.println("Comment No: "+ commentNo);
-//				System.out.println("\tComment Id: "+ comment.getId());
-//				System.out.println("\t\tComment Time: "+ comment.getTimestamp());
-//				System.out.println("\t\tComment BugId: "+ comment.getBugId());
-////				System.out.println("\t\tComment Creator: "+ comment.getCreator());
-////				System.out.println("\t\tComment CreatorId: "+ comment.getCreatorId());
-////				System.out.println("\t\tComment Author: "+ comment.getAuthor());
-//////				System.out.println("Comment Text: "+ comment.getText());
-//////				commentNo++;
-//			}
+		    List<Comment> comments = session.getCommentsForBugIds(idArray, dateRepresentation);
+			
+////			int commentNo = 1;
+			for (Comment comment: comments) {
+////				System.out.println("Comment No: "+ commentNo);
+				System.out.println("\tComment Id: "+ comment.getId());
+				System.out.println("\t\tComment Time: "+ comment.getTimestamp());
+				System.out.println("\t\tComment BugId: "+ comment.getBugId());
+//				System.out.println("\t\tComment Creator: "+ comment.getCreator());
+//				System.out.println("\t\tComment CreatorId: "+ comment.getCreatorId());
+//				System.out.println("\t\tComment Author: "+ comment.getAuthor());
+////				System.out.println("Comment Text: "+ comment.getText());
+////				commentNo++;
+			}
+			
+//		int attachmentNo = 1;
+//		for (Integer bugId: idArray) {
+		for (Bug bug: bugs) {
+			List<Attachment> attachments = session.getAttachmentForBugId(bug.getID());
+			for (Attachment attachment: attachments) {
+//			System.out.println("Attachment No: "+ attachmentNo);
+				System.out.println("\tAttachment Id: "+ attachment.getAttachmentID());
+				System.out.println("\t\tAttachment BugId: "+ attachment.getBugID());
+				System.out.println("\t\tAttachment Filename: "+ attachment.getFileName());
+				System.out.println("\t\tAttachment Mimetype: "+ attachment.getMIMEType());
+				System.out.println("\t\tAttachment Creator: "+ attachment.getCreator());
+				System.out.println("\t\tAttachment RawData: "+ attachment.getRawData());
+//			attachmentNo++;
+			}
+		}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

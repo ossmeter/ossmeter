@@ -6,8 +6,8 @@ public class BugzillaComment  extends BugTrackingSystemComment {
 
 	private static final long serialVersionUID = 1L;
 	
-	protected String creatorId;
-	protected String author;
+	private String creatorId;
+	private String author;
 
 	public String getCreatorId() {
 		return creatorId;
