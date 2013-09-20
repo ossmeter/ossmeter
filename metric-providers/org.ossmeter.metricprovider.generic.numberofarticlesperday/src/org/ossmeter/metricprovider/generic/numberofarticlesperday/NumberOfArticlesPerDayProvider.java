@@ -36,21 +36,6 @@ public class NumberOfArticlesPerDayProvider implements IHistoricalMetricProvider
 	}
 
 	@Override
-	public String getShortIdentifier() {
-		return "noapd";
-	}
-
-	@Override
-	public String getFriendlyName() {
-		return "Number of articles/day";
-	}
-
-	@Override
-	public String getSummaryInformation() {
-		return "This metric illustrates the number of newsgroup articles that have been posted over time.";
-	}
-	
-	@Override
 	public boolean appliesTo(Project project) {
 		for (CommunicationChannel communicationChannel: project.getCommunicationChannels()) {
 			if (communicationChannel instanceof NntpNewsGroup) return true;
@@ -88,5 +73,20 @@ public class NumberOfArticlesPerDayProvider implements IHistoricalMetricProvider
 	@Override
 	public void setMetricProviderContext(MetricProviderContext context) {
 		this.context = context;
+	}
+
+	@Override
+	public String getShortIdentifier() {
+		return "numberofarticlesperday";
+	}
+
+	@Override
+	public String getFriendlyName() {
+		return "Number Of Articles Per Day Provider";
+	}
+
+	@Override
+	public String getSummaryInformation() {
+		return "This metric computes the number of articles per day.";
 	}
 }

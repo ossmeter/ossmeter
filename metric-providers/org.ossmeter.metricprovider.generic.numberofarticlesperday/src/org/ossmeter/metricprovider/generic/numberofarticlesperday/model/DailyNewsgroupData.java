@@ -1,7 +1,5 @@
 package org.ossmeter.metricprovider.generic.numberofarticlesperday.model;
 
-import com.mongodb.*;
-import java.util.*;
 import com.googlecode.pongo.runtime.*;
 
 
