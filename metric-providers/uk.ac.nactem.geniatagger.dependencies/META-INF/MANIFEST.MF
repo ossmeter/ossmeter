@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Dependencies
+Bundle-SymbolicName: uk.ac.nactem.geniatagger.dependencies
+Bundle-Version: 1.0.0.qualifier
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ClassPath: GeniaTaggerJNI.jar
+Export-Package: uk.ac.nactem.splitter,
+ uk.ac.nactem.tools,
+ uk.ac.nactem.utils
