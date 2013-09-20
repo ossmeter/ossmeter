@@ -1,6 +1,7 @@
 package org.ossmeter.metricprovider.activeusers;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.ossmeter.metricprovider.activeusers.model.ActiveUsers;
@@ -48,7 +49,7 @@ public class ActiveUsersMetricProvider implements ITransientMetricProvider<Activ
 
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return null;
+		return Collections.emptyList();
 	}
 
 	@Override
