@@ -78,9 +78,6 @@ public class XML {
             //solve img tags not closed
             text=sanitizeTag("img",text);
             text=sanitizeTag("input",text);
-            System.out.println(text);
-            
-            //text= text.substring(0, text.indexOf("<![CDATA[//><!--"));
             
          }
          DocumentBuilder db = dbf.newDocumentBuilder(); 
