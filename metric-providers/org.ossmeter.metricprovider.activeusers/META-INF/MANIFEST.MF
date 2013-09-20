@@ -13,6 +13,5 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.repository.model.cc.nntp
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Import-Package: org.ossmeter.platform.communicationchannel.nntp
 Export-Package: org.ossmeter.metricprovider.activeusers,
  org.ossmeter.metricprovider.activeusers.model

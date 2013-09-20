@@ -8,8 +8,8 @@ Require-Bundle: org.eclipse.core.runtime,
  com.googlecode.pongo.runtime,
  org.ossmeter.platform,
  org.ossmeter.metricprovider.loc,
- org.ossmeter.platform.client.api
+ org.ossmeter.platform.client.api,
+ org.ossmeter.repository.model
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.metricprovider.generic.totalloc
-Import-Package: org.ossmeter.repository.model

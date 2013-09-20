@@ -12,6 +12,3 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.metricprovider.generic.overalldailynumberofbugzillacomments
-Import-Package: org.ossmeter.metricprovider.numberofbugzillacomments,
- org.ossmeter.metricprovider.numberofbugzillacomments.model,
- org.ossmeter.repository.model

@@ -24,5 +24,3 @@ Export-Package: org.ossmeter.platform,
  org.ossmeter.platform.delta.vcs,
  org.ossmeter.platform.logging,
  org.ossmeter.platform.util
-Import-Package: javax.inject,
- org.ossmeter.repository.model

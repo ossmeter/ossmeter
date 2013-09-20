@@ -13,4 +13,3 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.metricprovider.generic.overalldailynumberofnewbugzillabugs
-Import-Package: org.ossmeter.repository.model

@@ -7,5 +7,4 @@ Require-Bundle: org.eclipse.emf.ecore,
  org.ossmeter.repository.model,
  com.googlecode.pongo.runtime.dependencies,
  com.googlecode.pongo.runtime
-Import-Package: com.googlecode.pongo
 Export-Package: org.ossmeter.repository.model.sourceforge

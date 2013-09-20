@@ -15,4 +15,3 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.egit
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Import-Package: org.eclipse.egit.github.core

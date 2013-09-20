@@ -6,5 +6,4 @@ Bundle-Version: 0.1.0
 Require-Bundle: org.eclipse.emf.ecore,
  com.googlecode.pongo.runtime,
  org.ossmeter.repository.model
-Import-Package: com.googlecode.pongo
 Export-Package: org.ossmeter.repository.model.github
