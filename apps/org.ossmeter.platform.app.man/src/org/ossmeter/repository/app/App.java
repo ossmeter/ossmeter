@@ -51,7 +51,9 @@ public class App implements IApplication {
 //		addSampleProjectWithNewsGroup("epsilon", "news.eclipse.org", "eclipse.epsilon", true, "exquisitus", "flinder1f7", 80, 10000, platform);
 //		addSampleProjectWithNewsGroup("thunderbird", "news.mozilla.org", "mozilla.support.thunderbird", false, null, null, 80, 10000, platform);
 
-		addSampleProjectWithBugTrackingSystem("fedora", "https://bugs.eclipse.org/bugs/xmlrpc.cgi", "epsilon", null, platform); // "acpi", platform);
+		addSampleProjectWithBugTrackingSystem("fedora", "https://bugzilla.redhat.com/xmlrpc.cgi", "Fedora", null, platform); //"acpi"
+//		addSampleProjectWithBugTrackingSystem("bugzilla", "https://bugzilla.redhat.com/xmlrpc.cgi", "Bugzilla", null, platform);
+//		addSampleProjectWithBugTrackingSystem("eclipse", "https://bugs.eclipse.org/bugs/query.cgi", "EMF", "cdo.core", platform);
 
 		platform.run();
 	}
