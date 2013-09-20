@@ -203,11 +203,11 @@ public class SimpleMetricProviderScheduler {
 		try{	
 			Path projectLocalStoragePath = Paths.get(platform.getLocalStorageHomeDirectory().toString(), project.getName());		
 			if (Files.notExists(projectLocalStoragePath)) {
-					Files.createDirectory(projectLocalStoragePath);
-					LocalStorage projectLocalStorage = new LocalStorage();
-					projectLocalStorage.setPath(projectLocalStoragePath.toString());
-					project.setStorage(projectLocalStorage);
+				Files.createDirectory(projectLocalStoragePath);
 			}
+			LocalStorage projectLocalStorage = new LocalStorage();
+			projectLocalStorage.setPath(projectLocalStoragePath.toString());
+			project.setStorage(projectLocalStorage);
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
