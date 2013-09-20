@@ -14,6 +14,7 @@ public class ActiveUsers extends PongoDB {
 	}
 	
 	protected NewsgroupDataCollection newsgroups = null;
+	protected UserCollection users = null;
 	
 	// protected region custom-fields-and-methods on begin
 	// protected region custom-fields-and-methods end
@@ -23,11 +24,17 @@ public class ActiveUsers extends PongoDB {
 		return newsgroups;
 	}
 	
+	public UserCollection getUsers() {
+		return users;
+	}
+	
 	
 	@Override
 	public void setDb(DB db) {
 		super.setDb(db);
 		newsgroups = new NewsgroupDataCollection(db.getCollection("ActiveUsers.newsgroups"));
 		pongoCollections.add(newsgroups);
+		users = new UserCollection(db.getCollection("ActiveUsers.users"));
+		pongoCollections.add(users);
 	}
 }

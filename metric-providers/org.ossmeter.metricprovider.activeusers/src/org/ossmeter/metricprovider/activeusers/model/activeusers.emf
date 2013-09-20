@@ -4,18 +4,18 @@ package org.ossmeter.metricprovider.activeusers.model;
 @customize
 class ActiveUsers {
 	val NewsgroupData[*] newsgroups;
+    val User[*] users;
 }
 
 class NewsgroupData {
 	@searchable
    	attr String url_name;
    	attr int numberOfActiveUsers;
-    val User[*] users;
 }
 
 class User {
    @searchable
+   attr String url_name;
    attr String userId;
    attr String lastActivityDate;
 }
-

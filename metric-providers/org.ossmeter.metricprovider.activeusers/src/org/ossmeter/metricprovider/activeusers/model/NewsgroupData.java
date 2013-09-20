@@ -1,19 +1,16 @@
 package org.ossmeter.metricprovider.activeusers.model;
 
-import com.mongodb.*;
-import java.util.*;
-import com.googlecode.pongo.runtime.*;
-import com.googlecode.pongo.runtime.querying.*;
+import com.googlecode.pongo.runtime.Pongo;
+import com.googlecode.pongo.runtime.querying.NumericalQueryProducer;
+import com.googlecode.pongo.runtime.querying.StringQueryProducer;
 
 
 public class NewsgroupData extends Pongo {
 	
-	protected List<User> users = null;
 	
 	
 	public NewsgroupData() { 
 		super();
-		dbObject.put("users", new BasicDBList());
 		URL_NAME.setOwningType("org.ossmeter.metricprovider.activeusers.model.NewsgroupData");
 		NUMBEROFACTIVEUSERS.setOwningType("org.ossmeter.metricprovider.activeusers.model.NewsgroupData");
 	}
@@ -42,12 +39,6 @@ public class NewsgroupData extends Pongo {
 	}
 	
 	
-	public List<User> getUsers() {
-		if (users == null) {
-			users = new PongoList<User>(this, "users", true);
-		}
-		return users;
-	}
 	
 	
 }
