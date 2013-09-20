@@ -74,4 +74,22 @@ public class NumberOfActiveUsersPerDayProvider implements IHistoricalMetricProvi
 	public void setMetricProviderContext(MetricProviderContext context) {
 		this.context = context;
 	}
+
+	@Override
+	public String getShortIdentifier() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getFriendlyName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getSummaryInformation() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
