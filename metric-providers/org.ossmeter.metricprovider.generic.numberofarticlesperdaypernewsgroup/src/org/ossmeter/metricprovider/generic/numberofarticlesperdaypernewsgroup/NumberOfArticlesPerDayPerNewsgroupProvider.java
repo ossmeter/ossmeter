@@ -76,17 +76,16 @@ public class NumberOfArticlesPerDayPerNewsgroupProvider implements IHistoricalMe
 
 	@Override
 	public String getShortIdentifier() {
-		return "noapdpnp";
+		return "numberofarticlesperdaypernewsgroup";
 	}
 
 	@Override
 	public String getFriendlyName() {
-		// TODO Auto-generated method stub
-		return "Articles/day/newsgroup";
+		return "Number Of Articles Per Day Per Newsgroup Provider";
 	}
 
 	@Override
 	public String getSummaryInformation() {
-		return "Lorum ipsum";
+		return "This metric computes the number of articles per day for each newsgroup separately.";
 	}
 }
