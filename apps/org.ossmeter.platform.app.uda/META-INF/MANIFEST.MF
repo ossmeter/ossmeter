@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: App
-Bundle-SymbolicName: org.ossmeter.platform.app.uda
+Bundle-SymbolicName: org.ossmeter.platform.app.uda;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.repository.app.Activator
 Require-Bundle: org.eclipse.ui,
@@ -12,7 +12,10 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.repository.model.github,
  org.ossmeter.metricprovider.downloadcounter.github,
  org.ossmeter.repository.model.sourceforge,
- org.ossmeter.repository.model
+ org.ossmeter.repository.model,
+ org.ossmeter.repository.model.eclipse.importer;bundle-version="1.0.0",
+ org.ossmeter.repository.model.eclipse;bundle-version="0.1.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.repository.app
+Import-Package: com.googlecode.pongo.runtime.osgi

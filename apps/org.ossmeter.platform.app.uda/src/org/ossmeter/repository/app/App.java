@@ -12,19 +12,32 @@ import org.ossmeter.repository.model.github.GitHubRepository;
 import org.ossmeter.repository.model.github.GitHubUser;
 import org.ossmeter.repository.model.sourceforge.SourceForgeProject;
 
+import org.ossmeter.repository.model.eclipse.importer.*;
+import org.ossmeter.repository.model.eclipse.*;
+
+
+import com.googlecode.pongo.runtime.PongoFactory;
+import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
 import com.mongodb.Mongo;
 
 public class App implements IApplication {
 	
 	public void run(IMetricProviderManager metricProviderManager, PlatformVcsManager platformVcsManager) throws Exception {
 		Mongo mongo = new Mongo();
+		
+		PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
+		
+		
 		Platform platform = new Platform(mongo);
 		platform.setMetricProviderManager(metricProviderManager);
 		platform.setPlatformVcsManager(platformVcsManager);
 		
+		addSampleEclipseProject("birt", platform);
+		
+		/*
 		addSampleGitHubProject("mojombo", "grit", platform);
 		addSourceForgeProject("skim-app", platform);
-		
+		*/
 		//platform.getProjectRepositoryManager().reset();
 		//addSampleSvnProject("pongo", "https://pongo.googlecode.com/svn", platform);
 		//addSampleSvnProject("hamcrest", "http://hamcrest.googlecode.com/svn/", platform);
@@ -38,6 +51,19 @@ public class App implements IApplication {
 	}
 	
 	
+	private void addSampleEclipseProject(String projectId, Platform platform) {
+		EclipseProjectImporter importer = new EclipseProjectImporter();
+		
+		EclipseProject project = new EclipseProject();
+		project = importer.importProject(projectId);
+		
+		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
+		platform.getProjectRepositoryManager().getProjectRepository().sync();
+	
+		
+	}
+
+
 	protected void addSampleGitHubProject(String login, String repository, Platform platform) {
 		GitHubProject project = new GitHubProject();
 		project.setName(login + "-" + repository);

@@ -4,5 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="lib/commons-io-2.4.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.ossmeter.repository.model.eclipse"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
