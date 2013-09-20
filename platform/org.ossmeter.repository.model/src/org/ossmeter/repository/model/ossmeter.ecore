@@ -32,13 +32,10 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="bugTrackingSystems" upperBound="-1" eType="//BugTrackingSystem" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="persons" upperBound="-1" eType="//Person" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="licenses" upperBound="-1" eType="//License" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="newsgroups" upperBound="-1" eType="//NntpNewsGroup" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="storage" eType="//LocalStorage" containment="true">
-      <eAnnotations source="invisible"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="metricProviders" upperBound="-1" eType="//MetricProvider" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="storage" eType="//LocalStorage" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="metricProviderData" upperBound="-1" eType="//MetricProvider" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="MetricProvider">
+  <eClassifiers xsi:type="ecore:EClass" name="MetricProvider" eSuperTypes="//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="metricProviderId">
       <eAnnotations source="searchable"/>
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -54,24 +51,8 @@
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="NntpNewsGroup" eSuperTypes="//CommunicationChannel">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="authenticationRequired">
-      <eAnnotations source="searchable"/>
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="username">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="password">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="interval">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="port">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastArticleChecked">
+  <eClassifiers xsi:type="ecore:EClass" name="CommunicationChannel" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
   </eClassifiers>
@@ -86,22 +67,7 @@
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Bugzilla" eSuperTypes="//BugTrackingSystem">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="product">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="component">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SvnRepository" eSuperTypes="//VcsRepository"/>
-  <eClassifiers xsi:type="ecore:EClass" name="GitRepository" eSuperTypes="//VcsRepository"/>
   <eClassifiers xsi:type="ecore:EClass" name="BugTrackingSystem" abstract="true">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="CommunicationChannel" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="url">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
@@ -111,23 +77,10 @@
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="License">
+  <eClassifiers xsi:type="ecore:EClass" name="License" eSuperTypes="//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="url">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="//LicenseType"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="LicenseType">
-    <eLiterals name="ApacheTwo" value="1"/>
-    <eLiterals name="GPL" value="2"/>
-    <eLiterals name="EPL" value="3"/>
-    <eLiterals name="GPL2" value="4"/>
-    <eLiterals name="GPL3" value="5"/>
-    <eLiterals name="LGPL" value="6"/>
-    <eLiterals name="MIT" value="7"/>
-    <eLiterals name="Mozilla" value="8"/>
-    <eLiterals name="BSD" value="9"/>
-    <eLiterals name="Other" value="10"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="MetricProviderType">
     <eLiterals name="HISTORIC"/>

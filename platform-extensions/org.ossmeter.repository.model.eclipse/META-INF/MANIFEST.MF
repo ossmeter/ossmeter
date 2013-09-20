@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.ossmeter.repository.model.eclipseproject
+Bundle-SymbolicName: org.ossmeter.repository.model.eclipse;singleton:=true
+Bundle-Version: 0.1.0
+Require-Bundle: org.eclipse.emf.ecore,
+ com.googlecode.pongo.runtime.dependencies,
+ com.googlecode.pongo.runtime,
+ org.ossmeter.repository.model,
+ org.ossmeter.repository.model.cc.nntp
+Export-Package: org.ossmeter.repository.model.eclipse

@@ -35,8 +35,8 @@ public class App implements IApplication {
 		
 		// FIXME: Needs to check Mongo for projects, not keep registering the same ones!
 		
-//		Project pongo = ProjectCreationUtil.createSvnProject("pongo", "https://pongo.googlecode.com/svn");
-//		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(pongo);
+		Project pongo = ProjectCreationUtil.createSvnProject("pongo", "https://pongo.googlecode.com/svn");
+		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(pongo);
 //		Project saf = ProjectCreationUtil.createGitProject("saf", "https://code.google.com/p/super-awesome-fighter");
 //		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(saf);
 //		Project fedora = ProjectCreationUtil.createProjectWithBugTrackingSystem("fedora", "https://bugzilla.redhat.com/xmlrpc.cgi", "Fedora", "acpi"); // "acpi", platform);
@@ -47,13 +47,13 @@ public class App implements IApplication {
 //		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(skim);
 //		Project epsilon = ProjectCreationUtil.createProjectWithNewsGroup("epsilon", "news.eclipse.org", "eclipse.epsilon", true, "exquisitus", "flinder1f7", 80, 10000);
 //		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(epsilon);
-//		platform.getProjectRepositoryManager().getProjectRepository().sync();
+		platform.getProjectRepositoryManager().getProjectRepository().sync();
 		
-		while (true) {
-			if (1 > 2) break;
-		}
-
 		platform.run();
+		
+		//while (true) {
+		//	if (1 > 2) break;
+		//}
 	}
 	
 	@Override

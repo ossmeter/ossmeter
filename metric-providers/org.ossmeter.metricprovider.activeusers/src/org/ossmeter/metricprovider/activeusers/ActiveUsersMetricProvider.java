@@ -4,22 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ossmeter.metricprovider.activeusers.model.ActiveUsers;
-import org.ossmeter.metricprovider.activeusers.model.User;
 import org.ossmeter.metricprovider.activeusers.model.NewsgroupData;
+import org.ossmeter.metricprovider.activeusers.model.User;
 import org.ossmeter.platform.Date;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.ITransientMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
-import org.ossmeter.platform.communicationchannel.nntp.*;
+import org.ossmeter.platform.communicationchannel.nntp.NntpUtil;
 import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.platform.delta.communicationchannel.CommunicationChannelArticle;
 import org.ossmeter.platform.delta.communicationchannel.CommunicationChannelDelta;
 import org.ossmeter.platform.delta.communicationchannel.CommunicationChannelProjectDelta;
 import org.ossmeter.platform.delta.communicationchannel.PlatformCommunicationChannelManager;
 import org.ossmeter.repository.model.CommunicationChannel;
-import org.ossmeter.repository.model.NntpNewsGroup;
 import org.ossmeter.repository.model.Project;
-
+import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 
 import com.mongodb.DB;
 

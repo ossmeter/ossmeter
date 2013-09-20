@@ -3,6 +3,7 @@ package org.ossmeter.repository.model.sourceforge;
 import com.mongodb.*;
 import java.util.*;
 import com.googlecode.pongo.runtime.*;
+import com.googlecode.pongo.runtime.querying.*;
 
 
 public class SourceForgeProject extends org.ossmeter.repository.model.Project {
@@ -38,14 +39,39 @@ public class SourceForgeProject extends org.ossmeter.repository.model.Project {
 		dbObject.put("patches", new BasicDBList());
 		dbObject.put("bts", new BasicDBList());
 		dbObject.put("discussion", new BasicDBList());
+		super.setSuperTypes("org.ossmeter.repository.model.sourceforge.Project");
+		CREATED.setOwningType("org.ossmeter.repository.model.sourceforge.SourceForgeProject");
+		PROJECTID.setOwningType("org.ossmeter.repository.model.sourceforge.SourceForgeProject");
+		_PRIVATE.setOwningType("org.ossmeter.repository.model.sourceforge.SourceForgeProject");
+		SHORTDESC.setOwningType("org.ossmeter.repository.model.sourceforge.SourceForgeProject");
+		PERCENTILE.setOwningType("org.ossmeter.repository.model.sourceforge.SourceForgeProject");
+		RANKING.setOwningType("org.ossmeter.repository.model.sourceforge.SourceForgeProject");
+		DOWNLOADPAGE.setOwningType("org.ossmeter.repository.model.sourceforge.SourceForgeProject");
+		SUPPORTPAGE.setOwningType("org.ossmeter.repository.model.sourceforge.SourceForgeProject");
+		SUMMARYPAGE.setOwningType("org.ossmeter.repository.model.sourceforge.SourceForgeProject");
+		HOMEPAGE.setOwningType("org.ossmeter.repository.model.sourceforge.SourceForgeProject");
+		MAILINGLIST.setOwningType("org.ossmeter.repository.model.sourceforge.SourceForgeProject");
 	}
+	
+	public static StringQueryProducer CREATED = new StringQueryProducer("created"); 
+	public static NumericalQueryProducer PROJECTID = new NumericalQueryProducer("projectId");
+	public static NumericalQueryProducer _PRIVATE = new NumericalQueryProducer("_private");
+	public static StringQueryProducer SHORTDESC = new StringQueryProducer("shortDesc"); 
+	public static NumericalQueryProducer PERCENTILE = new NumericalQueryProducer("percentile");
+	public static NumericalQueryProducer RANKING = new NumericalQueryProducer("ranking");
+	public static StringQueryProducer DOWNLOADPAGE = new StringQueryProducer("downloadPage"); 
+	public static StringQueryProducer SUPPORTPAGE = new StringQueryProducer("supportPage"); 
+	public static StringQueryProducer SUMMARYPAGE = new StringQueryProducer("summaryPage"); 
+	public static StringQueryProducer HOMEPAGE = new StringQueryProducer("homePage"); 
+	public static StringQueryProducer MAILINGLIST = new StringQueryProducer("mailingList"); 
+	
 	
 	public String getCreated() {
 		return parseString(dbObject.get("created")+"", "");
 	}
 	
 	public SourceForgeProject setCreated(String created) {
-		dbObject.put("created", created + "");
+		dbObject.put("created", created);
 		notifyChanged();
 		return this;
 	}
@@ -54,7 +80,7 @@ public class SourceForgeProject extends org.ossmeter.repository.model.Project {
 	}
 	
 	public SourceForgeProject setProjectId(int projectId) {
-		dbObject.put("projectId", projectId + "");
+		dbObject.put("projectId", projectId);
 		notifyChanged();
 		return this;
 	}
@@ -63,7 +89,7 @@ public class SourceForgeProject extends org.ossmeter.repository.model.Project {
 	}
 	
 	public SourceForgeProject set_private(int _private) {
-		dbObject.put("_private", _private + "");
+		dbObject.put("_private", _private);
 		notifyChanged();
 		return this;
 	}
@@ -72,7 +98,7 @@ public class SourceForgeProject extends org.ossmeter.repository.model.Project {
 	}
 	
 	public SourceForgeProject setShortDesc(String shortDesc) {
-		dbObject.put("shortDesc", shortDesc + "");
+		dbObject.put("shortDesc", shortDesc);
 		notifyChanged();
 		return this;
 	}
@@ -81,7 +107,7 @@ public class SourceForgeProject extends org.ossmeter.repository.model.Project {
 	}
 	
 	public SourceForgeProject setPercentile(float percentile) {
-		dbObject.put("percentile", percentile + "");
+		dbObject.put("percentile", percentile);
 		notifyChanged();
 		return this;
 	}
@@ -90,7 +116,7 @@ public class SourceForgeProject extends org.ossmeter.repository.model.Project {
 	}
 	
 	public SourceForgeProject setRanking(int ranking) {
-		dbObject.put("ranking", ranking + "");
+		dbObject.put("ranking", ranking);
 		notifyChanged();
 		return this;
 	}
@@ -99,7 +125,7 @@ public class SourceForgeProject extends org.ossmeter.repository.model.Project {
 	}
 	
 	public SourceForgeProject setDownloadPage(String downloadPage) {
-		dbObject.put("downloadPage", downloadPage + "");
+		dbObject.put("downloadPage", downloadPage);
 		notifyChanged();
 		return this;
 	}
@@ -108,7 +134,7 @@ public class SourceForgeProject extends org.ossmeter.repository.model.Project {
 	}
 	
 	public SourceForgeProject setSupportPage(String supportPage) {
-		dbObject.put("supportPage", supportPage + "");
+		dbObject.put("supportPage", supportPage);
 		notifyChanged();
 		return this;
 	}
@@ -117,7 +143,7 @@ public class SourceForgeProject extends org.ossmeter.repository.model.Project {
 	}
 	
 	public SourceForgeProject setSummaryPage(String summaryPage) {
-		dbObject.put("summaryPage", summaryPage + "");
+		dbObject.put("summaryPage", summaryPage);
 		notifyChanged();
 		return this;
 	}
@@ -126,7 +152,7 @@ public class SourceForgeProject extends org.ossmeter.repository.model.Project {
 	}
 	
 	public SourceForgeProject setHomePage(String homePage) {
-		dbObject.put("homePage", homePage + "");
+		dbObject.put("homePage", homePage);
 		notifyChanged();
 		return this;
 	}
@@ -135,7 +161,7 @@ public class SourceForgeProject extends org.ossmeter.repository.model.Project {
 	}
 	
 	public SourceForgeProject setMailingList(String mailingList) {
-		dbObject.put("mailingList", mailingList + "");
+		dbObject.put("mailingList", mailingList);
 		notifyChanged();
 		return this;
 	}

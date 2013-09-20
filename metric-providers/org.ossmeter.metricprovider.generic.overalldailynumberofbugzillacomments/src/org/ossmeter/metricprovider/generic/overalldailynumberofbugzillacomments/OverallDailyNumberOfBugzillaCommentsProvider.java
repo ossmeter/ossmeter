@@ -12,8 +12,8 @@ import org.ossmeter.platform.IHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.repository.model.BugTrackingSystem;
-import org.ossmeter.repository.model.Bugzilla;
 import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
 
 import com.googlecode.pongo.runtime.Pongo;
 

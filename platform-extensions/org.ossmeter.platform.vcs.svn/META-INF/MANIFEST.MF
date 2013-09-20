@@ -9,7 +9,8 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.platform;visibility:=reexport,
  com.googlecode.pongo.runtime;visibility:=reexport,
  org.tmatesoft.svnkit,
- org.ossmeter.repository.model
+ org.ossmeter.repository.model,
+ org.ossmeter.repository.model.vcs.svn
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.platform.vcs.svn

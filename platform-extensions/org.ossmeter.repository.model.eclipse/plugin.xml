@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<plugin>
+  
+
+
+
+
+
+
+
+
+<extension point="com.googlecode.pongo.runtime.osgi">
+    <class name="org.ossmeter.repository.model.eclipse.EclipseProject"/>
+    <class name="org.ossmeter.repository.model.eclipse.EclipsePlatform"/>
+    <class name="org.ossmeter.repository.model.eclipse.Release"/>
+    <class name="org.ossmeter.repository.model.eclipse.Article"/>
+    <class name="org.ossmeter.repository.model.eclipse.EclipseNewsGroup"/>
+    <class name="org.ossmeter.repository.model.eclipse.MailingList"/>
+    <class name="org.ossmeter.repository.model.eclipse.Wiki"/>
+    <class name="org.ossmeter.repository.model.eclipse.Documentation"/>
+    <class name="org.ossmeter.repository.model.eclipse.Review"/>
+  </extension>
+</plugin>

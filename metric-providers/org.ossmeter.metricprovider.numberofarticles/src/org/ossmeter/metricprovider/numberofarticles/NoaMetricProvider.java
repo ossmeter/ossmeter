@@ -12,8 +12,8 @@ import org.ossmeter.platform.delta.communicationchannel.CommunicationChannelDelt
 import org.ossmeter.platform.delta.communicationchannel.CommunicationChannelProjectDelta;
 import org.ossmeter.platform.delta.communicationchannel.PlatformCommunicationChannelManager;
 import org.ossmeter.repository.model.CommunicationChannel;
-import org.ossmeter.repository.model.NntpNewsGroup;
 import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 
 import com.mongodb.DB;
 

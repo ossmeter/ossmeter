@@ -12,8 +12,8 @@ import org.ossmeter.platform.IHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.repository.model.CommunicationChannel;
-import org.ossmeter.repository.model.NntpNewsGroup;
 import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 
 import com.googlecode.pongo.runtime.Pongo;
 

@@ -70,6 +70,10 @@ public class SimpleMetricProviderScheduler {
 			
 
 			for (VcsRepository repo : project.getVcsRepositories()) {
+				
+				
+				System.err.println("Rep " + repo);
+				
 				// This needs to be the day BEFORE the first day! (Hence the addDays(-1))
 				Date d = platform.getVcsManager().getDateForRevision(repo, platform.getVcsManager().getFirstRevision(repo)).addDays(-1);
 				if (lastExec.compareTo(d) < 0) {
@@ -164,7 +168,7 @@ public class SimpleMetricProviderScheduler {
 		MetricProvider mp = getProjectModelMetricProvider(project, provider);
 		if (mp == null) {
 			mp = new MetricProvider();
-			project.getMetricProviders().add(mp);
+			project.getMetricProviderData().add(mp);
 			mp.setMetricProviderId(provider.getShortIdentifier());
 			mp.setType(type);
 		}
@@ -172,7 +176,7 @@ public class SimpleMetricProviderScheduler {
 	}
 	
 	protected MetricProvider getProjectModelMetricProvider(Project project, IMetricProvider iProvider) {
-		for (MetricProvider mp : project.getMetricProviders()) {
+		for (MetricProvider mp : project.getMetricProviderData()) {
 			if (mp.getMetricProviderId().equals(iProvider.getShortIdentifier())) {
 				return mp;
 			}

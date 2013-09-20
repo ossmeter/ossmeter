@@ -12,8 +12,8 @@ import org.ossmeter.platform.IHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.repository.model.BugTrackingSystem;
-import org.ossmeter.repository.model.Bugzilla;
 import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
 
 import com.googlecode.pongo.runtime.Pongo;
 
@@ -42,12 +42,14 @@ public class OverallDailyNumberOfNewBugzillaBugsProvider implements IHistoricalM
 
 	@Override
 	public String getFriendlyName() {
-		return "Number of new bugs per day";
+		return "Number of bug reports per day";
 	}
 
 	@Override
 	public String getSummaryInformation() {
-		return "The number of new bugs filed per day during the period of interest.";
+		return "The number of new bugs reported per day during the period of interest. " +
+				"A small number of bug reports can indicate either a bug-free, robust project " +
+				"or a project with a small/inactive user community.";
 	}
 	
 	@Override

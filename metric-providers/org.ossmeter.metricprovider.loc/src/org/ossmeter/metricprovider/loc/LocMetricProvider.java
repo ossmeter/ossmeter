@@ -15,10 +15,9 @@ import org.ossmeter.platform.delta.vcs.VcsCommit;
 import org.ossmeter.platform.delta.vcs.VcsCommitItem;
 import org.ossmeter.platform.delta.vcs.VcsProjectDelta;
 import org.ossmeter.platform.delta.vcs.VcsRepositoryDelta;
-import org.ossmeter.repository.model.GitRepository;
 import org.ossmeter.repository.model.Project;
-import org.ossmeter.repository.model.SvnRepository;
 import org.ossmeter.repository.model.VcsRepository;
+import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 
 import com.mongodb.DB;
 
@@ -120,9 +119,9 @@ public class LocMetricProvider implements ITransientMetricProvider<Loc> {
 	protected String getRepositoryType(VcsRepository vcsRepository) {
 		if (vcsRepository instanceof SvnRepository) {
 			return "SVN";
-		} else if (vcsRepository instanceof GitRepository) {
+		} /*else if (vcsRepository instanceof GitRepository) {
 			return "GIT";
-		}
+		}*/ // TODO: Enable when the Git manager works
 		return "UNKNOWN";
 	}
 	

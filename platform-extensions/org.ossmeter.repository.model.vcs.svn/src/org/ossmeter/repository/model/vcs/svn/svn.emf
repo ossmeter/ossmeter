@@ -1,6 +1,6 @@
 package org.ossmeter.repository.model.vcs.svn;
 
-@stub(javaClass="org.ossmeter.repository.model.base.VcsRepository")
+@stub(javaClass="org.ossmeter.repository.model.VcsRepository")
 abstract class VcsRepository {
    
 }

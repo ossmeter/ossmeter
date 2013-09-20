@@ -2,7 +2,6 @@ package org.ossmeter.platform.tests;
 
 import org.junit.Test;
 import org.ossmeter.platform.Platform;
-import org.ossmeter.repository.model.GitRepository;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.github.GitHubProject;
 

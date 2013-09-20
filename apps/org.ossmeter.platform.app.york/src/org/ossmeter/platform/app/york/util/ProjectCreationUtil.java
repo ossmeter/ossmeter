@@ -1,15 +1,13 @@
 package org.ossmeter.platform.app.york.util;
 
-import org.ossmeter.platform.Platform;
-import org.ossmeter.repository.model.Bugzilla;
-import org.ossmeter.repository.model.GitRepository;
-import org.ossmeter.repository.model.NntpNewsGroup;
 import org.ossmeter.repository.model.Project;
-import org.ossmeter.repository.model.SvnRepository;
+import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
+import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 import org.ossmeter.repository.model.github.GitHubProject;
 import org.ossmeter.repository.model.github.GitHubRepository;
 import org.ossmeter.repository.model.github.GitHubUser;
 import org.ossmeter.repository.model.sourceforge.SourceForgeProject;
+import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 
 /**
  * This class is purely for illustration purposes and is not intended for release.
@@ -36,6 +34,7 @@ public class ProjectCreationUtil {
 		return project;
 	}
 	
+	/*
 	public static Project createGitProject(String name, String url) {
 		Project project = new Project();
 		project.setName(name);
@@ -45,7 +44,7 @@ public class ProjectCreationUtil {
 		
 		project.getVcsRepositories().add(repo);
 		return project;
-	}
+	}*/
 	
 	public static Project createProjectWithBugTrackingSystem(String name, String url, String product, String component){
 		Project project = new Project();

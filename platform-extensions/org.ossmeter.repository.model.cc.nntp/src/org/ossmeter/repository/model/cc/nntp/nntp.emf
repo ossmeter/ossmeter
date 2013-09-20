@@ -1,6 +1,6 @@
 package org.ossmeter.repository.model.cc.nntp;
 
-@stub(javaClass="org.ossmeter.repository.model.base.CommunicationChannel")
+@stub(javaClass="org.ossmeter.repository.model.CommunicationChannel")
 abstract class CommunicationChannel {
    
 }

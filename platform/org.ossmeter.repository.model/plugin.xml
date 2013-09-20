@@ -5,15 +5,15 @@
 
 
 
+
+
+
+
 <extension point="com.googlecode.pongo.runtime.osgi">
     <class name="org.ossmeter.repository.model.ProjectRepository"/>
     <class name="org.ossmeter.repository.model.Project"/>
     <class name="org.ossmeter.repository.model.MetricProvider"/>
     <class name="org.ossmeter.repository.model.LocalStorage"/>
-    <class name="org.ossmeter.repository.model.NntpNewsGroup"/>
-    <class name="org.ossmeter.repository.model.Bugzilla"/>
-    <class name="org.ossmeter.repository.model.SvnRepository"/>
-    <class name="org.ossmeter.repository.model.GitRepository"/>
     <class name="org.ossmeter.repository.model.Person"/>
     <class name="org.ossmeter.repository.model.License"/>
   </extension>

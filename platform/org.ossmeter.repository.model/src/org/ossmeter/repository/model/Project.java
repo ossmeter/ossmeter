@@ -13,8 +13,7 @@ public class Project extends NamedElement {
 	protected List<BugTrackingSystem> bugTrackingSystems = null;
 	protected List<Person> persons = null;
 	protected List<License> licenses = null;
-	protected List<NntpNewsGroup> newsgroups = null;
-	protected List<MetricProvider> metricProviders = null;
+	protected List<MetricProvider> metricProviderData = null;
 	protected LocalStorage storage = null;
 	
 	
@@ -25,8 +24,7 @@ public class Project extends NamedElement {
 		dbObject.put("bugTrackingSystems", new BasicDBList());
 		dbObject.put("persons", new BasicDBList());
 		dbObject.put("licenses", new BasicDBList());
-		dbObject.put("newsgroups", new BasicDBList());
-		dbObject.put("metricProviders", new BasicDBList());
+		dbObject.put("metricProviderData", new BasicDBList());
 		super.setSuperTypes("org.ossmeter.repository.model.NamedElement");
 		NAME.setOwningType("org.ossmeter.repository.model.Project");
 		SHORTNAME.setOwningType("org.ossmeter.repository.model.Project");
@@ -121,17 +119,11 @@ public class Project extends NamedElement {
 		}
 		return licenses;
 	}
-	public List<NntpNewsGroup> getNewsgroups() {
-		if (newsgroups == null) {
-			newsgroups = new PongoList<NntpNewsGroup>(this, "newsgroups", true);
+	public List<MetricProvider> getMetricProviderData() {
+		if (metricProviderData == null) {
+			metricProviderData = new PongoList<MetricProvider>(this, "metricProviderData", true);
 		}
-		return newsgroups;
-	}
-	public List<MetricProvider> getMetricProviders() {
-		if (metricProviders == null) {
-			metricProviders = new PongoList<MetricProvider>(this, "metricProviders", true);
-		}
-		return metricProviders;
+		return metricProviderData;
 	}
 	
 	

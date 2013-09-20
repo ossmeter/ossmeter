@@ -3,7 +3,6 @@ package org.ossmeter.repository.app;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
-import org.ossmeter.metricprovider.generic.totalloc.GenericTotalLocMetricProvider;
 import org.ossmeter.platform.ExtensionPointMetricProviderManager;
 import org.ossmeter.platform.IMetricProviderManager;
 import org.ossmeter.platform.Platform;
@@ -16,11 +15,10 @@ import org.ossmeter.platform.delta.communicationchannel.ServiceCommunicationChan
 import org.ossmeter.platform.delta.vcs.ExtensionPointVcsManager;
 import org.ossmeter.platform.delta.vcs.PlatformVcsManager;
 import org.ossmeter.platform.delta.vcs.ServiceVcsManager;
-import org.ossmeter.repository.model.Bugzilla;
-import org.ossmeter.repository.model.GitRepository;
-import org.ossmeter.repository.model.NntpNewsGroup;
 import org.ossmeter.repository.model.Project;
-import org.ossmeter.repository.model.SvnRepository;
+import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
+import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
+import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 
 import com.googlecode.pongo.runtime.PongoFactory;
 import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
@@ -53,11 +51,12 @@ public class App implements IApplication {
 //		addSampleProjectWithNewsGroup("epsilon", "news.eclipse.org", "eclipse.epsilon", true, "exquisitus", "flinder1f7", 80, 10000, platform);
 //		addSampleProjectWithNewsGroup("thunderbird", "news.mozilla.org", "mozilla.support.thunderbird", false, null, null, 80, 10000, platform);
 
-		addSampleProjectWithBugTrackingSystem("fedora", "https://bugzilla.redhat.com/xmlrpc.cgi", "Fedora", "acpi", platform); // "acpi", platform);
+		addSampleProjectWithBugTrackingSystem("fedora", "https://bugs.eclipse.org/bugs/xmlrpc.cgi", "epsilon", null, platform); // "acpi", platform);
 
 		platform.run();
 	}
 	
+	/*
 	protected void addSampleGitProject(String name, String url, Platform platform) {
 		Project project = new Project();
 		project.setName(name);
@@ -68,7 +67,7 @@ public class App implements IApplication {
 		
 		project.getVcsRepositories().add(repo);
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
-	}
+	}*/
 	
 	protected void addSampleSvnProject(String name, String url, Platform platform ) {
 		Project project = new Project();

@@ -13,7 +13,7 @@ import org.ossmeter.platform.delta.vcs.VcsChangeType;
 import org.ossmeter.platform.delta.vcs.VcsCommit;
 import org.ossmeter.platform.delta.vcs.VcsCommitItem;
 import org.ossmeter.platform.delta.vcs.VcsRepositoryDelta;
-import org.ossmeter.repository.model.SvnRepository;
+import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 import org.ossmeter.repository.model.VcsRepository;
 import org.tmatesoft.svn.core.SVNLogEntry;
 import org.tmatesoft.svn.core.SVNLogEntryPath;

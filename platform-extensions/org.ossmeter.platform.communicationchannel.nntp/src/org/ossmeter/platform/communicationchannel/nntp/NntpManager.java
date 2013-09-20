@@ -9,7 +9,7 @@ import org.ossmeter.platform.Date;
 import org.ossmeter.platform.delta.communicationchannel.CommunicationChannelArticle;
 import org.ossmeter.platform.delta.communicationchannel.CommunicationChannelDelta;
 import org.ossmeter.platform.delta.communicationchannel.ICommunicationChannelManager;
-import org.ossmeter.repository.model.NntpNewsGroup;
+import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 
 public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> {
 	

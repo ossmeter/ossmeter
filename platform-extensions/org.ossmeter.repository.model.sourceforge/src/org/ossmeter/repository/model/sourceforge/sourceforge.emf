@@ -1,16 +1,16 @@
 package org.ossmeter.repository.model.sourceforge;
 
-@stub(javaClass="org.ossmeter.repository.model.base.Project")
+@stub(javaClass="org.ossmeter.repository.model.Project")
 class Project {
    
 }
 
-@stub(javaClass="org.ossmeter.repository.model.base.BugTrackingSystem")
+@stub(javaClass="org.ossmeter.repository.model.BugTrackingSystem")
 class BugTrackingSystem {
    
 }
 
-@stub(javaClass="org.ossmeter.repository.model.base.Person")
+@stub(javaClass="org.ossmeter.repository.model.Person")
 class Person {
    
 }
@@ -19,12 +19,12 @@ class Person {
 //class VcsRepository {
 //}
 
-@stub(javaClass="org.ossmeter.repository.model.base.NamedElement")
+@stub(javaClass="org.ossmeter.repository.model.NamedElement")
 class NamedElement {
    
 }
 
-@stub(javaClass="org.ossmeter.repository.model.base.CommunicationChannel")
+@stub(javaClass="org.ossmeter.repository.model.CommunicationChannel")
 class CommunicationChannel {
    
 }

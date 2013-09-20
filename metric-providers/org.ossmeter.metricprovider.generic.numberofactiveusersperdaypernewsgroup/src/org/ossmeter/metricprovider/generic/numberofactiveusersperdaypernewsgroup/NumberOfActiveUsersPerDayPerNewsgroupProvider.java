@@ -3,17 +3,17 @@ package org.ossmeter.metricprovider.generic.numberofactiveusersperdaypernewsgrou
 import java.util.Arrays;
 import java.util.List;
 
-import org.ossmeter.metricprovider.generic.numberofactiveusersperdaypernewsgroup.model.DailyActiveUsers;
-import org.ossmeter.metricprovider.generic.numberofactiveusersperdaypernewsgroup.model.DailyNewsgroupData;
 import org.ossmeter.metricprovider.activeusers.ActiveUsersMetricProvider;
 import org.ossmeter.metricprovider.activeusers.model.ActiveUsers;
 import org.ossmeter.metricprovider.activeusers.model.NewsgroupData;
+import org.ossmeter.metricprovider.generic.numberofactiveusersperdaypernewsgroup.model.DailyActiveUsers;
+import org.ossmeter.metricprovider.generic.numberofactiveusersperdaypernewsgroup.model.DailyNewsgroupData;
 import org.ossmeter.platform.IHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.repository.model.CommunicationChannel;
-import org.ossmeter.repository.model.NntpNewsGroup;
 import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 
 import com.googlecode.pongo.runtime.Pongo;
 

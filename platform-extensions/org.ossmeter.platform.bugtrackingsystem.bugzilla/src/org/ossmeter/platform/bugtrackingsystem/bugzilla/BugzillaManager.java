@@ -10,7 +10,7 @@ import org.ossmeter.platform.delta.bugtrackingsystem.BugTrackingSystemBug;
 import org.ossmeter.platform.delta.bugtrackingsystem.BugTrackingSystemComment;
 import org.ossmeter.platform.delta.bugtrackingsystem.BugTrackingSystemDelta;
 import org.ossmeter.platform.delta.bugtrackingsystem.IBugTrackingSystemManager;
-import org.ossmeter.repository.model.Bugzilla;
+import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
 
 import utils.BugSearch.SearchLimiter;
 import utils.BugSearch.SearchQuery;

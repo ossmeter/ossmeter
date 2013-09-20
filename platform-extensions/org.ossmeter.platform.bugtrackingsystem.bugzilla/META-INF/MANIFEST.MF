@@ -11,7 +11,8 @@ Require-Bundle: org.eclipse.ui,
  com.j2bugzilla,
  org.apache.ws.commons,
  org.apache.xmlrpc,
- org.apache.xmlrpc.common
+ org.apache.xmlrpc.common,
+ org.ossmeter.repository.model.bts.bugzilla
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: org.ossmeter.repository.model

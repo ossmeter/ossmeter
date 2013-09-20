@@ -6,17 +6,20 @@ import com.googlecode.pongo.runtime.*;
 import com.googlecode.pongo.runtime.querying.*;
 
 
-public class MetricProvider extends Pongo {
+public class MetricProvider extends NamedElement {
 	
 	
 	
 	public MetricProvider() { 
 		super();
+		super.setSuperTypes("org.ossmeter.repository.model.NamedElement");
+		NAME.setOwningType("org.ossmeter.repository.model.MetricProvider");
 		METRICPROVIDERID.setOwningType("org.ossmeter.repository.model.MetricProvider");
 		TYPE.setOwningType("org.ossmeter.repository.model.MetricProvider");
 		LASTEXECUTED.setOwningType("org.ossmeter.repository.model.MetricProvider");
 	}
 	
+	public static StringQueryProducer NAME = new StringQueryProducer("name"); 
 	public static StringQueryProducer METRICPROVIDERID = new StringQueryProducer("metricProviderId"); 
 	public static StringQueryProducer TYPE = new StringQueryProducer("type"); 
 	public static StringQueryProducer LASTEXECUTED = new StringQueryProducer("lastExecuted"); 

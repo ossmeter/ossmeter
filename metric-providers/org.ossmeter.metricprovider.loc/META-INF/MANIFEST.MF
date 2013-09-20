@@ -8,9 +8,10 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.workbench,
  com.googlecode.pongo.runtime,
  org.ossmeter.platform,
- com.googlecode.pongo.runtime.osgi
+ com.googlecode.pongo.runtime.osgi,
+ org.ossmeter.repository.model.vcs.svn,
+ org.ossmeter.repository.model
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.metricprovider.loc,
  org.ossmeter.metricprovider.loc.model
-Import-Package: org.ossmeter.repository.model

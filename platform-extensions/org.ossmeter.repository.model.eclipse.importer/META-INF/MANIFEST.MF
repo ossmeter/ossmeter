@@ -4,4 +4,4 @@ Bundle-Name: Importer
 Bundle-SymbolicName: org.ossmeter.repository.model.eclipse.importer
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Require-Bundle: org.ossmeter.repository.model.eclipseforge
+Require-Bundle: org.ossmeter.repository.model.eclipse

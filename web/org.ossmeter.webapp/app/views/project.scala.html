@@ -6,21 +6,21 @@
 @main(project.getName() + " | OSSMETER") {
 
  	<section id="projectheader" class="row">
- 		<div class="span6">
-			<img src="http://eclipse.org/epsilon/img/slideshow/images/epsilon.png" style="float:left; height:50px;"/><h1>@project.getName()</h1>
+ 		<div class="span8">
+			<!--img src="http://eclipse.org/epsilon/img/slideshow/images/epsilon.png" style="float:left; height:50px;"/--><h1>@project.getName()</h1>
 			<p>@project.getDescription()</p>
 		</div>
 	<!-- </section>
 	<section id="summary" style="border:1px solid #eee; padding:10px;font-size:10pt"> -->
-		<div class="span6">
+		<div class="span4">
 			<h3>Summary</h3>
-			<p>born: <span class="card-title">@project.getYear()</span></p>
-			<p>active: <span class="card-title">@if(!project.getActive()) { No } Yes</span></p>
+			<!--p>born: <span class="card-title">@project.getYear()</span></p>
+			<p>active: <span class="card-title">@if(!project.getActive()) { No } Yes</span></p-->
 		@if(project.isInstanceOf[EclipseForgeProject]) {
-			<h4>Eclipse Forge Project</h4>
-			<p>status: <span class="card-title">@project.asInstanceOf[EclipseForgeProject].getStatus()</span></p>
-			<p>committers: <span class="card-title">@project.asInstanceOf[EclipseForgeProject].getCommitters().length</span></p>
-			<p class="url"><a href="@project.asInstanceOf[EclipseForgeProject].getHomePage()">Website</a></p>
+			<p><i class="icon-home"></i> <span class="card-title">Eclipse Foundation project</span></p>
+			<!--p>status: <span class="card-title">@project.asInstanceOf[EclipseForgeProject].getStatus()</span></p-->
+			<p><i class="icon-user"></i> <span class="card-title">@project.asInstanceOf[EclipseForgeProject].getCommitters().length committers</span></p>
+			<p class="url"><i class="icon-globe"></i> <a href="@project.asInstanceOf[EclipseForgeProject].getHomePage()">Website</a></p>
 		}
 		</div>
 	</section>
@@ -50,7 +50,7 @@
 		function createContainerAndLoadMetric(metricId) {
 			var contId = "metric-container-" + containerId;
 			containerId++;
-			$("#metrics").append('<article id="' + contId + '"class="metric-container row"><div class="span3"><h4 id="metric-'+contId+'-name"></h4><p id="metric-'+contId+'-summary"></p></div><div class="span9" id="'+contId+'-viz"><img src="@routes.Assets.at("images/loading.gif")"/></div></article>');
+			$("#metrics").append('<article id="' + contId + '"class="metric-container row"><div class="span4"><h4 id="metric-'+contId+'-name"></h4><p id="metric-'+contId+'-summary"></p></div><div class="span8" id="'+contId+'-viz"><img src="@routes.Assets.at("images/loading.gif")"/></div></article>');
 
 			loadMetric(metricId, contId);
 		}

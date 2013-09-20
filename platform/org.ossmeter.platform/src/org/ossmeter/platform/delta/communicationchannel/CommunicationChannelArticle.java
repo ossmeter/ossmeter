@@ -3,7 +3,7 @@ package org.ossmeter.platform.delta.communicationchannel;
 import java.io.Serializable;
 import java.util.Date;
 
-import org.ossmeter.repository.model.NntpNewsGroup;
+import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 
 public class CommunicationChannelArticle implements Serializable {
 	

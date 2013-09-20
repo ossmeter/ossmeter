@@ -2,14 +2,13 @@ package org.ossmeter.platform.app.york;
 
 import org.ossmeter.platform.Date;
 import org.ossmeter.platform.Platform;
-import org.ossmeter.repository.model.Bugzilla;
-import org.ossmeter.repository.model.NntpNewsGroup;
 import org.ossmeter.repository.model.Person;
 import org.ossmeter.repository.model.Project;
-import org.ossmeter.repository.model.SvnRepository;
-import org.ossmeter.repository.model.eclipseforge.EclipseForgeProject;
-import org.ossmeter.repository.model.eclipseforge.Release;
-import org.ossmeter.repository.model.eclipseforge.ReleaseType;
+import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
+import org.ossmeter.repository.model.eclipse.EclipseProject;
+import org.ossmeter.repository.model.eclipse.Release;
+import org.ossmeter.repository.model.eclipse.ReleaseType;
+import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -51,7 +50,7 @@ public class CreateProject {
 		}
 		
 		if (platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByShortName("epsilon") ==null) {
-			EclipseForgeProject p = new EclipseForgeProject();
+			EclipseProject p = new EclipseProject();
 			p.setName("Epsilon");
 			p.setShortName("epsilon");
 			p.setDescription("Epsilon is a family of languages and tools for code generation, model-to-model transformation, model validation, comparison, migration and refactoring that work out-of-the-box with EMF and other types of models.");

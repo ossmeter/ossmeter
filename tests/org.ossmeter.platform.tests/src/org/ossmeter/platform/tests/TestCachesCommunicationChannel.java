@@ -1,8 +1,8 @@
 package org.ossmeter.platform.tests;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -12,19 +12,9 @@ import org.ossmeter.platform.cache.communicationchannel.CommunicationChannelCont
 import org.ossmeter.platform.cache.communicationchannel.CommunicationChannelDeltaCache;
 import org.ossmeter.platform.cache.communicationchannel.ICommunicationChannelContentsCache;
 import org.ossmeter.platform.cache.communicationchannel.ICommunicationChannelDeltaCache;
-import org.ossmeter.platform.cache.vcs.IVcsContentsCache;
-import org.ossmeter.platform.cache.vcs.IVcsDeltaCache;
-import org.ossmeter.platform.cache.vcs.VcsContentsCache;
-import org.ossmeter.platform.cache.vcs.VcsDeltaCache;
 import org.ossmeter.platform.delta.communicationchannel.CommunicationChannelArticle;
 import org.ossmeter.platform.delta.communicationchannel.CommunicationChannelDelta;
-import org.ossmeter.platform.delta.vcs.VcsChangeType;
-import org.ossmeter.platform.delta.vcs.VcsCommit;
-import org.ossmeter.platform.delta.vcs.VcsCommitItem;
-import org.ossmeter.platform.delta.vcs.VcsRepositoryDelta;
-import org.ossmeter.repository.model.CommunicationChannel;
-import org.ossmeter.repository.model.NntpNewsGroup;
-import org.ossmeter.repository.model.VcsRepository;
+import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 
 public class TestCachesCommunicationChannel {
 

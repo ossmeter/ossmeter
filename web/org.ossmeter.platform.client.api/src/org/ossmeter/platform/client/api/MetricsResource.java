@@ -42,7 +42,7 @@ public class MetricsResource extends ServerResource {
 		}
 
 		IMetricProvider metricProvider = null;
-		for (MetricProvider mp : project.getMetricProviders()) {
+		for (MetricProvider mp : project.getMetricProviderData()) {
 			for (IMetricProvider imp : platform.getMetricProviderManager().getMetricProviders()) { // This is ugly. Required as repo.model.MetricProvider doesn't have the info
 				if (imp.getShortIdentifier().equals(metricName)) {
 					metricProvider = imp;

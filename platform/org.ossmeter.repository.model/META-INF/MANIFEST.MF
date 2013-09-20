@@ -10,5 +10,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.ossmeter.repository.model;uses:="com.googlecode.pongo.runtime,com.mongodb"
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.workbench,
- com.googlecode.pongo.runtime
+ com.googlecode.pongo.runtime;visibility:=reexport
 Bundle-ActivationPolicy: lazy

@@ -1,6 +1,6 @@
 package org.ossmeter.repository.model.bts.bugzilla;
 
-@stub(javaClass="org.ossmeter.repository.model.base.BugTrackingSystem")
+@stub(javaClass="org.ossmeter.repository.model.BugTrackingSystem")
 abstract class BugTrackingSystem {
    
 }

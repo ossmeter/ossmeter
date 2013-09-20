@@ -3,6 +3,7 @@ package org.ossmeter.repository.model.sourceforge;
 import com.mongodb.*;
 import java.util.*;
 import com.googlecode.pongo.runtime.*;
+import com.googlecode.pongo.runtime.querying.*;
 
 
 public class Bug extends Tracker {
@@ -13,14 +14,29 @@ public class Bug extends Tracker {
 	
 	public Bug() { 
 		super();
+		super.setSuperTypes("org.ossmeter.repository.model.sourceforge.Tracker","org.ossmeter.repository.model.sourceforge.NamedElement");
+		LOCATION.setOwningType("org.ossmeter.repository.model.sourceforge.Bug");
+		STATUS.setOwningType("org.ossmeter.repository.model.sourceforge.Bug");
+		DESCRIPTION.setOwningType("org.ossmeter.repository.model.sourceforge.Bug");
+		PRIORITY.setOwningType("org.ossmeter.repository.model.sourceforge.Bug");
+		RESOLUTIONSTATUS.setOwningType("org.ossmeter.repository.model.sourceforge.Bug");
+		BUGVISIBILITY.setOwningType("org.ossmeter.repository.model.sourceforge.Bug");
 	}
+	
+	public static StringQueryProducer LOCATION = new StringQueryProducer("location"); 
+	public static StringQueryProducer STATUS = new StringQueryProducer("status"); 
+	public static StringQueryProducer DESCRIPTION = new StringQueryProducer("description"); 
+	public static NumericalQueryProducer PRIORITY = new NumericalQueryProducer("priority");
+	public static StringQueryProducer RESOLUTIONSTATUS = new StringQueryProducer("resolutionStatus"); 
+	public static StringQueryProducer BUGVISIBILITY = new StringQueryProducer("bugVisibility"); 
+	
 	
 	public String getDescription() {
 		return parseString(dbObject.get("description")+"", "");
 	}
 	
 	public Bug setDescription(String description) {
-		dbObject.put("description", description + "");
+		dbObject.put("description", description);
 		notifyChanged();
 		return this;
 	}
@@ -29,7 +45,7 @@ public class Bug extends Tracker {
 	}
 	
 	public Bug setPriority(int priority) {
-		dbObject.put("priority", priority + "");
+		dbObject.put("priority", priority);
 		notifyChanged();
 		return this;
 	}
@@ -43,7 +59,7 @@ public class Bug extends Tracker {
 	}
 	
 	public Bug setResolutionStatus(ResolutionStatus resolutionStatus) {
-		dbObject.put("resolutionStatus", resolutionStatus + "");
+		dbObject.put("resolutionStatus", resolutionStatus.toString());
 		notifyChanged();
 		return this;
 	}
@@ -57,7 +73,7 @@ public class Bug extends Tracker {
 	}
 	
 	public Bug setBugVisibility(BugVisibility bugVisibility) {
-		dbObject.put("bugVisibility", bugVisibility + "");
+		dbObject.put("bugVisibility", bugVisibility.toString());
 		notifyChanged();
 		return this;
 	}

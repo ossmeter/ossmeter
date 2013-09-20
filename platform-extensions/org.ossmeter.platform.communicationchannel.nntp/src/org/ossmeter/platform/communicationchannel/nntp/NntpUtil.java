@@ -12,10 +12,9 @@ import java.util.StringTokenizer;
 
 import org.apache.commons.net.io.DotTerminatedMessageReader;
 import org.apache.commons.net.nntp.Article;
-import org.apache.commons.net.nntp.ArticlePointer;
 import org.apache.commons.net.nntp.NNTPClient;
 import org.apache.commons.net.nntp.NewsgroupInfo;
-import org.ossmeter.repository.model.NntpNewsGroup;
+import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 
 
 public class NntpUtil {

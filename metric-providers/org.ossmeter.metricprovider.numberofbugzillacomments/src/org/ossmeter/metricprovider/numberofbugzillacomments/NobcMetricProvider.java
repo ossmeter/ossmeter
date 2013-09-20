@@ -12,8 +12,8 @@ import org.ossmeter.platform.delta.bugtrackingsystem.BugTrackingSystemDelta;
 import org.ossmeter.platform.delta.bugtrackingsystem.BugTrackingSystemProjectDelta;
 import org.ossmeter.platform.delta.bugtrackingsystem.PlatformBugTrackingSystemManager;
 import org.ossmeter.repository.model.BugTrackingSystem;
-import org.ossmeter.repository.model.Bugzilla;
 import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
 
 import com.mongodb.DB;
 

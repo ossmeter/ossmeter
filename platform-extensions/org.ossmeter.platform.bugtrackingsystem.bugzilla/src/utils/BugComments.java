@@ -147,7 +147,7 @@ public class BugComments implements BugzillaMethod {
 					c.setTimestamp((Date)comment.get("time"));
 					c.setPrivate((Boolean)comment.get("is_private"));
 					c.setBugId((Integer)comment.get("bug_id"));
-					c.setCreatorId((Integer)comment.get("creator_id"));
+					//c.setCreatorId((Integer)comment.get("creator_id"));
 					c.setCreator((String)comment.get("creator"));
 					c.setAuthor((String)comment.get("author"));
 					commentList.add(c);
