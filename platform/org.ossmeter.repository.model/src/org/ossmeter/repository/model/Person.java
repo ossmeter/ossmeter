@@ -8,10 +8,12 @@ import com.googlecode.pongo.runtime.querying.*;
 
 public class Person extends NamedElement {
 	
+	protected List<Role> roles = null;
 	
 	
 	public Person() { 
 		super();
+		dbObject.put("roles", new BasicDBList());
 		super.setSuperTypes("org.ossmeter.repository.model.NamedElement");
 		NAME.setOwningType("org.ossmeter.repository.model.Person");
 		HOMEPAGE.setOwningType("org.ossmeter.repository.model.Person");
@@ -32,6 +34,12 @@ public class Person extends NamedElement {
 	}
 	
 	
+	public List<Role> getRoles() {
+		if (roles == null) {
+			roles = new PongoList<Role>(this, "roles", true);
+		}
+		return roles;
+	}
 	
 	
 }

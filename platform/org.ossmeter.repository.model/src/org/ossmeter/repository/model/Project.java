@@ -14,6 +14,7 @@ public class Project extends NamedElement {
 	protected List<Person> persons = null;
 	protected List<License> licenses = null;
 	protected List<MetricProvider> metricProviderData = null;
+	protected Project parent = null;
 	protected LocalStorage storage = null;
 	
 	
@@ -127,6 +128,26 @@ public class Project extends NamedElement {
 	}
 	
 	
+	public Project getParent() {
+		if (parent == null && dbObject.containsField("parent")) {
+			parent = (Project) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("parent"));
+		}
+		return parent;
+	}
+	
+	public Project setParent(Project parent) {
+		if (this.parent != parent) {
+			if (parent == null) {
+				dbObject.removeField("parent");
+			}
+			else {
+				dbObject.put("parent", parent.getDbObject());
+			}
+			this.parent = parent;
+			notifyChanged();
+		}
+		return this;
+	}
 	public LocalStorage getStorage() {
 		if (storage == null && dbObject.containsField("storage")) {
 			storage = (LocalStorage) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("storage"));
