@@ -73,9 +73,15 @@ public class XML {
             //remove w3c DTDs since they are slow
             int index=text.indexOf("<head");if(index==-1) index=text.indexOf("<HEAD");
             text="<html>"+text.substring(index);
+            //Actually remove all the head tag
+            text=removeHead(text);
             //solve img tags not closed
             text=sanitizeTag("img",text);
             text=sanitizeTag("input",text);
+            System.out.println(text);
+            
+            //text= text.substring(0, text.indexOf("<![CDATA[//><!--"));
+            
          }
          DocumentBuilder db = dbf.newDocumentBuilder(); 
          InputStream is=new ByteArrayInputStream(text.getBytes("UTF-8"));
@@ -85,7 +91,13 @@ public class XML {
          xpath = xFactory.newXPath();
      }
     
-    private String sanitizeTag(String tag,String text){
+    private String removeHead(String text) {
+		String result="";
+		result=text.substring(0,text.indexOf("<head "));
+		result+=text.substring(text.indexOf("</head>") + "</head>".length());
+		return result;
+	}
+	private String sanitizeTag(String tag,String text){
     	int offset=0;
     	int index1=0;
     	while (index1>-1){
