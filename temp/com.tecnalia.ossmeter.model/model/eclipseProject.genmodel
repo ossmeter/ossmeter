@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/com.tecnalia.ossmeter.model/src" modelPluginID="com.tecnalia.ossmeter.model"
+    modelName="EclipseProject" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="6.0" copyrightFields="false"
+    operationReflection="true" importOrganizing="true">
+  <foreignModel>eclipseProject.ecore</foreignModel>
+  <genPackages prefix="Eclipseproject" basePackage="com.tecnalia.ossmeter.model" disposableProviderFactory="true"
+      ecorePackage="eclipseProject.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="eclipseProject.ecore#//EnumCommunityType">
+      <genEnumLiterals ecoreEnumLiteral="eclipseProject.ecore#//EnumCommunityType/MAILING_LIST"/>
+      <genEnumLiterals ecoreEnumLiteral="eclipseProject.ecore#//EnumCommunityType/FORUM"/>
+      <genEnumLiterals ecoreEnumLiteral="eclipseProject.ecore#//EnumCommunityType/WEBSITE"/>
+      <genEnumLiterals ecoreEnumLiteral="eclipseProject.ecore#//EnumCommunityType/WIKI"/>
+      <genEnumLiterals ecoreEnumLiteral="eclipseProject.ecore#//EnumCommunityType/BUG_TRACKER"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="eclipseProject.ecore#//EnumRepository">
+      <genEnumLiterals ecoreEnumLiteral="eclipseProject.ecore#//EnumRepository/SUBVERSION"/>
+      <genEnumLiterals ecoreEnumLiteral="eclipseProject.ecore#//EnumRepository/GIT"/>
+      <genEnumLiterals ecoreEnumLiteral="eclipseProject.ecore#//EnumRepository/CVS"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="eclipseProject.ecore#//EnumProjectLiveCycle">
+      <genEnumLiterals ecoreEnumLiteral="eclipseProject.ecore#//EnumProjectLiveCycle/PRE_PROPOSAL"/>
+      <genEnumLiterals ecoreEnumLiteral="eclipseProject.ecore#//EnumProjectLiveCycle/PROPOSAL"/>
+      <genEnumLiterals ecoreEnumLiteral="eclipseProject.ecore#//EnumProjectLiveCycle/INCUBATION"/>
+      <genEnumLiterals ecoreEnumLiteral="eclipseProject.ecore#//EnumProjectLiveCycle/MATURE"/>
+      <genEnumLiterals ecoreEnumLiteral="eclipseProject.ecore#//EnumProjectLiveCycle/TOP_LEVEL"/>
+      <genEnumLiterals ecoreEnumLiteral="eclipseProject.ecore#//EnumProjectLiveCycle/ARCHIVED"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="eclipseProject.ecore#//EnumLiveliness">
+      <genEnumLiterals ecoreEnumLiteral="eclipseProject.ecore#//EnumLiveliness/INACTIVE"/>
+      <genEnumLiterals ecoreEnumLiteral="eclipseProject.ecore#//EnumLiveliness/ACTIVE"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="eclipseProject.ecore#//EnumPlatformVersion">
+      <genEnumLiterals ecoreEnumLiteral="eclipseProject.ecore#//EnumPlatformVersion/GANYMEDE"/>
+      <genEnumLiterals ecoreEnumLiteral="eclipseProject.ecore#//EnumPlatformVersion/GALILEO"/>
+      <genEnumLiterals ecoreEnumLiteral="eclipseProject.ecore#//EnumPlatformVersion/HELIOS"/>
+      <genEnumLiterals ecoreEnumLiteral="eclipseProject.ecore#//EnumPlatformVersion/INDIGO"/>
+      <genEnumLiterals ecoreEnumLiteral="eclipseProject.ecore#//EnumPlatformVersion/JUNO"/>
+      <genEnumLiterals ecoreEnumLiteral="eclipseProject.ecore#//EnumPlatformVersion/KEPLER"/>
+      <genEnumLiterals ecoreEnumLiteral="eclipseProject.ecore#//EnumPlatformVersion/LUNA"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="eclipseProject.ecore#//EnumLicense">
+      <genEnumLiterals ecoreEnumLiteral="eclipseProject.ecore#//EnumLicense/EPL_1_0"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="eclipseProject.ecore#//EnumMemberRole">
+      <genEnumLiterals ecoreEnumLiteral="eclipseProject.ecore#//EnumMemberRole/CONTRIBUTOR"/>
+      <genEnumLiterals ecoreEnumLiteral="eclipseProject.ecore#//EnumMemberRole/COMMITTER"/>
+      <genEnumLiterals ecoreEnumLiteral="eclipseProject.ecore#//EnumMemberRole/LEADER"/>
+    </genEnums>
+    <genClasses ecoreClass="eclipseProject.ecore#//EclipseWorld">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference eclipseProject.ecore#//EclipseWorld/projects"/>
+      <genOperations ecoreOperation="eclipseProject.ecore#//EclipseWorld/getProjectAtAnyDepth">
+        <genParameters ecoreParameter="eclipseProject.ecore#//EclipseWorld/getProjectAtAnyDepth/name"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="eclipseProject.ecore#//EclipseProject">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute eclipseProject.ecore#//EclipseProject/isParentProject"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute eclipseProject.ecore#//EclipseProject/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute eclipseProject.ecore#//EclipseProject/url"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute eclipseProject.ecore#//EclipseProject/status"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference eclipseProject.ecore#//EclipseProject/repositories"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute eclipseProject.ecore#//EclipseProject/liveliness"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference eclipseProject.ecore#//EclipseProject/members"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute eclipseProject.ecore#//EclipseProject/organizations"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute eclipseProject.ecore#//EclipseProject/availablePlatformVersions"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference eclipseProject.ecore#//EclipseProject/projects"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute eclipseProject.ecore#//EclipseProject/license"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference eclipseProject.ecore#//EclipseProject/CommunityResources"/>
+      <genOperations ecoreOperation="eclipseProject.ecore#//EclipseProject/getProjectAtAnyDepth">
+        <genParameters ecoreParameter="eclipseProject.ecore#//EclipseProject/getProjectAtAnyDepth/name"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="eclipseProject.ecore#//ProjectMember">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference eclipseProject.ecore#//ProjectMember/user"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute eclipseProject.ecore#//ProjectMember/role"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute eclipseProject.ecore#//ProjectMember/url"/>
+    </genClasses>
+    <genClasses ecoreClass="eclipseProject.ecore#//User">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute eclipseProject.ecore#//User/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute eclipseProject.ecore#//User/url"/>
+    </genClasses>
+    <genClasses ecoreClass="eclipseProject.ecore#//CodeRepository">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute eclipseProject.ecore#//CodeRepository/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute eclipseProject.ecore#//CodeRepository/url"/>
+    </genClasses>
+    <genClasses ecoreClass="eclipseProject.ecore#//CommunityResource">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute eclipseProject.ecore#//CommunityResource/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute eclipseProject.ecore#//CommunityResource/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute eclipseProject.ecore#//CommunityResource/url"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute eclipseProject.ecore#//CommunityResource/data"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

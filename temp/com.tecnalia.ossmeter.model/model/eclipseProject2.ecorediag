@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmi:id="__guoUPBGEeKBqsXtV-ortQ" type="EcoreTools" measurementUnit="Pixel">
+  <children xmi:type="notation:Node" xmi:id="__g4ZUPBGEeKBqsXtV-ortQ" type="1001">
+    <children xmi:type="notation:Node" xmi:id="__g61kPBGEeKBqsXtV-ortQ" type="4001"/>
+    <children xmi:type="notation:Node" xmi:id="__g61kfBGEeKBqsXtV-ortQ" type="5001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="__g61kvBGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="__g61k_BGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="__g7coPBGEeKBqsXtV-ortQ"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="__g7cofBGEeKBqsXtV-ortQ" type="5002">
+      <children xmi:type="notation:Node" xmi:id="__g8DsPBGEeKBqsXtV-ortQ" type="2002">
+        <element xmi:type="ecore:EOperation" href="eclipseProject.ecore#//EclipseWorld/getProjectAtAnyDepth"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__g8DsfBGEeKBqsXtV-ortQ"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="__g7covBGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="__g7co_BGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="__g7cpPBGEeKBqsXtV-ortQ"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="__g4ZUfBGEeKBqsXtV-ortQ" fontColor="4210752" fontName="Ubuntu" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EClass" href="eclipseProject.ecore#//EclipseWorld"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="__g4ZUvBGEeKBqsXtV-ortQ" x="348" y="612"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="__g8DsvBGEeKBqsXtV-ortQ" type="1001">
+    <children xmi:type="notation:Node" xmi:id="__g8qwPBGEeKBqsXtV-ortQ" type="4001"/>
+    <children xmi:type="notation:Node" xmi:id="__g8qwfBGEeKBqsXtV-ortQ" type="5001">
+      <children xmi:type="notation:Node" xmi:id="__g8qyfBGEeKBqsXtV-ortQ" type="2001">
+        <element xmi:type="ecore:EAttribute" href="eclipseProject.ecore#//EclipseProject/isParentProject"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__g8qyvBGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__g9R0PBGEeKBqsXtV-ortQ" type="2001">
+        <element xmi:type="ecore:EAttribute" href="eclipseProject.ecore#//EclipseProject/name"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__g9R0fBGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__g9R0vBGEeKBqsXtV-ortQ" type="2001">
+        <element xmi:type="ecore:EAttribute" href="eclipseProject.ecore#//EclipseProject/url"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__g9R0_BGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__g9R1PBGEeKBqsXtV-ortQ" type="2001">
+        <element xmi:type="ecore:EAttribute" href="eclipseProject.ecore#//EclipseProject/status"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__g9R1fBGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__g9R1vBGEeKBqsXtV-ortQ" type="2001">
+        <element xmi:type="ecore:EAttribute" href="eclipseProject.ecore#//EclipseProject/liveliness"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__g9R1_BGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__g944PBGEeKBqsXtV-ortQ" type="2001">
+        <element xmi:type="ecore:EAttribute" href="eclipseProject.ecore#//EclipseProject/organizations"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__g944fBGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__g944vBGEeKBqsXtV-ortQ" type="2001">
+        <element xmi:type="ecore:EAttribute" href="eclipseProject.ecore#//EclipseProject/availablePlatformVersions"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__g944_BGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__g-f8PBGEeKBqsXtV-ortQ" type="2001">
+        <element xmi:type="ecore:EAttribute" href="eclipseProject.ecore#//EclipseProject/license"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__g-f8fBGEeKBqsXtV-ortQ"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="__g8qwvBGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="__g8qw_BGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="__g8qxPBGEeKBqsXtV-ortQ"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="__g8qxfBGEeKBqsXtV-ortQ" type="5002">
+      <children xmi:type="notation:Node" xmi:id="__g-f8vBGEeKBqsXtV-ortQ" type="2002">
+        <element xmi:type="ecore:EOperation" href="eclipseProject.ecore#//EclipseProject/getProjectAtAnyDepth"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__g-f8_BGEeKBqsXtV-ortQ"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="__g8qxvBGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="__g8qx_BGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="__g8qyPBGEeKBqsXtV-ortQ"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="__g8Ds_BGEeKBqsXtV-ortQ" fontColor="4210752" fontName="Ubuntu" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EClass" href="eclipseProject.ecore#//EclipseProject"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="__g8DtPBGEeKBqsXtV-ortQ" x="339" y="366"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="__g-f9PBGEeKBqsXtV-ortQ" type="1001">
+    <children xmi:type="notation:Node" xmi:id="__g_HAPBGEeKBqsXtV-ortQ" type="4001"/>
+    <children xmi:type="notation:Node" xmi:id="__g_HAfBGEeKBqsXtV-ortQ" type="5001">
+      <children xmi:type="notation:Node" xmi:id="__g_HCfBGEeKBqsXtV-ortQ" type="2001">
+        <element xmi:type="ecore:EAttribute" href="eclipseProject.ecore#//ProjectMember/role"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__g_HCvBGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__g_HC_BGEeKBqsXtV-ortQ" type="2001">
+        <element xmi:type="ecore:EAttribute" href="eclipseProject.ecore#//ProjectMember/url"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__g_HDPBGEeKBqsXtV-ortQ"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="__g_HAvBGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="__g_HA_BGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="__g_HBPBGEeKBqsXtV-ortQ"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="__g_HBfBGEeKBqsXtV-ortQ" type="5002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="__g_HBvBGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="__g_HB_BGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="__g_HCPBGEeKBqsXtV-ortQ"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="__g-f9fBGEeKBqsXtV-ortQ" fontColor="4210752" fontName="Ubuntu" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EClass" href="eclipseProject.ecore#//ProjectMember"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="__g-f9vBGEeKBqsXtV-ortQ" x="185" y="209"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="__g_uEPBGEeKBqsXtV-ortQ" type="1001">
+    <children xmi:type="notation:Node" xmi:id="__g_uE_BGEeKBqsXtV-ortQ" type="4001"/>
+    <children xmi:type="notation:Node" xmi:id="__g_uFPBGEeKBqsXtV-ortQ" type="5001">
+      <children xmi:type="notation:Node" xmi:id="__hAVIPBGEeKBqsXtV-ortQ" type="2001">
+        <element xmi:type="ecore:EAttribute" href="eclipseProject.ecore#//User/name"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hAVIfBGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__hAVIvBGEeKBqsXtV-ortQ" type="2001">
+        <element xmi:type="ecore:EAttribute" href="eclipseProject.ecore#//User/url"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hAVI_BGEeKBqsXtV-ortQ"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="__g_uFfBGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="__g_uFvBGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="__g_uF_BGEeKBqsXtV-ortQ"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="__g_uGPBGEeKBqsXtV-ortQ" type="5002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="__g_uGfBGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="__g_uGvBGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="__g_uG_BGEeKBqsXtV-ortQ"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="__g_uEfBGEeKBqsXtV-ortQ" fontColor="4210752" fontName="Ubuntu" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EClass" href="eclipseProject.ecore#//User"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="__g_uEvBGEeKBqsXtV-ortQ" x="215"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="__hAVJPBGEeKBqsXtV-ortQ" type="1001">
+    <children xmi:type="notation:Node" xmi:id="__hA8MPBGEeKBqsXtV-ortQ" type="4001"/>
+    <children xmi:type="notation:Node" xmi:id="__hA8MfBGEeKBqsXtV-ortQ" type="5001">
+      <children xmi:type="notation:Node" xmi:id="__hA8OfBGEeKBqsXtV-ortQ" type="2001">
+        <element xmi:type="ecore:EAttribute" href="eclipseProject.ecore#//CodeRepository/type"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hA8OvBGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__hA8O_BGEeKBqsXtV-ortQ" type="2001">
+        <element xmi:type="ecore:EAttribute" href="eclipseProject.ecore#//CodeRepository/url"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hA8PPBGEeKBqsXtV-ortQ"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="__hA8MvBGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="__hA8M_BGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="__hA8NPBGEeKBqsXtV-ortQ"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="__hA8NfBGEeKBqsXtV-ortQ" type="5002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="__hA8NvBGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="__hA8N_BGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="__hA8OPBGEeKBqsXtV-ortQ"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="__hAVJfBGEeKBqsXtV-ortQ" fontColor="4210752" fontName="Ubuntu" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EClass" href="eclipseProject.ecore#//CodeRepository"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="__hAVJvBGEeKBqsXtV-ortQ" x="421" y="209"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="__hBjQPBGEeKBqsXtV-ortQ" type="1001">
+    <children xmi:type="notation:Node" xmi:id="__hBjQ_BGEeKBqsXtV-ortQ" type="4001"/>
+    <children xmi:type="notation:Node" xmi:id="__hBjRPBGEeKBqsXtV-ortQ" type="5001">
+      <children xmi:type="notation:Node" xmi:id="__hCKUPBGEeKBqsXtV-ortQ" type="2001">
+        <element xmi:type="ecore:EAttribute" href="eclipseProject.ecore#//CommunityResource/type"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hCKUfBGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__hCKUvBGEeKBqsXtV-ortQ" type="2001">
+        <element xmi:type="ecore:EAttribute" href="eclipseProject.ecore#//CommunityResource/name"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hCKU_BGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__hCxYPBGEeKBqsXtV-ortQ" type="2001">
+        <element xmi:type="ecore:EAttribute" href="eclipseProject.ecore#//CommunityResource/url"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hCxYfBGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__hCxYvBGEeKBqsXtV-ortQ" type="2001">
+        <element xmi:type="ecore:EAttribute" href="eclipseProject.ecore#//CommunityResource/data"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hCxY_BGEeKBqsXtV-ortQ"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="__hBjRfBGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="__hBjRvBGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="__hBjR_BGEeKBqsXtV-ortQ"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="__hBjSPBGEeKBqsXtV-ortQ" type="5002">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="__hBjSfBGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="__hBjSvBGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="__hBjS_BGEeKBqsXtV-ortQ"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="__hBjQfBGEeKBqsXtV-ortQ" fontColor="4210752" fontName="Ubuntu" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EClass" href="eclipseProject.ecore#//CommunityResource"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="__hBjQvBGEeKBqsXtV-ortQ" x="648" y="209"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="__hDYcPBGEeKBqsXtV-ortQ" type="1005">
+    <children xmi:type="notation:Node" xmi:id="__hDYc_BGEeKBqsXtV-ortQ" type="4010"/>
+    <children xmi:type="notation:Node" xmi:id="__hD_gPBGEeKBqsXtV-ortQ" type="5008">
+      <children xmi:type="notation:Node" xmi:id="__hD_hPBGEeKBqsXtV-ortQ" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="eclipseProject.ecore#//EnumCommunityType/MAILING_LIST"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hD_hfBGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__hEmkPBGEeKBqsXtV-ortQ" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="eclipseProject.ecore#//EnumCommunityType/FORUM"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hEmkfBGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__hEmkvBGEeKBqsXtV-ortQ" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="eclipseProject.ecore#//EnumCommunityType/WEBSITE"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hEmk_BGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__hEmlPBGEeKBqsXtV-ortQ" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="eclipseProject.ecore#//EnumCommunityType/WIKI"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hEmlfBGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__hEmlvBGEeKBqsXtV-ortQ" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="eclipseProject.ecore#//EnumCommunityType/BUG_TRACKER"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hEml_BGEeKBqsXtV-ortQ"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="__hD_gfBGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="__hD_gvBGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="__hD_g_BGEeKBqsXtV-ortQ"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="__hDYcfBGEeKBqsXtV-ortQ" fontColor="4210752" fontName="Ubuntu" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EEnum" href="eclipseProject.ecore#//EnumCommunityType"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="__hDYcvBGEeKBqsXtV-ortQ"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="__hFNoPBGEeKBqsXtV-ortQ" type="1005">
+    <children xmi:type="notation:Node" xmi:id="__hFNo_BGEeKBqsXtV-ortQ" type="4010"/>
+    <children xmi:type="notation:Node" xmi:id="__hFNpPBGEeKBqsXtV-ortQ" type="5008">
+      <children xmi:type="notation:Node" xmi:id="__hFNqPBGEeKBqsXtV-ortQ" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="eclipseProject.ecore#//EnumRepository/SUBVERSION"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hFNqfBGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__hF0sPBGEeKBqsXtV-ortQ" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="eclipseProject.ecore#//EnumRepository/GIT"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hF0sfBGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__hF0svBGEeKBqsXtV-ortQ" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="eclipseProject.ecore#//EnumRepository/CVS"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hF0s_BGEeKBqsXtV-ortQ"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="__hFNpfBGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="__hFNpvBGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="__hFNp_BGEeKBqsXtV-ortQ"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="__hFNofBGEeKBqsXtV-ortQ" fontColor="4210752" fontName="Ubuntu" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EEnum" href="eclipseProject.ecore#//EnumRepository"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="__hFNovBGEeKBqsXtV-ortQ" x="392"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="__hF0tPBGEeKBqsXtV-ortQ" type="1005">
+    <children xmi:type="notation:Node" xmi:id="__hGbwPBGEeKBqsXtV-ortQ" type="4010"/>
+    <children xmi:type="notation:Node" xmi:id="__hGbwfBGEeKBqsXtV-ortQ" type="5008">
+      <children xmi:type="notation:Node" xmi:id="__hGbxfBGEeKBqsXtV-ortQ" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="eclipseProject.ecore#//EnumProjectLiveCycle/PRE_PROPOSAL"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hGbxvBGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__hGbx_BGEeKBqsXtV-ortQ" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="eclipseProject.ecore#//EnumProjectLiveCycle/PROPOSAL"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hGbyPBGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__hGbyfBGEeKBqsXtV-ortQ" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="eclipseProject.ecore#//EnumProjectLiveCycle/INCUBATION"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hHC0PBGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__hHC0fBGEeKBqsXtV-ortQ" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="eclipseProject.ecore#//EnumProjectLiveCycle/MATURE"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hHC0vBGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__hHC0_BGEeKBqsXtV-ortQ" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="eclipseProject.ecore#//EnumProjectLiveCycle/TOP_LEVEL"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hHC1PBGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__hHC1fBGEeKBqsXtV-ortQ" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="eclipseProject.ecore#//EnumProjectLiveCycle/ARCHIVED"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hHC1vBGEeKBqsXtV-ortQ"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="__hGbwvBGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="__hGbw_BGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="__hGbxPBGEeKBqsXtV-ortQ"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="__hF0tfBGEeKBqsXtV-ortQ" fontColor="4210752" fontName="Ubuntu" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EEnum" href="eclipseProject.ecore#//EnumProjectLiveCycle"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="__hF0tvBGEeKBqsXtV-ortQ" x="573"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="__hHp4PBGEeKBqsXtV-ortQ" type="1005">
+    <children xmi:type="notation:Node" xmi:id="__hHp4_BGEeKBqsXtV-ortQ" type="4010"/>
+    <children xmi:type="notation:Node" xmi:id="__hHp5PBGEeKBqsXtV-ortQ" type="5008">
+      <children xmi:type="notation:Node" xmi:id="__hHp6PBGEeKBqsXtV-ortQ" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="eclipseProject.ecore#//EnumLiveliness/INACTIVE"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hHp6fBGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__hIQ8PBGEeKBqsXtV-ortQ" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="eclipseProject.ecore#//EnumLiveliness/ACTIVE"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hIQ8fBGEeKBqsXtV-ortQ"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="__hHp5fBGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="__hHp5vBGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="__hHp5_BGEeKBqsXtV-ortQ"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="__hHp4fBGEeKBqsXtV-ortQ" fontColor="4210752" fontName="Ubuntu" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EEnum" href="eclipseProject.ecore#//EnumLiveliness"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="__hHp4vBGEeKBqsXtV-ortQ" x="787"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="__hIQ8vBGEeKBqsXtV-ortQ" type="1005">
+    <children xmi:type="notation:Node" xmi:id="__hI4APBGEeKBqsXtV-ortQ" type="4010"/>
+    <children xmi:type="notation:Node" xmi:id="__hI4AfBGEeKBqsXtV-ortQ" type="5008">
+      <children xmi:type="notation:Node" xmi:id="__hI4BfBGEeKBqsXtV-ortQ" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="eclipseProject.ecore#//EnumPlatformVersion/GANYMEDE"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hI4BvBGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__hJfEPBGEeKBqsXtV-ortQ" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="eclipseProject.ecore#//EnumPlatformVersion/GALILEO"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hJfEfBGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__hJfEvBGEeKBqsXtV-ortQ" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="eclipseProject.ecore#//EnumPlatformVersion/HELIOS"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hJfE_BGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__hKGIPBGEeKBqsXtV-ortQ" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="eclipseProject.ecore#//EnumPlatformVersion/INDIGO"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hKGIfBGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__hKGIvBGEeKBqsXtV-ortQ" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="eclipseProject.ecore#//EnumPlatformVersion/JUNO"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hKGI_BGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__hKGJPBGEeKBqsXtV-ortQ" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="eclipseProject.ecore#//EnumPlatformVersion/KEPLER"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hKGJfBGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__hKtMPBGEeKBqsXtV-ortQ" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="eclipseProject.ecore#//EnumPlatformVersion/LUNA"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hKtMfBGEeKBqsXtV-ortQ"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="__hI4AvBGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="__hI4A_BGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="__hI4BPBGEeKBqsXtV-ortQ"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="__hIQ8_BGEeKBqsXtV-ortQ" fontColor="4210752" fontName="Ubuntu" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EEnum" href="eclipseProject.ecore#//EnumPlatformVersion"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="__hIQ9PBGEeKBqsXtV-ortQ" x="961"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="__hKtMvBGEeKBqsXtV-ortQ" type="1005">
+    <children xmi:type="notation:Node" xmi:id="__hLUQPBGEeKBqsXtV-ortQ" type="4010"/>
+    <children xmi:type="notation:Node" xmi:id="__hLUQfBGEeKBqsXtV-ortQ" type="5008">
+      <children xmi:type="notation:Node" xmi:id="__hL7UPBGEeKBqsXtV-ortQ" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="eclipseProject.ecore#//EnumLicense/EPL_1_0"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hL7UfBGEeKBqsXtV-ortQ"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="__hLUQvBGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="__hLUQ_BGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="__hLURPBGEeKBqsXtV-ortQ"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="__hKtM_BGEeKBqsXtV-ortQ" fontColor="4210752" fontName="Ubuntu" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EEnum" href="eclipseProject.ecore#//EnumLicense"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="__hKtNPBGEeKBqsXtV-ortQ" x="960" y="204"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="__hL7UvBGEeKBqsXtV-ortQ" type="1005">
+    <children xmi:type="notation:Node" xmi:id="__hMiYPBGEeKBqsXtV-ortQ" type="4010"/>
+    <children xmi:type="notation:Node" xmi:id="__hMiYfBGEeKBqsXtV-ortQ" type="5008">
+      <children xmi:type="notation:Node" xmi:id="__hMiZfBGEeKBqsXtV-ortQ" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="eclipseProject.ecore#//EnumMemberRole/CONTRIBUTOR"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hMiZvBGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__hNJcPBGEeKBqsXtV-ortQ" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="eclipseProject.ecore#//EnumMemberRole/COMMITTER"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hNJcfBGEeKBqsXtV-ortQ"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="__hNJcvBGEeKBqsXtV-ortQ" type="2006">
+        <element xmi:type="ecore:EEnumLiteral" href="eclipseProject.ecore#//EnumMemberRole/LEADER"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="__hNJc_BGEeKBqsXtV-ortQ"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="__hMiYvBGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="__hMiY_BGEeKBqsXtV-ortQ"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="__hMiZPBGEeKBqsXtV-ortQ"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="__hL7U_BGEeKBqsXtV-ortQ" fontColor="4210752" fontName="Ubuntu" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
+    <element xmi:type="ecore:EEnum" href="eclipseProject.ecore#//EnumMemberRole"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="__hL7VPBGEeKBqsXtV-ortQ" x="960" y="300"/>
+  </children>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="__guoUfBGEeKBqsXtV-ortQ"/>
+  <element xmi:type="ecore:EPackage" href="eclipseProject.ecore#/"/>
+  <edges xmi:type="notation:Edge" xmi:id="__hO-oPBGEeKBqsXtV-ortQ" type="3002" source="__g4ZUPBGEeKBqsXtV-ortQ" target="__g8DsvBGEeKBqsXtV-ortQ">
+    <children xmi:type="notation:Node" xmi:id="__hPlsPBGEeKBqsXtV-ortQ" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="__hPlsfBGEeKBqsXtV-ortQ" x="-10" y="-10"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="__hQMwPBGEeKBqsXtV-ortQ" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="__hQMwfBGEeKBqsXtV-ortQ" x="10" y="10"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="__hO-ofBGEeKBqsXtV-ortQ" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="__hO-ovBGEeKBqsXtV-ortQ" fontColor="4210752" fontName="Ubuntu" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="eclipseProject.ecore#//EclipseWorld/projects"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="__hO-o_BGEeKBqsXtV-ortQ" points="[0, 0, 0, 60]$[0, -60, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="__ihYEPBGEeKBqsXtV-ortQ" id="(0.5,0.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="__ihYEfBGEeKBqsXtV-ortQ" id="(0.4984894259818731,1.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="__hQz0PBGEeKBqsXtV-ortQ" type="3002" source="__g8DsvBGEeKBqsXtV-ortQ" target="__hAVJPBGEeKBqsXtV-ortQ">
+    <children xmi:type="notation:Node" xmi:id="__hQz1PBGEeKBqsXtV-ortQ" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="__hQz1fBGEeKBqsXtV-ortQ" x="-10" y="-10"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="__hQz1vBGEeKBqsXtV-ortQ" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="__hQz1_BGEeKBqsXtV-ortQ" x="10" y="10"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="__hQz0fBGEeKBqsXtV-ortQ" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="__hQz0vBGEeKBqsXtV-ortQ" fontColor="4210752" fontName="Ubuntu" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="eclipseProject.ecore#//EclipseProject/repositories"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="__hQz0_BGEeKBqsXtV-ortQ" points="[0, 0, 0, 92]$[0, -92, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="__ijNQPBGEeKBqsXtV-ortQ" id="(0.4984894259818731,0.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="__ijNQfBGEeKBqsXtV-ortQ" id="(0.49700598802395207,1.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="__hRa4PBGEeKBqsXtV-ortQ" type="3002" source="__g8DsvBGEeKBqsXtV-ortQ" target="__g-f9PBGEeKBqsXtV-ortQ">
+    <children xmi:type="notation:Node" xmi:id="__hRa5PBGEeKBqsXtV-ortQ" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="__hRa5fBGEeKBqsXtV-ortQ" x="-10" y="-10"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="__hRa5vBGEeKBqsXtV-ortQ" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="__hRa5_BGEeKBqsXtV-ortQ" x="10" y="10"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="__hRa4fBGEeKBqsXtV-ortQ" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="__hRa4vBGEeKBqsXtV-ortQ" fontColor="4210752" fontName="Ubuntu" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="eclipseProject.ecore#//EclipseProject/members"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="__hRa4_BGEeKBqsXtV-ortQ" points="[0, 0, 148, 92]$[-148, -92, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="__ih_IPBGEeKBqsXtV-ortQ" id="(0.24773413897280966,0.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="__ih_IfBGEeKBqsXtV-ortQ" id="(0.5,1.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="__hSB8PBGEeKBqsXtV-ortQ" type="3002" source="__g8DsvBGEeKBqsXtV-ortQ" target="__g8DsvBGEeKBqsXtV-ortQ">
+    <children xmi:type="notation:Node" xmi:id="__hSB9PBGEeKBqsXtV-ortQ" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="__hSB9fBGEeKBqsXtV-ortQ" x="-10" y="-10"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="__hSB9vBGEeKBqsXtV-ortQ" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="__hSB9_BGEeKBqsXtV-ortQ" x="10" y="10"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="__hSB8fBGEeKBqsXtV-ortQ" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="__hSB8vBGEeKBqsXtV-ortQ" fontColor="4210752" fontName="Ubuntu" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="eclipseProject.ecore#//EclipseProject/projects"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="__hSB8_BGEeKBqsXtV-ortQ" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="__hSB-PBGEeKBqsXtV-ortQ" type="3002" source="__g8DsvBGEeKBqsXtV-ortQ" target="__hBjQPBGEeKBqsXtV-ortQ">
+    <children xmi:type="notation:Node" xmi:id="__hSpAPBGEeKBqsXtV-ortQ" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="__hSpAfBGEeKBqsXtV-ortQ" x="-10" y="-10"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="__hSpAvBGEeKBqsXtV-ortQ" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="__hSpA_BGEeKBqsXtV-ortQ" x="10" y="10"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="__hSB-fBGEeKBqsXtV-ortQ" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="__hSB-vBGEeKBqsXtV-ortQ" fontColor="4210752" fontName="Ubuntu" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="eclipseProject.ecore#//EclipseProject/CommunityResources"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="__hSB-_BGEeKBqsXtV-ortQ" points="[0, 0, -133, 60]$[133, -60, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="__iimMPBGEeKBqsXtV-ortQ" id="(0.7492447129909365,0.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="__iimMfBGEeKBqsXtV-ortQ" id="(0.496551724137931,1.0)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="__hSpBPBGEeKBqsXtV-ortQ" type="3002" source="__g-f9PBGEeKBqsXtV-ortQ" target="__g_uEPBGEeKBqsXtV-ortQ">
+    <children xmi:type="notation:Node" xmi:id="__hTQEPBGEeKBqsXtV-ortQ" type="4011">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="__hTQEfBGEeKBqsXtV-ortQ" x="-10" y="-10"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="__hTQEvBGEeKBqsXtV-ortQ" type="4012">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="__hTQE_BGEeKBqsXtV-ortQ" x="10" y="10"/>
+    </children>
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="__hSpBfBGEeKBqsXtV-ortQ" lineColor="4210752"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="__hSpBvBGEeKBqsXtV-ortQ" fontColor="4210752" fontName="Ubuntu" fontHeight="10"/>
+    <element xmi:type="ecore:EReference" href="eclipseProject.ecore#//ProjectMember/user"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="__hSpB_BGEeKBqsXtV-ortQ" points="[0, 0, 0, 144]$[0, -144, 0, 0]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="__igJ8PBGEeKBqsXtV-ortQ" id="(0.5,0.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="__igxAPBGEeKBqsXtV-ortQ" id="(0.49572649572649574,1.0)"/>
+  </edges>
+</notation:Diagram>

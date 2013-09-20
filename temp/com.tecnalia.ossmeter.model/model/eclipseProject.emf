@@ -1,0 +1,153 @@
+@namespace(
+	uri="http://com.tecnalia.ossmeter.model/eclipse_project", prefix="eclipse_project")
+
+package eclipseproject;
+
+/**
+Main Container.All the topLevel projects are stored here.
+*/
+class EclipseWorld{
+		//val EclipseTopLevelProject[*] topLevelProjects;
+		val EclipseProject[*] projects;
+		/**Get project, at any depth level*/
+		op EclipseProject getProjectAtAnyDepth(String name);
+}
+
+/*
+ Read http://www.eclipse.org/projects/dev_process/development_process_2011.php
+*/
+
+/*
+Set of eclipse projects, under a same objective, team, or group or interest
+This kind of project is intended to contains eclipse projects
+*/
+/*
+class EclipseTopLevelProject{
+	attr String[1] name;
+	attr String[1] url;
+	val EclipseProject[*] projects;
+	
+}
+*/
+/**
+Collection of different identifiers related to an eclipse project
+*/
+class EclipseProject{
+	//attr String[1] parentProject;//string instead of ref to prevent double linkage
+	attr boolean[1] isParentProject=false;
+	id attr String[1] name;
+	attr String[1] url;
+	attr EnumProjectLiveCycle[1] status;
+	val CodeRepository[*] repositories;
+	attr EnumLiveliness[1] liveliness; 
+	/*val since two projects can be managed by the same person-> 2 ProjectMembers, 1 User(by reference)*/
+	val ProjectMember[+] members;
+	attr int[1] organizations;
+	attr EnumPlatformVersion[+] availablePlatformVersions;
+	val EclipseProject[*] projects;
+	attr EnumLicense license;
+	val CommunityResource[*] CommunityResources;
+	/*
+	4-PROJECT STRUCTURE & ORGANIZATION
+	comitters
+	code and releases
+	ip records
+	comunity awarenes
+	scope
+	leaders
+	commiters
+	councils
+	incubator projects
+	*/
+	/**Get project, at any depth level*/	
+	op EclipseProject getProjectAtAnyDepth(String name);
+}
+
+/**
+	Member related to a project. 
+	The meaning of this item is different than a real user,
+	since a user is unique, but the user will have one ProjectMember object for each project is involved 
+*/
+class ProjectMember{
+	ref User[1] user;
+	attr EnumMemberRole[1] role;
+	attr String[1] url;//Example:http:\/\/projects.eclipse.org/content/kenn-hussey-committer-emf
+}
+
+/**
+	A real person
+*/
+class User{
+	id attr String[1] name;
+	attr String[1] url;//Example:http:\/\/projects.eclipse.org/users/khussey
+}
+
+
+class CodeRepository{
+	attr EnumRepository[1] type;
+	attr String[1] url;
+}
+
+/*Mailing list, forum, etc*/
+class CommunityResource{
+	attr String[1] type;
+	attr String[1] name;
+	attr String[1] url;	
+	attr Object data;/*generic container for each community type*/
+}
+
+/*Available community list*/
+enum EnumCommunityType{
+	MAILING_LIST;
+	FORUM;
+	WEBSITE;
+	WIKI;
+	BUG_TRACKER;
+}
+/*Control version system attached to the project*/
+enum EnumRepository{
+	SUBVERSION;
+	GIT;
+	CVS;
+}
+
+/**
+ *Status of maturity in the project
+ *http://www.eclipse.org/projects/dev_process/development_process_2011.php
+*/
+enum EnumProjectLiveCycle{
+	PRE_PROPOSAL;
+	PROPOSAL;
+	INCUBATION;
+	MATURE;
+	TOP_LEVEL;
+	ARCHIVED;
+}
+
+/*Status of continuous development in the project*/
+enum EnumLiveliness{
+	INACTIVE;
+	ACTIVE;
+}
+
+/*Eclipse version names*/
+enum EnumPlatformVersion{
+	GANYMEDE;
+	GALILEO;
+	HELIOS;
+	INDIGO;
+	JUNO;
+	KEPLER;
+	LUNA;
+}
+
+/*Types of avaliable license for each eclipse project*/
+enum EnumLicense{
+	EPL_1_0;
+}
+
+enum EnumMemberRole{
+	CONTRIBUTOR;
+	COMMITTER;
+	LEADER;
+}

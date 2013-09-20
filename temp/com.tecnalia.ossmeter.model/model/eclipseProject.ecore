@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="eclipseproject" nsURI="http://com.tecnalia.ossmeter.model/eclipse_project"
+    nsPrefix="eclipse_project">
+  <eClassifiers xsi:type="ecore:EClass" name="EclipseWorld">
+    <eOperations name="getProjectAtAnyDepth" eType="#//EclipseProject">
+      <eParameters name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="projects" upperBound="-1"
+        eType="#//EclipseProject" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EclipseProject">
+    <eOperations name="getProjectAtAnyDepth" eType="#//EclipseProject">
+      <eParameters name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isParentProject" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="false"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" lowerBound="1"
+        eType="#//EnumProjectLiveCycle"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="repositories" upperBound="-1"
+        eType="#//CodeRepository" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="liveliness" lowerBound="1"
+        eType="#//EnumLiveliness"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="members" lowerBound="1"
+        upperBound="-1" eType="#//ProjectMember" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="organizations" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="availablePlatformVersions"
+        lowerBound="1" upperBound="-1" eType="#//EnumPlatformVersion"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="projects" upperBound="-1"
+        eType="#//EclipseProject" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="license" eType="#//EnumLicense"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="CommunityResources" upperBound="-1"
+        eType="#//CommunityResource" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ProjectMember">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="user" lowerBound="1" eType="#//User"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="role" lowerBound="1" eType="#//EnumMemberRole"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="User">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CodeRepository">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="#//EnumRepository"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CommunityResource">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="data" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="EnumCommunityType">
+    <eLiterals name="MAILING_LIST"/>
+    <eLiterals name="FORUM" value="1"/>
+    <eLiterals name="WEBSITE" value="2"/>
+    <eLiterals name="WIKI" value="3"/>
+    <eLiterals name="BUG_TRACKER" value="4"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="EnumRepository">
+    <eLiterals name="SUBVERSION"/>
+    <eLiterals name="GIT" value="1"/>
+    <eLiterals name="CVS" value="2"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="EnumProjectLiveCycle">
+    <eLiterals name="PRE_PROPOSAL"/>
+    <eLiterals name="PROPOSAL" value="1"/>
+    <eLiterals name="INCUBATION" value="2"/>
+    <eLiterals name="MATURE" value="3"/>
+    <eLiterals name="TOP_LEVEL" value="4"/>
+    <eLiterals name="ARCHIVED" value="5"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="EnumLiveliness">
+    <eLiterals name="INACTIVE"/>
+    <eLiterals name="ACTIVE" value="1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="EnumPlatformVersion">
+    <eLiterals name="GANYMEDE"/>
+    <eLiterals name="GALILEO" value="1"/>
+    <eLiterals name="HELIOS" value="2"/>
+    <eLiterals name="INDIGO" value="3"/>
+    <eLiterals name="JUNO" value="4"/>
+    <eLiterals name="KEPLER" value="5"/>
+    <eLiterals name="LUNA" value="6"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="EnumLicense">
+    <eLiterals name="EPL_1_0"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="EnumMemberRole">
+    <eLiterals name="CONTRIBUTOR"/>
+    <eLiterals name="COMMITTER" value="1"/>
+    <eLiterals name="LEADER" value="2"/>
+  </eClassifiers>
+</ecore:EPackage>
