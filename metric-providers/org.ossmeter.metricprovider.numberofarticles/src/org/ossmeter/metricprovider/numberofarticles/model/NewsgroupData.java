@@ -1,8 +1,6 @@
 package org.ossmeter.metricprovider.numberofarticles.model;
 
-import com.mongodb.*;
-import java.util.*;
-import com.googlecode.pongo.runtime.*;
+import com.googlecode.pongo.runtime.Pongo;
 
 
 public class NewsgroupData extends Pongo {

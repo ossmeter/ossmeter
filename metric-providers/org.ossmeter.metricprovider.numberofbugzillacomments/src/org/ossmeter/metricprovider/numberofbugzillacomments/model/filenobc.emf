@@ -8,7 +8,9 @@ class Nobc {
 
 class BugzillaData {
    @searchable
-   attr String url_prod_comp;
+   attr String url;
+   attr String product;
+   attr String component;
    attr int numberOfComments;
 }
 

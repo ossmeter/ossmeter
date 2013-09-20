@@ -76,16 +76,16 @@ public class OverallDailyNumberOfBugzillaCommentsProvider implements IHistorical
 
 	@Override
 	public String getShortIdentifier() {
-		return "odnobc";
+		return "overallDailynumberofBugzillacomments";
 	}
 
 	@Override
 	public String getFriendlyName() {
-		return "Overall number of comments";
+		return "Number Of Comments Per Day";
 	}
 
 	@Override
 	public String getSummaryInformation() {
-		return "Lorum ipsum.";
+		return "This metric computes the number of comments submitted every day.";
 	}
 }

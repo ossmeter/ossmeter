@@ -1,8 +1,8 @@
 package org.ossmeter.metricprovider.numberofnewbugzillabugs.model;
 
-import com.mongodb.*;
-import java.util.*;
-import com.googlecode.pongo.runtime.*;
+import com.googlecode.pongo.runtime.Pongo;
+import com.googlecode.pongo.runtime.querying.NumericalQueryProducer;
+import com.googlecode.pongo.runtime.querying.StringQueryProducer;
 
 
 public class BugzillaData extends Pongo {
@@ -11,14 +11,42 @@ public class BugzillaData extends Pongo {
 	
 	public BugzillaData() { 
 		super();
+		URL.setOwningType("org.ossmeter.metricprovider.numberofnewbugzillabugs.model.BugzillaData");
+		PRODUCT.setOwningType("org.ossmeter.metricprovider.numberofnewbugzillabugs.model.BugzillaData");
+		COMPONENT.setOwningType("org.ossmeter.metricprovider.numberofnewbugzillabugs.model.BugzillaData");
+		NUMBEROFBUGS.setOwningType("org.ossmeter.metricprovider.numberofnewbugzillabugs.model.BugzillaData");
 	}
 	
-	public String getUrl_prod_comp() {
-		return parseString(dbObject.get("url_prod_comp")+"", "");
+	public static StringQueryProducer URL = new StringQueryProducer("url"); 
+	public static StringQueryProducer PRODUCT = new StringQueryProducer("product"); 
+	public static StringQueryProducer COMPONENT = new StringQueryProducer("component"); 
+	public static NumericalQueryProducer NUMBEROFBUGS = new NumericalQueryProducer("numberOfBugs");
+	
+	
+	public String getUrl() {
+		return parseString(dbObject.get("url")+"", "");
 	}
 	
-	public BugzillaData setUrl_prod_comp(String url_prod_comp) {
-		dbObject.put("url_prod_comp", url_prod_comp + "");
+	public BugzillaData setUrl(String url) {
+		dbObject.put("url", url);
+		notifyChanged();
+		return this;
+	}
+	public String getProduct() {
+		return parseString(dbObject.get("product")+"", "");
+	}
+	
+	public BugzillaData setProduct(String product) {
+		dbObject.put("product", product);
+		notifyChanged();
+		return this;
+	}
+	public String getComponent() {
+		return parseString(dbObject.get("component")+"", "");
+	}
+	
+	public BugzillaData setComponent(String component) {
+		dbObject.put("component", component);
 		notifyChanged();
 		return this;
 	}
@@ -27,7 +55,7 @@ public class BugzillaData extends Pongo {
 	}
 	
 	public BugzillaData setNumberOfBugs(int numberOfBugs) {
-		dbObject.put("numberOfBugs", numberOfBugs + "");
+		dbObject.put("numberOfBugs", numberOfBugs);
 		notifyChanged();
 		return this;
 	}

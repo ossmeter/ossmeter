@@ -77,12 +77,19 @@ public class NobcMetricProvider implements ITransientMetricProvider<Nobc>{
 			BugTrackingSystem bugTrackingSystem = bugTrackingSystemDelta.getBugTrackingSystem();
 			if (!(bugTrackingSystem instanceof Bugzilla)) continue;
 			Bugzilla bugzilla = (Bugzilla) bugTrackingSystem;
-			String url_prod_comp = 
-					bugzilla.getUrl()+"#"+bugzilla.getProduct()+"#"+bugzilla.getComponent();
-			BugzillaData bugzillaData = db.getBugzillas().findOneByUrl_prod_comp(url_prod_comp);
+			Iterable<BugzillaData> bugzillaDataIt = db.getBugzillas().
+					find(BugzillaData.URL.eq(bugzilla.getUrl()), 
+							BugzillaData.PRODUCT.eq(bugzilla.getProduct()), 
+							BugzillaData.COMPONENT.eq(bugzilla.getComponent()));
+			BugzillaData bugzillaData = null;
+			for (BugzillaData bd:  bugzillaDataIt) {
+				bugzillaData = bd;
+			}
 			if (bugzillaData == null) {
 				bugzillaData = new BugzillaData();
-				bugzillaData.setUrl_prod_comp(url_prod_comp);
+				bugzillaData.setUrl(bugzilla.getUrl());
+				bugzillaData.setProduct(bugzilla.getProduct());
+				bugzillaData.setComponent(bugzilla.getComponent());
 				db.getBugzillas().add(bugzillaData);
 			} 
 			bugzillaData.setNumberOfComments(bugTrackingSystemDelta.getComments().size());

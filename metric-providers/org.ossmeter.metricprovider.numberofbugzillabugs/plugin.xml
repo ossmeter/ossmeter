@@ -1,22 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.4"?>
-<plugin>
-   <extension
-         point="com.googlecode.pongo.runtime.osgi">
-         
-	  <class
-            name="org.ossmeter.metricprovider.numberofnewbugzillabugs.model.Nonbb">
-      </class>
-	  <class
-            name="org.ossmeter.metricprovider.numberofnewbugzillabugs.model.BugzillaData">
-      </class>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?eclipse version="3.4"?><plugin>
    
-   </extension>
-   <extension
-         point="org.ossmeter.platform.metricprovider">
-      <metricProvider
-            provider="org.ossmeter.metricprovider.numberofnewbugzillabugs.NonbbMetricProvider">
+   <extension point="org.ossmeter.platform.metricprovider">
+      <metricProvider provider="org.ossmeter.metricprovider.numberofnewbugzillabugs.NonbbMetricProvider">
       </metricProvider>
    </extension>
 
+<extension point="com.googlecode.pongo.runtime.osgi">
+    <class name="org.ossmeter.metricprovider.numberofnewbugzillabugs.model.Nonbb"/>
+    <class name="org.ossmeter.metricprovider.numberofnewbugzillabugs.model.BugzillaData"/>
+  </extension>
 </plugin>
