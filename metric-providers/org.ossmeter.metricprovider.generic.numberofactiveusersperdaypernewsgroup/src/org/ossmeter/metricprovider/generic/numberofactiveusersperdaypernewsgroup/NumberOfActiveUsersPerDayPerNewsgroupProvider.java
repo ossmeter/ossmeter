@@ -75,7 +75,7 @@ public class NumberOfActiveUsersPerDayPerNewsgroupProvider implements IHistorica
 
 	@Override
 	public String getShortIdentifier() {
-		return "numberofactiveusersperdaypernewsgroup";
+		return "activeuserspernewsgroup";
 	}
 
 	@Override

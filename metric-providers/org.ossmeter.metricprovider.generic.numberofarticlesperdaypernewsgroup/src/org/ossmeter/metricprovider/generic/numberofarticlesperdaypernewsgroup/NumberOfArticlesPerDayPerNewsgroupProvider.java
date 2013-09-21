@@ -76,12 +76,12 @@ public class NumberOfArticlesPerDayPerNewsgroupProvider implements IHistoricalMe
 
 	@Override
 	public String getShortIdentifier() {
-		return "numberofarticlesperdaypernewsgroup";
+		return "articlespernewsgroup";
 	}
 
 	@Override
 	public String getFriendlyName() {
-		return "Number Of Articles Per Day Per Newsgroup Provider";
+		return "Number Of Articles Per Day Per Newsgroup";
 	}
 
 	@Override

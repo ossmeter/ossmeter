@@ -76,7 +76,7 @@ public class OverallDailyNumberOfBugzillaPatchesProvider implements IHistoricalM
 
 	@Override
 	public String getShortIdentifier() {
-		return "dnbp";
+		return "dailybugzillapatches";
 	}
 
 	@Override

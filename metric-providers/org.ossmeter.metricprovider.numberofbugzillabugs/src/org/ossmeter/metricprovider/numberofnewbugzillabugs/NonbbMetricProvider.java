@@ -1,5 +1,6 @@
 package org.ossmeter.metricprovider.numberofnewbugzillabugs;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.ossmeter.metricprovider.numberofnewbugzillabugs.model.BugzillaData;
@@ -41,7 +42,7 @@ public class NonbbMetricProvider implements ITransientMetricProvider<Nonbb>{
 
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return null;
+		return Collections.emptyList();
 	}
 
 	@Override
@@ -86,7 +87,7 @@ public class NonbbMetricProvider implements ITransientMetricProvider<Nonbb>{
 
 	@Override
 	public String getShortIdentifier() {
-		return "nonbb";
+		return "newbugs";
 	}
 
 	@Override

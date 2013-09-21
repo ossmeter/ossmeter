@@ -77,7 +77,7 @@ public class NumberOfActiveUsersPerDayProvider implements IHistoricalMetricProvi
 
 	@Override
 	public String getShortIdentifier() {
-		return "numberofactiveusersperday";
+		return "activeusers";
 	}
 
 	@Override

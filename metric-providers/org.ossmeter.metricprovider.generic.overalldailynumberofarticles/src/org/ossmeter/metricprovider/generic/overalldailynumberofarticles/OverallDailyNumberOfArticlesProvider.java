@@ -77,16 +77,16 @@ public class OverallDailyNumberOfArticlesProvider implements IHistoricalMetricPr
 
 	@Override
 	public String getShortIdentifier() {
-		return "OverallDailyNumberOfArticlesProvider";
+		return "dailyarticles";
 	}
 
 	@Override
 	public String getFriendlyName() {
-		return "Daily articles";
+		return "Daily Number Of Articles";
 	}
 
 	@Override
 	public String getSummaryInformation() {
-		return "Lorum ipsum";
+		return "This metric keeps track of the number of newsgroup articles.";
 	}
 }

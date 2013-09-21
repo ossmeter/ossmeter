@@ -108,12 +108,12 @@ public class NumberOfRequestsRepliesPerDayPerNewsgroupProvider implements IHisto
 
 	@Override
 	public String getShortIdentifier() {
-		return "nrpdpn";
+		return "requestsrepliespernewsgroup";
 	}
 
 	@Override
 	public String getFriendlyName() {
-		return "Number Of Requests and Replies Per Day Per Newsgroup";
+		return "Number Of Requests and Replies Per Newsgroup";
 	}
 
 	@Override

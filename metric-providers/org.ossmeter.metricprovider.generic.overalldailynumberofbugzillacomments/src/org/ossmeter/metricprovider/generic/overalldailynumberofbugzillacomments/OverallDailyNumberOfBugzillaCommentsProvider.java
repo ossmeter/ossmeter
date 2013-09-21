@@ -76,12 +76,12 @@ public class OverallDailyNumberOfBugzillaCommentsProvider implements IHistorical
 
 	@Override
 	public String getShortIdentifier() {
-		return "overallDailynumberofBugzillacomments";
+		return "dailybugzillacomments";
 	}
 
 	@Override
 	public String getFriendlyName() {
-		return "Number Of Comments Per Day";
+		return "Number Of Bugzilla Comments Per Day";
 	}
 
 	@Override

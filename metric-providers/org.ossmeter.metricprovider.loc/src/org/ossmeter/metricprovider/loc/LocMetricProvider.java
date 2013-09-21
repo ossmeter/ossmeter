@@ -1,5 +1,6 @@
 package org.ossmeter.metricprovider.loc;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.ossmeter.metricprovider.loc.model.LinesOfCodeData;
@@ -132,7 +133,7 @@ public class LocMetricProvider implements ITransientMetricProvider<Loc> {
 
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return null;
+		return Collections.emptyList();
 	}
 
 	@Override

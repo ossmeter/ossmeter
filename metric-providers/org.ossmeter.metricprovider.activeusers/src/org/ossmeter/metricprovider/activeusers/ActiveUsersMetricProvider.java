@@ -125,12 +125,12 @@ public class ActiveUsersMetricProvider implements ITransientMetricProvider<Activ
 
 	@Override
 	public String getShortIdentifier() {
-		return "activeusersmetricprovider";
+		return "activeusers";
 	}
 
 	@Override
 	public String getFriendlyName() {
-		return "Active Users Metric Provider";
+		return "Active Users";
 	}
 
 	@Override

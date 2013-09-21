@@ -37,12 +37,12 @@ public class OverallDailyNumberOfNewBugzillaBugsProvider implements IHistoricalM
 
 	@Override
 	public String getShortIdentifier() {
-		return "odnonbb";
+		return "dailynewbugzillabugs";
 	}
 
 	@Override
 	public String getFriendlyName() {
-		return "Number of bug reports per day";
+		return "Daily Number Of New Bugzilla Bugs";
 	}
 
 	@Override

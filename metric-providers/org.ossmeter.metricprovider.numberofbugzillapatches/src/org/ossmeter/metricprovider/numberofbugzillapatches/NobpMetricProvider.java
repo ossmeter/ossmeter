@@ -1,5 +1,6 @@
 package org.ossmeter.metricprovider.numberofbugzillapatches;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.ossmeter.metricprovider.numberofbugzillapatches.model.BugzillaData;
@@ -42,7 +43,7 @@ public class NobpMetricProvider implements ITransientMetricProvider<Nobp>{
 
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return null;
+		return Collections.emptyList();
 	}
 
 	@Override
@@ -97,7 +98,7 @@ public class NobpMetricProvider implements ITransientMetricProvider<Nobp>{
 
 	@Override
 	public String getShortIdentifier() {
-		return "nobp";
+		return "bugpatches";
 	}
 
 	@Override
@@ -107,7 +108,7 @@ public class NobpMetricProvider implements ITransientMetricProvider<Nobp>{
 
 	@Override
 	public String getSummaryInformation() {
-		return "This metric keeps the number of patches submitted for each bug";
+		return "This metric keeps the number of patches submitted for each bug.";
 	}
 
 }

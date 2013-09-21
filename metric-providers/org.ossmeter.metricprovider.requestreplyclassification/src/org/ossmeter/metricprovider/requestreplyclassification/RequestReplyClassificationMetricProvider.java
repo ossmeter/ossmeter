@@ -1,5 +1,6 @@
 package org.ossmeter.metricprovider.requestreplyclassification;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.ossmeter.metricprovider.requestreplyclassification.model.BugzillaCommentsData;
@@ -55,7 +56,7 @@ public class RequestReplyClassificationMetricProvider  implements ITransientMetr
 
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return null;
+		return Collections.emptyList();
 	}
 
 	@Override
@@ -214,12 +215,12 @@ public class RequestReplyClassificationMetricProvider  implements ITransientMetr
 	@Override
 	public String getShortIdentifier() {
 		// TODO Auto-generated method stub
-		return "requestreplyclassificationmetricprovider";
+		return "requestreplyclassification";
 	}
 
 	@Override
 	public String getFriendlyName() {
-		return "Request Reply Classification Metric Provider";
+		return "Request Reply Classification";
 	}
 
 	@Override

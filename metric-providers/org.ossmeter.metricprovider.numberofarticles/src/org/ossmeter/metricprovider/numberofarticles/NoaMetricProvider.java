@@ -1,5 +1,6 @@
 package org.ossmeter.metricprovider.numberofarticles;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.ossmeter.metricprovider.numberofarticles.model.NewsgroupData;
@@ -56,7 +57,7 @@ public class NoaMetricProvider implements ITransientMetricProvider<Noa>{
 
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return null;
+		return Collections.emptyList();
 	}
 
 	@Override
