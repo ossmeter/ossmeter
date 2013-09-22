@@ -45,17 +45,17 @@ public class NumberOfActiveUsersPerDayPerNewsgroupProvider implements IHistorica
 
 	@Override
 	public Pongo measure(Project project) {
-		DailyActiveUsers dailyNoa = new DailyActiveUsers();
+		DailyActiveUsers dailyActiveUsers = new DailyActiveUsers();
 		for (IMetricProvider used : uses) {
 			  ActiveUsers ActiveUsers = ((ActiveUsersMetricProvider)used).adapt(context.getProjectDB(project));
 			 for (NewsgroupData newsgroup: ActiveUsers.getNewsgroups()) {
 				 DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
 				 dailyNewsgroupData.setUrl_name(newsgroup.getUrl_name());
 				 dailyNewsgroupData.setNumberOfActiveUsers(newsgroup.getNumberOfActiveUsers());
-				 dailyNoa.getNewsgroups().add(dailyNewsgroupData);
+				 dailyActiveUsers.getNewsgroups().add(dailyNewsgroupData);
 			 }
 		}
-		return dailyNoa;
+		return dailyActiveUsers;
 	}
 			
 	@Override
