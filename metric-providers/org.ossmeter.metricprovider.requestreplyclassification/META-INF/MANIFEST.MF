@@ -8,11 +8,10 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  com.googlecode.pongo.runtime,
  org.ossmeter.platform,
- org.ossmeter.repository.model,
- org.ossmeter.requestreplyclassifier
+ org.ossmeter.requestreplyclassifier,
+ org.ossmeter.repository.model.cc.nntp,
+ org.ossmeter.repository.model.bts.bugzilla
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.metricprovider.requestreplyclassification,
  org.ossmeter.metricprovider.requestreplyclassification.model
-Import-Package: org.ossmeter.repository.model.bts.bugzilla,
- org.ossmeter.repository.model.cc.nntp
