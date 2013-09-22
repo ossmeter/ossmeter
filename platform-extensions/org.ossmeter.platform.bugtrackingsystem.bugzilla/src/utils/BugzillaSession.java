@@ -14,7 +14,7 @@ import com.j2bugzilla.base.Bug;
 import com.j2bugzilla.base.BugzillaConnector;
 import com.j2bugzilla.base.BugzillaException;
 import com.j2bugzilla.base.ConnectionException;
-import com.j2bugzilla.rpc.GetAttachments;
+import utils.GetAttachments;
 import com.j2bugzilla.rpc.GetBug;
 import com.j2bugzilla.rpc.LogIn;
 
@@ -91,12 +91,20 @@ public class BugzillaSession {
 		GetAttachments getAttachments= new GetAttachments(bugId);
 		conn.executeMethod(getAttachments);
 		List<Attachment> attachments = getAttachments.getAttachments();
-		for(Attachment attachment: attachments) {
-			System.out.println("bugId: " + bugId 
-								+ "\tattachmentId: " + attachment.getAttachmentID() 
-								+ "\tattachmentMIMEtype: " + attachment.getFileName() 
-								+ "\tattachmentMIMEtype: " + attachment.getMIMEType());
-		}
+//		for(Attachment attachment: attachments) {
+//			System.out.println("bugId: " + bugId 
+//								+ "\tattachmentId: " + attachment.getAttachmentID() 
+//								+ "\tattachmentFilenameType: " + attachment.getFileName() 
+//								+ "\tattachmentMIMEtype: " + attachment.getMIMEType());
+//		}
+		return attachments;
+	}
+
+	public List<Attachment> getAttachmentsforIdList(List<Integer> idArray) 
+			throws BugzillaException {
+		GetAttachments getAttachments = new GetAttachments(idArray);
+		conn.executeMethod(getAttachments);
+		List<Attachment> attachments = getAttachments.getAttachments();
 		return attachments;
 	}
 
@@ -149,7 +157,7 @@ public class BugzillaSession {
 					new SearchQuery(SearchLimiter.PRODUCT,"Fedora"); //	"Pulp");
 //			searchQueries[1] = new SearchQuery(SearchLimiter.COMPONENT, "acpi");  // "acpi");
 			searchQueries[2] = 
-					new SearchQuery(SearchLimiter.LIMIT, "1000");
+					new SearchQuery(SearchLimiter.LIMIT, "100");
 
 			Calendar cal = Calendar.getInstance();
 		    cal.set(Calendar.YEAR, 2013);
@@ -257,20 +265,19 @@ public class BugzillaSession {
 ////				commentNo++;
 			}
 			
-//		int attachmentNo = 1;
-//		for (Integer bugId: idArray) {
-		for (Bug bug: bugs) {
-			List<Attachment> attachments = session.getAttachmentForBugId(bug.getID());
-			for (Attachment attachment: attachments) {
-//			System.out.println("Attachment No: "+ attachmentNo);
-				System.out.println("\tAttachment Id: "+ attachment.getAttachmentID());
-				System.out.println("\t\tAttachment BugId: "+ attachment.getBugID());
-				System.out.println("\t\tAttachment Filename: "+ attachment.getFileName());
-				System.out.println("\t\tAttachment Mimetype: "+ attachment.getMIMEType());
-				System.out.println("\t\tAttachment Creator: "+ attachment.getCreator());
-				System.out.println("\t\tAttachment RawData: "+ attachment.getRawData());
-//			attachmentNo++;
-			}
+		int attachmentNo = 1;
+			
+		for (Bug bug: bugs) idArray.add(bug.getID());
+		List<Attachment> attachments = session.getAttachmentsforIdList(idArray);
+		for (Attachment attachment: attachments) {
+			System.out.println("Attachment No: "+ attachmentNo);
+			System.out.println("\tAttachment Id: "+ attachment.getAttachmentID());
+			System.out.println("\t\tAttachment BugId: "+ attachment.getBugID());
+			System.out.println("\t\tAttachment Filename: "+ attachment.getFileName());
+			System.out.println("\t\tAttachment Mimetype: "+ attachment.getMIMEType());
+			System.out.println("\t\tAttachment Creator: "+ attachment.getCreator());
+			System.out.println("\t\tAttachment RawData: "+ attachment.getRawData());
+			attachmentNo++;
 		}
 			
 		} catch (Exception e) {

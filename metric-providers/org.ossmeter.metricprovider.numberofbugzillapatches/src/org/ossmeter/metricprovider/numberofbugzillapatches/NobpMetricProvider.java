@@ -81,16 +81,16 @@ public class NobpMetricProvider implements ITransientMetricProvider<Nobp>{
 			} 
 			int patches = 0;
 			for (BugTrackingSystemAttachment attachment :bugTrackingSystemDelta.getAttachments()) {
-				System.out.println("bugId: " + attachment.getBugId() 
-						+ "\tattachmentId: " + attachment.getAttachmentId() 
-						+ "\tattachmentMIMEtype: " + attachment.getFilename() 
-						+ "\tattachmentMIMEtype: " + attachment.getMimeType());
+//				System.out.println("bugId: " + attachment.getBugId() 
+//						+ "\tattachmentId: " + attachment.getAttachmentId() 
+//						+ "\tattachmentFiletypeType: " + attachment.getFilename() 
+//						+ "\tattachmentMIMEtype: " + attachment.getMimeType());
 				if ((attachment.getFilename().contains("patch"))
 						||(attachment.getMimeType().contains("patch"))) {
 					patches++;
-					System.err.println(patches + " patches captured");
 				}
-		}
+			}
+			System.err.println(patches + " patches captured");
 			bugzillaData.setNumberOfPatches(patches);
 			db.sync();
 		}
