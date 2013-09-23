@@ -6,11 +6,11 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.metricprovider.numberofbugzillapatches.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- com.googlecode.pongo.runtime,
  org.ossmeter.platform,
- org.ossmeter.repository.model
+ org.ossmeter.repository.model,
+ com.googlecode.pongo.runtime.osgi,
+ org.ossmeter.repository.model.bts.bugzilla
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.metricprovider.numberofbugzillapatches,
  org.ossmeter.metricprovider.numberofbugzillapatches.model
-Import-Package: org.ossmeter.repository.model.bts.bugzilla
