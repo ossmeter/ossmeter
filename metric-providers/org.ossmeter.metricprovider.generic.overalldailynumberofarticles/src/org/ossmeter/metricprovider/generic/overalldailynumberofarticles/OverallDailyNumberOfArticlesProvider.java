@@ -3,7 +3,7 @@ package org.ossmeter.metricprovider.generic.overalldailynumberofarticles;
 import java.util.Arrays;
 import java.util.List;
 
-import org.ossmeter.metricprovider.generic.overalldailynumberofarticles.model.DailyBugzillaData;
+import org.ossmeter.metricprovider.generic.overalldailynumberofarticles.model.DailyNewsgroupData;
 import org.ossmeter.metricprovider.generic.overalldailynumberofarticles.model.DailyNoa;
 import org.ossmeter.metricprovider.numberofarticles.NoaMetricProvider;
 import org.ossmeter.metricprovider.numberofarticles.model.NewsgroupData;
@@ -53,7 +53,7 @@ public class OverallDailyNumberOfArticlesProvider implements IHistoricalMetricPr
 			 for (NewsgroupData newsgroup: usedNoa.getNewsgroups()) {
 				 numberOfArticles += newsgroup.getNumberOfArticles();
 			 }
-			 DailyBugzillaData dailyNewsgroupData = new DailyBugzillaData();
+			 DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
 			 dailyNewsgroupData.setNumberOfArticles(numberOfArticles);
 			 dailyNoa.getNewsgroups().add(dailyNewsgroupData);
 		}

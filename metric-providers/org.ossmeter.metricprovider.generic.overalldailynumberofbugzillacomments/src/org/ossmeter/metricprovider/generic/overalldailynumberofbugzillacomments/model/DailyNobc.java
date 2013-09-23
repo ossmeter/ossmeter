@@ -1,8 +1,10 @@
 package org.ossmeter.metricprovider.generic.overalldailynumberofbugzillacomments.model;
 
-import com.mongodb.*;
-import java.util.*;
-import com.googlecode.pongo.runtime.*;
+import java.util.List;
+
+import com.googlecode.pongo.runtime.Pongo;
+import com.googlecode.pongo.runtime.PongoList;
+import com.mongodb.BasicDBList;
 
 
 public class DailyNobc extends Pongo {
@@ -14,6 +16,8 @@ public class DailyNobc extends Pongo {
 		super();
 		dbObject.put("bugzillas", new BasicDBList());
 	}
+	
+	
 	
 	
 	

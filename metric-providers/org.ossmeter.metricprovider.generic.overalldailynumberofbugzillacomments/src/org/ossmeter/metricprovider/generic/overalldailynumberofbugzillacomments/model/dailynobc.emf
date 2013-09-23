@@ -1,10 +1,13 @@
 package org.ossmeter.metricprovider.generic.overalldailynumberofbugzillacomments.model;
 
+@viz(target="gcharts", chart="line")
 class DailyNobc {
+	@series
 	val DailyBugzillaData[*] bugzillas;
 }
 
 class DailyBugzillaData {
+	@yaxis(title="Number of bug comments")
    attr int numberOfComments;
 }
 

@@ -5,11 +5,11 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-SymbolicName: org.ossmeter.metricprovider.generic.overalldailynumberofnewbugzillabugs;singleton:=true
 Bundle-Activator: org.ossmeter.metricprovider.generic.overalldailynumberofnewbugzillabugs.Activator
 Require-Bundle: org.eclipse.core.runtime,
- com.googlecode.pongo.runtime,
  org.ossmeter.platform,
  org.ossmeter.metricprovider.numberofnewbugzillabugs;bundle-version="1.0.0",
  org.ossmeter.platform.client.api,
- org.ossmeter.repository.model.bts.bugzilla
+ org.ossmeter.repository.model.bts.bugzilla,
+ com.googlecode.pongo.runtime.osgi
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.metricprovider.generic.overalldailynumberofnewbugzillabugs

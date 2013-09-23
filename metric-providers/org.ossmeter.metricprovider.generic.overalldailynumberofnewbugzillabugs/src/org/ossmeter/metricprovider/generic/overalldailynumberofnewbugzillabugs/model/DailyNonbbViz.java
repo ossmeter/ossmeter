@@ -19,7 +19,7 @@ public class DailyNonbbViz extends PongoViz {
 		switch (type) {
 			case "gcharts": 
 	String dataTable = createDataTable("bugzillas", "", "__date", "numberOfBugs");
-	return ("{ 'target' : 'gcharts', 'chartType' : 'LineChart', 'options' : { 'hAxis' : {'title':'Date'}, 'vAxis':{'title' : 'Number of new bugs' }, 'width':'90%','height':200, 'legend': {'position': 'in'}}, 'datatable' : " + dataTable + " }").replaceAll("'", "\"");		}
+	return ("{ 'target' : 'gcharts', 'chartType' : 'LineChart', 'options' : { 'hAxis' : {'title':'Date'}, 'vAxis':{'title' : 'Number of new bugs' }}, 'datatable' : " + dataTable + " }").replaceAll("'", "\"");		}
 		return null;
 	}
 }

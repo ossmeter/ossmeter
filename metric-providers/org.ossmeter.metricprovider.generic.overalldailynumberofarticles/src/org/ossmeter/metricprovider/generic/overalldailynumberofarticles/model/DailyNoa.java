@@ -1,13 +1,15 @@
 package org.ossmeter.metricprovider.generic.overalldailynumberofarticles.model;
 
-import com.mongodb.*;
-import java.util.*;
-import com.googlecode.pongo.runtime.*;
+import java.util.List;
+
+import com.googlecode.pongo.runtime.Pongo;
+import com.googlecode.pongo.runtime.PongoList;
+import com.mongodb.BasicDBList;
 
 
 public class DailyNoa extends Pongo {
 	
-	protected List<DailyBugzillaData> newsgroups = null;
+	protected List<DailyNewsgroupData> newsgroups = null;
 	
 	
 	public DailyNoa() { 
@@ -17,9 +19,11 @@ public class DailyNoa extends Pongo {
 	
 	
 	
-	public List<DailyBugzillaData> getNewsgroups() {
+	
+	
+	public List<DailyNewsgroupData> getNewsgroups() {
 		if (newsgroups == null) {
-			newsgroups = new PongoList<DailyBugzillaData>(this, "newsgroups", true);
+			newsgroups = new PongoList<DailyNewsgroupData>(this, "newsgroups", true);
 		}
 		return newsgroups;
 	}
