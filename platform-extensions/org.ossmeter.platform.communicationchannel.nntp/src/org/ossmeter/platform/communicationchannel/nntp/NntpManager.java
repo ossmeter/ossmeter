@@ -27,10 +27,10 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 		NewsgroupInfo newsgroupInfo = NntpUtil.selectNewsgroup(nntpClient, newsgroup);
 		int lastArticle = newsgroupInfo.getLastArticle();
 
-		// The following statement is not really needed, but I added it to speed up running,
-		// in the date is far latter than the first day of the newsgroup.
+////		 The following statement is not really needed, but I added it to speed up running,
+////		 in the date is far latter than the first day of the newsgroup.
 //		if (Integer.parseInt(newsgroup.getLastArticleChecked())<137500)
-//			newsgroup.setLastArticleChecked("137500");
+//			newsgroup.setLastArticleChecked("134500"); //137500");
 
 		int lastArticleChecked = Integer.parseInt(newsgroup.getLastArticleChecked());
 		if (lastArticleChecked<0) lastArticleChecked = newsgroupInfo.getFirstArticle();
@@ -89,7 +89,7 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 					communicationChannelArticle.setReferences(article.getReferences());
 					communicationChannelArticle.setSubject(article.getSubject());
 					communicationChannelArticle.setUser(article.getFrom());
-					communicationChannelArticle.setSubject(
+					communicationChannelArticle.setText(
 							getContents(newNewsgroup, communicationChannelArticle));
 					delta.getArticles().add(communicationChannelArticle);
 //					lastArticleChecked = article.getArticleNumber();
