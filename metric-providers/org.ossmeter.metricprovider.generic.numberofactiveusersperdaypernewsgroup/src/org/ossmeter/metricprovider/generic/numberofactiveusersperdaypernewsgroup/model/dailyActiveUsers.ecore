@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="ASCII"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="org.ossmeter.metricprovider.generic.numberofactiveusersperdaypernewsgroup.model">
   <eClassifiers xsi:type="ecore:EClass" name="DailyActiveUsers">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="newsgroups" upperBound="-1" eType="//DailyNewsgroupData" containment="true"/>
+    <eAnnotations source="viz">
+      <details key="target" value="gcharts"/>
+      <details key="chart" value="line"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="newsgroups" upperBound="-1" eType="//DailyNewsgroupData" containment="true">
+      <eAnnotations source="series"/>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DailyNewsgroupData">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="url_name">
@@ -9,6 +15,9 @@
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="numberOfActiveUsers">
+      <eAnnotations source="yaxis">
+        <details key="title" value="Number of active users"/>
+      </eAnnotations>
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     </eStructuralFeatures>
   </eClassifiers>

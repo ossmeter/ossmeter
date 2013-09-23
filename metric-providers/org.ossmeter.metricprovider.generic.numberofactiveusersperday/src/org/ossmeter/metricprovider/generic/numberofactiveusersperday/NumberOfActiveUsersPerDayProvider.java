@@ -48,14 +48,13 @@ public class NumberOfActiveUsersPerDayProvider implements IHistoricalMetricProvi
 
 		 DailyActiveUsers dailyActiveUsers = new DailyActiveUsers();
 		for (IMetricProvider used : uses) {
-			
 			ActiveUsers ActiveUsers = ((ActiveUsersMetricProvider)used).adapt(context.getProjectDB(project));
-			for (NewsgroupData newsgroup: ActiveUsers.getNewsgroups()) {
-				DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
-				dailyNewsgroupData.setUrl_name(newsgroup.getUrl_name());
-				dailyNewsgroupData.setNumberOfActiveUsers(newsgroup.getNumberOfActiveUsers());
-				dailyActiveUsers.getNewsgroups().add(dailyNewsgroupData);
-			}
+			int activeUsers = 0;
+			for (NewsgroupData newsgroup: ActiveUsers.getNewsgroups())
+				activeUsers += newsgroup.getNumberOfActiveUsers();
+			DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
+			dailyNewsgroupData.setNumberOfActiveUsers(activeUsers);
+			dailyActiveUsers.getNewsgroups().add(dailyNewsgroupData);
 		}
 		return dailyActiveUsers;
 	}

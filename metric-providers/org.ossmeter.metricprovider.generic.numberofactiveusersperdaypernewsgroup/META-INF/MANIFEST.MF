@@ -6,10 +6,11 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.metricprovider.generic.numberofactiveusersperdaypernewsgroup.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- com.googlecode.pongo.runtime,
  org.ossmeter.platform,
  org.ossmeter.metricprovider.activeusers,
- org.ossmeter.repository.model.cc.nntp
+ org.ossmeter.repository.model.cc.nntp,
+ org.ossmeter.platform.client.api,
+ com.googlecode.pongo.runtime.osgi
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.metricprovider.generic.numberofactiveusersperdaypernewsgroup

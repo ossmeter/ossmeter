@@ -1,12 +1,14 @@
 package org.ossmeter.metricprovider.generic.numberofactiveusersperdaypernewsgroup.model;
 
+@viz(target="gcharts", chart="line")
 class DailyActiveUsers {
+	@series
 	val DailyNewsgroupData[*] newsgroups;
 }
 
 class DailyNewsgroupData {
-   @searchable
-   attr String url_name;
-   attr int numberOfActiveUsers;
+	@searchable
+	attr String url_name;
+	@yaxis(title="Number of active users")
+	attr int numberOfActiveUsers;
 }
-

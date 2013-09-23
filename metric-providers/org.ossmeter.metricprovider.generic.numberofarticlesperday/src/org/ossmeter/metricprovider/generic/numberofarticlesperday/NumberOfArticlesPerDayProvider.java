@@ -48,17 +48,18 @@ public class NumberOfArticlesPerDayProvider implements IHistoricalMetricProvider
 
 		DailyNoa dailyNoa = new DailyNoa();
 		for (IMetricProvider used : uses) {
-			
+			int articles = 0;
 			Noa usedNoa = ((NoaMetricProvider)used).adapt(context.getProjectDB(project));
-			for (NewsgroupData newsgroup: usedNoa.getNewsgroups()) {
-				DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
-				dailyNewsgroupData.setUrl_name(newsgroup.getUrl_name());
-				dailyNewsgroupData.setNumberOfArticles(newsgroup.getNumberOfArticles());
-				dailyNoa.getNewsgroups().add(dailyNewsgroupData);
-			}
+			for (NewsgroupData newsgroup: usedNoa.getNewsgroups()) 
+				articles += newsgroup.getNumberOfArticles();
+			DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
+			dailyNewsgroupData.setNumberOfArticles(articles);
+			dailyNoa.getNewsgroups().add(dailyNewsgroupData);
 		}
 		return dailyNoa;
 	}
+	
+	
 			
 	@Override
 	public void setUses(List<IMetricProvider> uses) {

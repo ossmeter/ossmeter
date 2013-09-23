@@ -1,12 +1,13 @@
 package org.ossmeter.metricprovider.generic.numberofarticlesperday.model;
 
+@viz(target="gcharts", chart="line")
 class DailyNoa {
+	@series
 	val DailyNewsgroupData[*] newsgroups;
 }
 
 class DailyNewsgroupData {
-   @searchable
-   attr String url_name;
-   attr int numberOfArticles;
+	@yaxis(title="Number of articles")
+	attr int numberOfArticles;
 }
 
