@@ -1,0 +1,13 @@
+package org.ossmeter.metricprovider.generic.numberofworksformebugzillabugs.model;
+
+@viz(target="gcharts", chart="line")
+class DailyNowfmb {
+	@series
+	val DailyBugzillaData[*] bugzillas;
+}
+
+class DailyBugzillaData {
+	@yaxis(title="Number of works-for-me bugs")
+	attr int numberOfWorksForMeBugs;
+}
+

@@ -1,0 +1,13 @@
+package org.ossmeter.metricprovider.generic.numberofduplicatebugzillabugs.model;
+
+@viz(target="gcharts", chart="line")
+class DailyNodb {
+	@series
+	val DailyBugzillaData[*] bugzillas;
+}
+
+class DailyBugzillaData {
+	@yaxis(title="Number of duplicate bugs")
+   attr int numberOfDuplicateBugs;
+}
+

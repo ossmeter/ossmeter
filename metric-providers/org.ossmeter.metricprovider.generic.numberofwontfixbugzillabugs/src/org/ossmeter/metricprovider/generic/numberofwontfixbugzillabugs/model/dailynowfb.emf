@@ -1,0 +1,13 @@
+package org.ossmeter.metricprovider.generic.numberofwontfixbugzillabugs.model;
+
+@viz(target="gcharts", chart="line")
+class DailyNowfb {
+	@series
+	val DailyBugzillaData[*] bugzillas;
+}
+
+class DailyBugzillaData {
+	@yaxis(title="Number of wont-fix bugs")
+	attr int numberOfWontFixBugs;
+}
+
