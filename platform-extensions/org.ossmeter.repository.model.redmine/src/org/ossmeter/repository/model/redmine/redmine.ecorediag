@@ -30,7 +30,7 @@
     </children>
     <styles xmi:type="notation:ShapeStyle" xmi:id="_u5-_iRcJEeOlBPxqRM-fSw" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
     <element xmi:type="ecore:EClass" href="redmine.ecore#//Person"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_u5-_ihcJEeOlBPxqRM-fSw" x="695" y="115"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_u5-_ihcJEeOlBPxqRM-fSw" x="525" y="150"/>
   </children>
   <children xmi:type="notation:Node" xmi:id="_u5_mmRcJEeOlBPxqRM-fSw" type="1001">
     <children xmi:type="notation:Node" xmi:id="_u6ANoBcJEeOlBPxqRM-fSw" type="4001"/>
@@ -227,26 +227,6 @@
     <element xmi:type="ecore:EClass" href="redmine.ecore#//RedmineUser"/>
     <layoutConstraint xmi:type="notation:Bounds" xmi:id="_u6HiZhcJEeOlBPxqRM-fSw" x="525" y="218"/>
   </children>
-  <children xmi:type="notation:Node" xmi:id="_u6IJehcJEeOlBPxqRM-fSw" type="1001">
-    <children xmi:type="notation:Node" xmi:id="_u6IwgBcJEeOlBPxqRM-fSw" type="4001"/>
-    <children xmi:type="notation:Node" xmi:id="_u6IwgRcJEeOlBPxqRM-fSw" type="5001">
-      <children xmi:type="notation:Node" xmi:id="_u6IwiRcJEeOlBPxqRM-fSw" type="2001">
-        <element xmi:type="ecore:EAttribute" href="redmine.ecore#//RedmineUserRole/name"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_u6IwihcJEeOlBPxqRM-fSw"/>
-      </children>
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_u6IwghcJEeOlBPxqRM-fSw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_u6IwgxcJEeOlBPxqRM-fSw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_u6IwhBcJEeOlBPxqRM-fSw"/>
-    </children>
-    <children xmi:type="notation:Node" xmi:id="_u6IwhRcJEeOlBPxqRM-fSw" type="5002">
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_u6IwhhcJEeOlBPxqRM-fSw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_u6IwhxcJEeOlBPxqRM-fSw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_u6IwiBcJEeOlBPxqRM-fSw"/>
-    </children>
-    <styles xmi:type="notation:ShapeStyle" xmi:id="_u6IJexcJEeOlBPxqRM-fSw" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
-    <element xmi:type="ecore:EClass" href="redmine.ecore#//RedmineUserRole"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_u6IJfBcJEeOlBPxqRM-fSw" x="520" y="115"/>
-  </children>
   <children xmi:type="notation:Node" xmi:id="_u6JXkBcJEeOlBPxqRM-fSw" type="1001">
     <children xmi:type="notation:Node" xmi:id="_u6J-oBcJEeOlBPxqRM-fSw" type="4001"/>
     <children xmi:type="notation:Node" xmi:id="_u6J-oRcJEeOlBPxqRM-fSw" type="5001">
@@ -416,10 +396,6 @@
   <children xmi:type="notation:Node" xmi:id="_u6QsVBcJEeOlBPxqRM-fSw" type="1005">
     <children xmi:type="notation:Node" xmi:id="_u6RTYBcJEeOlBPxqRM-fSw" type="4010"/>
     <children xmi:type="notation:Node" xmi:id="_u6RTYRcJEeOlBPxqRM-fSw" type="5008">
-      <children xmi:type="notation:Node" xmi:id="_u6RTZRcJEeOlBPxqRM-fSw" type="2006">
-        <element xmi:type="ecore:EEnumLiteral" href="redmine.ecore#//RedmineIssueStatus/new"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_u6RTZhcJEeOlBPxqRM-fSw"/>
-      </children>
       <styles xmi:type="notation:DrawerStyle" xmi:id="_u6RTYhcJEeOlBPxqRM-fSw"/>
       <styles xmi:type="notation:SortingStyle" xmi:id="_u6RTYxcJEeOlBPxqRM-fSw"/>
       <styles xmi:type="notation:FilteringStyle" xmi:id="_u6RTZBcJEeOlBPxqRM-fSw"/>
@@ -581,27 +557,13 @@
     <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_u6U9wxcJEeOlBPxqRM-fSw" points="[23, 0, -7, 220]$[23, -199, -7, 21]"/>
     <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_u7td0hcJEeOlBPxqRM-fSw" id="(0.3125,0.0)"/>
   </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_u6U9xBcJEeOlBPxqRM-fSw" type="3002" source="_u6HiZBcJEeOlBPxqRM-fSw" target="_u6IJehcJEeOlBPxqRM-fSw">
-    <children xmi:type="notation:Node" xmi:id="_u6U9yBcJEeOlBPxqRM-fSw" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_u6U9yRcJEeOlBPxqRM-fSw" x="-4" y="-25"/>
-    </children>
-    <children xmi:type="notation:Node" xmi:id="_u6U9yhcJEeOlBPxqRM-fSw" type="4012">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_u6U9yxcJEeOlBPxqRM-fSw" x="-6" y="18"/>
-    </children>
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_u6U9xRcJEeOlBPxqRM-fSw" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_u6U9xhcJEeOlBPxqRM-fSw" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
-    <element xmi:type="ecore:EReference" href="redmine.ecore#//RedmineUser/roles"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_u6U9xxcJEeOlBPxqRM-fSw" points="[0, 0, 0, 167]$[0, -167, 0, 0]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_u7s2whcJEeOlBPxqRM-fSw" id="(0.5,0.0)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_u7s2wxcJEeOlBPxqRM-fSw" id="(0.496,1.0)"/>
-  </edges>
   <edges xmi:type="notation:Edge" xmi:id="_u6Vk0BcJEeOlBPxqRM-fSw" type="3003" source="_u6HiZBcJEeOlBPxqRM-fSw" target="_u5-_iBcJEeOlBPxqRM-fSw">
     <styles xmi:type="notation:ConnectorStyle" xmi:id="_u6Vk0RcJEeOlBPxqRM-fSw" routing="Rectilinear" lineColor="4210752"/>
     <styles xmi:type="notation:FontStyle" xmi:id="_u6Vk0hcJEeOlBPxqRM-fSw" fontName="Segoe UI"/>
     <element xsi:nil="true"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_u6Vk0xcJEeOlBPxqRM-fSw" points="[28, 22, -93, 84]$[113, 22, -8, 84]$[113, -62, -8, 0]"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_u6Vk0xcJEeOlBPxqRM-fSw" points="[-29, 0, 6, 33]$[-29, -27, 6, 6]"/>
     <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_u7td0BcJEeOlBPxqRM-fSw" id="(0.75,0.0)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_u7td0RcJEeOlBPxqRM-fSw" id="(0.3333333333333333,1.0)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_1TOXwCUmEeOix4nzwmlJSA" id="(0.47058823529411764,0.8604651162790697)"/>
   </edges>
   <edges xmi:type="notation:Edge" xmi:id="_u6Vk1BcJEeOlBPxqRM-fSw" type="3002" source="_u6JXkBcJEeOlBPxqRM-fSw" target="_u6KlshcJEeOlBPxqRM-fSw">
     <children xmi:type="notation:Node" xmi:id="_u6Vk2BcJEeOlBPxqRM-fSw" type="4011">

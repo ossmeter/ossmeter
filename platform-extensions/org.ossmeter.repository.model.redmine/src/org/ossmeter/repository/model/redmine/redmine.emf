@@ -1,19 +1,19 @@
 @namespace(uri="org.ossmeter.repository.model.redmine", prefix="redmine")
 package org.ossmeter.repository.model.redmine;
 
-@stub(javaClass="org.ossmeter.repository.model.base.Project")
+@stub(javaClass="org.ossmeter.repository.model.Project")
 class Project {
 }
 
-@stub(javaClass="org.ossmeter.repository.model.base.Person")
+@stub(javaClass="org.ossmeter.repository.model.Person")
 class Person {
 }
 
-@stub(javaClass="org.ossmeter.repository.model.base.BugTrackingSystem")
+@stub(javaClass="org.ossmeter.repository.model.BugTrackingSystem")
 class BugTrackingSystem {
 }
 
-@stub(javaClass="org.ossmeter.repository.model.base.CommunicationChannel")
+@stub(javaClass="org.ossmeter.repository.model.CommunicationChannel")
 class CommunicationChannel {
 }
 
@@ -56,12 +56,12 @@ enum RedmineProjectVersionStatus {
 
 class RedmineUser extends Person {
   attr String login;
-  val RedmineUserRole[*] roles;
+ // val RedmineUserRole[*] roles;
 }
 
-class RedmineUserRole {
-  attr String name;
-}
+//class RedmineUserRole {
+ // attr String name;
+//}
 
 class RedmineBugIssueTracker extends BugTrackingSystem {
   attr String name;
@@ -114,7 +114,7 @@ enum RedminIssueRelationType {
 }
 
 enum RedmineIssueStatus {
-  new = 0;
+  _new = 0;
   closed = 1;
 }
 
