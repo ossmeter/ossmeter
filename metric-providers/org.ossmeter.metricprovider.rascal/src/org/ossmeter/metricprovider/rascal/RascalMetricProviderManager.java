@@ -15,6 +15,7 @@ public class RascalMetricProviderManager implements IMetricProviderManager {
 	
 	@Override
 	public List<IMetricProvider> getMetricProviders() {
+		System.out.println("Rascal manager");
 		List<IMetricProvider> metricProviders = new ArrayList<IMetricProvider>();
 		
 		for(IConfigurationElement configurationElement : ExtensionPointHelper.getConfigurationElementsForExtensionPoint(extensionId)){
