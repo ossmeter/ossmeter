@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: OSSMETER CWI App
+Bundle-SymbolicName: org.ossmeter.platform.app.cwi;singleton:=true
+Bundle-Version: 0.0.0.qualifier
+Bundle-Activator: org.ossmeter.platform.app.cwi.Activator
+Bundle-Vendor: OSSMETER
+Require-Bundle: org.eclipse.core.runtime,
+ org.ossmeter.platform,
+ com.googlecode.pongo.runtime.osgi,
+ org.ossmeter.repository.model,
+ com.googlecode.pongo.runtime,
+ org.ossmeter.repository.model.github,
+ org.ossmeter.repository.model.sourceforge,
+ org.ossmeter.platform.client.api,
+ org.ossmeter.repository.model.cc.nntp,
+ org.ossmeter.repository.model.bts.bugzilla,
+ org.ossmeter.repository.model.vcs.svn
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
