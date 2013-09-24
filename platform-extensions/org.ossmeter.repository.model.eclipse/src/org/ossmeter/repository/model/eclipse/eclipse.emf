@@ -10,11 +10,6 @@ class NamedElement {
    
 }
 
-@stub(javaClass="org.ossmeter.repository.model.Person")
-class Person {
-   
-}
-
 @stub(javaClass="org.ossmeter.repository.model.CommunicationChannel")
 abstract class CommunicationChannel {
    

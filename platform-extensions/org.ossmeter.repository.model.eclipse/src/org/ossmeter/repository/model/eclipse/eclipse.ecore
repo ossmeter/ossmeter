@@ -10,11 +10,6 @@
       <details key="javaClass" value="org.ossmeter.repository.model.NamedElement"/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Person">
-    <eAnnotations source="stub">
-      <details key="javaClass" value="org.ossmeter.repository.model.Person"/>
-    </eAnnotations>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CommunicationChannel" abstract="true">
     <eAnnotations source="stub">
       <details key="javaClass" value="org.ossmeter.repository.model.CommunicationChannel"/>
