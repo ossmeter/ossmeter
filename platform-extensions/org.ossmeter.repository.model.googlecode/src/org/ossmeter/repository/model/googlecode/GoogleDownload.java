@@ -3,6 +3,7 @@ package org.ossmeter.repository.model.googlecode;
 import com.mongodb.*;
 import java.util.*;
 import com.googlecode.pongo.runtime.*;
+import com.googlecode.pongo.runtime.querying.*;
 
 
 public class GoogleDownload extends Pongo {
@@ -13,14 +14,28 @@ public class GoogleDownload extends Pongo {
 	public GoogleDownload() { 
 		super();
 		dbObject.put("labels", new BasicDBList());
+		STARRED.setOwningType("org.ossmeter.repository.model.googlecode.GoogleDownload");
+		FILENAME.setOwningType("org.ossmeter.repository.model.googlecode.GoogleDownload");
+		UPLOADED_AT.setOwningType("org.ossmeter.repository.model.googlecode.GoogleDownload");
+		UPDATED_AT.setOwningType("org.ossmeter.repository.model.googlecode.GoogleDownload");
+		SIZE.setOwningType("org.ossmeter.repository.model.googlecode.GoogleDownload");
+		DOWNLOADCOUNTS.setOwningType("org.ossmeter.repository.model.googlecode.GoogleDownload");
 	}
+	
+	public static StringQueryProducer STARRED = new StringQueryProducer("starred"); 
+	public static StringQueryProducer FILENAME = new StringQueryProducer("fileName"); 
+	public static StringQueryProducer UPLOADED_AT = new StringQueryProducer("uploaded_at"); 
+	public static StringQueryProducer UPDATED_AT = new StringQueryProducer("updated_at"); 
+	public static NumericalQueryProducer SIZE = new NumericalQueryProducer("size");
+	public static NumericalQueryProducer DOWNLOADCOUNTS = new NumericalQueryProducer("downloadCounts");
+	
 	
 	public boolean getStarred() {
 		return parseBoolean(dbObject.get("starred")+"", false);
 	}
 	
 	public GoogleDownload setStarred(boolean starred) {
-		dbObject.put("starred", starred + "");
+		dbObject.put("starred", starred);
 		notifyChanged();
 		return this;
 	}
@@ -29,7 +44,7 @@ public class GoogleDownload extends Pongo {
 	}
 	
 	public GoogleDownload setFileName(String fileName) {
-		dbObject.put("fileName", fileName + "");
+		dbObject.put("fileName", fileName);
 		notifyChanged();
 		return this;
 	}
@@ -38,7 +53,7 @@ public class GoogleDownload extends Pongo {
 	}
 	
 	public GoogleDownload setUploaded_at(String uploaded_at) {
-		dbObject.put("uploaded_at", uploaded_at + "");
+		dbObject.put("uploaded_at", uploaded_at);
 		notifyChanged();
 		return this;
 	}
@@ -47,7 +62,7 @@ public class GoogleDownload extends Pongo {
 	}
 	
 	public GoogleDownload setUpdated_at(String updated_at) {
-		dbObject.put("updated_at", updated_at + "");
+		dbObject.put("updated_at", updated_at);
 		notifyChanged();
 		return this;
 	}
@@ -56,7 +71,7 @@ public class GoogleDownload extends Pongo {
 	}
 	
 	public GoogleDownload setSize(int size) {
-		dbObject.put("size", size + "");
+		dbObject.put("size", size);
 		notifyChanged();
 		return this;
 	}
@@ -65,7 +80,7 @@ public class GoogleDownload extends Pongo {
 	}
 	
 	public GoogleDownload setDownloadCounts(int downloadCounts) {
-		dbObject.put("downloadCounts", downloadCounts + "");
+		dbObject.put("downloadCounts", downloadCounts);
 		notifyChanged();
 		return this;
 	}

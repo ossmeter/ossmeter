@@ -1,31 +1,31 @@
 package org.ossmeter.repository.model.googlecode;
 
-@stub(javaClass="org.ossmeter.repository.model.base.Project")
+@stub(javaClass="org.ossmeter.repository.model.Project")
 class Project {
 }
 
-@stub(javaClass="org.ossmeter.repository.model.base.NamedElement")
+@stub(javaClass="org.ossmeter.repository.model.NamedElement")
 class NamedElement {
 }
 
-@stub(javaClass="org.ossmeter.repository.model.base.CommunicationChannel")
+@stub(javaClass="org.ossmeter.repository.model.CommunicationChannel")
 class CommunicationChannel {
 }
 
-@stub(javaClass="org.ossmeter.repository.model.base.Person")
+@stub(javaClass="org.ossmeter.repository.model.Person")
 class Person {
 }
 
-@stub(javaClass="org.ossmeter.repository.model.base.BugTrackingSystem")
+@stub(javaClass="org.ossmeter.repository.model.BugTrackingSystem")
 class BugTrackingSystem {   
 }
 
 class GoogleCodeProject extends Project {
   val GoogleWiki wiki;
   val GoogleForum forum;
-  val GoogleUser owner;
-  val GoogleUser[*] committers;
-  val GoogleUser[*] contributors;
+ // val GoogleUser owner;
+//  val GoogleUser[*] committers;
+//  val GoogleUser[*] contributors;
   val GoogleDownload[*] downloads;
   val GoogleIssueTracker issueTracker;
 

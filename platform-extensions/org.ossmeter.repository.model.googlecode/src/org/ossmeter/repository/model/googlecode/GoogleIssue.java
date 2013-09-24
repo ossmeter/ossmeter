@@ -3,6 +3,7 @@ package org.ossmeter.repository.model.googlecode;
 import com.mongodb.*;
 import java.util.*;
 import com.googlecode.pongo.runtime.*;
+import com.googlecode.pongo.runtime.querying.*;
 
 
 public class GoogleIssue extends Pongo {
@@ -16,14 +17,32 @@ public class GoogleIssue extends Pongo {
 		super();
 		dbObject.put("comments", new BasicDBList());
 		dbObject.put("labels", new BasicDBList());
+		CREATED_AT.setOwningType("org.ossmeter.repository.model.googlecode.GoogleIssue");
+		UPDATED_AT.setOwningType("org.ossmeter.repository.model.googlecode.GoogleIssue");
+		PRIORITY.setOwningType("org.ossmeter.repository.model.googlecode.GoogleIssue");
+		TYPE.setOwningType("org.ossmeter.repository.model.googlecode.GoogleIssue");
+		COMPONENT.setOwningType("org.ossmeter.repository.model.googlecode.GoogleIssue");
+		STATUS.setOwningType("org.ossmeter.repository.model.googlecode.GoogleIssue");
+		STARS.setOwningType("org.ossmeter.repository.model.googlecode.GoogleIssue");
+		SUMMARY.setOwningType("org.ossmeter.repository.model.googlecode.GoogleIssue");
 	}
+	
+	public static StringQueryProducer CREATED_AT = new StringQueryProducer("created_at"); 
+	public static StringQueryProducer UPDATED_AT = new StringQueryProducer("updated_at"); 
+	public static StringQueryProducer PRIORITY = new StringQueryProducer("priority"); 
+	public static StringQueryProducer TYPE = new StringQueryProducer("type"); 
+	public static StringQueryProducer COMPONENT = new StringQueryProducer("component"); 
+	public static StringQueryProducer STATUS = new StringQueryProducer("status"); 
+	public static NumericalQueryProducer STARS = new NumericalQueryProducer("stars");
+	public static StringQueryProducer SUMMARY = new StringQueryProducer("summary"); 
+	
 	
 	public String getCreated_at() {
 		return parseString(dbObject.get("created_at")+"", "");
 	}
 	
 	public GoogleIssue setCreated_at(String created_at) {
-		dbObject.put("created_at", created_at + "");
+		dbObject.put("created_at", created_at);
 		notifyChanged();
 		return this;
 	}
@@ -32,7 +51,7 @@ public class GoogleIssue extends Pongo {
 	}
 	
 	public GoogleIssue setUpdated_at(String updated_at) {
-		dbObject.put("updated_at", updated_at + "");
+		dbObject.put("updated_at", updated_at);
 		notifyChanged();
 		return this;
 	}
@@ -46,7 +65,7 @@ public class GoogleIssue extends Pongo {
 	}
 	
 	public GoogleIssue setPriority(GoogleIssuePriority priority) {
-		dbObject.put("priority", priority + "");
+		dbObject.put("priority", priority.toString());
 		notifyChanged();
 		return this;
 	}
@@ -60,7 +79,7 @@ public class GoogleIssue extends Pongo {
 	}
 	
 	public GoogleIssue setType(GoogleIssueType type) {
-		dbObject.put("type", type + "");
+		dbObject.put("type", type.toString());
 		notifyChanged();
 		return this;
 	}
@@ -69,7 +88,7 @@ public class GoogleIssue extends Pongo {
 	}
 	
 	public GoogleIssue setComponent(String component) {
-		dbObject.put("component", component + "");
+		dbObject.put("component", component);
 		notifyChanged();
 		return this;
 	}
@@ -83,7 +102,7 @@ public class GoogleIssue extends Pongo {
 	}
 	
 	public GoogleIssue setStatus(GoogleIssueStatus status) {
-		dbObject.put("status", status + "");
+		dbObject.put("status", status.toString());
 		notifyChanged();
 		return this;
 	}
@@ -92,7 +111,7 @@ public class GoogleIssue extends Pongo {
 	}
 	
 	public GoogleIssue setStars(int stars) {
-		dbObject.put("stars", stars + "");
+		dbObject.put("stars", stars);
 		notifyChanged();
 		return this;
 	}
@@ -101,7 +120,7 @@ public class GoogleIssue extends Pongo {
 	}
 	
 	public GoogleIssue setSummary(String summary) {
-		dbObject.put("summary", summary + "");
+		dbObject.put("summary", summary);
 		notifyChanged();
 		return this;
 	}
