@@ -3,39 +3,73 @@ package org.ossmeter.repository.model.github;
 import com.mongodb.*;
 import java.util.*;
 import com.googlecode.pongo.runtime.*;
+import com.googlecode.pongo.runtime.querying.*;
 
 
-public class GitHubRepository extends org.ossmeter.repository.model.VcsRepository {
+public class GitHubRepository extends org.ossmeter.repository.model.Project {
 	
-	protected List<GitHubUser> stargazers = null;
-	protected List<GitHubUser> collaborators = null;
 	protected List<GitHubCommit> commits = null;
 	protected List<GitHubContent> contents = null;
 	protected List<GitHubDownload> downloads = null;
 	protected List<GitHubRepository> forks = null;
-	protected List<GitHubUser> watchers = null;
 	protected List<GitHubMilestone> milestones = null;
-	protected GitHubUser owner = null;
 	
 	
 	public GitHubRepository() { 
 		super();
-		dbObject.put("stargazers", new BasicDBList());
-		dbObject.put("collaborators", new BasicDBList());
 		dbObject.put("commits", new BasicDBList());
 		dbObject.put("contents", new BasicDBList());
 		dbObject.put("downloads", new BasicDBList());
 		dbObject.put("forks", new BasicDBList());
-		dbObject.put("watchers", new BasicDBList());
 		dbObject.put("milestones", new BasicDBList());
+		super.setSuperTypes("org.ossmeter.repository.model.github.Project");
+		NAME.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
+		FULL_NAME.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
+		_PRIVATE.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
+		FORK.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
+		HTML_URL.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
+		CLONE_URL.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
+		GIT_URL.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
+		SSH_URL.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
+		SVN_URL.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
+		MIRROR_URL.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
+		HOMEPAGE.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
+		LANGUAGE.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
+		SIZE.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
+		MASTER_BRANCH.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
 	}
+	
+	public static StringQueryProducer NAME = new StringQueryProducer("name"); 
+	public static StringQueryProducer FULL_NAME = new StringQueryProducer("full_name"); 
+	public static StringQueryProducer _PRIVATE = new StringQueryProducer("_private"); 
+	public static StringQueryProducer FORK = new StringQueryProducer("fork"); 
+	public static StringQueryProducer HTML_URL = new StringQueryProducer("html_url"); 
+	public static StringQueryProducer CLONE_URL = new StringQueryProducer("clone_url"); 
+	public static StringQueryProducer GIT_URL = new StringQueryProducer("git_url"); 
+	public static StringQueryProducer SSH_URL = new StringQueryProducer("ssh_url"); 
+	public static StringQueryProducer SVN_URL = new StringQueryProducer("svn_url"); 
+	public static StringQueryProducer MIRROR_URL = new StringQueryProducer("mirror_url"); 
+	public static StringQueryProducer HOMEPAGE = new StringQueryProducer("homepage"); 
+	public static StringQueryProducer LANGUAGE = new StringQueryProducer("language"); 
+	public static NumericalQueryProducer SIZE = new NumericalQueryProducer("size");
+	public static StringQueryProducer MASTER_BRANCH = new StringQueryProducer("master_branch"); 
+	
 	
 	public String getName() {
 		return parseString(dbObject.get("name")+"", "");
 	}
 	
 	public GitHubRepository setName(String name) {
-		dbObject.put("name", name + "");
+		dbObject.put("name", name);
+		notifyChanged();
+		return this;
+	}
+	public String getFull_name() {
+		return parseString(dbObject.get("full_name")+"", "");
+	}
+	
+	public GitHubRepository setFull_name(String full_name) {
+		dbObject.put("full_name", full_name);
 		notifyChanged();
 		return this;
 	}
@@ -44,7 +78,7 @@ public class GitHubRepository extends org.ossmeter.repository.model.VcsRepositor
 	}
 	
 	public GitHubRepository set_private(boolean _private) {
-		dbObject.put("_private", _private + "");
+		dbObject.put("_private", _private);
 		notifyChanged();
 		return this;
 	}
@@ -53,7 +87,7 @@ public class GitHubRepository extends org.ossmeter.repository.model.VcsRepositor
 	}
 	
 	public GitHubRepository setFork(boolean fork) {
-		dbObject.put("fork", fork + "");
+		dbObject.put("fork", fork);
 		notifyChanged();
 		return this;
 	}
@@ -62,7 +96,7 @@ public class GitHubRepository extends org.ossmeter.repository.model.VcsRepositor
 	}
 	
 	public GitHubRepository setHtml_url(String html_url) {
-		dbObject.put("html_url", html_url + "");
+		dbObject.put("html_url", html_url);
 		notifyChanged();
 		return this;
 	}
@@ -71,16 +105,16 @@ public class GitHubRepository extends org.ossmeter.repository.model.VcsRepositor
 	}
 	
 	public GitHubRepository setClone_url(String clone_url) {
-		dbObject.put("clone_url", clone_url + "");
+		dbObject.put("clone_url", clone_url);
 		notifyChanged();
 		return this;
 	}
-	public String getGitHub_url() {
-		return parseString(dbObject.get("GitHub_url")+"", "");
+	public String getGit_url() {
+		return parseString(dbObject.get("git_url")+"", "");
 	}
 	
-	public GitHubRepository setGitHub_url(String GitHub_url) {
-		dbObject.put("GitHub_url", GitHub_url + "");
+	public GitHubRepository setGit_url(String git_url) {
+		dbObject.put("git_url", git_url);
 		notifyChanged();
 		return this;
 	}
@@ -89,7 +123,7 @@ public class GitHubRepository extends org.ossmeter.repository.model.VcsRepositor
 	}
 	
 	public GitHubRepository setSsh_url(String ssh_url) {
-		dbObject.put("ssh_url", ssh_url + "");
+		dbObject.put("ssh_url", ssh_url);
 		notifyChanged();
 		return this;
 	}
@@ -98,7 +132,7 @@ public class GitHubRepository extends org.ossmeter.repository.model.VcsRepositor
 	}
 	
 	public GitHubRepository setSvn_url(String svn_url) {
-		dbObject.put("svn_url", svn_url + "");
+		dbObject.put("svn_url", svn_url);
 		notifyChanged();
 		return this;
 	}
@@ -107,7 +141,7 @@ public class GitHubRepository extends org.ossmeter.repository.model.VcsRepositor
 	}
 	
 	public GitHubRepository setMirror_url(String mirror_url) {
-		dbObject.put("mirror_url", mirror_url + "");
+		dbObject.put("mirror_url", mirror_url);
 		notifyChanged();
 		return this;
 	}
@@ -116,7 +150,7 @@ public class GitHubRepository extends org.ossmeter.repository.model.VcsRepositor
 	}
 	
 	public GitHubRepository setHomepage(String homepage) {
-		dbObject.put("homepage", homepage + "");
+		dbObject.put("homepage", homepage);
 		notifyChanged();
 		return this;
 	}
@@ -125,7 +159,7 @@ public class GitHubRepository extends org.ossmeter.repository.model.VcsRepositor
 	}
 	
 	public GitHubRepository setLanguage(String language) {
-		dbObject.put("language", language + "");
+		dbObject.put("language", language);
 		notifyChanged();
 		return this;
 	}
@@ -134,7 +168,7 @@ public class GitHubRepository extends org.ossmeter.repository.model.VcsRepositor
 	}
 	
 	public GitHubRepository setSize(int size) {
-		dbObject.put("size", size + "");
+		dbObject.put("size", size);
 		notifyChanged();
 		return this;
 	}
@@ -143,24 +177,12 @@ public class GitHubRepository extends org.ossmeter.repository.model.VcsRepositor
 	}
 	
 	public GitHubRepository setMaster_branch(String master_branch) {
-		dbObject.put("master_branch", master_branch + "");
+		dbObject.put("master_branch", master_branch);
 		notifyChanged();
 		return this;
 	}
 	
 	
-	public List<GitHubUser> getStargazers() {
-		if (stargazers == null) {
-			stargazers = new PongoList<GitHubUser>(this, "stargazers", true);
-		}
-		return stargazers;
-	}
-	public List<GitHubUser> getCollaborators() {
-		if (collaborators == null) {
-			collaborators = new PongoList<GitHubUser>(this, "collaborators", true);
-		}
-		return collaborators;
-	}
 	public List<GitHubCommit> getCommits() {
 		if (commits == null) {
 			commits = new PongoList<GitHubCommit>(this, "commits", true);
@@ -181,15 +203,9 @@ public class GitHubRepository extends org.ossmeter.repository.model.VcsRepositor
 	}
 	public List<GitHubRepository> getForks() {
 		if (forks == null) {
-			forks = new PongoList<GitHubRepository>(this, "forks", true);
+			forks = new PongoList<GitHubRepository>(this, "forks", false);
 		}
 		return forks;
-	}
-	public List<GitHubUser> getWatchers() {
-		if (watchers == null) {
-			watchers = new PongoList<GitHubUser>(this, "watchers", true);
-		}
-		return watchers;
 	}
 	public List<GitHubMilestone> getMilestones() {
 		if (milestones == null) {
@@ -199,24 +215,4 @@ public class GitHubRepository extends org.ossmeter.repository.model.VcsRepositor
 	}
 	
 	
-	public GitHubUser getOwner() {
-		if (owner == null && dbObject.containsField("owner")) {
-			owner = (GitHubUser) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("owner"));
-		}
-		return owner;
-	}
-	
-	public GitHubRepository setOwner(GitHubUser owner) {
-		if (this.owner != owner) {
-			if (owner == null) {
-				dbObject.removeField("owner");
-			}
-			else {
-				dbObject.put("owner", owner.getDbObject());
-			}
-			this.owner = owner;
-			notifyChanged();
-		}
-		return this;
-	}
 }

@@ -3,6 +3,7 @@ package org.ossmeter.repository.model.github;
 import com.mongodb.*;
 import java.util.*;
 import com.googlecode.pongo.runtime.*;
+import com.googlecode.pongo.runtime.querying.*;
 
 
 public class GitHubIssue extends Pongo {
@@ -19,14 +20,30 @@ public class GitHubIssue extends Pongo {
 		dbObject.put("subscribed_users", new BasicDBList());
 		dbObject.put("mentioned_users", new BasicDBList());
 		dbObject.put("comments", new BasicDBList());
+		NUMBER.setOwningType("org.ossmeter.repository.model.github.GitHubIssue");
+		STATE.setOwningType("org.ossmeter.repository.model.github.GitHubIssue");
+		TITLE.setOwningType("org.ossmeter.repository.model.github.GitHubIssue");
+		BODY.setOwningType("org.ossmeter.repository.model.github.GitHubIssue");
+		CREATED_AT.setOwningType("org.ossmeter.repository.model.github.GitHubIssue");
+		UPDATED_AT.setOwningType("org.ossmeter.repository.model.github.GitHubIssue");
+		CLOSED_AT.setOwningType("org.ossmeter.repository.model.github.GitHubIssue");
 	}
+	
+	public static NumericalQueryProducer NUMBER = new NumericalQueryProducer("number");
+	public static StringQueryProducer STATE = new StringQueryProducer("state"); 
+	public static StringQueryProducer TITLE = new StringQueryProducer("title"); 
+	public static StringQueryProducer BODY = new StringQueryProducer("body"); 
+	public static StringQueryProducer CREATED_AT = new StringQueryProducer("created_at"); 
+	public static StringQueryProducer UPDATED_AT = new StringQueryProducer("updated_at"); 
+	public static StringQueryProducer CLOSED_AT = new StringQueryProducer("closed_at"); 
+	
 	
 	public int getNumber() {
 		return parseInteger(dbObject.get("number")+"", 0);
 	}
 	
 	public GitHubIssue setNumber(int number) {
-		dbObject.put("number", number + "");
+		dbObject.put("number", number);
 		notifyChanged();
 		return this;
 	}
@@ -40,7 +57,7 @@ public class GitHubIssue extends Pongo {
 	}
 	
 	public GitHubIssue setState(GitHubIssueState state) {
-		dbObject.put("state", state + "");
+		dbObject.put("state", state.toString());
 		notifyChanged();
 		return this;
 	}
@@ -49,7 +66,7 @@ public class GitHubIssue extends Pongo {
 	}
 	
 	public GitHubIssue setTitle(String title) {
-		dbObject.put("title", title + "");
+		dbObject.put("title", title);
 		notifyChanged();
 		return this;
 	}
@@ -58,7 +75,7 @@ public class GitHubIssue extends Pongo {
 	}
 	
 	public GitHubIssue setBody(String body) {
-		dbObject.put("body", body + "");
+		dbObject.put("body", body);
 		notifyChanged();
 		return this;
 	}
@@ -67,7 +84,7 @@ public class GitHubIssue extends Pongo {
 	}
 	
 	public GitHubIssue setCreated_at(String created_at) {
-		dbObject.put("created_at", created_at + "");
+		dbObject.put("created_at", created_at);
 		notifyChanged();
 		return this;
 	}
@@ -76,7 +93,7 @@ public class GitHubIssue extends Pongo {
 	}
 	
 	public GitHubIssue setUpdated_at(String updated_at) {
-		dbObject.put("updated_at", updated_at + "");
+		dbObject.put("updated_at", updated_at);
 		notifyChanged();
 		return this;
 	}
@@ -85,7 +102,7 @@ public class GitHubIssue extends Pongo {
 	}
 	
 	public GitHubIssue setClosed_at(String closed_at) {
-		dbObject.put("closed_at", closed_at + "");
+		dbObject.put("closed_at", closed_at);
 		notifyChanged();
 		return this;
 	}

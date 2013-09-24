@@ -1,31 +1,26 @@
 package org.ossmeter.repository.model.github;
 
-//@stub(javaClass="org.ossmeter.repository.model.Project")
-//class Project {  
-//}
+@stub(javaClass="org.ossmeter.repository.model.Project")
+class Project {  
+}
 
-@stub(javaClass="org.ossmeter.repository.model.base.Person")
+@stub(javaClass="org.ossmeter.repository.model.Person")
 class Person {
    
 }
 
-@stub(javaClass="org.ossmeter.repository.model.base.VcsRepository")
-class VcsRepository {
-   
-}
-
-@stub(javaClass="org.ossmeter.repository.model.base.BugTrackingSystem")
+@stub(javaClass="org.ossmeter.repository.model.BugTrackingSystem")
 class BugTrackingSystem {
    
 }
 
-//class GitHubProject extends Project {  
+//class GitHubProject extends Project {
 //}
 
-class GitHubRepository extends VcsRepository {
+class GitHubRepository extends Project {
 
   @key
-  ref GitHubUser owner;
+ // ref GitHubUser owner;
   attr String name;
   attr String full_name;
   attr Boolean private;
@@ -40,13 +35,13 @@ class GitHubRepository extends VcsRepository {
   attr String language;
   attr Integer size;
   attr String master_branch;
-  val GitHubUser[*] stargazers;
-  val GitHubUser[*] collaborators;
+ // val GitHubUser[*] stargazers;
+ // val GitHubUser[*] collaborators;
   val GitHubCommit[*] commits;
   val GitHubContent[*] contents;
   val GitHubDownload[*] downloads;
   ref GitHubRepository[*] forks;
-  val GitHubUser[*] watchers;
+ // val GitHubUser[*] watchers;
   val GitHubMilestone[*] milestones;
 }
 

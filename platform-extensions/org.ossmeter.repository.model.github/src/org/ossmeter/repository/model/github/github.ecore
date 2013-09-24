@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="org.ossmeter.repository.model.github">
-  <eClassifiers xsi:type="ecore:EClass" name="Person">
+  <eClassifiers xsi:type="ecore:EClass" name="Project">
     <eAnnotations source="stub">
-      <details key="javaClass" value="org.ossmeter.repository.model.base.Person"/>
+      <details key="javaClass" value="org.ossmeter.repository.model.Project"/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="VcsRepository">
+  <eClassifiers xsi:type="ecore:EClass" name="Person">
     <eAnnotations source="stub">
-      <details key="javaClass" value="org.ossmeter.repository.model.base.VcsRepository"/>
+      <details key="javaClass" value="org.ossmeter.repository.model.Person"/>
     </eAnnotations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BugTrackingSystem">
     <eAnnotations source="stub">
-      <details key="javaClass" value="org.ossmeter.repository.model.base.BugTrackingSystem"/>
+      <details key="javaClass" value="org.ossmeter.repository.model.BugTrackingSystem"/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="GitHubRepository" eSuperTypes="#//VcsRepository">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="owner" eType="#//GitHubUser">
+  <eClassifiers xsi:type="ecore:EClass" name="GitHubRepository" eSuperTypes="#//Project #//EClass0">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
       <eAnnotations source="key"/>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="full_name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="private" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="fork" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"/>
@@ -34,10 +33,6 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="language" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="size" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="master_branch" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="stargazers" upperBound="-1"
-        eType="#//GitHubUser" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="collaborators" upperBound="-1"
-        eType="#//GitHubUser" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="commits" upperBound="-1"
         eType="#//GitHubCommit" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="contents" upperBound="-1"
@@ -46,8 +41,6 @@
         eType="#//GitHubDownload" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="forks" upperBound="-1"
         eType="#//GitHubRepository"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="watchers" upperBound="-1"
-        eType="#//GitHubUser" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="milestones" upperBound="-1"
         eType="#//GitHubMilestone" containment="true"/>
   </eClassifiers>
@@ -151,4 +144,5 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="followers" upperBound="-1"
         eType="#//GitHubUser" containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EClass0"/>
 </ecore:EPackage>

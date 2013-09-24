@@ -3,6 +3,7 @@ package org.ossmeter.repository.model.github;
 import com.mongodb.*;
 import java.util.*;
 import com.googlecode.pongo.runtime.*;
+import com.googlecode.pongo.runtime.querying.*;
 
 
 public class GitHubCommit extends Pongo {
@@ -17,14 +18,22 @@ public class GitHubCommit extends Pongo {
 		super();
 		dbObject.put("comments", new BasicDBList());
 		dbObject.put("parents", new BasicDBList());
+		URL.setOwningType("org.ossmeter.repository.model.github.GitHubCommit");
+		SHA.setOwningType("org.ossmeter.repository.model.github.GitHubCommit");
+		MESSAGE.setOwningType("org.ossmeter.repository.model.github.GitHubCommit");
 	}
+	
+	public static StringQueryProducer URL = new StringQueryProducer("url"); 
+	public static StringQueryProducer SHA = new StringQueryProducer("sha"); 
+	public static StringQueryProducer MESSAGE = new StringQueryProducer("message"); 
+	
 	
 	public String getUrl() {
 		return parseString(dbObject.get("url")+"", "");
 	}
 	
 	public GitHubCommit setUrl(String url) {
-		dbObject.put("url", url + "");
+		dbObject.put("url", url);
 		notifyChanged();
 		return this;
 	}
@@ -33,7 +42,7 @@ public class GitHubCommit extends Pongo {
 	}
 	
 	public GitHubCommit setSha(String sha) {
-		dbObject.put("sha", sha + "");
+		dbObject.put("sha", sha);
 		notifyChanged();
 		return this;
 	}
@@ -42,7 +51,7 @@ public class GitHubCommit extends Pongo {
 	}
 	
 	public GitHubCommit setMessage(String message) {
-		dbObject.put("message", message + "");
+		dbObject.put("message", message);
 		notifyChanged();
 		return this;
 	}

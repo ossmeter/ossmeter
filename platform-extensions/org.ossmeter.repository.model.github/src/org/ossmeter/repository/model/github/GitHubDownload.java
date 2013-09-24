@@ -3,6 +3,7 @@ package org.ossmeter.repository.model.github;
 import com.mongodb.*;
 import java.util.*;
 import com.googlecode.pongo.runtime.*;
+import com.googlecode.pongo.runtime.querying.*;
 
 
 public class GitHubDownload extends Pongo {
@@ -11,14 +12,41 @@ public class GitHubDownload extends Pongo {
 	
 	public GitHubDownload() { 
 		super();
+		_ID.setOwningType("org.ossmeter.repository.model.github.GitHubDownload");
+		URL.setOwningType("org.ossmeter.repository.model.github.GitHubDownload");
+		HTML_URL.setOwningType("org.ossmeter.repository.model.github.GitHubDownload");
+		NAME.setOwningType("org.ossmeter.repository.model.github.GitHubDownload");
+		DESCRIPTION.setOwningType("org.ossmeter.repository.model.github.GitHubDownload");
+		SIZE.setOwningType("org.ossmeter.repository.model.github.GitHubDownload");
+		DOWNLOAD_COUNT.setOwningType("org.ossmeter.repository.model.github.GitHubDownload");
+		CONTENT_TYPE.setOwningType("org.ossmeter.repository.model.github.GitHubDownload");
 	}
 	
+	public static NumericalQueryProducer _ID = new NumericalQueryProducer("_id");
+	public static StringQueryProducer URL = new StringQueryProducer("url"); 
+	public static StringQueryProducer HTML_URL = new StringQueryProducer("html_url"); 
+	public static StringQueryProducer NAME = new StringQueryProducer("name"); 
+	public static StringQueryProducer DESCRIPTION = new StringQueryProducer("description"); 
+	public static NumericalQueryProducer SIZE = new NumericalQueryProducer("size");
+	public static NumericalQueryProducer DOWNLOAD_COUNT = new NumericalQueryProducer("download_count");
+	public static StringQueryProducer CONTENT_TYPE = new StringQueryProducer("content_type"); 
+	
+	
+	public int get_id() {
+		return parseInteger(dbObject.get("_id")+"", 0);
+	}
+	
+	public GitHubDownload set_id(int _id) {
+		dbObject.put("_id", _id);
+		notifyChanged();
+		return this;
+	}
 	public String getUrl() {
 		return parseString(dbObject.get("url")+"", "");
 	}
 	
 	public GitHubDownload setUrl(String url) {
-		dbObject.put("url", url + "");
+		dbObject.put("url", url);
 		notifyChanged();
 		return this;
 	}
@@ -27,7 +55,7 @@ public class GitHubDownload extends Pongo {
 	}
 	
 	public GitHubDownload setHtml_url(String html_url) {
-		dbObject.put("html_url", html_url + "");
+		dbObject.put("html_url", html_url);
 		notifyChanged();
 		return this;
 	}
@@ -36,7 +64,7 @@ public class GitHubDownload extends Pongo {
 	}
 	
 	public GitHubDownload setName(String name) {
-		dbObject.put("name", name + "");
+		dbObject.put("name", name);
 		notifyChanged();
 		return this;
 	}
@@ -45,7 +73,7 @@ public class GitHubDownload extends Pongo {
 	}
 	
 	public GitHubDownload setDescription(String description) {
-		dbObject.put("description", description + "");
+		dbObject.put("description", description);
 		notifyChanged();
 		return this;
 	}
@@ -54,7 +82,7 @@ public class GitHubDownload extends Pongo {
 	}
 	
 	public GitHubDownload setSize(int size) {
-		dbObject.put("size", size + "");
+		dbObject.put("size", size);
 		notifyChanged();
 		return this;
 	}
@@ -63,7 +91,7 @@ public class GitHubDownload extends Pongo {
 	}
 	
 	public GitHubDownload setDownload_count(int download_count) {
-		dbObject.put("download_count", download_count + "");
+		dbObject.put("download_count", download_count);
 		notifyChanged();
 		return this;
 	}
@@ -72,7 +100,7 @@ public class GitHubDownload extends Pongo {
 	}
 	
 	public GitHubDownload setContent_type(String content_type) {
-		dbObject.put("content_type", content_type + "");
+		dbObject.put("content_type", content_type);
 		notifyChanged();
 		return this;
 	}

@@ -3,6 +3,7 @@ package org.ossmeter.repository.model.github;
 import com.mongodb.*;
 import java.util.*;
 import com.googlecode.pongo.runtime.*;
+import com.googlecode.pongo.runtime.querying.*;
 
 
 public class GitHubComment extends Pongo {
@@ -12,14 +13,30 @@ public class GitHubComment extends Pongo {
 	
 	public GitHubComment() { 
 		super();
+		URL.setOwningType("org.ossmeter.repository.model.github.GitHubComment");
+		BODY.setOwningType("org.ossmeter.repository.model.github.GitHubComment");
+		PATH.setOwningType("org.ossmeter.repository.model.github.GitHubComment");
+		POSITION.setOwningType("org.ossmeter.repository.model.github.GitHubComment");
+		LINE.setOwningType("org.ossmeter.repository.model.github.GitHubComment");
+		CREATED_AT.setOwningType("org.ossmeter.repository.model.github.GitHubComment");
+		UPDATED_AT.setOwningType("org.ossmeter.repository.model.github.GitHubComment");
 	}
+	
+	public static StringQueryProducer URL = new StringQueryProducer("url"); 
+	public static StringQueryProducer BODY = new StringQueryProducer("body"); 
+	public static StringQueryProducer PATH = new StringQueryProducer("path"); 
+	public static NumericalQueryProducer POSITION = new NumericalQueryProducer("position");
+	public static NumericalQueryProducer LINE = new NumericalQueryProducer("line");
+	public static StringQueryProducer CREATED_AT = new StringQueryProducer("created_at"); 
+	public static StringQueryProducer UPDATED_AT = new StringQueryProducer("updated_at"); 
+	
 	
 	public String getUrl() {
 		return parseString(dbObject.get("url")+"", "");
 	}
 	
 	public GitHubComment setUrl(String url) {
-		dbObject.put("url", url + "");
+		dbObject.put("url", url);
 		notifyChanged();
 		return this;
 	}
@@ -28,7 +45,7 @@ public class GitHubComment extends Pongo {
 	}
 	
 	public GitHubComment setBody(String body) {
-		dbObject.put("body", body + "");
+		dbObject.put("body", body);
 		notifyChanged();
 		return this;
 	}
@@ -37,7 +54,7 @@ public class GitHubComment extends Pongo {
 	}
 	
 	public GitHubComment setPath(String path) {
-		dbObject.put("path", path + "");
+		dbObject.put("path", path);
 		notifyChanged();
 		return this;
 	}
@@ -46,7 +63,7 @@ public class GitHubComment extends Pongo {
 	}
 	
 	public GitHubComment setPosition(int position) {
-		dbObject.put("position", position + "");
+		dbObject.put("position", position);
 		notifyChanged();
 		return this;
 	}
@@ -55,7 +72,7 @@ public class GitHubComment extends Pongo {
 	}
 	
 	public GitHubComment setLine(int line) {
-		dbObject.put("line", line + "");
+		dbObject.put("line", line);
 		notifyChanged();
 		return this;
 	}
@@ -64,7 +81,7 @@ public class GitHubComment extends Pongo {
 	}
 	
 	public GitHubComment setCreated_at(String created_at) {
-		dbObject.put("created_at", created_at + "");
+		dbObject.put("created_at", created_at);
 		notifyChanged();
 		return this;
 	}
@@ -73,7 +90,7 @@ public class GitHubComment extends Pongo {
 	}
 	
 	public GitHubComment setUpdated_at(String updated_at) {
-		dbObject.put("updated_at", updated_at + "");
+		dbObject.put("updated_at", updated_at);
 		notifyChanged();
 		return this;
 	}

@@ -3,6 +3,7 @@ package org.ossmeter.repository.model.github;
 import com.mongodb.*;
 import java.util.*;
 import com.googlecode.pongo.runtime.*;
+import com.googlecode.pongo.runtime.querying.*;
 
 
 public class GitHubContent extends Pongo {
@@ -11,7 +12,21 @@ public class GitHubContent extends Pongo {
 	
 	public GitHubContent() { 
 		super();
+		TYPE.setOwningType("org.ossmeter.repository.model.github.GitHubContent");
+		ENVODING.setOwningType("org.ossmeter.repository.model.github.GitHubContent");
+		SIZE.setOwningType("org.ossmeter.repository.model.github.GitHubContent");
+		NAME.setOwningType("org.ossmeter.repository.model.github.GitHubContent");
+		PATH.setOwningType("org.ossmeter.repository.model.github.GitHubContent");
+		SHA.setOwningType("org.ossmeter.repository.model.github.GitHubContent");
 	}
+	
+	public static StringQueryProducer TYPE = new StringQueryProducer("type"); 
+	public static StringQueryProducer ENVODING = new StringQueryProducer("envoding"); 
+	public static NumericalQueryProducer SIZE = new NumericalQueryProducer("size");
+	public static StringQueryProducer NAME = new StringQueryProducer("name"); 
+	public static StringQueryProducer PATH = new StringQueryProducer("path"); 
+	public static StringQueryProducer SHA = new StringQueryProducer("sha"); 
+	
 	
 	public GitHubContentType getType() {
 		GitHubContentType type = null;
@@ -23,7 +38,7 @@ public class GitHubContent extends Pongo {
 	}
 	
 	public GitHubContent setType(GitHubContentType type) {
-		dbObject.put("type", type + "");
+		dbObject.put("type", type.toString());
 		notifyChanged();
 		return this;
 	}
@@ -32,7 +47,7 @@ public class GitHubContent extends Pongo {
 	}
 	
 	public GitHubContent setEnvoding(String envoding) {
-		dbObject.put("envoding", envoding + "");
+		dbObject.put("envoding", envoding);
 		notifyChanged();
 		return this;
 	}
@@ -41,7 +56,7 @@ public class GitHubContent extends Pongo {
 	}
 	
 	public GitHubContent setSize(int size) {
-		dbObject.put("size", size + "");
+		dbObject.put("size", size);
 		notifyChanged();
 		return this;
 	}
@@ -50,7 +65,7 @@ public class GitHubContent extends Pongo {
 	}
 	
 	public GitHubContent setName(String name) {
-		dbObject.put("name", name + "");
+		dbObject.put("name", name);
 		notifyChanged();
 		return this;
 	}
@@ -59,7 +74,7 @@ public class GitHubContent extends Pongo {
 	}
 	
 	public GitHubContent setPath(String path) {
-		dbObject.put("path", path + "");
+		dbObject.put("path", path);
 		notifyChanged();
 		return this;
 	}
@@ -68,7 +83,7 @@ public class GitHubContent extends Pongo {
 	}
 	
 	public GitHubContent setSha(String sha) {
-		dbObject.put("sha", sha + "");
+		dbObject.put("sha", sha);
 		notifyChanged();
 		return this;
 	}
