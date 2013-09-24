@@ -506,34 +506,6 @@
   </children>
   <styles xmi:type="notation:DiagramStyle" xmi:id="_UtP1kRb4EeOlBPxqRM-fSw"/>
   <element xmi:type="ecore:EPackage" href="sourceforge.ecore#/"/>
-  <edges xmi:type="notation:Edge" xmi:id="_UtyoKBb4EeOlBPxqRM-fSw" type="3002" source="_UtaNoBb4EeOlBPxqRM-fSw" target="_UtXKVBb4EeOlBPxqRM-fSw">
-    <children xmi:type="notation:Node" xmi:id="_UtyoLBb4EeOlBPxqRM-fSw" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_UtyoLRb4EeOlBPxqRM-fSw" x="86" y="34"/>
-    </children>
-    <children xmi:type="notation:Node" xmi:id="_UtzPMBb4EeOlBPxqRM-fSw" type="4012">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_UtzPMRb4EeOlBPxqRM-fSw" x="66" y="10"/>
-    </children>
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_UtyoKRb4EeOlBPxqRM-fSw" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_UtyoKhb4EeOlBPxqRM-fSw" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
-    <element xmi:type="ecore:EReference" href="sourceforge.ecore#//SourceForgeProject/maintainers"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_UtyoKxb4EeOlBPxqRM-fSw" points="[-18, 0, 442, 256]$[-448, 0, 12, 256]$[-448, -256, 12, 0]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Uv9yYhb4EeOlBPxqRM-fSw" id="(0.11176470588235295,0.09049773755656108)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Uv-ZcBb4EeOlBPxqRM-fSw" id="(0.6764705882352942,1.0)"/>
-  </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_UtzPMhb4EeOlBPxqRM-fSw" type="3002" source="_UtaNoBb4EeOlBPxqRM-fSw" target="_UtXKVBb4EeOlBPxqRM-fSw">
-    <children xmi:type="notation:Node" xmi:id="_UtzPNhb4EeOlBPxqRM-fSw" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_UtzPNxb4EeOlBPxqRM-fSw" x="107" y="-29"/>
-    </children>
-    <children xmi:type="notation:Node" xmi:id="_UtzPOBb4EeOlBPxqRM-fSw" type="4012">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_UtzPORb4EeOlBPxqRM-fSw" x="87" y="-12"/>
-    </children>
-    <styles xmi:type="notation:ConnectorStyle" xmi:id="_UtzPMxb4EeOlBPxqRM-fSw" lineColor="4210752"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_UtzPNBb4EeOlBPxqRM-fSw" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
-    <element xmi:type="ecore:EReference" href="sourceforge.ecore#//SourceForgeProject/developers"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_UtzPNRb4EeOlBPxqRM-fSw" points="[-2, -9, 483, 308]$[-485, -9, 0, 308]$[-485, -312, 0, 5]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Uv9yYBb4EeOlBPxqRM-fSw" id="(0.01764705882352941,0.3438914027149321)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_Uv9yYRb4EeOlBPxqRM-fSw" id="(0.2647058823529412,0.8837209302325582)"/>
-  </edges>
   <edges xmi:type="notation:Edge" xmi:id="_UtzPOhb4EeOlBPxqRM-fSw" type="3002" source="_UtaNoBb4EeOlBPxqRM-fSw" target="_UtfGIBb4EeOlBPxqRM-fSw">
     <children xmi:type="notation:Node" xmi:id="_Utz2QBb4EeOlBPxqRM-fSw" type="4011">
       <layoutConstraint xmi:type="notation:Location" xmi:id="_Utz2QRb4EeOlBPxqRM-fSw" x="-10" y="-10"/>

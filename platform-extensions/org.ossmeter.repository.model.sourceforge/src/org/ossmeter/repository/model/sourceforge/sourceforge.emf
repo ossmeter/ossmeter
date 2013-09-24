@@ -41,8 +41,8 @@ class SourceForgeProject extends Project {
   attr String summaryPage;
   attr String homePage;
   attr String mailingList;
-  val Person[*] maintainers;
-  val Person[*] developers;
+//  val Person[*] maintainers;
+//  val Person[*] developers;
   val OS[*] os;
   val Topic[*] topics;
   val ProgrammingLanguage[*] programminLanguages;
