@@ -5,7 +5,42 @@
          point="org.ossmeter.metricprovider.rascal">
       <rascalMetricProvider
             isHistoric="false"
-            rascalUri="rascal://modules/DemoLoc/countLoc">
+            rascalUri="metrics://Manager/countTotalLoc">
+      </rascalMetricProvider>
+   </extension>
+   <extension
+         point="org.ossmeter.metricprovider.rascal">
+      <rascalMetricProvider
+            isHistoric="false"
+            rascalUri="metrics://Manager/countCommentedLoc">
+      </rascalMetricProvider>
+   </extension>
+   <extension
+         point="org.ossmeter.metricprovider.rascal">
+      <rascalMetricProvider
+            isHistoric="false"
+            rascalUri="metrics://Manager/countEmptyLoc">
+      </rascalMetricProvider>
+   </extension>
+   <extension
+         point="org.ossmeter.metricprovider.rascal">
+      <rascalMetricProvider
+            isHistoric="false"
+            rascalUri="metrics://Manager/countSourceLoc">
+      </rascalMetricProvider>
+   </extension>
+   <extension
+         point="org.ossmeter.metricprovider.rascal">
+      <rascalMetricProvider
+            isHistoric="false"
+            rascalUri="metrics://Manager/countTotalLocPerLanguage">
+      </rascalMetricProvider>
+   </extension>
+   <extension
+         point="org.ossmeter.metricprovider.rascal">
+      <rascalMetricProvider
+            isHistoric="false"
+            rascalUri="metrics://Manager/countSourceLocPerLanguage">
       </rascalMetricProvider>
    </extension>
 
