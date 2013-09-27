@@ -64,7 +64,6 @@ public class ActiveUsersMetricProvider implements ITransientMetricProvider<Activ
 
 	@Override
 	public void measure(Project project, ProjectDelta projectDelta, ActiveUsers db) {
-		System.out.println("ActiveUsersMetric");
 		CommunicationChannelProjectDelta delta = projectDelta.getCommunicationChannelDelta();
 		for ( CommunicationChannelDelta communicationChannelDelta: delta.getCommunicationChannelSystemDeltas()) {
 			CommunicationChannel communicationChannel = communicationChannelDelta.getCommunicationChannel();
