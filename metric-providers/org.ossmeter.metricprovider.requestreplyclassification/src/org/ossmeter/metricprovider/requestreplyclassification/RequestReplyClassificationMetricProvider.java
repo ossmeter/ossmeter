@@ -104,7 +104,7 @@ public class RequestReplyClassificationMetricProvider  implements ITransientMetr
 				if (newsgroupArticlesData == null) {
 					newsgroupArticlesData = new NewsgroupArticlesData();
 					newsgroupArticlesData.setUrl(newsgroup.getUrl());
-					newsgroupArticlesData.setArticleId(article.getArticleNumber());
+					newsgroupArticlesData.setArticleNumber(article.getArticleNumber());
 					db.getNewsgroupArticles().add(newsgroupArticlesData);
 				} 
 				prepareNewsgroupArticleInstance(classifier, newsgroup, article);
@@ -201,7 +201,7 @@ public class RequestReplyClassificationMetricProvider  implements ITransientMetr
 		Iterable<NewsgroupArticlesData> newsgroupArticlesDataIt = 
 				db.getNewsgroupArticles().
 						find(NewsgroupArticlesData.URL.eq(newsgroup.getUrl()), 
-								NewsgroupArticlesData.ARTICLEID.eq(article.getArticleNumber()));
+								NewsgroupArticlesData.ARTICLENUMBER.eq(article.getArticleNumber()));
 		for (NewsgroupArticlesData nad:  newsgroupArticlesDataIt) {
 			newsgroupArticlesData = nad;
 		}

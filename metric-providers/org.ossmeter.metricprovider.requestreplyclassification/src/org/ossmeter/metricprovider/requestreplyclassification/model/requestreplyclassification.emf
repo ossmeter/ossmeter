@@ -20,6 +20,6 @@ class BugzillaCommentsData {
 class NewsgroupArticlesData {
 	@searchable
    	attr String url;
-   	attr int articleId;
+   	attr int articleNumber;
    	attr String classificationResult;
 }

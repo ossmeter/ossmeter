@@ -12,12 +12,12 @@ public class NewsgroupArticlesData extends Pongo {
 	public NewsgroupArticlesData() { 
 		super();
 		URL.setOwningType("org.ossmeter.metricprovider.requestreplyclassification.model.NewsgroupArticlesData");
-		ARTICLEID.setOwningType("org.ossmeter.metricprovider.requestreplyclassification.model.NewsgroupArticlesData");
+		ARTICLENUMBER.setOwningType("org.ossmeter.metricprovider.requestreplyclassification.model.NewsgroupArticlesData");
 		CLASSIFICATIONRESULT.setOwningType("org.ossmeter.metricprovider.requestreplyclassification.model.NewsgroupArticlesData");
 	}
 	
 	public static StringQueryProducer URL = new StringQueryProducer("url"); 
-	public static NumericalQueryProducer ARTICLEID = new NumericalQueryProducer("articleId");
+	public static NumericalQueryProducer ARTICLENUMBER = new NumericalQueryProducer("articleNumber");
 	public static StringQueryProducer CLASSIFICATIONRESULT = new StringQueryProducer("classificationResult"); 
 	
 	
@@ -30,12 +30,12 @@ public class NewsgroupArticlesData extends Pongo {
 		notifyChanged();
 		return this;
 	}
-	public int getArticleId() {
-		return parseInteger(dbObject.get("articleId")+"", 0);
+	public int getArticleNumber() {
+		return parseInteger(dbObject.get("articleNumber")+"", 0);
 	}
 	
-	public NewsgroupArticlesData setArticleId(int articleId) {
-		dbObject.put("articleId", articleId);
+	public NewsgroupArticlesData setArticleNumber(int articleNumber) {
+		dbObject.put("articleNumber", articleNumber);
 		notifyChanged();
 		return this;
 	}
