@@ -9,7 +9,6 @@ import com.googlecode.pongo.runtime.querying.*;
 public class GitHubRepository extends org.ossmeter.repository.model.Project {
 	
 	protected List<Language> languages = null;
-	protected List<GitHubCommit> commits = null;
 	protected List<GitHubContent> contents = null;
 	protected List<GitHubDownload> downloads = null;
 	protected List<GitHubRepository> forks = null;
@@ -19,7 +18,6 @@ public class GitHubRepository extends org.ossmeter.repository.model.Project {
 	public GitHubRepository() { 
 		super();
 		dbObject.put("languages", new BasicDBList());
-		dbObject.put("commits", new BasicDBList());
 		dbObject.put("contents", new BasicDBList());
 		dbObject.put("downloads", new BasicDBList());
 		dbObject.put("forks", new BasicDBList());
@@ -179,12 +177,6 @@ public class GitHubRepository extends org.ossmeter.repository.model.Project {
 			languages = new PongoList<Language>(this, "languages", true);
 		}
 		return languages;
-	}
-	public List<GitHubCommit> getCommits() {
-		if (commits == null) {
-			commits = new PongoList<GitHubCommit>(this, "commits", true);
-		}
-		return commits;
 	}
 	public List<GitHubContent> getContents() {
 		if (contents == null) {

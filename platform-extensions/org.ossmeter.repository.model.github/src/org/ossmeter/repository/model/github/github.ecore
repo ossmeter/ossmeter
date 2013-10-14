@@ -57,7 +57,6 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="master_branch">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="commits" upperBound="-1" eType="//GitHubCommit" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="contents" upperBound="-1" eType="//GitHubContent" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="downloads" upperBound="-1" eType="//GitHubDownload" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="forks" upperBound="-1" eType="//GitHubRepository"/>
@@ -116,21 +115,6 @@
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="GitHubCommit">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sha">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="author" eType="//GitHubUser" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="committer" eType="//GitHubUser" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="comments" upperBound="-1" eType="//GitHubComment" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="message">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parents" upperBound="-1" eType="//GitHubCommit" containment="true"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GitHubBugTracker" eSuperTypes="//BugTrackingSystem">
     <eStructuralFeatures xsi:type="ecore:EReference" name="issues" upperBound="-1" eType="//GitHubIssue" containment="true"/>
   </eClassifiers>
@@ -149,7 +133,6 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="assignee" eType="//GitHubUser" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="subscribed_users" upperBound="-1" eType="//GitHubUser" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="mentioned_users" upperBound="-1" eType="//GitHubUser" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="comments" upperBound="-1" eType="//GitHubComment" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="created_at">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
@@ -163,30 +146,6 @@
   <eClassifiers xsi:type="ecore:EEnum" name="GitHubIssueState">
     <eLiterals name="open"/>
     <eLiterals name="closed" value="1"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="GitHubComment">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="body">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="path">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="position">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="line">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="user" eType="//GitHubUser" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="created_at">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="updated_at">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GitHubMilestone">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="url">

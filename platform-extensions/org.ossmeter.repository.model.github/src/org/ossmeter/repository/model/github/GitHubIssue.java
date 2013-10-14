@@ -10,7 +10,6 @@ public class GitHubIssue extends Pongo {
 	
 	protected List<GitHubUser> subscribed_users = null;
 	protected List<GitHubUser> mentioned_users = null;
-	protected List<GitHubComment> comments = null;
 	protected GitHubUser creator = null;
 	protected GitHubUser assignee = null;
 	
@@ -19,7 +18,6 @@ public class GitHubIssue extends Pongo {
 		super();
 		dbObject.put("subscribed_users", new BasicDBList());
 		dbObject.put("mentioned_users", new BasicDBList());
-		dbObject.put("comments", new BasicDBList());
 		NUMBER.setOwningType("org.ossmeter.repository.model.github.GitHubIssue");
 		STATE.setOwningType("org.ossmeter.repository.model.github.GitHubIssue");
 		TITLE.setOwningType("org.ossmeter.repository.model.github.GitHubIssue");
@@ -119,12 +117,6 @@ public class GitHubIssue extends Pongo {
 			mentioned_users = new PongoList<GitHubUser>(this, "mentioned_users", true);
 		}
 		return mentioned_users;
-	}
-	public List<GitHubComment> getComments() {
-		if (comments == null) {
-			comments = new PongoList<GitHubComment>(this, "comments", true);
-		}
-		return comments;
 	}
 	
 	
