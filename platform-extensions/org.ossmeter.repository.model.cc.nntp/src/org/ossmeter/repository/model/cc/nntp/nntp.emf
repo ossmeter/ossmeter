@@ -10,7 +10,7 @@ class NntpNewsGroup extends  CommunicationChannel {
 	attr Boolean authenticationRequired;
 	attr String username;
 	attr String password;
-	attr int interval;
 	attr int port;
-	attr String lastArticleChecked;
+	attr String description;
+	attr String name;
 }

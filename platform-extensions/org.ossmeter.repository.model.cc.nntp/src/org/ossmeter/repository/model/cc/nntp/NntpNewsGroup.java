@@ -16,17 +16,17 @@ public class NntpNewsGroup extends org.ossmeter.repository.model.CommunicationCh
 		AUTHENTICATIONREQUIRED.setOwningType("org.ossmeter.repository.model.cc.nntp.NntpNewsGroup");
 		USERNAME.setOwningType("org.ossmeter.repository.model.cc.nntp.NntpNewsGroup");
 		PASSWORD.setOwningType("org.ossmeter.repository.model.cc.nntp.NntpNewsGroup");
-		INTERVAL.setOwningType("org.ossmeter.repository.model.cc.nntp.NntpNewsGroup");
 		PORT.setOwningType("org.ossmeter.repository.model.cc.nntp.NntpNewsGroup");
-		LASTARTICLECHECKED.setOwningType("org.ossmeter.repository.model.cc.nntp.NntpNewsGroup");
+		DESCRIPTION.setOwningType("org.ossmeter.repository.model.cc.nntp.NntpNewsGroup");
+		NAME.setOwningType("org.ossmeter.repository.model.cc.nntp.NntpNewsGroup");
 	}
 	
 	public static StringQueryProducer AUTHENTICATIONREQUIRED = new StringQueryProducer("authenticationRequired"); 
 	public static StringQueryProducer USERNAME = new StringQueryProducer("username"); 
 	public static StringQueryProducer PASSWORD = new StringQueryProducer("password"); 
-	public static NumericalQueryProducer INTERVAL = new NumericalQueryProducer("interval");
 	public static NumericalQueryProducer PORT = new NumericalQueryProducer("port");
-	public static StringQueryProducer LASTARTICLECHECKED = new StringQueryProducer("lastArticleChecked"); 
+	public static StringQueryProducer DESCRIPTION = new StringQueryProducer("description"); 
+	public static StringQueryProducer NAME = new StringQueryProducer("name"); 
 	
 	
 	public boolean getAuthenticationRequired() {
@@ -56,15 +56,6 @@ public class NntpNewsGroup extends org.ossmeter.repository.model.CommunicationCh
 		notifyChanged();
 		return this;
 	}
-	public int getInterval() {
-		return parseInteger(dbObject.get("interval")+"", 0);
-	}
-	
-	public NntpNewsGroup setInterval(int interval) {
-		dbObject.put("interval", interval);
-		notifyChanged();
-		return this;
-	}
 	public int getPort() {
 		return parseInteger(dbObject.get("port")+"", 0);
 	}
@@ -74,12 +65,21 @@ public class NntpNewsGroup extends org.ossmeter.repository.model.CommunicationCh
 		notifyChanged();
 		return this;
 	}
-	public String getLastArticleChecked() {
-		return parseString(dbObject.get("lastArticleChecked")+"", "");
+	public String getDescription() {
+		return parseString(dbObject.get("description")+"", "");
 	}
 	
-	public NntpNewsGroup setLastArticleChecked(String lastArticleChecked) {
-		dbObject.put("lastArticleChecked", lastArticleChecked);
+	public NntpNewsGroup setDescription(String description) {
+		dbObject.put("description", description);
+		notifyChanged();
+		return this;
+	}
+	public String getName() {
+		return parseString(dbObject.get("name")+"", "");
+	}
+	
+	public NntpNewsGroup setName(String name) {
+		dbObject.put("name", name);
 		notifyChanged();
 		return this;
 	}

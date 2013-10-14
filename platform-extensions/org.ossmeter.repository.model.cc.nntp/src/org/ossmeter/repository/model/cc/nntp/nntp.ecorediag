@@ -31,17 +31,17 @@
         <element xmi:type="ecore:EAttribute" href="nntp.ecore#//NntpNewsGroup/password"/>
         <layoutConstraint xmi:type="notation:Location" xmi:id="_7Xtx6RSgEeOUc5I9QFWRyA"/>
       </children>
-      <children xmi:type="notation:Node" xmi:id="_7XuY8BSgEeOUc5I9QFWRyA" type="2001">
-        <element xmi:type="ecore:EAttribute" href="nntp.ecore#//NntpNewsGroup/interval"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_7XuY8RSgEeOUc5I9QFWRyA"/>
-      </children>
       <children xmi:type="notation:Node" xmi:id="_7XuY8hSgEeOUc5I9QFWRyA" type="2001">
         <element xmi:type="ecore:EAttribute" href="nntp.ecore#//NntpNewsGroup/port"/>
         <layoutConstraint xmi:type="notation:Location" xmi:id="_7XuY8xSgEeOUc5I9QFWRyA"/>
       </children>
       <children xmi:type="notation:Node" xmi:id="_7XuY9BSgEeOUc5I9QFWRyA" type="2001">
-        <element xmi:type="ecore:EAttribute" href="nntp.ecore#//NntpNewsGroup/lastArticleChecked"/>
+        <element xmi:type="ecore:EAttribute" href="nntp.ecore#//NntpNewsGroup/description"/>
         <layoutConstraint xmi:type="notation:Location" xmi:id="_7XuY9RSgEeOUc5I9QFWRyA"/>
+      </children>
+      <children xmi:type="notation:Node" xmi:id="_hMda8DTWEeO2RtgldF9FJw" type="2001">
+        <element xmi:type="ecore:EAttribute" href="nntp.ecore#//NntpNewsGroup/name"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_hMda8TTWEeO2RtgldF9FJw"/>
       </children>
       <styles xmi:type="notation:DrawerStyle" xmi:id="_7XtK2BSgEeOUc5I9QFWRyA"/>
       <styles xmi:type="notation:SortingStyle" xmi:id="_7XtK2RSgEeOUc5I9QFWRyA"/>
