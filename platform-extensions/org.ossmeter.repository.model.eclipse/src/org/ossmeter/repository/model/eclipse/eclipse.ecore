@@ -82,6 +82,9 @@
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="//MailingListType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="archiveUrl">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Wiki" eSuperTypes="//CommunicationChannel"/>
   <eClassifiers xsi:type="ecore:EClass" name="Documentation" eSuperTypes="//CommunicationChannel"/>

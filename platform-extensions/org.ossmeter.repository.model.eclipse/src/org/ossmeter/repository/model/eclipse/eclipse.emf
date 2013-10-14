@@ -73,6 +73,7 @@ class MailingList extends CommunicationChannel{
    attr String name;
    attr String description;
    attr MailingListType type;
+   attr String archiveUrl;
 }
 
 class Wiki extends CommunicationChannel{

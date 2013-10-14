@@ -30,7 +30,7 @@
     </children>
     <styles xmi:type="notation:ShapeStyle" xmi:id="_8Bm4ISUiEeOix4nzwmlJSA" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
     <element xmi:type="ecore:EClass" href="eclipse.ecore#//NamedElement"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_8Bm4IiUiEeOix4nzwmlJSA" x="45" y="325"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_8Bm4IiUiEeOix4nzwmlJSA" x="40" y="325"/>
   </children>
   <children xmi:type="notation:Node" xmi:id="_8BpUYCUiEeOix4nzwmlJSA" type="1001">
     <children xmi:type="notation:Node" xmi:id="_8Bp7cCUiEeOix4nzwmlJSA" type="4001"/>
@@ -126,7 +126,7 @@
     </children>
     <styles xmi:type="notation:ShapeStyle" xmi:id="_8Btl1SUiEeOix4nzwmlJSA" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
     <element xmi:type="ecore:EClass" href="eclipse.ecore#//EclipsePlatform"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_8Btl1iUiEeOix4nzwmlJSA" x="50" y="400"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_8Btl1iUiEeOix4nzwmlJSA" x="45" y="400"/>
   </children>
   <children xmi:type="notation:Node" xmi:id="_8Buz8CUiEeOix4nzwmlJSA" type="1005">
     <children xmi:type="notation:Node" xmi:id="_8Buz8yUiEeOix4nzwmlJSA" type="4010"/>
@@ -248,6 +248,10 @@
         <element xmi:type="ecore:EAttribute" href="eclipse.ecore#//MailingList/type"/>
         <layoutConstraint xmi:type="notation:Location" xmi:id="_8B0ThSUiEeOix4nzwmlJSA"/>
       </children>
+      <children xmi:type="notation:Node" xmi:id="_SWIqcDTXEeO2RtgldF9FJw" type="2001">
+        <element xmi:type="ecore:EAttribute" href="eclipse.ecore#//MailingList/archiveUrl"/>
+        <layoutConstraint xmi:type="notation:Location" xmi:id="_SWIqcTTXEeO2RtgldF9FJw"/>
+      </children>
       <styles xmi:type="notation:DrawerStyle" xmi:id="_8BzsciUiEeOix4nzwmlJSA"/>
       <styles xmi:type="notation:SortingStyle" xmi:id="_8BzscyUiEeOix4nzwmlJSA"/>
       <styles xmi:type="notation:FilteringStyle" xmi:id="_8BzsdCUiEeOix4nzwmlJSA"/>
@@ -259,7 +263,7 @@
     </children>
     <styles xmi:type="notation:ShapeStyle" xmi:id="_8BzFayUiEeOix4nzwmlJSA" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
     <element xmi:type="ecore:EClass" href="eclipse.ecore#//MailingList"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_8BzFbCUiEeOix4nzwmlJSA" x="445" y="390"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_8BzFbCUiEeOix4nzwmlJSA" x="445" y="355"/>
   </children>
   <children xmi:type="notation:Node" xmi:id="_8B0ThiUiEeOix4nzwmlJSA" type="1001">
     <children xmi:type="notation:Node" xmi:id="_8B06kCUiEeOix4nzwmlJSA" type="4001"/>
@@ -470,7 +474,7 @@
   </edges>
   <edges xmi:type="notation:Edge" xmi:id="_8B-EhCUiEeOix4nzwmlJSA" type="3002" source="_8BrJmSUiEeOix4nzwmlJSA" target="_8BwCFCUiEeOix4nzwmlJSA">
     <children xmi:type="notation:Node" xmi:id="_8B-EiCUiEeOix4nzwmlJSA" type="4011">
-      <layoutConstraint xmi:type="notation:Location" xmi:id="_8B-EiSUiEeOix4nzwmlJSA" x="-10" y="-10"/>
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_8B-EiSUiEeOix4nzwmlJSA" x="-20" y="-8"/>
     </children>
     <children xmi:type="notation:Node" xmi:id="_8B-rkCUiEeOix4nzwmlJSA" type="4012">
       <layoutConstraint xmi:type="notation:Location" xmi:id="_8B-rkSUiEeOix4nzwmlJSA" x="-5" y="7"/>
@@ -518,7 +522,7 @@
     <styles xmi:type="notation:ConnectorStyle" xmi:id="_8B_SqSUiEeOix4nzwmlJSA" routing="Rectilinear" lineColor="4210752"/>
     <styles xmi:type="notation:FontStyle" xmi:id="_8B_SqiUiEeOix4nzwmlJSA" fontName="Segoe UI"/>
     <element xsi:nil="true"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_8B_SqyUiEeOix4nzwmlJSA" points="[-3, 0, -144, 49]$[-3, -69, -144, -20]$[103, -69, -38, -20]"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_8B_SqyUiEeOix4nzwmlJSA" points="[-2, 0, -143, 4]$[-2, -25, -143, -21]$[103, -25, -38, -21]"/>
     <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_8DXysiUiEeOix4nzwmlJSA" id="(0.4968152866242038,0.0)"/>
     <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_8DYZwCUiEeOix4nzwmlJSA" id="(0.2468354430379747,1.0)"/>
   </edges>

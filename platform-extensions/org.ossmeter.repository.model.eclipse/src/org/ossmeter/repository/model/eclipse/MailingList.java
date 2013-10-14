@@ -16,11 +16,13 @@ public class MailingList extends org.ossmeter.repository.model.CommunicationChan
 		NAME.setOwningType("org.ossmeter.repository.model.eclipse.MailingList");
 		DESCRIPTION.setOwningType("org.ossmeter.repository.model.eclipse.MailingList");
 		TYPE.setOwningType("org.ossmeter.repository.model.eclipse.MailingList");
+		ARCHIVEURL.setOwningType("org.ossmeter.repository.model.eclipse.MailingList");
 	}
 	
 	public static StringQueryProducer NAME = new StringQueryProducer("name"); 
 	public static StringQueryProducer DESCRIPTION = new StringQueryProducer("description"); 
 	public static StringQueryProducer TYPE = new StringQueryProducer("type"); 
+	public static StringQueryProducer ARCHIVEURL = new StringQueryProducer("archiveUrl"); 
 	
 	
 	public String getName() {
@@ -52,6 +54,15 @@ public class MailingList extends org.ossmeter.repository.model.CommunicationChan
 	
 	public MailingList setType(MailingListType type) {
 		dbObject.put("type", type.toString());
+		notifyChanged();
+		return this;
+	}
+	public String getArchiveUrl() {
+		return parseString(dbObject.get("archiveUrl")+"", "");
+	}
+	
+	public MailingList setArchiveUrl(String archiveUrl) {
+		dbObject.put("archiveUrl", archiveUrl);
 		notifyChanged();
 		return this;
 	}
