@@ -32,7 +32,7 @@ class GitHubRepository extends Project {
   attr String svn_url;
   attr String mirror_url;
   attr String homepage;
-  attr String language;
+  val Language[*] languages;
   attr Integer size;
   attr String master_branch;
  // val GitHubUser[*] stargazers;
@@ -43,6 +43,10 @@ class GitHubRepository extends Project {
   ref GitHubRepository[*] forks;
  // val GitHubUser[*] watchers;
   val GitHubMilestone[*] milestones;
+}
+
+class Language  {
+	attr String name;
 }
 
 class GitHubContent {

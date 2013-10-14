@@ -1,40 +1,21 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.4"?>
-<plugin>
-   <extension
-         point="com.googlecode.pongo.runtime.osgi">
-         
-	  <class
-            name="org.ossmeter.repository.model.github.GitHubProject">
-      </class>
-	  <class
-            name="org.ossmeter.repository.model.github.GitHubRepository">
-      </class>
-	  <class
-            name="org.ossmeter.repository.model.github.GitHubContent">
-      </class>
-	  <class
-            name="org.ossmeter.repository.model.github.GitHubDownload">
-      </class>
-	  <class
-            name="org.ossmeter.repository.model.github.GitHubCommit">
-      </class>
-	  <class
-            name="org.ossmeter.repository.model.github.GitHubBugTracker">
-      </class>
-	  <class
-            name="org.ossmeter.repository.model.github.GitHubIssue">
-      </class>
-	  <class
-            name="org.ossmeter.repository.model.github.GitHubComment">
-      </class>
-	  <class
-            name="org.ossmeter.repository.model.github.GitHubMilestone">
-      </class>
-	  <class
-            name="org.ossmeter.repository.model.github.GitHubUser">
-      </class>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?eclipse version="3.4"?><plugin>
    
-   </extension>
 
+
+
+
+
+<extension point="com.googlecode.pongo.runtime.osgi">
+    <class name="org.ossmeter.repository.model.github.GitHubRepository"/>
+    <class name="org.ossmeter.repository.model.github.Language"/>
+    <class name="org.ossmeter.repository.model.github.GitHubContent"/>
+    <class name="org.ossmeter.repository.model.github.GitHubDownload"/>
+    <class name="org.ossmeter.repository.model.github.GitHubCommit"/>
+    <class name="org.ossmeter.repository.model.github.GitHubBugTracker"/>
+    <class name="org.ossmeter.repository.model.github.GitHubIssue"/>
+    <class name="org.ossmeter.repository.model.github.GitHubComment"/>
+    <class name="org.ossmeter.repository.model.github.GitHubMilestone"/>
+    <class name="org.ossmeter.repository.model.github.GitHubUser"/>
+  </extension>
 </plugin>

@@ -8,6 +8,7 @@ import com.googlecode.pongo.runtime.querying.*;
 
 public class GitHubRepository extends org.ossmeter.repository.model.Project {
 	
+	protected List<Language> languages = null;
 	protected List<GitHubCommit> commits = null;
 	protected List<GitHubContent> contents = null;
 	protected List<GitHubDownload> downloads = null;
@@ -17,6 +18,7 @@ public class GitHubRepository extends org.ossmeter.repository.model.Project {
 	
 	public GitHubRepository() { 
 		super();
+		dbObject.put("languages", new BasicDBList());
 		dbObject.put("commits", new BasicDBList());
 		dbObject.put("contents", new BasicDBList());
 		dbObject.put("downloads", new BasicDBList());
@@ -34,7 +36,6 @@ public class GitHubRepository extends org.ossmeter.repository.model.Project {
 		SVN_URL.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
 		MIRROR_URL.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
 		HOMEPAGE.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
-		LANGUAGE.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
 		SIZE.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
 		MASTER_BRANCH.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
 	}
@@ -50,7 +51,6 @@ public class GitHubRepository extends org.ossmeter.repository.model.Project {
 	public static StringQueryProducer SVN_URL = new StringQueryProducer("svn_url"); 
 	public static StringQueryProducer MIRROR_URL = new StringQueryProducer("mirror_url"); 
 	public static StringQueryProducer HOMEPAGE = new StringQueryProducer("homepage"); 
-	public static StringQueryProducer LANGUAGE = new StringQueryProducer("language"); 
 	public static NumericalQueryProducer SIZE = new NumericalQueryProducer("size");
 	public static StringQueryProducer MASTER_BRANCH = new StringQueryProducer("master_branch"); 
 	
@@ -154,15 +154,6 @@ public class GitHubRepository extends org.ossmeter.repository.model.Project {
 		notifyChanged();
 		return this;
 	}
-	public String getLanguage() {
-		return parseString(dbObject.get("language")+"", "");
-	}
-	
-	public GitHubRepository setLanguage(String language) {
-		dbObject.put("language", language);
-		notifyChanged();
-		return this;
-	}
 	public int getSize() {
 		return parseInteger(dbObject.get("size")+"", 0);
 	}
@@ -183,6 +174,12 @@ public class GitHubRepository extends org.ossmeter.repository.model.Project {
 	}
 	
 	
+	public List<Language> getLanguages() {
+		if (languages == null) {
+			languages = new PongoList<Language>(this, "languages", true);
+		}
+		return languages;
+	}
 	public List<GitHubCommit> getCommits() {
 		if (commits == null) {
 			commits = new PongoList<GitHubCommit>(this, "commits", true);
