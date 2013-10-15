@@ -13,4 +13,6 @@ class NntpNewsGroup extends  CommunicationChannel {
 	attr int port;
 	attr String description;
 	attr String name;
+	attr int interval;
+	attr String lastArticleChecked;
 }
