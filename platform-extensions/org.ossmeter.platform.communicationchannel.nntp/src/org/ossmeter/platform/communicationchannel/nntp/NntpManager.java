@@ -27,9 +27,9 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 		NewsgroupInfo newsgroupInfo = NntpUtil.selectNewsgroup(nntpClient, newsgroup);
 		int lastArticle = newsgroupInfo.getLastArticle();
 
-////		 The following statement is not really needed, but I added it to speed up running,
-////		 in the date is far latter than the first day of the newsgroup.
-//		if (Integer.parseInt(newsgroup.getLastArticleChecked())<137500)
+//		 The following statement is not really needed, but I added it to speed up running,
+//		 in the date is far latter than the first day of the newsgroup.
+//		if (Integer.parseInt(newsgroup.getLastArticleChecked())<134500)
 //			newsgroup.setLastArticleChecked("134500"); //137500");
 
 		int lastArticleChecked = Integer.parseInt(newsgroup.getLastArticleChecked());
@@ -66,39 +66,44 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 
 			for (Article article: articles) {
 				java.util.Date javaArticleDate = NntpUtil.parseDate(article.getDate());
-				articleDate = new Date(javaArticleDate);
-				if (date.compareTo(articleDate) < 0) {
-					dayCompleted = true;
-//					System.out.println("dayCompleted");
-				}
-				else if (date.compareTo(articleDate) == 0) {
-					CommunicationChannelArticle communicationChannelArticle = new CommunicationChannelArticle();
-					communicationChannelArticle.setArticleId(article.getArticleId());
-					communicationChannelArticle.setArticleNumber(article.getArticleNumber());
-					communicationChannelArticle.setDate(javaArticleDate);
-//					I haven't seen any messageThreadIds on NNTP servers, yet.
-//					communicationChannelArticle.setMessageThreadId(article.messageThreadId());
-					NntpNewsGroup newNewsgroup = new NntpNewsGroup();
-					newNewsgroup.setUrl(newsgroup.getUrl());
-					newNewsgroup.setAuthenticationRequired(newsgroup.getAuthenticationRequired());
-					newNewsgroup.setUsername(newsgroup.getUsername());
-					newNewsgroup.setPassword(newsgroup.getPassword());
-					newNewsgroup.setPort(newsgroup.getPort());
-					newNewsgroup.setInterval(newsgroup.getInterval());
-					communicationChannelArticle.setNewsgroup(newNewsgroup);
-					communicationChannelArticle.setReferences(article.getReferences());
-					communicationChannelArticle.setSubject(article.getSubject());
-					communicationChannelArticle.setUser(article.getFrom());
-					communicationChannelArticle.setText(
-							getContents(newNewsgroup, communicationChannelArticle));
-					delta.getArticles().add(communicationChannelArticle);
-//					lastArticleChecked = article.getArticleNumber();
-//					System.out.println("dayNOTCompleted");
-				} 
-				else {
-						//TODO: In this case, there are unprocessed articles whose date is earlier than the date requested.
-						//      This means that the deltas of those article dates are incomplete, 
-						//		i.e. the deltas did not contain all articles of those dates.
+				if (javaArticleDate!=null) {
+					articleDate = new Date(javaArticleDate);
+					if (date.compareTo(articleDate) < 0) {
+						dayCompleted = true;
+//						System.out.println("dayCompleted");
+					}
+					else if (date.compareTo(articleDate) == 0) {
+						CommunicationChannelArticle communicationChannelArticle = new CommunicationChannelArticle();
+						communicationChannelArticle.setArticleId(article.getArticleId());
+						communicationChannelArticle.setArticleNumber(article.getArticleNumber());
+						communicationChannelArticle.setDate(javaArticleDate);
+//						I haven't seen any messageThreadIds on NNTP servers, yet.
+//						communicationChannelArticle.setMessageThreadId(article.messageThreadId());
+						NntpNewsGroup newNewsgroup = new NntpNewsGroup();
+						newNewsgroup.setUrl(newsgroup.getUrl());
+						newNewsgroup.setAuthenticationRequired(newsgroup.getAuthenticationRequired());
+						newNewsgroup.setUsername(newsgroup.getUsername());
+						newNewsgroup.setPassword(newsgroup.getPassword());
+						newNewsgroup.setPort(newsgroup.getPort());
+						newNewsgroup.setInterval(newsgroup.getInterval());
+						communicationChannelArticle.setNewsgroup(newNewsgroup);
+						communicationChannelArticle.setReferences(article.getReferences());
+						communicationChannelArticle.setSubject(article.getSubject());
+						communicationChannelArticle.setUser(article.getFrom());
+						communicationChannelArticle.setText(
+								getContents(newNewsgroup, communicationChannelArticle));
+						delta.getArticles().add(communicationChannelArticle);
+						lastArticleChecked = article.getArticleNumber();
+//						System.out.println("dayNOTCompleted");
+					} 
+					else {
+							//TODO: In this case, there are unprocessed articles whose date is earlier than the date requested.
+							//      This means that the deltas of those article dates are incomplete, 
+							//		i.e. the deltas did not contain all articles of those dates.
+					}
+				} else {
+					// If an article has no correct date, then ignore it
+					System.err.println("\t\tUnparsable article date: " + article.getDate());
 				}
 			}
 		}
