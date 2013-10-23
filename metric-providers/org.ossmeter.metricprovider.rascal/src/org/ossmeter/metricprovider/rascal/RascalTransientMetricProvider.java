@@ -3,13 +3,22 @@ package org.ossmeter.metricprovider.rascal;
 import java.io.File;
 import java.io.PrintWriter;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.imp.pdb.facts.IBool;
+import org.eclipse.imp.pdb.facts.IInteger;
+import org.eclipse.imp.pdb.facts.IReal;
 import org.eclipse.imp.pdb.facts.ISourceLocation;
 import org.eclipse.imp.pdb.facts.IValue;
 import org.eclipse.imp.pdb.facts.IValueFactory;
+import org.ossmeter.metricprovider.rascal.trans.model.BooleanMeasurement;
+import org.ossmeter.metricprovider.rascal.trans.model.IntegerMeasurement;
+import org.ossmeter.metricprovider.rascal.trans.model.Measurement;
 import org.ossmeter.metricprovider.rascal.trans.model.RascalMetrics;
+import org.ossmeter.metricprovider.rascal.trans.model.RealMeasurement;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.ITransientMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
@@ -28,6 +37,7 @@ import org.rascalmpl.uri.ClassResourceInputOutput;
 import org.rascalmpl.uri.IURIInputStreamResolver;
 import org.rascalmpl.uri.URIUtil;
 import org.rascalmpl.values.ValueFactoryFactory;
+import org.eclipse.imp.pdb.facts.type.Type;
 
 import com.mongodb.DB;
 
@@ -83,29 +93,64 @@ public class RascalTransientMetricProvider implements ITransientMetricProvider<R
 		File localStorage = new File(project.getStorage().getPath());
 		ossmStore.addProject(project.getName(), localStorage);
 		try {
-			
-			System.out.println("Going into rascal code");
 			VcsProjectDelta vcsDelta = projectDelta.getVcsDelta();
 
 			for (VcsRepositoryDelta vcsRepositoryDelta : vcsDelta.getRepoDeltas()) {
 				VcsRepository vcsRepository = vcsRepositoryDelta.getRepository();
 				//ISourceLocation rascalLoc = VF.sourceLocation(URIUtil.create("ossm", project.getName(), "/"));
 				ISourceLocation rascalLoc = VF.sourceLocation(localStorage.getAbsolutePath());
-				IValue result = eval.call(new NullRascalMonitor(), module, "checkOutRepository", VF.string(vcsRepository.getUrl()), rascalLoc);
-				System.out.println(result);
-				result = eval.call(new NullRascalMonitor(), module, "createModel", rascalLoc);
-				System.out.println(result);
-				result = eval.call(new NullRascalMonitor(), module, function);
-				System.out.println(result);
-				/*
-				 * Do stuff
-				 */
+				eval.call(new NullRascalMonitor(), module, "checkOutRepository", VF.string(vcsRepository.getUrl()), rascalLoc);
+				eval.call(new NullRascalMonitor(), module, "createModel", rascalLoc);
+				IValue result = eval.call(new NullRascalMonitor(), module, function);
+				
+				Type type = result.getType();
+				List<Measurement> test =  new ArrayList<>();
+
+				if (type.isInteger()) {
+					test.add(makeIntegerMeasurement(result));
+				} else if (type.isReal()) {
+					test.add(makeRealMeasurement(result));
+				} else if (type.isBool()) {
+					test.add(makeBooleanMeasurement(result));
+				} else if (type.isMap()){
+					if (type.getKeyType().isString()) {
+						// do not do anything at the moment
+					}
+					
+				} else {
+					throw new UnsupportedOperationException();
+				}
+				
+				for (Iterator<Measurement> it = test.iterator(); it.hasNext(); ) {
+					Measurement metricValue = it.next();
+					metricValue.setMetric(metric.toASCIIString());
+					metricValue.setUri(rascalLoc.getURI().toASCIIString());
+					db.getMeasurements().add(metricValue);
+				}
 				
 				db.sync();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private Measurement makeIntegerMeasurement(IValue result) {
+		Measurement test = new IntegerMeasurement();
+		((IntegerMeasurement) test).setValue(((IInteger) result).longValue());
+		return test;
+	}
+	
+	private Measurement makeRealMeasurement(IValue result) {
+		Measurement test = new RealMeasurement();
+		((RealMeasurement) test).setValue(((IReal) result).floatValue());
+		return test;
+	}
+	
+	private Measurement makeBooleanMeasurement(IValue result) {
+		Measurement test = new BooleanMeasurement();
+		((BooleanMeasurement) test).setValue(((IBool) result).getValue());
+		return test;
 	}
 
 	@Override
