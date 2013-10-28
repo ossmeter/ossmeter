@@ -13,6 +13,9 @@ import org.ossmeter.platform.delta.communicationchannel.PlatformCommunicationCha
 import org.ossmeter.platform.delta.vcs.ExtensionPointVcsManager;
 import org.ossmeter.platform.delta.vcs.PlatformVcsManager;
 import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
+import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
+import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 
 import com.googlecode.pongo.runtime.PongoFactory;
 import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
@@ -35,8 +38,8 @@ public class App implements IApplication {
 		
 		// FIXME: Needs to check Mongo for projects, not keep registering the same ones!
 		
-		Project pongo = ProjectCreationUtil.createSvnProject("pongo", "https://pongo.googlecode.com/svn");
-		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(pongo);
+//		Project pongo = ProjectCreationUtil.createSvnProject("pongo", "https://pongo.googlecode.com/svn");
+//		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(pongo);
 //		Project saf = ProjectCreationUtil.createGitProject("saf", "https://code.google.com/p/super-awesome-fighter");
 //		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(saf);
 //		Project fedora = ProjectCreationUtil.createProjectWithBugTrackingSystem("fedora", "https://bugzilla.redhat.com/xmlrpc.cgi", "Fedora", "acpi"); // "acpi", platform);
@@ -47,13 +50,73 @@ public class App implements IApplication {
 //		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(skim);
 //		Project epsilon = ProjectCreationUtil.createProjectWithNewsGroup("epsilon", "news.eclipse.org", "eclipse.epsilon", true, "exquisitus", "flinder1f7", 80, 10000);
 //		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(epsilon);
+//		platform.getProjectRepositoryManager().getProjectRepository().sync();
+
+		Project openOffice = ProjectCreationUtil.createProjectSvnNntpBugzilla(
+				"OpenOffice2", "openoffice", "https://svn.apache.org/repos/asf/openoffice/trunk/main",
+				"https://issues.apache.org/ooo/xmlrpc.cgi", "General", "",
+				"subversion.user", "news.gmane.org/gmane.comp.version-control.subversion.user", false, "", "");	
+		
+		Project ant = ProjectCreationUtil.createProjectSvnNntpBugzilla(
+				"Ant", "ant", "http://svn.apache.org/repos/asf/ant/core/trunk/",
+				"https://issues.apache.org/bugzilla/xmlrpc.cgi", "Ant", "Core",
+				"ant-user", "news.gmane.org/gmane.comp.jakarta.ant.user", false, "", "");
+		
+		Project log4j = ProjectCreationUtil.createProjectSvnNntpBugzilla(
+				"Log4J", "log4j", "http://svn.apache.org/repos/asf/logging/log4j/trunk",
+				"https://issues.apache.org/bugzilla/xmlrpc.cgi", "Log4j", "null", 
+				"ant-user", "news.gmane.org/gmane.comp.jakarta.log4j.user", false, "", "");
+		
+		Project tomcat = ProjectCreationUtil.createProjectSvnNntpBugzilla(
+				"Tomcat", "tomcat", "http://svn.apache.org/repos/asf/tomcat/trunk/",
+				"https://issues.apache.org/bugzilla/xmlrpc.cgi", "Tomcat 8", "Manager",
+				"ant-user", "news.gmane.org/gmane.comp.jakarta.tomcat.user", false, "", "");
+		
+		// FIXME: subversion  currently cannot connect to bugzilla
+		Project subversion = ProjectCreationUtil.createProjectSvnNntpBugzilla(
+				"Subversion", "subversion", "http://svn.apache.org/repos/asf/subversion/trunk",
+				"http://subversion.tigris.org/issues/xmlrpc.cgi", "subversion", "null",
+				"openoffice.user", "news.gmane.org/gmane.comp.apache.openoffice.user", false, "", "");
+		
+		Project subversive = ProjectCreationUtil.createProjectSvnNntpBugzilla(
+				"Subversive", "subversive", "http://dev.eclipse.org/svnroot/technology/org.eclipse.subversive/trunk",
+				"https://bugs.eclipse.org/bugs/xmlrpc.cgi", "Subversive", "null",
+				"openoffice.user", "news.eclipse.org/eclipse.technology.subversive", true, "exquisitus", "flinder1f7");
+
+		Project epsilon = ProjectCreationUtil.createProjectSvnNntpBugzilla(
+				"Epsilon", "epsilon", "http://dev.eclipse.org/svnroot/modeling/org.eclipse.epsilon/trunk",
+				"https://bugs.eclipse.org/bugs/xmlrpc.cgi", "Epsilon", "null",
+				"epsilon", "news.eclipse.org/eclipse.epsilon", true, "exquisitus", "flinder1f7");
+
+		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(openOffice);
+		
+		//TMP DEBUG
+		openOffice.getBugTrackingSystems().clear();
+		
+/*
+		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(subversive);
+		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(tomcat);
+		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(log4j);
+		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(epsilon);
+ 		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(openOffice);
+		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(ant);
+*/
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
+		
+		// FEDORA
+		// GIT: https://github.com/fcrepo/fcrepo.git
+		// Bugzilla: https://bugzilla.redhat.com/xmlrpc.cgi (product = Fedora)
+		// NNTP: ???
+		
+		// Eclipse platform
+		// GIT: git.eclipse.org/gitroot/platform/eclipse.platform.git
+		// Bugzilla: https://bugs.eclipse.org/bugs/describecomponents.cgi?product=Platform
 		
 		platform.run();
 		
-		//while (true) {
-		//	if (1 > 2) break;
-		//}
+//		while (true) {
+//			if (1 > 2) break;
+//		}
 	}
 	
 	@Override
