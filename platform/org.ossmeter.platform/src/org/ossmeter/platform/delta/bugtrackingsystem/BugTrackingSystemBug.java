@@ -14,6 +14,9 @@ public class BugTrackingSystemBug implements Serializable {
 	protected String bugId;
 	protected String status;
 	protected String creator;
+	protected String operatingSystem;
+	protected String priority;
+	protected String resolution;
 	protected Date creationTime;
 //	protected String summary;
 	transient protected BugTrackingSystem bugTrackingSystem;	
@@ -50,7 +53,6 @@ public class BugTrackingSystemBug implements Serializable {
 	public void setCreationTime(Date creationTime) {
 		this.creationTime = creationTime;
 	}
-
 	
 //	public String getSummary() {
 //		return summary;
@@ -62,6 +64,30 @@ public class BugTrackingSystemBug implements Serializable {
 
 	public BugTrackingSystem getBugTrackingSystem() {
 		return bugTrackingSystem;
+	}
+
+	public String getOperatingSystem() {
+		return operatingSystem;
+	}
+
+	public void setOperatingSystem(String operatingSystem) {
+		this.operatingSystem = operatingSystem;
+	}
+
+	public String getPriority() {
+		return priority;
+	}
+
+	public void setPriority(String priority) {
+		this.priority = priority;
+	}
+
+	public String getResolution() {
+		return resolution;
+	}
+
+	public void setResolution(String resolution) {
+		this.resolution = resolution;
 	}
 
 	public void setBugTrackingSystem(BugTrackingSystem bugTrackingSystem) {
