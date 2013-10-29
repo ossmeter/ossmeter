@@ -8,6 +8,7 @@ import org.ossmeter.metricprovider.bugheadermetadata.model.BugHeaderMetadata;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.ITransientMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
+import org.ossmeter.platform.bugtrackingsystem.bugzilla.BugzillaBug;
 import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.platform.delta.bugtrackingsystem.BugTrackingSystemBug;
 import org.ossmeter.platform.delta.bugtrackingsystem.BugTrackingSystemDelta;
@@ -65,13 +66,13 @@ public class BugHeaderMetadataMetricProvider implements ITransientMetricProvider
 			if (!(bugTrackingSystem instanceof Bugzilla)) continue;
 			Bugzilla bugzilla = (Bugzilla) bugTrackingSystem;
 			for (BugTrackingSystemBug bug: bugTrackingSystemDelta.getNewBugs())
-				storeBug(db, bugzilla, bug);
+				storeBug(db, bugzilla, (BugzillaBug) bug);
 			for (BugTrackingSystemBug bug: bugTrackingSystemDelta.getUpdatedBugs())
-				storeBug(db, bugzilla, bug);
+				storeBug(db, bugzilla, (BugzillaBug) bug);
 			db.sync();
 		}
 	}
-	private BugData storeBug(BugHeaderMetadata db, Bugzilla bugzilla, BugTrackingSystemBug bug) {
+	private BugData storeBug(BugHeaderMetadata db, Bugzilla bugzilla, BugzillaBug bug) {
 		Iterable<BugData> bugDataIt = 
 				db.getBugs().find(BugData.URL.eq(bugzilla.getUrl()), 
 								  BugData.PRODUCT.eq(bugzilla.getProduct()), 
@@ -85,12 +86,15 @@ public class BugHeaderMetadataMetricProvider implements ITransientMetricProvider
 			bugData.setProduct(bugzilla.getProduct());
 			bugData.setComponent(bugzilla.getComponent());
 			bugData.setComponent(bug.getBugId());
+			bugData.setCreationTime(bug.getCreationTime().toString());
 			db.getBugs().add(bugData);
 		}
 		bugData.setOperatingSystem(bug.getOperatingSystem());
 		bugData.setPriority(bug.getPriority());
 		bugData.setResolution(bug.getResolution());
 		bugData.setStatus(bug.getStatus());
+		if (bug.getLastClosed()!=null)
+			bugData.setLastClosedTime(bug.getLastClosed().toString());
 		return bugData;
 	}
 

@@ -1,9 +1,7 @@
 package org.ossmeter.metricprovider.bugheadermetadata.model;
 
-import com.mongodb.*;
-import java.util.*;
-import com.googlecode.pongo.runtime.*;
-import com.googlecode.pongo.runtime.querying.*;
+import com.googlecode.pongo.runtime.Pongo;
+import com.googlecode.pongo.runtime.querying.StringQueryProducer;
 
 
 public class BugData extends Pongo {
@@ -20,6 +18,8 @@ public class BugData extends Pongo {
 		RESOLUTION.setOwningType("org.ossmeter.metricprovider.bugheadermetadata.model.BugData");
 		OPERATINGSYSTEM.setOwningType("org.ossmeter.metricprovider.bugheadermetadata.model.BugData");
 		PRIORITY.setOwningType("org.ossmeter.metricprovider.bugheadermetadata.model.BugData");
+		CREATIONTIME.setOwningType("org.ossmeter.metricprovider.bugheadermetadata.model.BugData");
+		LASTCLOSEDTIME.setOwningType("org.ossmeter.metricprovider.bugheadermetadata.model.BugData");
 	}
 	
 	public static StringQueryProducer URL = new StringQueryProducer("url"); 
@@ -30,6 +30,8 @@ public class BugData extends Pongo {
 	public static StringQueryProducer RESOLUTION = new StringQueryProducer("resolution"); 
 	public static StringQueryProducer OPERATINGSYSTEM = new StringQueryProducer("operatingSystem"); 
 	public static StringQueryProducer PRIORITY = new StringQueryProducer("priority"); 
+	public static StringQueryProducer CREATIONTIME = new StringQueryProducer("creationTime"); 
+	public static StringQueryProducer LASTCLOSEDTIME = new StringQueryProducer("lastClosedTime"); 
 	
 	
 	public String getUrl() {
@@ -101,6 +103,24 @@ public class BugData extends Pongo {
 	
 	public BugData setPriority(String priority) {
 		dbObject.put("priority", priority);
+		notifyChanged();
+		return this;
+	}
+	public String getCreationTime() {
+		return parseString(dbObject.get("creationTime")+"", "");
+	}
+	
+	public BugData setCreationTime(String creationTime) {
+		dbObject.put("creationTime", creationTime);
+		notifyChanged();
+		return this;
+	}
+	public String getLastClosedTime() {
+		return parseString(dbObject.get("lastClosedTime")+"", "");
+	}
+	
+	public BugData setLastClosedTime(String lastClosedTime) {
+		dbObject.put("lastClosedTime", lastClosedTime);
 		notifyChanged();
 		return this;
 	}
