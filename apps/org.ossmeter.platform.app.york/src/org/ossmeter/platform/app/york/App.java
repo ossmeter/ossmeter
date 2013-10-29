@@ -54,7 +54,7 @@ public class App implements IApplication {
 
 		Project openOffice = ProjectCreationUtil.createProjectSvnNntpBugzilla(
 				"OpenOffice2", "openoffice", "https://svn.apache.org/repos/asf/openoffice/trunk/main",
-				"https://issues.apache.org/ooo/xmlrpc.cgi", "General", "",
+				"https://issues.apache.org/ooo/xmlrpc.cgi", "General", "null",
 				"subversion.user", "news.gmane.org/gmane.comp.version-control.subversion.user", false, "", "");	
 		
 		Project ant = ProjectCreationUtil.createProjectSvnNntpBugzilla(
@@ -90,8 +90,8 @@ public class App implements IApplication {
 
 		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(openOffice);
 		
-		//TMP DEBUG
 		openOffice.getBugTrackingSystems().clear();
+		openOffice.getVcsRepositories().clear();
 		
 /*
 		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(subversive);
