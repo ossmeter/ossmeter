@@ -1,0 +1,21 @@
+package org.ossmeter.metricprovider.threads.model;
+
+@db(qualifiedCollectionNames="true")
+@customize
+class Threads {
+    val ArticleData[*] articles;
+}
+
+class ArticleData {
+   @searchable
+   attr String url_name;
+   @searchable
+   attr int articleNumber;
+   attr String articleId;
+   attr int threadId;
+   attr String date;
+   attr String from;
+   attr String subject;
+   attr String references;   
+}
+
