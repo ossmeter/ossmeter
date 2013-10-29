@@ -1,12 +1,20 @@
 package org.ossmeter.metricprovider.generic.numberofrequestsrepliesperday.model;
 
+// The visualisation doesn't work!
+@viz(target="gcharts", chart="line")
 class DailyNorr {
-	val DailyNewsgroupData[*] newsgroups;
+ @series(label="requests")
+	val DailyNewsgroupRequestsData[*] requests;
+ @series(label="replies")
+	val DailyNewsgroupRepliesData[*] replies;
 }
 
-class DailyNewsgroupData {
-   @searchable
-   attr int numberOfRequests;
-   attr int numberOfReplies;
+class DailyNewsgroupRequestsData {
+	@yaxis(title="Number of occurences")
+	attr int numberOfRequests;
 }
 
+class DailyNewsgroupRepliesData {
+	@yaxis(title="Number of occurences")
+	attr int numberOfReplies;
+}

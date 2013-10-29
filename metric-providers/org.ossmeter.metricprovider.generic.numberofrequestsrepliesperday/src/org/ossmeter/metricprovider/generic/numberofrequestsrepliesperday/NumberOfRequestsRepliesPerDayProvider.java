@@ -3,7 +3,8 @@ package org.ossmeter.metricprovider.generic.numberofrequestsrepliesperday;
 import java.util.Arrays;
 import java.util.List;
 
-import org.ossmeter.metricprovider.generic.numberofrequestsrepliesperday.model.DailyNewsgroupData;
+import org.ossmeter.metricprovider.generic.numberofrequestsrepliesperday.model.DailyNewsgroupRepliesData;
+import org.ossmeter.metricprovider.generic.numberofrequestsrepliesperday.model.DailyNewsgroupRequestsData;
 import org.ossmeter.metricprovider.generic.numberofrequestsrepliesperday.model.DailyNorr;
 import org.ossmeter.metricprovider.requestreplyclassification.RequestReplyClassificationMetricProvider;
 import org.ossmeter.metricprovider.requestreplyclassification.model.NewsgroupArticlesData;
@@ -62,10 +63,16 @@ public class NumberOfRequestsRepliesPerDayProvider  implements IHistoricalMetric
 									" ) should be either Request or Reply!");
 				}
 			}
-			DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
-			dailyNewsgroupData.setNumberOfRequests(requests);
-			dailyNewsgroupData.setNumberOfReplies(replies);
-			dailyNorr.getNewsgroups().add(dailyNewsgroupData);
+			DailyNewsgroupRequestsData dailyNewsgroupRequestsData = 
+					new DailyNewsgroupRequestsData();
+			dailyNewsgroupRequestsData.setNumberOfRequests(requests);
+			dailyNorr.getRequests().add(dailyNewsgroupRequestsData);
+
+			DailyNewsgroupRepliesData dailyNewsgroupRepliesData = 
+					new DailyNewsgroupRepliesData();
+			dailyNewsgroupRepliesData.setNumberOfReplies(replies);
+			dailyNorr.getReplies().add(dailyNewsgroupRepliesData);
+			
 		}
 		return dailyNorr;
 	}
@@ -87,12 +94,12 @@ public class NumberOfRequestsRepliesPerDayProvider  implements IHistoricalMetric
 
 	@Override
 	public String getShortIdentifier() {
-		return "nrrpd";
+		return "requestsreplies";
 	}
 
 	@Override
 	public String getFriendlyName() {
-		return "Number Of Requests Replies Per Day";
+		return "Requests and Replies Per Day";
 	}
 
 	@Override

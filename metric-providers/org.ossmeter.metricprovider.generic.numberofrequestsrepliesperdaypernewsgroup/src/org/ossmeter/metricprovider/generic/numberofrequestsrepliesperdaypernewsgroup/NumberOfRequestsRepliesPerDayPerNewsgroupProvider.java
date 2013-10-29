@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.ossmeter.metricprovider.generic.numberofrequestsrepliesperdaypernewsgroup.model.DailyNewsgroupData;
+import org.ossmeter.metricprovider.generic.numberofrequestsrepliesperdaypernewsgroup.model.DailyNewsgroupRepliesData;
+import org.ossmeter.metricprovider.generic.numberofrequestsrepliesperdaypernewsgroup.model.DailyNewsgroupRequestsData;
 import org.ossmeter.metricprovider.generic.numberofrequestsrepliesperdaypernewsgroup.model.DailyNorr;
 import org.ossmeter.metricprovider.requestreplyclassification.RequestReplyClassificationMetricProvider;
 import org.ossmeter.metricprovider.requestreplyclassification.model.NewsgroupArticlesData;
@@ -16,8 +17,8 @@ import org.ossmeter.platform.IHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.repository.model.CommunicationChannel;
-import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 
 import com.googlecode.pongo.runtime.Pongo;
 
@@ -76,17 +77,23 @@ public class NumberOfRequestsRepliesPerDayPerNewsgroupProvider implements IHisto
 			}
 		}
 		for (String newsgroupUrl: newsgroupUrls) {
-			DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
-			dailyNewsgroupData.setUrl_name(newsgroupUrl);
+			DailyNewsgroupRequestsData dailyNewsgroupRequestsData = 
+					new DailyNewsgroupRequestsData();
+			dailyNewsgroupRequestsData.setUrl_name(newsgroupUrl);
 			if (requests.containsKey(newsgroupUrl))
-				dailyNewsgroupData.setNumberOfRequests(requests.get(newsgroupUrl));
+				dailyNewsgroupRequestsData.setNumberOfRequests(requests.get(newsgroupUrl));
 			else
-				dailyNewsgroupData.setNumberOfRequests(0);
+				dailyNewsgroupRequestsData.setNumberOfRequests(0);
+			dailyNorr.getRequests().add(dailyNewsgroupRequestsData);
+			
+			DailyNewsgroupRepliesData dailyNewsgroupRepliesData = 
+					new DailyNewsgroupRepliesData();
+			dailyNewsgroupRepliesData.setUrl_name(newsgroupUrl);
 			if (replies.containsKey(newsgroupUrl))
-				dailyNewsgroupData.setNumberOfReplies(replies.get(newsgroupUrl));
+				dailyNewsgroupRepliesData.setNumberOfReplies(replies.get(newsgroupUrl));
 			else
-				dailyNewsgroupData.setNumberOfReplies(0);
-			dailyNorr.getNewsgroups().add(dailyNewsgroupData);
+				dailyNewsgroupRepliesData.setNumberOfReplies(0);
+			dailyNorr.getReplies().add(dailyNewsgroupRepliesData);
 		}
 		return dailyNorr;
 	}
@@ -113,7 +120,7 @@ public class NumberOfRequestsRepliesPerDayPerNewsgroupProvider implements IHisto
 
 	@Override
 	public String getFriendlyName() {
-		return "Number Of Requests and Replies Per Newsgroup";
+		return "Requests and Replies Per Newsgroup";
 	}
 
 	@Override

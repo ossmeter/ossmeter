@@ -9,23 +9,31 @@ import com.mongodb.BasicDBList;
 
 public class DailyNorr extends Pongo {
 	
-	protected List<DailyNewsgroupData> newsgroups = null;
+	protected List<DailyNewsgroupRequestsData> requests = null;
+	protected List<DailyNewsgroupRepliesData> replies = null;
 	
 	
 	public DailyNorr() { 
 		super();
-		dbObject.put("newsgroups", new BasicDBList());
+		dbObject.put("requests", new BasicDBList());
+		dbObject.put("replies", new BasicDBList());
 	}
 	
 	
 	
 	
 	
-	public List<DailyNewsgroupData> getNewsgroups() {
-		if (newsgroups == null) {
-			newsgroups = new PongoList<DailyNewsgroupData>(this, "newsgroups", true);
+	public List<DailyNewsgroupRequestsData> getRequests() {
+		if (requests == null) {
+			requests = new PongoList<DailyNewsgroupRequestsData>(this, "requests", true);
 		}
-		return newsgroups;
+		return requests;
+	}
+	public List<DailyNewsgroupRepliesData> getReplies() {
+		if (replies == null) {
+			replies = new PongoList<DailyNewsgroupRepliesData>(this, "replies", true);
+		}
+		return replies;
 	}
 	
 	
