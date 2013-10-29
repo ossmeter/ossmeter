@@ -105,4 +105,19 @@ public class Date {
 		
 		return dates.toArray(new Date[dates.size()]);
 	}
+	
+	public static long duration(Date earlier, Date later) {
+		
+		if (earlier.compareTo(later) > 0)
+			return duration(later, earlier);
+
+        Calendar earlierCalendar = Calendar.getInstance();
+        earlierCalendar.setTime(earlier.toJavaDate());
+
+        Calendar laterCalendar   = Calendar.getInstance();
+        laterCalendar.setTime(later.toJavaDate());
+
+        return laterCalendar.getTimeInMillis() - earlierCalendar.getTimeInMillis();
+	}
+	
 }
