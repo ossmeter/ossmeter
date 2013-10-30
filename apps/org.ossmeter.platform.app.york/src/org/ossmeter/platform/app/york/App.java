@@ -57,10 +57,10 @@ public class App implements IApplication {
 				"https://issues.apache.org/ooo/xmlrpc.cgi", "General", "null",
 				"openoffice.user", "news.gmane.org/gmane.comp.apache.openoffice.user", false, "", "");	
 		
-//		Project ant = ProjectCreationUtil.createProjectSvnNntpBugzilla(
-//				"Ant", "ant", "http://svn.apache.org/repos/asf/ant/core/trunk/",
-//				"https://issues.apache.org/bugzilla/xmlrpc.cgi", "Ant", "Core",
-//				"ant-user", "news.gmane.org/gmane.comp.jakarta.ant.user", false, "", "");
+		Project ant = ProjectCreationUtil.createProjectSvnNntpBugzilla(
+				"Ant", "ant", "http://svn.apache.org/repos/asf/ant/core/trunk/",
+				"https://issues.apache.org/bugzilla/xmlrpc.cgi", "Ant", "Core",
+				"ant-user", "news.gmane.org/gmane.comp.jakarta.ant.user", false, "", "");
 //		
 //		Project log4j = ProjectCreationUtil.createProjectSvnNntpBugzilla(
 //				"Log4J", "log4j", "http://svn.apache.org/repos/asf/logging/log4j/trunk",
@@ -90,19 +90,12 @@ public class App implements IApplication {
 //				"https://bugs.eclipse.org/bugs/xmlrpc.cgi", "Epsilon", "null",
 //				"epsilon", "news.eclipse.org/eclipse.epsilon", true, "exquisitus", "flinder1f7");
 
-		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(openOffice);
-		
-		openOffice.getBugTrackingSystems().clear();
-		openOffice.getVcsRepositories().clear();
-		
-/*
-		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(subversive);
-		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(tomcat);
-		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(log4j);
-		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(epsilon);
- 		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(openOffice);
+//		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(openOffice);
 		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(ant);
-*/
+		
+		openOffice.getCommunicationChannels().clear();
+		ant.getCommunicationChannels().clear();
+
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 		
 		// FEDORA
