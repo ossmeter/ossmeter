@@ -25,7 +25,7 @@ import com.j2bugzilla.base.BugzillaException;
 
 public class BugzillaManager implements IBugTrackingSystemManager<Bugzilla> {
 	
-	private final String BUG_QUERY_LIMIT = "10";
+	private final String BUG_QUERY_LIMIT = "20";
 	private final int COMMENT_QUERY__NO_BUGS_RETRIEVED_AT_ONCE = 10;
 
 	@Override
@@ -53,39 +53,26 @@ public class BugzillaManager implements IBugTrackingSystemManager<Bugzilla> {
 
 	private void getUpdatedBugsComments(Bugzilla bugzilla, BugTrackingSystemDelta delta, 
 			 BugzillaSession session, Date date) throws Exception {
-
 		SearchQuery[] searchQueries;
-		if (!bugzilla.getComponent().equals("null"))
-			searchQueries = new SearchQuery[4];
-		else
+		if (!bugzilla.getComponent().equals("null")) {
 			searchQueries = new SearchQuery[3];
+			searchQueries[2] = new SearchQuery(SearchLimiter.COMPONENT, bugzilla.getComponent());
+		}
+		else
+			searchQueries = new SearchQuery[2];
 		searchQueries[0] = new SearchQuery(SearchLimiter.PRODUCT, bugzilla.getProduct());
-		searchQueries[1] = new SearchQuery(SearchLimiter.LIMIT, BUG_QUERY_LIMIT);
-		if (!bugzilla.getComponent().equals("null"))
-			searchQueries[3] = new SearchQuery(SearchLimiter.COMPONENT, bugzilla.getComponent());
-		java.util.Date javaDate = date.toJavaDate();
-		int counter = 0;
-		boolean noBugsRetrieved = false;
-		while ((date.compareTo(javaDate)==0)&&(!noBugsRetrieved)) {
-			counter++;
-			searchQueries[2] = new SearchQuery( SearchLimiter.LAST_CHANGE_TIME, date.toJavaDate() );
-			List<Bug> bugs = session.getBugs(searchQueries);
-			System.err.println(counter + ". getComments:\t" + bugs.size() + " bugs retrieved");
-			if (bugs.size()>0) {
-				javaDate = session.getCreationTime(bugs.get(bugs.size()-1));
-				int startOffset = 0, endOffset;
-				while (startOffset < bugs.size()) {
-					if (startOffset + COMMENT_QUERY__NO_BUGS_RETRIEVED_AT_ONCE <= bugs.size())
-						endOffset = startOffset + COMMENT_QUERY__NO_BUGS_RETRIEVED_AT_ONCE;
-					else
-						endOffset = bugs.size();
-					List<Bug> bugsSlice = bugs.subList(startOffset, endOffset);
-					getComments(bugzilla, delta, session, bugsSlice, date);
-					startOffset += COMMENT_QUERY__NO_BUGS_RETRIEVED_AT_ONCE;
-				}
-			}
+		searchQueries[1] = new SearchQuery( SearchLimiter.LAST_CHANGE_TIME, date.toJavaDate());
+		List<Bug> bugs = session.getBugs(searchQueries);
+		System.err.println("getComments:\t" + bugs.size() + " bugs retrieved");
+		int startOffset = 0, endOffset;
+		while (startOffset < bugs.size()) {
+			if (startOffset + COMMENT_QUERY__NO_BUGS_RETRIEVED_AT_ONCE <= bugs.size())
+				endOffset = startOffset + COMMENT_QUERY__NO_BUGS_RETRIEVED_AT_ONCE;
 			else
-				noBugsRetrieved = true; 
+				endOffset = bugs.size();
+			List<Bug> bugsSlice = bugs.subList(startOffset, endOffset);
+			getComments(bugzilla, delta, session, bugsSlice, date);
+			startOffset += COMMENT_QUERY__NO_BUGS_RETRIEVED_AT_ONCE;
 		}
 	}
 	
