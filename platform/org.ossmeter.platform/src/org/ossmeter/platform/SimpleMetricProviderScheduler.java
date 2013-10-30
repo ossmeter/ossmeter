@@ -8,7 +8,9 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.ossmeter.platform.delta.ProjectDelta;
+import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.platform.logging.OssmeterLoggerFactory;
 import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.CommunicationChannel;
@@ -20,21 +22,31 @@ import org.ossmeter.repository.model.VcsRepository;
 
 public class SimpleMetricProviderScheduler {
 	
+	protected final OssmeterLogger logger;
 	protected Platform platform;
 	protected int interval = 2000;
 	
 	public SimpleMetricProviderScheduler(Platform platform) {
 		this.platform = platform;
+		logger = (OssmeterLogger) OssmeterLogger.getLogger("platform.scheduler");
+		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 	}
 	
 	public void setInterval(int interval) {
 		this.interval = interval;
 	}
 	
+	/**
+	 * @return The interval at which metric providers should be executed.
+	 */
 	public int getInterval() {
 		return interval;
 	}
 	
+	/**
+	 * Starts scheduling the metric providers for all projects in the DB.
+	 * @throws Exception
+	 */
 	public void run() throws Exception {
 //		TimerTask timerTask = new TimerTask() {
 //			
@@ -51,6 +63,12 @@ public class SimpleMetricProviderScheduler {
 //		new Timer().schedule(timerTask, 0, interval);
 	}
 	
+	/**
+	 * Orders transient metric providers to ensure that any dependencies are
+	 * executed first. TODO: Not actually implemented.
+	 * @param providers
+	 * @return
+	 */
 	protected List<ITransientMetricProvider> getOrderedTransientMetricProviders(List<IMetricProvider> providers) {
 		List<ITransientMetricProvider> transMPs = new ArrayList<ITransientMetricProvider>();
 		for (IMetricProvider provider : providers) {
@@ -61,6 +79,14 @@ public class SimpleMetricProviderScheduler {
 		return transMPs;
 	}
 	
+	/**
+	 * Applies the list of metric providers to the project. Applies each
+	 * metric provider daily from the last executed date (or the beginning
+	 * of time).
+	 * @param providers
+	 * @param project
+	 * @throws Exception
+	 */
 	protected void executeMetricProviders(List<IMetricProvider> providers, Project project) throws Exception {
 		
 		// 1. Calculate Project Delta
@@ -70,10 +96,6 @@ public class SimpleMetricProviderScheduler {
 			
 
 			for (VcsRepository repo : project.getVcsRepositories()) {
-				
-				
-				System.err.println("Rep " + repo);
-				
 				// This needs to be the day BEFORE the first day! (Hence the addDays(-1))
 				Date d = platform.getVcsManager().getDateForRevision(repo, platform.getVcsManager().getFirstRevision(repo)).addDays(-1);
 				if (lastExec.compareTo(d) < 0) {
@@ -96,23 +118,18 @@ public class SimpleMetricProviderScheduler {
 		}
 		
 		Date last = new Date(project.getLastExecuted());
-		
-		//DEBUG
-		last = new Date("20120909");
-		//END DEBUG
-		
-		
 		Date today = new Date();
-		
+
 		//DEBUG
-		today = new Date("20130912");
+		last = new Date("20120609");
+		today = new Date("20131014");
 		//END DEBUG
 		
 		Date[] dates = Date.range(last.addDays(1), today);
 		
-		
 		for (Date date : dates) {
-			System.out.println("\tDate: " + date + " (" + project.getName() + ")");
+			logger.info("Date: " + date + " (" + project.getName() + ")");
+			
 			ProjectDelta delta = new ProjectDelta(	project, 
 													date, 
 													platform.getVcsManager(), 
@@ -123,10 +140,14 @@ public class SimpleMetricProviderScheduler {
 			// 2. Execute transient MPs
 			for (ITransientMetricProvider provider : getOrderedTransientMetricProviders(providers)) {
 				if (provider.appliesTo(project) && !hasMetricProviderBeenExecutedForDate(project, provider, date)) {
-					System.out.println("\t'\tTMP: " + provider.getIdentifier());
+					logger.info("\tTMP: " + provider.getIdentifier());
 					provider.setMetricProviderContext(new MetricProviderContext(platform, new OssmeterLoggerFactory().makeNewLoggerInstance(provider.getIdentifier())));
 					addDependenciesToMetricProvider(provider);
-					provider.measure(project, delta, provider.adapt(platform.getMetricsRepository(project).getDb()));
+					try {
+						provider.measure(project, delta, provider.adapt(platform.getMetricsRepository(project).getDb()));
+					} catch (Exception e) {
+						logger.error("Metric provider '' threw an exception for project '' on date ''. Error message: \n" + e.getMessage());
+					}
 					
 					updateMetricProviderMetaData(project, provider, date, MetricProviderType.TRANSIENT);
 				}
@@ -136,10 +157,14 @@ public class SimpleMetricProviderScheduler {
 			MetricHistoryManager historyManager = new MetricHistoryManager(platform);
 			for (IMetricProvider  provider : providers) {
 				if (provider instanceof IHistoricalMetricProvider && provider.appliesTo(project) && !hasMetricProviderBeenExecutedForDate(project, provider, date)) {
-					System.out.println("\t'\tHMP: " + provider.getIdentifier());
+					logger.info("\t'\tHMP: " + provider.getIdentifier());
 					provider.setMetricProviderContext(new MetricProviderContext(platform, new OssmeterLoggerFactory().makeNewLoggerInstance(provider.getIdentifier())));
 					addDependenciesToMetricProvider(provider);
-					historyManager.store(project, date, (IHistoricalMetricProvider) provider);
+					try {
+						historyManager.store(project, date, (IHistoricalMetricProvider) provider);
+					} catch (Exception e) {
+						logger.error("Metric provider '' threw an exception for project '' on date ''. Error message: \n" + e.getMessage());
+					}
 					
 					updateMetricProviderMetaData(project, provider, date, MetricProviderType.HISTORIC);
 				}
@@ -150,6 +175,13 @@ public class SimpleMetricProviderScheduler {
 		platform.getProjectRepositoryManager().projectRepository.sync();
 	}
 	
+	/**
+	 * Does what the method name suggests.
+	 * @param project
+	 * @param provider
+	 * @param date
+	 * @return
+	 */
 	protected boolean hasMetricProviderBeenExecutedForDate(Project project, IMetricProvider provider, Date date) {
 		MetricProvider mp = getProjectModelMetricProvider(project, provider);
 		if (mp != null) {
@@ -163,6 +195,14 @@ public class SimpleMetricProviderScheduler {
 		return false;
 	}
 	
+	/**
+	 * Ensures that the project DB has the up-to-date information regarding
+	 * the date of last execution.
+	 * @param project
+	 * @param provider
+	 * @param date
+	 * @param type
+	 */
 	protected void updateMetricProviderMetaData(Project project, IMetricProvider provider, Date date, MetricProviderType type) {
 		// Update project MP meta-data
 		MetricProvider mp = getProjectModelMetricProvider(project, provider);
@@ -175,6 +215,12 @@ public class SimpleMetricProviderScheduler {
 		mp.setLastExecuted(date.toString()); 
 	}
 	
+	/**
+	 * 
+	 * @param project
+	 * @param iProvider
+	 * @return A MetricProvider (part of the Project DB) that matches the given IMetricProvider.
+	 */
 	protected MetricProvider getProjectModelMetricProvider(Project project, IMetricProvider iProvider) {
 		for (MetricProvider mp : project.getMetricProviderData()) {
 			if (mp.getMetricProviderId().equals(iProvider.getShortIdentifier())) {
@@ -184,6 +230,11 @@ public class SimpleMetricProviderScheduler {
 		return null;
 	}
 	
+	/**
+	 * Adds references to the dependencies of a metric provider so that they
+	 * can use their data for the calculations.
+	 * @param mp
+	 */
 	protected void addDependenciesToMetricProvider(IMetricProvider mp) {
 		if (mp.getIdentifiersOfUses() == null) return; 
 		
@@ -199,6 +250,11 @@ public class SimpleMetricProviderScheduler {
 		mp.setUses(uses);
 	}
 	
+	/**
+	 * Configure the location on disk where metrics can store data 
+	 * related to projects.
+	 * @param project
+	 */
 	protected void initialiseProjectLocalStorage (Project project) {
 		try{	
 			Path projectLocalStoragePath = Paths.get(platform.getLocalStorageHomeDirectory().toString(), project.getName());		
