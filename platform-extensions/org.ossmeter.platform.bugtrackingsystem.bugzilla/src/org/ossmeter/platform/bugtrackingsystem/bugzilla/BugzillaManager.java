@@ -63,7 +63,8 @@ public class BugzillaManager implements IBugTrackingSystemManager<Bugzilla> {
 		searchQueries[0] = new SearchQuery(SearchLimiter.PRODUCT, bugzilla.getProduct());
 		searchQueries[1] = new SearchQuery( SearchLimiter.LAST_CHANGE_TIME, date.toJavaDate());
 		List<Bug> bugs = session.getBugs(searchQueries);
-		System.err.println("getComments:\t" + bugs.size() + " bugs retrieved");
+	    if (bugs.size() > 0)
+	    	System.err.println("getComments:\t" + bugs.size() + " bugs retrieved");
 		int startOffset = 0, endOffset;
 		while (startOffset < bugs.size()) {
 			if (startOffset + COMMENT_QUERY__NO_BUGS_RETRIEVED_AT_ONCE <= bugs.size())
@@ -86,7 +87,8 @@ public class BugzillaManager implements IBugTrackingSystemManager<Bugzilla> {
 	    		bugIdBugMap.put(bug.getID(), bug);
 	    	}
 		    List<Comment> comments = session.getCommentsForBugIds(bugIds, date.toJavaDate());
-			System.err.println("getBugs for comments:\t" + comments.size() + " comments retrieved");
+		    if (comments.size() > 0)
+		    	System.err.println("getBugs for comments:\t" + comments.size() + " comments retrieved");
 			int storedItems = 0;
 			for (Comment comment: comments) {
 				if (date.compareTo(comment.getTimestamp())==0)  {
@@ -129,7 +131,8 @@ public class BugzillaManager implements IBugTrackingSystemManager<Bugzilla> {
 				List<Attachment> attachments = session.getAttachmentsforIdList(bugIdSlice);
 				for (Attachment attachment: attachments) 
 					storeAttachment(bugzilla, attachment, delta);
-				System.err.println(counter + ". getAttachments(): stored " + attachments.size() + " attachments");
+			    if (attachments.size() > 0)
+			    	System.err.println(counter + ". getAttachments(): stored " + attachments.size() + " attachments");
 				counter++;
 				startOffset += (5*COMMENT_QUERY__NO_BUGS_RETRIEVED_AT_ONCE);
 			}
@@ -156,7 +159,8 @@ public class BugzillaManager implements IBugTrackingSystemManager<Bugzilla> {
 			counter++;
 			searchQueries[2] = new SearchQuery( SearchLimiter.CREATION_TIME, javaDate );
 			List<Bug> retrievedBugs = session.getBugs(searchQueries);
-			System.err.println(counter + ". getBugs:\t" + retrievedBugs.size() + " bugs retrieved");
+		    if (retrievedBugs.size() > 0)
+		    	System.err.println(counter + ". getBugs:\t" + retrievedBugs.size() + " bugs retrieved");
 			for (Bug retrievedBug : retrievedBugs) {
 				if (date.compareTo(session.getCreationTime(retrievedBug)) == 0) {
 					storeBug(bugzilla, retrievedBug, delta.getNewBugs(), "delta.getNewBugs()", session);
