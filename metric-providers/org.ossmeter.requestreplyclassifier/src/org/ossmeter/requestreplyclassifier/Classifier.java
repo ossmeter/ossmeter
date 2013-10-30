@@ -18,6 +18,8 @@ import weka.core.converters.ConverterUtils.DataSource;
 
 public class Classifier {
 
+	private final int MAX_CHARACTERS_IN_WORD = 60;
+
 	List<ClassificationInstance> classificationInstanceList;
 	Map<String, String> classificationResults; 
 
@@ -64,8 +66,17 @@ public class Classifier {
 				e.printStackTrace();
 			}
 			for (int[] indexes : output) {
-				String sentence = xmlItem.getText().substring(indexes[2], indexes[3]);
-				List<GeniaToken> geniaTokens = geniatagger.getTagger().tagToTokens(sentence);
+				String cleanedSentence = "",
+					   sentence = xmlItem.getText().substring(indexes[2], indexes[3]);
+				String[] components = sentence.split("\\s+");
+				for (String component: components) {
+					if (component.length() < MAX_CHARACTERS_IN_WORD) {
+						if (cleanedSentence.length() > 0) cleanedSentence += " ";
+						cleanedSentence += component;
+					}
+				}
+				List<GeniaToken> geniaTokens = 
+						geniatagger.getTagger().tagToTokens(cleanedSentence);
 				featureGenerator.updateData(xmlItem.getComposedId(), geniaTokens);
 			}
 		}
