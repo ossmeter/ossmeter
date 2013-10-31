@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
@@ -13,8 +15,8 @@ import org.ossmeter.platform.delta.vcs.VcsChangeType;
 import org.ossmeter.platform.delta.vcs.VcsCommit;
 import org.ossmeter.platform.delta.vcs.VcsCommitItem;
 import org.ossmeter.platform.delta.vcs.VcsRepositoryDelta;
-import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 import org.ossmeter.repository.model.VcsRepository;
+import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 import org.tmatesoft.svn.core.SVNLogEntry;
 import org.tmatesoft.svn.core.SVNLogEntryPath;
 import org.tmatesoft.svn.core.SVNNodeKind;
@@ -54,34 +56,44 @@ public class SvnManager extends AbstractVcsManager {
 				commit.setMessage(svnLogEntry.getMessage());
 				commit.setRevision(svnLogEntry.getRevision() + "");
 				commit.setDelta(delta);
+				commit.setJavaDate(svnLogEntry.getDate());
 				delta.getCommits().add(commit);
 				
 				Map<String, SVNLogEntryPath> changedPaths = svnLogEntry.getChangedPaths();
 				for (String path : changedPaths.keySet()) {
 					SVNLogEntryPath svnLogEntryPath = changedPaths.get(path);
 
-					// FIXME: [12th Sept 2013] For epsilon, files are being assigned SVNNodeKind.UNKNOWN. Find out why.
-//					if (svnLogEntryPath.getKind() == SVNNodeKind.FILE) {
+//					String[] exts = {".cxx",".h",".hxx",".cpp",".cpp",".html"};
+					
+					System.err.println(path);
+					if (svnLogEntryPath.getKind() == SVNNodeKind.FILE) {
+						String[] blacklist = {".png",".jpg",".bmp",".zip",".jar",".gz",".tar"};
 						
-						VcsCommitItem commitItem = new VcsCommitItem();
-						commit.getItems().add(commitItem);
-						commitItem.setCommit(commit);
-						commitItem.setPath(path);
+						if (path.lastIndexOf(".") <= 0) continue;
+						String ext = path.substring(path.lastIndexOf("."), path.length());
+						System.err.println(ext + " in " + blacklist + " == " + !Arrays.asList(blacklist).contains(ext));
+						if (!Arrays.asList(blacklist).contains(ext)){
 						
-						if (svnLogEntryPath.getType() == 'A') {
-							commitItem.setChangeType(VcsChangeType.ADDED);
-						} else if (svnLogEntryPath.getType() == 'M') {
-							commitItem.setChangeType(VcsChangeType.UPDATED);
-						} else if (svnLogEntryPath.getType() == 'D') {
-							commitItem.setChangeType(VcsChangeType.DELETED);
-						} else if (svnLogEntryPath.getType() == 'R') {
-							commitItem.setChangeType(VcsChangeType.REPLACED);
-						} else {
-							System.err.println("Found unrecognised svn log entry type: " + svnLogEntryPath.getType());
-							commitItem.setChangeType(VcsChangeType.UNKNOWN);
+							VcsCommitItem commitItem = new VcsCommitItem();
+							commit.getItems().add(commitItem);
+							commitItem.setCommit(commit);
+							commitItem.setPath(path);
+							
+							if (svnLogEntryPath.getType() == 'A') {
+								commitItem.setChangeType(VcsChangeType.ADDED);
+							} else if (svnLogEntryPath.getType() == 'M') {
+								commitItem.setChangeType(VcsChangeType.UPDATED);
+							} else if (svnLogEntryPath.getType() == 'D') {
+								commitItem.setChangeType(VcsChangeType.DELETED);
+							} else if (svnLogEntryPath.getType() == 'R') {
+								commitItem.setChangeType(VcsChangeType.REPLACED);
+							} else {
+								System.err.println("Found unrecognised svn log entry type: " + svnLogEntryPath.getType());
+								commitItem.setChangeType(VcsChangeType.UNKNOWN);
+							}
 						}
 					}
-//				}
+				}
 			}
 //		}
 
@@ -102,6 +114,8 @@ public class SvnManager extends AbstractVcsManager {
 		//TODO: Think about adding a notion of a filter
 //		String mimeType = fileProperties.getStringValue(SVNProperty.MIME_TYPE);
      
+//		System.err.println("File being read from SVN: " + item.getPath());
+		
         StringBuffer sb = new StringBuffer();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(baos.toByteArray())));
 		String line;
@@ -164,7 +178,7 @@ public class SvnManager extends AbstractVcsManager {
 				break;
 			}
 		}
-		
+		System.out.println("SVN revisions: "+revs[0] + ", " + revs[1]);
 		return revs;
 	}
 
