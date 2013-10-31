@@ -1,9 +1,7 @@
 package org.ossmeter.metricprovider.trans.hourlycommits;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
 
 import org.ossmeter.metricprovider.trans.commits.CommitsTransientMetricProvider;
@@ -12,7 +10,6 @@ import org.ossmeter.metricprovider.trans.commits.model.Commits;
 import org.ossmeter.metricprovider.trans.commits.model.RepositoryData;
 import org.ossmeter.metricprovider.trans.hourlycommits.model.Hour;
 import org.ossmeter.metricprovider.trans.hourlycommits.model.HourlyCommits;
-import org.ossmeter.platform.Date;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.ITransientMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
@@ -97,14 +94,17 @@ public class HourlyCommitsMetricProvider implements ITransientMetricProvider<Hou
 				repos.add(rd);
 			}
 		}
-		
-		for (RepositoryData rd : repos) {
-			for (CommitData commit : rd.getCommits()){
-				String hourName = commit.getTime().split(":")[0];
-				
-				Hour hour = db.getHours().findOneByHour(hourName + ":00");
-				hour.setNumberOfCommits(hour.getNumberOfCommits()+1);
-				db.sync();
+		// QUICKFIX: needed because COmmitsTransientMetricPRovider wno't clear 
+		// old data if there are no vcs deltas that day and so this will count old data
+		if (delta.getVcsDelta().getRepoDeltas().size() >0) { 
+			for (RepositoryData rd : repos) {
+				for (CommitData commit : rd.getCommits()){
+					String hourName = commit.getTime().split(":")[0];
+					
+					Hour hour = db.getHours().findOneByHour(hourName + ":00");
+					hour.setNumberOfCommits(hour.getNumberOfCommits()+1);
+					db.sync();
+				}
 			}
 		}
 	}
