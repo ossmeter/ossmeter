@@ -10,3 +10,5 @@ Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.repository.model
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: org.ossmeter.metricprovider.trans.commits,
+ org.ossmeter.metricprovider.trans.commits.model

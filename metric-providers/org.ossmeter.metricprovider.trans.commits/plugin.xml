@@ -6,4 +6,11 @@
     <class name="org.ossmeter.metricprovider.trans.commits.model.RepositoryData"/>
     <class name="org.ossmeter.metricprovider.trans.commits.model.CommitData"/>
   </extension>
+  <extension
+        id="org.ossmeter.metricprovider.trans.commits.CommitsTransientMetricProvider"
+        point="org.ossmeter.platform.metricprovider">
+     <metricProvider
+           provider="org.ossmeter.metricprovider.trans.commits.CommitsTransientMetricProvider">
+     </metricProvider>
+  </extension>
 </plugin>
