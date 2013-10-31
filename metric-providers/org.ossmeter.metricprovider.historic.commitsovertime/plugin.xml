@@ -4,4 +4,11 @@
     <class name="org.ossmeter.metricprovider.historic.commitsovertime.model.CommitsOverTime"/>
     <class name="org.ossmeter.metricprovider.historic.commitsovertime.model.RepositoryData"/>
   </extension>
+  <extension
+        id="org.ossmeter.metricprovider.historic.commitsovertime.CommitsOverTimeHistoricMetricProvider"
+        point="org.ossmeter.platform.metricprovider">
+     <metricProvider
+           provider="org.ossmeter.metricprovider.historic.commitsovertime.CommitsOverTimeHistoricMetricProvider">
+     </metricProvider>
+  </extension>
 </plugin>
