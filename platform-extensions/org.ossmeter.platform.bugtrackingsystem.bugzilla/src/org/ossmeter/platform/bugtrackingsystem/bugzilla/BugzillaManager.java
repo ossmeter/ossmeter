@@ -45,7 +45,7 @@ public class BugzillaManager implements IBugTrackingSystemManager<Bugzilla> {
 		List<Bug> bugs = getBugs(bugzilla, delta, session, date);
 		// Get the comments of bugs that were started on date
 		getComments(bugzilla, delta, session, bugs, date);
-		// Get the comments that were started before date
+		// Get the comments of bugs that were started before date
 		getUpdatedBugsComments(bugzilla, delta, session, date);
 		getUpdatedBugsAttachments(bugzilla, delta, session);
 		return delta;
@@ -246,7 +246,7 @@ public class BugzillaManager implements IBugTrackingSystemManager<Bugzilla> {
 			bugzillaBug.setAssignedTo(session.getAssignedTo(bug));
 			bugzillaBug.setCategory(session.getCategory(bug));
 			bugzillaBug.setClassification(session.getClassification(bug));
-			bugzillaBug.setCloneOf(session.getCloneOf(bug));
+//			bugzillaBug.setCloneOf(session.getCloneOf(bug));
 			bugzillaBug.setCrm(session.getCrm(bug));
 			bugzillaBug.setDocType(session.getDocType(bug));
 			bugzillaBug.setDocumentationAction(session.getDocumentationAction(bug));
