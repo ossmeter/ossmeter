@@ -5,4 +5,10 @@
     <class name="org.ossmeter.metricprovider.trans.dailycommits.model.DailyCommits"/>
     <class name="org.ossmeter.metricprovider.trans.dailycommits.model.Day"/>
   </extension>
+<extension
+      point="org.ossmeter.platform.metricprovider">
+   <metricProvider
+         provider="org.ossmeter.metricprovider.trans.dailycommits.DailyCommitsMetricProvider">
+   </metricProvider>
+</extension>
 </plugin>
