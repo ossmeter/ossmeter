@@ -17,11 +17,13 @@ public class RepositoryData extends Pongo {
 		URL.setOwningType("org.ossmeter.metricprovider.trans.commits.model.RepositoryData");
 		REPOTYPE.setOwningType("org.ossmeter.metricprovider.trans.commits.model.RepositoryData");
 		REVISION.setOwningType("org.ossmeter.metricprovider.trans.commits.model.RepositoryData");
+		TOTALCOMMITS.setOwningType("org.ossmeter.metricprovider.trans.commits.model.RepositoryData");
 	}
 	
 	public static StringQueryProducer URL = new StringQueryProducer("url"); 
 	public static StringQueryProducer REPOTYPE = new StringQueryProducer("repoType"); 
 	public static StringQueryProducer REVISION = new StringQueryProducer("revision"); 
+	public static NumericalQueryProducer TOTALCOMMITS = new NumericalQueryProducer("totalCommits");
 	
 	
 	public String getUrl() {
@@ -48,6 +50,15 @@ public class RepositoryData extends Pongo {
 	
 	public RepositoryData setRevision(String revision) {
 		dbObject.put("revision", revision);
+		notifyChanged();
+		return this;
+	}
+	public int getTotalCommits() {
+		return parseInteger(dbObject.get("totalCommits")+"", 0);
+	}
+	
+	public RepositoryData setTotalCommits(int totalCommits) {
+		dbObject.put("totalCommits", totalCommits);
 		notifyChanged();
 		return this;
 	}

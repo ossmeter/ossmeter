@@ -28,9 +28,9 @@ public class Commits extends PongoDB {
 	@Override
 	public void setDb(DB db) {
 		super.setDb(db);
-		repositories = new RepositoryDataCollection(db.getCollection("repositories"));
+		repositories = new RepositoryDataCollection(db.getCollection("Commits.repositories"));
 		pongoCollections.add(repositories);
-		commits = new CommitDataCollection(db.getCollection("commits"));
+		commits = new CommitDataCollection(db.getCollection("Commits.commits"));
 		pongoCollections.add(commits);
 	}
 }

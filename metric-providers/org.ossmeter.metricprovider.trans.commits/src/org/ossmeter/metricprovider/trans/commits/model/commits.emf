@@ -1,6 +1,6 @@
 package org.ossmeter.metricprovider.trans.commits.model;
 
-@db(qualifiedCollectionName="true")
+@db(qualifiedCollectionNames="true")
 class Commits {
 	val RepositoryData[*] repositories;
 	val CommitData[*] commits;
@@ -11,6 +11,7 @@ class RepositoryData {
 	attr String url;
 	attr String repoType;
 	attr String revision;
+	attr int totalCommits;
 	ref CommitData[*] commits;
 }
 
