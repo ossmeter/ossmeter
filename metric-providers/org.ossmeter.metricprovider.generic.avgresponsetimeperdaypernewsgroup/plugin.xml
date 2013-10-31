@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<plugin>
+  
+
+<extension point="org.ossmeter.platform.metricprovider">
+   <metricProvider provider="org.ossmeter.metricprovider.generic.avgresponsetimeperdaypernewsgroup.AvgResponseTimePerDayPerNewsgroupProvider">
+   </metricProvider>
+</extension>
+<extension point="org.ossmeter.platform.client.api.pongoviz">
+   <visualiser metricProviderId="org.ossmeter.metricprovider.generic.avgresponsetimeperdaypernewsgroup" pongoVisualiser="org.ossmeter.metricprovider.generic.avgresponsetimeperdaypernewsgroup.model.DailyAverageThreadResponseTimeViz">
+   </visualiser>
+</extension>
+<extension point="com.googlecode.pongo.runtime.osgi">
+    <class name="org.ossmeter.metricprovider.generic.avgresponsetimeperdaypernewsgroup.model.DailyAverageThreadResponseTime"/>
+    <class name="org.ossmeter.metricprovider.generic.avgresponsetimeperdaypernewsgroup.model.DailyNewsgroupData"/>
+  </extension>
+</plugin>
