@@ -71,7 +71,7 @@ public class SvnManager extends AbstractVcsManager {
 						
 						if (path.lastIndexOf(".") <= 0) continue;
 						String ext = path.substring(path.lastIndexOf("."), path.length());
-						System.err.println(ext + " in " + blacklist + " == " + !Arrays.asList(blacklist).contains(ext));
+//						System.err.println(ext + " in " + blacklist + " == " + !Arrays.asList(blacklist).contains(ext));
 						if (!Arrays.asList(blacklist).contains(ext)){
 						
 							VcsCommitItem commitItem = new VcsCommitItem();
