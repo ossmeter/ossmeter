@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<plugin>
+  
+
+<extension point="com.googlecode.pongo.runtime.osgi">
+    <class name="org.ossmeter.metricprovider.trans.hourlycommits.model.HourlyCommits"/>
+    <class name="org.ossmeter.metricprovider.trans.hourlycommits.model.Hour"/>
+  </extension>
+</plugin>
