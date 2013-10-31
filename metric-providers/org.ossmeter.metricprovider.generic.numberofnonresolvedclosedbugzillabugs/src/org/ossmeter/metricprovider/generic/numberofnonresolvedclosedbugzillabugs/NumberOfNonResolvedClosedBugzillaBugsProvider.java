@@ -54,9 +54,11 @@ public class NumberOfNonResolvedClosedBugzillaBugsProvider implements IHistorica
 						 &&(!bugData.getStatus().toLowerCase().equals("closed")))
 					 numberOfNonResolvedClosedBugs++;
 			 }
-			 DailyBugzillaData dailyBugzillaData = new DailyBugzillaData();
-			 dailyBugzillaData.setNumberOfNonResolvedClosedBugs(numberOfNonResolvedClosedBugs);
-			 dailyNorcb.getBugzillas().add(dailyBugzillaData);
+			 if (numberOfNonResolvedClosedBugs > 0) {
+				 DailyBugzillaData dailyBugzillaData = new DailyBugzillaData();
+				 dailyBugzillaData.setNumberOfNonResolvedClosedBugs(numberOfNonResolvedClosedBugs);
+				 dailyNorcb.getBugzillas().add(dailyBugzillaData);
+			 }
 		}
 		return dailyNorcb;
 	}

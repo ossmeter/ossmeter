@@ -52,9 +52,11 @@ public class OverallDailyNumberOfBugzillaCommentsProvider implements IHistorical
 			 for (BugzillaData bugzilla: usedNobc.getBugzillas()) {
 				 numberOfBugzillaComments += bugzilla.getNumberOfComments();
 			 }
-			 DailyBugzillaData dailyBugzillaData = new DailyBugzillaData();
-			 dailyBugzillaData.setNumberOfComments(numberOfBugzillaComments);
-			 dailyNobc.getBugzillas().add(dailyBugzillaData);
+			 if (numberOfBugzillaComments > 0) {
+				 DailyBugzillaData dailyBugzillaData = new DailyBugzillaData();
+				 dailyBugzillaData.setNumberOfComments(numberOfBugzillaComments);
+				 dailyNobc.getBugzillas().add(dailyBugzillaData);
+			 }
 		}
 		return dailyNobc;
 	}

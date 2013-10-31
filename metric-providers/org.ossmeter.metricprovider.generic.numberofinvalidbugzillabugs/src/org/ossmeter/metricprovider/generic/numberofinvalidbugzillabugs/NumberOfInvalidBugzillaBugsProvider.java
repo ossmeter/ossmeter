@@ -54,9 +54,11 @@ public class NumberOfInvalidBugzillaBugsProvider implements IHistoricalMetricPro
 						||(bugData.getResolution().toLowerCase().equals("notabug")))
 					numberOfInvalidBugs++;
 				 }
-			DailyBugzillaData dailyBugzillaData = new DailyBugzillaData();
-			dailyBugzillaData.setNumberOfInvalidBugs(numberOfInvalidBugs);
-			dailyNoib.getBugzillas().add(dailyBugzillaData);
+			if (numberOfInvalidBugs > 0) {
+				DailyBugzillaData dailyBugzillaData = new DailyBugzillaData();
+				dailyBugzillaData.setNumberOfInvalidBugs(numberOfInvalidBugs);
+				dailyNoib.getBugzillas().add(dailyBugzillaData);
+			}
 		}
 		return dailyNoib;
 	}

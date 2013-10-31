@@ -54,9 +54,11 @@ public class NumberOfWontFixBugzillaBugsProvider implements IHistoricalMetricPro
 					 ||(bugData.getResolution().toLowerCase().equals("cantfix")))
 					 numberOfWontFixBugs++;
 			 }
-			 DailyBugzillaData dailyBugzillaData = new DailyBugzillaData();
-			 dailyBugzillaData.setNumberOfWontFixBugs(numberOfWontFixBugs);
-			 dailyNowfb.getBugzillas().add(dailyBugzillaData);
+			 if (numberOfWontFixBugs > 0) {
+				 DailyBugzillaData dailyBugzillaData = new DailyBugzillaData();
+				 dailyBugzillaData.setNumberOfWontFixBugs(numberOfWontFixBugs);
+				 dailyNowfb.getBugzillas().add(dailyBugzillaData);
+			 }
 		}
 		return dailyNowfb;
 	}

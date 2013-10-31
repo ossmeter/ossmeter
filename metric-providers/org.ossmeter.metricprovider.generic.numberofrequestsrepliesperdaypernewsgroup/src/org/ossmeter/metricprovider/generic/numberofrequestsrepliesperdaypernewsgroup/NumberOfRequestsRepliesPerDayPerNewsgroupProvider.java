@@ -77,23 +77,21 @@ public class NumberOfRequestsRepliesPerDayPerNewsgroupProvider implements IHisto
 			}
 		}
 		for (String newsgroupUrl: newsgroupUrls) {
-			DailyNewsgroupRequestsData dailyNewsgroupRequestsData = 
-					new DailyNewsgroupRequestsData();
-			dailyNewsgroupRequestsData.setUrl_name(newsgroupUrl);
-			if (requests.containsKey(newsgroupUrl))
+			if (requests.containsKey(newsgroupUrl)) {
+				DailyNewsgroupRequestsData dailyNewsgroupRequestsData = 
+						new DailyNewsgroupRequestsData();
+				dailyNewsgroupRequestsData.setUrl_name(newsgroupUrl);
 				dailyNewsgroupRequestsData.setNumberOfRequests(requests.get(newsgroupUrl));
-			else
-				dailyNewsgroupRequestsData.setNumberOfRequests(0);
-			dailyNorr.getRequests().add(dailyNewsgroupRequestsData);
+				dailyNorr.getRequests().add(dailyNewsgroupRequestsData);
+			}
 			
-			DailyNewsgroupRepliesData dailyNewsgroupRepliesData = 
-					new DailyNewsgroupRepliesData();
-			dailyNewsgroupRepliesData.setUrl_name(newsgroupUrl);
-			if (replies.containsKey(newsgroupUrl))
+			if (replies.containsKey(newsgroupUrl)) {
+				DailyNewsgroupRepliesData dailyNewsgroupRepliesData = 
+						new DailyNewsgroupRepliesData();
+				dailyNewsgroupRepliesData.setUrl_name(newsgroupUrl);
 				dailyNewsgroupRepliesData.setNumberOfReplies(replies.get(newsgroupUrl));
-			else
-				dailyNewsgroupRepliesData.setNumberOfReplies(0);
-			dailyNorr.getReplies().add(dailyNewsgroupRepliesData);
+				dailyNorr.getReplies().add(dailyNewsgroupRepliesData);
+			}
 		}
 		return dailyNorr;
 	}

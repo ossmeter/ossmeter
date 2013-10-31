@@ -53,9 +53,11 @@ public class NumberOfWorksForMeBugzillaBugsProvider implements IHistoricalMetric
 				 if (bugData.getResolution().toLowerCase().equals("worksforme"))
 					 numberOfWorksForMeBugs++;
 			 }
-			 DailyBugzillaData dailyBugzillaData = new DailyBugzillaData();
-			 dailyBugzillaData.setNumberOfWorksForMeBugs(numberOfWorksForMeBugs);
-			 dailyNowfmb.getBugzillas().add(dailyBugzillaData);
+			 if (numberOfWorksForMeBugs > 0) {
+				 DailyBugzillaData dailyBugzillaData = new DailyBugzillaData();
+				 dailyBugzillaData.setNumberOfWorksForMeBugs(numberOfWorksForMeBugs);
+				 dailyNowfmb.getBugzillas().add(dailyBugzillaData);
+			 }
 		}
 		return dailyNowfmb;
 	}

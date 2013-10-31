@@ -54,9 +54,11 @@ public class NumberOfResolvedClosedBugzillaBugsProvider implements IHistoricalMe
 						 (bugData.getStatus().toLowerCase().equals("closed")))
 					 numberOfResolvedClosedBugs++;
 			 }
-			 DailyBugzillaData dailyBugzillaData = new DailyBugzillaData();
-			 dailyBugzillaData.setNumberOfResolvedClosedBugs(numberOfResolvedClosedBugs);
-			 dailyNorcb.getBugzillas().add(dailyBugzillaData);
+			 if (numberOfResolvedClosedBugs > 0) {
+				 DailyBugzillaData dailyBugzillaData = new DailyBugzillaData();
+				 dailyBugzillaData.setNumberOfResolvedClosedBugs(numberOfResolvedClosedBugs);
+				 dailyNorcb.getBugzillas().add(dailyBugzillaData);
+			 }
 		}
 		return dailyNorcb;
 	}

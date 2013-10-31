@@ -50,10 +50,12 @@ public class NumberOfArticlesPerDayPerNewsgroupProvider implements IHistoricalMe
 		for (IMetricProvider used : uses) {
 			 Noa usedNoa = ((NoaMetricProvider)used).adapt(context.getProjectDB(project));
 			 for (NewsgroupData newsgroup: usedNoa.getNewsgroups()) {
-				 DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
-				 dailyNewsgroupData.setUrl_name(newsgroup.getUrl_name());
-				 dailyNewsgroupData.setNumberOfArticles(newsgroup.getNumberOfArticles());
-				 dailyNoa.getNewsgroups().add(dailyNewsgroupData);
+				 if (newsgroup.getNumberOfArticles() > 0) {
+					 DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
+					 dailyNewsgroupData.setUrl_name(newsgroup.getUrl_name());
+					 dailyNewsgroupData.setNumberOfArticles(newsgroup.getNumberOfArticles());
+					 dailyNoa.getNewsgroups().add(dailyNewsgroupData);
+				 }
 			 }
 		}
 		return dailyNoa;

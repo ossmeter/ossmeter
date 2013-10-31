@@ -63,15 +63,19 @@ public class NumberOfRequestsRepliesPerDayProvider  implements IHistoricalMetric
 									" ) should be either Request or Reply!");
 				}
 			}
-			DailyNewsgroupRequestsData dailyNewsgroupRequestsData = 
-					new DailyNewsgroupRequestsData();
-			dailyNewsgroupRequestsData.setNumberOfRequests(requests);
-			dailyNorr.getRequests().add(dailyNewsgroupRequestsData);
+			if (requests > 0) {
+				DailyNewsgroupRequestsData dailyNewsgroupRequestsData = 
+						new DailyNewsgroupRequestsData();
+				dailyNewsgroupRequestsData.setNumberOfRequests(requests);
+				dailyNorr.getRequests().add(dailyNewsgroupRequestsData);
+			}
 
-			DailyNewsgroupRepliesData dailyNewsgroupRepliesData = 
-					new DailyNewsgroupRepliesData();
-			dailyNewsgroupRepliesData.setNumberOfReplies(replies);
-			dailyNorr.getReplies().add(dailyNewsgroupRepliesData);
+			if (replies > 0) {
+				DailyNewsgroupRepliesData dailyNewsgroupRepliesData = 
+						new DailyNewsgroupRepliesData();
+				dailyNewsgroupRepliesData.setNumberOfReplies(replies);
+				dailyNorr.getReplies().add(dailyNewsgroupRepliesData);
+			}
 			
 		}
 		return dailyNorr;

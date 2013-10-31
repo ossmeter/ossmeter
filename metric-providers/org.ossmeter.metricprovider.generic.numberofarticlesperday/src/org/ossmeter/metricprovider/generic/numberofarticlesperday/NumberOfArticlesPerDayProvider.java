@@ -45,16 +45,18 @@ public class NumberOfArticlesPerDayProvider implements IHistoricalMetricProvider
 
 	@Override
 	public Pongo measure(Project project) {
-
+//20-06-2012
 		DailyNoa dailyNoa = new DailyNoa();
 		for (IMetricProvider used : uses) {
 			int articles = 0;
 			Noa usedNoa = ((NoaMetricProvider)used).adapt(context.getProjectDB(project));
 			for (NewsgroupData newsgroup: usedNoa.getNewsgroups()) 
 				articles += newsgroup.getNumberOfArticles();
-			DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
-			dailyNewsgroupData.setNumberOfArticles(articles);
-			dailyNoa.getNewsgroups().add(dailyNewsgroupData);
+			if (articles > 0) {
+				DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
+				dailyNewsgroupData.setNumberOfArticles(articles);
+				dailyNoa.getNewsgroups().add(dailyNewsgroupData);
+			}
 		}
 		return dailyNoa;
 	}

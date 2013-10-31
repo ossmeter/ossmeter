@@ -57,9 +57,11 @@ public class NumberOfFixedBugzillaBugsProvider implements IHistoricalMetricProvi
 					 ||(bugData.getResolution().toLowerCase().equals("rawhide")))
 					 numberOfFixedBugs++;
 			 }
-			 DailyBugzillaData dailyBugzillaData = new DailyBugzillaData();
-			 dailyBugzillaData.setNumberOfFixedBugs(numberOfFixedBugs);
-			 dailyNofb.getBugzillas().add(dailyBugzillaData);
+			 if (numberOfFixedBugs > 0) {
+				 DailyBugzillaData dailyBugzillaData = new DailyBugzillaData();
+				 dailyBugzillaData.setNumberOfFixedBugs(numberOfFixedBugs);
+				 dailyNofb.getBugzillas().add(dailyBugzillaData);
+			 }
 		}
 		return dailyNofb;
 	}

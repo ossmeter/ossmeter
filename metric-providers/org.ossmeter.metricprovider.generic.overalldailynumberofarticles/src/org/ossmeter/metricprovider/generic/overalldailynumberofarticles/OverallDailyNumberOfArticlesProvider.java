@@ -53,9 +53,11 @@ public class OverallDailyNumberOfArticlesProvider implements IHistoricalMetricPr
 			 for (NewsgroupData newsgroup: usedNoa.getNewsgroups()) {
 				 numberOfArticles += newsgroup.getNumberOfArticles();
 			 }
-			 DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
-			 dailyNewsgroupData.setNumberOfArticles(numberOfArticles);
-			 dailyNoa.getNewsgroups().add(dailyNewsgroupData);
+			 if (numberOfArticles > 0) {
+				 DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
+				 dailyNewsgroupData.setNumberOfArticles(numberOfArticles);
+				 dailyNoa.getNewsgroups().add(dailyNewsgroupData);
+			 }
 		}
 		return dailyNoa;
 	}

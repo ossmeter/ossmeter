@@ -52,9 +52,11 @@ public class NumberOfActiveUsersPerDayProvider implements IHistoricalMetricProvi
 			int activeUsers = 0;
 			for (NewsgroupData newsgroup: ActiveUsers.getNewsgroups())
 				activeUsers += newsgroup.getNumberOfActiveUsers();
-			DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
-			dailyNewsgroupData.setNumberOfActiveUsers(activeUsers);
-			dailyActiveUsers.getNewsgroups().add(dailyNewsgroupData);
+			if (activeUsers > 0) {
+				DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
+				dailyNewsgroupData.setNumberOfActiveUsers(activeUsers);
+				dailyActiveUsers.getNewsgroups().add(dailyNewsgroupData);
+			}
 		}
 		return dailyActiveUsers;
 	}

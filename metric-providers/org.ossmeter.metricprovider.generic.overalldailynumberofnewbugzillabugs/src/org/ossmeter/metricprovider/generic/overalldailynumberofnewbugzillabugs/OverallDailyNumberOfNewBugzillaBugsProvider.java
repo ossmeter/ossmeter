@@ -69,9 +69,11 @@ public class OverallDailyNumberOfNewBugzillaBugsProvider implements IHistoricalM
 			 for (BugzillaData bugzilla: usedNonbb.getBugzillas()) {
 				 numberOfNewBugzillaBugs += bugzilla.getNumberOfBugs();
 			 }
-			 DailyBugzillaData dailyBugzillaData = new DailyBugzillaData();
-			 dailyBugzillaData.setNumberOfBugs(numberOfNewBugzillaBugs);
-			 dailyNonbb.getBugzillas().add(dailyBugzillaData);
+			 if (numberOfNewBugzillaBugs > 0) {
+				 DailyBugzillaData dailyBugzillaData = new DailyBugzillaData();
+				 dailyBugzillaData.setNumberOfBugs(numberOfNewBugzillaBugs);
+				 dailyNonbb.getBugzillas().add(dailyBugzillaData);
+			 }
 		}
 		return dailyNonbb;
 	}

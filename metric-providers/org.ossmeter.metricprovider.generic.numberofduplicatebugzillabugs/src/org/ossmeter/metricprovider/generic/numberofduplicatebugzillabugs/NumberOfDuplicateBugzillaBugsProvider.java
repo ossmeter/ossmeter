@@ -53,9 +53,11 @@ public class NumberOfDuplicateBugzillaBugsProvider implements IHistoricalMetricP
 				 if (bugData.getResolution().toLowerCase().equals("duplicate"))
 					 numberOfDuplicateBugs++;
 			 }
-			 DailyBugzillaData dailyBugzillaData = new DailyBugzillaData();
-			 dailyBugzillaData.setNumberOfDuplicateBugs(numberOfDuplicateBugs);
-			 dailyNorcb.getBugzillas().add(dailyBugzillaData);
+			 if (numberOfDuplicateBugs > 0) {
+				 DailyBugzillaData dailyBugzillaData = new DailyBugzillaData();
+				 dailyBugzillaData.setNumberOfDuplicateBugs(numberOfDuplicateBugs);
+				 dailyNorcb.getBugzillas().add(dailyBugzillaData);
+			 }
 		}
 		return dailyNorcb;
 	}
