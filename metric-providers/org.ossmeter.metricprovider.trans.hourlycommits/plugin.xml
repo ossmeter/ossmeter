@@ -6,4 +6,10 @@
     <class name="org.ossmeter.metricprovider.trans.hourlycommits.model.HourlyCommits"/>
     <class name="org.ossmeter.metricprovider.trans.hourlycommits.model.Hour"/>
   </extension>
+<extension
+      point="org.ossmeter.platform.metricprovider">
+   <metricProvider
+         provider="org.ossmeter.metricprovider.trans.hourlycommits.HourlyCommitsMetricProvider">
+   </metricProvider>
+</extension>
 </plugin>
