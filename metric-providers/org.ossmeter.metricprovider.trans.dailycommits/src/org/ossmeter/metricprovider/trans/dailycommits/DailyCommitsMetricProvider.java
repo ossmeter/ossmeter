@@ -99,21 +99,25 @@ public class DailyCommitsMetricProvider implements ITransientMetricProvider<Dail
 			}
 		}
 		
-		for (RepositoryData rd : repos) {
-			for (CommitData commit : rd.getCommits()){
-				try {
-					Date date = new Date(commit.getDate());
-					Calendar cal = Calendar.getInstance();
-					cal.setTime(date.toJavaDate());
-					int dow = cal.get(Calendar.DAY_OF_WEEK);
-					
-					String dayName = daysOfWeek[dow];
-					
-					Day day = db.getDays().findOneByName(dayName);
-					day.setNumberOfCommits(day.getNumberOfCommits()+1);
-					db.sync();
-				} catch (ParseException e) {
-					e.printStackTrace();
+		// QUICKFIX: needed because COmmitsTransientMetricPRovider wno't clear 
+		// old data if there are no vcs deltas that day and so this will count old data
+		if (delta.getVcsDelta().getRepoDeltas().size() >0) { 
+			for (RepositoryData rd : repos) {
+				for (CommitData commit : rd.getCommits()){
+					try {
+						Date date = new Date(commit.getDate());
+						Calendar cal = Calendar.getInstance();
+						cal.setTime(date.toJavaDate());
+						int dow = cal.get(Calendar.DAY_OF_WEEK);
+						
+						String dayName = daysOfWeek[dow];
+						
+						Day day = db.getDays().findOneByName(dayName);
+						day.setNumberOfCommits(day.getNumberOfCommits()+1);
+						db.sync();
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
