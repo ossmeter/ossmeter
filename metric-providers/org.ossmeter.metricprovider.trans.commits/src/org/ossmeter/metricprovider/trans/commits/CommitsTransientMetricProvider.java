@@ -107,7 +107,7 @@ public class CommitsTransientMetricProvider  implements ITransientMetricProvider
 				db.getCommits().add(c);
 				rd.getCommits().add(c);
 			}
-			rd.setTotalCommits(rd.getTotalCommits() + rd.getCommits().size());
+			rd.setTotalCommits(rd.getTotalCommits() + vcsRepositoryDelta.getCommits().size());
 			db.sync();
 		}
 	}
