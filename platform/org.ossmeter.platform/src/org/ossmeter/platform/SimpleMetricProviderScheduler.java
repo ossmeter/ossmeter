@@ -169,11 +169,9 @@ public class SimpleMetricProviderScheduler {
 					updateMetricProviderMetaData(project, provider, date, MetricProviderType.HISTORIC);
 				}
 			}
-			project.setLastExecuted(today.toString());
+			project.setLastExecuted(date.toString());
 			platform.getProjectRepositoryManager().projectRepository.sync();
 		}
-		project.setLastExecuted(today.toString());
-		platform.getProjectRepositoryManager().projectRepository.sync();
 	}
 	
 	/**
