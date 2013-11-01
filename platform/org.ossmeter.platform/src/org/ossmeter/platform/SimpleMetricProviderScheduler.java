@@ -121,8 +121,8 @@ public class SimpleMetricProviderScheduler {
 		Date today = new Date();
 
 		//DEBUG
-		last = new Date("20120609");
-		today = new Date("20131014");
+//		last = new Date("20120609");
+//		today = new Date("20131014");
 		//END DEBUG
 		
 		Date[] dates = Date.range(last.addDays(1), today);
@@ -169,6 +169,7 @@ public class SimpleMetricProviderScheduler {
 					updateMetricProviderMetaData(project, provider, date, MetricProviderType.HISTORIC);
 				}
 			}
+			project.setLastExecuted(today.toString());
 			platform.getProjectRepositoryManager().projectRepository.sync();
 		}
 		project.setLastExecuted(today.toString());
@@ -213,6 +214,7 @@ public class SimpleMetricProviderScheduler {
 			mp.setType(type);
 		}
 		mp.setLastExecuted(date.toString()); 
+		platform.getProjectRepositoryManager().projectRepository.sync();
 	}
 	
 	/**
