@@ -65,7 +65,7 @@ public class SvnManager extends AbstractVcsManager {
 
 //					String[] exts = {".cxx",".h",".hxx",".cpp",".cpp",".html"};
 					
-					System.err.println(path);
+//					System.err.println(path);
 					if (svnLogEntryPath.getKind() == SVNNodeKind.FILE) {
 						String[] blacklist = {".png",".jpg",".bmp",".zip",".jar",".gz",".tar"};
 						
