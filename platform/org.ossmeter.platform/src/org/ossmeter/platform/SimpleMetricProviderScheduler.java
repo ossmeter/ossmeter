@@ -121,7 +121,8 @@ public class SimpleMetricProviderScheduler {
 		Date today = new Date();
 
 		//DEBUG
-//		last = new Date("20120609");
+//		if (project.getName().equals("Epsilon"))
+//			last = new Date("20130901");
 //		today = new Date("20131014");
 		//END DEBUG
 		

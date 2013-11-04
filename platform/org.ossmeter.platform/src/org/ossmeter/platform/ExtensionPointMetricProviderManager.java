@@ -31,7 +31,7 @@ public class ExtensionPointMetricProviderManager implements IMetricProviderManag
 			}
 			
 			// Load extension points via custom managers 
-			System.out.println("Custom Extension Point managers: ");
+			System.err.println("Custom Extension Point managers: ");
 			for(IConfigurationElement configurationElement : ExtensionPointHelper.getConfigurationElementsForExtensionPoint(metricProviderManagerExtensionPointId)){
 				try {
 					IMetricProviderManager impm = (IMetricProviderManager) configurationElement.createExecutableExtension("manager");
