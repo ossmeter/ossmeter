@@ -42,6 +42,7 @@ public class ProjectListResource extends ServerResource {
 				if (it.hasNext()) json+=",";
 			} catch (Exception e) {
 				System.err.println("Error: " + e.getMessage());
+				e.printStackTrace();
 				return Util.generateErrorMessage("list-all-projects", e.getMessage());
 			}			
 		}

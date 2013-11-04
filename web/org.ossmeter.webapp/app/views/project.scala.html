@@ -3,94 +3,185 @@
 @import org.ossmeter.repository.model.MetricProviderType
 @import org.ossmeter.repository.model.eclipse.EclipseProject
 
-@main(project.getName() + " | OSSMETER") {
+@main("OSSMETER", true) {
 
- 	<section id="projectheader" class="row">
- 		<div class="span8">
-			<!--img src="http://eclipse.org/epsilon/img/slideshow/images/epsilon.png" style="float:left; height:50px;"/--><h1>@project.getName()</h1>
+	<section class="row">
+		<div class="span6">
+			<h1>@project.getName()</h1>
 			<p>@project.getDescription()</p>
 		</div>
-	<!-- </section>
-	<section id="summary" style="border:1px solid #eee; padding:10px;font-size:10pt"> -->
-		<div class="span4">
-			<h3>Summary</h3>
-			<!--p>born: <span class="card-title">@project.getYear()</span></p>
-			<p>active: <span class="card-title">@if(!project.getActive()) { No } Yes</span></p-->
-		@if(project.isInstanceOf[EclipseProject]) {
-			<p><i class="icon-home"></i> <span class="card-title">Eclipse Foundation project</span></p>
-			<!--p>status: <span class="card-title">@project.asInstanceOf[EclipseProject].getStatus()</span></p-->
-			<p><i class="icon-user"></i> <span class="card-title">@project.asInstanceOf[EclipseProject].getCommitters().length committers</span></p>
-			<p class="url"><i class="icon-globe"></i> <a href="@project.asInstanceOf[EclipseProject].getHomePage()">Website</a></p>
-		}
+	</section>
+	<section>
+		<div class="row well lplot">
+			<div class="plotdescriptionbox span3">
+				<h3 id="plotname"></h3>
+				<p id="plotdesc"></p> <!-- This needs changing.. it should really use auto-binding. ?? -->
+			</div>
+			<div id="mainPlot" class="span9" data-bind="largeplot: plot">
+				<img src="@routes.Assets.at("images/loading.gif")"/>
+			</div>
+		</div>
+		<h2>Metrics</h2>
+		<div class="row">
+			<ul class="sparklist" data-bind="template: {name: 'spark-template', foreach: sparks, as: 'spark'}"/>
 		</div>
 	</section>
-	<section id="metrics">
-		<h3>Metrics</h3>
-		<i class="icon-th-large"></i> &nbsp;<i class="icon-th-list"></i>
-	</section>
+
+ 	<script type="text/html" id="spark-template">
+			<li data-bind="click: $parent.setMain">
+		    	<div style="float:left">
+		        	<span data-bind="sparkplot: $data" class="spark">
+		        		<img src="@routes.Assets.at("images/loading.gif")"/>
+		        	</span>
+			    </div>
+			    <div>
+			    	<span data-bind="text: abbreviateNumber(lastValue)" class="sparkValue"></span><br/>
+			    	<span data-bind="text: name" class="sparkName"></span>
+		        </div>
+		    </li>
+		</script>
+
+	<script src="@routes.Assets.at("javascripts/ossplots.js")"></script>
+	<script type="text/javascript">
+		function load() {
+			ko.bindingHandlers.largeplot = {
+				init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+				        // This will be called when the binding is first applied to an element
+				        // Set up any initial state, event handlers, etc. here
+				        $(element).html("<img src=\"@routes.Assets.at("images/loading.gif")\"/>");	
+				    },
+			    update: function(element, valueAccessor, allBindingsAccessor) {
+			        // First get the latest data that we're bound to
+			        var value = valueAccessor(), allBindings = allBindingsAccessor();
+			 
+			        // Next, whether or not the supplied model property is observable, get its current value
+			        var valueUnwrapped = ko.unwrap(value);
+
+			        if (valueUnwrapped.type === "loading") return;
+
+			        $("#plotname").text(valueUnwrapped.name);
+			        $("#plotdesc").text(valueUnwrapped.description);
+
+					$(element).html(""); // Clear
+
+			        var svg = dimple.newSvg(element, 700, 200);
+				    var chart = new dimple.chart(svg, valueUnwrapped.datatable);
+				    var x = chart.addCategoryAxis("x", valueUnwrapped.xtext);
+
+				    if (valueUnwrapped.isTimeSeries) {
+					    x.timeField = valueUnwrapped.xtext;
+					    x.dateParseFormat = "%Y%m%d";
+					    x.tickFormat = "%B %Y"
+					}
+				 	// x.timePeriod = d3.time.month;
+					// x.timeInterval = 1;
+				    x.addOrderRule(valueUnwrapped.orderRule);
 
 
-	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-		<script>
-		// Initialise 
-		google.load('visualization', '1.0', {'packages':['corechart']});
-		google.setOnLoadCallback(loadInitialMetrics);
+				    var y = chart.addMeasureAxis("y", valueUnwrapped.ytext);
+				    var ser = chart.addSeries(null, dimple.plot[valueUnwrapped.type]);
+				    chart.draw();
 
-		var data;
-		var containerId = 0;
-		function loadInitialMetrics() {
-			var mps = [@for(metric <- project.getMetricProviderData()) {@if(metric.getType().equals(MetricProviderType.HISTORIC)){ "@metric.getMetricProviderId()", }}];
-			// FIXME: This is here for debug only
-			// mps = ["totalloc","totalloc"]
-			for (mp in mps) {
-				createContainerAndLoadMetric(mps[mp]);
+				    // Color the axes
+				    x.shapes.selectAll("path, line").style("stroke", "#A0A0A0");
+				    x.shapes.selectAll("text").style("fill", "#A0A0A0");
+				    y.shapes.selectAll("path, line").style("stroke", "#A0A0A0");
+				    y.shapes.selectAll("text").style("fill", "#A0A0A0");
+				    y.titleShape.style("fill", "#A0A0A0");
+				    x.titleShape.style("fill", "#A0A0A0");
+			    }
+			};
+
+			ko.bindingHandlers.sparkplot = {
+				init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+				        // This will be called when the binding is first applied to an element
+				        // Set up any initial state, event handlers, etc. here
+				        $(element).html("<img src=\"@routes.Assets.at("images/loading.gif")\"/>");	
+				    },
+			    update: function(element, valueAccessor, allBindingsAccessor) {
+			        // First get the latest data that we're bound to
+			        var value = valueAccessor(), allBindings = allBindingsAccessor();
+			 
+			        // Next, whether or not the supplied model property is observable, get its current value
+			        var valueUnwrapped = ko.unwrap(value);
+
+			        if (valueUnwrapped.type === "loading") return;
+
+			        $(element).html(""); // clear		
+
+			        var svg = dimple.newSvg(element, 200, 30);
+				    var chart = new dimple.chart(svg, valueUnwrapped.datatable);
+				    var x = chart.addAxis("x", valueUnwrapped.xtext);
+				    x.addOrderRule(valueUnwrapped.orderRule);
+
+				    if (valueUnwrapped.type === "line") { // hide for line charts
+					    x.hidden = true;
+					} 
+				    chart.addMeasureAxis("y", valueUnwrapped.ytext).hidden=true;
+				    var ser = chart.addSeries(null, dimple.plot[valueUnwrapped.type]);
+				    // dimple.plot.line.enterEventHandler = function(){}; // remove the interactivity (HACK - find a better way)
+				    chart.draw();
+
+				    if (valueUnwrapped.type === "bar") { // color for bars
+						x.shapes.selectAll("path, line").style("stroke", "#A0A0A0");
+					}
+			    }
+			};
+
+			
+			var ViewModel = function(plot) {
+				this.plot = ko.observable(plot);
+				this.sparks = ko.observableArray();
+				this.addSpark = function(spark) {
+					this.sparks.push(spark);
+				};
+				this.setMain = function(spark) {
+					vm.plot(spark);
+				}
 			}
+			var vm = new ViewModel({type:"loading"});
+			ko.applyBindings(vm);
+
+			// Initial main class
+			$.get("http://localhost:8182/projects/p/@project.getShortName()/m/totalloc", function(data) {
+				var metric = JSON.parse(data);
+				vm.setMain(metric);
+			});
+
+			// Sparklines
+			$.get("http://localhost:8182/projects/p/@project.getShortName()/m/commitsovertime", function(data) {
+				var metric = JSON.parse(data);
+				vm.addSpark(metric);
+			});
+
+			$.get("http://localhost:8182/projects/p/@project.getShortName()/m/dailycommits", function(data) {
+				var metric = JSON.parse(data);
+				vm.addSpark(metric);
+			});
+
+			$.get("http://localhost:8182/projects/p/@project.getShortName()/m/hourlycommits", function(data) {
+				var metric = JSON.parse(data);
+				vm.addSpark(metric);
+			});
+
+			$.get("http://localhost:8182/projects/p/@project.getShortName()/m/totalloc", function(data) {
+				var metric = JSON.parse(data);
+				vm.addSpark(metric);
+			});
+
+			// $.get("http://localhost:8000/projects/p/@project.getName()/m/all", function(data) {
+			// 	var metrics = JSON.parse(data);
+
+			// 	for (m in metrics) {
+			// 		$.get("http://localhost:8000/projects/p/@project.getName()/m/"+metrics[m]+".dimple", function(data) {
+			// 			var metric = JSON.parse(data);
+			// 			vm.addSpark(metric);
+			// 		});
+			// 	}
+			// });	
 		}
+		load();
+	</script>
 
-		function createContainerAndLoadMetric(metricId) {
-			var contId = "metric-container-" + containerId;
-			containerId++;
-			$("#metrics").append('<article id="' + contId + '"class="metric-container row"><div class="span4"><h4 id="metric-'+contId+'-name"></h4><p id="metric-'+contId+'-summary"></p></div><div class="span8" id="'+contId+'-viz"><img src="@routes.Assets.at("images/loading.gif")"/></div></article>');
-
-			loadMetric(metricId, contId);
-		}
-
-		function loadMetric(metricId,contId) {
-				$.get("@project.getShortName()/m/"+metricId, 
-					function (data, textStatus, jqXHR) {
-						$("#metric-"+contId+"-name").text(data.friendlyName);
-						$("#metric-"+contId+"-summary").text(data.summary);
-
-						var options = data.options;
-						options.fontName = "Helvetica";
-						options.lineWidth = 2;
-						options.width = "90%";
-						options.height = 200;
-						options.legend = {position:"in", textStyle : {color : "#bbb"}};
-
-						options.hAxis.baselineColor = '#ccc';
-						options.hAxis.textStyle = {color : '#ccc'};
-						options.hAxis.gridlines = {color : '#fff'};
-						options.hAxis.titleTextStyle = {color : "#aaa"};
-
-						options.vAxis.baselineColor = '#ccc';
-						options.vAxis.textStyle = {color : '#ccc'};
-						options.vAxis.gridlines = {color : '#fff'};
-						options.vAxis.titleTextStyle = {color : "#aaa"};
-
-						// Create and draw chart wrapper
-						var wrapper = new google.visualization.ChartWrapper({
-						    chartType: data.chartType,
-						    dataTable: data.datatable,
-						    options: options,
-						    containerId: contId+"-viz"
-						});
-						wrapper.draw();
-
-					}, 
-					"json");
-		}
-
-	    </script>
 
 }

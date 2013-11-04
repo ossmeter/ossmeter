@@ -1,0 +1,246 @@
+@()
+
+@main("OSSMETER : Compare projects", true) {
+
+	<section class="row">
+		<div class="span12">
+			<h1>Compare Projects</h1>
+			<p>The OSSMETER platform will allow you to discover projects that meet your desired goals, and then compare them on the metrics that are most important to you. Perhaps one potential project that you might adopt is slow at fixing bugs, whereas an alternative project has an active community, who respond quickly to forum questions and fix bugs fast.</p>
+
+			<p>The table and plots below illustrate the kind of comparison that will be possible with the OSSMETER platform. Click on the table headings to display the selected metrics for each project in the large plot.</p>
+		</div>
+	</section>
+	<section>
+		<div class="row well lplot">
+			<p id="plotTitle"></p>
+			<div class="span12" style="height:300px">
+				<div id="compPlot">
+					<p>[ Click one of the table headers below to view plot ]</p>
+				</div>
+			</div>
+		</div>
+		<table id="comp" class="table">
+			    <thead>
+			        <tr>
+			        	<th><p>Project</p></th>
+			        	<!-- ko foreach: metrics -->
+					        <th><p data-bind="text: name, click: $parent.setPlotForMetric"></p></th>
+					    <!-- /ko -->
+			        </tr>
+			    </thead>
+			    <tbody data-bind="foreach: projects">
+			        <tr>
+			            <td><p data-bind="text: name"></p></td>
+		            	<!-- ko foreach: $parent.metrics --> <!-- vm.metrics -->
+			        	<td >
+			        		<span data-bind="sparkplot: { project: $parent, metric: $data} " class="spark"></span>
+			        	</td>
+			        	<!-- /ko -->
+			        </tr>
+			    </tbody>
+			</table>
+	</section>
+
+	<script src="@routes.Assets.at("javascripts/ossplots.js")"></script>
+ 	<script type="text/javascript">
+    		/*
+				Script to add column/row highlighting
+    		*/
+    		function addInteractivityToCompTable() {
+    			// Highlighting
+				$('table#comp th:not(:first-child)').hover(function() {
+					var t = parseInt($(this).index()) + 1;
+					$('table#comp td:nth-child('+t+')').addClass("highlighted");
+					$(this).addClass("highlighted");
+	    		},
+	    		function() {
+	    			var t = parseInt($(this).index()) + 1;
+	    			$('table#comp td:nth-child('+t+')').removeClass("highlighted");
+	    			$(this).removeClass("highlighted");
+	    		}); 
+
+	    		// SELECTING COLUMNS 
+	    		$('table#comp th:not(:first-child)').off('click'); // Remove any events
+	    		$('table#comp th:not(:first-child)').click(function() {
+	    			$('table#comp td').removeClass("selected");
+	    			$('table#comp tr').removeClass("selected");
+	    			$('table#comp th').removeClass("selected");
+					
+					var t = parseInt($(this).index()) + 1;
+	    			$(this).closest("th").addClass("selected");
+	    			$('table#comp td:nth-child('+t+')').addClass("selected");
+
+	    			plotMetric(t);
+	    		});	
+    		}	
+    		// Column index starts from 1
+    		function plotMetric(index){
+    			var metricId = vm.metrics()[index-2].id;
+
+    			var toPlot = {};
+    			toPlot.metricName = vm.metrics()[index-2].name;
+    			toPlot["data"] = new Array();
+
+    			$.each(vm.projects(), function(i, project) {
+    				$.each(project.metricsData, function(j, metric) {
+    					if (metric.id === metricId) {
+    						// Each entry needs a new field to state its series
+    						$.map(metric.datatable, function(m, k) {
+    							m["Project"] = project.name;
+    						});
+    						toPlot.xtext = metric.xtext;
+    						toPlot.ytext = metric.ytext;
+    						toPlot.type = metric.type;
+    						toPlot.orderRule = metric.orderRule;
+    						toPlot.isTimeSeries = metric.isTimeSeries;
+    						toPlot.data = toPlot.data.concat(metric.datatable);
+    					}
+    				});
+    			});
+    			plot(toPlot);
+    		}
+
+    		function plot(data) {
+		        $("#compPlot").html("");
+
+		        var svg = dimple.newSvg("#compPlot", "100%", "100%");
+			    var chart = new dimple.chart(svg, data.data);
+			    chart.setBounds(60,20,800,150);
+			    var x = chart.addCategoryAxis("x", data.xtext);
+
+				if (data.isTimeSeries) {
+				    x.timeField = data.xtext;
+				    x.dateParseFormat = "%Y%m%d";
+				    x.tickFormat = "%B %Y"
+				}
+
+			    // x.timePeriod = d3.time.day;
+				// x.timeInterval = 5;
+			    x.addOrderRule(data.orderRule);
+
+			    var y = chart.addMeasureAxis("y", data.ytext);
+			    var ser = chart.addSeries("Project", dimple.plot[data.type]);
+			    ser.lineMarkers = true;
+			    chart.addLegend(60, 5, 680, 10, "right");
+			    chart.draw();
+
+			    x.shapes.selectAll("path, line").style("stroke", "#A0A0A0");
+			    x.shapes.selectAll("text").style("fill", "#A0A0A0");
+			    y.shapes.selectAll("path, line").style("stroke", "#A0A0A0");
+			    y.shapes.selectAll("text").style("fill", "#A0A0A0");
+			    y.titleShape.style("fill", "#A0A0A0");
+			    x.titleShape.style("fill", "#A0A0A0");
+
+			    $("#plotTitle").text(data.metricName);
+    		}
+
+
+		</script>
+	<script type="text/javascript">
+
+		function load() {
+
+			ko.bindingHandlers.sparkplot = {
+				init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+				         $(element).html("<img src=\"assets/images/loading.gif\"/>");	
+				    },
+			    update: function(element, valueAccessor, allBindingsAccessor) {
+			        // First get the latest data that we're bound to
+			        var value = valueAccessor(), allBindings = allBindingsAccessor();
+			 		
+			 		// Extract info
+			        var project = value.project;
+			        var metric = value.metric;
+			        var url = project.shortName + "/m/" + metric.id; 
+					$(element).html("");// Clear
+
+					$.get("http://localhost:8182/projects/p/"+url, function(data) {
+						if (!('metricsData' in project)) {
+							project.metricsData = new Array();
+							project.findMetricById = function(metricId) {
+								var self = this;
+								for (m in self.metricsData){
+									if (self.metricsData[m].id === metricId) {
+										return self.metricsData[m];
+									}
+								}
+								return -1;
+							};
+						}
+						var data = JSON.parse(data);
+						if (project.findMetricById(metric.id) === -1) {
+							project.metricsData.push(data);	
+						}
+
+				        var svg = dimple.newSvg(element, 150, 30);
+
+					    var chart = new dimple.chart(svg, data.datatable);
+					    var x = chart.addAxis("x", data.xtext);
+					    x.addOrderRule(data.orderRule);
+
+						if (data.type === "line") { // hide for line charts
+						    x.hidden = true;
+						} 
+
+					    chart.addMeasureAxis("y", data.ytext).hidden=true;
+					    var ser = chart.addSeries(null, dimple.plot[data.type]);
+					    // dimple.plot.line.enterEventHandler = function(){}; // remove the interactivity (HACK - find a better way)
+					    chart.draw();
+
+					    if (data.type === "bar") { // color for bars
+							x.shapes.selectAll("path, line").style("stroke", "#A0A0A0");
+						}
+
+					    $(element).after("<span class=\"sparkValue\">" + abbreviateNumber(data.lastValue) + "</span>");
+					});
+			    }
+			};
+
+			var ComparisonViewModel = function() {
+				var self = this;
+				self.projects = ko.observableArray();
+				self.metrics = ko.observableArray();
+				self.plotMetrics = ko.observableArray();
+				self.addProject = function(project) {
+					self.projects.push(project);
+					addInteractivityToCompTable();
+				};
+				self.addMetric = function(metric) {
+					self.metrics.push(metric);
+					addInteractivityToCompTable();
+				};
+			}
+
+			var Metric = function(id, name, description) {
+				var self = this;
+				self.name = name;
+				self.id = id;
+				self.description = description;
+			}
+
+			vm = new ComparisonViewModel();
+			ko.applyBindings(vm);
+			
+			// Get all projects
+			$.get("http://localhost:8182/projects/p/log4j", function(data) {
+				var project = JSON.parse(data);
+				vm.addProject(project);
+			});
+
+			$.get("http://localhost:8182/projects/p/epsilon", function(data) {
+				var project = JSON.parse(data);
+				vm.addProject(project);
+			});
+
+			// Get all metrics
+			vm.addMetric(new Metric("totalloc", "Lines of code", "blah"));
+			vm.addMetric(new Metric("commitsovertime", "Commits", "blah"));
+			vm.addMetric(new Metric("dailycommits", "Daily commits", "blah"));
+			vm.addMetric(new Metric("hourlycommits", "Hourly commits", "blah"));
+		}
+
+		load();
+		addInteractivityToCompTable();
+	    </script>
+
+}

@@ -1,0 +1,12 @@
+@(projects: List[org.ossmeter.repository.model.Project])
+
+@main("OSSMETER Project List") {
+    <h1>OSSMETER</h1>
+    <h4>Automated Measurement and Analysis of Open Source Software</h4>
+    <ul>
+    @for(project <- projects) {
+    	<li><a href="@routes.Application.getProject(project.getShortName())">@project.getName()</a> (@project.getYear())
+    	<br/><small>@project.getDescription()</small></li>
+    }
+    </ul>
+}

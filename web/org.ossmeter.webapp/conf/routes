@@ -4,13 +4,15 @@
 
 # Home page
 GET     /                           	controllers.Application.index()
-GET		/projects						controllers.Application.projects(page: Integer ?= 1)
-GET		/projects/						controllers.Application.projects(page: Integer ?= 1)
-GET		/projects/all					controllers.Application.projects(page: Integer ?= -1)
-GET		/projects/:page					controllers.Application.projects(page : Integer)
-GET		/project/:name 					controllers.Application.getProject(name : String)
-GET		/project/:name/m/:id			controllers.Application.getMetric(name : String, id : String)
+GET		/projects						controllers.Application.projects()
+GET		/p/:name 						controllers.Application.getProject(name : String)
+GET		/p/:name/m/:id					controllers.Application.getMetric(name : String, id : String)
 GET		/search							controllers.Application.search()
+GET		/compare						controllers.Application.compare()
+GET		/about							controllers.Application.about()
+
+
+#GET		/p/:page						controllers.Application.projects(page : Integer)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               	controllers.Assets.at(path="/public", file)

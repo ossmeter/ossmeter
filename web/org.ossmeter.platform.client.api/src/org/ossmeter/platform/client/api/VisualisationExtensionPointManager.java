@@ -8,7 +8,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.ossmeter.platform.util.ExtensionPointHelper;
 
 import com.googlecode.pongo.runtime.viz.PongoViz;
-import com.mongodb.DBCollection;
+import com.mongodb.DB;
 
 /**
  * TODO: Make this more efficient. 
@@ -26,14 +26,16 @@ public class VisualisationExtensionPointManager {
 		return instance;
 	}
 
-	public List<PongoViz> getVisualisersForMetricProvider(String metricProviderId, DBCollection projectDb) {
+	public List<PongoViz> getVisualisersForMetricProvider(String metricProviderId, DB projectDb) {
 		List<PongoViz> vizs = new ArrayList<PongoViz>();
 		
+//		System.err.println("Registered visualisations (looking for '"+metricProviderId+"'):");
 		for(IConfigurationElement configurationElement : ExtensionPointHelper.getConfigurationElementsForExtensionPoint("org.ossmeter.platform.client.api.pongoviz")) {
+//			System.err.println("\t"+configurationElement.getAttribute("metricProviderId") + " == " + metricProviderId);
 			if (configurationElement.getAttribute("metricProviderId").equals(metricProviderId)) {
 				try {
 					PongoViz viz = (PongoViz) configurationElement.createExecutableExtension("pongoVisualiser");
-					viz.setProjectCollection(projectDb);
+					viz.setProjectDB(projectDb);
 					vizs.add(viz);
 				} catch (CoreException e) {
 					e.printStackTrace();

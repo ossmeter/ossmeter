@@ -8,9 +8,14 @@ import org.ossmeter.platform.Platform;
 import org.ossmeter.repository.model.MetricProvider;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectRepository;
+import org.restlet.data.Form;
 import org.restlet.data.Status;
+import org.restlet.engine.header.Header;
+import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
+import org.restlet.resource.Options;
 import org.restlet.resource.ServerResource;
+import org.restlet.util.Series;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
@@ -29,6 +34,22 @@ public class MetricsResource extends ServerResource {
 	 */
 	@Get
 	public String represent() {
+		Series<Header> responseHeaders = (Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers");
+		if (responseHeaders == null) {
+		    responseHeaders = new Series(Header.class);
+		    getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders);
+		}
+		responseHeaders.add(new Header("Access-Control-Allow-Origin", "*"));
+		responseHeaders.add(new Header("Access-Control-Allow-Methods", "GET"));
+		
+//		responseHeaders.add("Access-Control-Allow-Origin", "*");
+//	    responseHeaders.add("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");
+//	    responseHeaders.add("Access-Control-Allow-Headers", "Content-Type");
+//	    responseHeaders.add("Access-Control-Allow-Headers", "authCode");
+//	    responseHeaders.add("Access-Control-Allow-Headers", "origin, x-requested-with, content-type");
+	    
+		
+		
 		String projectName = (String) getRequest().getAttributes().get("name");
 		String metricName = (String) getRequest().getAttributes().get("metricId");
 		
@@ -60,9 +81,11 @@ public class MetricsResource extends ServerResource {
 		DB projectDB = platform.getMetricsRepository(project).getDb();
 		DBCollection collection = projectDB.getCollection(metricProvider.getIdentifier());
 		
-		List<PongoViz> vizs = VisualisationExtensionPointManager.getInstance().getVisualisersForMetricProvider(metricProvider.getIdentifier(), collection);
+		
+		
+		List<PongoViz> vizs = VisualisationExtensionPointManager.getInstance().getVisualisersForMetricProvider(metricProvider.getIdentifier(), projectDB);
 		for (PongoViz v : vizs) {
-			String vizString = v.getViz("gcharts"); // FIXME hardcoded.
+			String vizString = v.getViz("d3"); // FIXME hardcoded.
 			
 			ObjectMapper mapper = new ObjectMapper();
 			JsonFactory factory = mapper.getFactory();
@@ -84,6 +107,7 @@ public class MetricsResource extends ServerResource {
 		
 		return Util.generateErrorMessage(generateRequestJson(projectName, metricName), "No visualiser found.");
 	}
+	
 	
 	private String generateRequestJson(String projectName, String metricId) {
 		return "{\"project\" : \"" + projectName + "\", \"metricId\" : \"" + metricId + "\" }";

@@ -1,67 +1,81 @@
-@(title: String)(content: Html)
+@(title: String, showNav:Boolean)(content: Html)
 
 <!DOCTYPE html>
 
 <html>
     <head>
         <title>@title</title>
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
-        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
-		<link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/nav.css")" >
-		<link href="@routes.Assets.at("font-awesome/css/font-awesome.min.css")" rel="stylesheet" media="screen">
-		<link href="http://fonts.googleapis.com/css?family=Open+Sans:500,400,300" rel="stylesheet" type="text/css">
-        
-        
-        <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
+
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,300italic|Open+Sans:300italic,400italic,400,300' rel='stylesheet' type='text/css'>
+        <link href="http://fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet" type="text/css">
+
+        <link href="@routes.Assets.at("stylesheets/bootstrap.min.css")" type="text/css" rel="stylesheet"/>
+        <link href="@routes.Assets.at("stylesheets/nav.css")" type="text/css" rel="stylesheet"/>
+        <link href="@routes.Assets.at("stylesheets/styles.css")" type="text/css" rel="stylesheet"/>
+        <link href="@routes.Assets.at("stylesheets/plots.css")" type="text/css" rel="stylesheet"/>
+        <link href="@routes.Assets.at("font-awesome/css/font-awesome.min.css")" rel="stylesheet" media="screen">
+
+        <link rel="icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+
+        <script src="@routes.Assets.at("javascripts/jquery-1.9.1.js")"></script>
+        <script src="@routes.Assets.at("javascripts/bootstrap.min.js")"></script>
+        <script src="@routes.Assets.at("javascripts/knockout-2.3.0.js")"></script>
+        <script src="@routes.Assets.at("javascripts/d3.v3.min.js")"></script>
+        <script src="@routes.Assets.at("javascripts/dimple.v1.1.1.min.js")"></script>
+        <script type="text/javascript">
+          $(document).ready(function () {
+            $("a").tooltip({
+              'selector': '',
+              'placement': 'bottom'
+            });
+          });
+        </script>
     </head>
     <body>
-   <!--  <nav>
+  
+   <div class="navbar navbar-static-top">
+      <div class="navbar-inner">
+        <div class="container">
+          @if(showNav) {
+          <a class="brand" href="#"><img src="@routes.Assets.at("images/OSSMETER_ICON_300x300.png")" style="width:60px;" alt="OSSMETER" /></a>
+          }
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li class="active"><a href="http://localhost:9000"><i class="icon-home icon-white"></i> Home</a></li>
+              <li><a href="/projects">Projects</a></li>
+              <li><a href="/compare">Compare</a></li>
+              <li><a href="/about">About</a></li>
+            </ul>
+            <form class="navbar-search pull-right" action="">
+              <input type="text" class="search-query span2" placeholder="Search ">
+            </form>
+          </div><!-- /.nav-collapse -->
+        </div><!-- /.container -->
+      </div><!-- /.navbar-inner -->
+    </div><!-- /.navbar -->
+  
 
-    	    <div id="nav-logo" class="nav-region">
-                <img src="@routes.Assets.at("/images/OSSMETER_ICON_300x300.png")" style="width:60px;" alt="OSSMETER" />
-            </div>
-            <div id="nav-main" class="nav-region">
-                <ul>
-                    <li>
-                    	<a href=""><i class="icon-home"></i></a>
-                    	<ul class="nav-hover-list">
-                    		<li>Home</li>
-                    	</ul>
-                    </li>
-                    <li>
-                    	<a href=""><i class="icon-search"></i></a>
-                    	<ul class="nav-hover-list">
-                    		<li>Search</li>
-                    	</ul>
-                    </li>
-                    <li>
-                    	<a href=""><i class="icon-star"></i></a>
-                    	<ul class="nav-hover-list">
-                    		<li>Favourites</li>
-                    		<li>epsilon</li>
-                    		<li>super-awesome-fighter</li>
-                    	</ul>
-                    </li>
-                    <li>
-                    	<a href=""><i class="icon-info-sign"></i></a>
-                    	<ul class="nav-hover-list">
-                    		<li>About</li>
-                    	</ul>
-                    </li>
-                </ul>
-            </div>
-            <div id="nav-settings-panel" class="nav-region">
-                <ul>
-                    <li>
-                    	<a href=""><i class="icon-wrench"></i></a>
-						<ul class="nav-hover-list">
-                    		<li>Settings</li>
-                    	</ul>
-                    </li>
-                </ul>
-            </div>
-    	</nav> -->
+    <div class="inner">
         @content
+    </div>
+      <footer>
+      <div class="inner">
+        <p>OSSMETER is funded by the European Commission under the Seventh (FP7) Framework Programme for Research and Technological Development.</p>
+        <div class="row-fluid">
+          <div class="span6">
+            <p>Project details:<br/>
+            <strong>Grant agreement number:</strong> 318736<br/>
+            <strong>Project start date:</strong> 01/10/2012<br/>
+            <strong>Project duration:</strong> 30 months</p>
+          </div>
+          <div class="span6">
+            <p>Contact details:</strong> <br/>
+            <strong>Scott Hansen:</strong> s.hansen [at] opengroup [dot] org<br/>
+            <strong>Dimitris Kolovos:</strong> dimitris [dot] kolovos [at] york [dot] ac [dot] uk<br/>
+            <strong>Twitter:</strong> <a href="https://www.twitter.com/ossmeter">@@ossmeter</a></p>
+          </div>
+        </div>
+      </div>
+  </footer>
     </body>
 </html>

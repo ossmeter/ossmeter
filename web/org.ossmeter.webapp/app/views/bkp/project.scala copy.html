@@ -1,0 +1,96 @@
+@(project: org.ossmeter.repository.model.Project)
+
+@import org.ossmeter.repository.model.MetricProviderType
+@import org.ossmeter.repository.model.eclipse.EclipseProject
+
+@main(project.getName() + " | OSSMETER") {
+
+ 	<section id="projectheader" class="row">
+ 		<div class="span8">
+			<!--img src="http://eclipse.org/epsilon/img/slideshow/images/epsilon.png" style="float:left; height:50px;"/--><h1>@project.getName()</h1>
+			<p>@project.getDescription()</p>
+		</div>
+	<!-- </section>
+	<section id="summary" style="border:1px solid #eee; padding:10px;font-size:10pt"> -->
+		<div class="span4">
+			<h3>Summary</h3>
+			<!--p>born: <span class="card-title">@project.getYear()</span></p>
+			<p>active: <span class="card-title">@if(!project.getActive()) { No } Yes</span></p-->
+		@if(project.isInstanceOf[EclipseProject]) {
+			<p><i class="icon-home"></i> <span class="card-title">Eclipse Foundation project</span></p>
+			<!--p>status: <span class="card-title">@project.asInstanceOf[EclipseProject].getStatus()</span></p-->
+			<p><i class="icon-user"></i> <span class="card-title">@project.asInstanceOf[EclipseProject].getCommitters().length committers</span></p>
+			<p class="url"><i class="icon-globe"></i> <a href="@project.asInstanceOf[EclipseProject].getHomePage()">Website</a></p>
+		}
+		</div>
+	</section>
+	<section id="metrics">
+		<h3>Metrics</h3>
+		<i class="icon-th-large"></i> &nbsp;<i class="icon-th-list"></i>
+	</section>
+
+
+	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		<script>
+		// Initialise 
+		google.load('visualization', '1.0', {'packages':['corechart']});
+		google.setOnLoadCallback(loadInitialMetrics);
+
+		var data;
+		var containerId = 0;
+		function loadInitialMetrics() {
+			var mps = [@for(metric <- project.getMetricProviderData()) {}];
+			// FIXME: This is here for debug only
+			// mps = ["totalloc","totalloc"]
+			for (mp in mps) {
+				createContainerAndLoadMetric(mps[mp]);
+			}
+		}
+
+		function createContainerAndLoadMetric(metricId) {
+			var contId = "metric-container-" + containerId;
+			containerId++;
+			$("#metrics").append('<article id="' + contId + '"class="metric-container row"><div class="span4"><h4 id="metric-'+contId+'-name"></h4><p id="metric-'+contId+'-summary"></p></div><div class="span8" id="'+contId+'-viz"><img src="@routes.Assets.at("images/loading.gif")"/></div></article>');
+
+			loadMetric(metricId, contId);
+		}
+
+		function loadMetric(metricId,contId) {
+				$.get("@project.getShortName()/m/"+metricId, 
+					function (data, textStatus, jqXHR) {
+						$("#metric-"+contId+"-name").text(data.friendlyName);
+						$("#metric-"+contId+"-summary").text(data.summary);
+
+						var options = data.options;
+						options.fontName = "Helvetica";
+						options.lineWidth = 2;
+						options.width = "90%";
+						options.height = 200;
+						options.legend = {position:"in", textStyle : {color : "#bbb"}};
+
+						options.hAxis.baselineColor = '#ccc';
+						options.hAxis.textStyle = {color : '#ccc'};
+						options.hAxis.gridlines = {color : '#fff'};
+						options.hAxis.titleTextStyle = {color : "#aaa"};
+
+						options.vAxis.baselineColor = '#ccc';
+						options.vAxis.textStyle = {color : '#ccc'};
+						options.vAxis.gridlines = {color : '#fff'};
+						options.vAxis.titleTextStyle = {color : "#aaa"};
+
+						// Create and draw chart wrapper
+						var wrapper = new google.visualization.ChartWrapper({
+						    chartType: data.chartType,
+						    dataTable: data.datatable,
+						    options: options,
+						    containerId: contId+"-viz"
+						});
+						wrapper.draw();
+
+					}, 
+					"json");
+		}
+
+	    </script>
+
+}

@@ -1,12 +1,115 @@
-@(projects: List[org.ossmeter.repository.model.Project])
+@()
 
-@main("OSSMETER Project List") {
-    <h1>OSSMETER</h1>
-    <h4>Automated Measurement and Analysis of Open Source Software</h4>
-    <ul>
-    @for(project <- projects) {
-    	<li><a href="@routes.Application.getProject(project.getShortName())">@project.getName()</a> (@project.getYear())
-    	<br/><small>@project.getDescription()</small></li>
-    }
-    </ul>
+
+@main("OSSMETER", false) {
+
+	<header>
+		<!-- <div class="span6">Extending the state-of-the-art in the field of automated analysis and measurement of open-source software.</div> -->
+		<div class="row">
+			<div class="span12 center">
+				<img src="@routes.Assets.at("images/OSSMETER_large.jpg")" alt="OSSMETER logo" class="logo"/>	
+				<p class="lead">OSSMETER is an open-source platform for automatically analysing the source code, bug tracking systems, and communication channels of open source software projects. <!-- <br/>
+					<a href="#" data-toggle="tooltip" title="Project website"><i class="icon-globe"></i></a>&nbsp;&nbsp;
+					<a href="#" data-toggle="tooltip" title="Twitter: @@ossmeter"><i class="icon-retweet"></i></a>&nbsp;&nbsp;
+					<a href="#" data-toggle="tooltip" title="Mailing list"><i class="icon-envelope"></i></a> -->
+				</p>
+			</div>
+		</div>
+	</header>
+
+	<section class="row shout well">
+		<div class="span4">
+			<div class="row">
+				<div class="span1"><img src="@routes.Assets.at("images/ossbullet-1.png")" alt="1"/></div>
+				<div class="span3">
+					<!-- <h2><a href="#browseModal" role="button" data-toggle="modal">Browse</a></h2> -->
+					<h2>Browse</h2>
+					<p>Search through thousands of open-source software projects to discover those that suit your needs.</p>
+				</div>
+			</div>
+		</div>
+		<div class="span4">
+			<div class="row">
+				<div class="span1"><img src="@routes.Assets.at("images/ossbullet-2.png")" alt="2"/></div>
+				<div class="span3">
+					<h2>Compare</h2>
+					<p>Explore the differences between similar projects, comparing projects on the metrics that are important to you.</p>
+				</div>
+			</div>
+		</div>
+		<div class="span4">
+			<div class="row">
+				<div class="span1"><img src="@routes.Assets.at("images/ossbullet-3.png")" alt="3"/></div>
+				<div class="span3">
+					<h2>Adopt</h2>
+					<p>Select the project that best fits your requirements and start using it.</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section id="modals">
+		<div id="browseModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		  	<div class="modal-header">
+		    	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		    	<h3 id="myModalLabel">Browse Open Source Projects</h3>
+		  	</div>
+		  	<div class="modal-body">
+		    	<p>OSSMETER will allow you browse thousands of open-source software projects for those that can satisfy the needs of you and your organisation. </p>
+		  	</div>
+		  	<div class="modal-footer">
+		    	<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+		  	</div>
+		</div>
+	</section>
+
+	<section>
+		<h1>Featured Projects</h1>
+		<p>Take a look at some of the projects that have been analysed so far:</p>
+		<ul class="inline featured">
+			<li class="well well-light">
+					<img src="@routes.Assets.at("images/logos/epsilon.png")" class="project-list-icon"/>
+					<h3><a href="p/epsilon">Epsilon</a></h3>
+					<small>Epsilon is a family of languages and tools for code generation, model-to-model transformation ...</small>
+			</li>
+			<li class="well well-light">
+					<img src="@routes.Assets.at("images/logos/log4j.jpg")" class="project-list-icon"/>
+					<h3><a href="p/log4j">Apache Log4J</a></h3>
+					<small>Apache log4j is an Apache Software Foundation Project and developed by a dedicated team ...</small>
+			</li>
+			<li class="well well-light">
+					<img src="@routes.Assets.at("images/logos/tomcat.png")" class="project-list-icon"/>
+					<h3><a href="p/ant">Apache Tomcat</a></h3>
+					<small>Select the project that best fits your requirements and start using it.</small>
+			</li>
+			<li class="well well-light">
+					<img src="@routes.Assets.at("images/logos/ant.png")" class="project-list-icon"/>
+					<h3><a href="p/subversion">Apache ANT</a></h3>
+					<small>Select the project that best fits your requirements and start using it.</small>
+			</li>
+			<li class="well well-light">
+					<img src="@routes.Assets.at("images/logos/subversive.gif")" class="project-list-icon"/>
+					<h3><a href="p/epsilon">Subversive</a></h3>
+					<small>Select the project that best fits your requirements and start using it.</small>
+			</li>
+			<li class="well well-light">
+					<img src="@routes.Assets.at("images/osslogo-color-48.png")" class="project-list-icon"/>
+					<h3><a href="p/epsilon">Epsilon</a></h3>
+					<small>Select the project that best fits your requirements and start using it.</small>
+			</li>
+		</ul>
+	</section>
+
+    <h1>Want to find out more?</h1>
+	<section class="row-fluid spaced-row">	
+		<div class="span6">
+			<h2>Follow us on Twitter</h2>
+			<a href="https://twitter.com/ossmeter" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @@ossmeter</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+		</div>
+		<div class="span6">
+			<h2>Join our mailing list</h2>
+			<iframe src="https://docs.google.com/forms/d/1_HkFphKbVECvcvnUpxlUyMfoGM4cgGJux37Ajlw9lM0/viewform?embedded=true" width="350" height="200" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
+		</div>
+	</section>
 }

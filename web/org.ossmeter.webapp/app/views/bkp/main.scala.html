@@ -1,0 +1,67 @@
+@(title: String)(content: Html)
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>@title</title>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+		<link rel="stylesheet" type="text/css" href="@routes.Assets.at("stylesheets/nav.css")" >
+		<link href="@routes.Assets.at("font-awesome/css/font-awesome.min.css")" rel="stylesheet" media="screen">
+		<link href="http://fonts.googleapis.com/css?family=Open+Sans:500,400,300" rel="stylesheet" type="text/css">
+        
+        
+        <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
+    </head>
+    <body>
+   <!--  <nav>
+
+    	    <div id="nav-logo" class="nav-region">
+                <img src="@routes.Assets.at("/images/OSSMETER_ICON_300x300.png")" style="width:60px;" alt="OSSMETER" />
+            </div>
+            <div id="nav-main" class="nav-region">
+                <ul>
+                    <li>
+                    	<a href=""><i class="icon-home"></i></a>
+                    	<ul class="nav-hover-list">
+                    		<li>Home</li>
+                    	</ul>
+                    </li>
+                    <li>
+                    	<a href=""><i class="icon-search"></i></a>
+                    	<ul class="nav-hover-list">
+                    		<li>Search</li>
+                    	</ul>
+                    </li>
+                    <li>
+                    	<a href=""><i class="icon-star"></i></a>
+                    	<ul class="nav-hover-list">
+                    		<li>Favourites</li>
+                    		<li>epsilon</li>
+                    		<li>super-awesome-fighter</li>
+                    	</ul>
+                    </li>
+                    <li>
+                    	<a href=""><i class="icon-info-sign"></i></a>
+                    	<ul class="nav-hover-list">
+                    		<li>About</li>
+                    	</ul>
+                    </li>
+                </ul>
+            </div>
+            <div id="nav-settings-panel" class="nav-region">
+                <ul>
+                    <li>
+                    	<a href=""><i class="icon-wrench"></i></a>
+						<ul class="nav-hover-list">
+                    		<li>Settings</li>
+                    	</ul>
+                    </li>
+                </ul>
+            </div>
+    	</nav> -->
+        @content
+    </body>
+</html>

@@ -5,14 +5,24 @@ import org.ossmeter.platform.client.api.mixins.OssmeterMixins;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectRepository;
 import org.restlet.data.Status;
+import org.restlet.engine.header.Header;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
+import org.restlet.util.Series;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ProjectResource extends ServerResource {
 	@Get
-	public String represent() {
+	public String represent() {	
+		Series<Header> responseHeaders = (Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers");
+		if (responseHeaders == null) {
+		    responseHeaders = new Series(Header.class);
+		    getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders);
+		}
+		responseHeaders.add(new Header("Access-Control-Allow-Origin", "*"));
+		responseHeaders.add(new Header("Access-Control-Allow-Methods", "GET"));
+		
 		String projectName = (String) getRequest().getAttributes().get("name");
 		
 		Platform platform = Platform.getInstance();

@@ -18,56 +18,39 @@ import com.googlecode.pongo.runtime.PongoFactory;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 
+import org.ossmeter.repository.model.Project;
+
 public class Application extends Controller {
 
+	// static String apiUrl ="http://localhost:8000/p/";
+	static String apiUrl ="http://localhost:8182/projects/";	
+
 	public static Result index() {
-		return redirect(routes.Application.projects(1));
+		// return redirect(routes.Application.projects(1));
+		return ok(views.html.index.render());
 	}
 
-	public static Result projects(Integer page) {
-		String url ="http://localhost:8182/projects";
-		
-		if (page > 0) {
-			url += "/" + page;
-		}
-		
-		return async(WS.url(url).get()
-				.map(new Function<WS.Response, Result>() {
-					public Result apply(WS.Response response) {
-						List<Project> projects = new ArrayList<Project>();
-						JsonNode projectsJson = Json.parse(response.getBody());
-						
-						JsonNode projs = projectsJson.get("projects");
-						
-						for (JsonNode node : projectsJson.get("projects")) {
-							
-							try {
-								ObjectMapper mapper = new ObjectMapper();
-								Project p = mapper.readValue(node.toString(), Project.class);
-								projects.add(p);
-							} catch (Exception e) {
-								e.printStackTrace(); //FIXME: handle better
-								return internalServerError(e.getMessage());
-							}
-						}
-						
-						return ok(views.html.index.render(projects));
-					}
-				}));
+	public static Result projects() {
+		return ok(views.html.projectlist.render());
 	}
 	
 	public static Result getProject(String name) {
-		return async(WS.url("http://localhost:8182/projects/p/"+name).get()
+		System.err.println("Requesting: " + apiUrl+"p/"+name);
+		return async(WS.url(apiUrl+"p/"+name).get()
 				.map(new Function<WS.Response, Result>() {
 					public Result apply(WS.Response response) {
+						
+						System.err.println(response.getBody());
+
 						JsonNode projectJson = Json.parse(response.getBody());
 						
 						try {
+							// FIXME: this shouldn't depend on the platform...
 							Project project = (Project)PongoFactory.getInstance().createPongo((DBObject)JSON.parse(projectJson.toString()));
 							
-//							ObjectMapper mapper = new ObjectMapper();
-//							Project project = mapper.readValue(projectJson.toString(), Project.class);
-							return ok(views.html.project.render(project));
+							// ObjectMapper mapper = new ObjectMapper();
+							// Project project = mapper.readValue(projectJson.toString(), Project.class);
+							return ok(views.html.project.render(project));//Json.toString()));
 						} catch (Exception e) {
 							e.printStackTrace(); //FIXME: handle better
 							return internalServerError(e.getMessage());
@@ -77,8 +60,7 @@ public class Application extends Controller {
 	}
 
 	public static Result getMetric(String projectName, String id) {
-		String url = "http://localhost:8182/projects/p/"+projectName+"/m/"+id;
-		return async(WS.url(url).get()
+		return async(WS.url(apiUrl+"p/"+projectName+"/m/"+id).get()
 				.map(new Function<WS.Response, Result>() {
 					public Result apply(WS.Response response) {
 						//TODO: check for error message.
@@ -86,6 +68,14 @@ public class Application extends Controller {
 						return ok(result);
 					}
 				}));
+	}
+
+	public static Result compare() {
+		return ok(views.html.compare.render());
+	}
+
+	public static Result about() {
+		return ok(views.html.about.render());
 	}
 
 	public static Result search() {
