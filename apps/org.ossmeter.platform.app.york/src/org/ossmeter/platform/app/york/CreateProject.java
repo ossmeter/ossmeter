@@ -70,22 +70,22 @@ public class CreateProject {
 			dk.setHomePage("http://www-users.cs.york.ac.uk/~dkolovos/");
 //			platform.getProjectRepositoryManager().getProjectRepository().getPersons().add(dk);
 			p.getPersons().add(dk);
-			p.getCommitters().add(dk);
-			p.getLeaders().add(dk);
+//			p.getCommitters().add(dk);
+//			p.getLeaders().add(dk);
 			
 			Person lr = new Person();
 			lr.setName("Louis Rose");
 			lr.setHomePage("http://www-users.cs.york.ac.uk/~louis/");
 //			platform.getProjectRepositoryManager().getProjectRepository().getPersons().add(lr);
 			p.getPersons().add(lr);
-			p.getCommitters().add(lr);
+//			p.getCommitters().add(lr);
 			
 			Person ag = new Person();
 			ag.setName("Antonio Garcia Dominguez");
 			ag.setHomePage("http://neptuno.uca.es/~agarcia/");
 //			platform.getProjectRepositoryManager().getProjectRepository().getPersons().add(ag);
 			p.getPersons().add(ag);
-			p.getCommitters().add(ag);
+//			p.getCommitters().add(ag);
 			
 //			FIXME: Attempted to create DBRef for non-referenceable object org.ossmeter.repository.model.eclipseforge.EclipsePlatform@611c1cdf
 //			p.getPlatforms().add((EclipsePlatform)new EclipsePlatform().setName("Ganymede"));

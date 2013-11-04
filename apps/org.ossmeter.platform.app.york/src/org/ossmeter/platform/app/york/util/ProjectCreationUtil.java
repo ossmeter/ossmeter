@@ -13,10 +13,11 @@ import org.ossmeter.repository.model.vcs.svn.SvnRepository;
  */
 public class ProjectCreationUtil {
 
-	public static Project createProjectSvnNntpBugzilla(String name, String shortname, String svnUrl, String bugzillaUrl, String bugzillaProduct, String bugzillaComponent, String nntpName, String nntpUrl, boolean nntpAuth, String usr, String pwd) {
+	public static Project createProjectSvnNntpBugzilla(String name, String shortname, String description, String svnUrl, String bugzillaUrl, String bugzillaProduct, String bugzillaComponent, String nntpName, String nntpUrl, boolean nntpAuth, String usr, String pwd) {
 		Project project = new Project();
 		project.setName(name);
 		project.setShortName(shortname);
+		project.setDescription(description);
 		
 		SvnRepository svn = new SvnRepository();
 		svn.setUrl(svnUrl);

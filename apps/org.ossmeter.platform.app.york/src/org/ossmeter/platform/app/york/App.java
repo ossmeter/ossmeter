@@ -13,9 +13,6 @@ import org.ossmeter.platform.delta.communicationchannel.PlatformCommunicationCha
 import org.ossmeter.platform.delta.vcs.ExtensionPointVcsManager;
 import org.ossmeter.platform.delta.vcs.PlatformVcsManager;
 import org.ossmeter.repository.model.Project;
-import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
-import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
-import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 
 import com.googlecode.pongo.runtime.PongoFactory;
 import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
@@ -50,6 +47,7 @@ public class App implements IApplication {
 //		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(skim);
 //		Project epsilon = ProjectCreationUtil.createProjectWithNewsGroup("epsilon", "news.eclipse.org", "eclipse.epsilon", true, "exquisitus", "flinder1f7", 80, 10000);
 //		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(epsilon);
+
 //		platform.getProjectRepositoryManager().getProjectRepository().sync();
 
 		Project openOffice = ProjectCreationUtil.createProjectSvnNntpBugzilla(
@@ -61,11 +59,11 @@ public class App implements IApplication {
 				"Ant", "ant", "http://svn.apache.org/repos/asf/ant/core/trunk/",
 				"https://issues.apache.org/bugzilla/xmlrpc.cgi", "Ant", "Core",
 				"ant-user", "news.gmane.org/gmane.comp.jakarta.ant.user", false, "", "");
-//		
-//		Project log4j = ProjectCreationUtil.createProjectSvnNntpBugzilla(
-//				"Log4J", "log4j", "http://svn.apache.org/repos/asf/logging/log4j/trunk",
-//				"https://issues.apache.org/bugzilla/xmlrpc.cgi", "Log4j", "null", 
-//				"ant-user", "news.gmane.org/gmane.comp.jakarta.log4j.user", false, "", "");
+		
+		Project log4j = ProjectCreationUtil.createProjectSvnNntpBugzilla(
+				"Log4J", "log4j", "http://svn.apache.org/repos/asf/logging/log4j/trunk",
+				"https://issues.apache.org/bugzilla/xmlrpc.cgi", "Log4j", "null", 
+				"ant-user", "news.gmane.org/gmane.comp.jakarta.log4j.user", false, "", "");
 //		
 //		Project tomcat = ProjectCreationUtil.createProjectSvnNntpBugzilla(
 //				"Tomcat", "tomcat", "http://svn.apache.org/repos/asf/tomcat/trunk/",
@@ -85,28 +83,17 @@ public class App implements IApplication {
 //				"https://bugs.eclipse.org/bugs/xmlrpc.cgi", "Subversive", "null",
 //				"subversion.user", "news.eclipse.org/eclipse.technology.subversive", true, "exquisitus", "flinder1f7");
 //
-//		Project epsilon = ProjectCreationUtil.createProjectSvnNntpBugzilla(
-//				"Epsilon", "epsilon", "http://dev.eclipse.org/svnroot/modeling/org.eclipse.epsilon/trunk",
-//				"https://bugs.eclipse.org/bugs/xmlrpc.cgi", "Epsilon", "null",
-//				"epsilon", "news.eclipse.org/eclipse.epsilon", true, "exquisitus", "flinder1f7");
+		Project epsilon = ProjectCreationUtil.createProjectSvnNntpBugzilla(
+				"Epsilon", "epsilon", "http://dev.eclipse.org/svnroot/modeling/org.eclipse.epsilon/trunk",
+				"https://bugs.eclipse.org/bugs/xmlrpc.cgi", "Epsilon", "null",
+				"epsilon", "news.eclipse.org/eclipse.epsilon", true, "exquisitus", "flinder1f7");
 
-//		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(openOffice);
-		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(ant);
-		
-		openOffice.getCommunicationChannels().clear();
-		ant.getCommunicationChannels().clear();
+//		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(epsilon);
+//		epsilon.getBugTrackingSystems().clear(); // TODO: Bugzilla connection too slow.
+//		epsilon.getCommunicationChannels().clear();
+//		
+//		platform.getProjectRepositoryManager().getProjectRepository().sync();
 
-		platform.getProjectRepositoryManager().getProjectRepository().sync();
-		
-		// FEDORA
-		// GIT: https://github.com/fcrepo/fcrepo.git
-		// Bugzilla: https://bugzilla.redhat.com/xmlrpc.cgi (product = Fedora)
-		// NNTP: ???
-		
-		// Eclipse platform
-		// GIT: git.eclipse.org/gitroot/platform/eclipse.platform.git
-		// Bugzilla: https://bugs.eclipse.org/bugs/describecomponents.cgi?product=Platform
-		
 		platform.run();
 		
 //		while (true) {
