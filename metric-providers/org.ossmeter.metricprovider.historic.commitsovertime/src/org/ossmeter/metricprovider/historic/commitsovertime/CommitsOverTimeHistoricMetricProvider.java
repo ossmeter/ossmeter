@@ -28,12 +28,12 @@ public class CommitsOverTimeHistoricMetricProvider implements
 
 	@Override
 	public String getShortIdentifier() {
-		return "Commits over time";
+		return "commitsovertime";
 	}
 
 	@Override
 	public String getFriendlyName() {
-		return "commitsovertime";
+		return "Commits over time";
 	}
 
 	@Override

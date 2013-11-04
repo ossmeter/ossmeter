@@ -11,4 +11,11 @@
          provider="org.ossmeter.metricprovider.trans.dailycommits.DailyCommitsMetricProvider">
    </metricProvider>
 </extension>
+<extension
+      point="org.ossmeter.platform.client.api.pongoviz">
+   <visualiser
+         metricProviderId="org.ossmeter.metricprovider.trans.dailycommits.DailyCommitsMetricProvider"
+         pongoVisualiser="org.ossmeter.metricprovider.trans.dailycommits.model.DailyCommitsViz">
+   </visualiser>
+</extension>
 </plugin>

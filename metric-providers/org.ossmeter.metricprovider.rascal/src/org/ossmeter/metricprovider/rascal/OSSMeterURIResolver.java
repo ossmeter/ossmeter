@@ -33,7 +33,7 @@ public class OSSMeterURIResolver implements IURIInputOutputResolver{
 		return new FileInputStream(getFile(uri));
 	}
 
-	@Override
+//	@Override
 	public Charset getCharset(URI uri) throws IOException {
 		return null;
 	}

@@ -8,6 +8,7 @@ Require-Bundle: org.eclipse.core.runtime,
  com.googlecode.pongo.runtime,
  org.ossmeter.platform,
  org.ossmeter.repository.model,
- org.ossmeter.metricprovider.trans.commits
+ org.ossmeter.metricprovider.trans.commits,
+ org.ossmeter.platform.client.api
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

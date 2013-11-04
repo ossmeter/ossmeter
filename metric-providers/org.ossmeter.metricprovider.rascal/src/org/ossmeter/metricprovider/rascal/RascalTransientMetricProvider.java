@@ -55,7 +55,7 @@ public class RascalTransientMetricProvider implements ITransientMetricProvider<R
 		eval.getResolverRegistry().registerInputOutput(ossmStore);
 		eval.addRascalSearchPathContributor(new URIContributor(URIUtil.rootScheme("metrics")));
 		eval.addRascalSearchPathContributor(StandardLibraryContributor.getInstance());
-		eval.addRascalSearchPath(URIUtil.assumeCorrect("file:///Users/shahi/Documents/CWI/OSSMeter/Software/Software/source/metric-providers/org.ossmeter.metricprovider.rascal.examples/modules/"));
+		eval.addRascalSearchPath(URIUtil.assumeCorrect("file:///Users/jimmy/Documents/Projects/ossmeter/code/head/metric-providers/org.ossmeter.metricprovider.rascal.examples/modules/"));
 		return eval;
 	}
 
