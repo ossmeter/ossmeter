@@ -23,7 +23,16 @@
 		</div>
 		<h2>Metrics</h2>
 		<div class="row">
-			<ul class="sparklist" data-bind="template: {name: 'spark-template', foreach: sparks, as: 'spark'}"/>
+			<h3>Source Code</h3>
+			<ul class="sparklist" data-bind="template: {name: 'spark-template', foreach: codeSparks, as: 'spark'}"></ul>
+		</div>
+		<div class="row">
+			<h3>Communication Channels</h3>
+			<ul class="sparklist" data-bind="template: {name: 'spark-template', foreach: commsSparks, as: 'spark'}"></ul>
+		</div>
+		<div class="row">
+			<h3>Bug Tracking Systems</h3>
+			<ul class="sparklist" data-bind="template: {name: 'spark-template', foreach: bugSparks, as: 'spark'}"></ul>
 		</div>
 	</section>
 
@@ -71,7 +80,7 @@
 				    if (valueUnwrapped.isTimeSeries) {
 					    x.timeField = valueUnwrapped.xtext;
 					    x.dateParseFormat = "%Y%m%d";
-					    x.tickFormat = "%B %Y"
+					    x.tickFormat = "%b %Y"
 					}
 				 	// x.timePeriod = d3.time.month;
 					// x.timeInterval = 1;
@@ -79,7 +88,8 @@
 
 
 				    var y = chart.addMeasureAxis("y", valueUnwrapped.ytext);
-				    var ser = chart.addSeries(null, dimple.plot[valueUnwrapped.type]);
+				    var ser = chart.addSeries(valueUnwrapped.series, dimple.plot[valueUnwrapped.type]);
+				    if (valueUnwrapped.series != null) chart.addLegend(60, 5, 500, 10, "right");
 				    chart.draw();
 
 				    // Color the axes
@@ -118,7 +128,7 @@
 					    x.hidden = true;
 					} 
 				    chart.addMeasureAxis("y", valueUnwrapped.ytext).hidden=true;
-				    var ser = chart.addSeries(null, dimple.plot[valueUnwrapped.type]);
+				    var ser = chart.addSeries(valueUnwrapped.series, dimple.plot[valueUnwrapped.type]);
 				    // dimple.plot.line.enterEventHandler = function(){}; // remove the interactivity (HACK - find a better way)
 				    chart.draw();
 
@@ -127,13 +137,21 @@
 					}
 			    }
 			};
-
 			
 			var ViewModel = function(plot) {
 				this.plot = ko.observable(plot);
-				this.sparks = ko.observableArray();
-				this.addSpark = function(spark) {
-					this.sparks.push(spark);
+				this.codeSparks = ko.observableArray();
+				this.commsSparks = ko.observableArray();
+				this.bugSparks = ko.observableArray();
+				
+				this.addCodeSpark = function(spark) {
+					this.codeSparks.push(spark);
+				};
+				this.addCommsSpark = function(spark) {
+					this.commsSparks.push(spark);
+				};
+				this.addBugSpark = function(spark) {
+					this.bugSparks.push(spark);
 				};
 				this.setMain = function(spark) {
 					vm.plot(spark);
@@ -145,29 +163,66 @@
 			// Initial main class
 			$.get("http://localhost:8182/projects/p/@project.getShortName()/m/totalloc", function(data) {
 				var metric = JSON.parse(data);
-				vm.setMain(metric);
+				if (metric.datatable.length > 0) 
+					vm.setMain(metric);
 			});
 
 			// Sparklines
+			$.get("http://localhost:8182/projects/p/@project.getShortName()/m/totalloc", function(data) {
+				var metric = JSON.parse(data);
+				if (metric.datatable.length > 0) 
+					vm.addCodeSpark(metric);
+			});
+
 			$.get("http://localhost:8182/projects/p/@project.getShortName()/m/commitsovertime", function(data) {
 				var metric = JSON.parse(data);
-				vm.addSpark(metric);
+				if (metric.datatable.length > 0) 
+					vm.addCodeSpark(metric);
 			});
 
 			$.get("http://localhost:8182/projects/p/@project.getShortName()/m/dailycommits", function(data) {
 				var metric = JSON.parse(data);
-				vm.addSpark(metric);
+				if (metric.datatable.length > 0) 
+					vm.addCodeSpark(metric);
 			});
 
 			$.get("http://localhost:8182/projects/p/@project.getShortName()/m/hourlycommits", function(data) {
 				var metric = JSON.parse(data);
-				vm.addSpark(metric);
+				if (metric.datatable.length > 0) 
+					vm.addCodeSpark(metric);
 			});
 
-			$.get("http://localhost:8182/projects/p/@project.getShortName()/m/totalloc", function(data) {
+			$.get("http://localhost:8182/projects/p/@project.getShortName()/m/activeusersperday", function(data) {
 				var metric = JSON.parse(data);
-				vm.addSpark(metric);
+				if (metric.datatable.length > 0) 
+					vm.addCommsSpark(metric);
 			});
+
+			$.get("http://localhost:8182/projects/p/@project.getShortName()/m/articles", function(data) {
+				var metric = JSON.parse(data);
+				if (metric.datatable.length > 0) 
+					vm.addCommsSpark(metric);
+			});
+
+			$.get("http://localhost:8182/projects/p/@project.getShortName()/m/requestsreplies", function(data) {
+				var metric = JSON.parse(data);
+				if (metric.datatable.length > 0) 
+					vm.addCommsSpark(metric);
+			});
+
+			$.get("http://localhost:8182/projects/p/@project.getShortName()/m/dailynewbugzillabugs", function(data) {
+				var metric = JSON.parse(data);
+				if (metric.datatable.length > 0) 
+					vm.addBugSpark(metric);
+			});
+
+			$.get("http://localhost:8182/projects/p/@project.getShortName()/m/dailybugzillacomments", function(data) {
+				var metric = JSON.parse(data);
+				if (metric.datatable.length > 0) 
+					vm.addBugSpark(metric);
+			});
+
+
 
 			// $.get("http://localhost:8000/projects/p/@project.getName()/m/all", function(data) {
 			// 	var metrics = JSON.parse(data);

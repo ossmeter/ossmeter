@@ -30,7 +30,7 @@
 			    </thead>
 			    <tbody data-bind="foreach: projects">
 			        <tr>
-			            <td><p data-bind="text: name"></p></td>
+			            <td><a data-bind="attr:{ href: 'p/'+shortName }"><p data-bind="text: name"></p></a></td>
 		            	<!-- ko foreach: $parent.metrics --> <!-- vm.metrics -->
 			        	<td >
 			        		<span data-bind="sparkplot: { project: $parent, metric: $data} " class="spark"></span>
@@ -111,7 +111,7 @@
 				if (data.isTimeSeries) {
 				    x.timeField = data.xtext;
 				    x.dateParseFormat = "%Y%m%d";
-				    x.tickFormat = "%B %Y"
+				    x.tickFormat = "%b %Y"
 				}
 
 			    // x.timePeriod = d3.time.day;
@@ -120,7 +120,7 @@
 
 			    var y = chart.addMeasureAxis("y", data.ytext);
 			    var ser = chart.addSeries("Project", dimple.plot[data.type]);
-			    ser.lineMarkers = true;
+			    // ser.lineMarkers = true;
 			    chart.addLegend(60, 5, 680, 10, "right");
 			    chart.draw();
 
@@ -172,7 +172,7 @@
 							project.metricsData.push(data);	
 						}
 
-				        var svg = dimple.newSvg(element, 150, 30);
+				        var svg = dimple.newSvg(element, 120, 30);
 
 					    var chart = new dimple.chart(svg, data.datatable);
 					    var x = chart.addAxis("x", data.xtext);
@@ -232,11 +232,27 @@
 				vm.addProject(project);
 			});
 
+			$.get("http://localhost:8182/projects/p/ant", function(data) {
+				var project = JSON.parse(data);
+				vm.addProject(project);
+			});
+
+			$.get("http://localhost:8182/projects/p/tomcat", function(data) {
+				var project = JSON.parse(data);
+				vm.addProject(project);
+			});
+
+			$.get("http://localhost:8182/projects/p/subversive", function(data) {
+				var project = JSON.parse(data);
+				vm.addProject(project);
+			});
+
 			// Get all metrics
 			vm.addMetric(new Metric("totalloc", "Lines of code", "blah"));
 			vm.addMetric(new Metric("commitsovertime", "Commits", "blah"));
 			vm.addMetric(new Metric("dailycommits", "Daily commits", "blah"));
 			vm.addMetric(new Metric("hourlycommits", "Hourly commits", "blah"));
+			vm.addMetric(new Metric("activeusersperday", "Active users", "blah"));
 		}
 
 		load();

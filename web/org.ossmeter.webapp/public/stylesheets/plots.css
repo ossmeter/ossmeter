@@ -24,6 +24,7 @@ div.lplot {
 ul.sparklist {
 	list-style: none;
 	margin:0;
+	clear:both;
 }
 ul.sparklist li {
 	/*clear:both;*/
@@ -43,7 +44,7 @@ ul.sparklist li:hover {
 	background-color:#eee;
 }
 .selected {
-	background-color:#ddd;
+	background-color:#eee;
 }
 table#comp th:not(:first-child){
 	cursor: pointer;
