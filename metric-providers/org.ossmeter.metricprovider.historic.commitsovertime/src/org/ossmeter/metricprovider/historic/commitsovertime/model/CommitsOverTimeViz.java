@@ -20,7 +20,7 @@ public class CommitsOverTimeViz extends PongoViz {
 			case "d3":
 				return ("{ 'id' : 'commitsovertime', 'name' : 'Commits', 'type' : 'line', " +
 						"'description' : 'The total number of commits over time.', " +
-						"'xtext' : 'Date', 'ytext':'Commits', 'orderRule' : 'Date', 'datatable' : " + createD3DataTable("repositories", "url", "__date", "numberOfCommits", "Date", "Commits") + "," +
+						"'xtext' : 'Date', 'ytext':'Commits', 'orderRule' : 'Date', 'datatable' : " + createD3DataTable("repositories", "url", "__date", "numberOfCommits", "Date", "Commits", DateFilter.MONTH) + "," +
 						"'isTimeSeries':true, 'lastValue': '"+getLastValue()+"' }").replaceAll("'", "\"");				
 		}
 		return null;
