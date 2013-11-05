@@ -95,7 +95,8 @@ public class CommitsTransientMetricProvider  implements ITransientMetricProvider
 			}
 			
 			// Clear commit data - only want to store latest day in db
-			rd.getCommits().clear();
+			rd.getCommits().clear(); // This doesn't clear the commits from the Commits.commits collection 
+			db.sync();
 			
 			// Now add the new ones
 			for (VcsCommit commit : vcsRepositoryDelta.getCommits()) {

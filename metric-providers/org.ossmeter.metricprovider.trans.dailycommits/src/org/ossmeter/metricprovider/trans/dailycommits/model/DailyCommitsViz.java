@@ -21,7 +21,7 @@ public class DailyCommitsViz extends PongoViz {
 				return ("{ 'id' : 'dailycommits', 'name' : 'Daily commits', 'type' : 'bar', " +
 						"'description' : 'Source code commits grouped by the day they occurred.', " +
 						"'xtext' : 'Day', 'ytext':'Commits', 'orderRule' : ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'], " +
-						"'datatable' : " + createD3DataTable(null, null, "name", "numberOfCommits","Day", "Commits") + "," +
+						"'datatable' : " + createD3DataTable(null, null, "name", "numberOfCommits","Day", "Commits", DateFilter.NONE) + "," +
 						"'isTimeSeries':false, 'lastValue': '"+getLastValue()+"' }").replaceAll("'", "\"");				
 		}
 		return null;
