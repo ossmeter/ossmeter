@@ -4,8 +4,6 @@ import java.util.Random;
 
 import org.ossmeter.metricprovider.generic.numberofactiveusersperday.NumberOfActiveUsersPerDayProvider;
 import org.ossmeter.metricprovider.generic.numberofactiveusersperday.model.DailyActiveUsers;
-import org.ossmeter.metricprovider.generic.numberofrequestsrepliesperday.NumberOfRequestsRepliesPerDayProvider;
-import org.ossmeter.metricprovider.generic.numberofrequestsrepliesperday.model.DailyNorr;
 import org.ossmeter.metricprovider.generic.numberofresolvedclosedbugzillabugs.NumberOfResolvedClosedBugzillaBugsProvider;
 import org.ossmeter.metricprovider.generic.numberofresolvedclosedbugzillabugs.model.DailyNorcb;
 import org.ossmeter.metricprovider.generic.overalldailynumberofarticles.OverallDailyNumberOfArticlesProvider;
@@ -18,8 +16,6 @@ import org.ossmeter.metricprovider.generic.overalldailynumberofbugzillapatches.m
 import org.ossmeter.metricprovider.generic.overalldailynumberofnewbugzillabugs.OverallDailyNumberOfNewBugzillaBugsProvider;
 import org.ossmeter.metricprovider.generic.overalldailynumberofnewbugzillabugs.model.DailyBugzillaData;
 import org.ossmeter.metricprovider.generic.overalldailynumberofnewbugzillabugs.model.DailyNonbb;
-import org.ossmeter.metricprovider.rascal.trans.model.IntegerMeasurement;
-import org.ossmeter.metricprovider.rascal.trans.model.Measurement;
 import org.ossmeter.platform.Date;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.repository.model.MetricProvider;
@@ -50,7 +46,7 @@ public class SampleDataCreator {
 		// Add projects
 		Project pongo = ProjectCreationUtil.createProjectSvnNntpBugzilla(
 				"Pongo", "pongo", "", //"Pongo is a template-based Java POJO generator for MongoDB. Instead of using low-level DBObjects to interact with your MongoDB database, with Pongo you can define your data/domain model using Emfatic and then generate strongly-typed Java classes you can then use to work with your database at a more convenient level of abstraction. ", 
-				"", "", "", "", "", false, "", "");
+				"", "", "", "", "", "", false, "", "");
 		
 		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(pongo);
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
@@ -76,19 +72,19 @@ public class SampleDataCreator {
 	protected static Random random = new Random();
 
 	public static void createHistoricRascalData(DB db, Project project, String metricName, Date start, Date end, int startValue, int interval) {
-		String metricId = "measurements";
-		DBCollection collection =  db.getCollection("measurements");
-		
-		for (Date date : Date.range(start, end)){
-			Measurement metricValue = new IntegerMeasurement();
-			startValue = nextInt(startValue, interval);
-			((IntegerMeasurement) metricValue).setValue(startValue);
-			metricValue.setMetric(metricName);
-			metricValue.setUri("file:///foo/bar");
-			
-			collection.save(appendDate(metricValue, date));
-		}
-		setMetricProviderLastExecuted(project, end, metricId);
+//		String metricId = "measurements";
+//		DBCollection collection =  db.getCollection("measurements");
+//		
+//		for (Date date : Date.range(start, end)){
+//			Measurement metricValue = new IntegerMeasurement();
+//			startValue = nextInt(startValue, interval);
+//			((IntegerMeasurement) metricValue).setValue(startValue);
+//			metricValue.setMetric(metricName);
+//			metricValue.setUri("file:///foo/bar");
+//			
+//			collection.save(appendDate(metricValue, date));
+//		}
+//		setMetricProviderLastExecuted(project, end, metricId);
 	}
 	
 	public static void createHistoricNewBugs(DB db, Project project, Date start, Date end, int startValue, int interval) {
