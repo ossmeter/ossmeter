@@ -1,0 +1,18 @@
+package org.ossmeter.metricprovider.rascal.metric.trans.model;
+
+@db(qualifiedCollectionNames="true")
+@customize
+class Loc {
+    val LinesOfCodeData[*] linesOfCode;
+}
+
+class LinesOfCodeData {
+   @searchable
+   attr String file;
+   attr long totalLines;
+   attr long commentedLines;
+   attr long emptyLines;
+   attr long sourceLines;
+   attr String revisionNumber;
+   attr String date;
+}
