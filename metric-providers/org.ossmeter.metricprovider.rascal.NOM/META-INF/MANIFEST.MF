@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: NOM
+Bundle-SymbolicName: org.ossmeter.metricprovider.rascal.NOM;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Export-Package: org.ossmeter.metricprovider.rascal.metric.trans.model
+Require-Bundle: com.googlecode.pongo.runtime,
+ org.ossmeter.metricprovider.rascal,
+ rascal,
+ org.eclipse.imp.pdb.values,
+ org.ossmeter.platform.vcs.svn,
+ com.googlecode.pongo.runtime.osgi
