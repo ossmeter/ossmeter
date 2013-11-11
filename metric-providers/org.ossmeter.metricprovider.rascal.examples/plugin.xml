@@ -2,46 +2,19 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="org.ossmeter.metricprovider.rascal">
-      <rascalMetricProvider
-            isHistoric="false"
-            rascalUri="metrics://Manager/countTotalLoc">
-      </rascalMetricProvider>
+         point="org.ossmeter.metricprovider.rascal.metric">
+      <metric
+            provider="org.ossmeter.metricprovider.rascal.metric.LinesOfCode">
+      </metric>
    </extension>
    <extension
-         point="org.ossmeter.metricprovider.rascal">
-      <rascalMetricProvider
-            isHistoric="false"
-            rascalUri="metrics://Manager/countCommentedLoc">
-      </rascalMetricProvider>
-   </extension>
-   <extension
-         point="org.ossmeter.metricprovider.rascal">
-      <rascalMetricProvider
-            isHistoric="false"
-            rascalUri="metrics://Manager/countEmptyLoc">
-      </rascalMetricProvider>
-   </extension>
-   <extension
-         point="org.ossmeter.metricprovider.rascal">
-      <rascalMetricProvider
-            isHistoric="false"
-            rascalUri="metrics://Manager/countSourceLoc">
-      </rascalMetricProvider>
-   </extension>
-   <extension
-         point="org.ossmeter.metricprovider.rascal">
-      <rascalMetricProvider
-            isHistoric="false"
-            rascalUri="metrics://Manager/countTotalLocPerLanguage">
-      </rascalMetricProvider>
-   </extension>
-   <extension
-         point="org.ossmeter.metricprovider.rascal">
-      <rascalMetricProvider
-            isHistoric="false"
-            rascalUri="metrics://Manager/countSourceLocPerLanguage">
-      </rascalMetricProvider>
+         point="com.googlecode.pongo.runtime.osgi">
+      <class
+            name="org.ossmeter.metricprovider.rascal.metric.trans.model.LinesOfCodeData">
+      </class>
+      <class
+            name="org.ossmeter.metricprovider.rascal.metric.trans.model.Loc">
+      </class>
    </extension>
 
 </plugin>
