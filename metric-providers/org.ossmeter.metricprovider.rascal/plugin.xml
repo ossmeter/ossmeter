@@ -2,11 +2,12 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="org.ossmeter.metricprovider.rascal" name="org.ossmeter.metricprovider.rascal" schema="schema/org.ossmeter.metricprovider.rascal.exsd"/>
+   <extension-point id="org.ossmeter.metricprovider.rascal.metric" name="org.ossmeter.metricprovider.rascal.metric" schema="schema/org.ossmeter.metricprovider.rascal.metric.exsd"/>
    <extension
-         point="org.ossmeter.platform.managers.metricprovider">
-      <metricProviderManager
-            manager="org.ossmeter.metricprovider.rascal.RascalMetricProviderManager">
-      </metricProviderManager>
+         point="org.ossmeter.platform.metricprovider">
+      <metricProvider
+            provider="org.ossmeter.metricprovider.rascal.RascalTransientMetricProvider">
+      </metricProvider>
    </extension>
 
 </plugin>

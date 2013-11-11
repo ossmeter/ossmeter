@@ -8,9 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.ossmeter.metricprovider.rascal.history.model.HistoricRascalMetrics;
-import org.ossmeter.metricprovider.rascal.trans.model.IntegerMeasurement;
-import org.ossmeter.metricprovider.rascal.trans.model.Measurement;
-import org.ossmeter.metricprovider.rascal.trans.model.RascalMetrics;
+import org.ossmeter.metricprovider.rascal.trans.model.RascalMetric;
 import org.ossmeter.platform.IHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
@@ -46,34 +44,34 @@ public class RascalHistoricMetricProvider implements IHistoricalMetricProvider{
 
 	@Override
 	public Pongo measure(Project project) {
-		RascalMetrics rascalMetrics = rascalMetricProvider.adapt(context.getProjectDB(project));
-
-		Iterable<Measurement> measurements = rascalMetrics.getMeasurements().findByMetric(getIdentifier());
+		RascalMetric rascalMetrics = rascalMetricProvider.adapt(context.getProjectDB(project));
+		return null;
+//		Iterable<Measurement> measurements = rascalMetrics.getMeasurements().findByMetric(getIdentifier());
+//		
+//		HistoricRascalMetrics hrm = new HistoricRascalMetrics();
+//		Map<String, Long> map = new HashMap<String, Long>();
+//		
+//		for (Measurement m : measurements) {
+//			if (m instanceof IntegerMeasurement) {
+//				
+//				String key = m.getUri().split("://")[0];
+//				if (map.containsKey(key)) {
+//					map.put(key, map.get(key) + ((IntegerMeasurement) m).getValue()); 
+//				} else {
+//					map.put(key, ((IntegerMeasurement) m).getValue());
+//				}
+//			}
+//		}
+//
+//		for (Entry<String, Long> entry : map.entrySet()){
+//			IntegerMeasurement im = new IntegerMeasurement();
+//			im.setMetric(getIdentifier());
+//			im.setValue(entry.getValue());
+//			im.setUri(entry.getKey());
+//			hrm.getMeasurements().add(im);
+//		}
 		
-		HistoricRascalMetrics hrm = new HistoricRascalMetrics();
-		Map<String, Long> map = new HashMap<String, Long>();
-		
-		for (Measurement m : measurements) {
-			if (m instanceof IntegerMeasurement) {
-				
-				String key = m.getUri().split("://")[0];
-				if (map.containsKey(key)) {
-					map.put(key, map.get(key) + ((IntegerMeasurement) m).getValue()); 
-				} else {
-					map.put(key, ((IntegerMeasurement) m).getValue());
-				}
-			}
-		}
-
-		for (Entry<String, Long> entry : map.entrySet()){
-			IntegerMeasurement im = new IntegerMeasurement();
-			im.setMetric(getIdentifier());
-			im.setValue(entry.getValue());
-			im.setUri(entry.getKey());
-			hrm.getMeasurements().add(im);
-		}
-		
-		return hrm;
+//		return hrm;
 	}
 
 	@Override

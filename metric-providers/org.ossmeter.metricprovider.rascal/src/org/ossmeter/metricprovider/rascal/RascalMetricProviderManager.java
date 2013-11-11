@@ -25,7 +25,8 @@ public class RascalMetricProviderManager implements IMetricProviderManager {
 			if (isHistoric) {
 				metricProviders.add(new RascalHistoricMetricProvider(URI.create(rascalUri)));
 			} else {
-				metricProviders.add(new RascalTransientMetricProvider(URI.create(rascalUri)));
+//				metricProviders.add(new RascalTransientMetricProvider(URI.create(rascalUri)));
+//				metricProviders.add(new RascalTransientMetricProvider());
 			}
 		}
 		
