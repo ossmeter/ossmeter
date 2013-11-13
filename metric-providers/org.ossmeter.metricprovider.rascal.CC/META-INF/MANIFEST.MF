@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: CC
+Bundle-SymbolicName: org.ossmeter.metricprovider.rascal.CC;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: rascal;bundle-version="0.6.2",
+ org.ossmeter.metricprovider.rascal;bundle-version="0.0.0",
+ org.ossmeter.platform;bundle-version="1.0.0",
+ com.googlecode.pongo.runtime;bundle-version="0.5.0",
+ com.googlecode.pongo.runtime.osgi;bundle-version="1.0.0",
+ org.ossmeter.repository.model.vcs.svn;bundle-version="1.0.0",
+ org.eclipse.imp.pdb.values;bundle-version="0.4.1"

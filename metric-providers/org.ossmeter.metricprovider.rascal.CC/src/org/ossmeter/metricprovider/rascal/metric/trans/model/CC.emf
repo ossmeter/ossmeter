@@ -1,0 +1,16 @@
+package org.ossmeter.metricprovider.rascal.metric.trans.model;
+
+@db(qualifiedCollectionNames="true")
+@customize
+class CC {
+    val CCData[*] methodCC;
+}
+
+class CCData {
+   @searchable
+   attr String fileURL;
+   attr String methodName;
+   attr long ccValue;
+   attr String revisionNumber;
+   attr String date;
+}
