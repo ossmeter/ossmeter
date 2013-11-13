@@ -31,8 +31,8 @@ public class App implements IApplication {
 		Platform platform = new Platform(mongo);
 		platform.setMetricProviderManager(metricProviderManager);
 		platform.setPlatformVcsManager(platformVcsManager);
-		platform.setPlatformCommunicationChannelManager(communicationChannelManager);
-		platform.setPlatformBugTrackingSystemManager(bugTrackingSystemManager);
+//		platform.setPlatformCommunicationChannelManager(communicationChannelManager);
+//		platform.setPlatformBugTrackingSystemManager(bugTrackingSystemManager);
 		
 		// FIXME: Needs to check Mongo for projects, not keep registering the same ones!
 		

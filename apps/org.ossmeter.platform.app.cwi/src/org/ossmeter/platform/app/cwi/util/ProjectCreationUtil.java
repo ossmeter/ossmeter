@@ -3,7 +3,7 @@ package org.ossmeter.platform.app.cwi.util;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
 import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
-import org.ossmeter.repository.model.github.GitHubProject;
+//import org.ossmeter.repository.model.github.GitHubProject;
 import org.ossmeter.repository.model.github.GitHubRepository;
 import org.ossmeter.repository.model.github.GitHubUser;
 import org.ossmeter.repository.model.sourceforge.SourceForgeProject;
@@ -71,19 +71,20 @@ public class ProjectCreationUtil {
 	
 	
 	public static Project createGitHubProject(String login, String repository, String url) {
-		GitHubProject project = new GitHubProject();
-		project.setName(login + "-" + repository);
-		
-		GitHubRepository gitHubRepository = new GitHubRepository();
-		gitHubRepository.setName(repository);
-		gitHubRepository.setUrl(url);
-		
-		GitHubUser owner = new GitHubUser();
-		owner.setLogin(login);
-		gitHubRepository.setOwner(owner);
-		
-		project.getVcsRepositories().add(gitHubRepository);
-		return project;
+//		GitHubProject project = new GitHubProject();
+//		project.setName(login + "-" + repository);
+//		
+//		GitHubRepository gitHubRepository = new GitHubRepository();
+//		gitHubRepository.setName(repository);
+//		gitHubRepository.setUrl(url);
+//		
+//		GitHubUser owner = new GitHubUser();
+//		owner.setLogin(login);
+//		gitHubRepository.setOwner(owner);
+//		
+//		project.getVcsRepositories().add(gitHubRepository);
+//		return project;
+		return null;
 	}
 	
 	
