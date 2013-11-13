@@ -8,5 +8,6 @@ Require-Bundle: com.googlecode.pongo.runtime,
  org.ossmeter.metricprovider.rascal,
  rascal,
  org.eclipse.imp.pdb.values,
- org.ossmeter.platform.vcs.svn,
- com.googlecode.pongo.runtime.osgi
+ com.googlecode.pongo.runtime.osgi,
+ org.ossmeter.repository.model;bundle-version="1.0.0",
+ org.ossmeter.platform;bundle-version="1.0.0"
