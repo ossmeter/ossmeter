@@ -1,6 +1,0 @@
-package org.ossmeter.metricprovider.rascal.trans.model;
-
-@db
-abstract class RascalMetric {
-	
-}
