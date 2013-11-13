@@ -1,0 +1,15 @@
+package org.ossmeter.metricprovider.rascal.metric.trans.model;
+
+@db(qualifiedCollectionNames="true")
+@customize
+class NOA {
+    val NOAData[*] numberOfAttributes;
+}
+
+class NOAData {
+   @searchable
+   attr String className;
+   attr long attributes;
+   attr String revisionNumber;
+   attr String date;
+}
