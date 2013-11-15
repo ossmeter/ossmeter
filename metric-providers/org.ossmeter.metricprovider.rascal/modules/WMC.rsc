@@ -20,7 +20,7 @@ map[str class, int cc] getCC(M3 fileM3) {
   return (replaceAll(replaceFirst(m.path, "/", ""), "/", ".") : getCC(m, fileM3.ast) | <cl,_> <- fileM3.model@declarations, isClass(cl), m <- fileM3.model@containment[cl], isMethod(m));
 }
 
-Declaration getMethodAST(loc methodLoc, Declaration fileAST) {
+Declaration getASTOfMethod(loc methodLoc, Declaration fileAST) {
   visit(fileAST) {
     case Declaration d: {
       if ("decl" in getAnnotations(d) && d@decl == methodLoc) {
@@ -33,7 +33,7 @@ Declaration getMethodAST(loc methodLoc, Declaration fileAST) {
 
 int getCC(loc m, Declaration ast) {
   int count = 1;
-  Declaration methodAST = getMethodAST(m, ast);
+  Declaration methodAST = getASTOfMethod(m, ast);
   
   visit(methodAST) {
     case Statement s: {
@@ -49,9 +49,9 @@ int getPaths(\for(list[Expression] initializers, list[Expression] updaters, Stat
 int getPaths(\if(Expression condition, Statement thenBranch, Statement elseBranch)) = 1 + getPaths(condition);
 int getPaths(\if(Expression condition, Statement thenBranch)) = 1 + getPaths(condition);
 int getPaths(\case(Expression expression)) = 1 + getPaths(expression);
-int getPaths(\defaultCase()) = 1;
 int getPaths(\while(Expression condition, Statement body)) = 1 + getPaths(condition);
-int getPaths(\do(Statement body, Expression condition)) = 1 + getPaths(condition);
+int getPaths(\do(Statement body, Expression condition)) = getPaths(condition);
+int getPaths(\catch(Declaration exception, Statement body)) = 1;
 default int getPaths(Statement s) = 0;
 
 int getPaths(\infix(Expression lhs, "||", Expression rhs, list[Expression] extendedOperands)) = 1 + size(extendedOperands);
