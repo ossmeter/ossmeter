@@ -1,7 +1,9 @@
 package org.ossmeter.metricprovider.rascal;
 
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import org.eclipse.imp.pdb.facts.IBool;
 import org.eclipse.imp.pdb.facts.ISourceLocation;
@@ -112,5 +114,18 @@ public class RascalManager {
 		for (ProjectRascalManager m : managedProjects.values()) {
 			m.clearManagerDataForProject();
 		}
+	}
+	
+	public static String makeRelative(String base, String extension) {
+		StringBuilder result = new StringBuilder();
+		List<String> baseSegments = Arrays.asList(base.split("/"));
+		String[] extensionSegments = extension.split("/");
+		for (String ext : extensionSegments) {
+			if (!baseSegments.contains(ext)) {
+				result.append(extension.substring(extension.indexOf(ext)));
+				break;
+			}
+		}
+		return result.toString();
 	}
 }

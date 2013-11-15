@@ -41,13 +41,16 @@ public abstract class RascalMetrics {
 						continue;
 					}
 					IValue fileM3 = null;
-					String localFile = localStorage.getAbsolutePath().concat(item.getPath());
-					String fileURL = vcsRepository.getUrl().concat(item.getPath());
+					String repo = vcsRepository.getUrl();
+					// FIXME: This should only be a temporary resolution.
+					String path = RascalManager.makeRelative(repo, item.getPath());
+					String localFile = localStorage.getAbsolutePath() + "/" + getLastSegment(repo) + "/" + path;
+					String fileURL = repo + (repo.endsWith("/") ? "" : "/") + path;
 					try {
 						fileM3 = manager.getModel(commit.getRevision(), fileURL, localFile);
 					} catch (Exception e) {
 						System.out.println(e.getMessage());
-						System.err.println("Model could not be created for file " + localStorage.getAbsolutePath().concat(item.getPath()));
+						System.err.println("Model could not be created for file " + localFile);
 						System.err.println("Continuing with other files...");
 						continue;
 					}
@@ -59,5 +62,14 @@ public abstract class RascalMetrics {
 		}
 		
 		return m3sPerRevision;
+	}
+
+	private String getLastSegment(String repo) {
+		String[] segments = repo.split("/");
+		int last = segments.length - 1;
+		while(segments[last].isEmpty()) {
+			--last;
+		}
+		return segments[last];
 	}
 }
