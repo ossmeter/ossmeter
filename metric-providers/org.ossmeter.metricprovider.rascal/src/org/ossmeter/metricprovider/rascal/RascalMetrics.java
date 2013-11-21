@@ -34,7 +34,7 @@ public abstract class RascalMetrics {
 			VcsRepository vcsRepository = vcsRepositoryDelta.getRepository();
 			List<VcsCommit> commits = vcsRepositoryDelta.getCommits();
 			for (VcsCommit commit : commits) {
-				manager.checkOutRevision(commit.getRevision(), vcsRepository.getUrl(), localStorage.getAbsolutePath());
+				manager.checkOutRevision(delta.getDate(), commit.getRevision(), vcsRepository.getUrl(), localStorage.getAbsolutePath());
 				for (VcsCommitItem item : commit.getItems()) {
 					if (item.getChangeType() == VcsChangeType.DELETED || item.getChangeType() == VcsChangeType.UNKNOWN) {
 						// not handling deleted files or unknown

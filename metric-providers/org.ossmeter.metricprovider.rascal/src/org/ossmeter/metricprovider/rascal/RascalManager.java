@@ -9,6 +9,7 @@ import org.eclipse.imp.pdb.facts.IBool;
 import org.eclipse.imp.pdb.facts.ISourceLocation;
 import org.eclipse.imp.pdb.facts.IValue;
 import org.eclipse.imp.pdb.facts.IValueFactory;
+import org.ossmeter.platform.Date;
 import org.rascalmpl.interpreter.Evaluator;
 import org.rascalmpl.interpreter.NullRascalMonitor;
 import org.rascalmpl.interpreter.env.GlobalEnvironment;
@@ -22,7 +23,6 @@ import org.rascalmpl.values.ValueFactoryFactory;
 
 public class RascalManager {
 	private static RascalManager _instance;
-	
 	private final static GlobalEnvironment heap = new GlobalEnvironment();
 	private final static ModuleEnvironment root = new ModuleEnvironment("******metrics******", heap);
 	private final static IValueFactory VF = ValueFactoryFactory.getValueFactory();
@@ -35,12 +35,19 @@ public class RascalManager {
 	
 	public class ProjectRascalManager {
 		public HashMap<String, HashMap<String, IValue>> fileModelsPerCommit = new HashMap<>();
+		private Date lastChecked;
 		
-		public void checkOutRevision(String revision, String repositoryURL, String localPath) {
+		public void checkOutRevision(Date currentDate, String revision, String repositoryURL, String localPath) {
+			if (lastChecked != null) {
+				if (currentDate.compareTo(lastChecked) > 0) {
+					clearProjectData();
+				}
+			}
 			if (!fileModelsPerCommit.containsKey(revision)) {
 				eval.call(new NullRascalMonitor(), module, "checkOutRepository", VF.string(repositoryURL), VF.integer(revision), VF.sourceLocation(localPath));
 				fileModelsPerCommit.put(revision, new HashMap<String, IValue>());
 			}
+			lastChecked = currentDate;
 		}
 		
 		public ISourceLocation makeLocation(String fileURL) {
