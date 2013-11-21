@@ -34,7 +34,9 @@ M3 createFileM3(loc file) {
 
     return m3WithAdditionalInfo(fileM3, createAstFromFile(file, true), total, comment, empty, source);
   }
-  return unknownFileType(size(readFileLines(file)));
+  if (isFile(file))
+    return unknownFileType(size(readFileLines(file)));
+  throw "Location <file> is not a file";
 }
 
 bool isValid(M3 fileM3) {
