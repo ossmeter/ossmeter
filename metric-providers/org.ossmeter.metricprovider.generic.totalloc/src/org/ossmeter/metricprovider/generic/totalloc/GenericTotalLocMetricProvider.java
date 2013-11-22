@@ -4,12 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.ossmeter.metricprovider.generic.totalloc.model.TLocRepositoryData;
 import org.ossmeter.metricprovider.generic.totalloc.model.TotalLoc;
-import org.ossmeter.metricprovider.loc.LocMetricProvider;
-import org.ossmeter.metricprovider.loc.model.LinesOfCodeData;
-import org.ossmeter.metricprovider.loc.model.Loc;
-import org.ossmeter.metricprovider.loc.model.RepositoryData;
+import org.ossmeter.metricprovider.rascal.metric.LinesOfCode;
+import org.ossmeter.metricprovider.rascal.metric.trans.model.LinesOfCodeData;
+import org.ossmeter.metricprovider.rascal.metric.trans.model.Loc;
 import org.ossmeter.platform.IHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
@@ -58,35 +56,35 @@ public class GenericTotalLocMetricProvider implements IHistoricalMetricProvider{
 
 	@Override
 	public Pongo measure(Project project) {
-		List<RepositoryData> fileRepos = new ArrayList<RepositoryData>();
+		List<LinesOfCodeData> locData = new ArrayList<LinesOfCodeData>();
 	
 		for (IMetricProvider used : uses) {
-			Loc usedLoc =  ((LocMetricProvider)used).adapt(context.getProjectDB(project));
-			for (RepositoryData rd : usedLoc.getRepositories()) {
-				fileRepos.add(rd);
+			Loc usedLoc =  ((LinesOfCode)used).adapt(context.getProjectDB(project));
+			for (LinesOfCodeData rd : usedLoc.getLinesOfCode()) {
+				locData.add(rd);
 			}
 		}
 		
-		TotalLoc tLoc = new TotalLoc();
+		TotalLoc hist = new TotalLoc();
 		
-		for (RepositoryData fileRd : fileRepos) {
-			TLocRepositoryData totalRd = new TLocRepositoryData(); 
-			totalRd.setUrl(fileRd.getUrl());
-			totalRd.setRepoType(fileRd.getRepoType());
-			totalRd.setRevision(fileRd.getRevision());
-			
-			// Now count those lines!
-			long loc = 0;
-			for (LinesOfCodeData locd : fileRd.getLinesOfCode()) {
-				loc += locd.getLines();
-			}
-			totalRd.setTotalLines(loc);
-
-			// Save
-			tLoc.getRepositories().add(totalRd);
+		hist.setUrl(project.getVcsRepositories().get(0).getUrl());
+		hist.setRepoType(project.getVcsRepositories().get(0).getClass().getCanonicalName());
+//		hist.setRevision(locD.getRevisionNumber());
+		
+		// Now count those lines!
+		long tloc = 0, eloc = 0, sloc = 0, cloc = 0;
+		for (LinesOfCodeData locD : locData) {
+			tloc += locD.getTotalLines();
+			sloc += locD.getSourceLines();
+			cloc += locD.getCommentedLines();
+			eloc += locD.getEmptyLines();
 		}
+		hist.setTotalLines(tloc);
+		hist.setSourceLines(sloc);
+		hist.setCommentedLines(cloc);
+		hist.setEmptyLines(eloc);
 
-		return tLoc;
+		return hist;
 	}
 			
 	@Override
@@ -96,7 +94,7 @@ public class GenericTotalLocMetricProvider implements IHistoricalMetricProvider{
 	
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return Arrays.asList(LocMetricProvider.class.getCanonicalName());
+		return Arrays.asList(LinesOfCode.class.getCanonicalName());
 	}
 
 	@Override
