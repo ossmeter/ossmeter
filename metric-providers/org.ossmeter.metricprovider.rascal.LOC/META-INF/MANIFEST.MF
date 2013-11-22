@@ -13,3 +13,5 @@ Require-Bundle: org.ossmeter.metricprovider.rascal,
  rascal,
  com.googlecode.pongo.runtime.osgi
 Import-Package: org.ossmeter.platform
+Export-Package: org.ossmeter.metricprovider.rascal.metric,
+ org.ossmeter.metricprovider.rascal.metric.trans.model
