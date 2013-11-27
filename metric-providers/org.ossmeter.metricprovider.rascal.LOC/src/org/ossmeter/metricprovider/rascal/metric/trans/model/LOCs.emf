@@ -1,7 +1,6 @@
 package org.ossmeter.metricprovider.rascal.metric.trans.model;
 
-@db(qualifiedCollectionNames="true")
-@customize
+@db
 class Loc {
     val LinesOfCodeData[*] linesOfCode;
 }

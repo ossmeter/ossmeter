@@ -16,5 +16,12 @@
             provider="org.ossmeter.metricprovider.rascal.metric.LinesOfCode">
       </metricProvider>
    </extension>
+   <extension
+         point="org.ossmeter.platform.client.api.pongoviz">
+      <visualiser
+            metricProviderId="org.ossmeter.metricprovider.rascal.metric.LinesOfCode"
+            pongoVisualiser="org.ossmeter.metricprovider.rascal.metric.trans.model.LocViz">
+      </visualiser>
+   </extension>
 
 </plugin>
