@@ -3,9 +3,13 @@
    <extension point="org.ossmeter.platform.metricprovider">
       <metricProvider provider="org.ossmeter.metricprovider.generic.totalloc.GenericTotalLocMetricProvider">
       </metricProvider>
+      <metricProvider provider="org.ossmeter.metricprovider.generic.totalloc.GenericTotalLocMetricProvider2">
+      </metricProvider>
    </extension>
    <extension point="org.ossmeter.platform.client.api.pongoviz">
       <visualiser metricProviderId="org.ossmeter.metricprovider.generic.totalloc" pongoVisualiser="org.ossmeter.metricprovider.generic.totalloc.model.TotalLocViz">
+      </visualiser>
+      <visualiser metricProviderId="totalloc2" pongoVisualiser="org.ossmeter.metricprovider.generic.totalloc.model.TotalLocVizBasic">
       </visualiser>
    </extension>
 
