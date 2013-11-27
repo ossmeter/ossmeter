@@ -83,11 +83,13 @@
 
     			$.each(vm.projects(), function(i, project) {
     				$.each(project.metricsData, function(j, metric) {
+    					console.log(metric.id + "===" +  metricId + " : " + (metric.id === metricId));
     					if (metric.id === metricId) {
     						// Each entry needs a new field to state its series
     						$.map(metric.datatable, function(m, k) {
     							m["Project"] = project.name;
     						});
+    						toPlot.vertical = metric.vertical;
     						toPlot.xtext = metric.xtext;
     						toPlot.ytext = metric.ytext;
     						toPlot.type = metric.type;
@@ -97,28 +99,62 @@
     					}
     				});
     			});
+
+    			console.log(JSON.stringify(toPlot));
+
     			plot(toPlot);
     		}
 
     		function plot(data) {
+    			// data = {"metricName":"Lines of code",
+    			// 	"data":[
+    			// 		{"Project":"Epsilon","Field":"sourceLines","Lines":13615},
+    			// 		{"Project":"Epsilon","Field":"commentedLines","Lines":3840},
+    			// 		{"Project":"Epsilon","Field":"emptyLines","Lines":1568},
+    			// 		{"Project":"Ant","Field":"sourceLines","Lines":13615},
+    			// 		{"Project":"Ant","Field":"commentedLines","Lines":3840},
+    			// 		{"Project":"Ant","Field":"emptyLines","Lines":1568}
+    			// 	],
+    			// 	"vertical":true,
+    			// 	"xtext":"Lines",
+    			// 	"ytext":["Project", "Field"],
+    			// 	"type":"bar",
+    			// 	// "orderRule": ["sourceLines","commentedLines","emptyLines"],
+    			// 	"isTimeSeries":false} ;
+
 		        $("#compPlot").html("");
 
 		        var svg = dimple.newSvg("#compPlot", "100%", "100%");
 			    var chart = new dimple.chart(svg, data.data);
 			    chart.setBounds(60,20,800,150);
-			    var x = chart.addCategoryAxis("x", data.xtext);
 
-				if (data.isTimeSeries) {
-				    x.timeField = data.xtext;
-				    x.dateParseFormat = "%Y%m%d";
-				    x.tickFormat = "%b %Y"
+			    if (data.vertical) {
+			    	var x = chart.addMeasureAxis("x", data.xtext);
+				    var y = chart.addCategoryAxis("y", data.ytext);
+
+					if (data.isTimeSeries) {
+					    y.timeField = data.ytext;
+					    y.dateParseFormat = "%Y%m%d";
+					    y.tickFormat = "%b %Y"
+					}
+
+				    y.addOrderRule(data.orderRule);
+
+			    } else {
+				    var x = chart.addCategoryAxis("x", data.xtext);
+
+					if (data.isTimeSeries) {
+					    x.timeField = data.xtext;
+					    x.dateParseFormat = "%Y%m%d";
+					    x.tickFormat = "%b %Y"
+					}
+
+				    // x.timePeriod = d3.time.day;
+					// x.timeInterval = 5;
+				    x.addOrderRule(data.orderRule);
+
+				    var y = chart.addMeasureAxis("y", data.ytext);
 				}
-
-			    // x.timePeriod = d3.time.day;
-				// x.timeInterval = 5;
-			    x.addOrderRule(data.orderRule);
-
-			    var y = chart.addMeasureAxis("y", data.ytext);
 			    var ser = chart.addSeries("Project", dimple.plot[data.type]);
 			    // ser.lineMarkers = true;
 			    chart.addLegend(60, 5, 680, 10, "right");
@@ -173,17 +209,32 @@
 						}
 
 				        var svg = dimple.newSvg(element, 120, 30);
+				        // console.log(data)
 
 					    var chart = new dimple.chart(svg, data.datatable);
-					    var x = chart.addAxis("x", data.xtext);
-					    x.addOrderRule(data.orderRule);
 
-						if (data.type === "line") { // hide for line charts
-						    x.hidden = true;
-						} 
+					    if (data.vertical) {
+					    	var x = chart.addMeasureAxis("x", data.xtext);
+						    x.hidden=true;
+						    var y = chart.addCategoryAxis("y", data.ytext);
+						    y.addOrderRule(data.orderRule);
 
-					    chart.addMeasureAxis("y", data.ytext).hidden=true;
-					    var ser = chart.addSeries(null, dimple.plot[data.type]);
+							if (data.type === "line") { // hide for line charts
+							    y.hidden = true;
+							} 
+
+					    } else {
+						    var x = chart.addAxis("x", data.xtext);
+						    x.addOrderRule(data.orderRule);
+
+							if (data.type === "line") { // hide for line charts
+							    x.hidden = true;
+							} 
+
+						    chart.addMeasureAxis("y", data.ytext).hidden=true;
+
+						}
+					    var ser = chart.addSeries(data.series, dimple.plot[data.type]);
 					    // dimple.plot.line.enterEventHandler = function(){}; // remove the interactivity (HACK - find a better way)
 					    chart.draw();
 
@@ -192,6 +243,10 @@
 						}
 
 					    $(element).after("<span class=\"sparkValue\">" + abbreviateNumber(data.lastValue) + "</span>");
+					}).fail(function(jqXHR, textStatus, errorThrown ){ 
+						console.log("Failed to retrieve " + project.shortName + ":" + metric.id);
+						console.log("\t" + textStatus);
+						console.log("\t" + errorThrown);
 					});
 			    }
 			};
@@ -220,12 +275,14 @@
 
 			vm = new ComparisonViewModel();
 			ko.applyBindings(vm);
+
+			$.ajaxSetup({ timeout: 100000 });
 			
 			// Get all projects
-			$.get("http://localhost:8182/projects/p/log4j", function(data) {
-				var project = JSON.parse(data);
-				vm.addProject(project);
-			});
+			// $.get("http://localhost:8182/projects/p/log4j", function(data) {
+			// 	var project = JSON.parse(data);
+			// 	vm.addProject(project);
+			// });
 
 			$.get("http://localhost:8182/projects/p/epsilon", function(data) {
 				var project = JSON.parse(data);
@@ -248,11 +305,12 @@
 			});
 
 			// Get all metrics
-			vm.addMetric(new Metric("totalloc", "Lines of code", "blah"));
+			vm.addMetric(new Metric("totalloc2", "Lines of code", "blah"));
 			vm.addMetric(new Metric("commitsovertime", "Commits", "blah"));
-			vm.addMetric(new Metric("dailycommits", "Daily commits", "blah"));
+			// vm.addMetric(new Metric("dailycommits", "Daily commits", "blah"));
 			vm.addMetric(new Metric("hourlycommits", "Hourly commits", "blah"));
 			vm.addMetric(new Metric("activeusersperday", "Active users", "blah"));
+			// vm.addMetric(new Metric("LOC", "Lines of code", "blah"));
 		}
 
 		load();

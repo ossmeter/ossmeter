@@ -75,19 +75,33 @@
 
 			        var svg = dimple.newSvg(element, 700, 200);
 				    var chart = new dimple.chart(svg, valueUnwrapped.datatable);
-				    var x = chart.addCategoryAxis("x", valueUnwrapped.xtext);
 
-				    if (valueUnwrapped.isTimeSeries) {
-					    x.timeField = valueUnwrapped.xtext;
-					    x.dateParseFormat = "%Y%m%d";
-					    x.tickFormat = "%b %Y"
+				    if (valueUnwrapped.vertical) {
+				    	var x = chart.addMeasureAxis("x", valueUnwrapped.xtext);
+					    var y = chart.addCategoryAxis("y", valueUnwrapped.ytext);
+
+					    if (valueUnwrapped.isTimeSeries) {
+						    y.timeField = valueUnwrapped.xtext;
+						    y.dateParseFormat = "%Y%m%d";
+						    y.tickFormat = "%b %Y"
+						}
+					    y.addOrderRule(valueUnwrapped.orderRule);
+				    } else {
+					    var x = chart.addCategoryAxis("x", valueUnwrapped.xtext);
+
+					    if (valueUnwrapped.isTimeSeries) {
+						    x.timeField = valueUnwrapped.xtext;
+						    x.dateParseFormat = "%Y%m%d";
+						    x.tickFormat = "%b %Y"
+						}
+					 	// x.timePeriod = d3.time.month;
+						// x.timeInterval = 1;
+					    x.addOrderRule(valueUnwrapped.orderRule);
+
+
+					    var y = chart.addMeasureAxis("y", valueUnwrapped.ytext);
 					}
-				 	// x.timePeriod = d3.time.month;
-					// x.timeInterval = 1;
-				    x.addOrderRule(valueUnwrapped.orderRule);
 
-
-				    var y = chart.addMeasureAxis("y", valueUnwrapped.ytext);
 				    var ser = chart.addSeries(valueUnwrapped.series, dimple.plot[valueUnwrapped.type]);
 				    if (valueUnwrapped.series != null) chart.addLegend(60, 5, 500, 10, "right");
 				    chart.draw();
@@ -121,13 +135,27 @@
 
 			        var svg = dimple.newSvg(element, 200, 30);
 				    var chart = new dimple.chart(svg, valueUnwrapped.datatable);
-				    var x = chart.addAxis("x", valueUnwrapped.xtext);
-				    x.addOrderRule(valueUnwrapped.orderRule);
 
-				    if (valueUnwrapped.type === "line") { // hide for line charts
-					    x.hidden = true;
-					} 
-				    chart.addMeasureAxis("y", valueUnwrapped.ytext).hidden=true;
+				    if (valueUnwrapped.vertical) {
+						var x = chart.addMeasureAxis("x", valueUnwrapped.xtext);
+					    var y = chart.addCategoryAxis("y", valueUnwrapped.ytext);
+					    y.hidden=true;
+					    y.addOrderRule(valueUnwrapped.orderRule);
+					    
+					    if (valueUnwrapped.type === "line") { // hide for line charts
+						    y.hidden = true;
+						} 
+					} else {
+
+					    var x = chart.addAxis("x", valueUnwrapped.xtext);
+					    x.addOrderRule(valueUnwrapped.orderRule);
+
+					    if (valueUnwrapped.type === "line") { // hide for line charts
+						    x.hidden = true;
+						} 
+					    chart.addMeasureAxis("y", valueUnwrapped.ytext).hidden=true;
+					}
+
 				    var ser = chart.addSeries(valueUnwrapped.series, dimple.plot[valueUnwrapped.type]);
 				    // dimple.plot.line.enterEventHandler = function(){}; // remove the interactivity (HACK - find a better way)
 				    chart.draw();
@@ -169,6 +197,12 @@
 
 			// Sparklines
 			$.get("http://localhost:8182/projects/p/@project.getShortName()/m/totalloc", function(data) {
+				var metric = JSON.parse(data);
+				if (metric.datatable.length > 0) 
+					vm.addCodeSpark(metric);
+			});
+
+			$.get("http://localhost:8182/projects/p/@project.getShortName()/m/LOC", function(data) {
 				var metric = JSON.parse(data);
 				if (metric.datatable.length > 0) 
 					vm.addCodeSpark(metric);
