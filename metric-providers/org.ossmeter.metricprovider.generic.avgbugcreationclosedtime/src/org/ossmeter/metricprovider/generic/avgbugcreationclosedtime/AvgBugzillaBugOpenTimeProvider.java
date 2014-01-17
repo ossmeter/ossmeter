@@ -58,10 +58,8 @@ public class AvgBugzillaBugOpenTimeProvider implements IHistoricalMetricProvider
 			for (BugData bugData: usedBhm.getBugs()) {
 				if (!bugData.getLastClosedTime().equals("null")) {
 					java.util.Date javaOpenTime = NntpUtil.parseDate(bugData.getCreationTime());
-					Date openTime  = new Date(javaOpenTime);
 					java.util.Date javaCloseTime = NntpUtil.parseDate(bugData.getLastClosedTime());
-					Date closeTime  = new Date(javaCloseTime);
-					seconds += ( Date.duration(openTime, closeTime) / 1000);
+					seconds += ( Date.duration(javaOpenTime, javaCloseTime) / 1000);
 					durations++;
 				}
 			}
