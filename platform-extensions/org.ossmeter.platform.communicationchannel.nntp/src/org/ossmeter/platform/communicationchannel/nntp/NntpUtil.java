@@ -193,7 +193,6 @@ public class NntpUtil {
 		};
 	
     public static Date parseDate(String dateString) {
-    	Date date = null;
     	for (SimpleDateFormat sdf: sdfList) {
     		ParsePosition ps = new ParsePosition(0);
     		Date result = sdf.parse(dateString, ps);
