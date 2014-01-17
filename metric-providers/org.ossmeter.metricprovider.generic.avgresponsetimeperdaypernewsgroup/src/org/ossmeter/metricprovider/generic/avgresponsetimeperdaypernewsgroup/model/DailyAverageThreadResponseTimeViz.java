@@ -1,9 +1,7 @@
 package org.ossmeter.metricprovider.generic.avgresponsetimeperdaypernewsgroup.model;
 
 import com.googlecode.pongo.runtime.viz.PongoViz;
-import com.googlecode.pongo.runtime.viz.PongoViz.DateFilter;
 import com.mongodb.DB;
-import com.mongodb.DBCollection;
 
 public class DailyAverageThreadResponseTimeViz extends PongoViz {
 
