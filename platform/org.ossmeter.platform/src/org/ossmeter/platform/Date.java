@@ -120,4 +120,12 @@ public class Date {
         return laterCalendar.getTimeInMillis() - earlierCalendar.getTimeInMillis();
 	}
 	
+	public static long duration(Date earlier, Date later) {
+		
+		if (earlier.compareTo(later) > 0)
+			return duration(later, earlier);
+		
+		return duration(earlier.toJavaDate(), later.toJavaDate());
+	}
+	
 }
