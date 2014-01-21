@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Avgthreadresponsetime
-Bundle-SymbolicName: org.ossmeter.metricprovider.generic.avgresponsetimeperdaypernewsgroup;singleton:=true
+Bundle-SymbolicName: org.ossmeter.metricprovider.generic.cumulativeavgresponsetimepernewsgroup;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.metricprovider.generic.avgresponsetimeperdaypernewsgroup.Activator
 Require-Bundle: org.eclipse.ui,
