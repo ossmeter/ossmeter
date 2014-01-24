@@ -2,7 +2,7 @@
 package org.ossmeter.metricprovider.generic.numberofresolvedclosedbugzillabugs.model;
 
 import com.googlecode.pongo.runtime.viz.PongoViz;
-import com.mongodb.DBCollection;
+import com.mongodb.DB;
 
 public class DailyNorcbViz extends PongoViz {
 
@@ -10,8 +10,8 @@ public class DailyNorcbViz extends PongoViz {
 		super();
 	}
 	
-	public DailyNorcbViz(DBCollection collection) {
-		super(collection);
+	public void setProjectDB(DB projectDB) {
+		this.collection = projectDB.getCollection("org.ossmeter.metricprovider.generic.numberofresolvedclosedbugzillabugs");
 	}
 
 	@Override
