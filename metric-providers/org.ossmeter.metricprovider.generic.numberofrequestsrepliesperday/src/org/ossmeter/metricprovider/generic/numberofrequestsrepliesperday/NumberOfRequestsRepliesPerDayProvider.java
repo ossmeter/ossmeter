@@ -18,7 +18,7 @@ import org.ossmeter.repository.model.Project;
 
 import com.googlecode.pongo.runtime.Pongo;
 
-public class NumberOfRequestsRepliesPerDayProvider  implements IHistoricalMetricProvider{
+public class NumberOfRequestsRepliesPerDayProvider implements IHistoricalMetricProvider{
 	public final static String IDENTIFIER = 
 			"org.ossmeter.metricprovider.generic.numberofrequestsrepliesperday";
 
