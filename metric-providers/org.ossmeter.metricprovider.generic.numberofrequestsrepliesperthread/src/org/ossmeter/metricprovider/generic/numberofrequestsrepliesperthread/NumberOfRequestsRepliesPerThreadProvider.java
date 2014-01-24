@@ -8,9 +8,9 @@ import org.ossmeter.metricprovider.generic.numberofrequestsrepliesperthread.mode
 import org.ossmeter.metricprovider.generic.numberofrequestsrepliesperthread.model.AverageRRThread;
 import org.ossmeter.metricprovider.generic.numberofrequestsrepliesperthread.model.AverageRepliesPerThreadData;
 import org.ossmeter.metricprovider.generic.numberofrequestsrepliesperthread.model.AverageRequestsPerThreadData;
-import org.ossmeter.metricprovider.requestreplyclassification.RequestReplyClassificationMetricProvider;
-import org.ossmeter.metricprovider.requestreplyclassification.model.NewsgroupArticlesData;
-import org.ossmeter.metricprovider.requestreplyclassification.model.Rrc;
+import org.ossmeter.metricprovider.activeusers.ActiveUsersMetricProvider;
+import org.ossmeter.metricprovider.activeusers.model.ActiveUsers;
+import org.ossmeter.metricprovider.activeusers.model.User;
 import org.ossmeter.metricprovider.threads.ThreadsMetricProvider;
 import org.ossmeter.metricprovider.threads.model.ArticleData;
 import org.ossmeter.metricprovider.threads.model.Threads;
@@ -64,21 +64,21 @@ public class NumberOfRequestsRepliesPerThreadProvider implements IHistoricalMetr
 		for (ArticleData article: usedThreads.getArticles())
 			threadIdSet.add(article.getThreadId());
 
-		Rrc usedClassifier = 
-				((RequestReplyClassificationMetricProvider)uses.get(1)).adapt(context.getProjectDB(project));
+		 ActiveUsers usedUsers = 
+				 ((ActiveUsersMetricProvider)uses.get(1)).adapt(context.getProjectDB(project));
 
-		int numberOrRequests = 0,
-				numberOrReplies = 0;
-		for (NewsgroupArticlesData articleData: usedClassifier.getNewsgroupArticles()) {
-			if (articleData.getClassificationResult().equals("Reply"))
-				numberOrReplies++;
-			else if (articleData.getClassificationResult().equals("Request"))
-					numberOrRequests++;
+		int numberOfArticles = 0,
+			numberOrRequests = 0,
+			numberOrReplies = 0;
+		for (User user: usedUsers.getUsers()) {
+			numberOfArticles += user.getArticles();
+			numberOrReplies += user.getReplies();
+			numberOrRequests += user.getRequests();
 		}
 		
 		AverageArticlesPerThreadData avgArticles = new AverageArticlesPerThreadData();
 		avgArticles.setAverageArticlesPerThread( 
-				((float) usedThreads.getArticles().size()) / threadIdSet.size() );
+				((float) numberOfArticles) / threadIdSet.size() );
 			
 		AverageRepliesPerThreadData avgReplies = new AverageRepliesPerThreadData();
 		avgReplies.setAverageRepliesPerThread(
@@ -104,7 +104,7 @@ public class NumberOfRequestsRepliesPerThreadProvider implements IHistoricalMetr
 	@Override
 	public List<String> getIdentifiersOfUses() {
 		return Arrays.asList(ThreadsMetricProvider.class.getCanonicalName(),
-				 RequestReplyClassificationMetricProvider.class.getCanonicalName());
+				 ActiveUsersMetricProvider.class.getCanonicalName());
 	}
 
 	@Override
