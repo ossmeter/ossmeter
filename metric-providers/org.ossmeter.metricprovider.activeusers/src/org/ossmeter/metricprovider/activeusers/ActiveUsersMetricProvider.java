@@ -85,9 +85,12 @@ public class ActiveUsersMetricProvider implements ITransientMetricProvider<Activ
 				newsgroupData = new NewsgroupData();
 				newsgroupData.setUrl_name(newsgroup.getUrl());
 				newsgroupData.setPreviousUsers(0);
+				newsgroupData.setDays(1);
 				db.getNewsgroups().add(newsgroupData);
-			} else
+			} else {
 				newsgroupData.setPreviousUsers(newsgroupData.getUsers());
+				newsgroupData.setDays(newsgroupData.getDays()+1);
+			}
 			
 			List<CommunicationChannelArticle> articles = communicationChannelDelta.getArticles();
 			for (CommunicationChannelArticle article: articles) {

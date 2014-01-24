@@ -16,6 +16,7 @@ public class NewsgroupData extends Pongo {
 		INACTIVEUSERS.setOwningType("org.ossmeter.metricprovider.activeusers.model.NewsgroupData");
 		PREVIOUSUSERS.setOwningType("org.ossmeter.metricprovider.activeusers.model.NewsgroupData");
 		USERS.setOwningType("org.ossmeter.metricprovider.activeusers.model.NewsgroupData");
+		DAYS.setOwningType("org.ossmeter.metricprovider.activeusers.model.NewsgroupData");
 	}
 	
 	public static StringQueryProducer URL_NAME = new StringQueryProducer("url_name"); 
@@ -23,6 +24,7 @@ public class NewsgroupData extends Pongo {
 	public static NumericalQueryProducer INACTIVEUSERS = new NumericalQueryProducer("inactiveUsers");
 	public static NumericalQueryProducer PREVIOUSUSERS = new NumericalQueryProducer("previousUsers");
 	public static NumericalQueryProducer USERS = new NumericalQueryProducer("users");
+	public static NumericalQueryProducer DAYS = new NumericalQueryProducer("days");
 	
 	
 	public String getUrl_name() {
@@ -67,6 +69,15 @@ public class NewsgroupData extends Pongo {
 	
 	public NewsgroupData setUsers(int users) {
 		dbObject.put("users", users);
+		notifyChanged();
+		return this;
+	}
+	public int getDays() {
+		return parseInteger(dbObject.get("days")+"", 0);
+	}
+	
+	public NewsgroupData setDays(int days) {
+		dbObject.put("days", days);
 		notifyChanged();
 		return this;
 	}

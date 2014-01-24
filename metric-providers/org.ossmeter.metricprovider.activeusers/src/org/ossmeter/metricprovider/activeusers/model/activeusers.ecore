@@ -25,6 +25,9 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="users">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="days">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="User">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="url_name">
