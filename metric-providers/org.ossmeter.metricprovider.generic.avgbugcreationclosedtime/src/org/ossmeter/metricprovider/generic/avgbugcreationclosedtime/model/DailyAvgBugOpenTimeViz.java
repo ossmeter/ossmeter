@@ -2,7 +2,7 @@
 package org.ossmeter.metricprovider.generic.avgbugcreationclosedtime.model;
 
 import com.googlecode.pongo.runtime.viz.PongoViz;
-import com.mongodb.DBCollection;
+import com.mongodb.DB;
 
 public class DailyAvgBugOpenTimeViz extends PongoViz {
 
@@ -10,8 +10,8 @@ public class DailyAvgBugOpenTimeViz extends PongoViz {
 		super();
 	}
 	
-	public DailyAvgBugOpenTimeViz(DBCollection collection) {
-		super(collection);
+	public void setProjectDB(DB projectDB) {
+		this.collection = projectDB.getCollection("org.ossmeter.metricprovider.generic.avgbugcreationclosedtime");
 	}
 
 	@Override
