@@ -1,0 +1,33 @@
+package org.ossmeter.metricprovider.hourlyrequestsreplies.model;
+
+@viz(target="gcharts", chart="bar")
+@db(qualifiedCollectionNames="true")
+class HourlyRequestsReplies {
+	@series(label="articles")
+	val HourArticles[*] hourArticles;
+	@series(label="replies")
+	val HourReplies[*] hourReplies;
+	@series(label="requests")
+	val HourRequests[*] hourRequests;
+}
+
+class HourArticles {
+	@searchable
+	attr String hour;
+	@yaxis(title="Number of articles")
+	attr int numberOfArticles;
+}
+
+class HourRequests {
+	@searchable
+	attr String hour;
+	@yaxis(title="Number of requests")
+	attr int numberOfRequests;
+}
+
+class HourReplies {
+	@searchable
+	attr String hour;
+	@yaxis(title="Number of replies")
+	attr int numberOfReplies;
+}

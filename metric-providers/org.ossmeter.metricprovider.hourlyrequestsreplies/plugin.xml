@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<plugin>
+  
+  <extension point="org.ossmeter.platform.client.api.pongoviz">
+     <visualiser metricProviderId="org.ossmeter.metricprovider.hourlyrequestsreplies" pongoVisualiser="org.ossmeter.metricprovider.hourlyrequestsreplies.model.HourlyRequestsRepliesViz">
+     </visualiser>
+  </extension>
+  <extension point="org.ossmeter.platform.metricprovider">
+     <metricProvider provider="org.ossmeter.metricprovider.hourlyrequestsreplies.HourlyRequestsRepliesProvider">
+     </metricProvider>
+  </extension>
+<extension point="com.googlecode.pongo.runtime.osgi">
+    <class name="org.ossmeter.metricprovider.hourlyrequestsreplies.model.HourlyRequestsReplies"/>
+    <class name="org.ossmeter.metricprovider.hourlyrequestsreplies.model.HourArticles"/>
+    <class name="org.ossmeter.metricprovider.hourlyrequestsreplies.model.HourRequests"/>
+    <class name="org.ossmeter.metricprovider.hourlyrequestsreplies.model.HourReplies"/>
+  </extension>
+</plugin>
