@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Numberofrequestsrepliesperthread
+Bundle-SymbolicName: org.ossmeter.metricprovider.generic.numberofrequestsrepliesperthread;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.ossmeter.metricprovider.generic.numberofrequestsrepliesperthread.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.ossmeter.platform,
+ org.ossmeter.platform.client.api,
+ org.ossmeter.metricprovider.threads,
+ org.ossmeter.metricprovider.requestreplyclassification,
+ org.ossmeter.repository.model.cc.nntp,
+ com.googlecode.pongo.runtime.osgi
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: org.ossmeter.metricprovider.generic.numberofrequestsrepliesperthread
