@@ -2,15 +2,21 @@ package org.ossmeter.metricprovider.threads;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import org.ossmeter.platform.communicationchannel.nntp.Article;
 import org.apache.commons.net.nntp.Threader;
 import org.ossmeter.metricprovider.threads.model.ArticleData;
+import org.ossmeter.metricprovider.threads.model.CurrentDate;
+import org.ossmeter.metricprovider.threads.model.NewsgroupData;
 import org.ossmeter.metricprovider.threads.model.Threads;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.ITransientMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
+import org.ossmeter.platform.communicationchannel.nntp.Article;
 import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.platform.delta.communicationchannel.CommunicationChannelArticle;
 import org.ossmeter.platform.delta.communicationchannel.CommunicationChannelDelta;
@@ -63,7 +69,25 @@ public class ThreadsMetricProvider implements ITransientMetricProvider<Threads>{
 
 	@Override
 	public void measure(Project project, ProjectDelta projectDelta, Threads db) {
+
+		 Iterable<CurrentDate> currentDateIt = db.getDate();
+		 CurrentDate currentDate = null;
+		for (CurrentDate cd:  currentDateIt)
+			currentDate = cd;
+		if (currentDate != null)
+			currentDate.setDate(projectDelta.getDate().toString());
+		else {
+			currentDate = new CurrentDate();
+			currentDate.setDate(projectDelta.getDate().toString());
+			db.getDate().add(currentDate);
+		}
+			
+		for (NewsgroupData newsgroupData: db.getNewsgroups()) {
+			newsgroupData.setPreviousThreads(newsgroupData.getThreads());
+		}
+		
 		CommunicationChannelProjectDelta delta = projectDelta.getCommunicationChannelDelta();
+		Map<String, Set<Integer>> threadsPerNewsgroup = new HashMap<String, Set<Integer>>();
 		for ( CommunicationChannelDelta communicationChannelDelta: delta.getCommunicationChannelSystemDeltas()) {
 			CommunicationChannel communicationChannel = communicationChannelDelta.getCommunicationChannel();
 			
@@ -150,7 +174,7 @@ public class ThreadsMetricProvider implements ITransientMetricProvider<Threads>{
 //				System.out.println("-=-=-=-=-=-=-=-");
 				
 				int index = 0;
-				for (List<Article>list: articleList) {
+				for (List<Article> list: articleList) {
 					index++;
 					for (Article article: list) {
 						Iterable<ArticleData> articleDataIt = db.getArticles().
@@ -160,11 +184,36 @@ public class ThreadsMetricProvider implements ITransientMetricProvider<Threads>{
 						for (ArticleData art:  articleDataIt)
 							articleData = art;
 						articleData.setThreadId(index);
+						
+						if (threadsPerNewsgroup.containsKey(articleData.getUrl_name()))
+							threadsPerNewsgroup.get(articleData.getUrl_name()).add(articleData.getThreadId());
+						else {
+							Set<Integer> threadSet = new HashSet<Integer>();
+							threadSet.add(articleData.getThreadId());
+							threadsPerNewsgroup.put(articleData.getUrl_name(), threadSet);
+						}
 					}
 				}
 				db.sync();
 			}
 		}
+		for (String urlNewsgroup: threadsPerNewsgroup.keySet()) {
+			Iterable<NewsgroupData> newsgroupDataIt = 
+					db.getNewsgroups().find(NewsgroupData.URL_NAME.eq(urlNewsgroup));
+			NewsgroupData newsgroupData = null;
+			for (NewsgroupData ngd:  newsgroupDataIt)
+				newsgroupData = ngd;
+			if (newsgroupData!=null) {
+				newsgroupData.setThreads(threadsPerNewsgroup.get(urlNewsgroup).size());
+			} else {
+				newsgroupData = new NewsgroupData();
+				newsgroupData.setUrl_name(urlNewsgroup);
+				newsgroupData.setPreviousThreads(0);
+				newsgroupData.setThreads(threadsPerNewsgroup.get(urlNewsgroup).size());
+				db.getNewsgroups().add(newsgroupData);
+			}
+		}
+		db.sync();
 	}
 
 	@Override

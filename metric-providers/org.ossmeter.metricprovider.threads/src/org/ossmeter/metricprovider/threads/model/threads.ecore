@@ -6,6 +6,13 @@
     </eAnnotations>
     <eAnnotations source="customize"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="articles" upperBound="-1" eType="//ArticleData" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="newsgroups" upperBound="-1" eType="//NewsgroupData" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="date" upperBound="-1" eType="//CurrentDate" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CurrentDate">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="date">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ArticleData">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="url_name">
@@ -33,6 +40,18 @@
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="references">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NewsgroupData">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url_name">
+      <eAnnotations source="searchable"/>
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="threads">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="previousThreads">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     </eStructuralFeatures>
   </eClassifiers>
 </ecore:EPackage>

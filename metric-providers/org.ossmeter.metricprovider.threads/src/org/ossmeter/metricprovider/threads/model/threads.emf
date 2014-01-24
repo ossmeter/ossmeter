@@ -4,7 +4,13 @@ package org.ossmeter.metricprovider.threads.model;
 @customize
 class Threads {
     val ArticleData[*] articles;
+    val NewsgroupData[*] newsgroups;
+    val CurrentDate[*] date;
 }
+
+class CurrentDate {
+	attr String date;
+}    
 
 class ArticleData {
    @searchable
@@ -19,3 +25,9 @@ class ArticleData {
    attr String references;   
 }
 
+class NewsgroupData {
+	@searchable
+	attr String url_name;
+	attr int threads;
+	attr int previousThreads;
+}
