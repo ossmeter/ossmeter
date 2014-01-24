@@ -10,12 +10,18 @@ class ActiveUsers {
 class NewsgroupData {
 	@searchable
    	attr String url_name;
-   	attr int numberOfActiveUsers;
+   	attr int activeUsers;
+   	attr int inactiveUsers;
+    attr int previousUsers; 
+   	attr int users;
 }
 
 class User {
-   @searchable
-   attr String url_name;
-   attr String userId;
-   attr String lastActivityDate;
+	@searchable
+	attr String url_name;
+	attr String userId;
+	attr String lastActivityDate;
+   	attr int articles;
+   	attr int requests;
+   	attr int replies;
 }

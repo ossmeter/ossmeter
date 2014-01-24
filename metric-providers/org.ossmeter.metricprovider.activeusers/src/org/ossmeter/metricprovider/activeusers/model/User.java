@@ -1,6 +1,7 @@
 package org.ossmeter.metricprovider.activeusers.model;
 
 import com.googlecode.pongo.runtime.Pongo;
+import com.googlecode.pongo.runtime.querying.NumericalQueryProducer;
 import com.googlecode.pongo.runtime.querying.StringQueryProducer;
 
 
@@ -13,11 +14,17 @@ public class User extends Pongo {
 		URL_NAME.setOwningType("org.ossmeter.metricprovider.activeusers.model.User");
 		USERID.setOwningType("org.ossmeter.metricprovider.activeusers.model.User");
 		LASTACTIVITYDATE.setOwningType("org.ossmeter.metricprovider.activeusers.model.User");
+		ARTICLES.setOwningType("org.ossmeter.metricprovider.activeusers.model.User");
+		REQUESTS.setOwningType("org.ossmeter.metricprovider.activeusers.model.User");
+		REPLIES.setOwningType("org.ossmeter.metricprovider.activeusers.model.User");
 	}
 	
 	public static StringQueryProducer URL_NAME = new StringQueryProducer("url_name"); 
 	public static StringQueryProducer USERID = new StringQueryProducer("userId"); 
 	public static StringQueryProducer LASTACTIVITYDATE = new StringQueryProducer("lastActivityDate"); 
+	public static NumericalQueryProducer ARTICLES = new NumericalQueryProducer("articles");
+	public static NumericalQueryProducer REQUESTS = new NumericalQueryProducer("requests");
+	public static NumericalQueryProducer REPLIES = new NumericalQueryProducer("replies");
 	
 	
 	public String getUrl_name() {
@@ -44,6 +51,33 @@ public class User extends Pongo {
 	
 	public User setLastActivityDate(String lastActivityDate) {
 		dbObject.put("lastActivityDate", lastActivityDate);
+		notifyChanged();
+		return this;
+	}
+	public int getArticles() {
+		return parseInteger(dbObject.get("articles")+"", 0);
+	}
+	
+	public User setArticles(int articles) {
+		dbObject.put("articles", articles);
+		notifyChanged();
+		return this;
+	}
+	public int getRequests() {
+		return parseInteger(dbObject.get("requests")+"", 0);
+	}
+	
+	public User setRequests(int requests) {
+		dbObject.put("requests", requests);
+		notifyChanged();
+		return this;
+	}
+	public int getReplies() {
+		return parseInteger(dbObject.get("replies")+"", 0);
+	}
+	
+	public User setReplies(int replies) {
+		dbObject.put("replies", replies);
 		notifyChanged();
 		return this;
 	}

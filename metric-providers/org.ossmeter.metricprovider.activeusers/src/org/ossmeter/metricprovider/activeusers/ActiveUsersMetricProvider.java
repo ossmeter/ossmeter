@@ -1,12 +1,14 @@
 package org.ossmeter.metricprovider.activeusers;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 import org.ossmeter.metricprovider.activeusers.model.ActiveUsers;
 import org.ossmeter.metricprovider.activeusers.model.NewsgroupData;
 import org.ossmeter.metricprovider.activeusers.model.User;
+import org.ossmeter.metricprovider.requestreplyclassification.RequestReplyClassificationMetricProvider;
+import org.ossmeter.metricprovider.requestreplyclassification.model.NewsgroupArticlesData;
+import org.ossmeter.metricprovider.requestreplyclassification.model.Rrc;
 import org.ossmeter.platform.Date;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.ITransientMetricProvider;
@@ -29,6 +31,10 @@ public class ActiveUsersMetricProvider implements ITransientMetricProvider<Activ
 	
 	protected PlatformCommunicationChannelManager communicationChannelManager;
 
+	protected MetricProviderContext context;
+	
+	protected List<IMetricProvider> uses;
+
 	@Override
 	public String getIdentifier() {
 		return ActiveUsersMetricProvider.class.getCanonicalName();
@@ -44,16 +50,17 @@ public class ActiveUsersMetricProvider implements ITransientMetricProvider<Activ
 
 	@Override
 	public void setUses(List<IMetricProvider> uses) {
-		// DO NOTHING -- we don't use anything
+		this.uses = uses;
 	}
 
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return Collections.emptyList();
+		return Arrays.asList(RequestReplyClassificationMetricProvider.class.getCanonicalName());
 	}
 
 	@Override
 	public void setMetricProviderContext(MetricProviderContext context) {
+		this.context = context;
 		this.communicationChannelManager = context.getPlatformCommunicationChannelManager();
 	}
 
@@ -65,6 +72,10 @@ public class ActiveUsersMetricProvider implements ITransientMetricProvider<Activ
 	@Override
 	public void measure(Project project, ProjectDelta projectDelta, ActiveUsers db) {
 		CommunicationChannelProjectDelta delta = projectDelta.getCommunicationChannelDelta();
+		
+		Rrc usedClassifier = 
+				((RequestReplyClassificationMetricProvider)uses.get(0)).adapt(context.getProjectDB(project));
+
 		for ( CommunicationChannelDelta communicationChannelDelta: delta.getCommunicationChannelSystemDeltas()) {
 			CommunicationChannel communicationChannel = communicationChannelDelta.getCommunicationChannel();
 			if (!(communicationChannel instanceof NntpNewsGroup)) continue;
@@ -73,8 +84,11 @@ public class ActiveUsersMetricProvider implements ITransientMetricProvider<Activ
 			if (newsgroupData == null) {
 				newsgroupData = new NewsgroupData();
 				newsgroupData.setUrl_name(newsgroup.getUrl());
+				newsgroupData.setPreviousUsers(0);
 				db.getNewsgroups().add(newsgroupData);
-			} 
+			} else
+				newsgroupData.setPreviousUsers(newsgroupData.getUsers());
+			
 			List<CommunicationChannelArticle> articles = communicationChannelDelta.getArticles();
 			for (CommunicationChannelArticle article: articles) {
 				Iterable<User> usersIt = db.getUsers().
@@ -88,38 +102,72 @@ public class ActiveUsersMetricProvider implements ITransientMetricProvider<Activ
 					user = new User();
 					user.setUrl_name(newsgroup.getUrl());
 					user.setUserId(article.getUser());
-					db.getUsers().add(user);
 					user.setLastActivityDate(article.getDate().toString());
+					user.setArticles(1);
+					String requestReplyClass = getRequestReplyClass(usedClassifier, newsgroup, article);
+					if (requestReplyClass.equals("Reply"))
+						user.setReplies(1);
+					else if (requestReplyClass.equals("Request"))
+						user.setRequests(1);
+					db.getUsers().add(user);
 				} else {
 					java.util.Date javaDate = NntpUtil.parseDate(user.getLastActivityDate());
 					Date userDate = new Date(javaDate);
 					Date articleDate = new Date(article.getDate());
 					if (articleDate.compareTo(userDate)==1)
 						user.setLastActivityDate(article.getDate().toString());
+					user.setArticles(user.getArticles()+1);
+					String requestReplyClass = getRequestReplyClass(usedClassifier, newsgroup, article);
+					if (requestReplyClass.equals("Reply"))
+						user.setReplies(user.getReplies()+1);
+					else if (requestReplyClass.equals("Request"))
+						user.setRequests(user.getRequests()+1);
 				}
 				db.sync();
 			}
 			
 			Iterable<User> usersIt = db.getUsers().findByUrl_name(newsgroup.getUrl());
-			List<User> usersToRemove = new ArrayList<User>();
-			int numberOfUsers = 0;
+			int users = 0,
+				activeUsers = 0,
+				inactiveUsers = 0;
 			for (User user:  usersIt) {
-				numberOfUsers++;
+				Boolean active = true;
+				users++;
 				java.util.Date javaDate = NntpUtil.parseDate(user.getLastActivityDate());
 				if (javaDate!=null) {
 					Date date = new Date(javaDate);
 					if (projectDelta.getDate().compareTo(date.addDays(STEP)) >0) {
-						usersToRemove.add(user);
+						active=false;
 					}
-				}
+				} else
+					active=false;
+				if (active) activeUsers++;
+				else inactiveUsers++;
 			}
-			for (User user: usersToRemove) {
-				db.getUsers().remove(user);
-			}
-			
-			newsgroupData.setNumberOfActiveUsers(numberOfUsers - usersToRemove.size());
+			newsgroupData.setActiveUsers(activeUsers);
+			newsgroupData.setInactiveUsers(inactiveUsers);
+			newsgroupData.setUsers(users);
 			db.sync();
 		}
+	}
+
+	private String getRequestReplyClass(Rrc usedClassifier, 
+			NntpNewsGroup newsgroup, CommunicationChannelArticle article) {
+		Iterable<NewsgroupArticlesData> newsgroupArticlesDataIt = usedClassifier.getNewsgroupArticles().
+				find(NewsgroupArticlesData.URL.eq(newsgroup.getUrl()), 
+						NewsgroupArticlesData.ARTICLENUMBER.eq(article.getArticleNumber()));
+		NewsgroupArticlesData newsgroupArticleData = null;
+		for (NewsgroupArticlesData art:  newsgroupArticlesDataIt) {
+			newsgroupArticleData = art;
+		}
+		if (newsgroupArticleData == null) {
+			System.err.println("Active users metric -\t" + 
+					"there is no classification for article: " + article.getArticleNumber() +
+					"\t of newsgroup: " + newsgroup.getUrl());
+			System.exit(-1);
+		} else
+			return newsgroupArticleData.getClassificationResult();
+		return "";
 	}
 
 	@Override

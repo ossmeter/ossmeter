@@ -10,7 +10,8 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.repository.model,
  org.ossmeter.platform.communicationchannel.nntp,
  org.ossmeter.repository.model.cc.nntp,
- com.googlecode.pongo.runtime.osgi
+ com.googlecode.pongo.runtime.osgi,
+ org.ossmeter.metricprovider.requestreplyclassification
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.metricprovider.activeusers,
