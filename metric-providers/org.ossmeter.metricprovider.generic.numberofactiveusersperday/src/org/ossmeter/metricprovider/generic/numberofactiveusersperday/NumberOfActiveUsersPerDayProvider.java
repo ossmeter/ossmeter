@@ -51,7 +51,7 @@ public class NumberOfActiveUsersPerDayProvider implements IHistoricalMetricProvi
 			ActiveUsers ActiveUsers = ((ActiveUsersMetricProvider)used).adapt(context.getProjectDB(project));
 			int activeUsers = 0;
 			for (NewsgroupData newsgroup: ActiveUsers.getNewsgroups())
-				activeUsers += newsgroup.getNumberOfActiveUsers();
+				activeUsers += newsgroup.getActiveUsers();
 			if (activeUsers > 0) {
 				DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
 				dailyNewsgroupData.setNumberOfActiveUsers(activeUsers);
@@ -83,7 +83,7 @@ public class NumberOfActiveUsersPerDayProvider implements IHistoricalMetricProvi
 
 	@Override
 	public String getFriendlyName() {
-		return "Number Of ActiveUsers Per Day Provider";
+		return "Number Of Active Users Per Day Provider";
 	}
 
 	@Override

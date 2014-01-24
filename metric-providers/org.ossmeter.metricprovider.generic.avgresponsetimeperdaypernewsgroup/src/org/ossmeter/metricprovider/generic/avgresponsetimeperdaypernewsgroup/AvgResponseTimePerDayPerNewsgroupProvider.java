@@ -30,7 +30,7 @@ import com.googlecode.pongo.runtime.Pongo;
 public class AvgResponseTimePerDayPerNewsgroupProvider implements IHistoricalMetricProvider{
 
 	public final static String IDENTIFIER = 
-			"org.ossmeter.metricprovider.generic.avgresponsetimeperdaypernewsgroup";
+			"org.ossmeter.metricprovider.generic.cumulativeavgresponsetimepernewsgroup";
 
 	protected MetricProviderContext context;
 	
@@ -57,7 +57,7 @@ public class AvgResponseTimePerDayPerNewsgroupProvider implements IHistoricalMet
 	public Pongo measure(Project project) {
 
 		if (uses.size()!=2) {
-			System.err.println("Metric: unansweredthreadsperdaypernewsgroup failed to retrieve " + 
+			System.err.println("Metric: cumulativeavgresponsetimepernewsgroup failed to retrieve " + 
 								"the two transient metrics it needs!");
 			System.exit(-1);
 		}

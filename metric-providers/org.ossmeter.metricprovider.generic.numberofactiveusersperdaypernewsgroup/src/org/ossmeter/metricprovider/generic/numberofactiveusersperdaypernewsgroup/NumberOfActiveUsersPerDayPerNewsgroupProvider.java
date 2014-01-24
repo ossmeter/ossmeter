@@ -49,10 +49,10 @@ public class NumberOfActiveUsersPerDayPerNewsgroupProvider implements IHistorica
 		for (IMetricProvider used : uses) {
 			  ActiveUsers ActiveUsers = ((ActiveUsersMetricProvider)used).adapt(context.getProjectDB(project));
 			 for (NewsgroupData newsgroup: ActiveUsers.getNewsgroups()) {
-				 if (newsgroup.getNumberOfActiveUsers() > 0) {
+				 if (newsgroup.getActiveUsers() > 0) {
 					 DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
 					 dailyNewsgroupData.setUrl_name(newsgroup.getUrl_name());
-					 dailyNewsgroupData.setNumberOfActiveUsers(newsgroup.getNumberOfActiveUsers());
+					 dailyNewsgroupData.setNumberOfActiveUsers(newsgroup.getActiveUsers());
 					 dailyActiveUsers.getNewsgroups().add(dailyNewsgroupData);
 				 }
 			 }
@@ -82,7 +82,7 @@ public class NumberOfActiveUsersPerDayPerNewsgroupProvider implements IHistorica
 
 	@Override
 	public String getFriendlyName() {
-		return "Number Of ActiveUsers Per Day Per Newsgroup Provider";
+		return "Number Of Active Users Per Day Per Newsgroup Provider";
 	}
 
 	@Override
