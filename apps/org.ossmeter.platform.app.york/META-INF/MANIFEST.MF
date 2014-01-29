@@ -10,18 +10,9 @@ Require-Bundle: org.eclipse.core.runtime,
  com.googlecode.pongo.runtime.osgi,
  org.ossmeter.repository.model,
  com.googlecode.pongo.runtime,
- org.ossmeter.repository.model.sourceforge,
  org.ossmeter.platform.client.api,
- org.ossmeter.repository.model.eclipse,
- org.ossmeter.repository.model.cc.nntp,
- org.ossmeter.repository.model.bts.bugzilla,
  org.ossmeter.repository.model.vcs.svn,
- org.ossmeter.metricprovider.generic.overalldailynumberofnewbugzillabugs;bundle-version="1.0.0",
- org.ossmeter.metricprovider.generic.numberofresolvedclosedbugzillabugs,
- org.ossmeter.metricprovider.generic.overalldailynumberofbugzillacomments;bundle-version="1.0.0",
- org.ossmeter.metricprovider.generic.overalldailynumberofbugzillapatches;bundle-version="1.0.0",
- org.ossmeter.metricprovider.generic.overalldailynumberofarticles;bundle-version="1.0.0",
- org.ossmeter.metricprovider.generic.numberofrequestsrepliesperday;bundle-version="1.0.0",
- org.ossmeter.metricprovider.generic.numberofactiveusersperday;bundle-version="1.0.0"
+ org.ossmeter.repository.model.bts.bugzilla,
+ org.ossmeter.repository.model.cc.nntp
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy

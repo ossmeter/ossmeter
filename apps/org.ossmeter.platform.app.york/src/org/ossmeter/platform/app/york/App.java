@@ -50,31 +50,29 @@ public class App implements IApplication {
 
 //		platform.getProjectRepositoryManager().getProjectRepository().sync();
 
-		Project openOffice = ProjectCreationUtil.createProjectSvnNntpBugzilla(
-				"OpenOffice2", "openoffice", "Description", 
-				"https://svn.apache.org/repos/asf/openoffice/trunk/main",
-				"https://issues.apache.org/ooo/xmlrpc.cgi", "General", "null",
-				"openoffice.user", "news.gmane.org/gmane.comp.apache.openoffice.user", false, "", "");	
-		
-		Project ant = ProjectCreationUtil.createProjectSvnNntpBugzilla(
-				"Ant", "ant", "Description", 
-				"http://svn.apache.org/repos/asf/ant/core/trunk/",
-				"https://issues.apache.org/bugzilla/xmlrpc.cgi", "Ant", "Core",
-				"ant-user", "news.gmane.org/gmane.comp.jakarta.ant.user", false, "", "");
-		
-		Project log4j = ProjectCreationUtil.createProjectSvnNntpBugzilla(
-				"Log4J", "log4j", "Description", 
-				"http://svn.apache.org/repos/asf/logging/log4j/trunk",
-				"https://issues.apache.org/bugzilla/xmlrpc.cgi", "Log4j", "null", 
-				"ant-user", "news.gmane.org/gmane.comp.jakarta.log4j.user", false, "", "");
+//		Project openOffice = ProjectCreationUtil.createProjectSvnNntpBugzilla(
+//				"OpenOffice2", "openoffice", "Description", 
+//				"https://svn.apache.org/repos/asf/openoffice/trunk/main",
+//				"https://issues.apache.org/ooo/xmlrpc.cgi", "General", "null",
+//				"openoffice.user", "news.gmane.org/gmane.comp.apache.openoffice.user", false, "", "");	
+//		
+//		Project ant = ProjectCreationUtil.createProjectSvnNntpBugzilla(
+//				"Ant", "ant", "Description", 
+//				"http://svn.apache.org/repos/asf/ant/core/trunk/",
+//				"https://issues.apache.org/bugzilla/xmlrpc.cgi", "Ant", "Core",
+//				"ant-user", "news.gmane.org/gmane.comp.jakarta.ant.user", false, "", "");
+//		
+//		Project log4j = ProjectCreationUtil.createProjectSvnNntpBugzilla(
+//				"Log4J", "log4j", "Description", 
+//				"http://svn.apache.org/repos/asf/logging/log4j/trunk",
+//				"https://issues.apache.org/bugzilla/xmlrpc.cgi", "Log4j", "null", 
+//				"ant-user", "news.gmane.org/gmane.comp.jakarta.log4j.user", false, "", "");
 //		
 		Project tomcat = ProjectCreationUtil.createProjectSvnNntpBugzilla(
 				"Tomcat", "tomcat", "Description", 
 				"http://svn.apache.org/repos/asf/tomcat/trunk/",
 				"https://issues.apache.org/bugzilla/xmlrpc.cgi", "Tomcat 8", "Manager",
 				"tomcat-user", "news.gmane.org/gmane.comp.jakarta.tomcat.user", false, "", "");
-//		
-//		//TODO CHECK THE NNTP CONNECTION STRINGS AND GROUP
 //		
 //		// FIXME: subversion  currently cannot connect to bugzilla
 //		Project subversion = ProjectCreationUtil.createProjectSvnNntpBugzilla(
@@ -83,31 +81,36 @@ public class App implements IApplication {
 //				"http://subversion.tigris.org/issues/xmlrpc.cgi", "subversion", "null",
 //				"subversion.user", "news.gmane.org/gmane.comp.apache.openoffice.user", false, "", "");
 //		
-		Project subversive = ProjectCreationUtil.createProjectSvnNntpBugzilla(
-				"Subversive", "subversive", "Description", 
-				"http://dev.eclipse.org/svnroot/technology/org.eclipse.subversive/trunk",
-				"https://bugs.eclipse.org/bugs/xmlrpc.cgi", "Subversive", "null",
-				"subversion.user", "news.eclipse.org/eclipse.technology.subversive", true, "exquisitus", "flinder1f7");
-//
-		Project epsilon = ProjectCreationUtil.createProjectSvnNntpBugzilla(
-				"Epsilon", "epsilon", "Description", 
-				"http://dev.eclipse.org/svnroot/modeling/org.eclipse.epsilon/trunk",
-				"https://bugs.eclipse.org/bugs/xmlrpc.cgi", "Epsilon", "null",
-				"epsilon", "news.eclipse.org/eclipse.epsilon", true, "exquisitus", "flinder1f7");
+//		Project subversive = ProjectCreationUtil.createProjectSvnNntpBugzilla(
+//				"Subversive", "subversive", "Description", 
+//				"http://dev.eclipse.org/svnroot/technology/org.eclipse.subversive/trunk",
+//				"https://bugs.eclipse.org/bugs/xmlrpc.cgi", "Subversive", "null",
+//				"subversion.user", "news.eclipse.org/eclipse.technology.subversive", true, "exquisitus", "flinder1f7");
+////
+//		Project epsilon = ProjectCreationUtil.createProjectSvnNntpBugzilla(
+//				"Epsilon", "epsilon", "Description", 
+//				"http://dev.eclipse.org/svnroot/modeling/org.eclipse.epsilon/trunk",
+//				"https://bugs.eclipse.org/bugs/xmlrpc.cgi", "Epsilon", "null",
+//				"epsilon", "news.eclipse.org/eclipse.epsilon", true, "exquisitus", "flinder1f7");
 
+		// This is just for the MSR paper
+		tomcat.getVcsRepositories().clear();
+		tomcat.getBugTrackingSystems().clear();
+		
+		
 		addProjectNonDuplicating(platform, tomcat);
-		addProjectNonDuplicating(platform, epsilon);
-		addProjectNonDuplicating(platform, subversive);
-		addProjectNonDuplicating(platform, log4j);
-		addProjectNonDuplicating(platform, ant);
+//		addProjectNonDuplicating(platform, epsilon);
+//		addProjectNonDuplicating(platform, subversive);
+//		addProjectNonDuplicating(platform, log4j);
+//		addProjectNonDuplicating(platform, ant);
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 
-		System.err.println("The platform is not running. No projects are being scheduled. In Client API debug mode. Uncomment platform.run() if you want to analyse projects.");
-//		platform.run();
+//		System.err.println("The platform is not running. No projects are being scheduled. In Client API debug mode. Uncomment platform.run() if you want to analyse projects.");
+		platform.run();
 		
-		while (true) {
-			if (1 > 2) break;
-		}
+//		while (true) {
+//			Thread.sleep(10000);
+//		}
 	}
 	
 	private void addProjectNonDuplicating(Platform platform, Project project) {

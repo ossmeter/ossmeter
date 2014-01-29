@@ -3,7 +3,6 @@ package org.ossmeter.platform.app.york.util;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
 import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
-import org.ossmeter.repository.model.sourceforge.SourceForgeProject;
 import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 
 /**
@@ -114,13 +113,13 @@ public class ProjectCreationUtil {
 //	}
 	
 	
-	public static Project createSourceForgeProject(String name) {
-		SourceForgeProject project = new SourceForgeProject();
-		project.setName(name);
-		/* TODO: Why was this code commented out?
-		SvnRepository svnRepository = new SvnRepository();
-		svnRepository.setUrl("http://" + name + ".svn.sourceforge.net/svnroot/" + name);
-		project.getVcsRepositories().add(svnRepository); */
-		return project;
-	}
+//	public static Project createSourceForgeProject(String name) {
+//		SourceForgeProject project = new SourceForgeProject();
+//		project.setName(name);
+//		/* TODO: Why was this code commented out?
+//		SvnRepository svnRepository = new SvnRepository();
+//		svnRepository.setUrl("http://" + name + ".svn.sourceforge.net/svnroot/" + name);
+//		project.getVcsRepositories().add(svnRepository); */
+//		return project;
+//	}
 }
