@@ -50,30 +50,27 @@ public class NumberOfRequestsRepliesPerDayPerNewsgroupProvider implements IHisto
 	@Override
 	public Pongo measure(Project project) {
 
+		Rrc usedRrc = ((RequestReplyClassificationMetricProvider)uses.get(0)).adapt(context.getProjectDB(project));
 		DailyNorr dailyNorr = new DailyNorr();
 		Set<String> newsgroupUrls = new HashSet<String>();
 		Map<String, Integer> requests = new HashMap<String, Integer>(), 
 							  replies = new HashMap<String, Integer>();
-		for (IMetricProvider used : uses) {
-			Rrc usedRrc = ((RequestReplyClassificationMetricProvider)used).
-							adapt(context.getProjectDB(project));
-			for (NewsgroupArticlesData naData: usedRrc.getNewsgroupArticles()) {
-				Map<String, Integer> rr = null;
-				if (naData.getClassificationResult().equals("Request")) 
-					rr = requests;
-				else if (naData.getClassificationResult().equals("Reply")) 
-					rr = replies;
-				if (rr!=null) {
-					newsgroupUrls.add(naData.getUrl());
-					if (rr.containsKey(naData.getUrl()))
-						rr.put(naData.getUrl(), rr.get(naData.getUrl()) + 1);
-					else
-						rr.put(naData.getUrl(), 1);
-				} else {
-					System.err.println("Classification result ( " + 
-							naData.getClassificationResult() + 
-									" ) should be either Request or Reply!");
-				}
+		for (NewsgroupArticlesData naData: usedRrc.getNewsgroupArticles()) {
+			Map<String, Integer> rr = null;
+			if (naData.getClassificationResult().equals("Request")) 
+				rr = requests;
+			else if (naData.getClassificationResult().equals("Reply")) 
+				rr = replies;
+			if (rr!=null) {
+				newsgroupUrls.add(naData.getUrl());
+				if (rr.containsKey(naData.getUrl()))
+					rr.put(naData.getUrl(), rr.get(naData.getUrl()) + 1);
+				else
+					rr.put(naData.getUrl(), 1);
+			} else {
+				System.err.println("Classification result ( " + 
+						naData.getClassificationResult() + 
+						" ) should be either Request or Reply!");
 			}
 		}
 		for (String newsgroupUrl: newsgroupUrls) {
