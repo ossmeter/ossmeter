@@ -64,22 +64,6 @@ public class SimpleMetricProviderScheduler {
 	}
 	
 	/**
-	 * Orders transient metric providers to ensure that any dependencies are
-	 * executed first. TODO: Not actually implemented.
-	 * @param providers
-	 * @return
-	 */
-	protected List<ITransientMetricProvider> getOrderedTransientMetricProviders(List<IMetricProvider> providers) {
-		List<ITransientMetricProvider> transMPs = new ArrayList<ITransientMetricProvider>();
-		for (IMetricProvider provider : providers) {
-			if (provider instanceof ITransientMetricProvider) {
-				transMPs.add((ITransientMetricProvider<?>) provider);
-			} // TODO dependencies need ordering
-		}
-		return transMPs;
-	}
-	
-	/**
 	 * Applies the list of metric providers to the project. Applies each
 	 * metric provider daily from the last executed date (or the beginning
 	 * of time).
@@ -156,8 +140,8 @@ public class SimpleMetricProviderScheduler {
 			
 			// 3. Execute historical MPs
 			MetricHistoryManager historyManager = new MetricHistoryManager(platform);
-			for (IMetricProvider  provider : providers) {
-				if (provider instanceof IHistoricalMetricProvider && provider.appliesTo(project) && !hasMetricProviderBeenExecutedForDate(project, provider, date)) {
+			for (IHistoricalMetricProvider  provider : getOrderedHistoricMetricProviders(providers)) {
+				if (provider.appliesTo(project) && !hasMetricProviderBeenExecutedForDate(project, provider, date)) {
 					logger.info("\t'\tHMP: " + provider.getIdentifier());
 					provider.setMetricProviderContext(new MetricProviderContext(platform, new OssmeterLoggerFactory().makeNewLoggerInstance(provider.getIdentifier())));
 					addDependenciesToMetricProvider(provider);
@@ -174,6 +158,74 @@ public class SimpleMetricProviderScheduler {
 			platform.getProjectRepositoryManager().projectRepository.sync();
 		}
 	}
+	
+	private List<IHistoricalMetricProvider> getOrderedHistoricMetricProviders(List<IMetricProvider> providers) {
+		List<IMetricProvider> histMps = new ArrayList<IMetricProvider>();
+		
+		for (IMetricProvider mp : providers) {
+			if( mp instanceof IHistoricalMetricProvider) {
+				histMps.add(mp);
+			}
+		}
+		return (List)sortMetricProviders(histMps); // FIXME: ack! Loss of type safety.
+	}
+
+	
+	/**
+	 * Orders transient metric providers to ensure that any dependencies are
+	 * executed first. TODO: Not actually implemented.
+	 * @param providers
+	 * @return
+	 */
+	protected List<ITransientMetricProvider> getOrderedTransientMetricProviders(List<IMetricProvider> providers) {
+		List<IMetricProvider> transMps = new ArrayList<IMetricProvider>();
+		
+		for (IMetricProvider mp : providers) {
+			if( mp instanceof ITransientMetricProvider) {
+				transMps.add(mp);
+			}
+		}
+		return (List)sortMetricProviders(transMps); // FIXME: ack! Loss of type safety.
+	}
+	
+	
+	protected List<IMetricProvider> sortMetricProviders(List<IMetricProvider> providers) {
+		List<IMetricProvider> sorted = new ArrayList<IMetricProvider>();
+		List<IMetricProvider> marked = new ArrayList<IMetricProvider>();
+		List<IMetricProvider> temporarilyMarked = new ArrayList<IMetricProvider>();
+		List<IMetricProvider> unmarked = new ArrayList<IMetricProvider>();
+		unmarked.addAll(providers);
+		
+		while (unmarked.size()>0) {
+			IMetricProvider mp = unmarked.get(0);
+			visitDependencies(marked, temporarilyMarked, unmarked, mp, providers, sorted);
+		}
+		return sorted;
+	}
+	
+	protected void visitDependencies(List<IMetricProvider> marked, List<IMetricProvider> temporarilyMarked, List<IMetricProvider> unmarked, IMetricProvider mp, List<IMetricProvider> providers, List<IMetricProvider> sorted) {
+		if (temporarilyMarked.contains(mp)) {
+			throw new RuntimeException("Temporarily marked error.");
+		}
+		if (!marked.contains(mp)) {
+			temporarilyMarked.add(mp);
+			List<String> dependencies = mp.getIdentifiersOfUses();
+			if (dependencies != null) 
+				for (String dependencyIdentifier : dependencies) {
+					for (IMetricProvider p : providers) {
+						if (p.getIdentifier().equals(dependencyIdentifier)){
+							visitDependencies(marked, temporarilyMarked, unmarked, p, providers, sorted);
+							break;
+						}
+					}
+				}
+			marked.add(mp);
+			temporarilyMarked.remove(mp);
+			unmarked.remove(mp);
+			sorted.add(mp);
+		}
+	}
+	
 	
 	/**
 	 * Does what the method name suggests.
