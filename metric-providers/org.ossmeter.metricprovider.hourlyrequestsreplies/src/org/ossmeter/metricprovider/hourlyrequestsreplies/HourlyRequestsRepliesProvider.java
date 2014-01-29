@@ -110,8 +110,8 @@ public class HourlyRequestsRepliesProvider implements ITransientMetricProvider<H
 			
 			List<CommunicationChannelArticle> articles = communicationChannelDelta.getArticles();
 			for (CommunicationChannelArticle article: articles) {
+				String hourNumber = String.format("%02d", article.getDate().getHours());
 				
-				int hourNumber = article.getDate().getHours();
 				HourArticles hourArticles = db.getHourArticles().findOneByHour(hourNumber + ":00");
 				hourArticles.setNumberOfArticles(hourArticles.getNumberOfArticles()+1);
 
@@ -142,8 +142,9 @@ public class HourlyRequestsRepliesProvider implements ITransientMetricProvider<H
 					"there is no classification for article: " + article.getArticleNumber() +
 					"\t of newsgroup: " + newsgroup.getUrl());
 			System.exit(-1);
-		} else
+		} else{
 			return newsgroupArticleData.getClassificationResult();
+		}
 		return "";
 	}
 
