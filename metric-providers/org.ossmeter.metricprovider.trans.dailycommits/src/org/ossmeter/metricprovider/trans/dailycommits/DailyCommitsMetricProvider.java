@@ -108,7 +108,7 @@ public class DailyCommitsMetricProvider implements ITransientMetricProvider<Dail
 						Date date = new Date(commit.getDate());
 						Calendar cal = Calendar.getInstance();
 						cal.setTime(date.toJavaDate());
-						int dow = cal.get(Calendar.DAY_OF_WEEK);
+						int dow = cal.get(Calendar.DAY_OF_WEEK)-1;
 						
 						String dayName = daysOfWeek[dow];
 						
