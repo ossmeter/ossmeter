@@ -117,7 +117,7 @@ public class DailyRequestsRepliesProvider implements ITransientMetricProvider<Da
 				Date date = new Date(article.getDate());
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(date.toJavaDate());
-				int dow = cal.get(Calendar.DAY_OF_WEEK);
+				int dow = cal.get(Calendar.DAY_OF_WEEK) - 1;
 				String dayName = daysOfWeek[dow];
 
 				DayArticles dayArticles = db.getDayArticles().findOneByName(dayName);
