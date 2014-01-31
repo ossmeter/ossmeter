@@ -117,7 +117,14 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 		NNTPClient nntpClient = NntpUtil.connectToNntpServer(newsgroup);
 		NewsgroupInfo newsgroupInfo = NntpUtil.selectNewsgroup(nntpClient, newsgroup);
 		int firstArticleNumber = newsgroupInfo.getFirstArticle();
-		Reader reader = nntpClient.retrieveArticle(firstArticleNumber);
+		
+		Reader reader = reader = nntpClient.retrieveArticle(firstArticleNumber);;
+		while (reader == null) {
+			firstArticleNumber++;
+			reader = nntpClient.retrieveArticle(firstArticleNumber);
+			if (firstArticleNumber >= newsgroupInfo.getLastArticle()) break;
+		}
+		
 		ArticleHeader articleHeader = new ArticleHeader(reader);
 //		Article article = NntpUtil.getArticleInfo(nntpClient, articleId);
 		nntpClient.disconnect();
