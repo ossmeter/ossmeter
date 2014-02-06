@@ -2,8 +2,11 @@ package org.ossmeter.metricprovider.generic.dailyavgresponsetimepernewsgroup;
 
 import java.text.ParseException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -55,8 +58,13 @@ public class DailyAvgResponseTimePerNewsgroupProvider implements IHistoricalMetr
 		return false;
 	}
 
+//	private String time(long timeInMS) {
+//		return DurationFormatUtils.formatDuration(timeInMS, "HH:mm:ss,SSS");
+//	}
+	
 	@Override
 	public Pongo measure(Project project) {
+//		final long startTime = System.currentTimeMillis();
 
 		if (uses.size()!=2) {
 			System.err.println("Metric: dailyavgresponsetimepernewsgroup failed to retrieve " + 
@@ -75,106 +83,64 @@ public class DailyAvgResponseTimePerNewsgroupProvider implements IHistoricalMetr
 		try {currentDate = new Date(cd.getDate());} 
 		catch (ParseException e) {e.printStackTrace();}
 
-		HashSet<ArticleData> articleSet = new HashSet<ArticleData>();
-		for (ArticleData article: usedThreads.getArticles())
-			articleSet.add(article);
-		SortedSet<ArticleData> sortedArticleSet = new TreeSet<ArticleData>(new ArticleDataComparator());
-		sortedArticleSet.addAll(articleSet);
-		
-		DailyAverageThreadResponseTime dailyAverageThreadResponseTime = 
-				new DailyAverageThreadResponseTime();
+		Map<String, String> articleReplyRequest = new HashMap<String, String>();
+		for (NewsgroupArticlesData article: usedClassifier.getNewsgroupArticles()) {
+			articleReplyRequest.put(article.getUrl()+article.getArticleNumber(), article.getClassificationResult());
+		}
 
-		String lastUrl_name = "";
-		int lastThreadId = -1, threads = 0;
+		DailyAverageThreadResponseTime dailyAverageThreadResponseTime = new DailyAverageThreadResponseTime();
+
 		long sumOfDurations = 0;
-		String firstMessageTime = "", firstResponseTime = "";
-		Boolean answered = false;
-		for (ArticleData article: sortedArticleSet) {
-			if (!article.getUrl_name().equals(lastUrl_name)) {
-				if (lastUrl_name.length()>0) {
-					java.util.Date firstResponseDate = NntpUtil.parseDate(firstResponseTime);
-					if ( (!firstMessageTime.equals(firstResponseTime))
-							&&(currentDate.compareTo(firstResponseDate)==0)) {
-						long duration = computeDurationInSeconds(firstMessageTime, firstResponseTime);
-						threads++;
-						sumOfDurations += duration;
-//						System.err.println("firstMessageTime: " + firstMessageTime + "\t" +
-//								"firstResponseTime: " + firstResponseTime + "\t" + 
-//								"duration: " + duration + "\t" + 
-//								"avg: " + computeAverageDuration(sumOfDurations, threads));
-					}
-					dailyAverageThreadResponseTime.getNewsgroups().add(
-							prepareNewsgroupData(lastUrl_name, sumOfDurations, threads));
-					
-				}
+		int threadsConsidered = 0,
+			threadId = 1,
+			threadSize = 0;
+		String lastUrl_name = "";
+		while ((threadSize>0)||(threadId==1)) {
+			threadSize = 0;
+			HashSet<ArticleData> articleSet = new HashSet<ArticleData>();
+			Iterable<ArticleData> articleDataIt = usedThreads.getArticles().find(ArticleData.THREADID.eq(threadId));
+			for (ArticleData article: articleDataIt) {
+				articleSet.add(article);
+				threadSize++;
+			}
+			SortedSet<ArticleData> sortedArticleSet = new TreeSet<ArticleData>(new ArticleDataComparator());
+			sortedArticleSet.addAll(articleSet);
+
+			String firstMessageTime = null;
+	        Iterator<ArticleData> iterator = sortedArticleSet.iterator();
+			boolean first=true,
+					cont=true;
+
+			while ((cont)&&(iterator.hasNext())) {
+				ArticleData article = iterator.next();
 				lastUrl_name = article.getUrl_name();
-				lastThreadId = article.getThreadId();
-				firstMessageTime = "";
-				firstResponseTime = "";
-				answered = false;
-			} else if (article.getThreadId() != lastThreadId) {
-				if (firstResponseTime.length()>0) {
-					java.util.Date firstResponseDate = NntpUtil.parseDate(firstResponseTime);
-					if ( (!firstMessageTime.equals(firstResponseTime))
-							&&(currentDate.compareTo(firstResponseDate)==0)) {
-						long duration = computeDurationInSeconds(firstMessageTime, firstResponseTime);
-						threads++;
+				String responseReply = articleReplyRequest.get(article.getUrl_name()+article.getArticleNumber());
+				if (first) firstMessageTime = article.getDate();
+				if (responseReply.equals("Reply")) cont=false;
+				if ((!first)&&(responseReply.equals("Reply"))) {
+					java.util.Date firstResponseDate = NntpUtil.parseDate(article.getDate());
+					if (currentDate.compareTo(firstResponseDate)==0) {
+						long duration = computeDurationInSeconds(firstMessageTime, article.getDate());
 						sumOfDurations += duration;
+						threadsConsidered++;
 //						System.err.println("firstMessageTime: " + firstMessageTime + "\t" +
-//								"firstResponseTime: " + firstResponseTime + "\t" + 
+//								"firstResponseTime: " + article.getDate() + "\t" + 
 //								"duration: " + duration + "\t" + 
-//										"avg: " + computeAverageDuration(sumOfDurations, threads));
+//								"avg: " + computeAverageDuration(sumOfDurations, threadsConsidered));
 					}
 				}
-				firstMessageTime = "";
-				firstResponseTime = "";
-				answered = false;
-				lastThreadId = article.getThreadId();
+				first=false;
 			}
-			
-			if ( answered == false ) {
-				Iterable<NewsgroupArticlesData> newsgroupArticlesDataIt = usedClassifier.getNewsgroupArticles().
-						find(NewsgroupArticlesData.URL.eq(article.getUrl_name()), 
-								NewsgroupArticlesData.ARTICLENUMBER.eq(article.getArticleNumber()));
-				NewsgroupArticlesData newsgroupArticleData = null;
-				for (NewsgroupArticlesData art:  newsgroupArticlesDataIt) {
-					newsgroupArticleData = art;
-				}
-				if (newsgroupArticleData == null) {
-					System.err.println("Metric: " + IDENTIFIER + "\n\t" + 
-							"there is no classification for article: " + article.getArticleNumber() +
-							"\t of newsgroup: " + article.getUrl_name());
-					System.exit(-1);
-				} else {
-					if (firstMessageTime.length()==0) 
-						firstMessageTime = article.getDate();
-					if ((newsgroupArticleData.getClassificationResult().equals("Reply")) &&
-						((firstResponseTime.length()==0) )) {
-						firstResponseTime = article.getDate();
-						answered = true;
-					}
-				}
-				
-			}
+			threadId++;
 		}
-		if (firstResponseTime.length()>0) {
-			java.util.Date firstResponseDate = NntpUtil.parseDate(firstResponseTime);
-			if ( (!firstMessageTime.equals(firstResponseTime))
-					&&(currentDate.compareTo(firstResponseDate)==0)) {
-				long duration = computeDurationInSeconds(firstMessageTime, firstResponseTime);
-				threads++;	
-				sumOfDurations += duration;
-//				System.err.println("firstMessageTime: " + firstMessageTime + "\t" +
-//						"firstResponseTime: " + firstResponseTime + "\t" + 
-//						"duration: " + duration + "\t" + 
-//								"avg: " + computeAverageDuration(sumOfDurations, threads));
-			}
-		}
-		if (threads>0)
-			dailyAverageThreadResponseTime.getNewsgroups().add(prepareNewsgroupData(lastUrl_name, sumOfDurations, threads));
+
+		if (threadsConsidered>0)
+			dailyAverageThreadResponseTime.getNewsgroups().add(prepareNewsgroupData(lastUrl_name, sumOfDurations, threadsConsidered));
+
+//		System.err.println(time(System.currentTimeMillis() - startTime) + "\tdaily_new");
 		return dailyAverageThreadResponseTime;
 	}
-	
+
 	private static final long SECONDS_DAY = 24 * 60 * 60;
 
 	private long computeDurationInSeconds(String firstMessageTimeString, String firstResponseTimeString) {
@@ -189,11 +155,17 @@ public class DailyAvgResponseTimePerNewsgroupProvider implements IHistoricalMetr
 
 
 	private String computeAverageDuration(long sumOfDurations, int threads) {
-		long avgDuration = sumOfDurations/threads;
-		int days = (int) (avgDuration / SECONDS_DAY);
-		long lessThanDay = (avgDuration % SECONDS_DAY);
-		String formatted = days + ":" + 
-				DurationFormatUtils.formatDuration(lessThanDay*1000, "HH:mm:ss:SS");
+		String formatted = null;
+		if (threads>0) {
+			long avgDuration = sumOfDurations/threads;
+			int days = (int) (avgDuration / SECONDS_DAY);
+			long lessThanDay = (avgDuration % SECONDS_DAY);
+			formatted = days + ":" + 
+					DurationFormatUtils.formatDuration(lessThanDay*1000, "HH:mm:ss:SS");
+		} else {
+			formatted = 0 + ":" + 
+					DurationFormatUtils.formatDuration(0, "HH:mm:ss:SS");
+		}
 		return formatted;
 	}
 
