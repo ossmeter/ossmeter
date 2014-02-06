@@ -1,10 +1,11 @@
 package org.ossmeter.metricprovider.generic.unansweredthreadsperdaypernewsgroup;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.Map;
 
 import org.ossmeter.metricprovider.generic.unansweredthreadsperdaypernewsgroup.model.DailyNewsgroupData;
 import org.ossmeter.metricprovider.generic.unansweredthreadsperdaypernewsgroup.model.DailyUnansweredThreads;
@@ -13,7 +14,6 @@ import org.ossmeter.metricprovider.requestreplyclassification.model.NewsgroupArt
 import org.ossmeter.metricprovider.requestreplyclassification.model.Rrc;
 import org.ossmeter.metricprovider.threads.ThreadsMetricProvider;
 import org.ossmeter.metricprovider.threads.model.ArticleData;
-import org.ossmeter.metricprovider.threads.model.ArticleDataComparator;
 import org.ossmeter.metricprovider.threads.model.Threads;
 import org.ossmeter.platform.IHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
@@ -50,8 +50,13 @@ public class UnsweredThreadsPerDayPerNewsgroupProvider implements IHistoricalMet
 		return false;
 	}
 
+//	private String time(long timeInMS) {
+//		return DurationFormatUtils.formatDuration(timeInMS, "HH:mm:ss,SSS");
+//	}
+	
 	@Override
 	public Pongo measure(Project project) {
+//		final long startTime = System.currentTimeMillis();
 
 		if (uses.size()!=2) {
 			System.err.println("Metric: unansweredthreadsperdaypernewsgroup failed to retrieve " + 
@@ -65,60 +70,45 @@ public class UnsweredThreadsPerDayPerNewsgroupProvider implements IHistoricalMet
 		Rrc usedClassifier = 
 				((RequestReplyClassificationMetricProvider)uses.get(1)).adapt(context.getProjectDB(project));
 
-		HashSet<ArticleData> articleSet = new HashSet<ArticleData>();
-		for (ArticleData article: usedThreads.getArticles())
-			articleSet.add(article);
-		SortedSet<ArticleData> sortedArticleSet = new TreeSet<ArticleData>(new ArticleDataComparator());
-		sortedArticleSet.addAll(articleSet);
-		
-		DailyUnansweredThreads dailyUnansweredThreads = new DailyUnansweredThreads();
+		Map<String, String> articleReplyRequest = new HashMap<String, String>();
+		for (NewsgroupArticlesData article: usedClassifier.getNewsgroupArticles()) {
+			articleReplyRequest.put(article.getUrl()+article.getArticleNumber(), article.getClassificationResult());
+		}
 
+		DailyUnansweredThreads dailyUnansweredThreads = new DailyUnansweredThreads();
+		
+		int unansweredThreads = 0,
+			threadId = 1,
+			threadSize = 0;
 		String lastUrl_name = "";
-		int lastThreadId = -1, unansweredThreads = 0;
-		Boolean answered = false;
-		for (ArticleData article: sortedArticleSet) {
-			if (!article.getUrl_name().equals(lastUrl_name)) {
-				if (lastUrl_name.length()>0) {
-					if (!answered)
-						unansweredThreads++;
-					if (unansweredThreads > 0) {
-						dailyUnansweredThreads.getNewsgroups().add(prepareNewsgroupData(lastUrl_name, unansweredThreads));
-					}
-				}
+		while ((threadSize>0)||(threadId==1)) {
+			threadSize = 0;
+			HashSet<ArticleData> articleSet = new HashSet<ArticleData>();
+			Iterable<ArticleData> articleDataIt = usedThreads.getArticles().find(ArticleData.THREADID.eq(threadId));
+			for (ArticleData article: articleDataIt) {
+				articleSet.add(article);
+				threadSize++;
+			}
+
+	        Iterator<ArticleData> iterator = articleSet.iterator();
+			boolean cont=true;
+			while ((cont)&&(iterator.hasNext())) {
+				ArticleData article = iterator.next();
 				lastUrl_name = article.getUrl_name();
-				lastThreadId = article.getThreadId();
-				unansweredThreads = 0;
-				answered = false;
-			} else if (article.getThreadId() != lastThreadId) {
-				if (!answered)
-					unansweredThreads++;
-				lastThreadId = article.getThreadId();
+				String responseReply = articleReplyRequest.get(article.getUrl_name()+article.getArticleNumber());
+				if (responseReply.equals("Reply")) cont=false;
 			}
-			
-			Iterable<NewsgroupArticlesData> newsgroupArticlesDataIt = usedClassifier.getNewsgroupArticles().
-					find(NewsgroupArticlesData.URL.eq(article.getUrl_name()), 
-							NewsgroupArticlesData.ARTICLENUMBER.eq(article.getArticleNumber()));
-			NewsgroupArticlesData newsgroupArticleData = null;
-			for (NewsgroupArticlesData art:  newsgroupArticlesDataIt) {
-				newsgroupArticleData = art;
-			}
-			if (newsgroupArticleData == null) {
-				System.err.println("Metric: " + IDENTIFIER + "\n\t" + 
-								   "there is no classification for article: " + article.getArticleNumber() +
-								   "\t of newsgroup: " + article.getUrl_name());
-				System.exit(-1);
-			} else if (newsgroupArticleData.getClassificationResult().equals("Reply")) {
-				answered = true;
-			}
+			if (cont) unansweredThreads++;
+			threadId++;
 		}
-		if (!answered)
-			unansweredThreads++;
-		if (unansweredThreads > 0) {
+
+		if (unansweredThreads > 0)
 			dailyUnansweredThreads.getNewsgroups().add(prepareNewsgroupData(lastUrl_name, unansweredThreads));
-		}
+		
+//		System.err.println(time(System.currentTimeMillis() - startTime) + "\tunanswered_new");
 		return dailyUnansweredThreads;
 	}
-			
+
 	private DailyNewsgroupData prepareNewsgroupData(String url_name, int unansweredThreads) {
 		DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
 		dailyNewsgroupData.setUrl_name(url_name);
