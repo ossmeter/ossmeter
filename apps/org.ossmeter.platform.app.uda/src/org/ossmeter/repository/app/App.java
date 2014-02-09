@@ -1,5 +1,8 @@
 package org.ossmeter.repository.app;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.ossmeter.platform.ExtensionPointMetricProviderManager;
@@ -7,9 +10,8 @@ import org.ossmeter.platform.IMetricProviderManager;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.delta.vcs.ExtensionPointVcsManager;
 import org.ossmeter.platform.delta.vcs.PlatformVcsManager;
-import org.ossmeter.repository.model.github.GitHubProject;
-import org.ossmeter.repository.model.github.GitHubRepository;
-import org.ossmeter.repository.model.github.GitHubUser;
+//import org.ossmeter.repository.model.github.GitHubRepository;
+//import org.ossmeter.repository.model.github.GitHubUser;
 import org.ossmeter.repository.model.sourceforge.SourceForgeProject;
 
 import org.ossmeter.repository.model.eclipse.importer.*;
@@ -31,8 +33,14 @@ public class App implements IApplication {
 		Platform platform = new Platform(mongo);
 		platform.setMetricProviderManager(metricProviderManager);
 		platform.setPlatformVcsManager(platformVcsManager);
+	
+		addEclipseProjects(platform);
 		
-		addSampleEclipseProject("birt", platform);
+//		addSampleEclipseProject("birt", platform);
+//		addSampleEclipseProject("modeling.emft", platform);
+//		addSampleEclipseProject("modeling.epsilon", platform);
+			
+		
 		
 		/*
 		addSampleGitHubProject("mojombo", "grit", platform);
@@ -47,10 +55,26 @@ public class App implements IApplication {
 		//addSampleSvnProject("jMonkeyEngine", "http://jmonkeyengine.googlecode.com/svn/", platform);
 		//addSampleProjectWithNewsGroup("epsilon", "news.eclipse.org","eclipse.epsilon", "exquisitus", "flinder1f7", platform);
 		
-		platform.run();
+		//platform.run();
 	}
 	
 	
+	private void addEclipseProjects(Platform platform) {
+		EclipseProjectImporter importer = new EclipseProjectImporter();
+		
+		Collection<EclipseProject> projects = importer.importAll();
+		
+		Iterator<EclipseProject> it = projects.iterator();
+		while (it.hasNext()) {
+			EclipseProject eclipseProject = (EclipseProject) it.next();
+			platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(eclipseProject);
+		}
+		
+		platform.getProjectRepositoryManager().getProjectRepository().sync();
+		
+	}
+
+
 	private void addSampleEclipseProject(String projectId, Platform platform) {
 		EclipseProjectImporter importer = new EclipseProjectImporter();
 		
@@ -63,9 +87,9 @@ public class App implements IApplication {
 		
 	}
 
-
+/*
 	protected void addSampleGitHubProject(String login, String repository, Platform platform) {
-		GitHubProject project = new GitHubProject();
+		GitHubRepository project = new GitHubRepository();
 		project.setName(login + "-" + repository);
 		
 		GitHubRepository gitHubRepository = new GitHubRepository();
@@ -80,7 +104,7 @@ public class App implements IApplication {
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 	}
 	
-	
+*/	
 	protected void addSourceForgeProject(String name, Platform platform) {
 		SourceForgeProject project = new SourceForgeProject();
 		project.setName(name);

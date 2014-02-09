@@ -5,7 +5,7 @@ import org.ossmeter.platform.delta.vcs.ServiceVcsManager;
 public class ServiceLoaderApp {
 
 	public static void main(String[] args) throws Exception {
-		ServiceLoaderSetup.copyMetaInfToBins();
+//		ServiceLoaderSetup.copyMetaInfToBins();
 
 		ServiceLoaderMetricProviderManager mpManager = new ServiceLoaderMetricProviderManager();
 	
