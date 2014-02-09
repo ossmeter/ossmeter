@@ -57,7 +57,7 @@
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="VcsRepository" abstract="true">
+  <eClassifiers xsi:type="ecore:EClass" name="VcsRepository" abstract="true" eSuperTypes="//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="created_at">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>

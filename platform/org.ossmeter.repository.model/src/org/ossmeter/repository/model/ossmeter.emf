@@ -45,7 +45,7 @@ abstract class CommunicationChannel {
   attr String url;
 }
 
-abstract class VcsRepository {
+abstract class VcsRepository extends NamedElement{
   attr String created_at;
   attr String updated_at;
   attr String url;

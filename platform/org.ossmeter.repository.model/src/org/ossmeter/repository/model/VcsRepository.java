@@ -6,17 +6,20 @@ import com.googlecode.pongo.runtime.*;
 import com.googlecode.pongo.runtime.querying.*;
 
 
-public abstract class VcsRepository extends Pongo {
+public abstract class VcsRepository extends NamedElement {
 	
 	
 	
 	public VcsRepository() { 
 		super();
+		super.setSuperTypes("org.ossmeter.repository.model.NamedElement");
+		NAME.setOwningType("org.ossmeter.repository.model.VcsRepository");
 		CREATED_AT.setOwningType("org.ossmeter.repository.model.VcsRepository");
 		UPDATED_AT.setOwningType("org.ossmeter.repository.model.VcsRepository");
 		URL.setOwningType("org.ossmeter.repository.model.VcsRepository");
 	}
 	
+	public static StringQueryProducer NAME = new StringQueryProducer("name"); 
 	public static StringQueryProducer CREATED_AT = new StringQueryProducer("created_at"); 
 	public static StringQueryProducer UPDATED_AT = new StringQueryProducer("updated_at"); 
 	public static StringQueryProducer URL = new StringQueryProducer("url"); 

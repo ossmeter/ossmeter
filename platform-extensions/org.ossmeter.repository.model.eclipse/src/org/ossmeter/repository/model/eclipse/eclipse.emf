@@ -28,7 +28,7 @@ class EclipseProject extends Project {
 	attr String homePage;
 	attr String projectplanUrl;
 	attr String updatesiteUrl;
-	attr ProjectStatus status;
+	attr String status;
 //	val  EclipseProject[1] parent; 
 	val  EclipsePlatform[*] platforms;
 	

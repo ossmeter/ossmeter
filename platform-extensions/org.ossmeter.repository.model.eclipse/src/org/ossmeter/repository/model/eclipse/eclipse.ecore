@@ -42,7 +42,9 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="updatesiteUrl">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="//ProjectStatus"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="state">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="platforms" upperBound="-1" eType="//EclipsePlatform" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="reviews" upperBound="-1" eType="//Review" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="articles" upperBound="-1" eType="//Article" containment="true"/>

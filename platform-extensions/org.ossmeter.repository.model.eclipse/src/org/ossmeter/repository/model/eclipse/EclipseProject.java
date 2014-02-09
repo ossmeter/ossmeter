@@ -28,7 +28,7 @@ public class EclipseProject extends org.ossmeter.repository.model.Project {
 		HOMEPAGE.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
 		PROJECTPLANURL.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
 		UPDATESITEURL.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
-		STATUS.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
+		STATE.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
 	}
 	
 	public static StringQueryProducer SHORTNAME = new StringQueryProducer("shortName"); 
@@ -38,7 +38,7 @@ public class EclipseProject extends org.ossmeter.repository.model.Project {
 	public static StringQueryProducer HOMEPAGE = new StringQueryProducer("homePage"); 
 	public static StringQueryProducer PROJECTPLANURL = new StringQueryProducer("projectplanUrl"); 
 	public static StringQueryProducer UPDATESITEURL = new StringQueryProducer("updatesiteUrl"); 
-	public static StringQueryProducer STATUS = new StringQueryProducer("status"); 
+	public static StringQueryProducer STATE = new StringQueryProducer("state"); 
 	
 	
 	public String getShortName() {
@@ -104,17 +104,12 @@ public class EclipseProject extends org.ossmeter.repository.model.Project {
 		notifyChanged();
 		return this;
 	}
-	public ProjectStatus getStatus() {
-		ProjectStatus status = null;
-		try {
-			status = ProjectStatus.valueOf(dbObject.get("status")+"");
-		}
-		catch (Exception ex) {}
-		return status;
+	public String getState() {
+		return parseString(dbObject.get("state")+"", "");
 	}
 	
-	public EclipseProject setStatus(ProjectStatus status) {
-		dbObject.put("status", status.toString());
+	public EclipseProject setState(String state) {
+		dbObject.put("state", state);
 		notifyChanged();
 		return this;
 	}

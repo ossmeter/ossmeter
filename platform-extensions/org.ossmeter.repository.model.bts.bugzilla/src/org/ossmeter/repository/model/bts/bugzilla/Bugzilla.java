@@ -17,12 +17,14 @@ public class Bugzilla extends org.ossmeter.repository.model.BugTrackingSystem {
 		PASSWORD.setOwningType("org.ossmeter.repository.model.bts.bugzilla.Bugzilla");
 		PRODUCT.setOwningType("org.ossmeter.repository.model.bts.bugzilla.Bugzilla");
 		COMPONENT.setOwningType("org.ossmeter.repository.model.bts.bugzilla.Bugzilla");
+		CGIQUERYPROGRAM.setOwningType("org.ossmeter.repository.model.bts.bugzilla.Bugzilla");
 	}
 	
 	public static StringQueryProducer USERNAME = new StringQueryProducer("username"); 
 	public static StringQueryProducer PASSWORD = new StringQueryProducer("password"); 
 	public static StringQueryProducer PRODUCT = new StringQueryProducer("product"); 
 	public static StringQueryProducer COMPONENT = new StringQueryProducer("component"); 
+	public static StringQueryProducer CGIQUERYPROGRAM = new StringQueryProducer("cgiQueryProgram"); 
 	
 	
 	public String getUsername() {
@@ -58,6 +60,15 @@ public class Bugzilla extends org.ossmeter.repository.model.BugTrackingSystem {
 	
 	public Bugzilla setComponent(String component) {
 		dbObject.put("component", component);
+		notifyChanged();
+		return this;
+	}
+	public String getCgiQueryProgram() {
+		return parseString(dbObject.get("cgiQueryProgram")+"", "");
+	}
+	
+	public Bugzilla setCgiQueryProgram(String cgiQueryProgram) {
+		dbObject.put("cgiQueryProgram", cgiQueryProgram);
 		notifyChanged();
 		return this;
 	}

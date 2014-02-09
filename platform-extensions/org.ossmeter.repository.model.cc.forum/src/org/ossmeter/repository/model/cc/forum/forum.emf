@@ -1,0 +1,12 @@
+package org.ossmeter.repository.model.cc.forum;
+
+@stub(javaClass="org.ossmeter.repository.model.CommunicationChannel")
+abstract class CommunicationChannel {
+   
+}
+
+class Forum extends  CommunicationChannel {
+	@searchable
+	attr String name;
+	attr String description;
+}
