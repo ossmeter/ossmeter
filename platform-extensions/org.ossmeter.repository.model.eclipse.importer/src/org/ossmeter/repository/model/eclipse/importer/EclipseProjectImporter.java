@@ -98,8 +98,8 @@ public class EclipseProjectImporter {
 		try {
 			System.out.println("Retrieving the list of Eclipse projects...");
 
-			InputStream is = new FileInputStream(new File("C:\\eclipse.json"));
-//			InputStream is = new URL("http://projects.eclipse.org/json/projects/all").openStream();
+//			InputStream is = new FileInputStream(new File("C:\\eclipse.json"));
+			InputStream is = new URL("http://projects.eclipse.org/json/projects/all").openStream();
 			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
 			String jsonText = readAll(rd);		
 	
@@ -110,9 +110,6 @@ public class EclipseProjectImporter {
 			    while(iter.hasNext()){
 			      Map.Entry entry = (Map.Entry)iter.next();
 
-if ( !((String)entry.getKey()).equals("birt")) {	
-	continue;
-}
 			      System.out.println("---> Retrieving metadata of " + entry.getKey());			     
 			      projects.add(importProject((String)entry.getKey()));
 			    }
