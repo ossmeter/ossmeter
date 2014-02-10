@@ -1,0 +1,13 @@
+package org.ossmeter.repository.model.vcs.cvs;
+
+@stub(javaClass="org.ossmeter.repository.model.VcsRepository")
+abstract class VcsRepository {
+   
+}
+
+class CvsRepository extends VcsRepository {
+    attr String browse;
+  	attr String username;
+	attr String password;
+	attr String path;
+}
