@@ -191,7 +191,7 @@ public class EclipseProjectImporter {
 			project.setShortName(projectId); 
 			
 			if ((isNotNull(currentProg,"description")))
-				project.setDownloadsUrl(((JSONObject)((JSONArray)currentProg.get("description")).get(0)).get("value").toString());
+				project.setDescription(((JSONObject)((JSONArray)currentProg.get("description")).get(0)).get("value").toString());
 		
 			/* TODO Parent projects require a specific management. Probably the metamodel has to be changed
 			 * by modifying the type of "parent". It might be a string containing the name of the parent project 
@@ -200,7 +200,7 @@ public class EclipseProjectImporter {
 			*/
 			
 			if ((isNotNull(currentProg,"documentation_url")))
-				project.setDownloadsUrl(((JSONObject)((JSONArray)currentProg.get("documentation_url")).get(0)).get("url").toString());
+				project.setDescriptionUrl(((JSONObject)((JSONArray)currentProg.get("documentation_url")).get(0)).get("url").toString());
 
 			project.setParagraphUrl(getParagraphUrl(projectId));
 			
