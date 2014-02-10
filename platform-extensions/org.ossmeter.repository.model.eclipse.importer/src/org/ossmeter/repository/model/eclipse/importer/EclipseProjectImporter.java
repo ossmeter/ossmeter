@@ -55,6 +55,7 @@ import org.ossmeter.repository.model.eclipse.EclipseProject;
 import org.ossmeter.repository.model.eclipse.importer.util.XML;
 import org.ossmeter.repository.model.vcs.git.GitRepository;
 import org.ossmeter.repository.model.vcs.svn.SvnRepository;
+import org.ossmeter.repository.model.vcs.cvs.CvsRepository;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Element;
@@ -274,7 +275,6 @@ public class EclipseProjectImporter {
 				}
 			}
 			
-			/* TODO Setting the url of the repository raises some strange error by the platform */
 			if ((isNotNull(currentProg,"source_repo"))){
 				JSONArray source_repo = (JSONArray)currentProg.get("source_repo");
 				Iterator<JSONObject> iter  = source_repo.iterator();
@@ -285,10 +285,14 @@ public class EclipseProjectImporter {
 						repository = new GitRepository();
 					} else if (((String)entry.get("type")).equals("svn")) {
 						repository = new SvnRepository();
+					} else if (((String)entry.get("type")).equals("cvs")) {
+						repository = new CvsRepository();
 					}
+				if (repository != null) {
 					repository.setName((String)entry.get("name"));
 					repository.setUrl((String)entry.get("url"));
-					project.getVcsRepositories().add(repository);
+				}
+				project.getVcsRepositories().add(repository);
 				}
 			}	
 			
