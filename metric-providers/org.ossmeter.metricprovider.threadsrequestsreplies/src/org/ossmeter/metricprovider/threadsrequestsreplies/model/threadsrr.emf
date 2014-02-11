@@ -1,0 +1,21 @@
+package org.ossmeter.metricprovider.threadsrequestsreplies.model;
+
+@db(qualifiedCollectionNames="true")
+class ThreadsRR {
+	val ThreadStatistics[*] threads;
+    val CurrentDate[*] date;
+}
+
+class CurrentDate {
+	attr String date;
+}    
+
+class ThreadStatistics {
+   @searchable
+   attr String url_name;
+   @searchable
+   attr int threadId;
+   attr boolean answered;
+   attr long responseDurationSec;
+   attr String responseDate;
+}
