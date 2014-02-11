@@ -20,6 +20,7 @@ public class Project extends NamedElement {
 	
 	public Project() { 
 		super();
+		dbObject.put("parent", new BasicDBObject());
 		dbObject.put("vcsRepositories", new BasicDBList());
 		dbObject.put("communicationChannels", new BasicDBList());
 		dbObject.put("bugTrackingSystems", new BasicDBList());
@@ -127,27 +128,27 @@ public class Project extends NamedElement {
 		return metricProviderData;
 	}
 	
-	
-	public Project getParent() {
-		if (parent == null && dbObject.containsField("parent")) {
-			parent = (Project) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("parent"));
-		}
-		return parent;
-	}
-	
 	public Project setParent(Project parent) {
 		if (this.parent != parent) {
 			if (parent == null) {
-				dbObject.removeField("parent");
+				dbObject.put("parent", new BasicDBObject());
 			}
 			else {
-				dbObject.put("parent", parent.getDbObject());
+				createReference("parent", parent);
 			}
 			this.parent = parent;
 			notifyChanged();
 		}
 		return this;
 	}
+	
+	public Project getParent() {
+		if (parent == null) {
+			parent = (Project) resolveReference("parent");
+		}
+		return parent;
+	}
+	
 	public LocalStorage getStorage() {
 		if (storage == null && dbObject.containsField("storage")) {
 			storage = (LocalStorage) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("storage"));

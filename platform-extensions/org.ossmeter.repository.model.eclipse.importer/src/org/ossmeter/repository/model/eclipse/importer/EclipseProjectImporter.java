@@ -1,49 +1,23 @@
 package org.ossmeter.repository.model.eclipse.importer;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-
-import org.ossmeter.repository.model.BugTrackingSystem;
-import org.ossmeter.repository.model.License;
-import org.ossmeter.repository.model.Person;
-import org.ossmeter.repository.model.Role;
-import org.ossmeter.repository.model.VcsRepository;
-import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
-import org.ossmeter.repository.model.cc.forum.Forum;
-import org.ossmeter.repository.model.eclipse.EclipsePlatform;
-import org.ossmeter.repository.model.eclipse.EclipseProject;
-import org.ossmeter.repository.model.eclipse.MailingList;
-import org.ossmeter.repository.model.eclipse.ProjectStatus;
-import org.ossmeter.repository.model.eclipse.Wiki;
-
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.lang.reflect.Type;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import javax.swing.plaf.basic.BasicScrollPaneUI.VSBChangeListener;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -51,28 +25,59 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
+import org.ossmeter.platform.Platform;
+import org.ossmeter.repository.model.License;
+import org.ossmeter.repository.model.VcsRepository;
+import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
+import org.ossmeter.repository.model.cc.forum.Forum;
+import org.ossmeter.repository.model.eclipse.EclipsePlatform;
 import org.ossmeter.repository.model.eclipse.EclipseProject;
+import org.ossmeter.repository.model.eclipse.MailingList;
+import org.ossmeter.repository.model.eclipse.Wiki;
 import org.ossmeter.repository.model.eclipse.importer.util.XML;
+import org.ossmeter.repository.model.vcs.cvs.CvsRepository;
 import org.ossmeter.repository.model.vcs.git.GitRepository;
 import org.ossmeter.repository.model.vcs.svn.SvnRepository;
-import org.ossmeter.repository.model.vcs.cvs.CvsRepository;
 import org.w3c.dom.Document;
-import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import com.google.gson.*;
-import com.google.gson.stream.JsonReader;
-
-import org.json.simple.JSONObject;
-import org.json.simple.JSONArray;
-import org.json.simple.parser.ParseException;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.JSONValue;
 
 public class EclipseProjectImporter {
 	
+	private Map<EclipseProject,String> pendingParentReferences = new HashMap<EclipseProject,String>();
+	private Collection<EclipseProject> importedProjects = new ArrayList<EclipseProject>();
+	
+	private EclipseProject getProjectByName(Collection<EclipseProject> projects, String projectName) {
+		for (EclipseProject p : projects) {
+	         if (p.getName().equals(projectName))
+	             return p;
+	    }
+		return null;	
+	}
+	
+	private Collection<EclipseProject> fixPendingParentReferences(){
+
+		EclipseProject child = null;
+	    EclipseProject parent = null;
+	    
+		Iterator it = pendingParentReferences.entrySet().iterator();
+		while (it.hasNext()) {
+	        Map.Entry pr = (Map.Entry)it.next();
+	        
+	        child = (EclipseProject) pr.getKey();
+	        parent = getProjectByName(importedProjects, (String)pr.getValue());
+	        if (parent != null)
+	        	child.setParent(parent);
+	        it.remove();
+	    }
+		
+		return importedProjects;
+	}
 	
 	private boolean isNotNull(JSONObject currentProg, String attribute ) 
 	{
@@ -92,30 +97,30 @@ public class EclipseProjectImporter {
 		return sb.toString();
 	}
 	
-	public Collection<EclipseProject> importAll() {
-		
-		Collection<EclipseProject> projects = new ArrayList<EclipseProject>();
-		
+	public void importAll(Platform platform) 
+	{		
 		try {
 			System.out.println("Retrieving the list of Eclipse projects...");
 
-//			InputStream is = new FileInputStream(new File("C:\\eclipse.json"));
-			InputStream is = new URL("http://projects.eclipse.org/json/projects/all").openStream();
+			InputStream is = new FileInputStream(new File("C:\\eclipse.json"));
+//			InputStream is = new URL("http://projects.eclipse.org/json/projects/all").openStream();
 			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
 			String jsonText = readAll(rd);		
 	
 			JSONObject obj=(JSONObject)JSONValue.parse(jsonText);	
 			JSONObject jsonProjects = (JSONObject)((JSONObject)obj.get("projects"));
 
-			Iterator iter  = jsonProjects.entrySet().iterator();
-			    while(iter.hasNext()){
-			      Map.Entry entry = (Map.Entry)iter.next();
+			Iterator iter = jsonProjects.entrySet().iterator();
+			while (iter.hasNext()) {
+				Map.Entry entry = (Map.Entry) iter.next();
 
-			      System.out.println("---> Retrieving metadata of " + entry.getKey());			     
-			      projects.add(importProject((String)entry.getKey()));
-			    }
-			 
-			return projects;
+				System.out.println("---> Retrieving metadata of " + entry.getKey());
+				EclipseProject project = importProject((String) entry.getKey(), importedProjects);
+				platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
+				importedProjects.add(project);
+			}
+			
+			fixPendingParentReferences();
 			
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
@@ -124,11 +129,11 @@ public class EclipseProjectImporter {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} 
-	    return null;
+//	    return null;
 
 	}
 	
-	public EclipseProject importProject(String projectId) {
+	public EclipseProject importProject(String projectId, Collection<EclipseProject> projects) {
 			
 		String URL_PROJECT = "http://projects.eclipse.org/projects/"+ projectId;
 		String html = null;
@@ -188,16 +193,22 @@ public class EclipseProjectImporter {
 			JSONObject obj=(JSONObject)JSONValue.parse(jsonText);
 			JSONObject currentProg = (JSONObject)((JSONObject)obj.get("projects")).get(projectId);
 				
-			project.setShortName(projectId); 
+			project.setName(projectId);
 			
 			if ((isNotNull(currentProg,"description")))
 				project.setDescription(((JSONObject)((JSONArray)currentProg.get("description")).get(0)).get("value").toString());
 		
-			/* TODO Parent projects require a specific management. Probably the metamodel has to be changed
-			 * by modifying the type of "parent". It might be a string containing the name of the parent project 
-			if ((isNotNull(currentProg,"parent_project")))
-				project.setParent(parent);
-			*/
+			if ((isNotNull(currentProg,"parent_project"))){
+				String parentProjectName = ((JSONObject)((JSONArray)currentProg.get("parent_project")).get(0)).get("id").toString();
+				EclipseProject parentProject = getProjectByName(projects, parentProjectName);
+				if (parentProject != null) {
+					project.setParent(parentProject);
+				    System.out.println("The project " + parentProject.getName() + " is parent of " + project.getName());
+				} else {
+					System.out.println("Found parent project " + parentProjectName + " to be added to the project " + project.getName());
+					pendingParentReferences.put(project,parentProjectName);
+				}
+			}		
 			
 			if ((isNotNull(currentProg,"documentation_url")))
 				project.setDescriptionUrl(((JSONObject)((JSONArray)currentProg.get("documentation_url")).get(0)).get("url").toString());

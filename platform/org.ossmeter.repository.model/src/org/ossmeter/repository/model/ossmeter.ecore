@@ -27,7 +27,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastExecuted">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="//Project" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="//Project"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="vcsRepositories" upperBound="-1" eType="//VcsRepository" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="communicationChannels" upperBound="-1" eType="//CommunicationChannel" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="bugTrackingSystems" upperBound="-1" eType="//BugTrackingSystem" containment="true"/>

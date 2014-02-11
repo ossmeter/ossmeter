@@ -12,4 +12,5 @@ Require-Bundle: org.ossmeter.repository.model.eclipse,
  org.ossmeter.repository.model.vcs.cvs
 Export-Package: org.ossmeter.repository.model.eclipse.importer
 Import-Package: org.json.simple,
- org.json.simple.parser
+ org.json.simple.parser,
+ org.ossmeter.platform

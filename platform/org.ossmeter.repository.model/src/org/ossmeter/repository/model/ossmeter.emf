@@ -19,7 +19,7 @@ class Project extends NamedElement {
   attr int year;
   attr boolean active;
   attr String lastExecuted;
-  val Project parent;
+  ref Project parent;
   val VcsRepository[*] vcsRepositories;
   val CommunicationChannel[*] communicationChannels;
   val BugTrackingSystem[*] bugTrackingSystems;
