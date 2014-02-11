@@ -62,13 +62,14 @@ public class App implements IApplication {
 	private void addEclipseProjects(Platform platform) {
 		EclipseProjectImporter importer = new EclipseProjectImporter();
 		
-		Collection<EclipseProject> projects = importer.importAll();
+//		Collection<EclipseProject> projects = 
+		importer.importAll(platform);
 		
-		Iterator<EclipseProject> it = projects.iterator();
-		while (it.hasNext()) {
-			EclipseProject eclipseProject = (EclipseProject) it.next();
-			platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(eclipseProject);
-		}
+//		Iterator<EclipseProject> it = projects.iterator();
+//		while (it.hasNext()) {
+//			EclipseProject eclipseProject = (EclipseProject) it.next();
+//			platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(eclipseProject);
+//		}
 		
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 		
@@ -79,7 +80,7 @@ public class App implements IApplication {
 		EclipseProjectImporter importer = new EclipseProjectImporter();
 		
 		EclipseProject project = new EclipseProject();
-		project = importer.importProject(projectId);
+	//	project = importer.importProject(projectId);
 		
 		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
