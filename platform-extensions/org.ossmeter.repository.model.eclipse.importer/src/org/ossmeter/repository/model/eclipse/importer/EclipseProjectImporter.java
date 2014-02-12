@@ -102,15 +102,15 @@ public class EclipseProjectImporter {
 		try {
 			System.out.println("Retrieving the list of Eclipse projects...");
 
-			InputStream is = new FileInputStream(new File("C:\\eclipse.json"));
-//			InputStream is = new URL("http://projects.eclipse.org/json/projects/all").openStream();
+//			InputStream is = new FileInputStream(new File("C:\\eclipse.json"));
+			InputStream is = new URL("http://projects.eclipse.org/json/projects/all").openStream();
 			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
 			String jsonText = readAll(rd);		
 	
 			JSONObject obj=(JSONObject)JSONValue.parse(jsonText);	
-			JSONObject jsonProjects = (JSONObject)((JSONObject)obj.get("projects"));
+			//JSONObject jsonProjects = (JSONObject)((JSONObject)obj.get(0));
 
-			Iterator iter = jsonProjects.entrySet().iterator();
+			Iterator iter = obj.entrySet().iterator();
 			while (iter.hasNext()) {
 				Map.Entry entry = (Map.Entry) iter.next();
 
@@ -317,56 +317,7 @@ public class EclipseProjectImporter {
 		
 	}
 
-	private HashMap getPersons(Node xml) {
-		// TODO Auto-generated method stub
-		/*
-		HashMap persons = new HashMap();
 
-		List roles_person1 = new ArrayList();
-		roles_person1.add("committer");
-		roles_person1.add("leader");
-		roles_person1.add("mentor");	
-		persons.put("Dimitris Kolovos", roles_person1);
-		
-		List roles_person2 = new ArrayList();
-		roles_person2.add("committer");
-		persons.put("Davide Di_Ruscio", roles_person2);
-		
-		return persons;*/
-
-		return null;
-
-	}
-
-	private String getReleases(Node xml) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private String getArticles(Node xml) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private String getReviews(Node xml) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private String getMentors(Node xml) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private String getLeaders(Node xml) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private String getCommitters(Node xml) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	private List<String> getPlatforms(Node xml) {
 		// Left region, first div -> Platforms
