@@ -8,12 +8,12 @@ import com.googlecode.pongo.runtime.querying.*;
 
 public class SourceForgeBugTrackingSystem extends org.ossmeter.repository.model.BugTrackingSystem {
 	
-	protected List<Bug> bugs = null;
+	protected List<BugTS> bugsTS = null;
 	
 	
 	public SourceForgeBugTrackingSystem() { 
 		super();
-		dbObject.put("bugs", new BasicDBList());
+		dbObject.put("bugsTS", new BasicDBList());
 		super.setSuperTypes("org.ossmeter.repository.model.sourceforge.BugTrackingSystem");
 	}
 	
@@ -21,11 +21,11 @@ public class SourceForgeBugTrackingSystem extends org.ossmeter.repository.model.
 	
 	
 	
-	public List<Bug> getBugs() {
-		if (bugs == null) {
-			bugs = new PongoList<Bug>(this, "bugs", true);
+	public List<BugTS> getBugsTS() {
+		if (bugsTS == null) {
+			bugsTS = new PongoList<BugTS>(this, "bugsTS", true);
 		}
-		return bugs;
+		return bugsTS;
 	}
 	
 	

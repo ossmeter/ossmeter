@@ -1,32 +1,24 @@
 package org.ossmeter.repository.model.sourceforge;
 
+
 @stub(javaClass="org.ossmeter.repository.model.Project")
 class Project {
-   
 }
 
 @stub(javaClass="org.ossmeter.repository.model.BugTrackingSystem")
 class BugTrackingSystem {
-   
 }
 
 @stub(javaClass="org.ossmeter.repository.model.Person")
 class Person {
-   
 }
-
-//@stub(javaClass="org.ossmeter.repository.model.base.VcsRepository")
-//class VcsRepository {
-//}
 
 @stub(javaClass="org.ossmeter.repository.model.NamedElement")
 class NamedElement {
-   
 }
 
 @stub(javaClass="org.ossmeter.repository.model.CommunicationChannel")
 class CommunicationChannel {
-   
 }
 
 class SourceForgeProject extends Project {
@@ -40,9 +32,7 @@ class SourceForgeProject extends Project {
   attr String supportPage;
   attr String summaryPage;
   attr String homePage;
-  attr String mailingList;
-//  val Person[*] maintainers;
-//  val Person[*] developers;
+  val MailingList mailingList;
   val OS[*] os;
   val Topic[*] topics;
   val ProgrammingLanguage[*] programminLanguages;
@@ -51,22 +41,19 @@ class SourceForgeProject extends Project {
   val Category[*] categories;
   val FeatureRequest[*] featureRequests;
   val SupportRequest[*] supportRequests;
-  val Patch[*] patches;  
+  val Patch[*] patches;
   val SourceForgeBugTrackingSystem[*] bts;
   val Donation donation;
   val Discussion[*] discussion;
+  ref Bug[*] bugs;
+}
+
+class MailingList extends CommunicationChannel{
+	
 }
 
 class Discussion extends CommunicationChannel {
-   
 }
-
-//class SvnRepository extends VcsRepository {
-//  attr String browse;
-//}
-
-//class MercurialRepository extends VcsRepository {
-//}
 
 class OS extends NamedElement {
 }
@@ -86,7 +73,6 @@ class Environment extends NamedElement {
 class Category extends NamedElement {
 }
 
-
 class Donation {
   attr String comment;
   attr DonationStatus status;
@@ -103,22 +89,21 @@ enum TrackerStatus {
   closed = 2;
 }
 
-
 abstract class Tracker extends NamedElement {
   attr String location;
-  attr TrackerStatus status; 
+  attr TrackerStatus status;
 }
 
 class SourceForgeBugTrackingSystem extends BugTrackingSystem {
-  val Bug[*] bugs;
+  val BugTS[*] bugsTS;
 }
 
-class Bug extends Tracker{
+class BugTS extends Tracker {
 
   @key
   attr String description;
-  val  Person assignee;
-  val  Person submitted;
+  val Person assignee;
+  val Person submitted;
   attr int priority;
   attr ResolutionStatus resolutionStatus;
   attr BugVisibility bugVisibility;
@@ -134,17 +119,15 @@ enum ResolutionStatus {
   fixed = 2;
 }
 
-
 abstract class Request extends Tracker {
-	attr String summary;
-   	attr String created_at;
-   	attr String updated_at; 
-	val Person creator;
+  attr String summary;
+  attr String created_at;
+  attr String updated_at;
+  val Person creator;
 }
 
 class FeatureRequest extends Request {
 }
-
 
 class SupportRequest extends Request {
 }
@@ -152,6 +135,5 @@ class SupportRequest extends Request {
 class Patch extends Tracker {
 }
 
-
-
-
+class Bug extends Tracker {
+}

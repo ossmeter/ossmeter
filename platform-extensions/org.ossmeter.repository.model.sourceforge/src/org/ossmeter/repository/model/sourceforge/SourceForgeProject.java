@@ -8,8 +8,6 @@ import com.googlecode.pongo.runtime.querying.*;
 
 public class SourceForgeProject extends org.ossmeter.repository.model.Project {
 	
-	protected List<org.ossmeter.repository.model.Person> maintainers = null;
-	protected List<org.ossmeter.repository.model.Person> developers = null;
 	protected List<OS> os = null;
 	protected List<Topic> topics = null;
 	protected List<ProgrammingLanguage> programminLanguages = null;
@@ -21,13 +19,13 @@ public class SourceForgeProject extends org.ossmeter.repository.model.Project {
 	protected List<Patch> patches = null;
 	protected List<SourceForgeBugTrackingSystem> bts = null;
 	protected List<Discussion> discussion = null;
+	protected List<Bug> bugs = null;
+	protected MailingList mailingList = null;
 	protected Donation donation = null;
 	
 	
 	public SourceForgeProject() { 
 		super();
-		dbObject.put("maintainers", new BasicDBList());
-		dbObject.put("developers", new BasicDBList());
 		dbObject.put("os", new BasicDBList());
 		dbObject.put("topics", new BasicDBList());
 		dbObject.put("programminLanguages", new BasicDBList());
@@ -39,6 +37,7 @@ public class SourceForgeProject extends org.ossmeter.repository.model.Project {
 		dbObject.put("patches", new BasicDBList());
 		dbObject.put("bts", new BasicDBList());
 		dbObject.put("discussion", new BasicDBList());
+		dbObject.put("bugs", new BasicDBList());
 		super.setSuperTypes("org.ossmeter.repository.model.sourceforge.Project");
 		CREATED.setOwningType("org.ossmeter.repository.model.sourceforge.SourceForgeProject");
 		PROJECTID.setOwningType("org.ossmeter.repository.model.sourceforge.SourceForgeProject");
@@ -50,7 +49,6 @@ public class SourceForgeProject extends org.ossmeter.repository.model.Project {
 		SUPPORTPAGE.setOwningType("org.ossmeter.repository.model.sourceforge.SourceForgeProject");
 		SUMMARYPAGE.setOwningType("org.ossmeter.repository.model.sourceforge.SourceForgeProject");
 		HOMEPAGE.setOwningType("org.ossmeter.repository.model.sourceforge.SourceForgeProject");
-		MAILINGLIST.setOwningType("org.ossmeter.repository.model.sourceforge.SourceForgeProject");
 	}
 	
 	public static StringQueryProducer CREATED = new StringQueryProducer("created"); 
@@ -63,7 +61,6 @@ public class SourceForgeProject extends org.ossmeter.repository.model.Project {
 	public static StringQueryProducer SUPPORTPAGE = new StringQueryProducer("supportPage"); 
 	public static StringQueryProducer SUMMARYPAGE = new StringQueryProducer("summaryPage"); 
 	public static StringQueryProducer HOMEPAGE = new StringQueryProducer("homePage"); 
-	public static StringQueryProducer MAILINGLIST = new StringQueryProducer("mailingList"); 
 	
 	
 	public String getCreated() {
@@ -156,29 +153,8 @@ public class SourceForgeProject extends org.ossmeter.repository.model.Project {
 		notifyChanged();
 		return this;
 	}
-	public String getMailingList() {
-		return parseString(dbObject.get("mailingList")+"", "");
-	}
-	
-	public SourceForgeProject setMailingList(String mailingList) {
-		dbObject.put("mailingList", mailingList);
-		notifyChanged();
-		return this;
-	}
 	
 	
-	public List<org.ossmeter.repository.model.Person> getMaintainers() {
-		if (maintainers == null) {
-			maintainers = new PongoList<org.ossmeter.repository.model.Person>(this, "maintainers", true);
-		}
-		return maintainers;
-	}
-	public List<org.ossmeter.repository.model.Person> getDevelopers() {
-		if (developers == null) {
-			developers = new PongoList<org.ossmeter.repository.model.Person>(this, "developers", true);
-		}
-		return developers;
-	}
 	public List<OS> getOs() {
 		if (os == null) {
 			os = new PongoList<OS>(this, "os", true);
@@ -245,8 +221,34 @@ public class SourceForgeProject extends org.ossmeter.repository.model.Project {
 		}
 		return discussion;
 	}
+	public List<Bug> getBugs() {
+		if (bugs == null) {
+			bugs = new PongoList<Bug>(this, "bugs", false);
+		}
+		return bugs;
+	}
 	
 	
+	public MailingList getMailingList() {
+		if (mailingList == null && dbObject.containsField("mailingList")) {
+			mailingList = (MailingList) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("mailingList"));
+		}
+		return mailingList;
+	}
+	
+	public SourceForgeProject setMailingList(MailingList mailingList) {
+		if (this.mailingList != mailingList) {
+			if (mailingList == null) {
+				dbObject.removeField("mailingList");
+			}
+			else {
+				dbObject.put("mailingList", mailingList.getDbObject());
+			}
+			this.mailingList = mailingList;
+			notifyChanged();
+		}
+		return this;
+	}
 	public Donation getDonation() {
 		if (donation == null && dbObject.containsField("donation")) {
 			donation = (Donation) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("donation"));
