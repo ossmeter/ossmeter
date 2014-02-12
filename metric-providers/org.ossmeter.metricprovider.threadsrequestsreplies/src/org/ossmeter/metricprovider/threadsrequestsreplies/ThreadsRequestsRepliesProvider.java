@@ -148,10 +148,10 @@ public class ThreadsRequestsRepliesProvider  implements ITransientMetricProvider
 					thread.setResponseDurationSec(duration);
 					db.getThreads().add(thread);
 					
-					System.err.println("threadId: " + threadId + "\t" +
-							"firstMessageTime: " + firstMessageTime + "\t" +
-							"firstResponseTime: " + article.getDate() + "\t" + 
-							"duration: " + duration);
+//					System.err.println("threadId: " + threadId + "\t" +
+//							"firstMessageTime: " + firstMessageTime + "\t" +
+//							"firstResponseTime: " + article.getDate() + "\t" + 
+//							"duration: " + duration);
 				}
 				first=false;
 			}
@@ -161,10 +161,10 @@ public class ThreadsRequestsRepliesProvider  implements ITransientMetricProvider
 				thread.setThreadId(threadId);
 				thread.setAnswered(false);
 				db.getThreads().add(thread);
-
-				System.err.println("threadId: " + threadId + "\t" +
-						"firstMessageTime: " + firstMessageTime + "\t" +
-						"unanswered");
+				
+//				System.err.println("threadId: " + threadId + "\t" +
+//						"firstMessageTime: " + firstMessageTime + "\t" +
+//						"unanswered");
 			}
 
 			threadId++;
