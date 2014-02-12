@@ -36,7 +36,7 @@ public class Person extends NamedElement {
 	
 	public List<Role> getRoles() {
 		if (roles == null) {
-			roles = new PongoList<Role>(this, "roles", true);
+			roles = new PongoList<Role>(this, "roles", false);
 		}
 		return roles;
 	}

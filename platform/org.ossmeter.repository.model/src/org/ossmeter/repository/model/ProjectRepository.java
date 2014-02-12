@@ -12,11 +12,16 @@ public class ProjectRepository extends PongoDB {
 	}
 	
 	protected ProjectCollection projects = null;
+	protected RoleCollection roles = null;
 	
 	
 	
 	public ProjectCollection getProjects() {
 		return projects;
+	}
+	
+	public RoleCollection getRoles() {
+		return roles;
 	}
 	
 	
@@ -25,5 +30,7 @@ public class ProjectRepository extends PongoDB {
 		super.setDb(db);
 		projects = new ProjectCollection(db.getCollection("projects"));
 		pongoCollections.add(projects);
+		roles = new RoleCollection(db.getCollection("roles"));
+		pongoCollections.add(roles);
 	}
 }

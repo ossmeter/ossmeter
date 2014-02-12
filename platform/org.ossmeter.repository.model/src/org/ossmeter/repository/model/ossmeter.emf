@@ -5,6 +5,7 @@ package org.ossmeter.repository.model;
 @db
 class ProjectRepository extends NamedElement{
 	val Project[*] projects;
+	val Role[*] roles;
 }
 
 abstract class NamedElement {
@@ -57,7 +58,7 @@ abstract class BugTrackingSystem {
 
 class Person extends NamedElement {
   attr String homePage;
-  val Role[*] roles;
+  ref Role[*] roles;
 }
 
 class Role extends NamedElement {
