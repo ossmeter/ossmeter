@@ -1,0 +1,64 @@
+package org.ossmeter.platform.mining.msr14.model;
+
+@db
+class Biodiversity {
+	val User[*] users;
+}
+
+class User {
+	attr String login;
+	attr String ~id;
+	attr String location;
+	attr int publicRepos;
+	attr String joinedDate;
+
+	attr int followerCount; // Needed because not all GitHub users are in the dataset
+	attr int followingCount;// Needed because not all GitHub users are in the dataset
+	ref User[*] followers;
+	ref User[*] following;
+	
+	attr String[*] watching;// FIXME will be Project class
+	attr String[*] forks;	// FIXME will be Project class
+	attr String[*] projects;// FIXME will be Project class
+	
+	val Countable issues;
+	val Countable issueComments;
+	val IssueEvent[*] issueEvents;
+	val Countable pullRequests;
+	val Countable pullRequestComments;
+	val Commit commitAuthors;
+	val Commit commitCommitter;
+	val Countable commitComments;
+	
+	val Artefact[*] artefacts;	
+}
+
+class IssueEvent{
+	attr IssueEventKind eventKind;
+	attr int count; 
+}
+
+enum IssueEventKind {
+	CLOSED; REOPENED; SUBSCRIBED; MERGED; REFERENCED; MENTIONED; UNSUBSCRIBED;
+	ASSIGNED; HEAD_REF_DELETED; HEAD_REF_CLEANED; HEAD_REF_RESTORED;
+}
+
+class Countable {
+	attr int number;
+	attr int frequency;
+} 
+
+class Commit extends Countable {
+	attr int total;
+	attr int additions;
+	attr int deletions;
+	attr int totalFiles;
+	attr double averageFilesPerCommit;
+}
+
+class Artefact {
+	@searchable
+	attr String extension;
+	attr int numberOfProjects; // This relates to cases where a file kind matches a project's language
+	attr int count;
+}
