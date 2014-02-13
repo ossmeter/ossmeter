@@ -86,7 +86,7 @@ public class SourceforgeProjectImporter {
 int count = 0;
 			for (int j = 1; j < (numPagesToBeScanned); j++)
 			{
-System.out.println("Scanning page " + j + " of " + numPagesToBeScanned);
+System.out.println("Scanning the projects directory page " + j + " of " + numPagesToBeScanned);
 				try {
 					String URL_PROJECT = "http://sourceforge.net/directory/?page="+j;
 					doc = Jsoup.connect(URL_PROJECT).get();
@@ -99,10 +99,15 @@ System.out.println("Scanning page " + j + " of " + numPagesToBeScanned);
 						SourceForgeProject project = importProject(url.split("/")[2], platform);
 						platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
 					}
+					platform.getProjectRepositoryManager().getProjectRepository().sync();
 				}
 				catch(SocketTimeoutException st) {
 					System.err.println("Read timed out during the connection to " + url + ". I'll retry later with it.");
 					toRetry.add(url);
+					continue;
+				}
+				catch(FileNotFoundException e) {
+					System.err.println("No further details available for the project " + url );
 					continue;
 				}
 			}
@@ -123,8 +128,10 @@ System.out.println("Scanning page " + j + " of " + numPagesToBeScanned);
 				System.out.println(el);
 				SourceForgeProject project = null;
 				try {
-					project = importProject(el.split("/")[2], platform);
-					platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
+					if ((platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByName(el.split("/")[2])) != null) {
+						project = importProject(el.split("/")[2], platform);
+						platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
+					}
 				} catch (MalformedURLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -148,6 +155,7 @@ System.out.println("Scanning page " + j + " of " + numPagesToBeScanned);
 			JSONObject currentProg = (JSONObject)((JSONObject)obj.get("Project"));
 				
 			project.setShortName(projectId); 
+			project.setName(projectId);
 			project.setCreated((String)currentProg.get("created"));
 			String app = currentProg.get("id").toString();
 			
@@ -185,8 +193,7 @@ System.out.println("Scanning page " + j + " of " + numPagesToBeScanned);
 				repository.setUrl(((String)((JSONObject)currentProg.get("CVSRepository")).get("anon-root")));
 				project.getVcsRepositories().add(repository);
 			}
-		
-			
+					
 			if ((isNotNull(currentProg,"licenses"))){			
 				JSONArray licenses = (JSONArray)currentProg.get("licenses");
 				Iterator<JSONObject> iter  = licenses.iterator();
