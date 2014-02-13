@@ -6,6 +6,11 @@ package org.ossmeter.repository.model;
 class ProjectRepository extends NamedElement{
 	val Project[*] projects;
 	val Role[*] roles;
+	val ImportData[*] gitHubImportData;
+}
+
+class ImportData {
+	attr String lastImportedProject;
 }
 
 abstract class NamedElement {
