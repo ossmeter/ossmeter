@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -82,9 +83,10 @@ public class SourceforgeProjectImporter {
 			doc = Jsoup.connect("http://sourceforge.net/directory/").get();
 			content = doc.getElementById("result_count");
 			numPagesToBeScanned = new Integer(content.toString().substring(("<p id=\"result_count\"> Showing page 1 of ".length()), content.toString().length()-6));
-				
-			for (int j = 1; j < numPagesToBeScanned; j++)
+int count = 0;
+			for (int j = 1; j < (numPagesToBeScanned); j++)
 			{
+System.out.println("Scanning page " + j + " of " + numPagesToBeScanned);
 				try {
 					String URL_PROJECT = "http://sourceforge.net/directory/?page="+j;
 					doc = Jsoup.connect(URL_PROJECT).get();
@@ -92,7 +94,8 @@ public class SourceforgeProjectImporter {
 					Elements e = content.getElementsByClass("project_info");
 					for (int i = 0; i < e.size(); i++){
 						url = e.get(i).getElementsByAttributeValue("itemprop", "url").first().attr("href");
-						System.out.println(url);
+						count++;
+						System.out.println("--> (" + count + ") " + url);
 						SourceForgeProject project = importProject(url.split("/")[2], platform);
 						platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
 					}
@@ -111,21 +114,32 @@ public class SourceforgeProjectImporter {
 		catch(Exception e){
 				e.printStackTrace();
 		}
-		
-		System.out.println("Trying again with...");
-		Iterator<String> it = toRetry.iterator();
-		String el;
-		while (it.hasNext()) {
-			el = (String) it.next();
-			System.out.println(el);
-			SourceForgeProject project = importProject(el.split("/")[2], platform);
-			platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
+		if (! toRetry.isEmpty()) {
+			System.out.println("Trying again with...");
+			Iterator<String> it = toRetry.iterator();
+			String el;
+			while (it.hasNext()) {
+				el = (String) it.next();
+				System.out.println(el);
+				SourceForgeProject project = null;
+				try {
+					project = importProject(el.split("/")[2], platform);
+					platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					continue;
+				}
+			}
 		}
 	}
 	
-	public SourceForgeProject importProject(String projectId, Platform platform) {
+	public SourceForgeProject importProject(String projectId, Platform platform) throws MalformedURLException, IOException {
 		SourceForgeProject project = new SourceForgeProject();
-		try {
+		
 			InputStream is = new URL("http://sourceforge.net/api/project/name/" + projectId + "/json").openStream();
 			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
 			String jsonText = readAll(rd);
@@ -283,11 +297,7 @@ public class SourceforgeProjectImporter {
 				}
 			}
 			
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		} 
+		
 		
 		return project;	
 		
