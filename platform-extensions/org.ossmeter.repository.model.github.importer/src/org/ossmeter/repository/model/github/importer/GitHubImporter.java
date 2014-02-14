@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 
@@ -40,32 +41,28 @@ public class GitHubImporter {
 		String url = "https://api.github.com/rate_limit?access_token="+this.authToken;
 		boolean sleep = true;
 		
-		try {
-			while (sleep) {
-				InputStream is = new URL(url).openStream();
-				BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));		
-				String jsonText = readAll(rd);
-
-				JSONObject obj=(JSONObject)JSONValue.parse(jsonText);
-				JSONObject rate = (JSONObject)((JSONObject)obj.get("rate"));
-			
-				Integer remaining = new Integer(rate.get("remaining").toString());
-				if (remaining > 0) {
-					sleep = false;
-				}
-			}
-			
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
-		
-		
+		while (sleep) {
+			try {
+					InputStream is = new URL(url).openStream();
+					BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));		
+					String jsonText = readAll(rd);
+	
+					JSONObject obj=(JSONObject)JSONValue.parse(jsonText);
+					JSONObject rate = (JSONObject)((JSONObject)obj.get("rate"));
+				
+					Integer remaining = new Integer(rate.get("remaining").toString());
+					if (remaining > 0) {
+						sleep = false;
+					}
+				
+			} catch (IOException e) {
+				System.err.println("Having difficulties to connect, retrying...");
+				continue;
+			}		
+		}	
 	}
 
+	
 	private boolean isNotNull(JSONObject currentRepo, String attribute ) 
 	{
 		if (currentRepo.get(attribute) == null)
