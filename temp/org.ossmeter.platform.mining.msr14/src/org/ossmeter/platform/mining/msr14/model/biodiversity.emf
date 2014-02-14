@@ -3,6 +3,7 @@ package org.ossmeter.platform.mining.msr14.model;
 @db
 class Biodiversity {
 	val User[*] users;
+	val Project[*] projects;
 }
 
 class User {
@@ -17,9 +18,16 @@ class User {
 	ref User[*] followers;
 	ref User[*] following;
 	
-	attr String[*] watching;// FIXME will be Project class
-	attr String[*] forks;	// FIXME will be Project class
-	attr String[*] projects;// FIXME will be Project class
+	ref Project[*] owns;
+	ref Project[*] watches;
+	ref Project[*] forks;
+	ref Project[*] commitsAsAuthor;
+	ref Project[*] commitsAsCommitter;
+	ref Project[*] commentsOnCommits;
+	ref Project[*] submitsIssues;
+	ref Project[*] commentsOnIssues;
+	ref Project[*] submitsPullRequests;
+	ref Project[*] commentsOnPullRequests;
 	
 	val Countable issues;
 	val Countable issueComments;
@@ -31,6 +39,33 @@ class User {
 	val Countable commitComments;
 	
 	val Artefact[*] artefacts;	
+}
+
+class Project {
+	attr String ~id;
+	attr String name;
+	attr String ownerName; // To enable quick querying
+	attr String createdAt;
+	attr int size; // TODO: Not sure what this value means? Look up in API
+	attr int watchersCount;
+	attr int watchersCount2;
+	attr String language;
+	attr int forks;
+	attr int forksCount;
+	attr int openIssuesCount;
+	attr int openIssues;
+	attr int networkCount;
+	ref User owner;
+	ref User[*] watchers;
+	
+	val IssueEvent[*] issueEvents;
+	
+	attr int numberOfCommits;
+	attr int numberOfIssues;
+	attr int numberOfCommitComments;
+	attr int numberOfIssueComments;
+	attr int numberOfPullRequests;
+	attr int numberOfPullRequestComments;
 }
 
 class IssueEvent{

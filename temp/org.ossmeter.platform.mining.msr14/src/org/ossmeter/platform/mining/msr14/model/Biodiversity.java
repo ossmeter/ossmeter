@@ -12,11 +12,16 @@ public class Biodiversity extends PongoDB {
 	}
 	
 	protected UserCollection users = null;
+	protected ProjectCollection projects = null;
 	
 	
 	
 	public UserCollection getUsers() {
 		return users;
+	}
+	
+	public ProjectCollection getProjects() {
+		return projects;
 	}
 	
 	
@@ -25,5 +30,7 @@ public class Biodiversity extends PongoDB {
 		super.setDb(db);
 		users = new UserCollection(db.getCollection("users"));
 		pongoCollections.add(users);
+		projects = new ProjectCollection(db.getCollection("projects"));
+		pongoCollections.add(projects);
 	}
 }

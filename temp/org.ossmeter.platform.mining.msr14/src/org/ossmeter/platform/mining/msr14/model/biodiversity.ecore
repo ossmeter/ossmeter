@@ -3,6 +3,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="Biodiversity">
     <eAnnotations source="db"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="users" upperBound="-1" eType="//User" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="projects" upperBound="-1" eType="//Project" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="User">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="login">
@@ -28,15 +29,16 @@
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="followers" upperBound="-1" eType="//User"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="following" upperBound="-1" eType="//User"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="watching" upperBound="-1">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="forks" upperBound="-1">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="projects" upperBound="-1">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="owns" upperBound="-1" eType="//Project"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="watches" upperBound="-1" eType="//Project"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="forks" upperBound="-1" eType="//Project"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="commitsAsAuthor" upperBound="-1" eType="//Project"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="commitsAsCommitter" upperBound="-1" eType="//Project"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="commentsOnCommits" upperBound="-1" eType="//Project"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="submitsIssues" upperBound="-1" eType="//Project"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="commentsOnIssues" upperBound="-1" eType="//Project"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="submitsPullRequests" upperBound="-1" eType="//Project"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="commentsOnPullRequests" upperBound="-1" eType="//Project"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="issues" eType="//Countable" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="issueComments" eType="//Countable" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="issueEvents" upperBound="-1" eType="//IssueEvent" containment="true"/>
@@ -46,6 +48,68 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="commitCommitter" eType="//Commit" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="commitComments" eType="//Countable" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="artefacts" upperBound="-1" eType="//Artefact" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Project">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ownerName">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="createdAt">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="size">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="watchersCount">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="watchersCount2">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="language">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="forks">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="forksCount">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="openIssuesCount">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="openIssues">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="networkCount">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="owner" eType="//User"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="watchers" upperBound="-1" eType="//User"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="issueEvents" upperBound="-1" eType="//IssueEvent" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="numberOfCommits">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="numberOfIssues">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="numberOfCommitComments">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="numberOfIssueComments">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="numberOfPullRequests">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="numberOfPullRequestComments">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="IssueEvent">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="eventKind" eType="//IssueEventKind"/>

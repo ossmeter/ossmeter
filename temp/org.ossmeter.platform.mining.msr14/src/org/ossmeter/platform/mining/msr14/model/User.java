@@ -10,9 +10,16 @@ public class User extends Pongo {
 	
 	protected List<User> followers = null;
 	protected List<User> following = null;
-	protected List<String> watching = null;
-	protected List<String> forks = null;
-	protected List<String> projects = null;
+	protected List<Project> owns = null;
+	protected List<Project> watches = null;
+	protected List<Project> forks = null;
+	protected List<Project> commitsAsAuthor = null;
+	protected List<Project> commitsAsCommitter = null;
+	protected List<Project> commentsOnCommits = null;
+	protected List<Project> submitsIssues = null;
+	protected List<Project> commentsOnIssues = null;
+	protected List<Project> submitsPullRequests = null;
+	protected List<Project> commentsOnPullRequests = null;
 	protected List<IssueEvent> issueEvents = null;
 	protected List<Artefact> artefacts = null;
 	protected Countable issues = null;
@@ -28,9 +35,16 @@ public class User extends Pongo {
 		super();
 		dbObject.put("followers", new BasicDBList());
 		dbObject.put("following", new BasicDBList());
-		dbObject.put("watching", new BasicDBList());
+		dbObject.put("owns", new BasicDBList());
+		dbObject.put("watches", new BasicDBList());
 		dbObject.put("forks", new BasicDBList());
-		dbObject.put("projects", new BasicDBList());
+		dbObject.put("commitsAsAuthor", new BasicDBList());
+		dbObject.put("commitsAsCommitter", new BasicDBList());
+		dbObject.put("commentsOnCommits", new BasicDBList());
+		dbObject.put("submitsIssues", new BasicDBList());
+		dbObject.put("commentsOnIssues", new BasicDBList());
+		dbObject.put("submitsPullRequests", new BasicDBList());
+		dbObject.put("commentsOnPullRequests", new BasicDBList());
 		dbObject.put("issueEvents", new BasicDBList());
 		dbObject.put("artefacts", new BasicDBList());
 		LOGIN.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
@@ -40,9 +54,6 @@ public class User extends Pongo {
 		JOINEDDATE.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
 		FOLLOWERCOUNT.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
 		FOLLOWINGCOUNT.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
-		WATCHING.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
-		FORKS.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
-		PROJECTS.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
 	}
 	
 	public static StringQueryProducer LOGIN = new StringQueryProducer("login"); 
@@ -52,9 +63,6 @@ public class User extends Pongo {
 	public static StringQueryProducer JOINEDDATE = new StringQueryProducer("joinedDate"); 
 	public static NumericalQueryProducer FOLLOWERCOUNT = new NumericalQueryProducer("followerCount");
 	public static NumericalQueryProducer FOLLOWINGCOUNT = new NumericalQueryProducer("followingCount");
-	public static ArrayQueryProducer WATCHING = new ArrayQueryProducer("watching");
-	public static ArrayQueryProducer FORKS = new ArrayQueryProducer("forks");
-	public static ArrayQueryProducer PROJECTS = new ArrayQueryProducer("projects");
 	
 	
 	public String getLogin() {
@@ -121,24 +129,6 @@ public class User extends Pongo {
 		return this;
 	}
 	
-	public List<String> getWatching() {
-		if (watching == null) {
-			watching = new PrimitiveList<String>(this, (BasicDBList) dbObject.get("watching"));
-		}
-		return watching;
-	}
-	public List<String> getForks() {
-		if (forks == null) {
-			forks = new PrimitiveList<String>(this, (BasicDBList) dbObject.get("forks"));
-		}
-		return forks;
-	}
-	public List<String> getProjects() {
-		if (projects == null) {
-			projects = new PrimitiveList<String>(this, (BasicDBList) dbObject.get("projects"));
-		}
-		return projects;
-	}
 	
 	public List<User> getFollowers() {
 		if (followers == null) {
@@ -151,6 +141,66 @@ public class User extends Pongo {
 			following = new PongoList<User>(this, "following", false);
 		}
 		return following;
+	}
+	public List<Project> getOwns() {
+		if (owns == null) {
+			owns = new PongoList<Project>(this, "owns", false);
+		}
+		return owns;
+	}
+	public List<Project> getWatches() {
+		if (watches == null) {
+			watches = new PongoList<Project>(this, "watches", false);
+		}
+		return watches;
+	}
+	public List<Project> getForks() {
+		if (forks == null) {
+			forks = new PongoList<Project>(this, "forks", false);
+		}
+		return forks;
+	}
+	public List<Project> getCommitsAsAuthor() {
+		if (commitsAsAuthor == null) {
+			commitsAsAuthor = new PongoList<Project>(this, "commitsAsAuthor", false);
+		}
+		return commitsAsAuthor;
+	}
+	public List<Project> getCommitsAsCommitter() {
+		if (commitsAsCommitter == null) {
+			commitsAsCommitter = new PongoList<Project>(this, "commitsAsCommitter", false);
+		}
+		return commitsAsCommitter;
+	}
+	public List<Project> getCommentsOnCommits() {
+		if (commentsOnCommits == null) {
+			commentsOnCommits = new PongoList<Project>(this, "commentsOnCommits", false);
+		}
+		return commentsOnCommits;
+	}
+	public List<Project> getSubmitsIssues() {
+		if (submitsIssues == null) {
+			submitsIssues = new PongoList<Project>(this, "submitsIssues", false);
+		}
+		return submitsIssues;
+	}
+	public List<Project> getCommentsOnIssues() {
+		if (commentsOnIssues == null) {
+			commentsOnIssues = new PongoList<Project>(this, "commentsOnIssues", false);
+		}
+		return commentsOnIssues;
+	}
+	public List<Project> getSubmitsPullRequests() {
+		if (submitsPullRequests == null) {
+			submitsPullRequests = new PongoList<Project>(this, "submitsPullRequests", false);
+		}
+		return submitsPullRequests;
+	}
+	public List<Project> getCommentsOnPullRequests() {
+		if (commentsOnPullRequests == null) {
+			commentsOnPullRequests = new PongoList<Project>(this, "commentsOnPullRequests", false);
+		}
+		return commentsOnPullRequests;
 	}
 	public List<IssueEvent> getIssueEvents() {
 		if (issueEvents == null) {
