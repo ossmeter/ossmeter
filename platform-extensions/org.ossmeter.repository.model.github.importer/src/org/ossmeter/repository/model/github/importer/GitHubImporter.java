@@ -111,7 +111,7 @@ public class GitHubImporter {
 				rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
 				jsonText = readAll(rd);			
 			} catch (IOException e) {
-				System.out.println("API rate limit exceeded. Waiting to restart the importing...");
+				System.err.println("API rate limit exceeded. Waiting to restart the importing...");
 //				platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportingData().first().setLastImportedProject(String.valueOf(lastImportedId));
 //				platform.getProjectRepositoryManager().getProjectRepository().sync();
 				waitApiRate();
@@ -207,7 +207,7 @@ public class GitHubImporter {
 			} catch (FileNotFoundException e1) {
 				e1.printStackTrace();
 			} catch (IOException e1) {
-				System.out.println("API rate limit exceeded. Waiting to restart the importing...");
+				System.err.println("API rate limit exceeded. Waiting to restart the importing...");
 //				platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportingData().first().setLastImportedProject(String.valueOf(lastImportedId));
 //				platform.getProjectRepositoryManager().getProjectRepository().sync();
 				waitApiRate();
