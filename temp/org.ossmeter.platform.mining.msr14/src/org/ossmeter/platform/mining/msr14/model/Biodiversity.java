@@ -13,6 +13,7 @@ public class Biodiversity extends PongoDB {
 	
 	protected UserCollection users = null;
 	protected ProjectCollection projects = null;
+	protected ProjectMembershipCollection projectMemberships = null;
 	
 	
 	
@@ -24,6 +25,10 @@ public class Biodiversity extends PongoDB {
 		return projects;
 	}
 	
+	public ProjectMembershipCollection getProjectMemberships() {
+		return projectMemberships;
+	}
+	
 	
 	@Override
 	public void setDb(DB db) {
@@ -32,5 +37,7 @@ public class Biodiversity extends PongoDB {
 		pongoCollections.add(users);
 		projects = new ProjectCollection(db.getCollection("projects"));
 		pongoCollections.add(projects);
+		projectMemberships = new ProjectMembershipCollection(db.getCollection("projectMemberships"));
+		pongoCollections.add(projectMemberships);
 	}
 }

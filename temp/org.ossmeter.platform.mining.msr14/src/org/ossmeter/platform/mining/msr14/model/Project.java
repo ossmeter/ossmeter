@@ -10,6 +10,7 @@ public class Project extends Pongo {
 	
 	protected List<User> watchers = null;
 	protected List<IssueEvent> issueEvents = null;
+	protected List<Artefact> artefacts = null;
 	protected User owner = null;
 	
 	
@@ -18,7 +19,8 @@ public class Project extends Pongo {
 		dbObject.put("owner", new BasicDBObject());
 		dbObject.put("watchers", new BasicDBList());
 		dbObject.put("issueEvents", new BasicDBList());
-		ID.setOwningType("org.ossmeter.platform.mining.msr14.model.Project");
+		dbObject.put("artefacts", new BasicDBList());
+		GHID.setOwningType("org.ossmeter.platform.mining.msr14.model.Project");
 		NAME.setOwningType("org.ossmeter.platform.mining.msr14.model.Project");
 		OWNERNAME.setOwningType("org.ossmeter.platform.mining.msr14.model.Project");
 		CREATEDAT.setOwningType("org.ossmeter.platform.mining.msr14.model.Project");
@@ -39,7 +41,7 @@ public class Project extends Pongo {
 		NUMBEROFPULLREQUESTCOMMENTS.setOwningType("org.ossmeter.platform.mining.msr14.model.Project");
 	}
 	
-	public static StringQueryProducer ID = new StringQueryProducer("id"); 
+	public static StringQueryProducer GHID = new StringQueryProducer("ghId"); 
 	public static StringQueryProducer NAME = new StringQueryProducer("name"); 
 	public static StringQueryProducer OWNERNAME = new StringQueryProducer("ownerName"); 
 	public static StringQueryProducer CREATEDAT = new StringQueryProducer("createdAt"); 
@@ -60,12 +62,12 @@ public class Project extends Pongo {
 	public static NumericalQueryProducer NUMBEROFPULLREQUESTCOMMENTS = new NumericalQueryProducer("numberOfPullRequestComments");
 	
 	
-	public String getId() {
-		return parseString(dbObject.get("id")+"", "");
+	public String getGhId() {
+		return parseString(dbObject.get("ghId")+"", "");
 	}
 	
-	public Project setId(String id) {
-		dbObject.put("id", id);
+	public Project setGhId(String ghId) {
+		dbObject.put("ghId", ghId);
 		notifyChanged();
 		return this;
 	}
@@ -244,6 +246,12 @@ public class Project extends Pongo {
 			issueEvents = new PongoList<IssueEvent>(this, "issueEvents", true);
 		}
 		return issueEvents;
+	}
+	public List<Artefact> getArtefacts() {
+		if (artefacts == null) {
+			artefacts = new PongoList<Artefact>(this, "artefacts", true);
+		}
+		return artefacts;
 	}
 	
 	public Project setOwner(User owner) {

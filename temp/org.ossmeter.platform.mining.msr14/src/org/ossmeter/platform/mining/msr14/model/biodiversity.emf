@@ -4,68 +4,89 @@ package org.ossmeter.platform.mining.msr14.model;
 class Biodiversity {
 	val User[*] users;
 	val Project[*] projects;
+	val ProjectMembership[*] projectMemberships;
 }
 
 class User {
+	// Extracted from user collection 
 	attr String login;
-	attr String ~id;
+	attr String ghId;
 	attr String location;
 	attr int publicRepos;
 	attr String joinedDate;
 
+	// Inferred
 	attr int followerCount; // Needed because not all GitHub users are in the dataset
 	attr int followingCount;// Needed because not all GitHub users are in the dataset
 	ref User[*] followers;
 	ref User[*] following;
 	
-	ref Project[*] owns;
 	ref Project[*] watches;
 	ref Project[*] forks;
-	ref Project[*] commitsAsAuthor;
-	ref Project[*] commitsAsCommitter;
-	ref Project[*] commentsOnCommits;
-	ref Project[*] submitsIssues;
-	ref Project[*] commentsOnIssues;
-	ref Project[*] submitsPullRequests;
-	ref Project[*] commentsOnPullRequests;
+	attr int numerOfWatches;
+	attr int numberOfForks;
 	
-	val Countable issues;
-	val Countable issueComments;
-	val IssueEvent[*] issueEvents;
-	val Countable pullRequests;
-	val Countable pullRequestComments;
-	val Commit commitAuthors;
-	val Commit commitCommitter;
-	val Countable commitComments;
+	ref ProjectMembership[*] projects;
+	
+	val IssueEvent[*] totalIssueEvents;
+	val Commits commits;
+	attr int totalNumberOfIssues;
+	attr int totalNumberOfCommitComments;
+	attr int totalNumberOfIssueComments;
+	attr int totalNumberOfPullRequests;
+	attr int totalNumberOfPullRequestComments;
 	
 	val Artefact[*] artefacts;	
 }
 
-class Project {
-	attr String ~id;
-	attr String name;
-	attr String ownerName; // To enable quick querying
-	attr String createdAt;
-	attr int size; // TODO: Not sure what this value means? Look up in API
-	attr int watchersCount;
-	attr int watchersCount2;
-	attr String language;
-	attr int forks;
-	attr int forksCount;
-	attr int openIssuesCount;
-	attr int openIssues;
-	attr int networkCount;
-	ref User owner;
-	ref User[*] watchers;
+class ProjectMembership {
+	attr boolean owner;
+	attr String projectName;	// Utility field: compound index with projectOwner
+	attr String projectOwner;	// Utility field: compound index with projectName
+	attr String userName;		// Utility field: single field index
+	ref Project project;
+	ref User user;
 	
 	val IssueEvent[*] issueEvents;
-	
+	val Commits commits;
 	attr int numberOfCommits;
 	attr int numberOfIssues;
 	attr int numberOfCommitComments;
 	attr int numberOfIssueComments;
 	attr int numberOfPullRequests;
 	attr int numberOfPullRequestComments;
+	
+	val Artefact[*] artefacts;	
+}
+
+class Project {
+	// Stripped directly from repo collection
+	attr String ghId;
+	attr String name;			// Compound index with ownerName
+	attr String ownerName; 		// Compound index with name
+	attr String createdAt;
+	attr int size; 				// TODO: Not sure what this value means? Look up in API
+	attr int watchersCount;		// All these are oddly duplicated in the repo collection:
+	attr int watchersCount2;	//
+	attr String language;		//
+	attr int forks;				//
+	attr int forksCount;		//
+	attr int openIssuesCount;	//
+	attr int openIssues;		//
+	attr int networkCount;	// TODO: Not sure what this value means? Look up in API
+	
+	// Inferred	from other collections
+	ref User owner;
+	ref User[*] watchers;
+	
+	val IssueEvent[*] issueEvents;
+	attr int numberOfCommits;
+	attr int numberOfIssues;
+	attr int numberOfCommitComments;
+	attr int numberOfIssueComments;
+	attr int numberOfPullRequests;
+	attr int numberOfPullRequestComments;
+	val Artefact[*] artefacts;	
 }
 
 class IssueEvent{
@@ -78,22 +99,20 @@ enum IssueEventKind {
 	ASSIGNED; HEAD_REF_DELETED; HEAD_REF_CLEANED; HEAD_REF_RESTORED;
 }
 
-class Countable {
-	attr int number;
-	attr int frequency;
-} 
-
-class Commit extends Countable {
-	attr int total;
+class Commits {
+	attr int count;
+	attr int totalChanges;
 	attr int additions;
 	attr int deletions;
+	attr int asAuthor;
+	attr int asCommitter;
 	attr int totalFiles;
 	attr double averageFilesPerCommit;
+	attr String[*] commitTimes; 	// We can perform offline analysis of this
 }
 
 class Artefact {
 	@searchable
 	attr String extension;
-	attr int numberOfProjects; // This relates to cases where a file kind matches a project's language
 	attr int count;
 }

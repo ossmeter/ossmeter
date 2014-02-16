@@ -4,14 +4,13 @@ import java.util.Iterator;
 
 import org.ossmeter.platform.mining.msr14.model.Artefact;
 import org.ossmeter.platform.mining.msr14.model.Biodiversity;
-import org.ossmeter.platform.mining.msr14.model.Commit;
-import org.ossmeter.platform.mining.msr14.model.Countable;
+import org.ossmeter.platform.mining.msr14.model.Commits;
 import org.ossmeter.platform.mining.msr14.model.IssueEvent;
 import org.ossmeter.platform.mining.msr14.model.IssueEventKind;
 import org.ossmeter.platform.mining.msr14.model.Project;
+import org.ossmeter.platform.mining.msr14.model.ProjectMembership;
 import org.ossmeter.platform.mining.msr14.model.User;
 
-import com.googlecode.pongo.runtime.querying.Logical;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.Bytes;
@@ -24,11 +23,30 @@ import com.mongodb.ServerAddress;
 public class Extractor {
 	public static void main(String[] args) throws Exception {
 		
-		Mongo msrMongo = new Mongo(new ServerAddress("localhost", 1234));
-		Mongo bioMongo = new Mongo(new ServerAddress("localhost", 12345));
+		Mongo msrMongo = new Mongo(new ServerAddress("localhost", 1234)); // GitHub challenge data
+		Mongo bioMongo = new Mongo(new ServerAddress("localhost", 12345));// Extracted data
 		
+		// Create indexes
 		Biodiversity bio = new Biodiversity(bioMongo.getDB("biodiversity"));
+		bioMongo.getDB("biodiversity").getCollection("users").ensureIndex(new BasicDBObject("login",1));
 
+		BasicDBObject index = new BasicDBObject();
+		index.put("name",1);
+		index.put("ownerName",1);
+		bioMongo.getDB("biodiversity").getCollection("projects").ensureIndex(index);
+		
+		index = new BasicDBObject();
+		index.put("projectName",1);
+		index.put("projectOwner",1);
+		bioMongo.getDB("biodiversity").getCollection("projectMemberships").ensureIndex(index);
+		
+		index = new BasicDBObject();
+		index.put("projectName",1);
+		index.put("userName",1);
+		bioMongo.getDB("biodiversity").getCollection("projectMemberships").ensureIndex(index);
+		
+		bioMongo.getDB("biodiversity").getCollection("projectMemberships").ensureIndex(new BasicDBObject("userName",1));
+		
 		DB msrDb = msrMongo.getDB("msr14");
 		
 //		#1 User extraction
@@ -37,17 +55,17 @@ public class Extractor {
 		cursor.addOption(Bytes.QUERYOPTION_NOTIMEOUT);
 		Iterator<DBObject> it = cursor.iterator();
 
-		bioMongo.getDB("biodiversity").getCollection("users").ensureIndex(new BasicDBObject("login",1));
 
 		int count = 0;
 		while(it.hasNext()){
 			BasicDBObject obj = (BasicDBObject) it.next();
 			
 			User user = new User();
-			user.setId(obj.getString("id"));
+			user.setGhId(obj.getString("id"));
 			user.setLogin(obj.getString("login"));
 			user.setLocation(obj.getString("location"));
 			user.setPublicRepos(obj.getInt("public_repos"));
+			user.setJoinedDate(obj.getString("created_at"));
 			
 			bio.getUsers().add(user);
 			
@@ -66,19 +84,13 @@ public class Extractor {
 		cursor.addOption(Bytes.QUERYOPTION_NOTIMEOUT);
 		it = cursor.iterator();
 
-		BasicDBObject index = new BasicDBObject();
-		index.put("name",1);
-		index.put("ownerName",1);
-		
-		bioMongo.getDB("biodiversity").getCollection("projects").ensureIndex(index);
-
 		count = 0;
 		while(it.hasNext()){
 			BasicDBObject obj = (BasicDBObject) it.next();
 			
 			Project project = new Project();
 			project.setName(obj.getString("name"));
-			project.setId(obj.getString("id"));
+			project.setGhId(obj.getString("id"));
 			project.setCreatedAt(obj.getString("created_at"));
 			project.setSize(obj.getInt("size", 0));
 			project.setWatchersCount(obj.getInt("watchers",0));
@@ -102,7 +114,10 @@ public class Extractor {
 			}
 			bio.getProjects().add(project);
 			
-			if (owner != null) owner.getOwns().add(project);
+			if (owner != null) { // This comes here as to reference the project, we need to have added to the project list first
+				ProjectMembership pm = getProjectMembership(bio, owner, project);
+				pm.setOwner(true);
+			}
 			
 			count++;
 			if (count % 1000 == 0) {
@@ -173,71 +188,127 @@ public class Extractor {
 			int additions = stats.getInt("additions", 0);
 			int deletions = stats.getInt("deletions", 0);
 			
+			String commitDate = ((BasicDBObject)((BasicDBObject)obj.get("commit")).get("author")).getString("date");
+			
 			User author = bio.getUsers().findOne(User.LOGIN.eq(authorLogin));
 			User committer = bio.getUsers().findOne(User.LOGIN.eq(committerLogin));
+			
 			if (author != null) {
-				if (author.getCommitAuthors() == null) author.setCommitAuthors(new Commit());
-				author.getCommitAuthors().setNumber(author.getCommitAuthors().getNumber()+1);
-				author.getCommitAuthors().setTotal(author.getCommitAuthors().getTotal() + total);
-				author.getCommitAuthors().setAdditions(author.getCommitAuthors().getAdditions()+additions);
-				author.getCommitAuthors().setDeletions(author.getCommitAuthors().getDeletions()+deletions);
-			} else {
-				System.err.println("Found commit with unknown author: " + authorLogin);
+				if (author.getCommits() ==null) author.setCommits(new Commits());
+				author.getCommits().setCount(author.getCommits().getCount()+1);
+				author.getCommits().setTotalChanges(author.getCommits().getTotalChanges()+total);
+				author.getCommits().setAdditions(author.getCommits().getAdditions()+additions);
+				author.getCommits().setDeletions(author.getCommits().getDeletions()+deletions);
+				author.getCommits().setAsAuthor(author.getCommits().getAsAuthor()+1);
+				author.getCommits().getCommitTimes().add(commitDate);
 			}
 			if (committer != null) {
-				if (committer.getCommitCommitter() == null) committer.setCommitCommitter(new Commit());
-				committer.getCommitCommitter().setNumber(committer.getCommitCommitter().getNumber()+1);
-				committer.getCommitCommitter().setTotal(committer.getCommitCommitter().getTotal() + total);
-				committer.getCommitCommitter().setAdditions(committer.getCommitCommitter().getAdditions()+additions);
-				committer.getCommitCommitter().setDeletions(committer.getCommitCommitter().getDeletions()+deletions);
-			} else {
-				System.err.println("Found commit with unknown committer: " + committerLogin);
-			}
-			// Files
-			BasicDBList files = (BasicDBList) obj.get("files");
-			if (files != null) {
-				for (Object f : files) {
-					BasicDBObject file = (BasicDBObject)f;
-					
-					String filename = file.getString("filename");
-					if (filename.lastIndexOf(".") != -1) { // If it has an extension, we want that. If not, use the entire filename
-						filename = filename.substring(filename.lastIndexOf("."));
-						filename = filename.toLowerCase(); // Ensure consistency
-					}
-					
-					if (author != null) addArtefact(author, filename);
-					if (committer != null) addArtefact(committer, filename);
-				}
+				if (committer.getCommits() ==null) committer.setCommits(new Commits());
+				committer.getCommits().setCount(committer.getCommits().getCount()+1);
+				committer.getCommits().setTotalChanges(committer.getCommits().getTotalChanges()+total);
+				committer.getCommits().setAdditions(committer.getCommits().getAdditions()+additions);
+				committer.getCommits().setDeletions(committer.getCommits().getDeletions()+deletions);
+				committer.getCommits().setAsCommitter(committer.getCommits().getAsCommitter()+1);
+				committer.getCommits().getCommitTimes().add(commitDate);
 			}
 			
-			if (author != null && files !=null) {
-				if (author.getCommitAuthors()==null) author.setCommitAuthors(new Commit());
-				author.getCommitAuthors().setTotalFiles(author.getCommitAuthors().getTotalFiles()+files.size());
-				author.getCommitAuthors().setAverageFilesPerCommit(author.getCommitAuthors().getTotalFiles()/author.getCommitAuthors().getNumber());
-			}
-			if (committer != null && files !=null) {
-				if (committer.getCommitCommitter()==null) committer.setCommitCommitter(new Commit());
-				committer.getCommitCommitter().setTotalFiles(committer.getCommitCommitter().getTotalFiles()+files.size());
-				committer.getCommitCommitter().setAverageFilesPerCommit(committer.getCommitCommitter().getTotalFiles()/committer.getCommitCommitter().getNumber());
-			}
+			ProjectMembership authorPm = null;
+			ProjectMembership committerPm = null;
 			
 			// Only a very small number of commit comments actually reference the repo
 			// Instead we're going to have to strip the string 
 			String[] url = convertUrlIntoProjectNameAndOwner(obj.getString("url"));
-			
+			Project project = null;
 			Iterator<Project> repoIt = bio.getProjects().find(Project.NAME.eq(url[1]), Project.OWNERNAME.eq(url[0])).iterator();
 			if (repoIt.hasNext()) {
-				Project project = repoIt.next();
+				project = repoIt.next();
 				if (project != null) {
 					project.setNumberOfCommits(project.getNumberOfCommits()+1);
-					if (author != null && !author.getCommitsAsAuthor().contains(project)) author.getCommitsAsAuthor().add(project);
-					if (committer != null && !committer.getCommitsAsCommitter().contains(project)) committer.getCommitsAsCommitter().add(project);
+					
+					if (author != null) {
+						authorPm = getProjectMembership(bio, author, project);
+						if (authorPm.getCommits() ==null) {
+							authorPm.setCommits(new Commits());
+							bio.sync();
+						}
+//						System.err.println("Just created an author PM for " + author + " and " + project);
+						authorPm.getCommits().setCount(authorPm.getCommits().getCount()+1);
+						authorPm.getCommits().setTotalChanges(authorPm.getCommits().getTotalChanges()+total);
+						authorPm.getCommits().setAdditions(authorPm.getCommits().getAdditions()+1);
+						authorPm.getCommits().setDeletions(authorPm.getCommits().getDeletions()+1);
+						authorPm.getCommits().setAsAuthor(authorPm.getCommits().getAsAuthor()+1);
+						
+						// Avoid duplicating information
+						if (committer != null && author.getLogin().equals(committer.getLogin())) {
+							authorPm.getCommits().setAsCommitter(authorPm.getCommits().getAsCommitter()+1);
+						}
+						
+						authorPm.getCommits().getCommitTimes().add(commitDate);
+						
+						if (authorPm.getCommits().getCount()>1) {
+							System.out.println("More than one commit!!! " + authorPm.getCommits().getCount() + " (" + project.getName() + " " + author.getLogin());
+						}
+					}
+					if (committer != null && author != null && !author.getLogin().equals(committer.getLogin())) {
+						committerPm = getProjectMembership(bio, committer, project);
+						if (committerPm.getCommits() ==null) committerPm.setCommits(new Commits());
+						committerPm.getCommits().setCount(committerPm.getCommits().getCount()+1);
+						committerPm.getCommits().setTotalChanges(committerPm.getCommits().getTotalChanges()+total);
+						committerPm.getCommits().setAdditions(committerPm.getCommits().getAdditions()+1);
+						committerPm.getCommits().setDeletions(committerPm.getCommits().getDeletions()+1);
+						committerPm.getCommits().setAsCommitter(committerPm.getCommits().getAsCommitter()+1);
+						
+						committerPm.getCommits().getCommitTimes().add(commitDate);
+					}
 				} 
 			}
 			else {
 				System.err.println("Didn't find project:" + url[0] + ":"+url[1] + ", prestrip: " + obj.getString("url"));
 			}
+			bio.getProjectMemberships().sync();
+			bio.sync();
+
+			// Files
+			BasicDBList files = (BasicDBList) obj.get("files");
+//			if (files != null) {
+//				for (Object f : files) {
+//					BasicDBObject file = (BasicDBObject)f;
+//					
+//					String filename = file.getString("filename");
+//					if (filename.lastIndexOf(".") != -1) { // If it has an extension, we want that. If not, use the entire filename
+//						filename = filename.substring(filename.lastIndexOf("."));
+//						filename = filename.toLowerCase(); // Ensure consistency
+//					}
+//			// FIXME: Should strip any /'s if there is no '.' - i.e. just the last one
+//					
+//					if (author != null) addArtefact(author, filename);
+//					if (committer != null) addArtefact(committer, filename);
+////					if (project != null) addArtefact(project, filename);
+//				}
+//			}
 			
+			if (author != null && files !=null) {
+				author.getCommits().setTotalFiles(author.getCommits().getTotalFiles()+files.size());
+				author.getCommits().setAverageFilesPerCommit(author.getCommits().getTotalFiles()/author.getCommits().getCount());
+			}
+			if (committer != null && files !=null) {
+				committer.getCommits().setTotalFiles(committer.getCommits().getTotalFiles()+files.size());
+				committer.getCommits().setAverageFilesPerCommit(committer.getCommits().getTotalFiles()/committer.getCommits().getCount());
+			}
+			if (authorPm !=null && files != null) {
+//				ProjectMembership authorPm = getProjectMembership(bio, author, project);
+//				if (authorPm.getCommits() ==null) authorPm.setCommits(new Commits()); //FIXME: this shouldn't be needed due to above
+				authorPm.getCommits().setTotalFiles(authorPm.getCommits().getTotalChanges()+files.size());
+				authorPm.getCommits().setAverageFilesPerCommit(authorPm.getCommits().getTotalFiles()/authorPm.getCommits().getCount());
+			}
+			if (committerPm != null && files != null) {
+//				ProjectMembership committerPm = getProjectMembership(bio, committer, project);
+//				if (committerPm.getCommits() ==null) committerPm.setCommits(new Commits());//FIXME: this shouldn't be needed due to above
+				committerPm.getCommits().setTotalFiles(committerPm.getCommits().getTotalChanges()+files.size());
+				committerPm.getCommits().setAverageFilesPerCommit(committerPm.getCommits().getTotalFiles()/committerPm.getCommits().getCount());
+			}
+			bio.getProjectMemberships().sync();
+			bio.sync();
 			count++;
 			if (count % 1000 == 0) {
 				System.out.print(count + ", ");
@@ -264,26 +335,29 @@ public class Extractor {
 				continue;
 			}
 			
-			if (user.getCommitComments() == null) user.setCommitComments(new Countable());
-			user.getCommitComments().setNumber(user.getCommitComments().getNumber()+1);
-			user.getCommitComments().setFrequency(0); //FIXME needs implementings
+			user.setTotalNumberOfCommitComments(user.getTotalNumberOfCommitComments()+1);
 			
 			// Only a very small number of commit comments actually reference the repo
 			// Instead we're going to have to strip the string 
 			String[] url = convertUrlIntoProjectNameAndOwner(obj.getString("url"));
 			
+//			System.out.println("Querying project " + url[1] + " and owner " + url[0]);
 			Iterator<Project> repoIt = bio.getProjects().find(Project.NAME.eq(url[1]), Project.OWNERNAME.eq(url[0])).iterator();
-			if (repoIt.hasNext()) {
+//			if (repoIt.hasNext()) {
 				Project project = repoIt.next();
-				if (project != null) project.setNumberOfCommitComments(project.getNumberOfCommitComments()+1);
-				if (project != null && !user.getCommentsOnCommits().contains(project)) user.getCommentsOnCommits().add(project);
-			}
+				if (project != null) {
+					project.setNumberOfCommitComments(project.getNumberOfCommitComments()+1);
+					ProjectMembership pm = getProjectMembership(bio, user, project);
+					pm.setNumberOfCommitComments(pm.getNumberOfCommitComments()+1);
+				}
+//			}
 			count++;
 			if (count % 1000 == 0) {
 				System.out.print(count + ", ");
 				bio.sync();
 			}
 		}
+		cursor.close();
 		bio.sync();
 		System.out.println();
 		
@@ -304,20 +378,20 @@ public class Extractor {
 				continue;
 			}
 			
-			if (user.getPullRequests() == null) user.setPullRequests(new Countable());
-			user.getPullRequests().setNumber(user.getPullRequests().getNumber()+1);
-			user.getPullRequests().setFrequency(0); //FIXME needs implementings
+			user.setTotalNumberOfPullRequests(user.getTotalNumberOfPullRequests()+1);
 
 			// Project
 			Iterator<Project> repoIt = bio.getProjects().find(Project.NAME.eq(obj.getString("repo")), Project.OWNERNAME.eq(obj.getString("owner"))).iterator();
 			if (repoIt.hasNext()) {
 				Project project = repoIt.next();
-				if (project != null) project.setNumberOfPullRequests(project.getNumberOfPullRequests()+1);
-				if (!user.getSubmitsPullRequests().contains(project)) user.getSubmitsPullRequests().add(project);
+				if (project != null) {
+					project.setNumberOfPullRequests(project.getNumberOfPullRequests()+1);
+					ProjectMembership pm = getProjectMembership(bio, user, project);
+					pm.setNumberOfPullRequests(pm.getNumberOfPullRequests()+1);
+				}
 			} else {
 				System.err.println("Didn't find project:" + obj.getString("repo") + ":"+obj.getString("owner"));
 			}
-			
 			
 			count++;
 			if (count % 1000 == 0) {
@@ -327,7 +401,6 @@ public class Extractor {
 		}
 		bio.sync();
 		System.out.println();
-
 		
 //		#6 Pull request comments
 		System.out.println("Extracting pull request comments...");
@@ -342,20 +415,21 @@ public class Extractor {
 			String username = getUserLoginName(bio, "user", "login", obj);
 			User user = bio.getUsers().findOne(User.LOGIN.eq(username));
 			if (user == null) {
-				System.err.println("Found pull request comment with unrecognised user:" + username);
+//				System.err.println("Found pull request comment with unrecognised user:" + username);
 				continue;
 			}
 			
-			if (user.getPullRequestComments() == null) user.setPullRequestComments(new Countable());
-			user.getPullRequestComments().setNumber(user.getPullRequestComments().getNumber()+1);
-			user.getPullRequestComments().setFrequency(0); //FIXME needs implementings
+			user.setTotalNumberOfPullRequestComments(user.getTotalNumberOfPullRequestComments()+1);
 			
 			// Project
 			Iterator<Project> repoIt = bio.getProjects().find(Project.NAME.eq(obj.getString("repo")), Project.OWNERNAME.eq(obj.getString("owner"))).iterator();
 			if (repoIt.hasNext()) {
 				Project project = repoIt.next();
-				if (project != null) project.setNumberOfPullRequestComments(project.getNumberOfPullRequestComments()+1);
-				if (!user.getCommentsOnPullRequests().contains(project)) user.getCommentsOnPullRequests().add(project);
+				if (project != null) {
+					project.setNumberOfPullRequestComments(project.getNumberOfPullRequestComments()+1);
+					ProjectMembership pm = getProjectMembership(bio, user, project);
+					pm.setNumberOfPullRequestComments(pm.getNumberOfPullRequestComments()+1);
+				}
 			}
 			count++;
 			if (count % 1000 == 0) {
@@ -380,20 +454,21 @@ public class Extractor {
 			String username = getUserLoginName(bio, "user", "login", obj);
 			User user = bio.getUsers().findOne(User.LOGIN.eq(username));
 			if (user == null) {
-				System.err.println("Found issue with unrecognised user:" + username);
+//				System.err.println("Found issue with unrecognised user:" + username);
 				continue;
 			}
 			
-			if (user.getIssues() == null) user.setIssues(new Countable());
-			user.getIssues().setNumber(user.getIssues().getNumber()+1);
-			user.getIssues().setFrequency(0); //FIXME needs implementings
+			user.setTotalNumberOfIssues(user.getTotalNumberOfIssues()+1);
 			
 			// Project
 			Iterator<Project> repoIt = bio.getProjects().find(Project.NAME.eq(obj.getString("repo")), Project.OWNERNAME.eq(obj.getString("owner"))).iterator();
 			if (repoIt.hasNext()) {
 				Project project = repoIt.next();
-				if (project != null) project.setNumberOfIssues(project.getNumberOfIssues()+1);
-				if (!user.getSubmitsIssues().contains(project)) user.getSubmitsIssues().add(project);
+				if (project != null) {
+					project.setNumberOfIssues(project.getNumberOfIssues()+1);
+					ProjectMembership pm = getProjectMembership(bio, user, project);
+					pm.setNumberOfIssues(pm.getNumberOfIssues()+1);
+				}
 			}
 			count++;
 			if (count % 1000 == 0) {
@@ -417,20 +492,21 @@ public class Extractor {
 			String username = getUserLoginName(bio, "user", "login", obj);
 			User user = bio.getUsers().findOne(User.LOGIN.eq(username));
 			if (user == null) {
-				System.err.println("Found issue comment with unrecognised user:" + username);
+//				System.err.println("Found issue comment with unrecognised user:" + username);
 				continue;
 			}
 			
-			if (user.getIssueComments() == null) user.setIssueComments(new Countable());
-			user.getIssueComments().setNumber(user.getIssueComments().getNumber()+1);
-			user.getIssueComments().setFrequency(0); //FIXME needs implementings
+			user.setTotalNumberOfIssueComments(user.getTotalNumberOfIssueComments()+1);
 			
 			// Project
 			Iterator<Project> repoIt = bio.getProjects().find(Project.NAME.eq(obj.getString("repo")), Project.OWNERNAME.eq(obj.getString("owner"))).iterator();
 			if (repoIt.hasNext()) {
 				Project project = repoIt.next();
-				if (project != null) project.setNumberOfIssueComments(project.getNumberOfIssueComments()+1);
-				if (!user.getCommentsOnIssues().contains(project)) user.getCommentsOnIssues().add(project);
+				if (project != null) {
+					project.setNumberOfIssueComments(project.getNumberOfIssueComments()+1);
+					ProjectMembership pm = getProjectMembership(bio, user, project);
+					pm.setNumberOfIssueComments(pm.getNumberOfIssueComments()+1);
+				}
 			}
 			count++;
 			if (count % 1000 == 0) {
@@ -454,7 +530,7 @@ public class Extractor {
 			String username = getUserLoginName(bio, "actor", "login", obj);
 			User user = bio.getUsers().findOne(User.LOGIN.eq(username));
 			if (user == null) {
-				System.err.println("Found issue event with unrecognised user:" + username);
+//				System.err.println("Found issue event with unrecognised user:" + username);
 				continue;
 			}
 			
@@ -479,7 +555,7 @@ public class Extractor {
 			if (kind == null) continue;
 
 			boolean eventKindFound = false;
-			for (IssueEvent ie : user.getIssueEvents()) {
+			for (IssueEvent ie : user.getTotalIssueEvents()) {
 				if (ie.getEventKind().equals(kind)) {
 					ie.setCount(ie.getCount()+1);
 					eventKindFound = true;
@@ -490,7 +566,7 @@ public class Extractor {
 				IssueEvent ie = new IssueEvent();
 				ie.setEventKind(kind);
 				ie.setCount(1);
-				user.getIssueEvents().add(ie);
+				user.getTotalIssueEvents().add(ie);
 			}
 			
 			// Project
@@ -511,6 +587,22 @@ public class Extractor {
 					ie.setEventKind(kind);
 					ie.setCount(1);
 					project.getIssueEvents().add(ie);
+				}
+				
+				ProjectMembership pm = getProjectMembership(bio, user, project);
+				eventKindFound = false;
+				for (IssueEvent ie : pm.getIssueEvents()) {
+					if (ie.getEventKind().equals(kind)) {
+						ie.setCount(ie.getCount()+1);
+						eventKindFound = true;
+						break;
+					}
+				}
+				if (!eventKindFound) {
+					IssueEvent ie = new IssueEvent();
+					ie.setEventKind(kind);
+					ie.setCount(1);
+					pm.getIssueEvents().add(ie);
 				}
 			}
 			
@@ -551,6 +643,35 @@ public class Extractor {
 		bio.sync();
 	}
 	
+	protected static ProjectMembership getProjectMembership(Biodiversity bio, User user, Project project) {
+		
+		Iterator<ProjectMembership> it = bio.getProjectMemberships().find(ProjectMembership.USERNAME.eq(user.getLogin()), ProjectMembership.PROJECTNAME.eq(project.getName())).iterator();
+		if (it.hasNext()) {
+			return it.next();
+		}
+
+//		for (ProjectMembership pm : user.getProjects()) {//bio.getUsers().findOne(User.LOGIN.eq(user.getLogin())).getProjects()){//
+//			if (pm ==null){
+//				System.err.println("user.getProjects() returned a null entry again. Hmmm..." + user + " " + project);
+//				break;
+//			}
+//			if (pm.getProjectOwner().equals(project.getOwnerName()) && pm.getProjectName().equals(project.getName())) {
+////				System.err.println("FOUND AN EXISTING PM");
+//				return pm;
+//			}
+//		}
+
+		ProjectMembership pm = new ProjectMembership();
+		pm.setProject(project);
+		pm.setProjectName(project.getName());
+		pm.setProjectOwner(project.getOwnerName());
+		pm.setUser(user);
+		pm.setUserName(user.getLogin());
+		bio.getProjectMemberships().add(pm);
+		user.getProjects().add(pm);
+		return pm;
+	}
+	
 	/**
 	 * Some 'user' field in commit_comments are Strings. Some are objects. Seriously.
 	 * @param bio
@@ -588,9 +709,24 @@ public class Extractor {
 		if (!artefactFound) {
 			Artefact a = new Artefact();
 			a.setExtension(extension);
-			a.setNumberOfProjects(1); //FIXME not implemented yet
 			a.setCount(1);
 			user.getArtefacts().add(a);
+		}
+	}
+	protected static void addArtefact(Project project, String extension) {
+		boolean artefactFound = false;
+		for (Artefact a : project.getArtefacts()) {
+			if (a.getExtension().equals(extension)) {
+				a.setCount(a.getCount()+1);
+				artefactFound = true;
+				break;
+			}
+		}
+		if (!artefactFound) {
+			Artefact a = new Artefact();
+			a.setExtension(extension);
+			a.setCount(1);
+			project.getArtefacts().add(a);
 		}
 	}
 }

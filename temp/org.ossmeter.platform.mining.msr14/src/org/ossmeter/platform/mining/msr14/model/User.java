@@ -10,59 +10,53 @@ public class User extends Pongo {
 	
 	protected List<User> followers = null;
 	protected List<User> following = null;
-	protected List<Project> owns = null;
 	protected List<Project> watches = null;
 	protected List<Project> forks = null;
-	protected List<Project> commitsAsAuthor = null;
-	protected List<Project> commitsAsCommitter = null;
-	protected List<Project> commentsOnCommits = null;
-	protected List<Project> submitsIssues = null;
-	protected List<Project> commentsOnIssues = null;
-	protected List<Project> submitsPullRequests = null;
-	protected List<Project> commentsOnPullRequests = null;
-	protected List<IssueEvent> issueEvents = null;
+	protected List<ProjectMembership> projects = null;
+	protected List<IssueEvent> totalIssueEvents = null;
 	protected List<Artefact> artefacts = null;
-	protected Countable issues = null;
-	protected Countable issueComments = null;
-	protected Countable pullRequests = null;
-	protected Countable pullRequestComments = null;
-	protected Commit commitAuthors = null;
-	protected Commit commitCommitter = null;
-	protected Countable commitComments = null;
+	protected Commits commits = null;
 	
 	
 	public User() { 
 		super();
 		dbObject.put("followers", new BasicDBList());
 		dbObject.put("following", new BasicDBList());
-		dbObject.put("owns", new BasicDBList());
 		dbObject.put("watches", new BasicDBList());
 		dbObject.put("forks", new BasicDBList());
-		dbObject.put("commitsAsAuthor", new BasicDBList());
-		dbObject.put("commitsAsCommitter", new BasicDBList());
-		dbObject.put("commentsOnCommits", new BasicDBList());
-		dbObject.put("submitsIssues", new BasicDBList());
-		dbObject.put("commentsOnIssues", new BasicDBList());
-		dbObject.put("submitsPullRequests", new BasicDBList());
-		dbObject.put("commentsOnPullRequests", new BasicDBList());
-		dbObject.put("issueEvents", new BasicDBList());
+		dbObject.put("projects", new BasicDBList());
+		dbObject.put("totalIssueEvents", new BasicDBList());
 		dbObject.put("artefacts", new BasicDBList());
 		LOGIN.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
-		ID.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
+		GHID.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
 		LOCATION.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
 		PUBLICREPOS.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
 		JOINEDDATE.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
 		FOLLOWERCOUNT.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
 		FOLLOWINGCOUNT.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
+		NUMEROFWATCHES.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
+		NUMBEROFFORKS.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
+		TOTALNUMBEROFISSUES.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
+		TOTALNUMBEROFCOMMITCOMMENTS.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
+		TOTALNUMBEROFISSUECOMMENTS.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
+		TOTALNUMBEROFPULLREQUESTS.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
+		TOTALNUMBEROFPULLREQUESTCOMMENTS.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
 	}
 	
 	public static StringQueryProducer LOGIN = new StringQueryProducer("login"); 
-	public static StringQueryProducer ID = new StringQueryProducer("id"); 
+	public static StringQueryProducer GHID = new StringQueryProducer("ghId"); 
 	public static StringQueryProducer LOCATION = new StringQueryProducer("location"); 
 	public static NumericalQueryProducer PUBLICREPOS = new NumericalQueryProducer("publicRepos");
 	public static StringQueryProducer JOINEDDATE = new StringQueryProducer("joinedDate"); 
 	public static NumericalQueryProducer FOLLOWERCOUNT = new NumericalQueryProducer("followerCount");
 	public static NumericalQueryProducer FOLLOWINGCOUNT = new NumericalQueryProducer("followingCount");
+	public static NumericalQueryProducer NUMEROFWATCHES = new NumericalQueryProducer("numerOfWatches");
+	public static NumericalQueryProducer NUMBEROFFORKS = new NumericalQueryProducer("numberOfForks");
+	public static NumericalQueryProducer TOTALNUMBEROFISSUES = new NumericalQueryProducer("totalNumberOfIssues");
+	public static NumericalQueryProducer TOTALNUMBEROFCOMMITCOMMENTS = new NumericalQueryProducer("totalNumberOfCommitComments");
+	public static NumericalQueryProducer TOTALNUMBEROFISSUECOMMENTS = new NumericalQueryProducer("totalNumberOfIssueComments");
+	public static NumericalQueryProducer TOTALNUMBEROFPULLREQUESTS = new NumericalQueryProducer("totalNumberOfPullRequests");
+	public static NumericalQueryProducer TOTALNUMBEROFPULLREQUESTCOMMENTS = new NumericalQueryProducer("totalNumberOfPullRequestComments");
 	
 	
 	public String getLogin() {
@@ -74,12 +68,12 @@ public class User extends Pongo {
 		notifyChanged();
 		return this;
 	}
-	public String getId() {
-		return parseString(dbObject.get("id")+"", "");
+	public String getGhId() {
+		return parseString(dbObject.get("ghId")+"", "");
 	}
 	
-	public User setId(String id) {
-		dbObject.put("id", id);
+	public User setGhId(String ghId) {
+		dbObject.put("ghId", ghId);
 		notifyChanged();
 		return this;
 	}
@@ -128,6 +122,69 @@ public class User extends Pongo {
 		notifyChanged();
 		return this;
 	}
+	public int getNumerOfWatches() {
+		return parseInteger(dbObject.get("numerOfWatches")+"", 0);
+	}
+	
+	public User setNumerOfWatches(int numerOfWatches) {
+		dbObject.put("numerOfWatches", numerOfWatches);
+		notifyChanged();
+		return this;
+	}
+	public int getNumberOfForks() {
+		return parseInteger(dbObject.get("numberOfForks")+"", 0);
+	}
+	
+	public User setNumberOfForks(int numberOfForks) {
+		dbObject.put("numberOfForks", numberOfForks);
+		notifyChanged();
+		return this;
+	}
+	public int getTotalNumberOfIssues() {
+		return parseInteger(dbObject.get("totalNumberOfIssues")+"", 0);
+	}
+	
+	public User setTotalNumberOfIssues(int totalNumberOfIssues) {
+		dbObject.put("totalNumberOfIssues", totalNumberOfIssues);
+		notifyChanged();
+		return this;
+	}
+	public int getTotalNumberOfCommitComments() {
+		return parseInteger(dbObject.get("totalNumberOfCommitComments")+"", 0);
+	}
+	
+	public User setTotalNumberOfCommitComments(int totalNumberOfCommitComments) {
+		dbObject.put("totalNumberOfCommitComments", totalNumberOfCommitComments);
+		notifyChanged();
+		return this;
+	}
+	public int getTotalNumberOfIssueComments() {
+		return parseInteger(dbObject.get("totalNumberOfIssueComments")+"", 0);
+	}
+	
+	public User setTotalNumberOfIssueComments(int totalNumberOfIssueComments) {
+		dbObject.put("totalNumberOfIssueComments", totalNumberOfIssueComments);
+		notifyChanged();
+		return this;
+	}
+	public int getTotalNumberOfPullRequests() {
+		return parseInteger(dbObject.get("totalNumberOfPullRequests")+"", 0);
+	}
+	
+	public User setTotalNumberOfPullRequests(int totalNumberOfPullRequests) {
+		dbObject.put("totalNumberOfPullRequests", totalNumberOfPullRequests);
+		notifyChanged();
+		return this;
+	}
+	public int getTotalNumberOfPullRequestComments() {
+		return parseInteger(dbObject.get("totalNumberOfPullRequestComments")+"", 0);
+	}
+	
+	public User setTotalNumberOfPullRequestComments(int totalNumberOfPullRequestComments) {
+		dbObject.put("totalNumberOfPullRequestComments", totalNumberOfPullRequestComments);
+		notifyChanged();
+		return this;
+	}
 	
 	
 	public List<User> getFollowers() {
@@ -142,12 +199,6 @@ public class User extends Pongo {
 		}
 		return following;
 	}
-	public List<Project> getOwns() {
-		if (owns == null) {
-			owns = new PongoList<Project>(this, "owns", false);
-		}
-		return owns;
-	}
 	public List<Project> getWatches() {
 		if (watches == null) {
 			watches = new PongoList<Project>(this, "watches", false);
@@ -160,53 +211,17 @@ public class User extends Pongo {
 		}
 		return forks;
 	}
-	public List<Project> getCommitsAsAuthor() {
-		if (commitsAsAuthor == null) {
-			commitsAsAuthor = new PongoList<Project>(this, "commitsAsAuthor", false);
+	public List<ProjectMembership> getProjects() {
+		if (projects == null) {
+			projects = new PongoList<ProjectMembership>(this, "projects", false);
 		}
-		return commitsAsAuthor;
+		return projects;
 	}
-	public List<Project> getCommitsAsCommitter() {
-		if (commitsAsCommitter == null) {
-			commitsAsCommitter = new PongoList<Project>(this, "commitsAsCommitter", false);
+	public List<IssueEvent> getTotalIssueEvents() {
+		if (totalIssueEvents == null) {
+			totalIssueEvents = new PongoList<IssueEvent>(this, "totalIssueEvents", true);
 		}
-		return commitsAsCommitter;
-	}
-	public List<Project> getCommentsOnCommits() {
-		if (commentsOnCommits == null) {
-			commentsOnCommits = new PongoList<Project>(this, "commentsOnCommits", false);
-		}
-		return commentsOnCommits;
-	}
-	public List<Project> getSubmitsIssues() {
-		if (submitsIssues == null) {
-			submitsIssues = new PongoList<Project>(this, "submitsIssues", false);
-		}
-		return submitsIssues;
-	}
-	public List<Project> getCommentsOnIssues() {
-		if (commentsOnIssues == null) {
-			commentsOnIssues = new PongoList<Project>(this, "commentsOnIssues", false);
-		}
-		return commentsOnIssues;
-	}
-	public List<Project> getSubmitsPullRequests() {
-		if (submitsPullRequests == null) {
-			submitsPullRequests = new PongoList<Project>(this, "submitsPullRequests", false);
-		}
-		return submitsPullRequests;
-	}
-	public List<Project> getCommentsOnPullRequests() {
-		if (commentsOnPullRequests == null) {
-			commentsOnPullRequests = new PongoList<Project>(this, "commentsOnPullRequests", false);
-		}
-		return commentsOnPullRequests;
-	}
-	public List<IssueEvent> getIssueEvents() {
-		if (issueEvents == null) {
-			issueEvents = new PongoList<IssueEvent>(this, "issueEvents", true);
-		}
-		return issueEvents;
+		return totalIssueEvents;
 	}
 	public List<Artefact> getArtefacts() {
 		if (artefacts == null) {
@@ -216,142 +231,22 @@ public class User extends Pongo {
 	}
 	
 	
-	public Countable getIssues() {
-		if (issues == null && dbObject.containsField("issues")) {
-			issues = (Countable) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("issues"));
+	public Commits getCommits() {
+		if (commits == null && dbObject.containsField("commits")) {
+			commits = (Commits) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("commits"));
 		}
-		return issues;
+		return commits;
 	}
 	
-	public User setIssues(Countable issues) {
-		if (this.issues != issues) {
-			if (issues == null) {
-				dbObject.removeField("issues");
+	public User setCommits(Commits commits) {
+		if (this.commits != commits) {
+			if (commits == null) {
+				dbObject.removeField("commits");
 			}
 			else {
-				dbObject.put("issues", issues.getDbObject());
+				dbObject.put("commits", commits.getDbObject());
 			}
-			this.issues = issues;
-			notifyChanged();
-		}
-		return this;
-	}
-	public Countable getIssueComments() {
-		if (issueComments == null && dbObject.containsField("issueComments")) {
-			issueComments = (Countable) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("issueComments"));
-		}
-		return issueComments;
-	}
-	
-	public User setIssueComments(Countable issueComments) {
-		if (this.issueComments != issueComments) {
-			if (issueComments == null) {
-				dbObject.removeField("issueComments");
-			}
-			else {
-				dbObject.put("issueComments", issueComments.getDbObject());
-			}
-			this.issueComments = issueComments;
-			notifyChanged();
-		}
-		return this;
-	}
-	public Countable getPullRequests() {
-		if (pullRequests == null && dbObject.containsField("pullRequests")) {
-			pullRequests = (Countable) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("pullRequests"));
-		}
-		return pullRequests;
-	}
-	
-	public User setPullRequests(Countable pullRequests) {
-		if (this.pullRequests != pullRequests) {
-			if (pullRequests == null) {
-				dbObject.removeField("pullRequests");
-			}
-			else {
-				dbObject.put("pullRequests", pullRequests.getDbObject());
-			}
-			this.pullRequests = pullRequests;
-			notifyChanged();
-		}
-		return this;
-	}
-	public Countable getPullRequestComments() {
-		if (pullRequestComments == null && dbObject.containsField("pullRequestComments")) {
-			pullRequestComments = (Countable) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("pullRequestComments"));
-		}
-		return pullRequestComments;
-	}
-	
-	public User setPullRequestComments(Countable pullRequestComments) {
-		if (this.pullRequestComments != pullRequestComments) {
-			if (pullRequestComments == null) {
-				dbObject.removeField("pullRequestComments");
-			}
-			else {
-				dbObject.put("pullRequestComments", pullRequestComments.getDbObject());
-			}
-			this.pullRequestComments = pullRequestComments;
-			notifyChanged();
-		}
-		return this;
-	}
-	public Commit getCommitAuthors() {
-		if (commitAuthors == null && dbObject.containsField("commitAuthors")) {
-			commitAuthors = (Commit) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("commitAuthors"));
-		}
-		return commitAuthors;
-	}
-	
-	public User setCommitAuthors(Commit commitAuthors) {
-		if (this.commitAuthors != commitAuthors) {
-			if (commitAuthors == null) {
-				dbObject.removeField("commitAuthors");
-			}
-			else {
-				dbObject.put("commitAuthors", commitAuthors.getDbObject());
-			}
-			this.commitAuthors = commitAuthors;
-			notifyChanged();
-		}
-		return this;
-	}
-	public Commit getCommitCommitter() {
-		if (commitCommitter == null && dbObject.containsField("commitCommitter")) {
-			commitCommitter = (Commit) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("commitCommitter"));
-		}
-		return commitCommitter;
-	}
-	
-	public User setCommitCommitter(Commit commitCommitter) {
-		if (this.commitCommitter != commitCommitter) {
-			if (commitCommitter == null) {
-				dbObject.removeField("commitCommitter");
-			}
-			else {
-				dbObject.put("commitCommitter", commitCommitter.getDbObject());
-			}
-			this.commitCommitter = commitCommitter;
-			notifyChanged();
-		}
-		return this;
-	}
-	public Countable getCommitComments() {
-		if (commitComments == null && dbObject.containsField("commitComments")) {
-			commitComments = (Countable) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("commitComments"));
-		}
-		return commitComments;
-	}
-	
-	public User setCommitComments(Countable commitComments) {
-		if (this.commitComments != commitComments) {
-			if (commitComments == null) {
-				dbObject.removeField("commitComments");
-			}
-			else {
-				dbObject.put("commitComments", commitComments.getDbObject());
-			}
-			this.commitComments = commitComments;
+			this.commits = commits;
 			notifyChanged();
 		}
 		return this;
