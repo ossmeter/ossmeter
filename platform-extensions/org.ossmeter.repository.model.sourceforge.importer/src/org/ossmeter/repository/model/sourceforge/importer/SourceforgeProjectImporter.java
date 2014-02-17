@@ -121,6 +121,7 @@ public class SourceforgeProjectImporter {
 						platform.getProjectRepositoryManager().getProjectRepository().getSfImportData().first().setLastImportedProject(lastImportedProject);
 						platform.getProjectRepositoryManager().getProjectRepository().sync();
 					}
+					startingProject=0;
 				}
 				catch(SocketTimeoutException  st) {
 					System.err.println("Read timed out during the connection to " + url + ". I'll retry later with it.");
