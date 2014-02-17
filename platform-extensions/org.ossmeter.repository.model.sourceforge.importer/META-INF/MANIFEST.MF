@@ -18,3 +18,4 @@ Require-Bundle: org.ossmeter.repository.model.eclipse,
 Export-Package: org.ossmeter.repository.model.sourceforge.importer
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Import-Package: javax.ws.rs

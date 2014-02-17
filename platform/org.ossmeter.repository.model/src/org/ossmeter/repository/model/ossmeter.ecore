@@ -5,6 +5,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="projects" upperBound="-1" eType="//Project" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="roles" upperBound="-1" eType="//Role" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="gitHubImportData" upperBound="-1" eType="//ImportData" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sfImportData" upperBound="-1" eType="//ImportData" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ImportData">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastImportedProject">

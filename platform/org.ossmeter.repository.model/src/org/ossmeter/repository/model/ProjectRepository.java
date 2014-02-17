@@ -14,6 +14,7 @@ public class ProjectRepository extends PongoDB {
 	protected ProjectCollection projects = null;
 	protected RoleCollection roles = null;
 	protected ImportDataCollection gitHubImportData = null;
+	protected ImportDataCollection sfImportData = null;
 	
 	
 	
@@ -29,6 +30,10 @@ public class ProjectRepository extends PongoDB {
 		return gitHubImportData;
 	}
 	
+	public ImportDataCollection getSfImportData() {
+		return sfImportData;
+	}
+	
 	
 	@Override
 	public void setDb(DB db) {
@@ -39,5 +44,7 @@ public class ProjectRepository extends PongoDB {
 		pongoCollections.add(roles);
 		gitHubImportData = new ImportDataCollection(db.getCollection("gitHubImportData"));
 		pongoCollections.add(gitHubImportData);
+		sfImportData = new ImportDataCollection(db.getCollection("sfImportData"));
+		pongoCollections.add(sfImportData);
 	}
 }

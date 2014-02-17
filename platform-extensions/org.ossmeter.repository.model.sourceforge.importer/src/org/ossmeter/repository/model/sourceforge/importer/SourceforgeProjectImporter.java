@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ossmeter.repository.model.ImportData;
 import org.ossmeter.repository.model.License;
 import org.ossmeter.repository.model.Person;
 import org.ossmeter.repository.model.Role;
@@ -83,30 +84,50 @@ public class SourceforgeProjectImporter {
 			doc = Jsoup.connect("http://sourceforge.net/directory/").get();
 			content = doc.getElementById("result_count");
 			numPagesToBeScanned = new Integer(content.toString().substring(("<p id=\"result_count\"> Showing page 1 of ".length()), content.toString().length()-6));
-int count = 0;
-			for (int j = 1; j < (numPagesToBeScanned); j++)
+			int count = 0;
+
+			String lastImportedProject = null;
+			int startingPage = 1;
+			int startingProject = 0;
+			
+			if (platform.getProjectRepositoryManager().getProjectRepository().getSfImportData().size() != 0) {
+				lastImportedProject = new String(platform.getProjectRepositoryManager().getProjectRepository().getSfImportData().first().getLastImportedProject());
+				startingPage = new Integer((lastImportedProject.split("/"))[0]);
+				startingProject = new Integer((lastImportedProject.split("/"))[1]);
+			} else {
+				ImportData id = new ImportData();
+				id.setLastImportedProject(new String());
+				platform.getProjectRepositoryManager().getProjectRepository().getSfImportData().add(id);	
+				platform.getProjectRepositoryManager().getProjectRepository().sync();
+			}
+
+			
+			
+			for (int j = startingPage; j < (numPagesToBeScanned); j++)
 			{
-System.out.println("Scanning the projects directory page " + j + " of " + numPagesToBeScanned);
+				System.out.println("Scanning the projects directory page " + j + " of " + numPagesToBeScanned);
 				try {
 					String URL_PROJECT = "http://sourceforge.net/directory/?page="+j;
 					doc = Jsoup.connect(URL_PROJECT).get();
 					content = doc.getElementsByClass("projects").first();
 					Elements e = content.getElementsByClass("project_info");
-					for (int i = 0; i < e.size(); i++){
+					for (int i = startingProject; i < e.size(); i++){
 						url = e.get(i).getElementsByAttributeValue("itemprop", "url").first().attr("href");
 						count++;
 						System.out.println("--> (" + count + ") " + url);
 						SourceForgeProject project = importProject(url.split("/")[2], platform);
 						platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
+						lastImportedProject = new String(j + "/" + i);
+						platform.getProjectRepositoryManager().getProjectRepository().getSfImportData().first().setLastImportedProject(lastImportedProject);
+						platform.getProjectRepositoryManager().getProjectRepository().sync();
 					}
-					platform.getProjectRepositoryManager().getProjectRepository().sync();
 				}
-				catch(SocketTimeoutException st) {
+				catch(SocketTimeoutException  st) {
 					System.err.println("Read timed out during the connection to " + url + ". I'll retry later with it.");
 					toRetry.add(url);
 					continue;
 				}
-				catch(FileNotFoundException e) {
+				catch(IOException e) {
 					System.err.println("No further details available for the project " + url );
 					continue;
 				}
@@ -135,9 +156,10 @@ System.out.println("Scanning the projects directory page " + j + " of " + numPag
 				} catch (MalformedURLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					continue;
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.err.println("No further details available for the project " + url );
 					continue;
 				}
 			}
