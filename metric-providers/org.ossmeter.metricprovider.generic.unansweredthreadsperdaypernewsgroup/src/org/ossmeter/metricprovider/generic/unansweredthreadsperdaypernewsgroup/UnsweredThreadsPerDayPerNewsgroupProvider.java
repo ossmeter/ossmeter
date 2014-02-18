@@ -66,7 +66,7 @@ public class UnsweredThreadsPerDayPerNewsgroupProvider implements IHistoricalMet
 		
 		for (ThreadStatistics thread: usedThreads.getThreads()) {
 			lastUrl_name = thread.getUrl_name();
-			if (!thread.getAnswered()) unansweredThreads++;
+			if ((!thread.getAnswered())&&(thread.getFirstRequest())) unansweredThreads++;
 		}
 		
 		DailyUnansweredThreads dailyUnansweredThreads = new DailyUnansweredThreads();
