@@ -3,6 +3,8 @@ package org.ossmeter.metricprovider.requestreplyclassification;
 import java.util.Collections;
 import java.util.List;
 
+//import org.apache.commons.lang.time.DurationFormatUtils;
+
 import org.ossmeter.metricprovider.requestreplyclassification.model.BugzillaCommentsData;
 import org.ossmeter.metricprovider.requestreplyclassification.model.NewsgroupArticlesData;
 import org.ossmeter.metricprovider.requestreplyclassification.model.Rrc;
@@ -23,8 +25,8 @@ import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
 import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 import org.ossmeter.repository.model.Project;
-import org.ossmeter.requestreplyclassifier.ClassificationInstance;
-import org.ossmeter.requestreplyclassifier.Classifier;
+import org.ossmeter.requestreplyclassifier.opennlptartarus.ClassificationInstance;
+import org.ossmeter.requestreplyclassifier.opennlptartarus.Classifier;
 
 import com.mongodb.DB;
 
@@ -69,9 +71,13 @@ public class RequestReplyClassificationMetricProvider  implements ITransientMetr
 	public Rrc adapt(DB db) {
 		return new Rrc(db);
 	}
-
+	
 	@Override
 	public void measure(Project project, ProjectDelta projectDelta, Rrc db) {
+//		final long startTime = System.currentTimeMillis();
+//		long previousTime = startTime;
+//		System.err.println("Started " + getIdentifier());
+
 		BugTrackingSystemProjectDelta btspDelta = projectDelta.getBugTrackingSystemDelta();
 		clearDB(db);
     	Classifier classifier = new Classifier();
@@ -94,6 +100,10 @@ public class RequestReplyClassificationMetricProvider  implements ITransientMetr
 			}
 			db.sync();
 		}
+		
+//		previousTime = printTimeMessage(startTime, previousTime, classifier.instanceListSize(),
+//										"prepared bugzilla comments");
+		
 		CommunicationChannelProjectDelta ccpDelta = projectDelta.getCommunicationChannelDelta();
 		for ( CommunicationChannelDelta communicationChannelDelta: ccpDelta.getCommunicationChannelSystemDeltas()) {
 			CommunicationChannel communicationChannel = communicationChannelDelta.getCommunicationChannel();
@@ -111,7 +121,15 @@ public class RequestReplyClassificationMetricProvider  implements ITransientMetr
 			}
 			db.sync();
 		}
+		
+//		previousTime = printTimeMessage(startTime, previousTime, classifier.instanceListSize(),
+//										"prepared newsgroup articles");
+
 		classifier.classify();
+
+//		previousTime = printTimeMessage(startTime, previousTime, classifier.instanceListSize(),
+//										"classifier.classify() finished");
+
 		for (BugTrackingSystemDelta bugTrackingSystemDelta : btspDelta.getBugTrackingSystemDeltas()) {
 			BugTrackingSystem bugTrackingSystem = bugTrackingSystemDelta.getBugTrackingSystem();
 			if (!(bugTrackingSystem instanceof Bugzilla)) continue;
@@ -123,6 +141,10 @@ public class RequestReplyClassificationMetricProvider  implements ITransientMetr
 			}
 			db.sync();
 		}
+
+//		previousTime = printTimeMessage(startTime, previousTime, classifier.instanceListSize(),
+//										"stored classified bugzilla comments");
+
 		for ( CommunicationChannelDelta communicationChannelDelta: ccpDelta.getCommunicationChannelSystemDeltas()) {
 			CommunicationChannel communicationChannel = communicationChannelDelta.getCommunicationChannel();
 			if (!(communicationChannel instanceof NntpNewsGroup)) continue;
@@ -134,8 +156,23 @@ public class RequestReplyClassificationMetricProvider  implements ITransientMetr
 			}
 			db.sync();
 		}
-	}
+
+//		previousTime = printTimeMessage(startTime, previousTime, classifier.instanceListSize(),
+//										"stored classified newsgroup articles");
+ 	}
 	
+//	private long printTimeMessage(long startTime, long previousTime, int size, String message) {
+//		long currentTime = System.currentTimeMillis();
+//		System.err.println(time(currentTime - previousTime) + "\t" +
+//						   time(currentTime - startTime) + "\t" +
+//						   size + "\t" + message);
+//		return currentTime;
+//	}
+
+//	private String time(long timeInMS) {
+//		return DurationFormatUtils.formatDuration(timeInMS, "HH:mm:ss,SSS");
+//	}
+
 	private void prepareBugzillaCommentInstance(Classifier classifier, Bugzilla bugzilla,
 			BugTrackingSystemComment comment) {
     	ClassificationInstance classificationInstance = new ClassificationInstance();
