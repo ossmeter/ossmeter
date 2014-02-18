@@ -79,6 +79,9 @@ public class ThreadsRequestsRepliesProvider  implements ITransientMetricProvider
 	@Override
 	public void measure(Project project, ProjectDelta projectDelta, ThreadsRR db) {
 //		final long startTime = System.currentTimeMillis();
+		
+		db.getThreads().getDbCollection().drop();
+		db.sync();
 
 		if (uses.size()!=2) {
 			System.err.println("Metric: " + getIdentifier() + " failed to retrieve " + 
@@ -129,7 +132,8 @@ public class ThreadsRequestsRepliesProvider  implements ITransientMetricProvider
 			String firstMessageTime = null;
 	        Iterator<ArticleData> iterator = sortedArticleSet.iterator();
 			boolean first=true,
-					cont=true;
+					cont=true,
+					isFirstRequest=true;
 
 			while ((cont)&&(iterator.hasNext())) {
 				ArticleData article = iterator.next();
@@ -137,10 +141,12 @@ public class ThreadsRequestsRepliesProvider  implements ITransientMetricProvider
 				String responseReply = articleReplyRequest.get(article.getUrl_name()+article.getArticleNumber());
 				if (first) firstMessageTime = article.getDate();
 				if (responseReply.equals("Reply")) cont=false;
+				if ((first)&&(responseReply.equals("Reply"))) isFirstRequest=false;
 				if ((!first)&&(responseReply.equals("Reply"))) {
 					
 					ThreadStatistics thread = new ThreadStatistics();
 					thread.setUrl_name(lastUrl_name);
+					thread.setFirstRequest(isFirstRequest);
 					thread.setThreadId(threadId);
 					thread.setAnswered(true);
 					thread.setResponseDate(article.getDate());
@@ -158,6 +164,7 @@ public class ThreadsRequestsRepliesProvider  implements ITransientMetricProvider
 			if (cont&&(!first)) {
 				ThreadStatistics thread = new ThreadStatistics();
 				thread.setUrl_name(lastUrl_name);
+				thread.setFirstRequest(isFirstRequest);
 				thread.setThreadId(threadId);
 				thread.setAnswered(false);
 				db.getThreads().add(thread);

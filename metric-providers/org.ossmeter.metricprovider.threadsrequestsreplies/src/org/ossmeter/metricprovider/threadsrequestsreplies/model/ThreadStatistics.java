@@ -13,6 +13,7 @@ public class ThreadStatistics extends Pongo {
 		super();
 		URL_NAME.setOwningType("org.ossmeter.metricprovider.threadsrequestsreplies.model.ThreadStatistics");
 		THREADID.setOwningType("org.ossmeter.metricprovider.threadsrequestsreplies.model.ThreadStatistics");
+		FIRSTREQUEST.setOwningType("org.ossmeter.metricprovider.threadsrequestsreplies.model.ThreadStatistics");
 		ANSWERED.setOwningType("org.ossmeter.metricprovider.threadsrequestsreplies.model.ThreadStatistics");
 		RESPONSEDURATIONSEC.setOwningType("org.ossmeter.metricprovider.threadsrequestsreplies.model.ThreadStatistics");
 		RESPONSEDATE.setOwningType("org.ossmeter.metricprovider.threadsrequestsreplies.model.ThreadStatistics");
@@ -20,6 +21,7 @@ public class ThreadStatistics extends Pongo {
 	
 	public static StringQueryProducer URL_NAME = new StringQueryProducer("url_name"); 
 	public static NumericalQueryProducer THREADID = new NumericalQueryProducer("threadId");
+	public static StringQueryProducer FIRSTREQUEST = new StringQueryProducer("firstRequest"); 
 	public static StringQueryProducer ANSWERED = new StringQueryProducer("answered"); 
 	public static NumericalQueryProducer RESPONSEDURATIONSEC = new NumericalQueryProducer("responseDurationSec");
 	public static StringQueryProducer RESPONSEDATE = new StringQueryProducer("responseDate"); 
@@ -40,6 +42,15 @@ public class ThreadStatistics extends Pongo {
 	
 	public ThreadStatistics setThreadId(int threadId) {
 		dbObject.put("threadId", threadId);
+		notifyChanged();
+		return this;
+	}
+	public boolean getFirstRequest() {
+		return parseBoolean(dbObject.get("firstRequest")+"", false);
+	}
+	
+	public ThreadStatistics setFirstRequest(boolean firstRequest) {
+		dbObject.put("firstRequest", firstRequest);
 		notifyChanged();
 		return this;
 	}

@@ -15,6 +15,7 @@ class ThreadStatistics {
    attr String url_name;
    @searchable
    attr int threadId;
+   attr boolean firstRequest;
    attr boolean answered;
    attr long responseDurationSec;
    attr String responseDate;
