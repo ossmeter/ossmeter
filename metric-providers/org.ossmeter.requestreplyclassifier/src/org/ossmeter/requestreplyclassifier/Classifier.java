@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+//import org.apache.commons.lang.time.DurationFormatUtils;
+
 import uk.ac.nactem.geniatagger.GeniaTaggerSingleton;
 import uk.ac.nactem.splitter.EnglishSentenceSplitter;
 import uk.ac.nactem.tools.GeniaTagger.GeniaToken;
@@ -32,6 +34,10 @@ public class Classifier {
 		classificationInstanceList = new ArrayList<ClassificationInstance>();
 	}
 
+	public int instanceListSize() {
+		return classificationInstanceList.size();
+	}
+	
 	public void add(ClassificationInstance classificationInstance) {
 		classificationInstanceList.add(classificationInstance);
 	}
@@ -47,24 +53,39 @@ public class Classifier {
 		}
 	}
 	
-	
 	public void classify() {
+//		previousTime = printTimeMessage(startTime, previousTime, instanceListSize(), 
+//										"Started classification.classify");
 
 		EnglishSentenceSplitter splitter = new EnglishSentenceSplitter();
 		GeniaTaggerSingleton geniatagger = GeniaTaggerSingleton.getInstance();
 		
+//		previousTime = printTimeMessage(startTime, previousTime, instanceListSize(), 
+//										"initialised splitter and tagger");
+
 		FeatureGenerator featureGenerator = new FeatureGenerator(
 				"classifierFiles/lemmaFeaturesList", 
 				"classifierFiles/empiricalFeaturesList", keptPoS);
 
+//		previousTime = printTimeMessage(startTime, previousTime, instanceListSize(), 
+//										"initialised featureGenerator");
+
+//		long splitterTime = 0,
+//			 textCleaningTime = 0,
+//			 taggerTime = 0; 
 		for (ClassificationInstance xmlItem: classificationInstanceList) {
 			List<int[]> output = null;
 			try {
-				output = splitter.markupRawText(xmlItem.getText());
+				output = splitter.markupRawText(xmlItem.getCleanText());
 			} catch (Exception e) {
 				System.err.println("Sentence splitter error.");
 				e.printStackTrace();
 			}
+			
+//			long currentTime = System.currentTimeMillis();
+//			splitterTime += (currentTime - previousTime);
+//			previousTime = currentTime;
+
 			for (int[] indexes : output) {
 				String cleanedSentence = "",
 					   sentence = xmlItem.getText().substring(indexes[2], indexes[3]);
@@ -75,12 +96,28 @@ public class Classifier {
 						cleanedSentence += component;
 					}
 				}
+				
+//				currentTime = System.currentTimeMillis();
+//				textCleaningTime += (currentTime - previousTime);
+//				previousTime = currentTime;
+
 				List<GeniaToken> geniaTokens = 
 						geniatagger.getTagger().tagToTokens(cleanedSentence);
 				featureGenerator.updateData(xmlItem.getComposedId(), geniaTokens);
+				
+//				currentTime = System.currentTimeMillis();
+//				taggerTime += (currentTime - previousTime);
+//				previousTime = currentTime;
+
 			}
 		}
+//		System.err.println(time(splitterTime) + "\t" + "splitter time");
+//		System.err.println(time(textCleaningTime) + "\t" + "text cleaning time");
+//		System.err.println(time(taggerTime) + "\t" + "tagger time");
 		
+//		previousTime = printTimeMessage(startTime, previousTime, instanceListSize(), 
+//										"updated featureGenerator");
+
 		String path = getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
 		if (path.endsWith("bin/"))
 			path = path.substring(0, path.lastIndexOf("bin/"));
@@ -91,6 +128,9 @@ public class Classifier {
 			e.printStackTrace();
 		}
 		
+//		previousTime = printTimeMessage(startTime, previousTime, instanceListSize(), 
+//										"generated features");
+
 		FilteredClassifier fc = null;
  		try {
 			fc = (FilteredClassifier) weka.core.SerializationHelper.read(path+"classifierFiles/filteredClassifier.model");
@@ -99,6 +139,9 @@ public class Classifier {
 			e.printStackTrace();
 		}
 		
+//		previousTime = printTimeMessage(startTime, previousTime, instanceListSize(), 
+//										"loaded filtered classifier");
+
 		DataSource testSource = null;
 		try {
 			testSource = new DataSource(path+"classifierFiles/test.arff");
@@ -106,6 +149,10 @@ public class Classifier {
 			System.out.println("Cannot read feature file.");
 			e1.printStackTrace();
 		}
+
+//		previousTime = printTimeMessage(startTime, previousTime, instanceListSize(), 
+//										"loaded test source");
+
 		Instances unlabeled = prepareInstances(testSource);
 		classificationResults = new HashMap<String, String>();
 		for (int i = 0; i < unlabeled.numInstances(); i++) {
@@ -120,7 +167,22 @@ public class Classifier {
 									  unlabeled.classAttribute().value((int) pred));
 		}
 		
+//		previousTime = printTimeMessage(startTime, previousTime, instanceListSize(), 
+//										"classification finished");
+//		return previousTime;
 	}
+
+//	private long printTimeMessage(long startTime, long previousTime, int size, String message) {
+//		long currentTime = System.currentTimeMillis();
+//		System.err.println(time(currentTime - previousTime) + "\t" +
+//						   time(currentTime - startTime) + "\t" +
+//						   size + "\t" + message);
+//		return currentTime;
+//	}
+
+//	private String time(long timeInMS) {
+//		return DurationFormatUtils.formatDuration(timeInMS, "HH:mm:ss,SSS");
+//	}
 
 	private static Instances prepareInstances(DataSource source) {
 		Instances instances = null;
