@@ -112,14 +112,25 @@ public class SourceforgeProjectImporter {
 					content = doc.getElementsByClass("projects").first();
 					Elements e = content.getElementsByClass("project_info");
 					for (int i = startingProject; i < e.size(); i++){
-						url = e.get(i).getElementsByAttributeValue("itemprop", "url").first().attr("href");
-						count++;
-						System.out.println("--> (" + count + ") " + url);
-						SourceForgeProject project = importProject(url.split("/")[2], platform);
-						platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
-						lastImportedProject = new String(j + "/" + i);
-						platform.getProjectRepositoryManager().getProjectRepository().getSfImportData().first().setLastImportedProject(lastImportedProject);
-						platform.getProjectRepositoryManager().getProjectRepository().sync();
+						try {
+							url = e.get(i).getElementsByAttributeValue("itemprop", "url").first().attr("href");
+							count++;
+							System.out.println("--> (" + count + ") " + url);
+							SourceForgeProject project = importProject(url.split("/")[2], platform);
+							platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
+							lastImportedProject = new String(j + "/" + i);
+							platform.getProjectRepositoryManager().getProjectRepository().getSfImportData().first().setLastImportedProject(lastImportedProject);
+							platform.getProjectRepositoryManager().getProjectRepository().sync();
+						}
+						catch(SocketTimeoutException  st) {
+							System.err.println("Read timed out during the connection to " + url + ". I'll retry later with it.");
+							toRetry.add(url);
+							continue;
+						}
+						catch(IOException er) {
+							System.err.println("No further details available for the project " + url );
+							continue;
+						}
 					}
 					startingProject=0;
 				}
