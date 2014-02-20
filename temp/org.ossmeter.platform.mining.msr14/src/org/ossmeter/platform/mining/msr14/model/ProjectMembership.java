@@ -6,43 +6,69 @@ import com.googlecode.pongo.runtime.*;
 import com.googlecode.pongo.runtime.querying.*;
 
 
-public class ProjectMembership extends Pongo {
+public class ProjectMembership extends Measureable {
 	
-	protected List<IssueEvent> issueEvents = null;
-	protected List<Artefact> artefacts = null;
 	protected Project project = null;
 	protected User user = null;
-	protected Commits commits = null;
 	
 	
 	public ProjectMembership() { 
 		super();
 		dbObject.put("project", new BasicDBObject());
 		dbObject.put("user", new BasicDBObject());
-		dbObject.put("issueEvents", new BasicDBList());
-		dbObject.put("artefacts", new BasicDBList());
-		OWNER.setOwningType("org.ossmeter.platform.mining.msr14.model.ProjectMembership");
-		PROJECTNAME.setOwningType("org.ossmeter.platform.mining.msr14.model.ProjectMembership");
-		PROJECTOWNER.setOwningType("org.ossmeter.platform.mining.msr14.model.ProjectMembership");
-		USERNAME.setOwningType("org.ossmeter.platform.mining.msr14.model.ProjectMembership");
-		NUMBEROFCOMMITS.setOwningType("org.ossmeter.platform.mining.msr14.model.ProjectMembership");
+		super.setSuperTypes("org.ossmeter.platform.mining.msr14.model.Measureable");
+		COMMITCOUNT.setOwningType("org.ossmeter.platform.mining.msr14.model.ProjectMembership");
+		COMMITTOTALCHANGES.setOwningType("org.ossmeter.platform.mining.msr14.model.ProjectMembership");
+		COMMITADDITIONS.setOwningType("org.ossmeter.platform.mining.msr14.model.ProjectMembership");
+		COMMITDELETIONS.setOwningType("org.ossmeter.platform.mining.msr14.model.ProjectMembership");
+		COMMITSASAUTHOR.setOwningType("org.ossmeter.platform.mining.msr14.model.ProjectMembership");
+		COMMITSASCOMMITTER.setOwningType("org.ossmeter.platform.mining.msr14.model.ProjectMembership");
+		COMMITTOTALFILES.setOwningType("org.ossmeter.platform.mining.msr14.model.ProjectMembership");
+		AVERAGEFILESPERCOMMIT.setOwningType("org.ossmeter.platform.mining.msr14.model.ProjectMembership");
+		COMMITTIMES.setOwningType("org.ossmeter.platform.mining.msr14.model.ProjectMembership");
+		COMMITCOMMENTTIMES.setOwningType("org.ossmeter.platform.mining.msr14.model.ProjectMembership");
+		PULLREQUESTTIMES.setOwningType("org.ossmeter.platform.mining.msr14.model.ProjectMembership");
+		PULLREQUESTCOMMENTTIMES.setOwningType("org.ossmeter.platform.mining.msr14.model.ProjectMembership");
+		ISSUETIMES.setOwningType("org.ossmeter.platform.mining.msr14.model.ProjectMembership");
+		ISSUECOMMENTTIMES.setOwningType("org.ossmeter.platform.mining.msr14.model.ProjectMembership");
 		NUMBEROFISSUES.setOwningType("org.ossmeter.platform.mining.msr14.model.ProjectMembership");
 		NUMBEROFCOMMITCOMMENTS.setOwningType("org.ossmeter.platform.mining.msr14.model.ProjectMembership");
 		NUMBEROFISSUECOMMENTS.setOwningType("org.ossmeter.platform.mining.msr14.model.ProjectMembership");
 		NUMBEROFPULLREQUESTS.setOwningType("org.ossmeter.platform.mining.msr14.model.ProjectMembership");
 		NUMBEROFPULLREQUESTCOMMENTS.setOwningType("org.ossmeter.platform.mining.msr14.model.ProjectMembership");
+		OWNER.setOwningType("org.ossmeter.platform.mining.msr14.model.ProjectMembership");
+		ORGMEMBER.setOwningType("org.ossmeter.platform.mining.msr14.model.ProjectMembership");
+		COLLABORATOR.setOwningType("org.ossmeter.platform.mining.msr14.model.ProjectMembership");
+		PROJECTNAME.setOwningType("org.ossmeter.platform.mining.msr14.model.ProjectMembership");
+		PROJECTOWNER.setOwningType("org.ossmeter.platform.mining.msr14.model.ProjectMembership");
+		USERNAME.setOwningType("org.ossmeter.platform.mining.msr14.model.ProjectMembership");
 	}
 	
-	public static StringQueryProducer OWNER = new StringQueryProducer("owner"); 
-	public static StringQueryProducer PROJECTNAME = new StringQueryProducer("projectName"); 
-	public static StringQueryProducer PROJECTOWNER = new StringQueryProducer("projectOwner"); 
-	public static StringQueryProducer USERNAME = new StringQueryProducer("userName"); 
-	public static NumericalQueryProducer NUMBEROFCOMMITS = new NumericalQueryProducer("numberOfCommits");
+	public static NumericalQueryProducer COMMITCOUNT = new NumericalQueryProducer("commitCount");
+	public static NumericalQueryProducer COMMITTOTALCHANGES = new NumericalQueryProducer("commitTotalChanges");
+	public static NumericalQueryProducer COMMITADDITIONS = new NumericalQueryProducer("commitAdditions");
+	public static NumericalQueryProducer COMMITDELETIONS = new NumericalQueryProducer("commitDeletions");
+	public static NumericalQueryProducer COMMITSASAUTHOR = new NumericalQueryProducer("commitsAsAuthor");
+	public static NumericalQueryProducer COMMITSASCOMMITTER = new NumericalQueryProducer("commitsAsCommitter");
+	public static NumericalQueryProducer COMMITTOTALFILES = new NumericalQueryProducer("commitTotalFiles");
+	public static NumericalQueryProducer AVERAGEFILESPERCOMMIT = new NumericalQueryProducer("averageFilesPerCommit");
 	public static NumericalQueryProducer NUMBEROFISSUES = new NumericalQueryProducer("numberOfIssues");
 	public static NumericalQueryProducer NUMBEROFCOMMITCOMMENTS = new NumericalQueryProducer("numberOfCommitComments");
 	public static NumericalQueryProducer NUMBEROFISSUECOMMENTS = new NumericalQueryProducer("numberOfIssueComments");
 	public static NumericalQueryProducer NUMBEROFPULLREQUESTS = new NumericalQueryProducer("numberOfPullRequests");
 	public static NumericalQueryProducer NUMBEROFPULLREQUESTCOMMENTS = new NumericalQueryProducer("numberOfPullRequestComments");
+	public static StringQueryProducer OWNER = new StringQueryProducer("owner"); 
+	public static StringQueryProducer ORGMEMBER = new StringQueryProducer("orgMember"); 
+	public static StringQueryProducer COLLABORATOR = new StringQueryProducer("collaborator"); 
+	public static StringQueryProducer PROJECTNAME = new StringQueryProducer("projectName"); 
+	public static StringQueryProducer PROJECTOWNER = new StringQueryProducer("projectOwner"); 
+	public static StringQueryProducer USERNAME = new StringQueryProducer("userName"); 
+	public static ArrayQueryProducer COMMITTIMES = new ArrayQueryProducer("commitTimes");
+	public static ArrayQueryProducer COMMITCOMMENTTIMES = new ArrayQueryProducer("commitCommentTimes");
+	public static ArrayQueryProducer PULLREQUESTTIMES = new ArrayQueryProducer("pullRequestTimes");
+	public static ArrayQueryProducer PULLREQUESTCOMMENTTIMES = new ArrayQueryProducer("pullRequestCommentTimes");
+	public static ArrayQueryProducer ISSUETIMES = new ArrayQueryProducer("issueTimes");
+	public static ArrayQueryProducer ISSUECOMMENTTIMES = new ArrayQueryProducer("issueCommentTimes");
 	
 	
 	public boolean getOwner() {
@@ -51,6 +77,24 @@ public class ProjectMembership extends Pongo {
 	
 	public ProjectMembership setOwner(boolean owner) {
 		dbObject.put("owner", owner);
+		notifyChanged();
+		return this;
+	}
+	public boolean getOrgMember() {
+		return parseBoolean(dbObject.get("orgMember")+"", false);
+	}
+	
+	public ProjectMembership setOrgMember(boolean orgMember) {
+		dbObject.put("orgMember", orgMember);
+		notifyChanged();
+		return this;
+	}
+	public boolean getCollaborator() {
+		return parseBoolean(dbObject.get("collaborator")+"", false);
+	}
+	
+	public ProjectMembership setCollaborator(boolean collaborator) {
+		dbObject.put("collaborator", collaborator);
 		notifyChanged();
 		return this;
 	}
@@ -81,74 +125,8 @@ public class ProjectMembership extends Pongo {
 		notifyChanged();
 		return this;
 	}
-	public int getNumberOfCommits() {
-		return parseInteger(dbObject.get("numberOfCommits")+"", 0);
-	}
-	
-	public ProjectMembership setNumberOfCommits(int numberOfCommits) {
-		dbObject.put("numberOfCommits", numberOfCommits);
-		notifyChanged();
-		return this;
-	}
-	public int getNumberOfIssues() {
-		return parseInteger(dbObject.get("numberOfIssues")+"", 0);
-	}
-	
-	public ProjectMembership setNumberOfIssues(int numberOfIssues) {
-		dbObject.put("numberOfIssues", numberOfIssues);
-		notifyChanged();
-		return this;
-	}
-	public int getNumberOfCommitComments() {
-		return parseInteger(dbObject.get("numberOfCommitComments")+"", 0);
-	}
-	
-	public ProjectMembership setNumberOfCommitComments(int numberOfCommitComments) {
-		dbObject.put("numberOfCommitComments", numberOfCommitComments);
-		notifyChanged();
-		return this;
-	}
-	public int getNumberOfIssueComments() {
-		return parseInteger(dbObject.get("numberOfIssueComments")+"", 0);
-	}
-	
-	public ProjectMembership setNumberOfIssueComments(int numberOfIssueComments) {
-		dbObject.put("numberOfIssueComments", numberOfIssueComments);
-		notifyChanged();
-		return this;
-	}
-	public int getNumberOfPullRequests() {
-		return parseInteger(dbObject.get("numberOfPullRequests")+"", 0);
-	}
-	
-	public ProjectMembership setNumberOfPullRequests(int numberOfPullRequests) {
-		dbObject.put("numberOfPullRequests", numberOfPullRequests);
-		notifyChanged();
-		return this;
-	}
-	public int getNumberOfPullRequestComments() {
-		return parseInteger(dbObject.get("numberOfPullRequestComments")+"", 0);
-	}
-	
-	public ProjectMembership setNumberOfPullRequestComments(int numberOfPullRequestComments) {
-		dbObject.put("numberOfPullRequestComments", numberOfPullRequestComments);
-		notifyChanged();
-		return this;
-	}
 	
 	
-	public List<IssueEvent> getIssueEvents() {
-		if (issueEvents == null) {
-			issueEvents = new PongoList<IssueEvent>(this, "issueEvents", true);
-		}
-		return issueEvents;
-	}
-	public List<Artefact> getArtefacts() {
-		if (artefacts == null) {
-			artefacts = new PongoList<Artefact>(this, "artefacts", true);
-		}
-		return artefacts;
-	}
 	
 	public ProjectMembership setProject(Project project) {
 		if (this.project != project) {
@@ -191,24 +169,4 @@ public class ProjectMembership extends Pongo {
 		return user;
 	}
 	
-	public Commits getCommits() {
-		if (commits == null && dbObject.containsField("commits")) {
-			commits = (Commits) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("commits"));
-		}
-		return commits;
-	}
-	
-	public ProjectMembership setCommits(Commits commits) {
-		if (this.commits != commits) {
-			if (commits == null) {
-				dbObject.removeField("commits");
-			}
-			else {
-				dbObject.put("commits", commits.getDbObject());
-			}
-			this.commits = commits;
-			notifyChanged();
-		}
-		return this;
-	}
 }

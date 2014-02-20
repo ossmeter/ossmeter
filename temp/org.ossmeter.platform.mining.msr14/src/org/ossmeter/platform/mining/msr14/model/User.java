@@ -6,16 +6,13 @@ import com.googlecode.pongo.runtime.*;
 import com.googlecode.pongo.runtime.querying.*;
 
 
-public class User extends Pongo {
+public class User extends Measureable {
 	
 	protected List<User> followers = null;
 	protected List<User> following = null;
 	protected List<Project> watches = null;
 	protected List<Project> forks = null;
 	protected List<ProjectMembership> projects = null;
-	protected List<IssueEvent> totalIssueEvents = null;
-	protected List<Artefact> artefacts = null;
-	protected Commits commits = null;
 	
 	
 	public User() { 
@@ -25,8 +22,26 @@ public class User extends Pongo {
 		dbObject.put("watches", new BasicDBList());
 		dbObject.put("forks", new BasicDBList());
 		dbObject.put("projects", new BasicDBList());
-		dbObject.put("totalIssueEvents", new BasicDBList());
-		dbObject.put("artefacts", new BasicDBList());
+		super.setSuperTypes("org.ossmeter.platform.mining.msr14.model.Measureable");
+		COMMITCOUNT.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
+		COMMITTOTALCHANGES.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
+		COMMITADDITIONS.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
+		COMMITDELETIONS.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
+		COMMITSASAUTHOR.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
+		COMMITSASCOMMITTER.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
+		COMMITTOTALFILES.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
+		AVERAGEFILESPERCOMMIT.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
+		COMMITTIMES.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
+		COMMITCOMMENTTIMES.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
+		PULLREQUESTTIMES.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
+		PULLREQUESTCOMMENTTIMES.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
+		ISSUETIMES.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
+		ISSUECOMMENTTIMES.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
+		NUMBEROFISSUES.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
+		NUMBEROFCOMMITCOMMENTS.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
+		NUMBEROFISSUECOMMENTS.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
+		NUMBEROFPULLREQUESTS.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
+		NUMBEROFPULLREQUESTCOMMENTS.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
 		LOGIN.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
 		GHID.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
 		LOCATION.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
@@ -36,13 +51,22 @@ public class User extends Pongo {
 		FOLLOWINGCOUNT.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
 		NUMEROFWATCHES.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
 		NUMBEROFFORKS.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
-		TOTALNUMBEROFISSUES.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
-		TOTALNUMBEROFCOMMITCOMMENTS.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
-		TOTALNUMBEROFISSUECOMMENTS.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
-		TOTALNUMBEROFPULLREQUESTS.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
-		TOTALNUMBEROFPULLREQUESTCOMMENTS.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
+		PUBLICGISTS.setOwningType("org.ossmeter.platform.mining.msr14.model.User");
 	}
 	
+	public static NumericalQueryProducer COMMITCOUNT = new NumericalQueryProducer("commitCount");
+	public static NumericalQueryProducer COMMITTOTALCHANGES = new NumericalQueryProducer("commitTotalChanges");
+	public static NumericalQueryProducer COMMITADDITIONS = new NumericalQueryProducer("commitAdditions");
+	public static NumericalQueryProducer COMMITDELETIONS = new NumericalQueryProducer("commitDeletions");
+	public static NumericalQueryProducer COMMITSASAUTHOR = new NumericalQueryProducer("commitsAsAuthor");
+	public static NumericalQueryProducer COMMITSASCOMMITTER = new NumericalQueryProducer("commitsAsCommitter");
+	public static NumericalQueryProducer COMMITTOTALFILES = new NumericalQueryProducer("commitTotalFiles");
+	public static NumericalQueryProducer AVERAGEFILESPERCOMMIT = new NumericalQueryProducer("averageFilesPerCommit");
+	public static NumericalQueryProducer NUMBEROFISSUES = new NumericalQueryProducer("numberOfIssues");
+	public static NumericalQueryProducer NUMBEROFCOMMITCOMMENTS = new NumericalQueryProducer("numberOfCommitComments");
+	public static NumericalQueryProducer NUMBEROFISSUECOMMENTS = new NumericalQueryProducer("numberOfIssueComments");
+	public static NumericalQueryProducer NUMBEROFPULLREQUESTS = new NumericalQueryProducer("numberOfPullRequests");
+	public static NumericalQueryProducer NUMBEROFPULLREQUESTCOMMENTS = new NumericalQueryProducer("numberOfPullRequestComments");
 	public static StringQueryProducer LOGIN = new StringQueryProducer("login"); 
 	public static StringQueryProducer GHID = new StringQueryProducer("ghId"); 
 	public static StringQueryProducer LOCATION = new StringQueryProducer("location"); 
@@ -52,11 +76,13 @@ public class User extends Pongo {
 	public static NumericalQueryProducer FOLLOWINGCOUNT = new NumericalQueryProducer("followingCount");
 	public static NumericalQueryProducer NUMEROFWATCHES = new NumericalQueryProducer("numerOfWatches");
 	public static NumericalQueryProducer NUMBEROFFORKS = new NumericalQueryProducer("numberOfForks");
-	public static NumericalQueryProducer TOTALNUMBEROFISSUES = new NumericalQueryProducer("totalNumberOfIssues");
-	public static NumericalQueryProducer TOTALNUMBEROFCOMMITCOMMENTS = new NumericalQueryProducer("totalNumberOfCommitComments");
-	public static NumericalQueryProducer TOTALNUMBEROFISSUECOMMENTS = new NumericalQueryProducer("totalNumberOfIssueComments");
-	public static NumericalQueryProducer TOTALNUMBEROFPULLREQUESTS = new NumericalQueryProducer("totalNumberOfPullRequests");
-	public static NumericalQueryProducer TOTALNUMBEROFPULLREQUESTCOMMENTS = new NumericalQueryProducer("totalNumberOfPullRequestComments");
+	public static NumericalQueryProducer PUBLICGISTS = new NumericalQueryProducer("publicGists");
+	public static ArrayQueryProducer COMMITTIMES = new ArrayQueryProducer("commitTimes");
+	public static ArrayQueryProducer COMMITCOMMENTTIMES = new ArrayQueryProducer("commitCommentTimes");
+	public static ArrayQueryProducer PULLREQUESTTIMES = new ArrayQueryProducer("pullRequestTimes");
+	public static ArrayQueryProducer PULLREQUESTCOMMENTTIMES = new ArrayQueryProducer("pullRequestCommentTimes");
+	public static ArrayQueryProducer ISSUETIMES = new ArrayQueryProducer("issueTimes");
+	public static ArrayQueryProducer ISSUECOMMENTTIMES = new ArrayQueryProducer("issueCommentTimes");
 	
 	
 	public String getLogin() {
@@ -140,48 +166,12 @@ public class User extends Pongo {
 		notifyChanged();
 		return this;
 	}
-	public int getTotalNumberOfIssues() {
-		return parseInteger(dbObject.get("totalNumberOfIssues")+"", 0);
+	public int getPublicGists() {
+		return parseInteger(dbObject.get("publicGists")+"", 0);
 	}
 	
-	public User setTotalNumberOfIssues(int totalNumberOfIssues) {
-		dbObject.put("totalNumberOfIssues", totalNumberOfIssues);
-		notifyChanged();
-		return this;
-	}
-	public int getTotalNumberOfCommitComments() {
-		return parseInteger(dbObject.get("totalNumberOfCommitComments")+"", 0);
-	}
-	
-	public User setTotalNumberOfCommitComments(int totalNumberOfCommitComments) {
-		dbObject.put("totalNumberOfCommitComments", totalNumberOfCommitComments);
-		notifyChanged();
-		return this;
-	}
-	public int getTotalNumberOfIssueComments() {
-		return parseInteger(dbObject.get("totalNumberOfIssueComments")+"", 0);
-	}
-	
-	public User setTotalNumberOfIssueComments(int totalNumberOfIssueComments) {
-		dbObject.put("totalNumberOfIssueComments", totalNumberOfIssueComments);
-		notifyChanged();
-		return this;
-	}
-	public int getTotalNumberOfPullRequests() {
-		return parseInteger(dbObject.get("totalNumberOfPullRequests")+"", 0);
-	}
-	
-	public User setTotalNumberOfPullRequests(int totalNumberOfPullRequests) {
-		dbObject.put("totalNumberOfPullRequests", totalNumberOfPullRequests);
-		notifyChanged();
-		return this;
-	}
-	public int getTotalNumberOfPullRequestComments() {
-		return parseInteger(dbObject.get("totalNumberOfPullRequestComments")+"", 0);
-	}
-	
-	public User setTotalNumberOfPullRequestComments(int totalNumberOfPullRequestComments) {
-		dbObject.put("totalNumberOfPullRequestComments", totalNumberOfPullRequestComments);
+	public User setPublicGists(int publicGists) {
+		dbObject.put("publicGists", publicGists);
 		notifyChanged();
 		return this;
 	}
@@ -217,38 +207,6 @@ public class User extends Pongo {
 		}
 		return projects;
 	}
-	public List<IssueEvent> getTotalIssueEvents() {
-		if (totalIssueEvents == null) {
-			totalIssueEvents = new PongoList<IssueEvent>(this, "totalIssueEvents", true);
-		}
-		return totalIssueEvents;
-	}
-	public List<Artefact> getArtefacts() {
-		if (artefacts == null) {
-			artefacts = new PongoList<Artefact>(this, "artefacts", true);
-		}
-		return artefacts;
-	}
 	
 	
-	public Commits getCommits() {
-		if (commits == null && dbObject.containsField("commits")) {
-			commits = (Commits) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("commits"));
-		}
-		return commits;
-	}
-	
-	public User setCommits(Commits commits) {
-		if (this.commits != commits) {
-			if (commits == null) {
-				dbObject.removeField("commits");
-			}
-			else {
-				dbObject.put("commits", commits.getDbObject());
-			}
-			this.commits = commits;
-			notifyChanged();
-		}
-		return this;
-	}
 }

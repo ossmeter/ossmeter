@@ -7,7 +7,35 @@ class Biodiversity {
 	val ProjectMembership[*] projectMemberships;
 }
 
-class User {
+abstract class Measureable {
+	val IssueEvent[*] issueEvents;
+	
+	attr int commitCount;
+	attr int commitTotalChanges;
+	attr int commitAdditions;
+	attr int commitDeletions;
+	attr int commitsAsAuthor;
+	attr int commitsAsCommitter;
+	attr int commitTotalFiles;
+	attr double averageFilesPerCommit;
+	
+	attr String[*] commitTimes;
+	attr String[*] commitCommentTimes;
+	attr String[*] pullRequestTimes;
+	attr String[*] pullRequestCommentTimes;
+	attr String[*] issueTimes;
+	attr String[*] issueCommentTimes;
+	
+	attr int numberOfIssues;
+	attr int numberOfCommitComments;
+	attr int numberOfIssueComments;
+	attr int numberOfPullRequests;
+	attr int numberOfPullRequestComments;
+	
+	val Artefact[*] artefacts;	
+}
+
+class User extends Measureable {
 	// Extracted from user collection 
 	attr String login;
 	attr String ghId;
@@ -25,41 +53,23 @@ class User {
 	ref Project[*] forks;
 	attr int numerOfWatches;
 	attr int numberOfForks;
+	attr int publicGists;
 	
 	ref ProjectMembership[*] projects;
-	
-	val IssueEvent[*] totalIssueEvents;
-	val Commits commits;
-	attr int totalNumberOfIssues;
-	attr int totalNumberOfCommitComments;
-	attr int totalNumberOfIssueComments;
-	attr int totalNumberOfPullRequests;
-	attr int totalNumberOfPullRequestComments;
-	
-	val Artefact[*] artefacts;	
 }
 
-class ProjectMembership {
+class ProjectMembership extends Measureable {
 	attr boolean owner;
+	attr boolean orgMember;
+	attr boolean collaborator;
 	attr String projectName;	// Utility field: compound index with projectOwner
 	attr String projectOwner;	// Utility field: compound index with projectName
 	attr String userName;		// Utility field: single field index
 	ref Project project;
 	ref User user;
-	
-	val IssueEvent[*] issueEvents;
-	val Commits commits;
-	attr int numberOfCommits;
-	attr int numberOfIssues;
-	attr int numberOfCommitComments;
-	attr int numberOfIssueComments;
-	attr int numberOfPullRequests;
-	attr int numberOfPullRequestComments;
-	
-	val Artefact[*] artefacts;	
 }
 
-class Project {
+class Project extends Measureable {
 	// Stripped directly from repo collection
 	attr String ghId;
 	attr String name;			// Compound index with ownerName
@@ -73,20 +83,11 @@ class Project {
 	attr int forksCount;		//
 	attr int openIssuesCount;	//
 	attr int openIssues;		//
-	attr int networkCount;	// TODO: Not sure what this value means? Look up in API
+	attr int networkCount;		// TODO: Not sure what this value means? Look up in API
 	
 	// Inferred	from other collections
 	ref User owner;
 	ref User[*] watchers;
-	
-	val IssueEvent[*] issueEvents;
-	attr int numberOfCommits;
-	attr int numberOfIssues;
-	attr int numberOfCommitComments;
-	attr int numberOfIssueComments;
-	attr int numberOfPullRequests;
-	attr int numberOfPullRequestComments;
-	val Artefact[*] artefacts;	
 }
 
 class IssueEvent{
@@ -99,6 +100,8 @@ enum IssueEventKind {
 	ASSIGNED; HEAD_REF_DELETED; HEAD_REF_CLEANED; HEAD_REF_RESTORED;
 }
 
+
+// Currently deprecated
 class Commits {
 	attr int count;
 	attr int totalChanges;
