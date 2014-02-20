@@ -87,7 +87,7 @@ public class SourceforgeProjectImporter {
 			int count = 0;
 
 			String lastImportedProject = null;
-			int startingPage = 1;
+			int startingPage = 0;
 			int startingProject = 0;
 			
 			if (platform.getProjectRepositoryManager().getProjectRepository().getSfImportData().size() != 0) {
@@ -108,7 +108,8 @@ public class SourceforgeProjectImporter {
 				System.out.println("Scanning the projects directory page " + j + " of " + numPagesToBeScanned);
 				try {
 					String URL_PROJECT = "http://sourceforge.net/directory/?page="+j;
-					doc = Jsoup.connect(URL_PROJECT).get();
+					url = URL_PROJECT;
+					doc = Jsoup.connect(URL_PROJECT).timeout(10000).get();
 					content = doc.getElementsByClass("projects").first();
 					Elements e = content.getElementsByClass("project_info");
 					for (int i = startingProject; i < e.size(); i++){
@@ -123,24 +124,24 @@ public class SourceforgeProjectImporter {
 							platform.getProjectRepositoryManager().getProjectRepository().sync();
 						}
 						catch(SocketTimeoutException  st) {
-							System.err.println("Read timed out during the connection to " + url + ". I'll retry later with it.");
+							System.err.println("Single project: Read timed out during the connection to " + url + ". I'll retry later with it.");
 							toRetry.add(url);
 							continue;
 						}
 						catch(IOException er) {
-							System.err.println("No further details available for the project " + url );
+							System.err.println("Single project: No further details available for the project " + url );
 							continue;
 						}
 					}
 					startingProject=0;
 				}
 				catch(SocketTimeoutException  st) {
-					System.err.println("Read timed out during the connection to " + url + ". I'll retry later with it.");
+					System.err.println("Page summary: Read timed out during the connection to " + url + ". I'll retry later with it.");
 					toRetry.add(url);
 					continue;
 				}
 				catch(IOException e) {
-					System.err.println("No further details available for the project " + url );
+					System.err.println("Page summary: No further details available for the project " + url );
 					continue;
 				}
 			}
