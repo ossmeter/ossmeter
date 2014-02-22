@@ -2,7 +2,6 @@ package org.ossmeter.metricprovider.threadsrequestsreplies;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +14,7 @@ import org.ossmeter.metricprovider.requestreplyclassification.model.Rrc;
 import org.ossmeter.metricprovider.threads.ThreadsMetricProvider;
 import org.ossmeter.metricprovider.threads.model.ArticleData;
 import org.ossmeter.metricprovider.threads.model.ArticleDataComparator;
+import org.ossmeter.metricprovider.threads.model.ThreadData;
 import org.ossmeter.metricprovider.threads.model.Threads;
 import org.ossmeter.metricprovider.threadsrequestsreplies.model.CurrentDate;
 import org.ossmeter.metricprovider.threadsrequestsreplies.model.ThreadStatistics;
@@ -115,19 +115,10 @@ public class ThreadsRequestsRepliesProvider  implements ITransientMetricProvider
 										article.getClassificationResult());
 		}
 
-		int threadId = 1,
-			threadSize = 0;
-		String lastUrl_name = "";
-		while ((threadSize>0)||(threadId==1)) {
-			threadSize = 0;
-			HashSet<ArticleData> articleSet = new HashSet<ArticleData>();
-			Iterable<ArticleData> articleDataIt = usedThreads.getArticles().find(ArticleData.THREADID.eq(threadId));
-			for (ArticleData article: articleDataIt) {
-				articleSet.add(article);
-				threadSize++;
-			}
+		for (ThreadData thread: usedThreads.getThreads()) {
+
 			SortedSet<ArticleData> sortedArticleSet = new TreeSet<ArticleData>(new ArticleDataComparator());
-			sortedArticleSet.addAll(articleSet);
+			sortedArticleSet.addAll(thread.getArticles());
 
 			String firstMessageTime = null;
 	        Iterator<ArticleData> iterator = sortedArticleSet.iterator();
@@ -135,6 +126,7 @@ public class ThreadsRequestsRepliesProvider  implements ITransientMetricProvider
 					cont=true,
 					isFirstRequest=true;
 
+			String lastUrl_name = "";
 			while ((cont)&&(iterator.hasNext())) {
 				ArticleData article = iterator.next();
 				lastUrl_name = article.getUrl_name();
@@ -144,15 +136,15 @@ public class ThreadsRequestsRepliesProvider  implements ITransientMetricProvider
 				if ((first)&&(responseReply.equals("Reply"))) isFirstRequest=false;
 				if ((!first)&&(responseReply.equals("Reply"))) {
 					
-					ThreadStatistics thread = new ThreadStatistics();
-					thread.setUrl_name(lastUrl_name);
-					thread.setFirstRequest(isFirstRequest);
-					thread.setThreadId(threadId);
-					thread.setAnswered(true);
-					thread.setResponseDate(article.getDate());
+					ThreadStatistics threadStats = new ThreadStatistics();
+					threadStats.setUrl_name(lastUrl_name);
+					threadStats.setFirstRequest(isFirstRequest);
+					threadStats.setThreadId(thread.getThreadId());
+					threadStats.setAnswered(true);
+					threadStats.setResponseDate(article.getDate());
 					long duration = computeDurationInSeconds(firstMessageTime, article.getDate());
-					thread.setResponseDurationSec(duration);
-					db.getThreads().add(thread);
+					threadStats.setResponseDurationSec(duration);
+					db.getThreads().add(threadStats);
 					
 //					System.err.println("threadId: " + threadId + "\t" +
 //							"firstMessageTime: " + firstMessageTime + "\t" +
@@ -162,29 +154,25 @@ public class ThreadsRequestsRepliesProvider  implements ITransientMetricProvider
 				first=false;
 			}
 			if (cont&&(!first)) {
-				ThreadStatistics thread = new ThreadStatistics();
-				thread.setUrl_name(lastUrl_name);
-				thread.setFirstRequest(isFirstRequest);
-				thread.setThreadId(threadId);
-				thread.setAnswered(false);
-				db.getThreads().add(thread);
+				ThreadStatistics threadStats = new ThreadStatistics();
+				threadStats.setUrl_name(lastUrl_name);
+				threadStats.setFirstRequest(isFirstRequest);
+				threadStats.setThreadId(thread.getThreadId());
+				threadStats.setAnswered(false);
+				db.getThreads().add(threadStats);
 				
 //				System.err.println("threadId: " + threadId + "\t" +
 //						"firstMessageTime: " + firstMessageTime + "\t" +
 //						"unanswered");
 			}
-
-			threadId++;
-			db.sync();
 		}
-
+		db.sync();
+		
 	}
 
 	private long computeDurationInSeconds(String firstMessageTimeString, String firstResponseTimeString) {
 		java.util.Date javaFirstMessageTime = NntpUtil.parseDate(firstMessageTimeString);
-//		Date firstMessageTime = new Date(javaFirstMessageTime);
 		java.util.Date javaFirstResponseTime = NntpUtil.parseDate(firstResponseTimeString);
-//		Date firstResponseTime  = new Date(javaFirstResponseTime);
 //		System.err.println(" --> firstMessageTime: "+ javaFirstMessageTime + "\t" + 
 //							"firstResponseTime: " + javaFirstResponseTime);
 		return Date.duration(javaFirstMessageTime, javaFirstResponseTime) / 1000;
