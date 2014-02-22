@@ -12,7 +12,7 @@ import org.ossmeter.metricprovider.activeusers.ActiveUsersMetricProvider;
 import org.ossmeter.metricprovider.activeusers.model.ActiveUsers;
 import org.ossmeter.metricprovider.activeusers.model.User;
 import org.ossmeter.metricprovider.threads.ThreadsMetricProvider;
-import org.ossmeter.metricprovider.threads.model.ArticleData;
+import org.ossmeter.metricprovider.threads.model.ThreadData;
 import org.ossmeter.metricprovider.threads.model.Threads;
 import org.ossmeter.platform.IHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
@@ -61,8 +61,8 @@ public class NumberOfRequestsRepliesPerThreadProvider implements IHistoricalMetr
 				((ThreadsMetricProvider)uses.get(0)).adapt(context.getProjectDB(project));
 		
 		HashSet<Integer> threadIdSet = new HashSet<Integer>();
-		for (ArticleData article: usedThreads.getArticles())
-			threadIdSet.add(article.getThreadId());
+		for (ThreadData thread: usedThreads.getThreads())
+			threadIdSet.add(thread.getThreadId());
 
 		 ActiveUsers usedUsers = 
 				 ((ActiveUsersMetricProvider)uses.get(1)).adapt(context.getProjectDB(project));
