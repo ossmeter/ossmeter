@@ -19,8 +19,13 @@
 
 
 
+
+
+
+
 <extension point="com.googlecode.pongo.runtime.osgi">
     <class name="org.ossmeter.metricprovider.threads.model.Threads"/>
+    <class name="org.ossmeter.metricprovider.threads.model.ThreadData"/>
     <class name="org.ossmeter.metricprovider.threads.model.CurrentDate"/>
     <class name="org.ossmeter.metricprovider.threads.model.ArticleData"/>
     <class name="org.ossmeter.metricprovider.threads.model.NewsgroupData"/>
