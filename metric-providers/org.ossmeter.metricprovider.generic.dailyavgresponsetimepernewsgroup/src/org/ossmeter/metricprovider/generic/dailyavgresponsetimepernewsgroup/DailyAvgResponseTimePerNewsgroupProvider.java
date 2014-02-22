@@ -68,7 +68,6 @@ public class DailyAvgResponseTimePerNewsgroupProvider implements IHistoricalMetr
 
 		long sumOfDurations = 0;
 		int threadsConsidered = 0;
-
 		String lastUrl_name = "";
 		
 		for (ThreadStatistics thread: usedThreads.getThreads()) {
