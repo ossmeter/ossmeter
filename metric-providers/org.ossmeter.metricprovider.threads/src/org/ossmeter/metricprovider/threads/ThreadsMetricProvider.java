@@ -12,6 +12,7 @@ import org.apache.commons.net.nntp.Threader;
 import org.ossmeter.metricprovider.threads.model.ArticleData;
 import org.ossmeter.metricprovider.threads.model.CurrentDate;
 import org.ossmeter.metricprovider.threads.model.NewsgroupData;
+import org.ossmeter.metricprovider.threads.model.ThreadData;
 import org.ossmeter.metricprovider.threads.model.Threads;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.ITransientMetricProvider;
@@ -30,8 +31,6 @@ import com.mongodb.DB;
 
 public class ThreadsMetricProvider implements ITransientMetricProvider<Threads>{
 
-	protected final int STEP = 15;
-	
 	protected PlatformCommunicationChannelManager communicationChannelManager;
 
 	@Override
@@ -82,117 +81,74 @@ public class ThreadsMetricProvider implements ITransientMetricProvider<Threads>{
 			db.getDate().add(currentDate);
 		}
 			
-		for (NewsgroupData newsgroupData: db.getNewsgroups()) {
+		for (NewsgroupData newsgroupData: db.getNewsgroups())
 			newsgroupData.setPreviousThreads(newsgroupData.getThreads());
-		}
 		
 		CommunicationChannelProjectDelta delta = projectDelta.getCommunicationChannelDelta();
+
+		Map<String, Set<Integer>> articleIdsPerNewsgroup = new HashMap<String, Set<Integer>>();
 		Map<String, Set<Integer>> threadsPerNewsgroup = new HashMap<String, Set<Integer>>();
+
 		for ( CommunicationChannelDelta communicationChannelDelta: delta.getCommunicationChannelSystemDeltas()) {
 			CommunicationChannel communicationChannel = communicationChannelDelta.getCommunicationChannel();
 			
 			if (communicationChannelDelta.getArticles().size() > 0) {
-				List<Article> articles = new ArrayList<Article>();
-				for (ArticleData articleData: db.getArticles()) {
-					Article article = new Article();
-					article.setArticleId(articleData.getArticleId());
-					article.setArticleNumber(articleData.getArticleNumber());
-					article.setDate(articleData.getDate());
-					article.setFrom(articleData.getFrom());
-					article.setSubject(articleData.getSubject());
-					for (String reference: articleData.getReferences().split(" "))
-						article.addReference(reference);
-//			System.out.println("|1| " + 
-//								articleData.getArticleId() + "\t" +
-//								articleData.getArticleNumber() + "\t" +
-//								articleData.getDate() + "\t" +
-//								articleData.getFrom() + "\t" +
-//								articleData.getSubject() + "\t|" +
-//								articleData.getReferences() + "|");
-					articles.add(article);
-				}
 				
+				List<Article> articles = new ArrayList<Article>();
+				for (ThreadData threadData: db.getThreads()) {
+					for (ArticleData articleData: threadData.getArticles()) {
+						articles.add(prepareArticle(articleData));
+						Set<Integer> articleIds = null;
+						if (articleIdsPerNewsgroup.containsKey(articleData.getUrl_name()))
+							articleIds = articleIdsPerNewsgroup.get(articleData.getUrl_name());
+						else {
+							articleIds = new HashSet<Integer>();
+							articleIdsPerNewsgroup.put(articleData.getUrl_name(), articleIds);
+						}
+						articleIds.add(articleData.getArticleNumber());
+					}
+				}
 				
 				if (!(communicationChannel instanceof NntpNewsGroup)) continue;
 				NntpNewsGroup newsgroup = (NntpNewsGroup) communicationChannel;
 				for (CommunicationChannelArticle deltaArticle :communicationChannelDelta.getArticles()) {
-					Iterable<ArticleData> articleDataIt = db.getArticles().
-							find(ArticleData.URL_NAME.eq(newsgroup.getUrl()), 
-									ArticleData.ARTICLENUMBER.eq(deltaArticle.getArticleNumber()));
-					ArticleData articleData = null;
-					for (ArticleData art:  articleDataIt) {
-						articleData = art;
-					}
-					if (articleData == null) {
-						Article article = new Article();
-						article.setArticleId(deltaArticle.getArticleId());
-						article.setArticleNumber(deltaArticle.getArticleNumber());
-						article.setDate(deltaArticle.getDate().toString());
-						article.setFrom(deltaArticle.getUser());
-						article.setSubject(deltaArticle.getSubject());
-						for (String reference: deltaArticle.getReferences())
-							article.addReference(reference);
-						articles.add(article);
-						
-						articleData = new ArticleData();
-						articleData.setUrl_name(newsgroup.getUrl());
-						articleData.setArticleId(deltaArticle.getArticleId());
-						articleData.setArticleNumber(deltaArticle.getArticleNumber());
-						articleData.setDate(deltaArticle.getDate().toString());
-						articleData.setFrom(deltaArticle.getUser());
-						articleData.setSubject(deltaArticle.getSubject());
-						String references = "";
-						for (String reference: deltaArticle.getReferences())
-							references += " " + reference;
-						articleData.setReferences(references.trim());
-						
-//					System.out.println("|2| " + 
-//							articleData.getArticleId() + "\t" +
-//							articleData.getArticleNumber() + "\t" +
-//							articleData.getDate() + "\t" +
-//							articleData.getFrom() + "\t" +
-//							articleData.getSubject() + "\t|" +
-//							articleData.getReferences() + "|");
-						db.getArticles().add(articleData);
-					} 
-				}
-				db.sync();
 
+					Boolean articleExists = false;
+					
+					if (articleIdsPerNewsgroup.containsKey(newsgroup.getUrl())
+						&& articleIdsPerNewsgroup.get(newsgroup.getUrl()).contains(deltaArticle.getArticleNumber()))
+						articleExists = true;
+					
+					if (!articleExists)
+						articles.add(prepareArticle(deltaArticle));
+				}
+				
+				db.getThreads().getDbCollection().drop();
+				db.sync();
+				
 				System.out.println("Building message thread tree... (" + articles.size() + ")");
 				Threader threader = new Threader();
 				Article root = (Article)threader.thread(articles);
 				List<List<Article>> articleList = zeroLevelCall(root);
-//				for (List<Article>list: articleList) {
-//					System.out.print(" [ ");
-//					for (Article art: list)
-//						System.out.print(art.getArticleNumber() + " ");
-//					System.out.print("] ");
-//				}
-//				System.out.println();
-//				System.out.println("-=-=-=-=-=-=-=-");
-//				Article.printThread(root, 0);
-//				System.out.println("-=-=-=-=-=-=-=-");
 				
 				int index = 0;
 				for (List<Article> list: articleList) {
 					index++;
+					
+					ThreadData threadData = new ThreadData();
+					threadData.setThreadId(index);
 					for (Article article: list) {
-						Iterable<ArticleData> articleDataIt = db.getArticles().
-								find(ArticleData.ARTICLEID.eq(article.getArticleId()), 
-										ArticleData.ARTICLENUMBER.eq(article.getArticleNumber()));
-						ArticleData articleData = null;
-						for (ArticleData art:  articleDataIt)
-							articleData = art;
-						articleData.setThreadId(index);
-						
-						if (threadsPerNewsgroup.containsKey(articleData.getUrl_name()))
-							threadsPerNewsgroup.get(articleData.getUrl_name()).add(articleData.getThreadId());
+						threadData.getArticles().add(prepareArticleData(article, newsgroup));
+
+						if (threadsPerNewsgroup.containsKey(newsgroup.getUrl()))
+							threadsPerNewsgroup.get(newsgroup.getUrl()).add(index);
 						else {
 							Set<Integer> threadSet = new HashSet<Integer>();
-							threadSet.add(articleData.getThreadId());
-							threadsPerNewsgroup.put(articleData.getUrl_name(), threadSet);
+							threadSet.add(index);
+							threadsPerNewsgroup.put(newsgroup.getUrl(), threadSet);
 						}
 					}
+					db.getThreads().add(threadData);
 				}
 				db.sync();
 			}
@@ -216,6 +172,58 @@ public class ThreadsMetricProvider implements ITransientMetricProvider<Threads>{
 		db.sync();
 	}
 
+	private Article prepareArticle(CommunicationChannelArticle deltaArticle) {
+		Article article = new Article();
+		article.setArticleId(deltaArticle.getArticleId());
+		article.setArticleNumber(deltaArticle.getArticleNumber());
+		article.setDate(deltaArticle.getDate().toString());
+		article.setFrom(deltaArticle.getUser());
+		article.setSubject(deltaArticle.getSubject());
+		for (String reference: deltaArticle.getReferences())
+			article.addReference(reference);
+//		printArticle(article, "|2| ");
+		return article;
+	}
+
+	private ArticleData prepareArticleData(Article article, NntpNewsGroup newsgroup) {
+		ArticleData articleData = new ArticleData();
+		articleData.setUrl_name(newsgroup.getUrl());
+		articleData.setArticleId(article.getArticleId());
+		articleData.setArticleNumber(article.getArticleNumber());
+		articleData.setDate(article.getDate());
+		articleData.setFrom(article.getFrom());
+		articleData.setSubject(article.getSubject());
+		String references = "";
+		for (String reference: article.getReferences())
+			references += " " + reference;
+		articleData.setReferences(references.trim());
+//		printArticle(article, "|3| ");
+		return articleData;
+	}
+
+	private Article prepareArticle(ArticleData articleData) {
+		Article article = new Article();
+		article.setArticleId(articleData.getArticleId());
+		article.setArticleNumber(articleData.getArticleNumber());
+		article.setDate(articleData.getDate());
+		article.setFrom(articleData.getFrom());
+		article.setSubject(articleData.getSubject());
+		for (String reference: articleData.getReferences().split(" "))
+			article.addReference(reference);
+//		printArticle(article, "|1| ");
+		return article;
+	}
+
+	private void printArticle(Article article, String message) {
+		System.out.println(message + 
+				article.getArticleId() + "\t" +
+				article.getArticleNumber() + "\t" +
+				article.getDate() + "\t" +
+				article.getFrom() + "\t" +
+				article.getSubject() + "\t|" +
+				article.getReferences() + "|");
+	}
+
 	@Override
 	public String getShortIdentifier() {
 		return "threads";
@@ -233,6 +241,7 @@ public class ThreadsMetricProvider implements ITransientMetricProvider<Threads>{
 	}
 	
 	public static List<List<Article>> zeroLevelCall(Article article) {
+//		Article root = article;
 		List<List<Article>> threadList = new ArrayList<List<Article>>();
 		while (article!=null) {
 			List<Article> articleNumbers = new ArrayList<Article>();
@@ -254,7 +263,21 @@ public class ThreadsMetricProvider implements ITransientMetricProvider<Threads>{
 				
 			article = article.next;
 		}
+//		printThreadList(root, threadList);
 		return threadList;
+	}
+
+	private static void printThreadList(Article root, List<List<Article>> threadList) {
+		for (List<Article>list: threadList) {
+			System.out.print(" [ ");
+			for (Article art: list)
+				System.out.print(art.getArticleNumber() + " ");
+			System.out.print("] ");
+		}
+		System.out.println();
+		System.out.println("-=-=-=-=-=-=-=-");
+		Article.printThread(root, 0);
+		System.out.println("-=-=-=-=-=-=-=-");
 	}
 
 	public static List<Article> higherLevelCall(Article article) {

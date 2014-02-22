@@ -14,7 +14,6 @@ public class ArticleData extends Pongo {
 		URL_NAME.setOwningType("org.ossmeter.metricprovider.threads.model.ArticleData");
 		ARTICLENUMBER.setOwningType("org.ossmeter.metricprovider.threads.model.ArticleData");
 		ARTICLEID.setOwningType("org.ossmeter.metricprovider.threads.model.ArticleData");
-		THREADID.setOwningType("org.ossmeter.metricprovider.threads.model.ArticleData");
 		DATE.setOwningType("org.ossmeter.metricprovider.threads.model.ArticleData");
 		FROM.setOwningType("org.ossmeter.metricprovider.threads.model.ArticleData");
 		SUBJECT.setOwningType("org.ossmeter.metricprovider.threads.model.ArticleData");
@@ -24,7 +23,6 @@ public class ArticleData extends Pongo {
 	public static StringQueryProducer URL_NAME = new StringQueryProducer("url_name"); 
 	public static NumericalQueryProducer ARTICLENUMBER = new NumericalQueryProducer("articleNumber");
 	public static StringQueryProducer ARTICLEID = new StringQueryProducer("articleId"); 
-	public static NumericalQueryProducer THREADID = new NumericalQueryProducer("threadId");
 	public static StringQueryProducer DATE = new StringQueryProducer("date"); 
 	public static StringQueryProducer FROM = new StringQueryProducer("from"); 
 	public static StringQueryProducer SUBJECT = new StringQueryProducer("subject"); 
@@ -55,15 +53,6 @@ public class ArticleData extends Pongo {
 	
 	public ArticleData setArticleId(String articleId) {
 		dbObject.put("articleId", articleId);
-		notifyChanged();
-		return this;
-	}
-	public int getThreadId() {
-		return parseInteger(dbObject.get("threadId")+"", 0);
-	}
-	
-	public ArticleData setThreadId(int threadId) {
-		dbObject.put("threadId", threadId);
 		notifyChanged();
 		return this;
 	}

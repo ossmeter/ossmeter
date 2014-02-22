@@ -3,9 +3,15 @@ package org.ossmeter.metricprovider.threads.model;
 @db(qualifiedCollectionNames="true")
 @customize
 class Threads {
-    val ArticleData[*] articles;
+    val ThreadData[*] threads;
     val NewsgroupData[*] newsgroups;
     val CurrentDate[*] date;
+}
+
+class ThreadData {
+   @searchable
+   attr int threadId;
+   val ArticleData[*] articles;
 }
 
 class CurrentDate {
@@ -18,7 +24,6 @@ class ArticleData {
    @searchable
    attr int articleNumber;
    attr String articleId;
-   attr int threadId;
    attr String date;
    attr String from;
    attr String subject;

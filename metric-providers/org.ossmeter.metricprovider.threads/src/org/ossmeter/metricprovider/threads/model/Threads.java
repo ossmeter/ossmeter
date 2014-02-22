@@ -13,7 +13,7 @@ public class Threads extends PongoDB {
 		setDb(db);
 	}
 	
-	protected ArticleDataCollection articles = null;
+	protected ThreadDataCollection threads = null;
 	protected NewsgroupDataCollection newsgroups = null;
 	protected CurrentDateCollection date = null;
 	
@@ -21,8 +21,8 @@ public class Threads extends PongoDB {
 	// protected region custom-fields-and-methods end
 	
 	
-	public ArticleDataCollection getArticles() {
-		return articles;
+	public ThreadDataCollection getThreads() {
+		return threads;
 	}
 	
 	public NewsgroupDataCollection getNewsgroups() {
@@ -37,8 +37,8 @@ public class Threads extends PongoDB {
 	@Override
 	public void setDb(DB db) {
 		super.setDb(db);
-		articles = new ArticleDataCollection(db.getCollection("Threads.articles"));
-		pongoCollections.add(articles);
+		threads = new ThreadDataCollection(db.getCollection("Threads.threads"));
+		pongoCollections.add(threads);
 		newsgroups = new NewsgroupDataCollection(db.getCollection("Threads.newsgroups"));
 		pongoCollections.add(newsgroups);
 		date = new CurrentDateCollection(db.getCollection("Threads.date"));
