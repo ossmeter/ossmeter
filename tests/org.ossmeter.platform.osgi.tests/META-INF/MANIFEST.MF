@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tests
+Bundle-SymbolicName: org.ossmeter.platform.osgi.tests
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: org.ossmeter.platform.osgi;bundle-version="1.0.0",
+ org.ossmeter.platform;bundle-version="1.0.0",
+ org.junit
