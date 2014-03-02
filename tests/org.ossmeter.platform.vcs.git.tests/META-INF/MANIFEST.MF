@@ -10,6 +10,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.platform.vcs.git,
  org.junit,
  org.ossmeter.repository.model,
- org.mockito
+ org.mockito,
+ org.ossmeter.repository.model.vcs.git,
+ org.ossmeter.repository.model.vcs.svn
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy

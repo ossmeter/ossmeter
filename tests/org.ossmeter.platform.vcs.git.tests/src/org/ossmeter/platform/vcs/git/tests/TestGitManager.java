@@ -12,8 +12,8 @@ import org.ossmeter.platform.delta.vcs.VcsCommit;
 import org.ossmeter.platform.delta.vcs.VcsCommitItem;
 import org.ossmeter.platform.delta.vcs.VcsRepositoryDelta;
 import org.ossmeter.platform.vcs.git.GitManager;
-import org.ossmeter.repository.model.GitRepository;
-import org.ossmeter.repository.model.SvnRepository;
+import org.ossmeter.repository.model.vcs.git.GitRepository;
+import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 
 public class TestGitManager {
 	GitManager manager;
