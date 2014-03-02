@@ -10,7 +10,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.repository.model,
  com.googlecode.pongo.runtime,
  org.eclipse.jgit,
- com.jcraft.jsch
+ com.jcraft.jsch,
+ org.ossmeter.repository.model.vcs.git
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: org.ossmeter.platform.vcs.git

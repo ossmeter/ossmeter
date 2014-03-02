@@ -10,13 +10,13 @@ import java.util.Scanner;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
+import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.ossmeter.platform.Constants;
@@ -26,8 +26,8 @@ import org.ossmeter.platform.delta.vcs.VcsChangeType;
 import org.ossmeter.platform.delta.vcs.VcsCommit;
 import org.ossmeter.platform.delta.vcs.VcsCommitItem;
 import org.ossmeter.platform.delta.vcs.VcsRepositoryDelta;
-import org.ossmeter.repository.model.GitRepository;
 import org.ossmeter.repository.model.VcsRepository;
+import org.ossmeter.repository.model.vcs.git.GitRepository;
 
 public class GitManager extends AbstractVcsManager {
 
