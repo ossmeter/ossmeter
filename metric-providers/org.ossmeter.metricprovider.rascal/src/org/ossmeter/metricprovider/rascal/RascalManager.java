@@ -92,7 +92,8 @@ public class RascalManager {
 		URIContributor moduleContributor = new URIContributor(URIUtil.rootScheme("metrics"));
 		eval.addRascalSearchPathContributor(moduleContributor);
 		eval.addRascalSearchPathContributor(StandardLibraryContributor.getInstance());
-		eval.addRascalSearchPath(URIUtil.assumeCorrect("file:///Users/shahi/Documents/CWI/OSSMeter/Software/OSSMETER/source/metric-providers/org.ossmeter.metricprovider.rascal/modules"));
+		eval.addRascalSearchPath(URIUtil.assumeCorrect("file:///Users/jimmy/Code/ossmeter/source/metric-providers/org.ossmeter.metricprovider.rascal/modules"));
+//		eval.addRascalSearchPath(URIUtil.assumeCorrect("file:///Users/shahi/Documents/CWI/OSSMeter/Software/OSSMETER/source/metric-providers/org.ossmeter.metricprovider.rascal/modules"));
 		return eval;
 	}
 	
