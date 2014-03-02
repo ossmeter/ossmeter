@@ -35,9 +35,8 @@ public class ExtensionPointMetricProviderManager implements IMetricProviderManag
 			for(IConfigurationElement configurationElement : ExtensionPointHelper.getConfigurationElementsForExtensionPoint(metricProviderManagerExtensionPointId)){
 				try {
 					IMetricProviderManager impm = (IMetricProviderManager) configurationElement.createExecutableExtension("manager");
-					System.out.println("\t" + impm.getClass().toString());
-					
-					//metricProviders.addAll(impm.getMetricProviders()); // FIXME: Commented out whilst determining how to properly resolve rascal URIs
+					System.err.println("\t" + impm.getClass().toString());
+					metricProviders.addAll(impm.getMetricProviders());
 				} catch (CoreException e) {
 					e.printStackTrace();
 				}
