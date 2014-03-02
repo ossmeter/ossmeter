@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Debug
+Bundle-SymbolicName: org.ossmeter.rascal.debug;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: org.ossmeter.metricprovider.rascal;bundle-version="0.0.0",
+ org.eclipse.osgi,
+ org.eclipse.core.runtime,
+ org.eclipse.ui,
+ com.googlecode.pongo.runtime;bundle-version="0.5.0",
+ org.ossmeter.repository.model;bundle-version="1.0.0",
+ org.ossmeter.platform;bundle-version="1.0.0",
+ com.googlecode.pongo.runtime.osgi
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: org.ossmeter.rascal.debug.Activator
