@@ -11,7 +11,8 @@ Require-Bundle: org.eclipse.core.runtime,
  com.googlecode.pongo.runtime,
  org.ossmeter.platform.vcs.svn,
  rascal,
- org.eclipse.imp.pdb.values
+ org.eclipse.imp.pdb.values,
+ org.eclipse.osgi
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: org.ossmeter.metricprovider.rascal

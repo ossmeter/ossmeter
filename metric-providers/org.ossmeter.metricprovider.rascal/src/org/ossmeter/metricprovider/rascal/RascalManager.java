@@ -1,38 +1,90 @@
 package org.ossmeter.metricprovider.rascal;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.imp.pdb.facts.IBool;
 import org.eclipse.imp.pdb.facts.ISourceLocation;
 import org.eclipse.imp.pdb.facts.IValue;
 import org.eclipse.imp.pdb.facts.IValueFactory;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.wiring.BundleWire;
+import org.osgi.framework.wiring.BundleWiring;
 import org.ossmeter.platform.Date;
 import org.rascalmpl.interpreter.Evaluator;
 import org.rascalmpl.interpreter.NullRascalMonitor;
 import org.rascalmpl.interpreter.env.GlobalEnvironment;
 import org.rascalmpl.interpreter.env.ModuleEnvironment;
 import org.rascalmpl.interpreter.load.StandardLibraryContributor;
-import org.rascalmpl.interpreter.load.URIContributor;
-import org.rascalmpl.uri.ClassResourceInput;
-import org.rascalmpl.uri.IURIInputStreamResolver;
-import org.rascalmpl.uri.URIUtil;
 import org.rascalmpl.values.ValueFactoryFactory;
 
 public class RascalManager {
-	private static RascalManager _instance;
 	private final static GlobalEnvironment heap = new GlobalEnvironment();
-	private final static ModuleEnvironment root = new ModuleEnvironment("******metrics******", heap);
+	private final static ModuleEnvironment root = new ModuleEnvironment("******ossmeter******", heap);
 	private final static IValueFactory VF = ValueFactoryFactory.getValueFactory();
-//	private final static OSSMeterURIResolver ossmStore = new OSSMeterURIResolver();
-	private final static Evaluator eval = initEvaluator();
+	private final static Evaluator eval = createEvaluator();
 	
 	private static HashMap<String, ProjectRascalManager> managedProjects = new HashMap<>();
 	
+	// thread safe way of keeping a static instance
+	private static class InstanceKeeper {
+	  public static final RascalManager sInstance = new RascalManager();
+	}
+	
 	private final String module = "Manager";
 	
+	/**
+   * This code is taken from http://wiki.eclipse.org/BundleProxyClassLoader_recipe
+   */
+  private static class BundleClassLoader extends ClassLoader {
+    private Bundle bundle;
+    private ClassLoader parent;
+      
+    public BundleClassLoader(Bundle bundle) {
+      this.bundle = bundle;
+    }
+    
+    @Override
+    public Enumeration<URL> getResources(String name) throws IOException {
+      return bundle.getResources(name);
+    }
+    
+    @Override
+    public URL findResource(String name) {
+        return bundle.getResource(name);
+    }
+
+    @Override
+    public Class<?> findClass(String name) throws ClassNotFoundException {
+        return bundle.loadClass(name);
+    }
+    
+    @Override
+    public URL getResource(String name) {
+      return (parent == null) ? findResource(name) : super.getResource(name);
+    }
+
+    @Override
+    protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+      Class<?> clazz = (parent == null) ? findClass(name) : super.loadClass(name, false);
+      if (resolve)
+        super.resolveClass(clazz);
+      
+      return clazz;
+    }
+  }
+  
 	public class ProjectRascalManager {
 		public HashMap<String, HashMap<String, IValue>> fileModelsPerCommit = new HashMap<>();
 		private Date lastChecked;
@@ -85,28 +137,95 @@ public class RascalManager {
 		}
 	}
 	
-	private static Evaluator initEvaluator() {
-		Evaluator eval = new Evaluator(VF, new PrintWriter(System.err), new PrintWriter(System.out), root, heap);
-		IURIInputStreamResolver metrics = new ClassResourceInput(eval.getResolverRegistry(), "metrics", RascalManager.class, "");
-		eval.getResolverRegistry().registerInput(metrics);
-		URIContributor moduleContributor = new URIContributor(URIUtil.rootScheme("metrics"));
-		eval.addRascalSearchPathContributor(moduleContributor);
-		eval.addRascalSearchPathContributor(StandardLibraryContributor.getInstance());
-		eval.addRascalSearchPath(URIUtil.assumeCorrect("file:///Users/jimmy/Code/ossmeter/source/metric-providers/org.ossmeter.metricprovider.rascal/modules"));
-//		eval.addRascalSearchPath(URIUtil.assumeCorrect("file:///Users/shahi/Documents/CWI/OSSMeter/Software/OSSMETER/source/metric-providers/org.ossmeter.metricprovider.rascal/modules"));
-		return eval;
+	public void configureRascalMetricProviders(Set<Bundle> providers) {
+	  assert eval != null;
+	  
+		for (Bundle provider : providers) {
+		  configureRascalMetricProvider(eval, provider);
+		}
 	}
 	
+	private static Evaluator createEvaluator() {
+	  Evaluator eval = new Evaluator(VF, new PrintWriter(System.err), new PrintWriter(System.out), root, heap);
+    eval.addRascalSearchPathContributor(StandardLibraryContributor.getInstance());
+    return eval;
+  }
+
+  private void configureRascalMetricProvider(Evaluator evaluator, Bundle bundle) {
+    try {
+      List<String> roots = new RascalBundleManifest().getSourceRoots(bundle);
+
+      for (String root : roots) {
+        evaluator.addRascalSearchPath(bundle.getResource(root).toURI());
+      }
+
+      evaluator.addClassLoader(new BundleClassLoader(bundle));
+      configureClassPath(bundle, evaluator);
+    }
+    catch (URISyntaxException e) {
+       Rasctivator.logException("failed to configure Rascal bundle " + bundle, e);
+    }
+  }
+	
+	 private void configureClassPath(Bundle bundle, Evaluator evaluator) {
+	    List<URL> classPath = new LinkedList<URL>();
+	    List<String> compilerClassPath = new LinkedList<String>();
+	    collectClassPathForBundle(bundle, classPath, compilerClassPath);
+	    configureClassPath(evaluator, classPath, compilerClassPath);
+	  }
+	  
+	  private void configureClassPath(Evaluator parser, List<URL> classPath, List<String> compilerClassPath) {
+	    // this registers the run-time path:
+	    URL[] urls = new URL[classPath.size()];
+	    classPath.toArray(urls);
+	    URLClassLoader classPathLoader = new URLClassLoader(urls, RascalManager.class.getClassLoader());
+	    parser.addClassLoader(classPathLoader);
+	    
+	    // this registers the compile-time path:
+	    String ccp = "";
+	    for (String elem : compilerClassPath) {
+	      ccp += File.pathSeparatorChar + elem;
+	    }
+	    
+	    parser.getConfiguration().setRascalJavaClassPathProperty(ccp.substring(1));
+	  }
+	  
+	  private void collectClassPathForBundle(Bundle bundle, List<URL> classPath, List<String> compilerClassPath) {
+	    try {
+	      File file = FileLocator.getBundleFile(bundle);
+	      URL url = file.toURI().toURL();
+	      
+	      if (classPath.contains(url)) {
+	        return; // kill infinite loop
+	      }
+	      
+	      classPath.add(0, url);
+	      compilerClassPath.add(0, file.getAbsolutePath());
+
+	      BundleWiring wiring = bundle.adapt(BundleWiring.class);
+
+	      for (BundleWire dep : wiring.getRequiredWires(null)) {
+	        collectClassPathForBundle(dep.getProviderWiring().getBundle(), classPath, compilerClassPath);
+	      }
+	    } 
+	    catch (IOException e) {
+	      Rasctivator.logException("error while tracing dependencies", e);
+	    } 
+	  }
+	  
 	private RascalManager() {
 		eval.doImport(new NullRascalMonitor(), module);
 	}
 
+	public static RascalManager getInstance() {
+	  return InstanceKeeper.sInstance;
+	}
+	
 	public static ProjectRascalManager getInstance(String project) {
-		if (_instance == null)
-			_instance = new RascalManager();
 		if (!managedProjects.containsKey(project)) {
-			managedProjects.put(project, _instance.new ProjectRascalManager());
+			managedProjects.put(project, getInstance().new ProjectRascalManager());
 		}
+		
 		return managedProjects.get(project);
 	}
 	
@@ -136,4 +255,8 @@ public class RascalManager {
 		}
 		return result.toString();
 	}
+
+  public void registerRascalMetricProvider(Bundle bundle) {
+    configureRascalMetricProvider(eval, bundle);
+  }
 }

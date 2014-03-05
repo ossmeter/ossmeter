@@ -1,16 +1,18 @@
 package org.ossmeter.metricprovider.rascal;
 
+import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.Platform;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.osgi.util.tracker.ServiceTracker;
-import org.ossmeter.platform.IMetricProvider;
+import org.ossmeter.platform.logging.OssmeterLoggerFactory;
 
 public class Rasctivator implements BundleActivator {
-
-	private static BundleContext context;
+	private static final Logger LOGGER = new OssmeterLoggerFactory().makeNewLoggerInstance("rascalLogger");
+  private static BundleContext context;
 	
-	protected ServiceTracker<IMetricProvider, IMetricProvider> rascalTracker;
-
 	static BundleContext getContext() {
 		return context;
 	}
@@ -19,17 +21,28 @@ public class Rasctivator implements BundleActivator {
 	public void start(BundleContext bundleContext) throws Exception {
 		Rasctivator.context = bundleContext;
 		
-		rascalTracker = new ServiceTracker<>(bundleContext, 
-				IMetricProvider.class, RascalMetricServiceTracker.getInstance());
-		
-		rascalTracker.open();
+		IExtensionPoint extensionPoint = Platform.getExtensionRegistry()
+        .getExtensionPoint("org.ossmeter.metricprovider.rascal", "ossmeter.rascal.metricprovider");
+
+    if (extensionPoint == null) {
+      return; // this may happen when nobody extends this point.
+    }
+    
+    for (IExtension element : extensionPoint.getExtensions()) {
+      String name = element.getContributor().getName();
+      Bundle bundle = Platform.getBundle(name);
+      RascalManager.getInstance().registerRascalMetricProvider(bundle);
+    }
+    
+	}
+	
+	public static void logException(Object message, Throwable cause) {
+	  LOGGER.error(message, cause);
 	}
 
 	@Override
 	public void stop(BundleContext bundleContext) throws Exception {
 		Rasctivator.context = null;
-		
-		rascalTracker.close();
 	}
 
 }

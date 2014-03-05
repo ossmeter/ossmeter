@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension-point id="ossmeter.rascal.metricprovider" name="OSSMETER Rascal metric provider" schema="schema/ossmeter.rascal.metricprovider.exsd"/>
    <extension
          point="org.ossmeter.platform.managers.metricprovider">
       <metricProviderManager
