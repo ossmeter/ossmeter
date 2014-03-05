@@ -106,6 +106,8 @@ public class RascalMetricProvider implements ITransientMetricProvider<org.ossmet
 				IValue m3 = fileM3s.get(fileURL);
 				
 				// TODO: generalize to any return type
+				// TODO: handle exceptions gracefully
+				// TODO: route warnings to the platform as well
         IMap result = (IMap) function.call(new Type[] { m3.getType() }, new IValue[] {m3}, null).getValue();
         
 				for (Iterator<Entry<IValue, IValue>> it = result.entryIterator(); it.hasNext(); ) {

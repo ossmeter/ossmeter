@@ -12,7 +12,6 @@ Require-Bundle: org.eclipse.core.runtime,
  com.googlecode.pongo.runtime,
  org.ossmeter.repository.model.github,
  org.ossmeter.repository.model.sourceforge,
- org.ossmeter.platform.client.api,
  org.ossmeter.repository.model.cc.nntp,
  org.ossmeter.repository.model.bts.bugzilla,
  org.ossmeter.repository.model.vcs.svn

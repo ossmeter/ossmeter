@@ -7,10 +7,8 @@ import com.mongodb.*;
 
 public class RascalMetrics extends PongoDB {
 	
-	private String collectionName;
+	private final String collectionName;
 
-	public RascalMetrics() {}
-	
 	public RascalMetrics(DB db, String collectionName) {
 		this.collectionName = collectionName;
 		setDb(db);

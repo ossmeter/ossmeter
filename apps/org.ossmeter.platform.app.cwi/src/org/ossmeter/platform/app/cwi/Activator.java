@@ -2,7 +2,6 @@ package org.ossmeter.platform.app.cwi;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.ossmeter.platform.client.api.ProjectListResource;
 
 
 public class Activator implements BundleActivator {
@@ -19,7 +18,6 @@ public class Activator implements BundleActivator {
 	 */
 	public void start(BundleContext bundleContext) throws Exception {
 		Activator.context = bundleContext;
-		ProjectListResource f = new ProjectListResource(); // Starts
 	}
 
 	/*
