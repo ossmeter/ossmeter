@@ -1,12 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.4"?>
-<plugin>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?eclipse version="3.4"?><plugin>
    <extension-point id="ossmeter.rascal.metricprovider" name="OSSMETER Rascal metric provider" schema="schema/ossmeter.rascal.metricprovider.exsd"/>
-   <extension
-         point="org.ossmeter.platform.managers.metricprovider">
-      <metricProviderManager
-            manager="org.ossmeter.metricprovider.rascal.RascalMetricProviderManager">
+   <extension point="org.ossmeter.platform.managers.metricprovider">
+      <metricProviderManager manager="org.ossmeter.metricprovider.rascal.RascalMetricProviderManager">
       </metricProviderManager>
    </extension>
 
+<extension point="com.googlecode.pongo.runtime.osgi">
+    <class name="org.ossmeter.metricprovider.rascal.trans.model.RascalMetrics"/>
+    <class name="org.ossmeter.metricprovider.rascal.trans.model.IntegerMeasurement"/>
+    <class name="org.ossmeter.metricprovider.rascal.trans.model.RealMeasurement"/>
+    <class name="org.ossmeter.metricprovider.rascal.trans.model.BooleanMeasurement"/>
+  </extension>
 </plugin>
