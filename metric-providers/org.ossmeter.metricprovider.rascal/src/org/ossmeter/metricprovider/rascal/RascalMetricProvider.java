@@ -83,8 +83,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<org.ossmet
 
 	@Override
 	public org.ossmeter.metricprovider.rascal.trans.model.RascalMetrics adapt(DB db) {
-		org.ossmeter.metricprovider.rascal.trans.model.RascalMetrics rm = new RascalMetrics(db);
-		rm.setMeasurementsCollectionName(this.metricId);
+		org.ossmeter.metricprovider.rascal.trans.model.RascalMetrics rm = new RascalMetrics(db, this.metricId);
 		return rm;
 	}
 

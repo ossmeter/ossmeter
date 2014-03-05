@@ -7,18 +7,18 @@ import com.mongodb.*;
 
 public class RascalMetrics extends PongoDB {
 	
+	private String collectionName;
+
 	public RascalMetrics() {}
 	
-	public RascalMetrics(DB db) {
+	public RascalMetrics(DB db, String collectionName) {
+		this.collectionName = collectionName;
 		setDb(db);
 	}
 	
 	protected MeasurementCollection measurements = null;
 	
 	// protected region custom-fields-and-methods on begin
-	public void setMeasurementsCollectionName(String newName) {
-		measurements.getDbCollection().rename(newName);
-	}
 	// protected region custom-fields-and-methods end
 	
 	
@@ -30,7 +30,7 @@ public class RascalMetrics extends PongoDB {
 	@Override
 	public void setDb(DB db) {
 		super.setDb(db);
-		measurements = new MeasurementCollection(db.getCollection("RascalMetrics.measurements"));
+		measurements = new MeasurementCollection(db.getCollection(collectionName));
 		pongoCollections.add(measurements);
 	}
 }
