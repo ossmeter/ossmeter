@@ -10,6 +10,7 @@ import org.eclipse.imp.pdb.facts.IInteger;
 import org.eclipse.imp.pdb.facts.IMap;
 import org.eclipse.imp.pdb.facts.IString;
 import org.eclipse.imp.pdb.facts.IValue;
+import org.ossmeter.metricprovider.rascal.trans.model.RascalMetrics;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.ITransientMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
@@ -19,7 +20,7 @@ import org.ossmeter.repository.model.Project;
 import com.googlecode.pongo.runtime.PongoDB;
 import com.mongodb.DB;
 
-public class RascalMetricProvider implements ITransientMetricProvider<PongoDB> {
+public class RascalMetricProvider implements ITransientMetricProvider<org.ossmeter.metricprovider.rascal.trans.model.RascalMetrics> {
 
   private final String description;
   private final String friendlyName;
@@ -37,6 +38,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<PongoDB> {
     this.module = module;
     this.function = function;
     RascalManager.importModule(this.module);
+    
   }
   
 	@Override
@@ -80,12 +82,14 @@ public class RascalMetricProvider implements ITransientMetricProvider<PongoDB> {
 	}
 
 	@Override
-	public PongoDB adapt(DB db) {
-		return new CC(db);
+	public org.ossmeter.metricprovider.rascal.trans.model.RascalMetrics adapt(DB db) {
+		org.ossmeter.metricprovider.rascal.trans.model.RascalMetrics rm = new RascalMetrics(db);
+		rm.setMeasurementsCollectionName(this.metricId);
+		return rm;
 	}
 
 	@Override
-	public void measure(Project project, ProjectDelta delta, CC db) {
+	public void measure(Project project, ProjectDelta delta, org.ossmeter.metricprovider.rascal.trans.model.RascalMetrics db) {
 		manager = RascalManager.getInstance(project.getName());
 		TreeMap<String, HashMap<String, IValue>> revisions = getM3s(project, delta);
 		for (String rev: revisions.keySet()) {

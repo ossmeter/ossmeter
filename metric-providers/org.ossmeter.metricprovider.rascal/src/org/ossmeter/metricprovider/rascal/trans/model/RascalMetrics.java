@@ -2,6 +2,8 @@ package org.ossmeter.metricprovider.rascal.trans.model;
 
 import com.googlecode.pongo.runtime.*;
 import com.mongodb.*;
+// protected region custom-imports on begin
+// protected region custom-imports end
 
 public class RascalMetrics extends PongoDB {
 	
@@ -13,6 +15,11 @@ public class RascalMetrics extends PongoDB {
 	
 	protected MeasurementCollection measurements = null;
 	
+	// protected region custom-fields-and-methods on begin
+	public void setMeasurementsCollectionName(String newName) {
+		measurements.getDbCollection().rename(newName);
+	}
+	// protected region custom-fields-and-methods end
 	
 	
 	public MeasurementCollection getMeasurements() {

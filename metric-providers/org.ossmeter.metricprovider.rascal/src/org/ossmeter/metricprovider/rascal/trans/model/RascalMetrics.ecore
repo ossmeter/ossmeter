@@ -4,6 +4,7 @@
     <eAnnotations source="db">
       <details key="qualifiedCollectionNames" value="true"/>
     </eAnnotations>
+    <eAnnotations source="customize"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="measurements" upperBound="-1" eType="//Measurement" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Measurement" abstract="true">
