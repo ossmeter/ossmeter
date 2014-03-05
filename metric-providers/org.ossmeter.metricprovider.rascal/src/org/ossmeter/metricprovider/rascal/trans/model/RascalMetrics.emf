@@ -10,7 +10,7 @@ abstract class Measurement {
     @searchable
     attr String uri;
     @searchable
-    attr String metric;
+    attr String metric; // TODO throw away
 }
 
 class IntegerMeasurement extends Measurement {

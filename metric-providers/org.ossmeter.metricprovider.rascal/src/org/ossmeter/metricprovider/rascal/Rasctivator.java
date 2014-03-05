@@ -22,8 +22,8 @@ public class Rasctivator implements BundleActivator {
 		Rasctivator.context = bundleContext;
 		
 		IExtensionPoint extensionPoint = Platform.getExtensionRegistry()
-        .getExtensionPoint("org.ossmeter.metricprovider.rascal", "ossmeter.rascal.metricprovider");
-
+        .getExtensionPoint("ossmeter.rascal.metricprovider");
+                   
     if (extensionPoint == null) {
       return; // this may happen when nobody extends this point.
     }

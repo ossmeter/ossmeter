@@ -9,8 +9,10 @@ import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.FileLocator;
@@ -22,11 +24,15 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.wiring.BundleWire;
 import org.osgi.framework.wiring.BundleWiring;
 import org.ossmeter.platform.Date;
+import org.ossmeter.platform.IMetricProvider;
 import org.rascalmpl.interpreter.Evaluator;
 import org.rascalmpl.interpreter.NullRascalMonitor;
 import org.rascalmpl.interpreter.env.GlobalEnvironment;
 import org.rascalmpl.interpreter.env.ModuleEnvironment;
+import org.rascalmpl.interpreter.env.Pair;
 import org.rascalmpl.interpreter.load.StandardLibraryContributor;
+import org.rascalmpl.interpreter.result.AbstractFunction;
+import org.rascalmpl.interpreter.result.ICallableValue;
 import org.rascalmpl.values.ValueFactoryFactory;
 
 public class RascalManager {
@@ -35,7 +41,8 @@ public class RascalManager {
 	private final static IValueFactory VF = ValueFactoryFactory.getValueFactory();
 	private final static Evaluator eval = createEvaluator();
 	
-	private static HashMap<String, ProjectRascalManager> managedProjects = new HashMap<>();
+	private final Set<Bundle> metricBundles = new HashSet<>();
+	private final Map<String, ProjectRascalManager> managedProjects = new HashMap<>();
 	
 	// thread safe way of keeping a static instance
 	private static class InstanceKeeper {
@@ -147,6 +154,7 @@ public class RascalManager {
 	
 	private static Evaluator createEvaluator() {
 	  Evaluator eval = new Evaluator(VF, new PrintWriter(System.err), new PrintWriter(System.out), root, heap);
+	  eval.getResolverRegistry().registerInput(new BundleURIResolver(eval.getResolverRegistry()));
     eval.addRascalSearchPathContributor(StandardLibraryContributor.getInstance());
     return eval;
   }
@@ -161,6 +169,8 @@ public class RascalManager {
 
       evaluator.addClassLoader(new BundleClassLoader(bundle));
       configureClassPath(bundle, evaluator);
+      
+      metricBundles.add(bundle);
     }
     catch (URISyntaxException e) {
        Rasctivator.logException("failed to configure Rascal bundle " + bundle, e);
@@ -213,31 +223,29 @@ public class RascalManager {
 	    } 
 	  }
 	  
-	private RascalManager() {
-		eval.doImport(new NullRascalMonitor(), module);
-	}
-
 	public static RascalManager getInstance() {
 	  return InstanceKeeper.sInstance;
 	}
 	
-	public static ProjectRascalManager getInstance(String project) {
-		if (!managedProjects.containsKey(project)) {
-			managedProjects.put(project, getInstance().new ProjectRascalManager());
+	public ProjectRascalManager getInstance(String project) {
+		RascalManager instance = getInstance();
+		
+    if (!instance.managedProjects.containsKey(project)) {
+			instance.managedProjects.put(project, instance.new ProjectRascalManager());
 		}
 		
-		return managedProjects.get(project);
+		return instance.managedProjects.get(project);
 	}
 	
-	public static void clearManagerData() {
-		managedProjects.clear();
+	public void clearManagerData() {
+		getInstance().managedProjects.clear();
 	}
 	
-	public static void importModule(String module) {
+	public void importModule(String module) {
 		eval.doImport(new NullRascalMonitor(), module);
 	}
 	
-	public static void clearProjectData() {
+	public void clearProjectData() {
 		for (ProjectRascalManager m : managedProjects.values()) {
 			m.clearManagerDataForProject();
 		}
@@ -258,5 +266,44 @@ public class RascalManager {
 
   public void registerRascalMetricProvider(Bundle bundle) {
     configureRascalMetricProvider(eval, bundle);
+  }
+
+  public void addMetricProviders(Bundle bundle, List<IMetricProvider> providers) {
+    RascalBundleManifest mf = new RascalBundleManifest();
+    String moduleName = mf.getMainModule(bundle);
+    
+    if (!eval.getHeap().existsModule(moduleName)) {
+      importModule(moduleName);
+    }
+    
+    ModuleEnvironment module = eval.getHeap().getModule(moduleName);
+    
+    for (Pair<String, List<AbstractFunction>> func : module.getFunctions()) {
+      final String funcName = func.getFirst();
+      
+      for (final AbstractFunction f : func.getSecond()) {
+        // TODO: add some type checking on the arguments
+        if (f.hasTag("metric")) {
+          String metricName = f.getTag("metric");
+          String metricId = bundle.getSymbolicName() + "." + metricName;
+          String friendlyName = f.getTag("friendlyName");
+          String description = f.getTag("doc");
+          
+          ICallableValue overloadedFunc = (ICallableValue) module.getVariable(f.getName()).getValue();
+          // TODO: friendly feedback in case of missing tags
+          providers.add(new RascalMetricProvider(metricId, funcName, friendlyName, description, overloadedFunc));
+        }
+      }
+    }
+  }
+
+  public List<IMetricProvider> getMetricProviders() {
+    List<IMetricProvider> providers = new LinkedList<>();
+    
+    for (Bundle bundle : metricBundles) {
+      addMetricProviders(bundle, providers);
+    }
+    
+    return providers;
   }
 }
