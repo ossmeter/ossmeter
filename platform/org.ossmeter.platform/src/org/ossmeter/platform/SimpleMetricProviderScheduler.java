@@ -131,7 +131,7 @@ public class SimpleMetricProviderScheduler {
 					try {
 						provider.measure(project, delta, provider.adapt(platform.getMetricsRepository(project).getDb()));
 					} catch (Exception e) {
-						logger.error("Metric provider '' threw an exception for project '' on date ''. Error message: \n" + e.getMessage());
+						logger.error("Metric provider '" + provider + "' threw an exception for project '" + project + "' on date ''. Error message: \n" + e.getMessage());
 					}
 					
 					updateMetricProviderMetaData(project, provider, date, MetricProviderType.TRANSIENT);
