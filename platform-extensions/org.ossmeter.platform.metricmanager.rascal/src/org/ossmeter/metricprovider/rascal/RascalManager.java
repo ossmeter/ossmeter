@@ -3,7 +3,6 @@ package org.ossmeter.metricprovider.rascal;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
@@ -36,10 +35,8 @@ import org.rascalmpl.interpreter.result.ICallableValue;
 import org.rascalmpl.values.ValueFactoryFactory;
 
 public class RascalManager {
-	private final static GlobalEnvironment heap = new GlobalEnvironment();
-	private final static ModuleEnvironment root = new ModuleEnvironment("******ossmeter******", heap);
-	private final static IValueFactory VF = ValueFactoryFactory.getValueFactory();
-	private final static Evaluator eval = createEvaluator();
+	private final Evaluator eval = createEvaluator();
+	private final IValueFactory VF = ValueFactoryFactory.getValueFactory();
 	
 	private final Set<Bundle> metricBundles = new HashSet<>();
 	private final Map<String, ProjectRascalManager> managedProjects = new HashMap<>();
@@ -102,8 +99,9 @@ public class RascalManager {
 					clearProjectData();
 				}
 			}
+			
 			if (!fileModelsPerCommit.containsKey(revision)) {
-				eval.call(new NullRascalMonitor(), module, "checkOutRepository", VF.string(repositoryURL), VF.integer(revision), VF.sourceLocation(localPath));
+				eval.call(new NullRascalMonitor(), module, "checkOutRepository", VF.string(repositoryURL), VF.string(revision), VF.sourceLocation(localPath));
 				fileModelsPerCommit.put(revision, new HashMap<String, IValue>());
 			}
 			lastChecked = currentDate;
@@ -152,7 +150,11 @@ public class RascalManager {
 		}
 	}
 	
-	private static Evaluator createEvaluator() {
+	private Evaluator createEvaluator() {
+	  GlobalEnvironment heap = new GlobalEnvironment();
+	  ModuleEnvironment root = new ModuleEnvironment("******ossmeter******", heap);
+	  
+	  
 	  Evaluator eval = new Evaluator(VF, new PrintWriter(System.err), new PrintWriter(System.out), root, heap);
 	  eval.getResolverRegistry().registerInput(new BundleURIResolver(eval.getResolverRegistry()));
     eval.addRascalSearchPathContributor(StandardLibraryContributor.getInstance());
@@ -172,8 +174,8 @@ public class RascalManager {
       
       metricBundles.add(bundle);
     }
-    catch (URISyntaxException e) {
-       Rasctivator.logException("failed to configure Rascal bundle " + bundle, e);
+    catch (Throwable e) {
+       Rasctivator.logException("failed to configure metrics bundle " + bundle, e);
     }
   }
 	
@@ -268,7 +270,7 @@ public class RascalManager {
     configureRascalMetricProvider(eval, bundle);
   }
 
-  public void addMetricProviders(Bundle bundle, List<IMetricProvider> providers) {
+  private void addMetricProviders(Bundle bundle, List<IMetricProvider> providers) {
     RascalBundleManifest mf = new RascalBundleManifest();
     String moduleName = mf.getMainModule(bundle);
     

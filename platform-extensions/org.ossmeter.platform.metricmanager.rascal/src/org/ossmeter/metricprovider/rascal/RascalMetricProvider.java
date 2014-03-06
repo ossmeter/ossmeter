@@ -46,7 +46,11 @@ public class RascalMetricProvider implements ITransientMetricProvider<org.ossmet
     this.friendlyName = friendlyName;
     this.description = description;
     this.function = function;
-    
+  }
+  
+  @Override
+  public String toString() {
+    return getIdentifier();
   }
   
 	@Override
@@ -154,7 +158,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<org.ossmet
         String repo = vcsRepository.getUrl();
         // FIXME: This should only be a temporary resolution.
         String path = RascalManager.makeRelative(repo, item.getPath());
-        String localFile = localStorage.getAbsolutePath() + "/" + getLastSegment(repo) + "/" + path;
+        String localFile = localStorage.getAbsolutePath() + "/checkout/" + path;
         String fileURL = repo + (repo.endsWith("/") ? "" : "/") + path;
         try {
           fileM3 = manager.getModel(commit.getRevision(), fileURL, localFile);
