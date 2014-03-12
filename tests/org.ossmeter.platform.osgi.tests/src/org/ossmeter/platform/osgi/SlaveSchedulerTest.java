@@ -6,14 +6,18 @@ import java.util.List;
 import org.junit.Test;
 import org.ossmeter.platform.osgi.executors.SlaveScheduler;
 
+import com.mongodb.Mongo;
+
 public class SlaveSchedulerTest {
 
 	@Test
-	public void test() {
+	public void test() throws Exception {
 		
-		SlaveScheduler slave = new SlaveScheduler();
+		Mongo mongo = new Mongo();
 		
-		List<Object> projects = new ArrayList<Object>(); 
+		SlaveScheduler slave = new SlaveScheduler(mongo);
+		
+		List<String> projects = new ArrayList<String>(); 
 		
 		projects.add("Project1");
 		projects.add("Project2");
