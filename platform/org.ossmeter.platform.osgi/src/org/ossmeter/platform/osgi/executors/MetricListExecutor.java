@@ -59,6 +59,7 @@ public class MetricListExecutor implements Runnable {
 //				e.printStackTrace();
 //			}
 		}
+		System.out.println("Exiting");
 	}
 
 	/**

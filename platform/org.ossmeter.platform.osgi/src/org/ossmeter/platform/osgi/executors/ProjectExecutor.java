@@ -1,8 +1,6 @@
 package org.ossmeter.platform.osgi.executors;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -39,17 +37,9 @@ public class ProjectExecutor implements Runnable {
 			return;
 		}
 		System.out.println(project.getName() + " executing...");
-		
-		// Split the dependencies into branches
-		List<IMetricProvider> transMetrics = getOrderedTransientMetricProviders(platform.getMetricProviderManager().getMetricProviders());
-		List<IMetricProvider> histMetrics = getOrderedHistoricMetricProviders(platform.getMetricProviderManager().getMetricProviders());
-		
-		List<List<IMetricProvider>> transientMpBranches = splitIntoBranches(transMetrics);
-		List<List<IMetricProvider>> historicMpBranches = splitIntoBranches(histMetrics);
-			
-		// TODO: An alternative would be to have a single thread pool for the node. I briefly tried this
-		// and it didn't work. Reverted to this implement (temporarily at least).
-		ExecutorService executorService = Executors.newFixedThreadPool(numberOfCores);
+
+		// Split metrics into branches
+		List<List<IMetricProvider>> metricBranches = splitIntoBranches(platform.getMetricProviderManager().getMetricProviders());
 		
 		//
 		Date lastExecuted = getLastExecutedDate();
@@ -63,51 +53,36 @@ public class ProjectExecutor implements Runnable {
 		
 		Date[] dates = Date.range(lastExecuted.addDays(1), today);
 		for (Date date : dates) {
+			// TODO: An alternative would be to have a single thread pool for the node. I briefly tried this
+			// and it didn't work. Reverted to this implement (temporarily at least).
+			ExecutorService executorService = Executors.newFixedThreadPool(numberOfCores);
 			System.out.println("Date: " + date + ", project: " + project.getName());
 			
 			ProjectDelta delta = new ProjectDelta(project, date, 
 					platform.getVcsManager(), platform.getCommunicationChannelManager(), platform.getBugTrackingSystemManager());
 			delta.create();
 			
-			for (List<IMetricProvider> branch : transientMpBranches) {
+			System.out.println("Number of metric branches: " + metricBranches.size());
+			for (List<IMetricProvider> branch : metricBranches) {
 				MetricListExecutor mExe = new MetricListExecutor(platform, project, delta, date);
 				mExe.setMetricList(branch);
 				
 				executorService.execute(mExe);				
 			}
-			// TODO: wait before proceeding.
 			
-			// TODO: don't filter by type - just branch.
 			// TODO: check a metric provider hasn't already been executed for the given date
 			try {
+				executorService.shutdown();
 				executorService.awaitTermination(24, TimeUnit.HOURS);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			
-			for (List<IMetricProvider> branch : historicMpBranches) {
-				MetricListExecutor mExe = new MetricListExecutor(platform, project, delta, date);
-				mExe.setMetricList(branch);
-				
-				executorService.execute(mExe);	
-			}
-			try {
-				executorService.awaitTermination(24, TimeUnit.HOURS);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			// TODO: wait before proceeding.
+			project.setLastExecuted(date.toString());
 		}
-		
-		executorService.shutdown();
-		try {
-			executorService.awaitTermination(30,TimeUnit.HOURS);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		};
 		
 		//TODO: Once terminated, update lastExecuted date. If a metric provider failed,
 		// it should be the last date it was successful
+		System.out.println("Finished projects");
 	}
 	
 	// FIXME: This should really only be done once - at the beginning, as all projects do the same.
