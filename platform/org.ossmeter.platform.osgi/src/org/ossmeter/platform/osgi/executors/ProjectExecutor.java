@@ -2,70 +2,251 @@ package org.ossmeter.platform.osgi.executors;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.ossmeter.platform.Date;
+import org.ossmeter.platform.IHistoricalMetricProvider;
+import org.ossmeter.platform.IMetricProvider;
+import org.ossmeter.platform.ITransientMetricProvider;
+import org.ossmeter.platform.Platform;
+import org.ossmeter.platform.delta.ProjectDelta;
+import org.ossmeter.repository.model.BugTrackingSystem;
+import org.ossmeter.repository.model.CommunicationChannel;
+import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.VcsRepository;
+
 public class ProjectExecutor implements Runnable {
 
-	protected Object project;
+	protected Project project;
 	protected int numberOfCores;
+	protected Platform platform;
 	
-	public ProjectExecutor() {
-		numberOfCores = Runtime.getRuntime().availableProcessors();
-	}
-	
-	public void setProject(Object project) {
+	public ProjectExecutor(Platform platform, Project project) {
+		this.numberOfCores = Runtime.getRuntime().availableProcessors();
+		
+		this.platform = platform;
 		this.project = project;
 	}
 	
 	@Override
 	public void run() {
-		System.out.println(project + " executing...");
+		if (project == null) {
+			System.err.println("No project scheduled. Exiting.");
+			return;
+		}
+		System.out.println(project.getName() + " executing...");
 		
-		List<Object> metrics1 = new ArrayList<Object>();
-		metrics1.add("Metric 1");
-		metrics1.add("Metric 2");
-		metrics1.add("Metric 3");
-		metrics1.add("Metric 4");
+		// Split the dependencies into branches
+		List<IMetricProvider> transMetrics = getOrderedTransientMetricProviders(platform.getMetricProviderManager().getMetricProviders());
+		List<IMetricProvider> histMetrics = getOrderedHistoricMetricProviders(platform.getMetricProviderManager().getMetricProviders());
 		
-		List<Object> metrics2 = new ArrayList<Object>();
-		metrics2.add("Metric 5");
-		metrics2.add("Metric 6");
-		
-		List<Object> metrics3 = new ArrayList<Object>();
-		metrics3.add("Metric 7");
-		
-		List<Object> metrics4 = new ArrayList<Object>();
-		metrics4.add("Metric 8");
-		
-		List<Object> metrics5 = new ArrayList<Object>();
-		metrics5.add("Metric 9");
-		
-		List<Object> metrics6 = new ArrayList<Object>();
-		metrics6.add("Metric 10");
-		metrics6.add("Metric 11");
-		
-		List<List<Object>> metricDependencyBranches = Arrays.asList(metrics1,metrics2,metrics3,metrics4,metrics5,metrics6);
-
+		List<List<IMetricProvider>> transientMpBranches = splitIntoBranches(transMetrics);
+		List<List<IMetricProvider>> historicMpBranches = splitIntoBranches(histMetrics);
+			
 		// TODO: An alternative would be to have a single thread pool for the node. I briefly tried this
 		// and it didn't work. Reverted to this implement (temporarily at least).
 		ExecutorService executorService = Executors.newFixedThreadPool(numberOfCores);
 		
-		for (List<Object> branch : metricDependencyBranches) {
-			MetricListExecutor mExe = new MetricListExecutor();
-			mExe.setMetricList(branch);
-			
-			executorService.execute(mExe);
+		//
+		Date lastExecuted = getLastExecutedDate();
+		
+		if (lastExecuted == null) {
+			// TODO: Logging/alert. Perhaps flag the project as being in an error state.
+			System.err.println("Date parse error. ");
+			return;
 		}
-
+		Date today = new Date();
+		
+		Date[] dates = Date.range(lastExecuted.addDays(1), today);
+		for (Date date : dates) {
+			System.out.println("Date: " + date + ", project: " + project.getName());
+			
+			ProjectDelta delta = new ProjectDelta(project, date, 
+					platform.getVcsManager(), platform.getCommunicationChannelManager(), platform.getBugTrackingSystemManager());
+			delta.create();
+			
+			for (List<IMetricProvider> branch : transientMpBranches) {
+				MetricListExecutor mExe = new MetricListExecutor(platform, project, delta, date);
+				mExe.setMetricList(branch);
+				
+				executorService.execute(mExe);				
+			}
+			// TODO: wait before proceeding.
+			
+			// TODO: don't filter by type - just branch.
+			// TODO: check a metric provider hasn't already been executed for the given date
+			try {
+				executorService.awaitTermination(24, TimeUnit.HOURS);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+			for (List<IMetricProvider> branch : historicMpBranches) {
+				MetricListExecutor mExe = new MetricListExecutor(platform, project, delta, date);
+				mExe.setMetricList(branch);
+				
+				executorService.execute(mExe);	
+			}
+			try {
+				executorService.awaitTermination(24, TimeUnit.HOURS);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			// TODO: wait before proceeding.
+		}
+		
 		executorService.shutdown();
 		try {
 			executorService.awaitTermination(30,TimeUnit.HOURS);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		};
+		
+		//TODO: Once terminated, update lastExecuted date. If a metric provider failed,
+		// it should be the last date it was successful
+	}
+	
+	// FIXME: This should really only be done once - at the beginning, as all projects do the same.
+	public  List<List<IMetricProvider>> splitIntoBranches(List<IMetricProvider> metrics) {
+		List<List<IMetricProvider>> branches = new ArrayList<List<IMetricProvider>>();
+		
+//		Collections.reverse(metrics);
+		for (IMetricProvider mp : metrics) {
+			List<IMetricProvider> mpBranch = null;
+				
+			for (List<IMetricProvider> branch : branches) {
+				if (branch.contains(mp)) {
+					mpBranch = branch;
+					break;
+				}
+			}
+			if (mpBranch == null) {
+				List<IMetricProvider> br = new ArrayList<IMetricProvider>();
+				br.add(mp);
+				mpBranch = br;
+				branches.add(mpBranch);
+			}
+				
+			if (mp.getIdentifiersOfUses() != null && mp.getIdentifiersOfUses().size() != 0) {
+				// Find self
+				for (String useId : mp.getIdentifiersOfUses()) {
+					for (IMetricProvider use : metrics) {
+						if (use.getIdentifier().equals(useId)) {
+							mpBranch.add(0, use);
+							break;
+						}
+					}
+				}
+			}
+		}
+		
+		return branches;
 	}
 
+	protected Date getLastExecutedDate() {
+		Date lastExec;
+		String lastExecuted = project.getLastExecuted();
+		
+		try {
+		
+		if(lastExecuted.equals("null") || lastExecuted.equals("")) {
+			lastExec = new Date("19700101");
+			
+			for (VcsRepository repo : project.getVcsRepositories()) {
+				// This needs to be the day BEFORE the first day! (Hence the addDays(-1)) 
+				Date d = platform.getVcsManager().getDateForRevision(repo, platform.getVcsManager().getFirstRevision(repo)).addDays(-1);
+				if (lastExec.compareTo(d) < 0) {
+					lastExec = d;
+				}
+			}
+			for (CommunicationChannel communicationChannel : project.getCommunicationChannels()) {
+				Date d = platform.getCommunicationChannelManager().getFirstDate(communicationChannel).addDays(-1);
+				if (lastExec.compareTo(d) < 0) {
+					lastExec = d;
+				}
+			}
+			for (BugTrackingSystem bugTrackingSystem : project.getBugTrackingSystems()) {
+				Date d = platform.getBugTrackingSystemManager().getFirstDate(bugTrackingSystem).addDays(-1);
+				if (lastExec.compareTo(d) < 0) {
+					lastExec = d;
+				}
+			}
+		} else {
+			lastExec = new Date(lastExecuted);
+		}
+		return lastExec;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	public List<IMetricProvider> getOrderedHistoricMetricProviders(List<IMetricProvider> providers) {
+		List<IMetricProvider> histMps = new ArrayList<IMetricProvider>();
+		
+		for (IMetricProvider mp : providers) {
+			if( mp instanceof IHistoricalMetricProvider) {
+				histMps.add(mp);
+			}
+		}
+		return sortMetricProviders(histMps); // FIXME: ack! Loss of type safety.
+	}
+
+	
+	/**
+	 * Orders transient metric providers to ensure that any dependencies are
+	 * executed first. 
+	 * @param providers
+	 * @return
+	 */
+	public List<IMetricProvider> getOrderedTransientMetricProviders(List<IMetricProvider> providers) {
+		List<IMetricProvider> transMps = new ArrayList<IMetricProvider>();
+		
+		for (IMetricProvider mp : providers) {
+			if( mp instanceof ITransientMetricProvider) {
+				transMps.add(mp);
+			}
+		}
+		return sortMetricProviders(transMps); // FIXME: ack! Loss of type safety.
+	}
+	
+	public List<IMetricProvider> sortMetricProviders(List<IMetricProvider> providers) {
+		List<IMetricProvider> sorted = new ArrayList<IMetricProvider>();
+		List<IMetricProvider> marked = new ArrayList<IMetricProvider>();
+		List<IMetricProvider> temporarilyMarked = new ArrayList<IMetricProvider>();
+		List<IMetricProvider> unmarked = new ArrayList<IMetricProvider>();
+		unmarked.addAll(providers);
+		
+		while (unmarked.size()>0) {
+			IMetricProvider mp = unmarked.get(0);
+			visitDependencies(marked, temporarilyMarked, unmarked, mp, providers, sorted);
+		}
+		return sorted;
+	}
+	
+	protected void visitDependencies(List<IMetricProvider> marked, List<IMetricProvider> temporarilyMarked, List<IMetricProvider> unmarked, IMetricProvider mp, List<IMetricProvider> providers, List<IMetricProvider> sorted) {
+		if (temporarilyMarked.contains(mp)) {
+			throw new RuntimeException("Temporarily marked error.");
+		}
+		if (!marked.contains(mp)) {
+			temporarilyMarked.add(mp);
+			List<String> dependencies = mp.getIdentifiersOfUses();
+			if (dependencies != null) 
+				for (String dependencyIdentifier : dependencies) {
+					for (IMetricProvider p : providers) {
+						if (p.getIdentifier().equals(dependencyIdentifier)){
+							visitDependencies(marked, temporarilyMarked, unmarked, p, providers, sorted);
+							break;
+						}
+					}
+				}
+			marked.add(mp);
+			temporarilyMarked.remove(mp);
+			unmarked.remove(mp);
+			sorted.add(mp);
+		}
+	}
 }

@@ -3,7 +3,11 @@ package org.ossmeter.platform.osgi.executors;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.osgi.old.IScheduler;
+import org.ossmeter.repository.model.Project;
+
+import com.mongodb.Mongo;
 
 public class SlaveScheduler implements IScheduler {
 
@@ -11,16 +15,24 @@ public class SlaveScheduler implements IScheduler {
 	protected Object master;
 	
 	protected SchedulerStatus status;
-	protected List<Object> queue;
+	protected List<String> queue;
 	
 	protected Thread worker;
+	final protected Mongo mongo;
+	protected Platform platform;
 	
-	public SlaveScheduler() {
+	
+	public SlaveScheduler(Mongo mongo) {
 		status = SchedulerStatus.AVAILABLE;
-		queue = new ArrayList<Object>();
+		queue = new ArrayList<String>();
+		this.mongo = mongo;
+		
+		// FIXME: This should be passed configuration information
+		// specifying local storage location etc.
+		this.platform = new Platform(mongo);
 	}
 	
-	public boolean queueProjects(List<Object> projects) {
+	public boolean queueProjects(List<String> projects) {
 		if (status.equals(SchedulerStatus.BUSY)) {
 			return false;
 		}
@@ -37,9 +49,15 @@ public class SlaveScheduler implements IScheduler {
 				@Override
 				public void run() {
 					// Focus on a single project at a time. Sequential.
-					for (Object project : queue) {
-						ProjectExecutor exe = new ProjectExecutor();
-						exe.setProject(project);
+					for (String projectName : queue) {
+						Project project = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByName(projectName);
+						
+						if (project == null) {
+							System.err.println("DB lookup for project named '" + projectName + "' failed. Skipping.");
+							continue;
+						}
+						
+						ProjectExecutor exe = new ProjectExecutor(platform, project);
 						exe.run();
 					}
 

@@ -15,10 +15,16 @@ import org.osgi.util.tracker.ServiceTrackerCustomizer;
 import org.ossmeter.platform.osgi.services.IWorkerService;
 import org.ossmeter.platform.osgi.services.WorkerService;
 
-public class WorkerServiceApplication implements IApplication, ServiceTrackerCustomizer<IWorkerService, IWorkerService> {
+import com.googlecode.pongo.runtime.PongoFactory;
+import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
+import com.mongodb.Mongo;
 
+public class WorkerServiceApplication implements IApplication, ServiceTrackerCustomizer<IWorkerService, IWorkerService> {
+	
 	protected boolean done = false;
 	protected Object appLock = new Object();
+	
+	protected Mongo mongo;
 	
 	protected ServiceTracker<IWorkerService, IWorkerService> workerServiceTracker;
 	protected ServiceRegistration<IWorkerService> workerRegistration;
@@ -26,6 +32,14 @@ public class WorkerServiceApplication implements IApplication, ServiceTrackerCus
 	@SuppressWarnings({ "unchecked", "rawtypes", "restriction" })// FIXME !!! (I just hate yellow squiggles...)
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
+		// TODO: Details need to come from a configuration file (perhaps specified in the run config
+
+		// Connect to Mongo - single instance per node -- should take connection details from config
+		mongo = new Mongo();
+		
+		// Ensure OSGi contributors are active
+		PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
+		
 		// Advertise as being a worker
 		Dictionary props = new Properties();
 		props.put(IDistributionConstants.SERVICE_EXPORTED_INTERFACES, IDistributionConstants.SERVICE_EXPORTED_INTERFACES_WILDCARD);
@@ -33,7 +47,9 @@ public class WorkerServiceApplication implements IApplication, ServiceTrackerCus
 		props.put(IDistributionConstants.SERVICE_EXPORTED_CONTAINER_FACTORY_ARGUMENTS, "ecftcp://localhost:3788/worker");
 		// FIXME: Understand the above: commenting out the props has no effect (at least locally - maybe a clue to network issue).
 		
-		workerRegistration = Activator.getContext().registerService(IWorkerService.class, new WorkerService(), props);		
+		// TODO: Pass the service any configuration details it needs
+		WorkerService worker = new WorkerService(mongo);
+		workerRegistration = Activator.getContext().registerService(IWorkerService.class, worker, props);		
 		
 		// Detect other workers
 		workerServiceTracker = new ServiceTracker<IWorkerService, IWorkerService>(Activator.getContext(), IWorkerService.class, this);	
@@ -49,6 +65,11 @@ public class WorkerServiceApplication implements IApplication, ServiceTrackerCus
 		synchronized (appLock) {
 			done = true;
 			appLock.notifyAll();
+			
+			// Clean up
+			mongo.close();
+			workerRegistration.unregister();
+			workerServiceTracker.close();
 		}	
 	}
 	
@@ -82,8 +103,8 @@ public class WorkerServiceApplication implements IApplication, ServiceTrackerCus
 		System.err.println("Worker registered!");
 		IWorkerService worker = Activator.getContext().getService(reference);
 		
-		List<Object> projects = new ArrayList<Object>(); 
-		projects.add("Project1");
+		List<String> projects = new ArrayList<String>(); 
+		projects.add("BIRT");
 		projects.add("Project2");
 		projects.add("Project3");
 		projects.add("Project4");

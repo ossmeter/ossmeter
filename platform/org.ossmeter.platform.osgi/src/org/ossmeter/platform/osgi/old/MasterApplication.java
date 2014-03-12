@@ -1,4 +1,4 @@
-package org.ossmeter.platform.osgi.old;
+package org.ossmeter.platform.osgi;
 
 import java.util.ArrayList;
 import java.util.Arrays;

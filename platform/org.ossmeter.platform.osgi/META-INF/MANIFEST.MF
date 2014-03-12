@@ -4,7 +4,11 @@ Bundle-Name: Osgi
 Bundle-SymbolicName: org.ossmeter.platform.osgi;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.platform.osgi.Activator
-Require-Bundle: org.eclipse.core.runtime
+Require-Bundle: org.eclipse.core.runtime,
+ com.googlecode.pongo.runtime,
+ com.googlecode.pongo.runtime.osgi,
+ org.ossmeter.platform,
+ org.ossmeter.repository.model
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Import-Package: org.eclipse.ecf.osgi.services.distribution

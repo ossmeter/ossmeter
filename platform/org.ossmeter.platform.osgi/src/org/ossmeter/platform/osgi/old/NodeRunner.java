@@ -15,7 +15,7 @@ public class NodeRunner {
 		if (isMaster()) {
 			scheduler = new MasterScheduler();
 		} else {
-			scheduler = new SlaveScheduler();
+//			scheduler = new SlaveScheduler();
 		}
 		
 		// FIXME: This above is probably not the way to go. This class needs

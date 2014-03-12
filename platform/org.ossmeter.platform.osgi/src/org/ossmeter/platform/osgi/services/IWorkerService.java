@@ -6,7 +6,7 @@ import org.ossmeter.platform.osgi.executors.SchedulerStatus;
 
 public interface IWorkerService {
 
-	public abstract boolean queueProjects(List<Object> projects);
+	public abstract boolean queueProjects(List<String> projects);
 
 	public abstract SchedulerStatus getStatus();
 
