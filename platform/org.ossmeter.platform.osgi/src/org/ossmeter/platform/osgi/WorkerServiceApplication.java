@@ -22,6 +22,7 @@ import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 import com.googlecode.pongo.runtime.PongoFactory;
 import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
 import com.mongodb.Mongo;
+import com.mongodb.ServerAddress;
 
 public class WorkerServiceApplication implements IApplication, ServiceTrackerCustomizer<IWorkerService, IWorkerService> {
 	
@@ -39,7 +40,11 @@ public class WorkerServiceApplication implements IApplication, ServiceTrackerCus
 		// TODO: Details need to come from a configuration file (perhaps specified in the run config
 
 		// Connect to Mongo - single instance per node -- should take connection details from config
-		mongo = new Mongo();
+		List<ServerAddress> addrs = new ArrayList<>();
+		addrs.add(new ServerAddress("144.32.156.177", 27017));
+		addrs.add(new ServerAddress("144.32.156.148", 27017));
+		addrs.add(new ServerAddress("144.32.156.184", 27017));
+		mongo = new Mongo(addrs);
 		
 		// Ensure OSGi contributors are active
 		PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
@@ -108,37 +113,12 @@ public class WorkerServiceApplication implements IApplication, ServiceTrackerCus
 		IWorkerService worker = Activator.getContext().getService(reference);
 		
 		List<String> projects = new ArrayList<String>(); 
-		
-//		//DEBUG
-//		Project epsilon = new Project();
-//		epsilon.setShortName("modeling.epsilon");
-//		epsilon.setName("epsilon");
-//		
-//		Bugzilla bug = new Bugzilla();
-//		bug.setUrl("https://bugs.eclipse.org/bugs/xmlrpc.cgi");
-//		bug.setProduct("Epsilon");
-//		bug.setComponent("Core");
-//		epsilon.getBugTrackingSystems().add(bug);
-//		
-//		NntpNewsGroup nntp = new NntpNewsGroup();
-//		nntp.setName("eclipse.epsilon");
-//		nntp.setUrl("news.eclipse.org/eclipse.epsilon");
-//		nntp.setAuthenticationRequired(true);
-//		nntp.setUsername("exquisitus");
-//		nntp.setPassword("flinder1f7");
-//		nntp.setPort(80);
-//		epsilon.getCommunicationChannels().add(nntp);
-//		
-//		Platform platform = new Platform(mongo);
-//		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(epsilon);
-//		platform.getProjectRepositoryManager().getProjectRepository().getProjects().sync();
-		
-		
-		projects.add("epsilon");
+		projects.add("modeling.epsilon");
 //		projects.add("Project2");
 //		projects.add("Project3");
 //		projects.add("Project4");
 //		projects.add("Project5");
+
 		
 		worker.queueProjects(projects);
 		

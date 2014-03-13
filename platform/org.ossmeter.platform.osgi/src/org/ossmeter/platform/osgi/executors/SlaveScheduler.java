@@ -50,7 +50,7 @@ public class SlaveScheduler implements IScheduler {
 				public void run() {
 					// Focus on a single project at a time. Sequential.
 					for (String projectName : queue) {
-						Project project = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByName(projectName);
+						Project project = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByShortName(projectName); //FIXME This should be just NAME
 						
 						if (project == null) {
 							System.err.println("DB lookup for project named '" + projectName + "' failed. Skipping.");

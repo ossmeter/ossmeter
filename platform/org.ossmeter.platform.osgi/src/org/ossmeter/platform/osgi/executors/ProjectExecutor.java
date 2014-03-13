@@ -81,6 +81,7 @@ public class ProjectExecutor implements Runnable {
 				e.printStackTrace();
 			}
 			project.setLastExecuted(date.toString());
+			platform.getProjectRepositoryManager().getProjectRepository().sync();
 		}
 		
 		//TODO: Once terminated, update lastExecuted date. If a metric provider failed,
