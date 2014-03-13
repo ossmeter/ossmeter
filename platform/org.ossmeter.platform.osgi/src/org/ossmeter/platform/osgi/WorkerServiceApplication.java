@@ -12,12 +12,8 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
-import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.osgi.services.IWorkerService;
 import org.ossmeter.platform.osgi.services.WorkerService;
-import org.ossmeter.repository.model.Project;
-import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
-import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 
 import com.googlecode.pongo.runtime.PongoFactory;
 import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
@@ -113,12 +109,16 @@ public class WorkerServiceApplication implements IApplication, ServiceTrackerCus
 		IWorkerService worker = Activator.getContext().getService(reference);
 		
 		List<String> projects = new ArrayList<String>(); 
-		projects.add("modeling.epsilon");
-//		projects.add("Project2");
-//		projects.add("Project3");
-//		projects.add("Project4");
-//		projects.add("Project5");
-
+//		projects.add("modeling.mmt.atl");
+//		projects.add("modeling.epsilon");
+//		projects.add("modeling.gmp.gmf-runtime");
+//		projects.add("modeling.tmf.xtext"); // git issue
+//		projects.add("modeling.viatra2");
+//		projects.add("modeling.gmt.amw");
+//		projects.add("modeling.mdt.papyrus");
+//		projects.add("modeling.mdt.modisco");
+		projects.add("modeling.gmp.graphiti");
+		
 		
 		worker.queueProjects(projects);
 		

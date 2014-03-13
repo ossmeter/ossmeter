@@ -251,24 +251,27 @@ public class ProjectExecutor implements Runnable {
 		try {
 		
 		if(lastExecuted.equals("null") || lastExecuted.equals("")) {
-			lastExec = new Date("19700101");
+			lastExec = new Date();
 			
 			for (VcsRepository repo : project.getVcsRepositories()) {
 				// This needs to be the day BEFORE the first day! (Hence the addDays(-1)) 
 				Date d = platform.getVcsManager().getDateForRevision(repo, platform.getVcsManager().getFirstRevision(repo)).addDays(-1);
-				if (lastExec.compareTo(d) < 0) {
+				if (d == null) continue;
+				if (lastExec.compareTo(d) > 0) {
 					lastExec = d;
 				}
 			}
 			for (CommunicationChannel communicationChannel : project.getCommunicationChannels()) {
 				Date d = platform.getCommunicationChannelManager().getFirstDate(communicationChannel).addDays(-1);
-				if (lastExec.compareTo(d) < 0) {
+				if (d == null) continue;
+				if (lastExec.compareTo(d) > 0) {
 					lastExec = d;
 				}
 			}
 			for (BugTrackingSystem bugTrackingSystem : project.getBugTrackingSystems()) {
 				Date d = platform.getBugTrackingSystemManager().getFirstDate(bugTrackingSystem).addDays(-1);
-				if (lastExec.compareTo(d) < 0) {
+				if (d == null) continue;
+				if (lastExec.compareTo(d) > 0) {
 					lastExec = d;
 				}
 			}
@@ -277,6 +280,7 @@ public class ProjectExecutor implements Runnable {
 		}
 		return lastExec;
 		} catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		}
 	}
