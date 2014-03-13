@@ -1,7 +1,10 @@
 package org.ossmeter.platform.osgi.executors;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -39,7 +42,7 @@ public class ProjectExecutor implements Runnable {
 		System.out.println(project.getName() + " executing...");
 
 		// Split metrics into branches
-		List<List<IMetricProvider>> metricBranches = splitIntoBranches(platform.getMetricProviderManager().getMetricProviders());
+		List<List<IMetricProvider>> metricBranches = splitIntoBranchesDFS2(platform.getMetricProviderManager().getMetricProviders());
 		
 		//
 		Date lastExecuted = getLastExecutedDate();
@@ -86,10 +89,13 @@ public class ProjectExecutor implements Runnable {
 	}
 	
 	// FIXME: This should really only be done once - at the beginning, as all projects do the same.
-	public  List<List<IMetricProvider>> splitIntoBranches(List<IMetricProvider> metrics) {
+	@Deprecated
+	private List<List<IMetricProvider>> splitIntoBranches(List<IMetricProvider> metrics) {
 		List<List<IMetricProvider>> branches = new ArrayList<List<IMetricProvider>>();
 		
-//		Collections.reverse(metrics);
+		// Start at the leaves
+		Collections.reverse(metrics);
+		
 		for (IMetricProvider mp : metrics) {
 			List<IMetricProvider> mpBranch = null;
 				
@@ -106,12 +112,27 @@ public class ProjectExecutor implements Runnable {
 				branches.add(mpBranch);
 			}
 				
+			//FIXME: This is incorrect. Rethink it.
 			if (mp.getIdentifiersOfUses() != null && mp.getIdentifiersOfUses().size() != 0) {
 				// Find self
 				for (String useId : mp.getIdentifiersOfUses()) {
 					for (IMetricProvider use : metrics) {
 						if (use.getIdentifier().equals(useId)) {
-							mpBranch.add(0, use);
+							// Check if it's already in a branch
+							boolean found = false;
+							for (List<IMetricProvider> branch : branches) {
+								if (branch.contains(use)) {
+									
+									branch.addAll(mpBranch);
+//									branches.remove(mpBranch);
+//									mpBranch.clear();
+									mpBranch = branch;
+									found = true;
+									break;
+								}
+							}
+							
+							if (!found) mpBranch.add(0, use);
 							break;
 						}
 					}
@@ -121,7 +142,107 @@ public class ProjectExecutor implements Runnable {
 		
 		return branches;
 	}
+	
+	public List<List<IMetricProvider>> splitIntoBranchesDFS2(List<IMetricProvider> metrics) {
+		List<Set<IMetricProvider>> branches = new ArrayList<Set<IMetricProvider>>();
+		
+		
+		for (IMetricProvider m : metrics) {
+			Set<IMetricProvider> mBranch = new HashSet<>();
+			
+			for (Set<IMetricProvider> branch : branches) {
+				if (branch.contains(m)) {
+					mBranch = branch;
+					break;
+				}
+			}
+			if (!mBranch.contains(m)) mBranch.add(m);
+			if (!branches.contains(mBranch)) branches.add(mBranch);
 
+			for (String id : m.getIdentifiersOfUses()) {
+				IMetricProvider use = lookupMetricProviderById(metrics, id);
+				if (use == null) continue;
+				boolean foundUse = false;
+				for (Set<IMetricProvider> branch : branches) {
+					if (branch.contains(use)) {
+						branch.addAll(mBranch);
+						branches.remove(mBranch);
+						mBranch = branch;
+						foundUse = true;
+						break;
+					}
+				}
+				if (!foundUse) {
+					mBranch.add(use);
+				}
+			}
+			if (!branches.contains(mBranch)) branches.add(mBranch);
+		}
+		
+		// TODO sort each branch
+		
+		List<List<IMetricProvider>> sortedBranches = new ArrayList<List<IMetricProvider>>();
+		for (Set<IMetricProvider> b : branches) {
+			sortedBranches.add(sortMetricProviders(new ArrayList<IMetricProvider>(b)));
+		}
+		
+		
+		return sortedBranches;
+	}
+	
+	@Deprecated
+	private List<List<IMetricProvider>> splitIntoBranchesDFS(List<IMetricProvider> metrics) {
+		List<List<IMetricProvider>> branches = new ArrayList<List<IMetricProvider>>();
+		
+		// Start at the leaves
+		Collections.reverse(metrics);
+		
+		for (IMetricProvider mp : metrics) {
+			boolean alreadyInBranch = false;
+			for (List<IMetricProvider> branch : branches) {
+				if (branch.contains(mp)) {
+					System.err.println("Found a metric already in a branch");
+					alreadyInBranch = true;
+					break;
+				}
+			}
+			if (alreadyInBranch) continue; // We've already analysed it.
+			
+			List<IMetricProvider> branch = new ArrayList<>();
+			branch.add(mp);
+			branches.add(branch);
+			dfsUses(branch, mp, metrics);
+		}
+		
+		// We now should have each dependency branch separated, but unordered.
+		
+		return branches;
+	}
+
+	@Deprecated
+	private void dfsUses(List<IMetricProvider> branch, IMetricProvider mp, List<IMetricProvider> allMetrics) {
+		if (mp.getIdentifiersOfUses() != null && mp.getIdentifiersOfUses().size() != 0) {
+			for (String useId : mp.getIdentifiersOfUses()) {
+				IMetricProvider use = lookupMetricProviderById(allMetrics, useId);
+				if (use == null) {
+					System.err.println("Metric provider lookup failed: " + useId);
+					continue;
+				}
+				branch.add(use);
+				dfsUses(branch, use, allMetrics);
+			}
+		}
+	}
+	
+	protected IMetricProvider lookupMetricProviderById(List<IMetricProvider> metrics, String id){
+		for (IMetricProvider mp : metrics) {
+			if (mp.getIdentifier().equals(id)) {
+				return mp;
+			}
+		}
+		return null;
+	}
+		
 	protected Date getLastExecutedDate() {
 		Date lastExec;
 		String lastExecuted = project.getLastExecuted();

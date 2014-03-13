@@ -12,8 +12,12 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
+import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.osgi.services.IWorkerService;
 import org.ossmeter.platform.osgi.services.WorkerService;
+import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
+import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 
 import com.googlecode.pongo.runtime.PongoFactory;
 import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
@@ -104,11 +108,37 @@ public class WorkerServiceApplication implements IApplication, ServiceTrackerCus
 		IWorkerService worker = Activator.getContext().getService(reference);
 		
 		List<String> projects = new ArrayList<String>(); 
-		projects.add("BIRT");
-		projects.add("Project2");
-		projects.add("Project3");
-		projects.add("Project4");
-		projects.add("Project5");
+		
+//		//DEBUG
+//		Project epsilon = new Project();
+//		epsilon.setShortName("modeling.epsilon");
+//		epsilon.setName("epsilon");
+//		
+//		Bugzilla bug = new Bugzilla();
+//		bug.setUrl("https://bugs.eclipse.org/bugs/xmlrpc.cgi");
+//		bug.setProduct("Epsilon");
+//		bug.setComponent("Core");
+//		epsilon.getBugTrackingSystems().add(bug);
+//		
+//		NntpNewsGroup nntp = new NntpNewsGroup();
+//		nntp.setName("eclipse.epsilon");
+//		nntp.setUrl("news.eclipse.org/eclipse.epsilon");
+//		nntp.setAuthenticationRequired(true);
+//		nntp.setUsername("exquisitus");
+//		nntp.setPassword("flinder1f7");
+//		nntp.setPort(80);
+//		epsilon.getCommunicationChannels().add(nntp);
+//		
+//		Platform platform = new Platform(mongo);
+//		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(epsilon);
+//		platform.getProjectRepositoryManager().getProjectRepository().getProjects().sync();
+		
+		
+		projects.add("epsilon");
+//		projects.add("Project2");
+//		projects.add("Project3");
+//		projects.add("Project4");
+//		projects.add("Project5");
 		
 		worker.queueProjects(projects);
 		

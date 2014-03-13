@@ -1,6 +1,7 @@
 package org.ossmeter.platform.osgi.executors;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.ossmeter.platform.Date;
@@ -41,23 +42,23 @@ public class MetricListExecutor implements Runnable {
 		for (IMetricProvider m : metrics) {
 			System.out.println("\t" + m.getIdentifier() + " executed");
 			
-//			m.setMetricProviderContext(new MetricProviderContext(platform, 
-//					new OssmeterLoggerFactory().makeNewLoggerInstance(m.getIdentifier())));
-//			addDependenciesToMetricProvider(m);
-//			
-//			
-//			try {
-//				if (m instanceof ITransientMetricProvider) {
-//					((ITransientMetricProvider) m).measure(project, delta, ((ITransientMetricProvider) m).adapt(platform.getMetricsRepository(project).getDb()));
-//					updateMetricProviderMetaData(project, m, date, MetricProviderType.TRANSIENT);
-//				} else if (m instanceof IHistoricalMetricProvider) {
-//					MetricHistoryManager historyManager = new MetricHistoryManager(platform);
-//					historyManager.store(project, date, (IHistoricalMetricProvider) m);
-//					updateMetricProviderMetaData(project, m, date, MetricProviderType.HISTORIC);
-//				}
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
+			m.setMetricProviderContext(new MetricProviderContext(platform, 
+					new OssmeterLoggerFactory().makeNewLoggerInstance(m.getIdentifier())));
+			addDependenciesToMetricProvider(m);
+			
+			
+			try {
+				if (m instanceof ITransientMetricProvider) {
+					((ITransientMetricProvider) m).measure(project, delta, ((ITransientMetricProvider) m).adapt(platform.getMetricsRepository(project).getDb()));
+					updateMetricProviderMetaData(project, m, date, MetricProviderType.TRANSIENT);
+				} else if (m instanceof IHistoricalMetricProvider) {
+					MetricHistoryManager historyManager = new MetricHistoryManager(platform);
+					historyManager.store(project, date, (IHistoricalMetricProvider) m);
+					updateMetricProviderMetaData(project, m, date, MetricProviderType.HISTORIC);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		System.out.println("Exiting");
 	}
@@ -112,11 +113,15 @@ public class MetricListExecutor implements Runnable {
 	 * @return A MetricProvider (part of the Project DB) that matches the given IMetricProvider.
 	 */
 	protected MetricProvider getProjectModelMetricProvider(Project project, IMetricProvider iProvider) {
-		for (MetricProvider mp : project.getMetricProviderData()) {
+		Iterator<MetricProvider> it = project.getMetricProviderData().iterator();
+		MetricProvider mp = null;
+		while (it.hasNext()) {
+			mp = it.next();
 			if (mp.getMetricProviderId().equals(iProvider.getShortIdentifier())) {
 				return mp;
 			}
 		}
+
 		return null;
 	}
 }
