@@ -86,7 +86,13 @@ public class EclipseProjectImporter {
 		else 
 			return true;		
 	}
-	
+	private boolean isNotNullObj(JSONObject currentProg, String attribute ) 
+	{
+		if (currentProg.get(attribute)!=null)
+			return true;
+		else 
+			return false;		
+	}
 	private static String readAll(Reader rd) throws IOException 
 	{
 		StringBuilder sb = new StringBuilder();
@@ -109,11 +115,16 @@ public class EclipseProjectImporter {
 	
 			JSONObject obj=(JSONObject)JSONValue.parse(jsonText);	
 			//JSONObject jsonProjects = (JSONObject)((JSONObject)obj.get(0));
-
 			Iterator iter = obj.entrySet().iterator();
-			while (iter.hasNext()) {
-				Map.Entry entry = (Map.Entry) iter.next();
-
+			Map.Entry jsonAr =  null;
+			if (iter.hasNext())
+				jsonAr = (Map.Entry) iter.next(); 
+			
+			Object o =jsonAr.getValue();
+			Iterator iter2 = ((JSONObject)jsonAr.getValue()).entrySet().iterator();
+			while (iter2.hasNext()) {
+				Map.Entry entry = (Map.Entry) iter2.next();
+				
 				System.out.println("---> Retrieving metadata of " + entry.getKey());
 				EclipseProject project = importProject((String) entry.getKey(), importedProjects);
 				platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
@@ -158,25 +169,7 @@ public class EclipseProjectImporter {
 				project.getPlatforms().add(eclipsePlatform);
 			}
 
-			/*
-			HashMap<String, List> persons = getPersons(xmlDoc);
-			it = persons.entrySet().iterator();
-		    while (it.hasNext()) {
-		        Map.Entry pairs = (Map.Entry)it.next();
-		        System.out.println(pairs.getKey() + " = " + pairs.getValue());	        
-		        Person p = new Person();
-				p.setName((String)pairs.getKey());     
-				Iterator it2 = ((List)pairs.getValue()).iterator();
-				while (it2.hasNext()) {
-					String roleName = (String) it2.next();
-					Role r = new Role();
-					r.setName(roleName);
-					p.getRoles().add(r);
-				}
-				project.getPersons().add(p);	
-		        it.remove(); 
-		    }
-		    */
+			
 			
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			e.printStackTrace();
@@ -193,8 +186,10 @@ public class EclipseProjectImporter {
 			JSONObject obj=(JSONObject)JSONValue.parse(jsonText);
 			JSONObject currentProg = (JSONObject)((JSONObject)obj.get("projects")).get(projectId);
 				
-			project.setName(projectId);
-			
+			project.setShortName(projectId);
+			if ((isNotNullObj(currentProg,"title")))
+				project.setName(currentProg.get("title").toString());
+		
 			if ((isNotNull(currentProg,"description")))
 				project.setDescription(((JSONObject)((JSONArray)currentProg.get("description")).get(0)).get("value").toString());
 		
@@ -213,6 +208,11 @@ public class EclipseProjectImporter {
 			if ((isNotNull(currentProg,"documentation_url")))
 				project.setDescriptionUrl(((JSONObject)((JSONArray)currentProg.get("documentation_url")).get(0)).get("url").toString());
 
+			
+			
+			if ((isNotNull(currentProg,"documentation_url")))
+				project.setDescriptionUrl(((JSONObject)((JSONArray)currentProg.get("documentation_url")).get(0)).get("url").toString());
+
 			project.setParagraphUrl(getParagraphUrl(projectId));
 			
 			if ((isNotNull(currentProg,"download_url")))
@@ -223,7 +223,7 @@ public class EclipseProjectImporter {
 	
 			if ((isNotNull(currentProg,"plan_url")))
 				project.setProjectplanUrl(((JSONObject)((JSONArray)currentProg.get("plan_url")).get(0)).get("url").toString());
-	
+
 			if ((isNotNull(currentProg,"wiki_url"))) {
 				Wiki wiki = new Wiki();
 				wiki.setUrl(((JSONObject)((JSONArray)currentProg.get("wiki_url")).get(0)).get("url").toString());
@@ -339,6 +339,24 @@ public class EclipseProjectImporter {
 				result.add(node.getFirstChild().getNodeValue());
 			}
 
+		} catch (XPathExpressionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
+	private String getCompelteName(Node xml) {
+		// Left region, first div -> Platforms
+		// //*[@id="block-summary-block-summary-block"]/div/div/div[1]/a
+		String result = "";
+		
+		String xPathPattern = "[@id=\"page-title\"]";
+		XPathFactory xFactory = XPathFactory.newInstance();
+		XPath xpath = xFactory.newXPath();
+		try {
+			XPathExpression expr = xpath.compile(xPathPattern);
+			Object evaluated = expr.evaluate(xml, XPathConstants.NODESET);
+			result = evaluated.toString();
 		} catch (XPathExpressionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
