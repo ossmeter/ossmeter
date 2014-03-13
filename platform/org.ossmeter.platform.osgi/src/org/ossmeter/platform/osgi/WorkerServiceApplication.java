@@ -109,15 +109,15 @@ public class WorkerServiceApplication implements IApplication, ServiceTrackerCus
 		IWorkerService worker = Activator.getContext().getService(reference);
 		
 		List<String> projects = new ArrayList<String>(); 
-//		projects.add("modeling.mmt.atl");
-//		projects.add("modeling.epsilon");
-//		projects.add("modeling.gmp.gmf-runtime");
+//		projects.add("modeling.mmt.atl");  // git issue - creates folder but doesn't pull any files????
+//		projects.add("modeling.epsilon"); // works
+//		projects.add("modeling.gmp.gmf-runtime"); // git issue
 //		projects.add("modeling.tmf.xtext"); // git issue
-//		projects.add("modeling.viatra2");
-//		projects.add("modeling.gmt.amw");
-//		projects.add("modeling.mdt.papyrus");
-//		projects.add("modeling.mdt.modisco");
-		projects.add("modeling.gmp.graphiti");
+//		projects.add("modeling.viatra2"); // works
+//		projects.add("modeling.gmt.amw"); //works
+//		projects.add("modeling.mdt.papyrus"); // git issue
+//		projects.add("modeling.mdt.modisco"); // works
+//		projects.add("modeling.gmp.graphiti"); // works
 		
 		
 		worker.queueProjects(projects);
