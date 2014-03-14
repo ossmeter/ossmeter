@@ -37,8 +37,8 @@ public class App implements IApplication {
 		platform.setMetricProviderManager(metricProviderManager);
 		platform.setPlatformVcsManager(platformVcsManager);
 	
-		//addEclipseProjects(platform);
-		addSourceForgeProjects(platform);
+		addEclipseProjects(platform);
+		//addSourceForgeProjects(platform);
 			
 		//addGitHubRepositories(platform);
 		
