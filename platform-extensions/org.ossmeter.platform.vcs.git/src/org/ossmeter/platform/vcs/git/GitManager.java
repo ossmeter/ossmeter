@@ -99,6 +99,7 @@ public class GitManager extends AbstractVcsManager {
 			    vcsCommit.setMessage(commit.getFullMessage());
 			    vcsCommit.setAuthor(commit.getAuthorIdent().getName());
 			    vcsCommit.setDelta(vcsDelta);
+			    vcsCommit.setJavaDate(new java.util.Date(commit.getCommitTime()));
 			    vcsDelta.getCommits().add(vcsCommit);
 			    
 			    if (prevCommit != null) {
@@ -233,9 +234,9 @@ public class GitManager extends AbstractVcsManager {
 		Integer oneIndex = revisions.indexOf(versionOne);
 		Integer twoIndex = revisions.indexOf(versionTwo);
 		
-		System.out.println(oneIndex);
-		System.out.println(twoIndex);
-		System.out.println(revisions);
+//		System.out.println(oneIndex);
+//		System.out.println(twoIndex);
+//		System.out.println(revisions);
 		
 		// Because the revision list is reversed, we compare two to one instead of the other way around
 		return twoIndex.compareTo(oneIndex);
@@ -259,14 +260,16 @@ public class GitManager extends AbstractVcsManager {
 		while(iterator.hasNext()) { 
 			RevCommit commit = iterator.next();
 			
-			System.out.println(Long.valueOf(commit.getCommitTime())*1000 + " == " + epoch); 
+//			System.out.println(Long.valueOf(commit.getCommitTime())*1000 + " == " + epoch); 
 			if (new Date(Long.valueOf(commit.getCommitTime())*1000).toString().equals(date.toString())) {
 				foundDate = true;
-				revisions.add(commit.getId().getName());
+				revisions.add(0, commit.getId().getName());
+				//FIXME: Added the zero index to in an attempt to bugfix
 			} else if (foundDate) {
 				break;
 			}
 		}
+		
 		
 		return revisions.toArray(new String[revisions.size()]);
 	}
