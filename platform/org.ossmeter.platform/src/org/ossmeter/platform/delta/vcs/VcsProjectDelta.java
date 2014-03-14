@@ -15,10 +15,12 @@ public class VcsProjectDelta {
 		for (VcsRepository repo : project.getVcsRepositories()) {
 			String[] revs = vcsManager.getRevisionsForDate(repo, date);
 			
-			if (revs == null) return;
-			if (revs.length != 2 || revs[0] == null || revs[1] == null) return;
+			if (revs == null || revs.length == 0) return;
 			
-			repoDeltas.add(vcsManager.getDelta(repo, revs[0], revs[1]));
+//			if (revs.length != 2 || revs[0] == null || revs[1] == null) return;
+			
+//			repoDeltas.add(vcsManager.getDelta(repo, revs[0], revs[1]));
+			repoDeltas.add(vcsManager.getDelta(repo, revs[0], revs[revs.length-1]));
 		}
 	}
 	
