@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Committers
+Bundle-SymbolicName: org.ossmeter.metricprovider.trans.committers;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: com.googlecode.pongo.runtime,
+ com.googlecode.pongo.runtime.dependencies,
+ org.ossmeter.platform,
+ org.ossmeter.repository.model
+Export-Package: org.ossmeter.metricprovider.trans.committers,
+ org.ossmeter.metricprovider.trans.committers.model
