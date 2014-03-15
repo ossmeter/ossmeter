@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<plugin>
+  <extension point="com.googlecode.pongo.runtime.osgi">
+    <class name="org.ossmeter.metricprovider.historic.numberofcommitters.model.Committers"/>
+  </extension>
+  <extension
+        point="org.ossmeter.platform.metricprovider">
+     <metricProvider
+           provider="org.ossmeter.metricprovider.historic.numberofcommitters.model.CommittersOverTime">
+     </metricProvider>
+  </extension>
+</plugin>
