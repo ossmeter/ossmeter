@@ -1,5 +1,9 @@
 package org.ossmeter.metricprovider.historic.numberofcommitters.model;
 
 class Committers {
-	attr int numberOfCommitters;
+	attr int totalNumberOfCommitters;
+	attr int numberOfCommittersLast1month;
+	attr int numberOfCommittersLast3months;
+	attr int numberOfCommittersLast6months;
+	attr int numberOfCommittersLast12months;
 }

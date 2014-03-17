@@ -1,9 +1,13 @@
 package org.ossmeter.metricprovider.historic.numberofcommitters.model;
 
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.ossmeter.metricprovider.trans.committers.CommittersMetricProvider;
+import org.ossmeter.metricprovider.trans.committers.model.Committer;
 import org.ossmeter.metricprovider.trans.committers.model.ProjectCommitters;
 import org.ossmeter.platform.IHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
@@ -64,8 +68,46 @@ public class CommittersOverTime implements IHistoricalMetricProvider {
 		ProjectCommitters pc = cmp.adapt(context.getProjectDB(project));
 		
 		Committers committers = new Committers();
-		committers.setNumberOfCommitters((int)pc.getCommitters().size());
+		committers.setTotalNumberOfCommitters((int)pc.getCommitters().size());
+		
+		Date today = context.getDate().toJavaDate();
+		Calendar c = Calendar.getInstance();
+		c.setTime(today);
+		c.add(Calendar.MONTH, -1);
+		long oneMonthAgo=c.getTimeInMillis();
+
+		c.setTime(today);
+		c.add(Calendar.MONTH, -3);
+		long threeMonthsAgo=c.getTimeInMillis();
+
+		c.setTime(today);
+		c.add(Calendar.MONTH, -6);
+		long sixMonthsAgo=c.getTimeInMillis();
+
+		c.setTime(today);
+		c.add(Calendar.MONTH, -12);
+		long twelveMonthsAgo=c.getTimeInMillis();
+		
+		int numberOfCommittersLast1month = getSizeOfIterable(pc.getCommitters().find(Committer.LASTCOMMITTIME.greaterThan(oneMonthAgo)));
+		int numberOfCommittersLast3month = getSizeOfIterable(pc.getCommitters().find(Committer.LASTCOMMITTIME.greaterThan(threeMonthsAgo)));
+		int numberOfCommittersLast6month = getSizeOfIterable(pc.getCommitters().find(Committer.LASTCOMMITTIME.greaterThan(sixMonthsAgo)));
+		int numberOfCommittersLast12month = getSizeOfIterable(pc.getCommitters().find(Committer.LASTCOMMITTIME.greaterThan(twelveMonthsAgo)));
+		
+		committers.setNumberOfCommittersLast1month(numberOfCommittersLast1month);
+		committers.setNumberOfCommittersLast3months(numberOfCommittersLast3month);
+		committers.setNumberOfCommittersLast6months(numberOfCommittersLast6month);
+		committers.setNumberOfCommittersLast12months(numberOfCommittersLast12month);
 		
 		return committers;
+	}
+	
+	protected int getSizeOfIterable(Iterable<?> iterable) {
+		Iterator<?> it = iterable.iterator();
+		int sum = 0;
+		while (it.hasNext()){
+			it.next();
+			sum++;
+		}
+		return sum;
 	}
 }
