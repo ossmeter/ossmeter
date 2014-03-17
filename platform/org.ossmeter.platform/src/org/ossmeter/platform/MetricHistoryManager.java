@@ -20,7 +20,9 @@ public class MetricHistoryManager {
 		DB db = platform.getMetricsRepository(project).getDb();
 		DBCollection collection = db.getCollection(provider.getIdentifier());
 
-		provider.setMetricProviderContext(new MetricProviderContext(platform, new OssmeterLoggerFactory().makeNewLoggerInstance(provider.getIdentifier())));
+		MetricProviderContext context = new MetricProviderContext(platform, new OssmeterLoggerFactory().makeNewLoggerInstance(provider.getIdentifier()));
+		context.setDate(date);
+		provider.setMetricProviderContext(context);
 		Pongo metric = provider.measure(project);
 		DBObject dbObject = metric.getDbObject();
 		

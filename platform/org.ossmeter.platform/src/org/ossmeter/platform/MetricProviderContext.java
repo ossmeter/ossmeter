@@ -11,6 +11,7 @@ import com.mongodb.DB;
 
 public class MetricProviderContext {
 	
+	protected Date date;
 	protected Platform platform;
 	protected Logger logger;
 	
@@ -37,6 +38,15 @@ public class MetricProviderContext {
 	
 	public DB getProjectDB(Project project) {
 		return platform.getMetricsRepository(project).getDb();
+	}
+	
+	
+	public void setDate(Date date) {
+		this.date = date;
+	}
+	
+	public Date getDate() {
+		return date;
 	}
 	
 	public Logger getLogger() {
