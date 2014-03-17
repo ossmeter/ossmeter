@@ -104,7 +104,7 @@ public class BugzillaManager implements IBugTrackingSystemManager<Bugzilla> {
 			while (!noBugsRetrieved) {
 				counter++;
 				searchQueries[3] = new SearchQuery( SearchLimiter.CREATION_TIME, javaDate );
-				System.err.println("GET UPDATED BUG COMMENTS: retrieving bugs for: " + date);
+				System.err.println("GET UPDATED BUG COMMENTS: retrieving bugs for: " + javaDate);
 				List<Bug> retrievedBugs = session.getBugs(searchQueries);
 				if (((retrievedBugs.size()==1) && (retrievedBugs.get(0).getID()==lastBugIdRetrieved))
 						||(retrievedBugs.size()==0)) {
