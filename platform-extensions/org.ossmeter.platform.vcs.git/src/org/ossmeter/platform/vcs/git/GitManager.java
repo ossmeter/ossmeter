@@ -99,7 +99,9 @@ public class GitManager extends AbstractVcsManager {
 			    vcsCommit.setMessage(commit.getFullMessage());
 			    vcsCommit.setAuthor(commit.getAuthorIdent().getName());
 			    vcsCommit.setDelta(vcsDelta);
-			    vcsCommit.setJavaDate(new java.util.Date(commit.getCommitTime()));
+			    int date = commit.getCommitTime();
+	    		long datelong = (long)date*(long)1000;
+				vcsCommit.setJavaDate(new java.util.Date(datelong));
 			    vcsDelta.getCommits().add(vcsCommit);
 			    
 			    if (prevCommit != null) {
