@@ -92,12 +92,12 @@ public class SimpleMetricProviderScheduler {
 					lastExec = d;
 				}
 			}
-			for (BugTrackingSystem bugTrackingSystem : project.getBugTrackingSystems()) {
-				Date d = platform.getBugTrackingSystemManager().getFirstDate(bugTrackingSystem).addDays(-1);
-				if (lastExec.compareTo(d) < 0) {
-					lastExec = d;
-				}
-			}
+//			for (BugTrackingSystem bugTrackingSystem : project.getBugTrackingSystems()) {
+//				Date d = platform.getBugTrackingSystemManager().getFirstDate(bugTrackingSystem).addDays(-1);
+//				if (lastExec.compareTo(d) < 0) {
+//					lastExec = d;
+//				}
+//			}
 			project.setLastExecuted(lastExec.toString());
 		}
 		
@@ -131,7 +131,7 @@ public class SimpleMetricProviderScheduler {
 					try {
 						provider.measure(project, delta, provider.adapt(platform.getMetricsRepository(project).getDb()));
 					} catch (Exception e) {
-						logger.error("Metric provider '" + provider + "' threw an exception for project '" + project + "' on date ''. Error message: \n" + e.getMessage());
+						logger.error("Metric provider '"+provider.getFriendlyName()+"' threw an exception for project '"+project.getName()+"' on date '"+date+"'. Error message: \n" + e.getMessage());
 					}
 					
 					updateMetricProviderMetaData(project, provider, date, MetricProviderType.TRANSIENT);
@@ -148,7 +148,7 @@ public class SimpleMetricProviderScheduler {
 					try {
 						historyManager.store(project, date, (IHistoricalMetricProvider) provider);
 					} catch (Exception e) {
-						logger.error("Metric provider '' threw an exception for project '' on date ''. Error message: \n" + e.getMessage());
+						logger.error("Metric provider '"+provider.getFriendlyName()+"' threw an exception for project '"+project.getName()+"' on date '"+date+"'. Error message: \n" + e.getMessage());
 					}
 					
 					updateMetricProviderMetaData(project, provider, date, MetricProviderType.HISTORIC);

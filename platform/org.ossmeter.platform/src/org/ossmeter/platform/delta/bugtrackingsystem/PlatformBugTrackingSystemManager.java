@@ -7,6 +7,7 @@ import org.ossmeter.platform.cache.bugtrackingsystem.BugTrackingSystemContentsCa
 import org.ossmeter.platform.cache.bugtrackingsystem.BugTrackingSystemDeltaCache;
 import org.ossmeter.platform.cache.bugtrackingsystem.IBugTrackingSystemContentsCache;
 import org.ossmeter.platform.cache.bugtrackingsystem.IBugTrackingSystemDeltaCache;
+import org.ossmeter.platform.delta.NoManagerFoundException;
 import org.ossmeter.repository.model.BugTrackingSystem;
 
 public abstract class PlatformBugTrackingSystemManager implements IBugTrackingSystemManager<BugTrackingSystem> {
@@ -19,16 +20,21 @@ public abstract class PlatformBugTrackingSystemManager implements IBugTrackingSy
 	
 	@Override
 	public boolean appliesTo(BugTrackingSystem bugTrackingSystem) {
-		return getBugTrackingSystemManager(bugTrackingSystem) != null;
+		try {
+			return getBugTrackingSystemManager(bugTrackingSystem) != null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
-	protected IBugTrackingSystemManager getBugTrackingSystemManager(BugTrackingSystem bugTrackingSystem) {
+	protected IBugTrackingSystemManager getBugTrackingSystemManager(BugTrackingSystem bugTrackingSystem) throws Exception {
 		for (IBugTrackingSystemManager bugTrackingSystemManager : getBugTrackingSystemManagers()) {
 			if (bugTrackingSystemManager.appliesTo(bugTrackingSystem)) {
 				return bugTrackingSystemManager;
 			}
 		}
-		throw new RuntimeException("No bug tracking system manager found for " + bugTrackingSystem);
+		throw new NoManagerFoundException("No bug tracking system manager found for " + bugTrackingSystem);
 	}
 	
 	@Override

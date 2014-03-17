@@ -3,14 +3,12 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Platform
 Bundle-SymbolicName: org.ossmeter.platform;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.ossmeter.platform.Activator
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
- org.eclipse.e4.core.di,
- com.googlecode.pongo.runtime,
+Require-Bundle: com.googlecode.pongo.runtime,
  org.mapdb,
  org.ossmeter.repository.model,
  org.apache.log4j.1.2.17;visibility:=reexport,
+ org.eclipse.osgi,
+ org.eclipse.core.runtime,
  org.ossmeter.repository.model.cc.nntp
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

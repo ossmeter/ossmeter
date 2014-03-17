@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ossmeter.platform.Date;
+import org.ossmeter.platform.delta.NoManagerFoundException;
 import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.Project;
 
@@ -16,7 +17,11 @@ public class BugTrackingSystemProjectDelta {
 	public BugTrackingSystemProjectDelta(Project project, Date date, 
 			IBugTrackingSystemManager bugTrackingSystemManager) throws Exception {
 		for (BugTrackingSystem bugTrackingSystem : project.getBugTrackingSystems()) {
-			bugTrackingSystemDeltas.add(bugTrackingSystemManager.getDelta(bugTrackingSystem, date));
+			try {
+				bugTrackingSystemDeltas.add(bugTrackingSystemManager.getDelta(bugTrackingSystem, date));
+			} catch (NoManagerFoundException e) {
+				System.err.println(e.getMessage());
+			}
 		}
 	}
 	

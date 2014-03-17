@@ -15,7 +15,16 @@ public class VcsProjectDelta {
 		for (VcsRepository repo : project.getVcsRepositories()) {
 			String[] revs = vcsManager.getRevisionsForDate(repo, date);
 			
-			if (revs == null || revs.length == 0) return;
+			if (revs == null || revs.length == 0) continue;
+			
+			boolean foundNull = false;
+			for (String r : revs) {
+				if (r == null) {
+					foundNull = true;
+					break;
+				}
+			}
+			if (foundNull) continue;
 			
 //			if (revs.length != 2 || revs[0] == null || revs[1] == null) return;
 			

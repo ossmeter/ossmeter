@@ -7,6 +7,7 @@ import org.ossmeter.platform.cache.vcs.IVcsContentsCache;
 import org.ossmeter.platform.cache.vcs.IVcsDeltaCache;
 import org.ossmeter.platform.cache.vcs.VcsContentsCache;
 import org.ossmeter.platform.cache.vcs.VcsDeltaCache;
+import org.ossmeter.platform.delta.NoManagerFoundException;
 import org.ossmeter.repository.model.VcsRepository;
 
 public abstract class PlatformVcsManager extends AbstractVcsManager {
@@ -59,21 +60,26 @@ public abstract class PlatformVcsManager extends AbstractVcsManager {
 		if (manager != null) {
 			return manager.getDateForRevision(repository, revision);
 		}
-		return null;
+		throw new NoManagerFoundException("Manager for repository: " + repository + " not found.");
 	}
 	
 	@Override
 	public boolean appliesTo(VcsRepository repository) {
-		return getVcsManager(repository) != null;
+		try {
+			return getVcsManager(repository) != null;
+		} catch (NoManagerFoundException e) {
+			e.printStackTrace(); //FIXME
+			return false;
+		}
 	}
 
-	protected IVcsManager getVcsManager(VcsRepository repository) {
+	protected IVcsManager getVcsManager(VcsRepository repository) throws NoManagerFoundException {
 		for (IVcsManager vcsManager : getVcsManagers()) {
 			if (vcsManager.appliesTo(repository)) {
 				return vcsManager;
 			}
 		}
-		throw new RuntimeException("No vcs manager found for repository " + repository);
+		throw new NoManagerFoundException("No vcs manager found for repository " + repository);
 	}
 	
 	@Override
