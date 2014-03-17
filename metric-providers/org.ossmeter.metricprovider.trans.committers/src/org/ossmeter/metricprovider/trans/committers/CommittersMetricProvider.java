@@ -68,6 +68,7 @@ public class CommittersMetricProvider implements ITransientMetricProvider<Projec
 		for (VcsRepositoryDelta vcsDelta : delta.getVcsDelta().getRepoDeltas()) {
 			for (VcsCommit commit : vcsDelta.getCommits()) {
 				String author = commit.getAuthor();
+				if (author == null || author.equals("null")) continue;
 				
 				Committer committer = db.getCommitters().findOneByName(author);
 				if (committer == null) {
