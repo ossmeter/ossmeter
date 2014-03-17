@@ -1,0 +1,49 @@
+package org.ossmeter.platform.bugtrackingsystem.bugzilla;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import org.ossmeter.platform.Date;
+import com.j2bugzilla.base.Attachment;
+
+public class AttachmentStore {
+
+	private Map<Integer, Attachment> attachments;
+	private Date latestAttachmentCheckDate;
+	
+	public AttachmentStore() {
+		super();
+		attachments = new HashMap<Integer, Attachment>();
+		latestAttachmentCheckDate = null;
+	}
+
+	public void addAttachment(Attachment attachment) {
+		if (!attachments.containsKey(attachment.getAttachmentID()))
+			attachments.put(attachment.getAttachmentID(), attachment);
+		java.util.Date date = new java.util.Date();
+		if ((latestAttachmentCheckDate==null)||(latestAttachmentCheckDate.compareTo(date)<0))
+			latestAttachmentCheckDate = new Date(date);
+//		System.out.println("latestAttachmentCheckDate: " + latestAttachmentCheckDate);
+	}
+
+//	public Attachment getAttachment(int attachmentId) {
+//		return attachments.get(attachmentId);
+//	}
+
+//	public Set<Integer> getAttachmentIds() {
+//		return attachments.keySet();
+//	}
+
+	public Collection<Attachment> getAttachments() {
+		return attachments.values();
+	}
+
+//	public Boolean containsAttachment(int attachmentId) {
+//		return attachments.containsKey(attachmentId);
+//	}
+
+	public Date getLatestAttachmentCheckDate() {
+		return latestAttachmentCheckDate;
+	}
+	
+}
