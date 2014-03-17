@@ -25,8 +25,11 @@ import com.j2bugzilla.base.BugzillaException;
 
 public class BugzillaManager implements IBugTrackingSystemManager<Bugzilla> {
 	
-	private final String BUG_QUERY_LIMIT = "20";
-	private final int COMMENT_QUERY__NO_BUGS_RETRIEVED_AT_ONCE = 10;
+	private final String BUG_QUERY_LIMIT_A = "5";
+	private final String BUG_QUERY_LIMIT_B = "250";
+	private final int COMMENT_QUERY__NO_BUGS_RETRIEVED_AT_ONCE = 250;
+	
+	private Storage storage = new Storage();
 
 	@Override
 	public boolean appliesTo(Bugzilla bugzilla) {
@@ -43,37 +46,97 @@ public class BugzillaManager implements IBugTrackingSystemManager<Bugzilla> {
 		delta.setBugTrackingSystem(bugzilla);
 		// Get bugs started on date
 		List<Bug> bugs = getBugs(bugzilla, delta, session, date);
+		// Get the comments of bugs that were started before date
+//		PROBLEM: NOW WE SEARCH ONLY THE COMMENTS 
+		getUpdatedBugsComments(bugzilla, delta, session, date);
 		// Get the comments of bugs that were started on date
 		getComments(bugzilla, delta, session, bugs, date);
-		// Get the comments of bugs that were started before date
-		getUpdatedBugsComments(bugzilla, delta, session, date);
-		getUpdatedBugsAttachments(bugzilla, delta, session);
+		getUpdatedBugsAttachments(bugzilla, delta, session, date);
 		return delta;
 	}
 
 	private void getUpdatedBugsComments(Bugzilla bugzilla, BugTrackingSystemDelta delta, 
 			 BugzillaSession session, Date date) throws Exception {
-		SearchQuery[] searchQueries;
-		if (!bugzilla.getComponent().equals("null")) {
-			searchQueries = new SearchQuery[3];
-			searchQueries[2] = new SearchQuery(SearchLimiter.COMPONENT, bugzilla.getComponent());
-		}
-		else
-			searchQueries = new SearchQuery[2];
-		searchQueries[0] = new SearchQuery(SearchLimiter.PRODUCT, bugzilla.getProduct());
-		searchQueries[1] = new SearchQuery( SearchLimiter.LAST_CHANGE_TIME, date.toJavaDate());
-		List<Bug> bugs = session.getBugs(searchQueries);
-	    if (bugs.size() > 0)
-	    	System.err.println("getComments:\t" + bugs.size() + " bugs retrieved");
-		int startOffset = 0, endOffset;
-		while (startOffset < bugs.size()) {
-			if (startOffset + COMMENT_QUERY__NO_BUGS_RETRIEVED_AT_ONCE <= bugs.size())
-				endOffset = startOffset + COMMENT_QUERY__NO_BUGS_RETRIEVED_AT_ONCE;
+		//=-=-=-=-=-=
+		if ((storage.getCommentStoreSize()>0)&(storage.getLatestCheckBugDate().compareTo(date)>0)) {
+			System.err.println("retrieving stored comments");
+			System.err.println("UBC:Date " + date + " is before " + storage.getLatestCheckBugDate());
+			for (int bugId: storage.getBugIds()) {
+				if (storage.containsComments(bugId)) {
+					for (Comment comment: storage.getComments(bugId)) {
+						if (date.compareTo(comment.getTimestamp())==0)  {
+							storeComment(bugzilla, comment, delta);
+							storeBug(bugzilla, storage.getBug(bugId), delta.getUpdatedBugs(), 
+									"delta.getUpdatedBugs()", session);
+						}
+					}
+				}
+			}
+		//=-=-=-=-=-=
+		} else {
+			SearchQuery[] searchQueries;
+			//-=-=-=-=-=-=-=-
+			// I HAVE TO CHECK IF THE BUG'S COMMENTS ARE PREVIOUSLY STORED
+			// DATES NEED TO BE CHECKED AS WELL.
+			//-=-=-=-=-=-=-=-
+			if (!bugzilla.getComponent().equals("null")) {
+				searchQueries = new SearchQuery[5];
+				searchQueries[4] = new SearchQuery(SearchLimiter.COMPONENT, bugzilla.getComponent());
+			}
 			else
-				endOffset = bugs.size();
-			List<Bug> bugsSlice = bugs.subList(startOffset, endOffset);
-			getComments(bugzilla, delta, session, bugsSlice, date);
-			startOffset += COMMENT_QUERY__NO_BUGS_RETRIEVED_AT_ONCE;
+				searchQueries = new SearchQuery[4];
+			searchQueries[0] = new SearchQuery(SearchLimiter.PRODUCT, bugzilla.getProduct());
+			//-=-=-=-=-=-=-=-
+//    		Date queryDate = date;
+//    		if (storage.getLatestCheckBugDate()!=null) {
+//    			queryDate = storage.getLatestCheckBugDate().addDays(-1); 
+//    			System.err.println("\tB query date was: " + date + " now changed to: " + queryDate);
+//    		}
+			searchQueries[1] = new SearchQuery(SearchLimiter.LIMIT, BUG_QUERY_LIMIT_B);
+			searchQueries[2] = new SearchQuery( SearchLimiter.LAST_CHANGE_TIME, date.toJavaDate());
+
+			System.err.println("retrieving comments for " + date);
+			List<Bug> bugs = new ArrayList<Bug>();
+			java.util.Date javaDate = date.toJavaDate();
+			int counter = 0;
+			boolean noBugsRetrieved = false;
+			int lastBugIdRetrieved = 0;
+			while (!noBugsRetrieved) {
+				counter++;
+				searchQueries[3] = new SearchQuery( SearchLimiter.CREATION_TIME, javaDate );
+				System.err.println("GET UPDATED BUG COMMENTS: retrieving bugs for: " + date);
+				List<Bug> retrievedBugs = session.getBugs(searchQueries);
+				if (((retrievedBugs.size()==1) && (retrievedBugs.get(0).getID()==lastBugIdRetrieved))
+						||(retrievedBugs.size()==0)) {
+//					System.err.println("\tNo bugs retrieved!");
+					noBugsRetrieved = true;
+				} else {
+					System.err.println(counter + ". getBugs:\t" + retrievedBugs.size() + " bugs retrieved");
+					bugs.addAll(retrievedBugs);
+//					System.err.print("\tprocessing bugs:");
+					for (Bug retrievedBug : retrievedBugs) {
+//						System.err.print(" " + retrievedBug.getID());
+						javaDate = session.getCreationTime(retrievedBug);
+						lastBugIdRetrieved = retrievedBug.getID();
+						storage.storeBug(retrievedBug, session.getCreationTime(retrievedBug));
+					}
+//					System.err.println("\n\tjavadate:" + javaDate);
+				}
+			}
+//			-=-=-=-=-=-=-=-	
+					
+//			if (bugs.size() > 0)
+			System.err.println("\tgetComments:\t" + bugs.size() + " bugs retrieved");
+			int startOffset = 0, endOffset;
+			while (startOffset < bugs.size()) {
+				if (startOffset + COMMENT_QUERY__NO_BUGS_RETRIEVED_AT_ONCE <= bugs.size())
+					endOffset = startOffset + COMMENT_QUERY__NO_BUGS_RETRIEVED_AT_ONCE;
+				else
+					endOffset = bugs.size();
+				List<Bug> bugsSlice = bugs.subList(startOffset, endOffset);
+				getComments(bugzilla, delta, session, bugsSlice, date);
+				startOffset += COMMENT_QUERY__NO_BUGS_RETRIEVED_AT_ONCE;
+			}
 		}
 	}
 	
@@ -82,42 +145,77 @@ public class BugzillaManager implements IBugTrackingSystemManager<Bugzilla> {
 	    if (bugs.size()>0) {
     		List<Integer> bugIds = new ArrayList<Integer>();
     		Map<Integer, Bug> bugIdBugMap = new HashMap<Integer, Bug>();
+//    		Date latestCommentCheckDate = null;
+    		int storedItems = 0;
 	    	for (Bug bug: bugs) {
-	    		bugIds.add(bug.getID());
-	    		bugIdBugMap.put(bug.getID(), bug);
+				//=-=-=-=-=-=
+				if ((storage.containsComments(bug.getID()))
+						&&(date.compareTo(storage.getCommentStore(bug.getID()).
+								getLatestCommentCheckDate())<0)) {
+//					System.err.println("\tCO: Date " + date + " is before " + 
+//							storage.getCommentStore(bug.getID()).getLatestCommentCheckDate());
+					for (Comment comment: storage.getComments(bug.getID())) {
+						if (date.compareTo(comment.getTimestamp())==0)  {
+							storedItems++;
+							storeComment(bugzilla, comment, delta);
+							storeBug(bugzilla, bug, delta.getUpdatedBugs(), 
+									"delta.getUpdatedBugs()", session);
+						}
+					}
+				//=-=-=-=-=-=
+				} else {
+//					if ((latestCommentCheckDate==null)||(latestCommentCheckDate.compareTo(date)<0))
+//						latestCommentCheckDate = 
+//							storage.getCommentStore(bug.getID()).getLatestCommentCheckDate();
+					bugIds.add(bug.getID());
+					bugIdBugMap.put(bug.getID(), bug);
+				}
 	    	}
-		    List<Comment> comments = session.getCommentsForBugIds(bugIds, date.toJavaDate());
-		    if (comments.size() > 0)
-		    	System.err.println("getBugs for comments:\t" + comments.size() + " comments retrieved");
-			int storedItems = 0;
-			for (Comment comment: comments) {
-				if (date.compareTo(comment.getTimestamp())==0)  {
+	    	if (bugIds.size() > 0) {
+	    		System.err.println("Retrieving comments for " + bugIds.size() + " bugIds.");
+				//-=-=-=-=-=-=-=-
+//	    		Date queryDate = date;
+//	    		if (latestCommentCheckDate!=null) {
+//	    			queryDate = latestCommentCheckDate.addDays(-1); 
+//	    			System.err.println("\tC query date was: " + date + " now changed to: " + queryDate);
+//	    		}
+				List<Comment> comments = session.getCommentsForBugIds(bugIds, date.toJavaDate());
+				//-=-=-=-=-=-=-=-
+	    		if (comments.size() > 0)
+	    			System.err.println("getBugs for comments:\t" + comments.size() + " comments retrieved");
+	    		for (Comment comment: comments) {
+	    			if (date.compareTo(comment.getTimestamp())==0)  {
 //					System.out.println(date.toString() + 
 //						"\t" + comment.getBugId() + 
 //						"\t" + comment.getId() + 
 //						"\t" + comment.getTimestamp().toString());
-					storeBug(bugzilla, bugIdBugMap.get(comment.getBugId()), 
-							delta.getUpdatedBugs(), "delta.getUpdatedBugs()", session);
-					storedItems++;
-					storeComment(bugzilla, comment, delta);
-				}
-			}
-			if (storedItems>0) {
-				System.err.println("getComments(): stored " + storedItems + " new comments");
-				System.err.println("getComments(): stored " + storedItems + " updated bugs");
-			}
+	    				storeBug(bugzilla, bugIdBugMap.get(comment.getBugId()), 
+	    						delta.getUpdatedBugs(), "delta.getUpdatedBugs()", session);
+	    				storedItems++;
+	    				storeComment(bugzilla, comment, delta);
+	    			}
+	    			//-=-=-=-=-=-=-=-
+	    			Bug bug = bugIdBugMap.get(comment.getBugId());
+	    			storage.storeComment(bug, session.getCreationTime(bug), comment);
+	    			//-=-=-=-=-=-=-=-
+	    		}
+	    	}
+//	    	if (storedItems>0) {
+//	    		System.err.println("getComments(): stored " + storedItems + " new comments");
+//	    		System.err.println("getComments(): stored " + storedItems + " updated bugs");
+//	    	}
 	    }
 	}
-	
-	private void getUpdatedBugsAttachments(Bugzilla bugzilla,
-			BugTrackingSystemDelta delta, BugzillaSession session) throws BugzillaException {
-		getUpdatedBugsAttachments(bugzilla, delta, delta.getNewBugs(), session);
-		getUpdatedBugsAttachments(bugzilla, delta, delta.getUpdatedBugs(), session);
+
+	private void getUpdatedBugsAttachments(Bugzilla bugzilla, BugTrackingSystemDelta delta, 
+			BugzillaSession session, Date date) throws BugzillaException {
+		getUpdatedBugsAttachments(bugzilla, delta, delta.getNewBugs(), session, date);
+		getUpdatedBugsAttachments(bugzilla, delta, delta.getUpdatedBugs(), session, date);
 	}
 	
 	
 	private void getUpdatedBugsAttachments(Bugzilla bugzilla, BugTrackingSystemDelta delta, 
-			List<BugTrackingSystemBug> bugs, BugzillaSession session) throws BugzillaException {
+			List<BugTrackingSystemBug> bugs, BugzillaSession session, Date date) throws BugzillaException {
 		if (bugs.size()>0) {
 			int startOffset = 0, endOffset,counter=1;
 			while (startOffset < bugs.size()) {
@@ -126,13 +224,31 @@ public class BugzillaManager implements IBugTrackingSystemManager<Bugzilla> {
 				else
 					endOffset = bugs.size();
 				List<Integer> bugIdSlice = new ArrayList<Integer>();
-				for (BugTrackingSystemBug bug: bugs.subList(startOffset, endOffset)) 
-					bugIdSlice.add(Integer.parseInt(bug.getBugId()));
-				List<Attachment> attachments = session.getAttachmentsforIdList(bugIdSlice);
-				for (Attachment attachment: attachments) 
-					storeAttachment(bugzilla, attachment, delta);
-			    if (attachments.size() > 0)
-			    	System.err.println(counter + ". getAttachments(): stored " + attachments.size() + " attachments");
+				for (BugTrackingSystemBug bug: bugs.subList(startOffset, endOffset)) {
+					//=-=-=-=-=-=
+					if ((storage.containsAttachments(bug.getBugId()))
+							&&(date.compareTo(storage.getAttachmentStore(bug.getBugId()).
+									getLatestAttachmentCheckDate())<0)) {
+//						System.err.println("UB: Date " + date + " is before " + 
+//								storage.getAttachmentStore(bug.getBugId()).getLatestAttachmentCheckDate());
+						for (Attachment attachment: storage.getAttachments(bug.getBugId()))
+							storeAttachment(bugzilla, attachment, delta);
+					//=-=-=-=-=-=
+					} else {
+						bugIdSlice.add(Integer.parseInt(bug.getBugId()));
+					}
+				}
+				if (bugIdSlice.size()>0) {
+					List<Attachment> attachments = session.getAttachmentsforIdList(bugIdSlice);
+					for (Attachment attachment: attachments) {
+						//=-=-=-=-=-=
+						storage.storeAttachment(attachment);
+						//=-=-=-=-=-=
+						storeAttachment(bugzilla, attachment, delta);
+					}
+					if (attachments.size() > 0)
+						System.err.println(counter + ". getAttachments(): stored " + attachments.size() + " attachments");
+				}
 				counter++;
 				startOffset += (5*COMMENT_QUERY__NO_BUGS_RETRIEVED_AT_ONCE);
 			}
@@ -147,7 +263,7 @@ public class BugzillaManager implements IBugTrackingSystemManager<Bugzilla> {
 		else
 			searchQueries = new SearchQuery[3];
 		searchQueries[0] = new SearchQuery(SearchLimiter.PRODUCT, bugzilla.getProduct());
-		searchQueries[1] = new SearchQuery(SearchLimiter.LIMIT, BUG_QUERY_LIMIT);
+		searchQueries[1] = new SearchQuery(SearchLimiter.LIMIT, BUG_QUERY_LIMIT_A);
 		if (!bugzilla.getComponent().equals("null"))
 			searchQueries[3] = new SearchQuery(SearchLimiter.COMPONENT, bugzilla.getComponent());
 		List<Bug> bugs = new ArrayList<Bug>();
@@ -155,31 +271,40 @@ public class BugzillaManager implements IBugTrackingSystemManager<Bugzilla> {
 		int counter = 0, 
 			storedBugs = 0;
 		boolean noBugsRetrieved = false;
+		System.err.println("GET BUGS: retrieving bugs for: " + date);
+		int lastBugIdRetrieved = 0;
 		while ((date.compareTo(javaDate)==0)&&(!noBugsRetrieved)) {
 			counter++;
 			searchQueries[2] = new SearchQuery( SearchLimiter.CREATION_TIME, javaDate );
 			List<Bug> retrievedBugs = session.getBugs(searchQueries);
-		    if (retrievedBugs.size() > 0)
-		    	System.err.println(counter + ". getBugs:\t" + retrievedBugs.size() + " bugs retrieved");
+//		    if (retrievedBugs.size() > 0)
+//		    	System.err.println(counter + ". getBugs:\t" + retrievedBugs.size() + " bugs retrieved");
+//		    System.err.print("\tprocessing bugs:");
 			for (Bug retrievedBug : retrievedBugs) {
+//				System.err.print(" " + retrievedBug.getID());
 				if (date.compareTo(session.getCreationTime(retrievedBug)) == 0) {
+					lastBugIdRetrieved = retrievedBug.getID();
 					storeBug(bugzilla, retrievedBug, delta.getNewBugs(), "delta.getNewBugs()", session);
 					bugs.add(retrievedBug);
 					storedBugs++;
 				}
 				javaDate = session.getCreationTime(retrievedBug);
+				storage.storeBug(retrievedBug, session.getCreationTime(retrievedBug));
 			}
-			if (retrievedBugs.size()==0)
+//			System.err.println("\n\tlast javadate:" + javaDate);
+			if (((retrievedBugs.size()==1) && (retrievedBugs.get(0).getID()==lastBugIdRetrieved))
+				|| (retrievedBugs.size()==0)) {
+//				System.err.println("\tNo bugs retrieved!");
 				noBugsRetrieved = true;
+			}
 		}
+//		System.err.println(storedBugs + " bugs to store");
 		if (storedBugs>0)
 			System.err.println("getBugs(): stored " + storedBugs + " new bugs");
 		return bugs;
 	}
 
-	private void storeComment(Bugzilla bugzilla, 
-								Comment comment,
-									BugTrackingSystemDelta delta) {
+	private void storeComment(Bugzilla bugzilla, Comment comment, BugTrackingSystemDelta delta) {
 		Boolean alreadyStored = false;
 		for (BugTrackingSystemComment storedComment: delta.getComments())
 			if (storedComment.equals(comment))
@@ -204,8 +329,7 @@ public class BugzillaManager implements IBugTrackingSystemManager<Bugzilla> {
 		}
 	}
 	
-	private void storeAttachment(Bugzilla bugzilla, Attachment attachment,
-				BugTrackingSystemDelta delta) {
+	private void storeAttachment(Bugzilla bugzilla, Attachment attachment, BugTrackingSystemDelta delta) {
 		Boolean alreadyStored = false;
 		for (BugTrackingSystemAttachment storedAttachment: delta.getAttachments())
 			if (storedAttachment.equals(attachment))
