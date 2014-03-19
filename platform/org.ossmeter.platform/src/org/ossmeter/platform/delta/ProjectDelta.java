@@ -7,6 +7,7 @@ import org.ossmeter.platform.delta.communicationchannel.ICommunicationChannelMan
 import org.ossmeter.platform.delta.communicationchannel.CommunicationChannelProjectDelta;
 import org.ossmeter.platform.delta.bugtrackingsystem.IBugTrackingSystemManager;
 import org.ossmeter.platform.delta.bugtrackingsystem.BugTrackingSystemProjectDelta;
+import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.repository.model.Project;
 
 public class ProjectDelta {
@@ -19,7 +20,8 @@ public class ProjectDelta {
 	protected VcsProjectDelta vcsDelta;
 	protected CommunicationChannelProjectDelta communicationChannelDelta;
 	protected BugTrackingSystemProjectDelta bugTrackingSystemDelta;
-//	protected TheOtherDelta
+
+	protected OssmeterLogger logger;
 	
 	public ProjectDelta(Project project, Date date, 
 			IVcsManager vcsManager, 
@@ -30,15 +32,22 @@ public class ProjectDelta {
 		this.vcsManager = vcsManager;
 		this.communicationChannelManager = communicationChannelManager;
 		this.bugTrackingSystemManager = bugTrackingSystemManager;
+		
+		this.logger = (OssmeterLogger)OssmeterLogger.getLogger("ProjectDelta ("+project.getName() + "," + date.toString() + ")");
+		this.logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 	}
 	
+	// TODO: Is it more important to execute SOME metrics or execute ALL metrics?
+	// I.e. if just one info source throws an exception, can we still execute metrics
+	// for the others? I think not. Next time we run the project we'll re-create
+	// some deltas unnecessarily.
 	public boolean create() {
 		try {
 			vcsDelta = new VcsProjectDelta(project, date, vcsManager);
 			communicationChannelDelta = new CommunicationChannelProjectDelta(project, date, communicationChannelManager);
 			bugTrackingSystemDelta = new BugTrackingSystemProjectDelta(project, date, bugTrackingSystemManager);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Delta creation failed.", e);
 			return false;
 		}
 		return true;
