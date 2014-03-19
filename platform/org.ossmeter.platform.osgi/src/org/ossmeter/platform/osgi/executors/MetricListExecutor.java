@@ -1,5 +1,6 @@
 package org.ossmeter.platform.osgi.executors;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.ossmeter.platform.MetricHistoryManager;
 import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.delta.ProjectDelta;
+import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.platform.logging.OssmeterLoggerFactory;
 import org.ossmeter.repository.model.MetricProvider;
 import org.ossmeter.repository.model.MetricProviderType;
@@ -24,12 +26,15 @@ public class MetricListExecutor implements Runnable {
 	protected List<IMetricProvider> metrics;
 	protected ProjectDelta delta;
 	protected Date date;
+	protected OssmeterLogger logger;
 	
 	public MetricListExecutor(Platform platform, Project project, ProjectDelta delta, Date date) {
 		this.project = project;
 		this.platform = platform;
 		this.delta = delta;
 		this.date = date;
+		this.logger = (OssmeterLogger) OssmeterLogger.getLogger("MetricListExecutor (" + project.getName() + ", " + date.toString() + ")");
+		this.logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 	}
 	
 	public void setMetricList(List<IMetricProvider> metrics) {
@@ -38,26 +43,55 @@ public class MetricListExecutor implements Runnable {
 	
 	@Override
 	public void run() {
-		
+
 		for (IMetricProvider m : metrics) {
-			System.out.println("\t" + m.getIdentifier() + " executed");
+			logger.info("\t" + m.getShortIdentifier() + " executing.");
 			
-			m.setMetricProviderContext(new MetricProviderContext(platform, 
-					new OssmeterLoggerFactory().makeNewLoggerInstance(m.getIdentifier())));
+			m.setMetricProviderContext(new MetricProviderContext(platform, new OssmeterLoggerFactory().makeNewLoggerInstance(m.getIdentifier())));
 			addDependenciesToMetricProvider(m);
 			
+			// We need to check that it hasn't already been excuted for this date
+			// e.g. in cases where a different MP 
+			MetricProviderType type = MetricProviderType.TRANSIENT;
+			if (m instanceof IHistoricalMetricProvider) type = MetricProviderType.HISTORIC;
 			
+			MetricProvider mpd = getProjectModelMetricProvider(project,m);
+			if (mpd == null) {
+				mpd = new MetricProvider();
+				project.getMetricProviderData().add(mpd);
+				mpd.setMetricProviderId(m.getShortIdentifier());
+				mpd.setType(type);
+			}
+			
+			try {
+				Date lastExec = new Date(mpd.getLastExecuted());
+				
+				// Check we haven't already executed the MP for this day.
+				if (date.compareTo(lastExec) > 1) {
+					logger.warn("Metric provider '" + m.getShortIdentifier() + "' has been executed for this date already. Ignoring.");
+					continue;
+				}
+			} catch (ParseException e1) {
+				// we can ignore this
+			}
+			
+			// Now execute
 			try {
 				if (m instanceof ITransientMetricProvider) {
 					((ITransientMetricProvider) m).measure(project, delta, ((ITransientMetricProvider) m).adapt(platform.getMetricsRepository(project).getDb()));
-					updateMetricProviderMetaData(project, m, date, MetricProviderType.TRANSIENT);
 				} else if (m instanceof IHistoricalMetricProvider) {
 					MetricHistoryManager historyManager = new MetricHistoryManager(platform);
 					historyManager.store(project, date, (IHistoricalMetricProvider) m);
-					updateMetricProviderMetaData(project, m, date, MetricProviderType.HISTORIC);
 				}
+				
+				// Update the meta data
+				mpd.setLastExecuted(date.toString()); 
+				platform.getProjectRepositoryManager().getProjectRepository().sync();
 			} catch (Exception e) {
-				e.printStackTrace();
+				logger.error("Exception thrown during metric provider execution ("+m.getShortIdentifier()+").", e);
+				project.setInErrorState(true);
+				platform.getProjectRepositoryManager().getProjectRepository().sync();
+				break;
 			}
 		}
 	}

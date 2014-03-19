@@ -1,7 +1,7 @@
 package org.ossmeter.platform.osgi.executors;
 
+import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -9,12 +9,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
 import org.ossmeter.platform.Date;
-import org.ossmeter.platform.IHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
-import org.ossmeter.platform.ITransientMetricProvider;
 import org.ossmeter.platform.Platform;
+import org.ossmeter.platform.delta.NoManagerFoundException;
 import org.ossmeter.platform.delta.ProjectDelta;
+import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.Project;
@@ -25,31 +26,37 @@ public class ProjectExecutor implements Runnable {
 	protected Project project;
 	protected int numberOfCores;
 	protected Platform platform;
+	protected OssmeterLogger logger;
 	
 	public ProjectExecutor(Platform platform, Project project) {
 		this.numberOfCores = Runtime.getRuntime().availableProcessors();
-		
 		this.platform = platform;
 		this.project = project;
+		this.logger = (OssmeterLogger)OssmeterLogger.getLogger("ProjectExecutor (" + project.getName() +")");
+		this.logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 	}
 	
 	@Override
 	public void run() {
 		if (project == null) {
-			System.err.println("No project scheduled. Exiting.");
+			logger.error("No project scheduled. Exiting.");
 			return;
 		}
-		System.out.println(project.getName() + " executing...");
-
-		// Split metrics into branches
-		List<List<IMetricProvider>> metricBranches = splitIntoBranchesDFS2(platform.getMetricProviderManager().getMetricProviders());
+		logger.info("Beginning execution.");
 		
-		//
+		// Clear any open flags
+		project.setInErrorState(true);
+		platform.getProjectRepositoryManager().getProjectRepository().sync();
+		
+		// Split metrics into branches
+		List<List<IMetricProvider>> metricBranches = splitIntoBranches(platform.getMetricProviderManager().getMetricProviders());
+		
+		// Find the date to start from 
 		Date lastExecuted = getLastExecutedDate();
 		
 		if (lastExecuted == null) {
-			// TODO: Logging/alert. Perhaps flag the project as being in an error state.
-			System.err.println("Date parse error. ");
+			// TODO: Perhaps flag the project as being in a fatal error state? This will potentially keep occurring.
+			logger.error("Parse error of project's lastExecuted date. Returned null.");
 			return;
 		}
 		Date today = new Date();
@@ -59,94 +66,68 @@ public class ProjectExecutor implements Runnable {
 			// TODO: An alternative would be to have a single thread pool for the node. I briefly tried this
 			// and it didn't work. Reverted to this implement (temporarily at least).
 			ExecutorService executorService = Executors.newFixedThreadPool(numberOfCores);
-			System.out.println("Date: " + date + ", project: " + project.getName());
+			logger.info("Date: " + date + ", project: " + project.getName());
 			
 			ProjectDelta delta = new ProjectDelta(project, date, 
 					platform.getVcsManager(), platform.getCommunicationChannelManager(), platform.getBugTrackingSystemManager());
-			delta.create();
+			boolean createdOk = delta.create();
+
+			if (createdOk) {
+			} else {
+				project.setInErrorState(true);
+				platform.getProjectRepositoryManager().getProjectRepository().sync();
+				
+				logger.error("Project delta creation failed. Aborting.");
+				return;
+			}
 			
-			System.out.println("Number of metric branches: " + metricBranches.size());
+			// DEBUG
+			for (List<IMetricProvider> bran : metricBranches) {
+				for (IMetricProvider m : bran) {
+					System.out.print(m.getIdentifier() + " -> ");
+				}
+				System.out.println();
+			}
+			
+			// END DEBUG
+			
+			
 			for (List<IMetricProvider> branch : metricBranches) {
 				MetricListExecutor mExe = new MetricListExecutor(platform, project, delta, date);
 				mExe.setMetricList(branch);
 				
-				executorService.execute(mExe);				
+				executorService.execute(mExe);
 			}
 			
-			// TODO: check a metric provider hasn't already been executed for the given date
 			try {
 				executorService.shutdown();
 				executorService.awaitTermination(24, TimeUnit.HOURS);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				logger.error("Exception thrown when shutting down executor service.", e);
 			}
-			project.setLastExecuted(date.toString());
-			platform.getProjectRepositoryManager().getProjectRepository().sync();
-		}
-		
-		//TODO: Once terminated, update lastExecuted date. If a metric provider failed,
-		// it should be the last date it was successful
-		System.out.println("Finished projects");
-	}
-	
-	// FIXME: This should really only be done once - at the beginning, as all projects do the same.
-	@Deprecated
-	private List<List<IMetricProvider>> splitIntoBranches(List<IMetricProvider> metrics) {
-		List<List<IMetricProvider>> branches = new ArrayList<List<IMetricProvider>>();
-		
-		// Start at the leaves
-		Collections.reverse(metrics);
-		
-		for (IMetricProvider mp : metrics) {
-			List<IMetricProvider> mpBranch = null;
-				
-			for (List<IMetricProvider> branch : branches) {
-				if (branch.contains(mp)) {
-					mpBranch = branch;
-					break;
-				}
-			}
-			if (mpBranch == null) {
-				List<IMetricProvider> br = new ArrayList<IMetricProvider>();
-				br.add(mp);
-				mpBranch = br;
-				branches.add(mpBranch);
-			}
-				
-			//FIXME: This is incorrect. Rethink it.
-			if (mp.getIdentifiersOfUses() != null && mp.getIdentifiersOfUses().size() != 0) {
-				// Find self
-				for (String useId : mp.getIdentifiersOfUses()) {
-					for (IMetricProvider use : metrics) {
-						if (use.getIdentifier().equals(useId)) {
-							// Check if it's already in a branch
-							boolean found = false;
-							for (List<IMetricProvider> branch : branches) {
-								if (branch.contains(use)) {
-									
-									branch.addAll(mpBranch);
-//									branches.remove(mpBranch);
-//									mpBranch.clear();
-									mpBranch = branch;
-									found = true;
-									break;
-								}
-							}
-							
-							if (!found) mpBranch.add(0, use);
-							break;
-						}
-					}
-				}
+			
+			if (project.getInErrorState()) {
+				// TODO: what should we do? Is the act of not-updating the lastExecuted flag enough?
+				// If it continues to loop, it simply tries tomorrow. We need to stop this happening.
+				logger.warn("Project in error state. Stopping execution.");
+				break;
+			} else {
+				project.setLastExecuted(date.toString());
+				platform.getProjectRepositoryManager().getProjectRepository().sync();
 			}
 		}
 		
-		return branches;
+		logger.info("Project execution complete. In error state: " + project.getInErrorState());
 	}
-	
-	public List<List<IMetricProvider>> splitIntoBranchesDFS2(List<IMetricProvider> metrics) {
+
+	/**
+	 * Algorithm to split a list of metric providers into dependency branches. Current implementation isn't
+	 * wonderful - it was built to work, not to perform - and needs relooking at in the future. 
+	 * @param metrics
+	 * @return
+	 */
+	public List<List<IMetricProvider>> splitIntoBranches(List<IMetricProvider> metrics) {
 		List<Set<IMetricProvider>> branches = new ArrayList<Set<IMetricProvider>>();
-		
 		
 		for (IMetricProvider m : metrics) {
 			Set<IMetricProvider> mBranch = new HashSet<>();
@@ -180,59 +161,12 @@ public class ProjectExecutor implements Runnable {
 			if (!branches.contains(mBranch)) branches.add(mBranch);
 		}
 		
-		// TODO sort each branch
-		
 		List<List<IMetricProvider>> sortedBranches = new ArrayList<List<IMetricProvider>>();
 		for (Set<IMetricProvider> b : branches) {
 			sortedBranches.add(sortMetricProviders(new ArrayList<IMetricProvider>(b)));
 		}
 		
-		
 		return sortedBranches;
-	}
-	
-	@Deprecated
-	private List<List<IMetricProvider>> splitIntoBranchesDFS(List<IMetricProvider> metrics) {
-		List<List<IMetricProvider>> branches = new ArrayList<List<IMetricProvider>>();
-		
-		// Start at the leaves
-		Collections.reverse(metrics);
-		
-		for (IMetricProvider mp : metrics) {
-			boolean alreadyInBranch = false;
-			for (List<IMetricProvider> branch : branches) {
-				if (branch.contains(mp)) {
-					System.err.println("Found a metric already in a branch");
-					alreadyInBranch = true;
-					break;
-				}
-			}
-			if (alreadyInBranch) continue; // We've already analysed it.
-			
-			List<IMetricProvider> branch = new ArrayList<>();
-			branch.add(mp);
-			branches.add(branch);
-			dfsUses(branch, mp, metrics);
-		}
-		
-		// We now should have each dependency branch separated, but unordered.
-		
-		return branches;
-	}
-
-	@Deprecated
-	private void dfsUses(List<IMetricProvider> branch, IMetricProvider mp, List<IMetricProvider> allMetrics) {
-		if (mp.getIdentifiersOfUses() != null && mp.getIdentifiersOfUses().size() != 0) {
-			for (String useId : mp.getIdentifiersOfUses()) {
-				IMetricProvider use = lookupMetricProviderById(allMetrics, useId);
-				if (use == null) {
-					System.err.println("Metric provider lookup failed: " + useId);
-					continue;
-				}
-				branch.add(use);
-				dfsUses(branch, use, allMetrics);
-			}
-		}
 	}
 	
 	protected IMetricProvider lookupMetricProviderById(List<IMetricProvider> metrics, String id){
@@ -248,70 +182,58 @@ public class ProjectExecutor implements Runnable {
 		Date lastExec;
 		String lastExecuted = project.getLastExecuted();
 		
-		try {
-		
 		if(lastExecuted.equals("null") || lastExecuted.equals("")) {
 			lastExec = new Date();
 			
 			for (VcsRepository repo : project.getVcsRepositories()) {
 				// This needs to be the day BEFORE the first day! (Hence the addDays(-1)) 
-				Date d = platform.getVcsManager().getDateForRevision(repo, platform.getVcsManager().getFirstRevision(repo)).addDays(-1);
-				if (d == null) continue;
-				if (lastExec.compareTo(d) > 0) {
-					lastExec = d;
+				try {
+					Date d = platform.getVcsManager().getDateForRevision(repo, platform.getVcsManager().getFirstRevision(repo)).addDays(-1);
+					if (d == null) continue;
+					if (lastExec.compareTo(d) > 0) {
+						lastExec = d;
+					} 
+				} catch (NoManagerFoundException e) {
+					System.err.println(e.getMessage());
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 			for (CommunicationChannel communicationChannel : project.getCommunicationChannels()) {
-				Date d = platform.getCommunicationChannelManager().getFirstDate(communicationChannel).addDays(-1);
-				if (d == null) continue;
-				if (lastExec.compareTo(d) > 0) {
-					lastExec = d;
+				try {
+					Date d = platform.getCommunicationChannelManager().getFirstDate(communicationChannel).addDays(-1);
+					if (d == null) continue;
+					if (lastExec.compareTo(d) > 0) {
+						lastExec = d;
+					}
+				} catch (NoManagerFoundException e) {
+					System.err.println(e.getMessage());
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 			for (BugTrackingSystem bugTrackingSystem : project.getBugTrackingSystems()) {
-				Date d = platform.getBugTrackingSystemManager().getFirstDate(bugTrackingSystem).addDays(-1);
-				if (d == null) continue;
-				if (lastExec.compareTo(d) > 0) {
-					lastExec = d;
+				try {
+					Date d = platform.getBugTrackingSystemManager().getFirstDate(bugTrackingSystem).addDays(-1);
+					if (d == null) continue;
+					if (lastExec.compareTo(d) > 0) {
+						lastExec = d;
+					}
+				} catch (NoManagerFoundException e) {
+					System.err.println(e.getMessage());					
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		} else {
-			lastExec = new Date(lastExecuted);
+			try {
+				lastExec = new Date(lastExecuted);
+			} catch (ParseException e) {
+				e.printStackTrace();
+				return null;
+			}
 		}
 		return lastExec;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
-	public List<IMetricProvider> getOrderedHistoricMetricProviders(List<IMetricProvider> providers) {
-		List<IMetricProvider> histMps = new ArrayList<IMetricProvider>();
-		
-		for (IMetricProvider mp : providers) {
-			if( mp instanceof IHistoricalMetricProvider) {
-				histMps.add(mp);
-			}
-		}
-		return sortMetricProviders(histMps); // FIXME: ack! Loss of type safety.
-	}
-
-	
-	/**
-	 * Orders transient metric providers to ensure that any dependencies are
-	 * executed first. 
-	 * @param providers
-	 * @return
-	 */
-	public List<IMetricProvider> getOrderedTransientMetricProviders(List<IMetricProvider> providers) {
-		List<IMetricProvider> transMps = new ArrayList<IMetricProvider>();
-		
-		for (IMetricProvider mp : providers) {
-			if( mp instanceof ITransientMetricProvider) {
-				transMps.add(mp);
-			}
-		}
-		return sortMetricProviders(transMps); // FIXME: ack! Loss of type safety.
 	}
 	
 	public List<IMetricProvider> sortMetricProviders(List<IMetricProvider> providers) {

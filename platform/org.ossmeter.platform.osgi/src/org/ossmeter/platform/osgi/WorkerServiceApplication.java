@@ -18,7 +18,6 @@ import org.ossmeter.platform.osgi.services.WorkerService;
 import com.googlecode.pongo.runtime.PongoFactory;
 import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
 import com.mongodb.Mongo;
-import com.mongodb.ServerAddress;
 
 public class WorkerServiceApplication implements IApplication, ServiceTrackerCustomizer<IWorkerService, IWorkerService> {
 	
@@ -36,11 +35,7 @@ public class WorkerServiceApplication implements IApplication, ServiceTrackerCus
 		// TODO: Details need to come from a configuration file (perhaps specified in the run config
 
 		// Connect to Mongo - single instance per node -- should take connection details from config
-		List<ServerAddress> addrs = new ArrayList<>();
-		addrs.add(new ServerAddress("144.32.156.177", 27017));
-		addrs.add(new ServerAddress("144.32.156.148", 27017));
-		addrs.add(new ServerAddress("144.32.156.184", 27017));
-		mongo = new Mongo(addrs);
+		mongo = new Mongo();
 		
 		// Ensure OSGi contributors are active
 		PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
@@ -109,16 +104,9 @@ public class WorkerServiceApplication implements IApplication, ServiceTrackerCus
 		IWorkerService worker = Activator.getContext().getService(reference);
 		
 		List<String> projects = new ArrayList<String>(); 
-//		projects.add("modeling.mmt.atl");  // git issue - creates folder but doesn't pull any files????
-//		projects.add("modeling.epsilon"); // works
-//		projects.add("modeling.gmp.gmf-runtime"); // git issue
-//		projects.add("modeling.tmf.xtext"); // git issue
-//		projects.add("modeling.viatra2"); // works
-//		projects.add("modeling.gmt.amw"); //works
-//		projects.add("modeling.mdt.papyrus"); // git issue
-//		projects.add("modeling.mdt.modisco"); // works
-//		projects.add("modeling.gmp.graphiti"); // works
 		
+		projects.add("modeling.tmf.xtext");
+		projects.add("modeling.tmf.xtext");
 		
 		worker.queueProjects(projects);
 		
