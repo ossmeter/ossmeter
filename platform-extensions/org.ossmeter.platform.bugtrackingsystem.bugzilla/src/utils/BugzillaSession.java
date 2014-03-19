@@ -11,9 +11,9 @@ import utils.BugSearch.SearchQuery;
 
 import com.j2bugzilla.base.Attachment;
 import com.j2bugzilla.base.Bug;
-import com.j2bugzilla.base.BugzillaConnector;
 import com.j2bugzilla.base.BugzillaException;
 import com.j2bugzilla.base.ConnectionException;
+
 import utils.GetAttachments;
 import com.j2bugzilla.rpc.GetBug;
 import com.j2bugzilla.rpc.LogIn;
