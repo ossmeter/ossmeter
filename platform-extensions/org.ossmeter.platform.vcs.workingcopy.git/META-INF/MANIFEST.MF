@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.ossmeter.platform.vcs.workingcopy.git
+Bundle-SymbolicName: org.ossmeter.platform.vcs.workingcopy.git;singleton:=true
+Bundle-Version: 0.0.1.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: org.ossmeter.platform.vcs.workingcopy.manager;bundle-version="0.0.1",
+ org.eclipse.jgit;bundle-version="3.0.3",
+ org.ossmeter.platform.vcs.git;bundle-version="0.0.1",
+ org.ossmeter.repository.model.vcs.git;bundle-version="1.0.0"
+Import-Package: org.ossmeter.repository.model
