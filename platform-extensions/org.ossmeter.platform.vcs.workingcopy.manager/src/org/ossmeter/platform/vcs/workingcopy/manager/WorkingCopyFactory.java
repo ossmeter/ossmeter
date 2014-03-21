@@ -33,7 +33,8 @@ public class WorkingCopyFactory {
            return c;
          }
       } catch (CoreException e) {
-        LOGGER.error("exception while searching for a working copy creator", e);
+        e.printStackTrace();
+//        LOGGER.error("exception while searching for a working copy creator", e);
       }
     }
     
@@ -43,11 +44,17 @@ public class WorkingCopyFactory {
   public List<File> checkout(Project project, String revision) throws WorkingCopyManagerUnavailable, WorkingCopyCheckoutException {
     File storage = new File(project.getStorage().getPath());
     File wc = new File(storage, WORKING_COPY_DIRECTORY);
+    
+    if (!wc.exists()) {
+      wc.mkdirs();
+    }
+    
     List<File> wcs = new LinkedList<>();
     
     for (VcsRepository repo : project.getVcsRepositories()) {
       WorkingCopyManager manager = getWorkingCopyCreator(repo);
-      File checkout = new File(wc, repo.getUrl());
+      // TODO: encode the url such that it is a safe directory name on all platforms
+      File checkout = new File(wc, repo.getUrl().replaceAll(File.separator, "_").replaceAll(":","_"));
       manager.checkout(checkout, repo, revision);
       wcs.add(checkout);
     }
