@@ -55,7 +55,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.ossmeter.platform.vcs.workingcopy.manager.WorkingCopyCreator"/>
+                  <meta.attribute kind="java" basedOn=":org.ossmeter.platform.vcs.workingcopy.manager.WorkingCopyManager"/>
                </appinfo>
             </annotation>
          </attribute>

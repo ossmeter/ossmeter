@@ -1,20 +1,20 @@
 package org.ossmeter.platform.vcs.workingcopy.manager;
 
-import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.VcsRepository;
 
 public class WorkingCopyCheckoutException extends Exception {
   private static final long serialVersionUID = 8393210027833758295L;
-  private final Project project;
+  private final VcsRepository repo;
   private final String revision;
 
-  public WorkingCopyCheckoutException(Project project, String revision) {
-    super("could not checkout revision of " + project.getName() + " for revision " + revision);
-    this.project = project;
+  public WorkingCopyCheckoutException(VcsRepository repo, String revision, Throwable cause) {
+    super("could not checkout revision of " + repo.getUrl() + " for revision " + revision, cause);
+    this.repo = repo;
     this.revision = revision;
   }
   
-  public Project getProject() {
-    return project;
+  public VcsRepository getRepository() {
+    return repo;
   }
   
   public String getRevision() {
