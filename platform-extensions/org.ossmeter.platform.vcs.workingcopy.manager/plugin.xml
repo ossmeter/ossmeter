@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?eclipse version="3.4"?><plugin>
+                            <extension-point id="org.ossmeter.vcs.workingcopymanager" name="org.ossmeter.vcs.workingcopymanager" schema="schema/org.ossmeter.vcs.workingcopymanager.exsd"/>
+   <extension point="org.ossmeter.platform.managers.metricprovider">
+      <metricProviderManager manager="org.ossmeter.metricprovider.rascal.RascalMetricProviderManager">
+      </metricProviderManager>
+   </extension>
+
+<extension point="com.googlecode.pongo.runtime.osgi">
+    <class name="org.ossmeter.metricprovider.rascal.trans.model.RascalMetrics"/>
+    <class name="org.ossmeter.metricprovider.rascal.trans.model.IntegerMeasurement"/>
+    <class name="org.ossmeter.metricprovider.rascal.trans.model.RealMeasurement"/>
+    <class name="org.ossmeter.metricprovider.rascal.trans.model.BooleanMeasurement"/>
+  </extension>
+</plugin>

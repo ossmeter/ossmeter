@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Rascal Metric Provider Definition
+Bundle-SymbolicName: org.ossmeter.platform.vcs.workingcopy.manager;singleton:=true
+Bundle-Version: 0.0.1.qualifier
+Bundle-Vendor: OSSMETER
+Require-Bundle: org.eclipse.core.runtime,
+ org.ossmeter.platform,
+ org.ossmeter.repository.model,
+ com.googlecode.pongo.runtime,
+ org.eclipse.osgi
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
