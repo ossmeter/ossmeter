@@ -52,7 +52,7 @@ public class SvnWorkingCopyManager implements WorkingCopyManager {
       throws WorkingCopyCheckoutException {
     try {
       // TODO: we'd rather use the SVNkit but that blocks indefinitely on loading classes (see above)
-      Process p = Runtime.getRuntime().exec(new String[] { "svn", "checkout", "--non-interactive", "--trust-server-cert","-r", revision, repository.getUrl(), workingDirectory.getAbsolutePath() });
+      Process p = Runtime.getRuntime().exec(new String[] { "svn", "checkout", "-r", revision, repository.getUrl(), workingDirectory.getAbsolutePath() });
       p.waitFor();
     } catch (IOException | InterruptedException e) {
       throw new WorkingCopyCheckoutException(repository, revision, e);
