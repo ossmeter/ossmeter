@@ -8,3 +8,4 @@ Require-Bundle: org.ossmeter.platform.vcs.workingcopy.manager;bundle-version="0.
  org.ossmeter.platform.vcs.svn;bundle-version="1.0.0",
  org.ossmeter.repository.model.vcs.svn;bundle-version="1.0.0",
  org.tmatesoft.svnkit;bundle-version="1.7.9"
+Export-Package: org.ossmeter.platform.vcs.workingcopy.svn
