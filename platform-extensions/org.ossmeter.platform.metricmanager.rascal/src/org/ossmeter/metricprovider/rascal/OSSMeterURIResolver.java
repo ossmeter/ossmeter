@@ -91,6 +91,10 @@ public class OSSMeterURIResolver implements IURIInputOutputResolver{
 		return new FileOutputStream(getFile(uri));
 	}
 
+	public void remove(URI uri) throws IOException {
+	  getFile(uri).delete();
+	}
+	
 	@Override
 	public void mkDirectory(URI uri) throws IOException {
 		getFile(uri).mkdir();
