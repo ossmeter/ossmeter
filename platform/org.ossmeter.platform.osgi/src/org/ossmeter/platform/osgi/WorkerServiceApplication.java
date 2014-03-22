@@ -12,6 +12,7 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
+import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.platform.osgi.services.IWorkerService;
 import org.ossmeter.platform.osgi.services.WorkerService;
 
@@ -21,6 +22,7 @@ import com.mongodb.Mongo;
 
 public class WorkerServiceApplication implements IApplication, ServiceTrackerCustomizer<IWorkerService, IWorkerService> {
 	
+	protected OssmeterLogger logger;
 	protected boolean done = false;
 	protected Object appLock = new Object();
 	
@@ -34,6 +36,10 @@ public class WorkerServiceApplication implements IApplication, ServiceTrackerCus
 	public Object start(IApplicationContext context) throws Exception {
 		// TODO: Details need to come from a configuration file (perhaps specified in the run config
 
+		logger = (OssmeterLogger)OssmeterLogger.getLogger("WorkerServiceApplication");
+		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
+		logger.info("Application initialising.");
+		
 		// Connect to Mongo - single instance per node -- should take connection details from config
 		mongo = new Mongo();
 		
@@ -105,7 +111,6 @@ public class WorkerServiceApplication implements IApplication, ServiceTrackerCus
 		
 		List<String> projects = new ArrayList<String>(); 
 		
-		projects.add("modeling.tmf.xtext");
 		projects.add("modeling.tmf.xtext");
 		
 		worker.queueProjects(projects);

@@ -45,7 +45,7 @@ public class ProjectExecutor implements Runnable {
 		logger.info("Beginning execution.");
 		
 		// Clear any open flags
-		project.setInErrorState(true);
+		project.setInErrorState(false);
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 		
 		// Split metrics into branches
