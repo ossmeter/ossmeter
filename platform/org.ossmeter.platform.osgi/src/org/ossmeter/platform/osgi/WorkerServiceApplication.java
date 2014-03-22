@@ -1,5 +1,6 @@
 package org.ossmeter.platform.osgi;
 
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.List;
@@ -19,12 +20,15 @@ import org.ossmeter.platform.osgi.services.WorkerService;
 import com.googlecode.pongo.runtime.PongoFactory;
 import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
 import com.mongodb.Mongo;
+import com.mongodb.ServerAddress;
 
 public class WorkerServiceApplication implements IApplication, ServiceTrackerCustomizer<IWorkerService, IWorkerService> {
 	
 	protected OssmeterLogger logger;
 	protected boolean done = false;
 	protected Object appLock = new Object();
+	protected Properties configuration;
+	protected List<ServerAddress> mongoHostAddresses;
 	
 	protected Mongo mongo;
 	
@@ -34,14 +38,16 @@ public class WorkerServiceApplication implements IApplication, ServiceTrackerCus
 	@SuppressWarnings({ "unchecked", "rawtypes", "restriction" })// FIXME !!! (I just hate yellow squiggles...)
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
-		// TODO: Details need to come from a configuration file (perhaps specified in the run config
+		// Setup platform
+		processArguments(context);
+		loadConfiguration();
 
 		logger = (OssmeterLogger)OssmeterLogger.getLogger("WorkerServiceApplication");
 		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 		logger.info("Application initialising.");
 		
-		// Connect to Mongo - single instance per node -- should take connection details from config
-		mongo = new Mongo();
+		// Connect to Mongo - single instance per node
+		mongo = new Mongo(mongoHostAddresses);
 		
 		// Ensure OSGi contributors are active
 		PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
@@ -64,6 +70,37 @@ public class WorkerServiceApplication implements IApplication, ServiceTrackerCus
 		// Now, rest.
 		waitForDone();
 		return IApplication.EXIT_OK;
+	}
+
+	protected void processArguments(IApplicationContext context) throws Exception {
+		String[] args = (String[])context.getArguments().get("application.args");
+		if (args == null) return;
+		
+		for (int i = 0; i < args.length; i++) {
+			if ("-ossmeterConfig".equals(args[i])) {
+				configuration = new Properties();
+				configuration.load(new FileReader(args[i+1]));
+				i++;
+			}
+		}
+	}
+
+	protected void loadConfiguration() throws Exception {
+		if (configuration == null) {
+			// TODO Create default configuration
+			configuration = new Properties();
+		}
+
+		// Mongo
+		String[] hosts = configuration.getProperty("mongohosts", "localhost:27017").split(",");
+		mongoHostAddresses = new ArrayList<>();
+		for (String host : hosts) {
+			mongoHostAddresses.add(new ServerAddress(host));
+		}
+		
+		// Storage
+		// TODO: Perhaps pass a configuration file as the constructor to the Platform?
+		
 	}
 
 	@Override
