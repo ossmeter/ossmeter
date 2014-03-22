@@ -34,7 +34,6 @@ public class ProjectDelta {
 		this.bugTrackingSystemManager = bugTrackingSystemManager;
 		
 		this.logger = (OssmeterLogger)OssmeterLogger.getLogger("ProjectDelta ("+project.getName() + "," + date.toString() + ")");
-		this.logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 	}
 	
 	// TODO: Is it more important to execute SOME metrics or execute ALL metrics?
