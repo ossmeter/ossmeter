@@ -8,12 +8,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import org.eclipse.imp.pdb.facts.IConstructor;
 import org.eclipse.imp.pdb.facts.IInteger;
 import org.eclipse.imp.pdb.facts.IMap;
 import org.eclipse.imp.pdb.facts.IString;
 import org.eclipse.imp.pdb.facts.IValue;
 import org.eclipse.imp.pdb.facts.type.Type;
-import org.ossmeter.metricprovider.rascal.RascalManager.ProjectRascalManager;
 import org.ossmeter.metricprovider.rascal.trans.model.IntegerMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.RascalMetrics;
 import org.ossmeter.platform.IMetricProvider;
@@ -25,13 +25,16 @@ import org.ossmeter.platform.delta.vcs.VcsCommit;
 import org.ossmeter.platform.delta.vcs.VcsCommitItem;
 import org.ossmeter.platform.delta.vcs.VcsProjectDelta;
 import org.ossmeter.platform.delta.vcs.VcsRepositoryDelta;
+import org.ossmeter.platform.vcs.workingcopy.manager.WorkingCopyCheckoutException;
+import org.ossmeter.platform.vcs.workingcopy.manager.WorkingCopyFactory;
+import org.ossmeter.platform.vcs.workingcopy.manager.WorkingCopyManagerUnavailable;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.VcsRepository;
 import org.rascalmpl.interpreter.result.ICallableValue;
 
 import com.mongodb.DB;
 
-public class RascalMetricProvider implements ITransientMetricProvider<org.ossmeter.metricprovider.rascal.trans.model.RascalMetrics> {
+public class RascalMetricProvider implements ITransientMetricProvider<RascalMetrics> {
 
   private final String description;
   private final String friendlyName;
@@ -95,60 +98,72 @@ public class RascalMetricProvider implements ITransientMetricProvider<org.ossmet
 
 	@Override
 	public RascalMetrics adapt(DB db) {
-		org.ossmeter.metricprovider.rascal.trans.model.RascalMetrics rm = new RascalMetrics(db, this.metricId);
+		RascalMetrics rm = new RascalMetrics(db, this.metricId);
 		return rm;
 	}
 
 	@Override
 	public void measure(Project project, ProjectDelta delta, RascalMetrics db) {
-		Map<String, Map<String, IValue>> revisions = getM3s(project, delta);
-
-		for (String rev: revisions.keySet()) {
-			Map<String, IValue> fileM3s = revisions.get(rev);
+		RascalManager _instance = RascalManager.getInstance();
+		RascalProjectDeltas rpd = new RascalProjectDeltas(_instance.getEvaluator());
+		IConstructor rascalDelta = rpd.convert(delta);
 		
-			for (String fileURL: fileM3s.keySet()) {
-				IValue m3 = fileM3s.get(fileURL);
+		List<VcsRepositoryDelta> repoDeltas = delta.getVcsDelta().getRepoDeltas();
+		List<VcsCommit> deltaCommits = repoDeltas.get(repoDeltas.size()).getCommits();
+		String lastRevision = deltaCommits.get(deltaCommits.size()).getRevision();
+		
+		
+		try {
+		  Map<String, File> workingCopyFolders = new HashMap<>();
+		  Map<String, File> scratchFolders = new HashMap<>();
+		  WorkingCopyFactory.getInstance().checkout(project, lastRevision, workingCopyFolders, scratchFolders);
+		  
+		  IMap rWorkingCopyFolders = _instance.makeMap(workingCopyFolders);
+		  IMap rScratchFolders = _instance.makeMap(scratchFolders);
+		  _instance.initialize(rascalDelta, rWorkingCopyFolders, rScratchFolders);
+			
+		  // TODO: generalize to any return type
+		  // TODO: handle exceptions gracefully
+		  // TODO: route warnings to the platform as well
+		  IMap result = (IMap) function.call( new Type[] { rascalDelta.getType(), rWorkingCopyFolders.getType(), rScratchFolders.getType() }, 
+												new IValue[] { rascalDelta, rWorkingCopyFolders, rScratchFolders }, null).getValue();
+		  
+		  for (Iterator<Entry<IValue, IValue>> it = result.entryIterator(); it.hasNext(); ) {
+			Entry<IValue, IValue> currentEntry = (Entry<IValue, IValue>) it.next();
+			// TODO: change to source locations
+			String key = ((IString) currentEntry.getKey()).getValue();
+			
+			if (!key.isEmpty()) {
+				IntegerMeasurement measurement = null;
+				// for cc need to delete all methods for this file
 				
-				// TODO: generalize to any return type
-				// TODO: handle exceptions gracefully
-				// TODO: route warnings to the platform as well
-        IMap result = (IMap) function.call(new Type[] { m3.getType() }, new IValue[] {m3}, null).getValue();
-        
-				for (Iterator<Entry<IValue, IValue>> it = result.entryIterator(); it.hasNext(); ) {
-					Entry<IValue, IValue> currentEntry = (Entry<IValue, IValue>)it.next();
-					
-					// TODO: change to source locations
-					String key = ((IString)currentEntry.getKey()).getValue();
-					
-					if (!key.isEmpty()) {
-						IntegerMeasurement noaData = null;
-						// for cc need to delete all methods for this file
-						
-						// TODO: dispatch on return type
-						noaData = new IntegerMeasurement();
-						noaData.setUri(key);
-						noaData.setValue(((IInteger)currentEntry.getValue()).longValue());
-						db.getMeasurements().add(noaData);
-					}
-				}
+				// TODO: dispatch on return type
+				measurement = new IntegerMeasurement();
+				measurement.setUri(key);
+				measurement.setValue(((IInteger) currentEntry.getValue()).longValue());
+				db.getMeasurements().add(measurement);
 			}
 			db.sync();
+		  }
+			
+		} catch (WorkingCopyManagerUnavailable | WorkingCopyCheckoutException e) {
+		  Rasctivator.logException("Working copy manager threw an error", e);
 		}
 	}
 	
-	private Map<String, Map<String, IValue>> getM3s(Project project, ProjectDelta delta) {
+	private Map<String, Map<String, IValue>> getM3s(Project project, ProjectDelta delta, IConstructor rdelta) {
 //  assert manager != null = throw new RuntimeException("manager isn't initializer");
   Map<String, Map<String, IValue>> m3sPerRevision = new TreeMap<>();
   Map<String, IValue> fileM3s = new HashMap<>();
   File localStorage = new File(project.getStorage().getPath());
   VcsProjectDelta vcsDelta = delta.getVcsDelta();
-  ProjectRascalManager manager = RascalManager.getInstance().getInstance(project.getName());
+//  ProjectRascalManager manager = RascalManager.getInstance().getInstance(project.getName());
 
   for (VcsRepositoryDelta vcsRepositoryDelta : vcsDelta.getRepoDeltas()) {
     VcsRepository vcsRepository = vcsRepositoryDelta.getRepository();
     List<VcsCommit> commits = vcsRepositoryDelta.getCommits();
     for (VcsCommit commit : commits) {
-      manager.checkOutRevision(delta.getDate(), commit.getRevision(), vcsRepository.getUrl(), localStorage.getAbsolutePath());
+//      manager.checkOutRevision(delta.getDate(), commit.getRevision(), vcsRepository.getUrl(), localStorage.getAbsolutePath());
       for (VcsCommitItem item : commit.getItems()) {
         if (item.getChangeType() == VcsChangeType.DELETED || item.getChangeType() == VcsChangeType.UNKNOWN) {
           // not handling deleted files or unknown
@@ -161,7 +176,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<org.ossmet
         String localFile = localStorage.getAbsolutePath() + "/checkout/" + path;
         String fileURL = repo + (repo.endsWith("/") ? "" : "/") + path;
         try {
-          fileM3 = manager.getModel(commit.getRevision(), fileURL, localFile);
+//          fileM3 = manager.getModel(commit.getRevision(), fileURL, localFile, rdelta);
         } catch (Exception e) {
           System.out.println(e.getMessage());
           System.err.println("Model could not be created for file " + localFile);

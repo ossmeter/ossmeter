@@ -3,26 +3,30 @@ package org.ossmeter.metricprovider.rascal;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.imp.pdb.facts.IBool;
+import org.eclipse.imp.pdb.facts.IConstructor;
+import org.eclipse.imp.pdb.facts.IList;
+import org.eclipse.imp.pdb.facts.IListWriter;
+import org.eclipse.imp.pdb.facts.IMap;
+import org.eclipse.imp.pdb.facts.IMapWriter;
 import org.eclipse.imp.pdb.facts.ISourceLocation;
 import org.eclipse.imp.pdb.facts.IValue;
 import org.eclipse.imp.pdb.facts.IValueFactory;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.wiring.BundleWire;
 import org.osgi.framework.wiring.BundleWiring;
-import org.ossmeter.platform.Date;
 import org.ossmeter.platform.IMetricProvider;
 import org.rascalmpl.interpreter.Evaluator;
 import org.rascalmpl.interpreter.NullRascalMonitor;
@@ -35,18 +39,17 @@ import org.rascalmpl.interpreter.result.ICallableValue;
 import org.rascalmpl.values.ValueFactoryFactory;
 
 public class RascalManager {
-	private final Evaluator eval = createEvaluator();
 	private final IValueFactory VF = ValueFactoryFactory.getValueFactory();
+	private final Evaluator eval = createEvaluator();
 	
 	private final Set<Bundle> metricBundles = new HashSet<>();
-	private final Map<String, ProjectRascalManager> managedProjects = new HashMap<>();
 	
 	// thread safe way of keeping a static instance
 	private static class InstanceKeeper {
 	  public static final RascalManager sInstance = new RascalManager();
 	}
 	
-	private final String module = "Manager";
+	public static final String MODULE = "org::ossmeter::metricprovider::Manager";
 	
 	/**
    * This code is taken from http://wiki.eclipse.org/BundleProxyClassLoader_recipe
@@ -89,58 +92,6 @@ public class RascalManager {
     }
   }
   
-	public class ProjectRascalManager {
-		public HashMap<String, HashMap<String, IValue>> fileModelsPerCommit = new HashMap<>();
-		private Date lastChecked;
-		
-		public void checkOutRevision(Date currentDate, String revision, String repositoryURL, String localPath) {
-			if (lastChecked != null) {
-				if (currentDate.compareTo(lastChecked) > 0) {
-					clearProjectData();
-				}
-			}
-			
-			if (!fileModelsPerCommit.containsKey(revision)) {
-				eval.call(new NullRascalMonitor(), module, "checkOutRepository", VF.string(repositoryURL), VF.string(revision), VF.sourceLocation(localPath));
-				fileModelsPerCommit.put(revision, new HashMap<String, IValue>());
-			}
-			lastChecked = currentDate;
-		}
-		
-		public ISourceLocation makeLocation(String fileURL) {
-			return VF.sourceLocation(fileURL);
-		}
-		
-		public IValue getModel(String revision, String fileURL, String localURL) {
-			HashMap<String, IValue> fileModels;
-			IValue result;
-			if (fileModelsPerCommit.containsKey(revision)) {
-				fileModels = fileModelsPerCommit.get(revision);
-				if (fileModels.containsKey(fileURL)) {
-					return fileModels.get(fileURL);
-				}
-			} else {
-				fileModels = new HashMap<>();
-			}
-			
-			result = eval.call(new NullRascalMonitor(), module, "createFileM3", VF.sourceLocation(localURL));
-			fileModels.put(fileURL, result);
-			fileModelsPerCommit.put(revision, fileModels);
-			return result;
-		}
-		
-		public boolean isValidModel(IValue fileM3) {
-			return ((IBool)eval.call(new NullRascalMonitor(), module, "isValid", fileM3)).getValue();
-		}
-		
-		public void clearManagerDataForProject() {
-			fileModelsPerCommit.clear();
-		}
-
-		public IValue callRascal(String module, String function, IValue... parameters) {
-			return eval.call(new NullRascalMonitor(), module, function, parameters);
-		}
-	}
 	
 	public void configureRascalMetricProviders(Set<Bundle> providers) {
 	  assert eval != null;
@@ -150,15 +101,28 @@ public class RascalManager {
 		}
 	}
 	
-	private Evaluator createEvaluator() {
-	  GlobalEnvironment heap = new GlobalEnvironment();
-	  ModuleEnvironment root = new ModuleEnvironment("******ossmeter******", heap);
+  private Evaluator createEvaluator() {
+	GlobalEnvironment heap = new GlobalEnvironment();
+	ModuleEnvironment moduleRoot = new ModuleEnvironment("******ossmeter******", heap);
 	  
-	  
-	  Evaluator eval = new Evaluator(VF, new PrintWriter(System.err), new PrintWriter(System.out), root, heap);
-	  eval.getResolverRegistry().registerInput(new BundleURIResolver(eval.getResolverRegistry()));
+	Evaluator eval = new Evaluator(VF, new PrintWriter(System.err), new PrintWriter(System.out), moduleRoot, heap);
+	eval.getResolverRegistry().registerInput(new BundleURIResolver(eval.getResolverRegistry()));
     eval.addRascalSearchPathContributor(StandardLibraryContributor.getInstance());
+    try {
+    	Bundle currentBundle = Rasctivator.getContext().getBundle();
+    	List<String> roots = new RascalBundleManifest().getSourceRoots(currentBundle);
+		
+    	for (String root : roots) {
+          eval.addRascalSearchPath(currentBundle.getResource(root).toURI());
+        }
+	} catch (URISyntaxException e) {
+		Rasctivator.logException("failed to add the current bundle path to rascal search path", e);
+	}
     return eval;
+  }
+  
+  public Evaluator getEvaluator() {
+	  return eval;
   }
 
   private void configureRascalMetricProvider(Evaluator evaluator, Bundle bundle) {
@@ -228,29 +192,9 @@ public class RascalManager {
 	public static RascalManager getInstance() {
 	  return InstanceKeeper.sInstance;
 	}
-	
-	public ProjectRascalManager getInstance(String project) {
-		RascalManager instance = getInstance();
 		
-    if (!instance.managedProjects.containsKey(project)) {
-			instance.managedProjects.put(project, instance.new ProjectRascalManager());
-		}
-		
-		return instance.managedProjects.get(project);
-	}
-	
-	public void clearManagerData() {
-		getInstance().managedProjects.clear();
-	}
-	
 	public void importModule(String module) {
 		eval.doImport(new NullRascalMonitor(), module);
-	}
-	
-	public void clearProjectData() {
-		for (ProjectRascalManager m : managedProjects.values()) {
-			m.clearManagerDataForProject();
-		}
 	}
 	
 	public static String makeRelative(String base, String extension) {
@@ -307,5 +251,19 @@ public class RascalManager {
     }
     
     return providers;
+  }
+  
+  public void initialize(IValue... parameters) {
+	eval.call(MODULE, parameters);
+  }
+
+  public IMap makeMap(Map<String, File> foldersMap) {
+	IMapWriter result = VF.mapWriter();
+	
+	for (Entry<String, File> entry : foldersMap.entrySet()) {
+		result.put(VF.sourceLocation(entry.getKey()), VF.sourceLocation(entry.getValue().getAbsolutePath()));
+	}
+	
+	return result.done();
   }
 }
