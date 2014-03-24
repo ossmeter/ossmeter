@@ -1,7 +1,6 @@
 package org.ossmeter.platform.vcs.workingcopy.manager;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -58,13 +57,14 @@ public class WorkingCopyFactory {
    * 
    * @param project   for which to check out all repositories
    * @param revision  the revision of the project
-   * @return a map where the keys are directories containing working copies and the
-   *         values are companion empty folders for storing extracted (model) data
-   *         about the working copies.
+   * @param workingCopyFolders a map where the keys are repository urls and the
+   *         values are working copy folders. Try to keep these folders clean.
+   * @param scratchFolders a map where the keys are repository urls and the values
+   *         are folder for storing additional (model) data 
    * @throws WorkingCopyManagerUnavailable if there is no registered means for creating a working copy for a certain VcsRepository.
    * @throws WorkingCopyCheckoutException  when a working copy manager generates an exception while producing the working copy.
    */
-  public Map<File,File> checkout(Project project, String revision) throws WorkingCopyManagerUnavailable, WorkingCopyCheckoutException {
+  public void checkout(Project project, String revision, Map<String,File> workingCopyFolders, Map<String,File> scratchFolders) throws WorkingCopyManagerUnavailable, WorkingCopyCheckoutException {
     File storage = new File(project.getStorage().getPath());
     File wc = new File(storage, WORKING_COPY_DIRECTORY);
     File md = new File(storage, MODEL_DIRECTORY);
@@ -73,23 +73,22 @@ public class WorkingCopyFactory {
       wc.mkdirs();
     }
     
-    Map<File,File> wcs = new HashMap<>();
-    
     for (VcsRepository repo : project.getVcsRepositories()) {
       WorkingCopyManager manager = getWorkingCopyCreator(repo);
       String sub = encode(repo.getUrl());
       File checkout = new File(wc, sub);
+      
       manager.checkout(checkout, repo, revision);
+      
+      workingCopyFolders.put(repo.getUrl(), checkout);
       
       File model = new File(md, sub);
       if (!model.exists()) {
         model.mkdirs();
       }
-      
-      wcs.put(checkout, model);
+      scratchFolders.put(repo.getUrl() , model);
     }
     
-    return wcs;
   }
 
   private String encode(String url) {
