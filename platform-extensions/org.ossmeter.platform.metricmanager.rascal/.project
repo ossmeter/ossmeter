@@ -25,4 +25,16 @@
 		<nature>org.eclipse.pde.PluginNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>pdb.values-src</name>
+			<type>2</type>
+			<location>/Users/shahi/Documents/CWI/l1_workspace/pdb.values/src</location>
+		</link>
+		<link>
+			<name>rascal-src</name>
+			<type>2</type>
+			<location>/Users/shahi/Documents/CWI/l1_workspace/rascal/src</location>
+		</link>
+	</linkedResources>
 </projectDescription>

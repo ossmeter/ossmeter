@@ -24,3 +24,7 @@ class RealMeasurement extends Measurement {
 class BooleanMeasurement extends Measurement {
     attr boolean value;
 }
+
+class StringMeasurement extends Measurement {
+    attr String value;
+}

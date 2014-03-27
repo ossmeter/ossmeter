@@ -9,20 +9,25 @@ import util::Math;
 
 import IO;
 import String;
+import ValueIO;
 import org::ossmeter::metricprovider::ProjectDelta;
 
 ProjectDelta previousDelta = ProjectDelta::\empty();
 
-int initialize(ProjectDelta currentDelta, list[loc] workingCopy, list[loc] m3Store) {
+int initialize(ProjectDelta currentDelta, map[str, loc] workingCopyFolders, map[str, loc] scratchFolders) {
   if (currentDelta == previousDelta) {
     return 1;
   }
   
   // we assume that workingcopymanager has already gotten the needed revision
   // could be optimized to exclude any unnecessary deletions
-  for (/VcsCommitItem vci <- currentDelta) {
-    //vcsCommitItem(str path, VcsChangeType changeType)
-    updateChangedItem(workingCopy+vci.path, m3Store+vci.path, vci.changeType);
+  for (/VcsRepositoryDelta vcrd <- currentDelta) {
+    str repo = vcrd.repository.url;
+    set[VcsCommitItem] filteredVCI = checkSanity([vci | /VcsCommitItem vci <- vcrd.commits]);
+    for (VcsCommitItem vci <- filteredVCI) {
+      loc scratchFile = scratchFolders[repo]+vci.path;
+      updateChangedItem(workingCopyFolders[repo]+vci.path, scratchFile[extension = scratchFile.extension+".m3"], vci.changeType);
+    }
   }
   
   previousDelta = currentDelta;
@@ -30,17 +35,17 @@ int initialize(ProjectDelta currentDelta, list[loc] workingCopy, list[loc] m3Sto
 }
 
 // All these functions work under the assumption that both working copy file and m3 store file are present
-void updateChangedItem(loc workingCopyFile, loc m3StoreFile, \deleted()) 
-  = delete(m3StoreFile);
+//void updateChangedItem(loc workingCopyFile, loc m3StoreFile, \deleted()) 
+//  = delete(m3StoreFile);
 void updateChangedItem(loc workingCopyFile, loc m3StoreFile, \added()) 
-  = writeBinaryValueFile(m3StoreFile, createM3FromFile(workingCopyFile));
+  = writeBinaryValueFile(m3StoreFile, createFileM3(workingCopyFile));
 void updateChangedItem(loc workingCopyFile, loc m3StoreFile, \updated()) 
-  = writeBinaryValueFile(m3StoreFile, createM3FromFile(workingCopyFile));
-// delete and write?
+  = writeBinaryValueFile(m3StoreFile, createFileM3(workingCopyFile));
 void updateChangedItem(loc workingCopyFile, loc m3StoreFile, \replaced()) 
-  = writeBinaryValueFile(m3StoreFile, createM3FromFile(workingCopyFile));
-default void updateChangedItem(loc workingCopyFile, loc m3StoreFile, VcsChangeType changeType) { 
-  throw "changeType for <workingCopyFile> is either \"unknown\" or not defined"; 
+  = writeBinaryValueFile(m3StoreFile, createFileM3(workingCopyFile));
+default void updateChangedItem(loc workingCopyFile, loc m3StoreFile, VcsChangeType changeType) {
+  //TODO: do nothing for now, should throw an error later 
+  //throw "changeType for <workingCopyFile> is either \"unknown\" or not defined"; 
 }
 
 data M3 = unknownFileType(int lines)
@@ -55,6 +60,9 @@ str checkOutRepository(str repositoryURL, int revision, loc localStorage) {
 }
 
 M3 createFileM3(loc file) {
+  if (!exists(file)) {
+    return unknownFileType(-1);
+  }
   if (file.extension == "java") {
     M3 fileM3 = createM3FromFile(file);
     loc compilationUnitSrc = getCompilationUnit(fileM3);

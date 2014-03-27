@@ -45,7 +45,7 @@ public class BundleURIResolver implements IURIOutputStreamResolver,
 	}
 
 	public void remove(URI uri) throws IOException {
-	  registry.remove(resolve(uri));
+//	  registry.remove(resolve(uri));
 	}
 	
   public void mkDirectory(URI uri) throws IOException {

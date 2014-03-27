@@ -6,10 +6,13 @@
       </metricProviderManager>
    </extension>
 
+
+
 <extension point="com.googlecode.pongo.runtime.osgi">
     <class name="org.ossmeter.metricprovider.rascal.trans.model.RascalMetrics"/>
     <class name="org.ossmeter.metricprovider.rascal.trans.model.IntegerMeasurement"/>
     <class name="org.ossmeter.metricprovider.rascal.trans.model.RealMeasurement"/>
     <class name="org.ossmeter.metricprovider.rascal.trans.model.BooleanMeasurement"/>
+    <class name="org.ossmeter.metricprovider.rascal.trans.model.StringMeasurement"/>
   </extension>
 </plugin>

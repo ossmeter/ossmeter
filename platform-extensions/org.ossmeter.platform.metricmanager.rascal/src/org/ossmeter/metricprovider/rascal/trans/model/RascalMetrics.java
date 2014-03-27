@@ -6,9 +6,8 @@ import com.mongodb.*;
 // protected region custom-imports end
 
 public class RascalMetrics extends PongoDB {
-	
 	private final String collectionName;
-
+	
 	public RascalMetrics(DB db, String collectionName) {
 		this.collectionName = collectionName;
 		setDb(db);

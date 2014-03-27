@@ -254,14 +254,15 @@ public class RascalManager {
   }
   
   public void initialize(IValue... parameters) {
-	eval.call(MODULE, parameters);
+//	eval.call("initialize", parameters);
+	eval.call("initialize", MODULE, null, parameters);
   }
 
   public IMap makeMap(Map<String, File> foldersMap) {
 	IMapWriter result = VF.mapWriter();
 	
 	for (Entry<String, File> entry : foldersMap.entrySet()) {
-		result.put(VF.sourceLocation(entry.getKey()), VF.sourceLocation(entry.getValue().getAbsolutePath()));
+		result.put(VF.string(entry.getKey()), VF.sourceLocation(entry.getValue().getAbsolutePath()));
 	}
 	
 	return result.done();

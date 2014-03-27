@@ -15,7 +15,9 @@ import org.eclipse.imp.pdb.facts.IString;
 import org.eclipse.imp.pdb.facts.IValue;
 import org.eclipse.imp.pdb.facts.type.Type;
 import org.ossmeter.metricprovider.rascal.trans.model.IntegerMeasurement;
+import org.ossmeter.metricprovider.rascal.trans.model.Measurement;
 import org.ossmeter.metricprovider.rascal.trans.model.RascalMetrics;
+import org.ossmeter.metricprovider.rascal.trans.model.StringMeasurement;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.ITransientMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
@@ -42,6 +44,10 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
   private final String metricId;
   private final ICallableValue function;
   private MetricProviderContext context;
+  private static String lastRevision = "0";
+  private static Map<String, File> workingCopyFolders = new HashMap<>();
+  private static Map<String, File> scratchFolders = new HashMap<>();
+  private static IConstructor rascalDelta;
 
   public RascalMetricProvider(String metricId, String shortMetricId, String friendlyName, String description, ICallableValue function) {
     this.metricId = metricId;
@@ -105,18 +111,37 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 	@Override
 	public void measure(Project project, ProjectDelta delta, RascalMetrics db) {
 		RascalManager _instance = RascalManager.getInstance();
-		RascalProjectDeltas rpd = new RascalProjectDeltas(_instance.getEvaluator());
-		IConstructor rascalDelta = rpd.convert(delta);
 		
 		List<VcsRepositoryDelta> repoDeltas = delta.getVcsDelta().getRepoDeltas();
-		List<VcsCommit> deltaCommits = repoDeltas.get(repoDeltas.size()).getCommits();
-		String lastRevision = deltaCommits.get(deltaCommits.size()).getRevision();
 		
+		if (repoDeltas.isEmpty()) { 
+		  System.err.println("Found repository deltas to be empty. Returning without doing anything");
+		  return;
+		}
+		List<VcsCommit> deltaCommits = repoDeltas.get(repoDeltas.size()-1).getCommits();
+		if (deltaCommits.isEmpty()) {
+			System.err.println("No commits? continuing for now...");
+		}
 		
+		String lastRevision = deltaCommits.get(deltaCommits.size()-1).getRevision();
+
 		try {
-		  Map<String, File> workingCopyFolders = new HashMap<>();
-		  Map<String, File> scratchFolders = new HashMap<>();
-		  WorkingCopyFactory.getInstance().checkout(project, lastRevision, workingCopyFolders, scratchFolders);
+		  if (!RascalMetricProvider.lastRevision.equals(lastRevision)) {
+			  workingCopyFolders.clear();
+			  scratchFolders.clear();
+			  WorkingCopyFactory.getInstance().checkout(project, lastRevision, workingCopyFolders, scratchFolders);
+			  
+			  Map<String, List<String>> repoDiffs = new HashMap<>();
+			  
+			  for (VcsRepository repo : project.getVcsRepositories()) {
+				  repoDiffs.put(repo.getUrl(), WorkingCopyFactory.getInstance().getDiff(repo, workingCopyFolders.get(repo.getUrl()), RascalMetricProvider.lastRevision, lastRevision));
+			  }
+			  
+			  RascalProjectDeltas rpd = new RascalProjectDeltas(_instance.getEvaluator());
+			  rpd.createChurn(repoDiffs);
+			  rascalDelta = rpd.convert(delta);
+			  RascalMetricProvider.lastRevision = lastRevision;
+		  }
 		  
 		  IMap rWorkingCopyFolders = _instance.makeMap(workingCopyFolders);
 		  IMap rScratchFolders = _instance.makeMap(scratchFolders);
@@ -134,13 +159,18 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 			String key = ((IString) currentEntry.getKey()).getValue();
 			
 			if (!key.isEmpty()) {
-				IntegerMeasurement measurement = null;
+				Measurement measurement = null;
 				// for cc need to delete all methods for this file
 				
 				// TODO: dispatch on return type
-				measurement = new IntegerMeasurement();
+				if (currentEntry.getValue().getType().isInteger()) {
+					measurement = new IntegerMeasurement();
+					((IntegerMeasurement) measurement).setValue(((IInteger) currentEntry.getValue()).longValue());
+				} else {
+					measurement = new StringMeasurement();
+					((StringMeasurement) measurement).setValue(((IString) currentEntry.getValue()).getValue());
+				}
 				measurement.setUri(key);
-				measurement.setValue(((IInteger) currentEntry.getValue()).longValue());
 				db.getMeasurements().add(measurement);
 			}
 			db.sync();

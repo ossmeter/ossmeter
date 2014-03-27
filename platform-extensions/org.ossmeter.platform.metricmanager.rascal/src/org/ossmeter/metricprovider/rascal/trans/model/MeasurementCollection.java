@@ -67,6 +67,19 @@ public class MeasurementCollection extends PongoCollection<Measurement> {
 		return measurement;
 	}
 	
+	
+	public Iterable<Measurement> findStringMeasurementsByUri(String q) {
+		return new IteratorIterable<Measurement>(new PongoCursorIterator<Measurement>(this, dbCollection.find(new BasicDBObject("uri", q + "").append("_type", "org.ossmeter.metricprovider.rascal.trans.model.StringMeasurement"))));
+	}
+	
+	public Measurement findOneStringMeasurementByUri(String q) {
+		Measurement measurement = (Measurement) PongoFactory.getInstance().createPongo(dbCollection.findOne(new BasicDBObject("uri", q + "").append("_type", "org.ossmeter.metricprovider.rascal.trans.model.StringMeasurement")));
+		if (measurement != null) {
+			measurement.setPongoCollection(this);
+		}
+		return measurement;
+	}
+	
 
 	public long countByUri(String q) {
 		return dbCollection.count(new BasicDBObject("uri", q + ""));
@@ -116,6 +129,19 @@ public class MeasurementCollection extends PongoCollection<Measurement> {
 	
 	public Measurement findOneBooleanMeasurementByMetric(String q) {
 		Measurement measurement = (Measurement) PongoFactory.getInstance().createPongo(dbCollection.findOne(new BasicDBObject("metric", q + "").append("_type", "org.ossmeter.metricprovider.rascal.trans.model.BooleanMeasurement")));
+		if (measurement != null) {
+			measurement.setPongoCollection(this);
+		}
+		return measurement;
+	}
+	
+	
+	public Iterable<Measurement> findStringMeasurementsByMetric(String q) {
+		return new IteratorIterable<Measurement>(new PongoCursorIterator<Measurement>(this, dbCollection.find(new BasicDBObject("metric", q + "").append("_type", "org.ossmeter.metricprovider.rascal.trans.model.StringMeasurement"))));
+	}
+	
+	public Measurement findOneStringMeasurementByMetric(String q) {
+		Measurement measurement = (Measurement) PongoFactory.getInstance().createPongo(dbCollection.findOne(new BasicDBObject("metric", q + "").append("_type", "org.ossmeter.metricprovider.rascal.trans.model.StringMeasurement")));
 		if (measurement != null) {
 			measurement.setPongoCollection(this);
 		}

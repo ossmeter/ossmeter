@@ -22,7 +22,7 @@ data VcsCommit
   ;
   
 data VcsCommitItem
-  = vcsCommitItem(str path, VcsChangeType changeType)
+  = vcsCommitItem(str path, VcsChangeType changeType, list[Churn] lineChurn)
   ;
   
 data VcsChangeType
@@ -33,11 +33,27 @@ data VcsChangeType
   | unknown()
   ;
   
+data Churn
+  = linesAdded(int i)
+  | linesDeleted(int i)
+  ;
+  
 map[str, list[str]] getChangedItemsPerRepository(ProjectDelta delta) {
   list[str] emptyList = [];
   map[str, list[str]] result = ();
   for (/VcsRepositoryDelta vcrd <- delta) {
-    result[vcrd.repository.url]? emptyList += [ vci.path | /VcsCommitItem vci <- vcrd ];
+    result[vcrd.repository.url]? emptyList += [ fVCI.path | VcsCommitItem fVCI <- checkSanity([ vci | /VcsCommitItem vci <- vcrd ]) ];
+  }
+  return result;
+}
+
+set[VcsCommitItem] checkSanity(list[VcsCommitItem] items) {
+  set[VcsCommitItem] result = {};
+  for (VcsCommitItem item <- items) {
+    result += item;
+    if (\deleted() := item.changeType || \unknown() := item.changeType) {
+      result -= { vci | VcsCommitItem vci <- items, vci.path == item.path };
+    }
   }
   return result;
 }

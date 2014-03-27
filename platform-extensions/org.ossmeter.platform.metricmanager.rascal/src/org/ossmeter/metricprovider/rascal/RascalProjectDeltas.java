@@ -1,8 +1,10 @@
 package org.ossmeter.metricprovider.rascal;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.imp.pdb.facts.IConstructor;
 import org.eclipse.imp.pdb.facts.IDateTime;
@@ -31,6 +33,7 @@ public class RascalProjectDeltas {
   private final IValueFactory values = ValueFactoryFactory.getValueFactory();
   private final TypeFactory TF = TypeFactory.getInstance();
   public static final String MODULE = "org::ossmeter::metricprovider::ProjectDelta";
+  private Map<String, IList> churns = new HashMap<>();
   
   public RascalProjectDeltas(Evaluator eval) {
 	if (!eval.getHeap().existsModule(MODULE)) {
@@ -39,7 +42,49 @@ public class RascalProjectDeltas {
 	store.extendStore(eval.getHeap().getModule(MODULE).getStore());
   }
   
-  public IConstructor convert(final ProjectDelta delta) {
+  public void createChurn(Map<String, List<String>> repoDiffs) {
+	for (String repo: repoDiffs.keySet()) {
+		List<String> repoDiff = repoDiffs.get(repo);
+		churns.putAll(convertChurn(repo, repoDiff));
+	}
+  }
+  
+  private Map<String, IList> convertChurn(String repo, List<String> repoDiff) {
+	Map<String, IList> result = new HashMap<>();
+	
+	int added = 0;
+	int deleted = 0;
+	String currentItem = "";
+	for (String line : repoDiff) {
+	  if (!line.isEmpty() && line.startsWith("Index:")) {
+		if (!currentItem.isEmpty()) {
+			IListWriter changes = values.listWriter();
+			
+			changes.append(createConstructor("Churn", "linesAdded", values.integer(added)));
+			changes.append(createConstructor("Churn", "linesDeleted", values.integer(deleted)));
+			
+			String itemName = currentItem;
+			if (!itemName.startsWith("/")) {
+				itemName = "/" + itemName;
+			}
+			result.put(repo+itemName, changes.done());
+			added = 0;
+			deleted = 0;
+		}
+	    currentItem = line.split(":")[1].trim();
+	    continue;
+	  } 
+	  if (line.matches("^\\+[^\\+].*")) {
+		added++;
+	  } else if (line.matches("^\\-[^\\-].*")) {
+		deleted++;
+	  }
+	}
+	
+	return result;
+}
+
+public IConstructor convert(final ProjectDelta delta) {
 	List<IValue> children = new ArrayList<>();
 	
 	children.add(convert(delta.getDate()));
@@ -122,13 +167,19 @@ public class RascalProjectDeltas {
   
   private IConstructor convert(VcsCommitItem commitItem) {
 	List<IValue> children = new ArrayList<>();
-		
+	
 	children.add(convert(commitItem.getPath()));
 	children.add(convert(commitItem.getChangeType()));
+	String commitItemPath = commitItem.getCommit().getDelta().getRepository().getUrl()+commitItem.getPath();
+	if (churns.containsKey(commitItemPath)) {
+		children.add(churns.get(commitItemPath));
+	} else {
+		children.add(values.list());
+	}
 				
 	return createConstructor("VcsCommitItem", "vcsCommitItem", children.toArray(new IValue[0]));
   }
-  
+
   private IConstructor convert(VcsChangeType changeType) {
 	return values.constructor(store.lookupConstructor(store.lookupAbstractDataType("VcsChangeType"), changeType.name().toLowerCase(), TF.tupleEmpty()));
   }
