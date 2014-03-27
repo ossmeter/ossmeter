@@ -34,6 +34,8 @@ public class Project extends NamedElement {
 		YEAR.setOwningType("org.ossmeter.repository.model.Project");
 		ACTIVE.setOwningType("org.ossmeter.repository.model.Project");
 		LASTEXECUTED.setOwningType("org.ossmeter.repository.model.Project");
+		MONITOR.setOwningType("org.ossmeter.repository.model.Project");
+		INERRORSTATE.setOwningType("org.ossmeter.repository.model.Project");
 	}
 	
 	public static StringQueryProducer NAME = new StringQueryProducer("name"); 
@@ -42,6 +44,8 @@ public class Project extends NamedElement {
 	public static NumericalQueryProducer YEAR = new NumericalQueryProducer("year");
 	public static StringQueryProducer ACTIVE = new StringQueryProducer("active"); 
 	public static StringQueryProducer LASTEXECUTED = new StringQueryProducer("lastExecuted"); 
+	public static StringQueryProducer MONITOR = new StringQueryProducer("monitor"); 
+	public static StringQueryProducer INERRORSTATE = new StringQueryProducer("inErrorState"); 
 	
 	
 	public String getShortName() {
@@ -86,6 +90,24 @@ public class Project extends NamedElement {
 	
 	public Project setLastExecuted(String lastExecuted) {
 		dbObject.put("lastExecuted", lastExecuted);
+		notifyChanged();
+		return this;
+	}
+	public boolean getMonitor() {
+		return parseBoolean(dbObject.get("monitor")+"", true);
+	}
+	
+	public Project setMonitor(boolean monitor) {
+		dbObject.put("monitor", monitor);
+		notifyChanged();
+		return this;
+	}
+	public boolean getInErrorState() {
+		return parseBoolean(dbObject.get("inErrorState")+"", false);
+	}
+	
+	public Project setInErrorState(boolean inErrorState) {
+		dbObject.put("inErrorState", inErrorState);
 		notifyChanged();
 		return this;
 	}

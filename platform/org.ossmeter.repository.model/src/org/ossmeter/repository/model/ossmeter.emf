@@ -33,10 +33,14 @@ class Project extends NamedElement {
   val Person[*] persons;
   val License[*] licenses;
   val LocalStorage storage;
+  
+  // Platform-related information
   val MetricProvider[*] metricProviderData;
+  attr boolean monitor = true;
+  attr boolean inErrorState = false;
 }
 
-class MetricProvider  extends NamedElement{
+class MetricProvider extends NamedElement{
 	@searchable
 	attr String metricProviderId;
 	attr MetricProviderType type;
