@@ -1,5 +1,7 @@
 package org.ossmeter.platform.osgi.executors;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -9,7 +11,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
 import org.ossmeter.platform.Date;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.Platform;
@@ -22,6 +23,8 @@ import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.VcsRepository;
 
 public class ProjectExecutor implements Runnable {
+	
+	protected FileWriter writer;
 
 	protected Project project;
 	protected int numberOfCores;
@@ -34,6 +37,14 @@ public class ProjectExecutor implements Runnable {
 		this.project = project;
 		this.logger = (OssmeterLogger)OssmeterLogger.getLogger("ProjectExecutor (" + project.getName() +")");
 		this.logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
+		
+		// DEBUG
+		try {
+//			this.writer = null;
+			this.writer = new FileWriter("/Users/esgroup/Desktop/D5.3-logs/" + project.getName() + ".csv");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
@@ -62,15 +73,19 @@ public class ProjectExecutor implements Runnable {
 		Date today = new Date();
 		
 		Date[] dates = Date.range(lastExecuted.addDays(1), today);
+		
+		
 		for (Date date : dates) {
 			// TODO: An alternative would be to have a single thread pool for the node. I briefly tried this
 			// and it didn't work. Reverted to this implement (temporarily at least).
 			ExecutorService executorService = Executors.newFixedThreadPool(numberOfCores);
 			logger.info("Date: " + date + ", project: " + project.getName());
 			
+			long startDelta = System.currentTimeMillis();
 			ProjectDelta delta = new ProjectDelta(project, date, 
 					platform.getVcsManager(), platform.getCommunicationChannelManager(), platform.getBugTrackingSystemManager());
 			boolean createdOk = delta.create();
+			long timeDelta = System.currentTimeMillis() - startDelta;
 
 			if (createdOk) {
 			} else {
@@ -81,17 +96,7 @@ public class ProjectExecutor implements Runnable {
 				return;
 			}
 			
-			// DEBUG
-			for (List<IMetricProvider> bran : metricBranches) {
-				for (IMetricProvider m : bran) {
-					System.out.print(m.getIdentifier() + " -> ");
-				}
-				System.out.println();
-			}
-			
-			// END DEBUG
-			
-			
+			long startMetrics = System.currentTimeMillis();
 			for (List<IMetricProvider> branch : metricBranches) {
 				MetricListExecutor mExe = new MetricListExecutor(platform, project, delta, date);
 				mExe.setMetricList(branch);
@@ -105,6 +110,7 @@ public class ProjectExecutor implements Runnable {
 			} catch (InterruptedException e) {
 				logger.error("Exception thrown when shutting down executor service.", e);
 			}
+			long timeMetrics = System.currentTimeMillis() - startMetrics;
 			
 			if (project.getInErrorState()) {
 				// TODO: what should we do? Is the act of not-updating the lastExecuted flag enough?
@@ -115,8 +121,19 @@ public class ProjectExecutor implements Runnable {
 				project.setLastExecuted(date.toString());
 				platform.getProjectRepositoryManager().getProjectRepository().sync();
 			}
+			
+			try { ///DEBUG
+				writer.write(date.toString() + "," + timeDelta + "," + timeMetrics + "\n");
+				writer.flush();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-		
+		try {
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		logger.info("Project execution complete. In error state: " + project.getInErrorState());
 	}
 

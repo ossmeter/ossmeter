@@ -147,8 +147,24 @@ public class WorkerServiceApplication implements IApplication, ServiceTrackerCus
 		IWorkerService worker = Activator.getContext().getService(reference);
 		
 		List<String> projects = new ArrayList<String>(); 
-		
-		projects.add("modeling.tmf.xtext");
+
+		// MODELS:
+//		projects.add("modeling.mmt.atl");  // jimbook
+//		projects.add("modeling.epsilon"); // jimbook
+//		projects.add("modeling.gmp.gmf-runtime"); // esgroup
+//		projects.add("modeling.tmf.xtext"); // esgroup
+//		projects.add("modeling.viatra2"); // jimbook
+//		projects.add("modeling.gmt.amw"); // paige
+//		projects.add("modeling.mdt.papyrus"); // esgroup
+//		projects.add("modeling.mdt.modisco"); // paige
+//		projects.add("modeling.gmp.graphiti"); // paige
+
+		// Deliverable:
+//		projects.add("modeling.mmt.atl");  // jimbook
+//		projects.add("modeling.viatra2"); // jimbook
+//		projects.add("modeling.epsilon"); // esgroup
+		projects.add("modeling.mdt.papyrus"); // esgroup
+//		projects.add("modeling.gmp.graphiti"); // paige
 		
 		worker.queueProjects(projects);
 		
@@ -158,6 +174,7 @@ public class WorkerServiceApplication implements IApplication, ServiceTrackerCus
 
 	@Override
 	public void modifiedService(ServiceReference<IWorkerService> reference, IWorkerService service) {
+		
 		
 	}
 

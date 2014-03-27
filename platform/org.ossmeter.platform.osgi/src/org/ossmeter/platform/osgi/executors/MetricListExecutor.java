@@ -1,5 +1,7 @@
 package org.ossmeter.platform.osgi.executors;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -20,6 +22,7 @@ import org.ossmeter.repository.model.MetricProviderType;
 import org.ossmeter.repository.model.Project;
 
 public class MetricListExecutor implements Runnable {
+	protected FileWriter writer;
 
 	final protected Platform platform;
 	final protected Project project;
@@ -35,6 +38,14 @@ public class MetricListExecutor implements Runnable {
 		this.date = date;
 		this.logger = (OssmeterLogger) OssmeterLogger.getLogger("MetricListExecutor (" + project.getName() + ", " + date.toString() + ")");
 		this.logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
+		
+		// DEBUG
+//		try {
+////					this.writer = null;
+//			this.writer = new FileWriter("/Users/esgroup/Desktop/D5.3-logs/" + project.getName() + "-" + ".csv");
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	public void setMetricList(List<IMetricProvider> metrics) {
