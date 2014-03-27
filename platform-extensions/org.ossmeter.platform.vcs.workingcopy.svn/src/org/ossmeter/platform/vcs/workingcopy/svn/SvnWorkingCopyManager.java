@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.ossmeter.platform.vcs.svn.SvnUtil;
 import org.ossmeter.platform.vcs.workingcopy.manager.WorkingCopyCheckoutException;
@@ -58,5 +61,49 @@ public class SvnWorkingCopyManager implements WorkingCopyManager {
       throw new WorkingCopyCheckoutException(repository, revision, e);
     }
     
+  }
+
+  @Override
+  public List<String> getDiff(File workingDirectory, String startRevision, String endRevision) {
+	final List<String> result = new ArrayList<>();
+	try {
+	  List<String> commandArgs = new ArrayList<>(Arrays.asList(new String[] { "svn", "diff", "-r", startRevision+":"+endRevision }));
+	  /* 
+	   * this little workaround makes sure the indexes we get for the diffs is in the form
+	   * workingCopyRoot+"/"+itemPath (relative - in the sense how I made it relative in the SVNManager)
+	   */
+	  for (String path: workingDirectory.list()) {
+		  // I hate this!!! :(
+		  if (!path.contains(".DS_Store")) {
+			  commandArgs.add(path);
+		  }
+	  }
+	  ProcessBuilder pb = new ProcessBuilder(commandArgs);
+	  pb.redirectErrorStream(true);
+	  pb.directory(workingDirectory);
+	  final Process p = pb.start();
+	  
+	  
+	  //Process p = Runtime.getRuntime().exec(commandArgs.toArray(new String[0]), null, workingDirectory);
+	  Thread reader = new Thread() {
+		  public void run() {
+			  try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
+				  String line;
+				  while ((line = reader.readLine()) != null) {
+					  result.add(line);
+				  }
+			  } catch (IOException e) {
+				  throw new RuntimeException(e);
+			  }
+			  
+		  }
+	  };
+	  reader.start();
+	  p.waitFor();
+	  reader.join();
+	} catch (IOException | InterruptedException e) {
+	  throw new RuntimeException(e);
+	}
+	return result;
   }
 }

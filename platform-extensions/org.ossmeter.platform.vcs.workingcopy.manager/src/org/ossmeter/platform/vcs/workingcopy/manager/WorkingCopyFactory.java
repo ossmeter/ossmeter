@@ -1,6 +1,7 @@
 package org.ossmeter.platform.vcs.workingcopy.manager;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -104,5 +105,10 @@ public class WorkingCopyFactory {
     }
     
     return b.toString();
+  }
+  
+  public List<String> getDiff(VcsRepository repo, File workingCopyFolder, String startRevision, String endRevision) throws WorkingCopyManagerUnavailable {
+	WorkingCopyManager manager = getWorkingCopyCreator(repo);
+	return manager.getDiff(workingCopyFolder, startRevision, endRevision);
   }
 }
