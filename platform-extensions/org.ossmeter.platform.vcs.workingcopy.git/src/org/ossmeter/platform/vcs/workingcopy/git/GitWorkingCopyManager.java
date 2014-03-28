@@ -2,6 +2,7 @@ package org.ossmeter.platform.vcs.workingcopy.git;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.ossmeter.platform.vcs.workingcopy.manager.WorkingCopyCheckoutException;
 import org.ossmeter.platform.vcs.workingcopy.manager.WorkingCopyManager;
@@ -38,4 +39,11 @@ public class GitWorkingCopyManager implements WorkingCopyManager {
       throw new WorkingCopyCheckoutException(repository, revision, e);
     }
   }
+
+  
+	@Override
+	public List<String> getDiff(File workingDirectory, String startRevision, String endRevision) {
+		// TODO Need to implement this method.
+		return null;
+	}
 }
