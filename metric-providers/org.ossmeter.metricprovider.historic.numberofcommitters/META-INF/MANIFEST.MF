@@ -8,4 +8,5 @@ Require-Bundle: com.googlecode.pongo.runtime,
  com.googlecode.pongo.runtime.dependencies,
  org.ossmeter.repository.model,
  org.ossmeter.platform,
- org.ossmeter.metricprovider.trans.committers
+ org.ossmeter.metricprovider.trans.committers,
+ org.ossmeter.platform.client.api
