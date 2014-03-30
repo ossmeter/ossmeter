@@ -167,7 +167,7 @@ public class ActiveUsersMetricProvider implements ITransientMetricProvider<Activ
 			System.err.println("Active users metric -\t" + 
 					"there is no classification for article: " + article.getArticleNumber() +
 					"\t of newsgroup: " + newsgroup.getUrl());
-			System.exit(-1);
+//			System.exit(-1);
 		} else
 			return newsgroupArticleData.getClassificationResult();
 		return "";

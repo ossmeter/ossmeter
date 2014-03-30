@@ -18,7 +18,7 @@ public class DailyNobpViz extends PongoViz {
 	@Override
 	public String getViz(String type) {
 		switch (type) {
-			case "d3":
+			case "json":
 				return ("{ 'id' : 'dailybugzillapatches', 'name' : 'Bug patches/day', 'type' : 'bar', " +
 						"'description' : 'A measure of the number of bug comments submitted by day.', " +
 						"'xtext' : 'Date', 'ytext':'Patches', 'orderRule' : 'Date', 'datatable' : " + createD3DataTable("bugzillas", "_id", "__date", "numberOfPatches", "Date", "Patches", DateFilter.DAY) + "," +

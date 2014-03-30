@@ -21,7 +21,7 @@ public class DailyNoaViz extends PongoViz {
 			case "gcharts": 
 				String dataTable = createDataTable("newsgroups", "", "__date", "numberOfArticles");
 				return ("{ 'target' : 'gcharts', 'chartType' : 'LineChart', 'options' : { 'hAxis' : {'title':'Date'}, 'vAxis':{'title' : 'Number of articles' }}, 'datatable' : " + dataTable + " }").replaceAll("'", "\"");		
-			case "d3":
+			case "json":
 				return ("{ 'id' : 'dailyarticles', 'name' : 'Articles', 'type' : 'line', " +
 						"'description' : 'This metric keeps track of the number of newsgroup articles.', " +
 						"'xtext' : 'Date', 'ytext':'Articles', 'orderRule' : 'Date', 'datatable' : " + createD3DataTable("newsgroups", "_id", "__date", "numberOfArticles", "Date", "Articles", DateFilter.MONTH) + "," +

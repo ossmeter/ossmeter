@@ -13,4 +13,5 @@ Require-Bundle: org.eclipse.ui,
  com.googlecode.pongo.runtime.osgi
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.generic.numberofrequestsrepliesperuser
+Export-Package: org.ossmeter.metricprovider.generic.numberofrequestsrepliesperuser,
+ org.ossmeter.metricprovider.generic.numberofrequestsrepliesperuser.model

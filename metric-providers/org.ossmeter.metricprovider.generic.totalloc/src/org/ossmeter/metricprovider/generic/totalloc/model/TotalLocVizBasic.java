@@ -22,7 +22,7 @@ public class TotalLocVizBasic extends PongoViz {
 	@Override
 	public String getViz(String type) {
 		switch (type) {
-			case "d3":
+			case "json":
 				return ("{ 'id' : 'totalloc2', 'name' : 'Lines of code', 'type' : 'line', " +
 						"'description' : 'Lines of code is a software metric used to measure the size of a computer program by counting the number of lines in the text of the programs source code.', " +
 						"'xtext' : 'Date', 'ytext':'Lines', 'orderRule' : 'Date', 'datatable' : " + createD3DataTable() + "," +

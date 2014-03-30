@@ -3,6 +3,7 @@ package org.ossmeter.metricprovider.generic.threadsperdaypernewsgroup.model;
 
 import com.googlecode.pongo.runtime.viz.PongoViz;
 import com.mongodb.DB;
+import com.mongodb.Mongo;
 
 public class DailyThreadsViz extends PongoViz {
 
@@ -17,9 +18,23 @@ public class DailyThreadsViz extends PongoViz {
 	@Override
 	public String getViz(String type) {
 		switch (type) {
-			case "gcharts": 
-	String dataTable = createDataTable("newsgroups", "", "__date", "numberOfThreads");
-	return ("{ 'target' : 'gcharts', 'chartType' : 'LineChart', 'options' : { 'hAxis' : {'title':'Date'}, 'vAxis':{'title' : 'Number of threads' }}, 'datatable' : " + dataTable + " }").replaceAll("'", "\"");		}
+			case "json":
+				return ("{ 'id' : 'threadsperdaypernewsgroup', 'name' : 'Users', 'type' : 'line', " +
+						"'description' : 'foo bar.', " +
+						"'xtext' : 'Date', 'ytext':'Threads', 'orderRule' : 'Date', 'datatable' : " + createD3DataTable("newsgroups", "_id", "__date", "numberOfThreads", "Date", "Threads", DateFilter.DAY) + "," +
+						"'isTimeSeries':true, 'lastValue': '"+getLastValue()+"' }").replaceAll("'", "\"");
+			
+			case "csv":
+				return createCSVDataTable("newsgroups", "_id", "__date", "numberOfThreads", "Date", "Threads", DateFilter.DAY);
+		}	
 		return null;
+	}
+	public static void main(String[] args) throws Exception {
+		Mongo mongo = new Mongo();
+		DB db = mongo.getDB("Subversion");
+			
+		DailyThreadsViz viz = new DailyThreadsViz();
+		viz.setProjectDB(db);
+		System.err.println(viz.getViz("d3"));
 	}
 }

@@ -85,7 +85,7 @@ public class BugHeaderMetadataMetricProvider implements ITransientMetricProvider
 			bugData.setUrl(bugzilla.getUrl());
 			bugData.setProduct(bugzilla.getProduct());
 			bugData.setComponent(bugzilla.getComponent());
-			bugData.setComponent(bug.getBugId());
+			bugData.setBugId(bug.getBugId());
 			bugData.setCreationTime(bug.getCreationTime().toString());
 			db.getBugs().add(bugData);
 		}

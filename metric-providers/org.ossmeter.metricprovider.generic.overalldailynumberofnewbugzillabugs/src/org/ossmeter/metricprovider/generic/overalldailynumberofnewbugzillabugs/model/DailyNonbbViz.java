@@ -21,7 +21,7 @@ public class DailyNonbbViz extends PongoViz {
 			case "gcharts": 
 				String dataTable = createDataTable("bugzillas", "", "__date", "numberOfBugs");
 				return ("{ 'target' : 'gcharts', 'chartType' : 'LineChart', 'options' : { 'hAxis' : {'title':'Date'}, 'vAxis':{'title' : 'Number of new bugs' }}, 'datatable' : " + dataTable + " }").replaceAll("'", "\"");	
-			case "d3":
+			case "json":
 				return ("{ 'id' : 'dailynewbugzillabugs', 'name' : 'New bugs/day', 'type' : 'bar', " +
 						"'description' : 'The number of new bug patches committed per day.', " +
 						"'xtext' : 'Date', 'ytext':'Bugs', 'orderRule' : 'Date', 'datatable' : " + createD3DataTable("bugzillas", "_id", "__date", "numberOfBugs", "Date", "Bugs", DateFilter.DAY) + "," +

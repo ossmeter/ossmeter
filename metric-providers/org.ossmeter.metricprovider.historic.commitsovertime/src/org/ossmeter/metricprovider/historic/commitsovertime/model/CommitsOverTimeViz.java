@@ -17,7 +17,7 @@ public class CommitsOverTimeViz extends PongoViz {
 	@Override
 	public String getViz(String type) {
 		switch (type) {
-			case "d3":
+			case "json":
 				return ("{ 'id' : 'commitsovertime', 'name' : 'Commits', 'type' : 'line', " +
 						"'description' : 'The total number of commits over time.', " +
 						"'xtext' : 'Date', 'ytext':'Commits', 'orderRule' : 'Date', 'datatable' : " + createD3DataTable("repositories", "url", "__date", "numberOfCommits", "Date", "Commits", DateFilter.MONTH) + "," +

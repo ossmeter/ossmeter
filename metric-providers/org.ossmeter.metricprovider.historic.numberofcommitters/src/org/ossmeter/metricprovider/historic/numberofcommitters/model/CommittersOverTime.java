@@ -71,22 +71,29 @@ public class CommittersOverTime implements IHistoricalMetricProvider {
 		committers.setTotalNumberOfCommitters((int)pc.getCommitters().size());
 		
 		Date today = context.getDate().toJavaDate();
+		
+		System.out.println("Today: " + today + " (" + today.getTime()+")");
+		
 		Calendar c = Calendar.getInstance();
 		c.setTime(today);
 		c.add(Calendar.MONTH, -1);
 		long oneMonthAgo=c.getTimeInMillis();
+//		System.out.println("One month ago: " + c.getTime() + " (" + c.getTimeInMillis()+")");
 
 		c.setTime(today);
 		c.add(Calendar.MONTH, -3);
 		long threeMonthsAgo=c.getTimeInMillis();
+//		System.out.println("Three months ago: " + c.getTime() + " (" + c.getTimeInMillis()+")");
 
 		c.setTime(today);
 		c.add(Calendar.MONTH, -6);
 		long sixMonthsAgo=c.getTimeInMillis();
+//		System.out.println("Six months ago: " + c.getTime() + " (" + c.getTimeInMillis()+")");
 
 		c.setTime(today);
 		c.add(Calendar.MONTH, -12);
 		long twelveMonthsAgo=c.getTimeInMillis();
+//		System.out.println("Twelve months ago: " + c.getTime() + " (" + c.getTimeInMillis()+")");
 		
 		int numberOfCommittersLast1month = getSizeOfIterable(pc.getCommitters().find(Committer.LASTCOMMITTIME.greaterThan(oneMonthAgo)));
 		int numberOfCommittersLast3month = getSizeOfIterable(pc.getCommitters().find(Committer.LASTCOMMITTIME.greaterThan(threeMonthsAgo)));

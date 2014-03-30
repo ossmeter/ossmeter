@@ -13,4 +13,5 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.metricprovider.threads
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.generic.threadsperdaypernewsgroup
+Export-Package: org.ossmeter.metricprovider.generic.threadsperdaypernewsgroup,
+ org.ossmeter.metricprovider.generic.threadsperdaypernewsgroup.model

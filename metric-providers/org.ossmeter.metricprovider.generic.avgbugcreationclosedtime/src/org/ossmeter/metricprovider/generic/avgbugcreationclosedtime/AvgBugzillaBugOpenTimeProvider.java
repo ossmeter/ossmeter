@@ -1,5 +1,7 @@
 package org.ossmeter.metricprovider.generic.avgbugcreationclosedtime;
 
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,7 +15,6 @@ import org.ossmeter.platform.Date;
 import org.ossmeter.platform.IHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
-import org.ossmeter.platform.communicationchannel.nntp.NntpUtil;
 import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
@@ -57,8 +58,8 @@ public class AvgBugzillaBugOpenTimeProvider implements IHistoricalMetricProvider
 			int durations = 0;
 			for (BugData bugData: usedBhm.getBugs()) {
 				if (!bugData.getLastClosedTime().equals("null")) {
-					java.util.Date javaOpenTime = NntpUtil.parseDate(bugData.getCreationTime());
-					java.util.Date javaCloseTime = NntpUtil.parseDate(bugData.getLastClosedTime());
+					java.util.Date javaOpenTime = parseDate(bugData.getCreationTime());
+					java.util.Date javaCloseTime = parseDate(bugData.getLastClosedTime());
 					seconds += ( Date.duration(javaOpenTime, javaCloseTime) / 1000);
 					durations++;
 				}
@@ -109,4 +110,28 @@ public class AvgBugzillaBugOpenTimeProvider implements IHistoricalMetricProvider
 		return "This metric computes the average time between creating and closing bugzilla bugs. " +
 				"Format: dd:HH:mm:ss:SS, where dd=days, HH:hours, mm=minutes, ss:seconds, SS=milliseconds.";
 	}
+	
+	
+	// FIXME: temporarily migrated from NNTPUtil to avoid the dependency.
+	static SimpleDateFormat[] sdfList = new SimpleDateFormat[]{
+		new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz"),
+		new SimpleDateFormat("dd MMM yyyy HH:mm:ss zzz"),
+		new SimpleDateFormat("EEE, dd MMM yyyy HH:mm zzz (Z)"),
+		new SimpleDateFormat("EEE, dd MMM yyyy HH:mm zzz"),
+		new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss"),
+		new SimpleDateFormat("dd MMM yyyy HH:mm:ss"),
+		new SimpleDateFormat("EEE, dd MMM yyyy hh:mm:ss Z"),
+		new SimpleDateFormat("EEE MMM d HH:mm:ss zzz yyyy")
+	};
+	   public static java.util.Date parseDate(String dateString) {
+	    	for (SimpleDateFormat sdf: sdfList) {
+	    		ParsePosition ps = new ParsePosition(0);
+	    		java.util.Date result = sdf.parse(dateString, ps);
+	    		if (ps.getIndex() != 0)
+	    			return result;
+	    	}
+	    	System.err.println("\t\t" + dateString + " cannot be parsed!\n");
+			return null;
+	    }
+
 }

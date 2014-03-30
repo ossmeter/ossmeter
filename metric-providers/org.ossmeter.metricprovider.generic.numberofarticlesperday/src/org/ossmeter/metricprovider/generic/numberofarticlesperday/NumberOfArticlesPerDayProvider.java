@@ -80,7 +80,7 @@ public class NumberOfArticlesPerDayProvider implements IHistoricalMetricProvider
 
 	@Override
 	public String getShortIdentifier() {
-		return "articles";
+		return "articlesperday";
 	}
 
 	@Override

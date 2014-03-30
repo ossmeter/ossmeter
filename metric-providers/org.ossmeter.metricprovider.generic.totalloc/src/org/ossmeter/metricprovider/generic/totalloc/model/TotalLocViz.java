@@ -30,7 +30,7 @@ public class TotalLocViz extends PongoViz {
 						"'width':'90%','height':200, " +
 						"'legend': {'position': 'in'}}, 'datatable' : " + createDataTable("repositories", "url", "__date", "totalLines") + " }").replaceAll("'", "\"");
 		
-			case "d3":
+			case "json":
 				return ("{ 'id' : 'totalloc', 'name' : 'Lines of code', 'type' : 'area', " +
 						"'description' : 'Lines of code is a software metric used to measure the size of a computer program by counting the number of lines in the text of the programs source code.', " +
 						"'xtext' : 'Date', 'ytext':'Lines', 'orderRule' : 'Date', 'datatable' : " + createD3DataTable("repositories", "url", "__date", "totalLines", "Date", "Lines", DateFilter.MONTH) + "," +

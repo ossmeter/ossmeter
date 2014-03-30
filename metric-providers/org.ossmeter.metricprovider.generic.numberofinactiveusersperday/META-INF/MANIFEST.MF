@@ -13,4 +13,5 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.platform.client.api
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.generic.numberofinactiveusersperday
+Export-Package: org.ossmeter.metricprovider.generic.numberofinactiveusersperday,
+ org.ossmeter.metricprovider.generic.numberofinactiveusersperday.model

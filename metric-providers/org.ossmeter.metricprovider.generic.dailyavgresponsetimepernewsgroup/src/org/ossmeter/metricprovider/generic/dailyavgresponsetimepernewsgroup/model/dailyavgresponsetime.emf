@@ -12,6 +12,5 @@ class DailyNewsgroupData {
 	@yaxis(title="Average response time")
    	attr String avgResponseTime;
 	attr int threadsConsidered;
-   
 }
 

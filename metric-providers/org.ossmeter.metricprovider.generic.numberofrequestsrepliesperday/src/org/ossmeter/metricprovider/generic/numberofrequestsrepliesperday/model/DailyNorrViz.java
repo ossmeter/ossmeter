@@ -4,7 +4,9 @@ package org.ossmeter.metricprovider.generic.numberofrequestsrepliesperday.model;
 import java.util.Iterator;
 
 import com.googlecode.pongo.runtime.viz.PongoViz;
+import com.googlecode.pongo.runtime.viz.PongoViz.DateFilter;
 import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
@@ -25,10 +27,9 @@ public class DailyNorrViz extends PongoViz {
 	@Override
 	public String getViz(String type) {
 		switch (type) {
-			case "gcharts": 
-				String dataTable = createDataTable("requests", "requests", "__date", "numberOfRequests");
-				return ("{ 'target' : 'gcharts', 'chartType' : 'LineChart', 'options' : { 'hAxis' : {'title':'Date'}, 'vAxis':{'title' : 'Number of occurences' }}, 'datatable' : " + dataTable + " }").replaceAll("'", "\"");		
-			case "d3":
+			case "csv": 
+				return createCSVDataTable("repositories", "url", "__date", "numberOfRequests", "Date", "Quantity", DateFilter.DAY);
+			case "json":
 				return ("{ 'id' : 'requestsreplies', 'name' : 'Requests and replies/day', 'type' : 'line', " +
 						"'description' : 'A measure of the number of requests and replies per day posted on the newsgroup.', " +
 						"'xtext' : 'Date', 'ytext':'Quantity', 'series':'Series', 'orderRule' : 'Date', 'datatable' : " + createD3DataTable("repositories", "url", "__date", "numberOfRequests", "Date", "Quantity", DateFilter.DAY) + "," +
@@ -36,6 +37,36 @@ public class DailyNorrViz extends PongoViz {
 		}
 		
 		return null;
+	}
+	
+	@Override
+	protected String createCSVDataTable(String seriesKind, String seriesLabel, String xAxis, String yAxis, String xtext, String ytext, DateFilter filter) {
+		Iterator<DBObject> it = collection.find().iterator();
+		String table = "Series,Quantity,Date\n";
+		
+		while (it.hasNext()) {
+			DBObject dbobj = it.next();
+			String xval = String.valueOf(dbobj.get(xAxis));
+		
+			// need to be defensive here, as the metric provider will create empty arrays if there is no data.
+			BasicDBList reqsList =  ((BasicDBList) dbobj.get("requests"));
+			BasicDBList repsList =  ((BasicDBList) dbobj.get("replies"));
+			
+			DBObject reqs = null;
+			if (reqsList.size()>0) reqs = (DBObject) reqsList.get(0);
+			
+			DBObject reps = null;
+			if (repsList.size()>0) reps = (DBObject) repsList.get(0);
+			
+			String quantityRequests = reqs != null ? String.valueOf(reqs.get("numberOfRequests")) : "0";
+			String quantityReplies = reps != null ? String.valueOf(reps.get("numberOfReplies")) : "0";
+			
+			table += "Requests," + quantityRequests + "," + xval + "\n" ;
+			table += "Replies," + quantityReplies + "," + xval + "\n" ;
+
+		}
+		
+		return table;
 	}
 	
 	@Override
@@ -49,11 +80,18 @@ public class DailyNorrViz extends PongoViz {
 			DBObject dbobj = it.next();
 			String xval = String.valueOf(dbobj.get(xAxis));
 		
-			DBObject reqs = (DBObject) ((BasicDBList) dbobj.get("requests")).get(0);
-			DBObject reps = (DBObject) ((BasicDBList) dbobj.get("replies")).get(0);
+			// need to be defensive here, as the metric provider will create empty arrays if there is no data.
+			BasicDBList reqsList =  ((BasicDBList) dbobj.get("requests"));
+			BasicDBList repsList =  ((BasicDBList) dbobj.get("replies"));
 			
-			String quantityRequests = String.valueOf(reqs.get("numberOfRequests"));
-			String quantityReplies = String.valueOf(reps.get("numberOfReplies"));;
+			DBObject reqs = null;
+			if (reqsList.size()>0) reqs = (DBObject) reqsList.get(0);
+			
+			DBObject reps = null;
+			if (repsList.size()>0) reps = (DBObject) repsList.get(0);
+			
+			String quantityRequests = reqs != null ? String.valueOf(reqs.get("numberOfRequests")) : "0";
+			String quantityReplies = reps != null ? String.valueOf(reps.get("numberOfReplies")) : "0";
 			
 			table += "{ 'Series' : 'Requests', 'Quantity' : " + quantityRequests + ", 'Date' : '" + xval + "' }," ;
 			table += "{ 'Series' : 'Replies', 'Quantity' : " + quantityReplies + ", 'Date' : '" + xval + "' }" ;
@@ -67,10 +105,10 @@ public class DailyNorrViz extends PongoViz {
 	
 	public static void main(String[] args) throws Exception {
 		Mongo mongo = new Mongo();
-		DB db = mongo.getDB("Tomcat");
+		DB db = mongo.getDB("Subversion");
 			
 		DailyNorrViz viz = new DailyNorrViz();
 		viz.setProjectDB(db);
-		System.err.println(viz.getViz("d3"));
+		System.err.println(viz.getViz("csv"));
 	}
 }

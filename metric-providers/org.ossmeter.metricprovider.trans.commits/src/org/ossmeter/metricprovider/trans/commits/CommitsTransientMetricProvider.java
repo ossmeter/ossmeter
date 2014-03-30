@@ -100,6 +100,9 @@ public class CommitsTransientMetricProvider  implements ITransientMetricProvider
 			
 			// Now add the new ones
 			for (VcsCommit commit : vcsRepositoryDelta.getCommits()) {
+				if (commit.getJavaDate() == null) {
+					System.err.println("Null java date!");
+				}
 				String time = dateFormat.format(commit.getJavaDate());
 
 				CommitData c = new CommitData();
