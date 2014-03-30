@@ -85,13 +85,14 @@ public class MetricsResource extends ServerResource {
 		
 		List<PongoViz> vizs = VisualisationExtensionPointManager.getInstance().getVisualisersForMetricProvider(metricProvider.getIdentifier(), projectDB);
 		for (PongoViz v : vizs) {
-			String vizString = v.getViz("d3"); // FIXME hardcoded.
+			String vizString = v.getViz("json"); // FIXME hardcoded.
 			
 			ObjectMapper mapper = new ObjectMapper();
 			JsonFactory factory = mapper.getFactory();
 			JsonParser parser;
 			ObjectNode root;
 			try {
+				System.out.println(vizString);
 				parser = factory.createParser(vizString);
 				root = parser.readValueAsTree();
 			} catch (IOException e) {

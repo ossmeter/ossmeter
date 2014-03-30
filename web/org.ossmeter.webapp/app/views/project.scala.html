@@ -195,67 +195,98 @@
 					vm.setMain(metric);
 			});
 
+			// // Sparklines
+			// $.get("http://localhost:8182/projects/p/@project.getShortName()/m/totalloc", function(data) {
+			// 	var metric = JSON.parse(data);
+			// 	if (metric.datatable.length > 0) 
+			// 		vm.addCodeSpark(metric);
+			// });
+
+			// $.get("http://localhost:8182/projects/p/@project.getShortName()/m/LOC", function(data) {
+			// 	var metric = JSON.parse(data);
+			// 	if (metric.datatable.length > 0) 
+			// 		vm.addCodeSpark(metric);
+			// });
+
+			// $.get("http://localhost:8182/projects/p/@project.getShortName()/m/commitsovertime", function(data) {
+			// 	var metric = JSON.parse(data);
+			// 	if (metric.datatable.length > 0) 
+			// 		vm.addCodeSpark(metric);
+			// });
+
+			// $.get("http://localhost:8182/projects/p/@project.getShortName()/m/dailycommits", function(data) {
+			// 	var metric = JSON.parse(data);
+			// 	if (metric.datatable.length > 0) 
+			// 		vm.addCodeSpark(metric);
+			// });
+
+			// $.get("http://localhost:8182/projects/p/@project.getShortName()/m/hourlycommits", function(data) {
+			// 	var metric = JSON.parse(data);
+			// 	if (metric.datatable.length > 0) 
+			// 		vm.addCodeSpark(metric);
+			// });
+
+			// $.get("http://localhost:8182/projects/p/@project.getShortName()/m/activeusersperday", function(data) {
+			// 	var metric = JSON.parse(data);
+			// 	if (metric.datatable.length > 0) 
+			// 		vm.addCommsSpark(metric);
+			// });
+
+			// $.get("http://localhost:8182/projects/p/@project.getShortName()/m/articles", function(data) {
+			// 	var metric = JSON.parse(data);
+			// 	if (metric.datatable.length > 0) 
+			// 		vm.addCommsSpark(metric);
+			// });
+
+			// $.get("http://localhost:8182/projects/p/@project.getShortName()/m/requestsreplies", function(data) {
+			// 	var metric = JSON.parse(data);
+			// 	if (metric.datatable.length > 0) 
+			// 		vm.addCommsSpark(metric);
+			// });
+
+			// $.get("http://localhost:8182/projects/p/@project.getShortName()/m/dailynewbugzillabugs", function(data) {
+			// 	var metric = JSON.parse(data);
+			// 	if (metric.datatable.length > 0) 
+			// 		vm.addBugSpark(metric);
+			// });
+
+			// $.get("http://localhost:8182/projects/p/@project.getShortName()/m/dailybugzillacomments", function(data) {
+			// 	var metric = JSON.parse(data);
+			// 	if (metric.datatable.length > 0) 
+			// 		vm.addBugSpark(metric);
+			// });
+
 			// Sparklines
-			$.get("http://localhost:8182/projects/p/@project.getShortName()/m/totalloc", function(data) {
-				var metric = JSON.parse(data);
-				if (metric.datatable.length > 0) 
-					vm.addCodeSpark(metric);
-			});
+			var bugs = ['worksformebugs','dailybugzillapatches','dailynewbugzillabugs','dailybugzillacomments','nonresolvedclosedbugs',
+				'duplicatebugs','invalidbugs','wontfixbugs','bugopentime','fixedbugs','bugpatches','newbugs','resolvedclosedbugs','nobc',''];
+			for (var bug in bugs) {
+				$.get("http://localhost:8182/projects/p/@project.getShortName()/m/"+bugs[bug], function(data) {
+					// console.log(data);
+					var metric = JSON.parse(data);
+					if (metric.datatable.length > 0) 
+						vm.addBugSpark(metric);
+				});
+			}
 
-			$.get("http://localhost:8182/projects/p/@project.getShortName()/m/LOC", function(data) {
-				var metric = JSON.parse(data);
-				if (metric.datatable.length > 0) 
-					vm.addCodeSpark(metric);
-			});
+			var comms = ['noa','dailyarticles','articlespernewsgroup','articlesperday','averageresponsetimepernewsgroup',
+				'hourlyrequestsreplies','threadspernewsgroup','activeusers','activeusersperday','newuserspernewsgroup','usersperday','dailyrequestsreplies','articlesrequestsrepliesperthread','newusersperday','activeuserspernewsgroup','requestrepliespernewsgroup',
+					'requestsrepliesperuser','inactiveusersperday','newthreadspernewsgroup'];
+			for (var comm in comms) {
+				$.get("http://localhost:8182/projects/p/@project.getShortName()/m/"+comms[comm], function(data) {
+					var metric = JSON.parse(data);
+					if (metric.datatable.length > 0) 
+						vm.addCommsSpark(metric);
+				});
+			}
 
-			$.get("http://localhost:8182/projects/p/@project.getShortName()/m/commitsovertime", function(data) {
-				var metric = JSON.parse(data);
-				if (metric.datatable.length > 0) 
-					vm.addCodeSpark(metric);
-			});
-
-			$.get("http://localhost:8182/projects/p/@project.getShortName()/m/dailycommits", function(data) {
-				var metric = JSON.parse(data);
-				if (metric.datatable.length > 0) 
-					vm.addCodeSpark(metric);
-			});
-
-			$.get("http://localhost:8182/projects/p/@project.getShortName()/m/hourlycommits", function(data) {
-				var metric = JSON.parse(data);
-				if (metric.datatable.length > 0) 
-					vm.addCodeSpark(metric);
-			});
-
-			$.get("http://localhost:8182/projects/p/@project.getShortName()/m/activeusersperday", function(data) {
-				var metric = JSON.parse(data);
-				if (metric.datatable.length > 0) 
-					vm.addCommsSpark(metric);
-			});
-
-			$.get("http://localhost:8182/projects/p/@project.getShortName()/m/articles", function(data) {
-				var metric = JSON.parse(data);
-				if (metric.datatable.length > 0) 
-					vm.addCommsSpark(metric);
-			});
-
-			$.get("http://localhost:8182/projects/p/@project.getShortName()/m/requestsreplies", function(data) {
-				var metric = JSON.parse(data);
-				if (metric.datatable.length > 0) 
-					vm.addCommsSpark(metric);
-			});
-
-			$.get("http://localhost:8182/projects/p/@project.getShortName()/m/dailynewbugzillabugs", function(data) {
-				var metric = JSON.parse(data);
-				if (metric.datatable.length > 0) 
-					vm.addBugSpark(metric);
-			});
-
-			$.get("http://localhost:8182/projects/p/@project.getShortName()/m/dailybugzillacomments", function(data) {
-				var metric = JSON.parse(data);
-				if (metric.datatable.length > 0) 
-					vm.addBugSpark(metric);
-			});
-
+			var codes = ['dailycommits','commitsovertime','committersovertime','hourlycommits'];
+			for (var code in codes) {
+				$.get("http://localhost:8182/projects/p/@project.getShortName()/m/"+codes[code], function(data) {
+					var metric = JSON.parse(data);
+					if (metric.datatable.length > 0) 
+						vm.addCodeSpark(metric);
+				});
+			}
 
 
 			// $.get("http://localhost:8000/projects/p/@project.getName()/m/all", function(data) {
