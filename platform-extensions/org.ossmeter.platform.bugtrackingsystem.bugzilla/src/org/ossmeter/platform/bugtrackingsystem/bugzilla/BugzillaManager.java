@@ -271,34 +271,49 @@ public class BugzillaManager implements IBugTrackingSystemManager<Bugzilla> {
 		int counter = 0, 
 			storedBugs = 0;
 		boolean noBugsRetrieved = false;
+		List<Integer> previousMessageIds = new ArrayList<Integer>();
 		System.err.println("GET BUGS: retrieving bugs for: " + date);
 		int lastBugIdRetrieved = 0;
 		while ((date.compareTo(javaDate)==0)&&(!noBugsRetrieved)) {
 			counter++;
 			searchQueries[2] = new SearchQuery( SearchLimiter.CREATION_TIME, javaDate );
 			List<Bug> retrievedBugs = session.getBugs(searchQueries);
-//		    if (retrievedBugs.size() > 0)
-//		    	System.err.println(counter + ". getBugs:\t" + retrievedBugs.size() + " bugs retrieved");
-//		    System.err.print("\tprocessing bugs:");
+		    if (retrievedBugs.size() > 0)
+		    	System.err.println(counter + ". getBugs:\t" + retrievedBugs.size() + " bugs retrieved");
+			if (previousMessageIds.size()==retrievedBugs.size()) {
+				boolean same = true;
+				for (int index=0; index<retrievedBugs.size(); index++)
+					if (retrievedBugs.get(index).getID()!=previousMessageIds.get(index))
+						same = false;
+				if (same) {
+					String stringQuery = (String)searchQueries[1].getQuery().toString();
+					searchQueries[1] = new SearchQuery(SearchLimiter.LIMIT, 2 * Integer.parseInt(stringQuery));
+				}
+			}
+//			System.err.print("\tprocessing bugs:");
+			previousMessageIds = new ArrayList<Integer>();
 			for (Bug retrievedBug : retrievedBugs) {
 //				System.err.print(" " + retrievedBug.getID());
 				if (date.compareTo(session.getCreationTime(retrievedBug)) == 0) {
 					lastBugIdRetrieved = retrievedBug.getID();
+					previousMessageIds.add(retrievedBug.getID());
 					storeBug(bugzilla, retrievedBug, delta.getNewBugs(), "delta.getNewBugs()", session);
 					bugs.add(retrievedBug);
 					storedBugs++;
 				}
 				javaDate = session.getCreationTime(retrievedBug);
+//				System.err.println("\t javadate:" + javaDate);
 				storage.storeBug(retrievedBug, session.getCreationTime(retrievedBug));
 			}
 //			System.err.println("\n\tlast javadate:" + javaDate);
-			if (((retrievedBugs.size()==1) && (retrievedBugs.get(0).getID()==lastBugIdRetrieved))
-				|| (retrievedBugs.size()==0)) {
-//				System.err.println("\tNo bugs retrieved!");
+			if ((retrievedBugs.size()==1) && (retrievedBugs.get(0).getID()==lastBugIdRetrieved)
+					|| (retrievedBugs.size()==0)) {
+				System.err.println("\tNo bugs retrieved!");
 				noBugsRetrieved = true;
 			}
 		}
-//		System.err.println(storedBugs + " bugs to store");
+		
+		System.err.println(storedBugs + " bugs to store");
 		if (storedBugs>0)
 			System.err.println("getBugs(): stored " + storedBugs + " new bugs");
 		return bugs;
