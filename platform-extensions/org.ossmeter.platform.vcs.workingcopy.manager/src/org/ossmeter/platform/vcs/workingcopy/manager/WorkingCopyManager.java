@@ -2,6 +2,7 @@ package org.ossmeter.platform.vcs.workingcopy.manager;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import org.ossmeter.repository.model.VcsRepository;
 
@@ -27,9 +28,9 @@ public interface WorkingCopyManager {
    * Note: This is only intended to work with local working copies.
    * 
    * @param workingDirectory The target for the diff.
-   * @param startRevision The start revision for the diff.
+   * @param numberOfCommits The number of commits to fetch.
    * @param endRevision The end revision of the diff.
    * @return The entire diff stream between the two revisions as a string.
    */
-  List<String> getDiff(File workingDirectory, String startRevision, String endRevision);
+  void getDiff(File workingDirectory, String lastRevision, String endRevision, Map<String, Integer> added, Map<String, Integer> deleted);
 }

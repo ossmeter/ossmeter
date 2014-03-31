@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.ossmeter.platform.vcs.svn.SvnUtil;
 import org.ossmeter.platform.vcs.workingcopy.manager.WorkingCopyCheckoutException;
@@ -64,10 +65,12 @@ public class SvnWorkingCopyManager implements WorkingCopyManager {
   }
 
   @Override
-  public List<String> getDiff(File workingDirectory, String startRevision, String endRevision) {
-	final List<String> result = new ArrayList<>();
+  public void getDiff(File workingDirectory, String lastRevision, String endRevision, final Map<String, Integer> added, final Map<String, Integer> deleted) {
+	if (lastRevision == null) {
+	  lastRevision = "0";
+	}
 	try {
-	  List<String> commandArgs = new ArrayList<>(Arrays.asList(new String[] { "svn", "diff", "-r", startRevision+":"+endRevision }));
+	  List<String> commandArgs = new ArrayList<>(Arrays.asList(new String[] { "svn", "diff", "-r", lastRevision+":"+endRevision }));
 	  /* 
 	   * this little workaround makes sure the indexes we get for the diffs is in the form
 	   * workingCopyRoot+"/"+itemPath (relative - in the sense how I made it relative in the SVNManager)
@@ -89,8 +92,35 @@ public class SvnWorkingCopyManager implements WorkingCopyManager {
 		  public void run() {
 			  try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
 				  String line;
+				  String currentItem = "";
+				  int linesAdded = 0;
+				  int linesDeleted = 0;
 				  while ((line = reader.readLine()) != null) {
-					  result.add(line);
+					if (!line.isEmpty() && line.startsWith("Index:")) {
+					  if (!currentItem.isEmpty()) {
+					    String itemName = currentItem;
+						if (!itemName.startsWith("/")) {
+					      itemName = "/" + itemName;
+					    }
+						if (added.containsKey(itemName)) {
+						  linesAdded += added.get(itemName);
+						}
+						if (deleted.containsKey(itemName)) {
+						  linesDeleted += deleted.get(itemName);
+						}
+						added.put(itemName, linesAdded);
+						deleted.put(itemName, linesDeleted);
+						linesAdded = 0;
+						linesDeleted = 0;
+					  }
+					  currentItem = line.split(":")[1].trim();
+					  continue;
+					} 
+					if (line.matches("^\\+[^\\+].*")) {
+					  linesAdded++;
+					} else if (line.matches("^\\-[^\\-].*")) {
+				      linesDeleted++;
+					}
 				  }
 			  } catch (IOException e) {
 				  throw new RuntimeException(e);
@@ -104,6 +134,5 @@ public class SvnWorkingCopyManager implements WorkingCopyManager {
 	} catch (IOException | InterruptedException e) {
 	  throw new RuntimeException(e);
 	}
-	return result;
   }
 }

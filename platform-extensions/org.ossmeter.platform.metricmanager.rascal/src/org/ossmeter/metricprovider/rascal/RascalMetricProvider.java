@@ -44,7 +44,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
   private final String metricId;
   private final ICallableValue function;
   private MetricProviderContext context;
-  private static String lastRevision = "0";
+  private static String lastRevision = null;
   private static Map<String, File> workingCopyFolders = new HashMap<>();
   private static Map<String, File> scratchFolders = new HashMap<>();
   private static IConstructor rascalDelta;
@@ -124,21 +124,24 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		}
 		
 		String lastRevision = deltaCommits.get(deltaCommits.size()-1).getRevision();
-
+		
 		try {
-		  if (!RascalMetricProvider.lastRevision.equals(lastRevision)) {
+		  if (RascalMetricProvider.lastRevision == null || !RascalMetricProvider.lastRevision.equals(lastRevision)) {
 			  workingCopyFolders.clear();
 			  scratchFolders.clear();
 			  WorkingCopyFactory.getInstance().checkout(project, lastRevision, workingCopyFolders, scratchFolders);
 			  
-			  Map<String, List<String>> repoDiffs = new HashMap<>();
+			  Map<String, Integer> linesAdded = new HashMap<>();
+			  Map<String, Integer> linesDeleted = new HashMap<>();
+			  RascalProjectDeltas rpd = new RascalProjectDeltas(_instance.getEvaluator());
 			  
 			  for (VcsRepository repo : project.getVcsRepositories()) {
-				  repoDiffs.put(repo.getUrl(), WorkingCopyFactory.getInstance().getDiff(repo, workingCopyFolders.get(repo.getUrl()), RascalMetricProvider.lastRevision, lastRevision));
+				  WorkingCopyFactory.getInstance().getDiff(repo, workingCopyFolders.get(repo.getUrl()), RascalMetricProvider.lastRevision, lastRevision, linesAdded, linesDeleted);
+				  rpd.createChurn(repo.getUrl(), linesAdded, linesDeleted);
+				  linesAdded.clear();
+				  linesDeleted.clear();
 			  }
 			  
-			  RascalProjectDeltas rpd = new RascalProjectDeltas(_instance.getEvaluator());
-			  rpd.createChurn(repoDiffs);
 			  rascalDelta = rpd.convert(delta);
 			  RascalMetricProvider.lastRevision = lastRevision;
 		  }
