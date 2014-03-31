@@ -7,6 +7,7 @@ import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 import org.ossmeter.repository.model.github.GitHubRepository;
 import org.ossmeter.repository.model.github.GitHubUser;
 import org.ossmeter.repository.model.sourceforge.SourceForgeProject;
+import org.ossmeter.repository.model.vcs.git.GitRepository;
 import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 
 /**
@@ -34,16 +35,16 @@ public class ProjectCreationUtil {
 		return project;
 	}
 	
-//	public static Project createGitProject(String name, String url) {
-//		Project project = new Project();
-//		project.setName(name);
-//		
-//		GitRepository repo = new GitRepository();
-//		repo.setUrl(url);
-//		
-//		project.getVcsRepositories().add(repo);
-//		return project;
-//	}
+	public static Project createGitProject(String name, String url) {
+		Project project = new Project();
+		project.setName(name);
+		
+		GitRepository repo = new GitRepository();
+		repo.setUrl(url);
+		
+		project.getVcsRepositories().add(repo);
+		return project;
+	}
 	
 	public static Project createProjectWithBugTrackingSystem(String name, String url, String product, String component){
 		Project project = new Project();
