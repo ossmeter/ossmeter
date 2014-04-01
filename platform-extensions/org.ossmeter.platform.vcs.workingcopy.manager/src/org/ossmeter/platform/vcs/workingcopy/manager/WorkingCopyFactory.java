@@ -107,8 +107,8 @@ public class WorkingCopyFactory {
     return b.toString();
   }
   
-  public void getDiff(VcsRepository repo, File workingCopyFolder, String lastRevision, String endRevision, Map<String, Integer> added, Map<String, Integer> deleted) throws WorkingCopyManagerUnavailable {
+  public List<Churn> getDiff(VcsRepository repo, File workingCopyFolder, String lastRevision) throws WorkingCopyManagerUnavailable {
 	WorkingCopyManager manager = getWorkingCopyCreator(repo);
-	manager.getDiff(workingCopyFolder, lastRevision, endRevision, added, deleted);
+	return manager.getDiff(workingCopyFolder, lastRevision);
   }
 }
