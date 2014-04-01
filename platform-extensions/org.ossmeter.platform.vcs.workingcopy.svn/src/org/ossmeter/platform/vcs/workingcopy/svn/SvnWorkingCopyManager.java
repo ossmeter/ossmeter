@@ -7,9 +7,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-
 import org.ossmeter.platform.vcs.svn.SvnUtil;
+import org.ossmeter.platform.vcs.workingcopy.manager.Churn;
 import org.ossmeter.platform.vcs.workingcopy.manager.WorkingCopyCheckoutException;
 import org.ossmeter.platform.vcs.workingcopy.manager.WorkingCopyManager;
 import org.ossmeter.repository.model.VcsRepository;
@@ -65,12 +64,16 @@ public class SvnWorkingCopyManager implements WorkingCopyManager {
   }
 
   @Override
-  public void getDiff(File workingDirectory, String lastRevision, String endRevision, final Map<String, Integer> added, final Map<String, Integer> deleted) {
+  public List<Churn> getDiff(File workingDirectory, String lastRevision) {
+	List<Churn> result = new ArrayList<>();
+	StringBuilder option = new StringBuilder("-r");
 	if (lastRevision == null) {
-	  lastRevision = "0";
+	  option.setLength(0);
+	  option.append("-c");
 	}
+	option.append(lastRevision);
 	try {
-	  List<String> commandArgs = new ArrayList<>(Arrays.asList(new String[] { "svn", "diff", "-r", lastRevision+":"+endRevision }));
+	  List<String> commandArgs = new ArrayList<>(Arrays.asList(new String[] { "svn", "diff", option.toString() }));
 	  /* 
 	   * this little workaround makes sure the indexes we get for the diffs is in the form
 	   * workingCopyRoot+"/"+itemPath (relative - in the sense how I made it relative in the SVNManager)
@@ -88,8 +91,8 @@ public class SvnWorkingCopyManager implements WorkingCopyManager {
 	  
 	  
 	  //Process p = Runtime.getRuntime().exec(commandArgs.toArray(new String[0]), null, workingDirectory);
-	  Thread reader = new Thread() {
-		  public void run() {
+//	  Thread reader = new Thread() {
+//		  public void run() {
 			  try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
 				  String line;
 				  String currentItem = "";
@@ -102,14 +105,7 @@ public class SvnWorkingCopyManager implements WorkingCopyManager {
 						if (!itemName.startsWith("/")) {
 					      itemName = "/" + itemName;
 					    }
-						if (added.containsKey(itemName)) {
-						  linesAdded += added.get(itemName);
-						}
-						if (deleted.containsKey(itemName)) {
-						  linesDeleted += deleted.get(itemName);
-						}
-						added.put(itemName, linesAdded);
-						deleted.put(itemName, linesDeleted);
+						result.add(new Churn(itemName, linesAdded, linesDeleted));
 						linesAdded = 0;
 						linesDeleted = 0;
 					  }
@@ -126,13 +122,14 @@ public class SvnWorkingCopyManager implements WorkingCopyManager {
 				  throw new RuntimeException(e);
 			  }
 			  
-		  }
-	  };
-	  reader.start();
+//		  }
+//	  };
+//	  reader.start();
 	  p.waitFor();
-	  reader.join();
+//	  reader.join();
 	} catch (IOException | InterruptedException e) {
 	  throw new RuntimeException(e);
 	}
+	return result;
   }
 }

@@ -7,8 +7,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
+import org.ossmeter.platform.vcs.workingcopy.manager.Churn;
 import org.ossmeter.platform.vcs.workingcopy.manager.WorkingCopyCheckoutException;
 import org.ossmeter.platform.vcs.workingcopy.manager.WorkingCopyManager;
 import org.ossmeter.repository.model.VcsRepository;
@@ -47,17 +47,15 @@ public class GitWorkingCopyManager implements WorkingCopyManager {
   }
 
   @Override
-  public void getDiff(File workingDirectory, String lastRevision, String endRevision, final Map<String, Integer> added, final Map<String, Integer> deleted) {
-//	  if (lastRevision == null) {
-//		  lastRevision = "";
-//	  }
+  public List<Churn> getDiff(File workingDirectory, String lastRevision) {
+	  List<Churn> result = new ArrayList<>();
+	  List<String> commandArgs = new ArrayList<>(Arrays.asList(new String[] { "git", "log", "--numstat" }));
+	  
+	  if (lastRevision != null) {
+		  commandArgs.add(2, lastRevision.concat(".."));
+	  }
 		try {
-		  List<String> commandArgs = new ArrayList<>(Arrays.asList(new String[] { "git", "log", endRevision, "--numstat" }));
 		  
-		  if (lastRevision != null) {
-			commandArgs.remove(2);
-		    commandArgs.add(2, lastRevision+".."+endRevision);
-		  }
 		  /* 
 		   * this little workaround makes sure the indexes we get for the diffs is in the form
 		   * workingCopyRoot+"/"+itemPath (relative - in the sense how I made it relative in the SVNManager)
@@ -84,15 +82,7 @@ public class GitWorkingCopyManager implements WorkingCopyManager {
 						if (lineParts.length == 3 && lineParts[0].matches("\\d+") && lineParts[1].matches("\\d+")) {
 						  int addedLines = Integer.parseInt(lineParts[0]);
 						  int deletedLines = Integer.parseInt(lineParts[1]);
-						  String key = lineParts[2];
-						  if (added.containsKey(key)) {
-							addedLines += added.get(key);
-						  }
-						  if (deleted.containsKey(key)) {
-						    deletedLines += deleted.get(key);
-						  }
-						  added.put(key, addedLines);
-						  deleted.put(key, deletedLines);
+						  result.add(new Churn(lineParts[2], addedLines, deletedLines));
 						} else {
 						  System.err.println("Line is not a valid num stat from git or the file is a binary");
 						}
@@ -109,5 +99,6 @@ public class GitWorkingCopyManager implements WorkingCopyManager {
 		} catch (IOException | InterruptedException e) {
 		  throw new RuntimeException(e);
 		}
+		return result;
   }
 }
