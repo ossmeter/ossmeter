@@ -1,7 +1,6 @@
 package org.ossmeter.metricprovider.rascal;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +21,7 @@ import org.ossmeter.platform.delta.vcs.VcsChangeType;
 import org.ossmeter.platform.delta.vcs.VcsCommit;
 import org.ossmeter.platform.delta.vcs.VcsCommitItem;
 import org.ossmeter.platform.delta.vcs.VcsRepositoryDelta;
+import org.ossmeter.platform.vcs.workingcopy.manager.Churn;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.VcsRepository;
 import org.rascalmpl.interpreter.Evaluator;
@@ -33,7 +33,7 @@ public class RascalProjectDeltas {
   private final IValueFactory values = ValueFactoryFactory.getValueFactory();
   private final TypeFactory TF = TypeFactory.getInstance();
   public static final String MODULE = "org::ossmeter::metricprovider::ProjectDelta";
-  private IList churns;
+  private Map<VcsCommit, List<Churn>> churns;
   
   public RascalProjectDeltas(Evaluator eval) {
 	if (!eval.getHeap().existsModule(MODULE)) {
@@ -42,8 +42,9 @@ public class RascalProjectDeltas {
 	store.extendStore(eval.getHeap().getModule(MODULE).getStore());
   }
 
-  public IConstructor convert(final ProjectDelta delta) {
+  public IConstructor convert(final ProjectDelta delta, Map<VcsCommit, List<Churn>> churnPerCommit) {
 	List<IValue> children = new ArrayList<>();
+	this.churns = churnPerCommit;
 	
 	children.add(convert(delta.getDate()));
 	children.add(convert(delta.getProject()));
@@ -100,7 +101,6 @@ public class RascalProjectDeltas {
 	children.add(convert(vcsRepoDelta.getRepository()));
 	children.add(convert(vcsRepoDelta.getCommits()));
 	children.add(convert(vcsRepoDelta.getLatestRevision()));
-	children.add(churns);
 		
 	return createConstructor("VcsRepositoryDelta", "vcsRepositoryDelta", children.toArray(new IValue[0]));
   }
@@ -129,6 +129,7 @@ public class RascalProjectDeltas {
 	
 	children.add(convert(commitItem.getPath()));
 	children.add(convert(commitItem.getChangeType()));
+	children.add(createChurn(churns.get(commitItem.getCommit()), commitItem.getPath()));
 				
 	return createConstructor("VcsCommitItem", "vcsCommitItem", children.toArray(new IValue[0]));
   }
@@ -137,23 +138,17 @@ public class RascalProjectDeltas {
 	return values.constructor(store.lookupConstructor(store.lookupAbstractDataType("VcsChangeType"), changeType.name().toLowerCase(), TF.tupleEmpty()));
   }
 
-  public void createChurn(String url, Map<String, Integer> linesAdded, Map<String, Integer> linesDeleted) {
-	churns = values.list();
-	int addedLines = 0;
-	int deletedLines = 0;
+  public IList createChurn(List<Churn> commitChurns, String itemPath) {
+	IListWriter result = values.listWriter();
 	
-	for (Integer i : linesAdded.values()) {
-		addedLines += i;
+	for (Churn c : commitChurns) {
+		if (c.getPath().equals(itemPath)) {
+			result.append(createConstructor("Churn", "linesAdded", values.integer(c.getLinesAdded())));
+			result.append(createConstructor("Churn", "linesDeleted", values.integer(c.getLinesDeleted())));
+			break;
+		}
 	}
 	
-	for (Integer i: linesDeleted.values()) {
-		deletedLines += i;
-	}
-	
-	List<IValue> children = new ArrayList<>();
-	children.add(createConstructor("Churn", "linesAdded", values.integer(addedLines)));
-	children.add(createConstructor("Churn", "linesDeleted", values.integer(deletedLines)));
-	
-	churns = values.list(children.toArray(new IValue[0]));
+	return result.done();
   }
 }

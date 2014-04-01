@@ -14,7 +14,7 @@ data VcsRepository
   ;
   
 data VcsRepositoryDelta
-  = vcsRepositoryDelta(VcsRepository repository, list[VcsCommit] commits, str lastRevision, list[Churn] churns)
+  = vcsRepositoryDelta(VcsRepository repository, list[VcsCommit] commits, str lastRevision)
   ;
   
 data VcsCommit
@@ -22,7 +22,7 @@ data VcsCommit
   ;
   
 data VcsCommitItem
-  = vcsCommitItem(str path, VcsChangeType changeType)
+  = vcsCommitItem(str path, VcsChangeType changeType, list[Churn] churns)
   ;
   
 data VcsChangeType

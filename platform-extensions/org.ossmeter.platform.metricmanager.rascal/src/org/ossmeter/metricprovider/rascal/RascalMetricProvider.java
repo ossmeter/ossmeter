@@ -27,6 +27,7 @@ import org.ossmeter.platform.delta.vcs.VcsCommit;
 import org.ossmeter.platform.delta.vcs.VcsCommitItem;
 import org.ossmeter.platform.delta.vcs.VcsProjectDelta;
 import org.ossmeter.platform.delta.vcs.VcsRepositoryDelta;
+import org.ossmeter.platform.vcs.workingcopy.manager.Churn;
 import org.ossmeter.platform.vcs.workingcopy.manager.WorkingCopyCheckoutException;
 import org.ossmeter.platform.vcs.workingcopy.manager.WorkingCopyFactory;
 import org.ossmeter.platform.vcs.workingcopy.manager.WorkingCopyManagerUnavailable;
@@ -45,6 +46,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
   private final ICallableValue function;
   private MetricProviderContext context;
   private static String lastRevision = null;
+  private static Map<VcsCommit, List<Churn>> churnPerCommit = new HashMap<>();
   private static Map<String, File> workingCopyFolders = new HashMap<>();
   private static Map<String, File> scratchFolders = new HashMap<>();
   private static IConstructor rascalDelta;
@@ -118,33 +120,35 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		  System.err.println("Found repository deltas to be empty. Returning without doing anything");
 		  return;
 		}
+		if (RascalMetricProvider.lastRevision == null) {
+			RascalMetricProvider.lastRevision = repoDeltas.get(repoDeltas.size()-1).getLatestRevision();
+			// the very first time, this will still be null, so we need to check for null below as well
+		}
 		List<VcsCommit> deltaCommits = repoDeltas.get(repoDeltas.size()-1).getCommits();
 		if (deltaCommits.isEmpty()) {
 			System.err.println("No commits? continuing for now...");
 		}
 		
-		String lastRevision = deltaCommits.get(deltaCommits.size()-1).getRevision();
+		RascalProjectDeltas rpd = new RascalProjectDeltas(_instance.getEvaluator());
 		
-		try {
-		  if (RascalMetricProvider.lastRevision == null || !RascalMetricProvider.lastRevision.equals(lastRevision)) {
-			  workingCopyFolders.clear();
-			  scratchFolders.clear();
-			  WorkingCopyFactory.getInstance().checkout(project, lastRevision, workingCopyFolders, scratchFolders);
-			  
-			  Map<String, Integer> linesAdded = new HashMap<>();
-			  Map<String, Integer> linesDeleted = new HashMap<>();
-			  RascalProjectDeltas rpd = new RascalProjectDeltas(_instance.getEvaluator());
-			  
-			  for (VcsRepository repo : project.getVcsRepositories()) {
-				  WorkingCopyFactory.getInstance().getDiff(repo, workingCopyFolders.get(repo.getUrl()), RascalMetricProvider.lastRevision, lastRevision, linesAdded, linesDeleted);
-				  rpd.createChurn(repo.getUrl(), linesAdded, linesDeleted);
-				  linesAdded.clear();
-				  linesDeleted.clear();
-			  }
-			  
-			  rascalDelta = rpd.convert(delta);
-			  RascalMetricProvider.lastRevision = lastRevision;
-		  }
+		if (RascalMetricProvider.lastRevision == null || !deltaCommits.get(deltaCommits.size()-1).getRevision().equals(RascalMetricProvider.lastRevision)) {
+			for (VcsCommit commit: deltaCommits) {
+				workingCopyFolders.clear();
+				scratchFolders.clear();
+				try {
+					WorkingCopyFactory.getInstance().checkout(project, commit.getRevision(), workingCopyFolders, scratchFolders);
+					VcsRepository repo = commit.getDelta().getRepository();
+					List<Churn> currentChurn = WorkingCopyFactory.getInstance().getDiff(repo, workingCopyFolders.get(repo.getUrl()), RascalMetricProvider.lastRevision);
+					RascalMetricProvider.churnPerCommit.put(commit, currentChurn);
+					RascalMetricProvider.lastRevision = commit.getRevision();
+				} catch (WorkingCopyManagerUnavailable | WorkingCopyCheckoutException e) {
+					Rasctivator.logException("Working copy manager threw an error", e);
+				}
+			}
+		}
+		
+		rascalDelta = rpd.convert(delta, churnPerCommit);
+		System.out.println(rascalDelta);
 		  
 		  IMap rWorkingCopyFolders = _instance.makeMap(workingCopyFolders);
 		  IMap rScratchFolders = _instance.makeMap(scratchFolders);
@@ -178,10 +182,6 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 			}
 			db.sync();
 		  }
-			
-		} catch (WorkingCopyManagerUnavailable | WorkingCopyCheckoutException e) {
-		  Rasctivator.logException("Working copy manager threw an error", e);
-		}
 	}
 	
 	private Map<String, Map<String, IValue>> getM3s(Project project, ProjectDelta delta, IConstructor rdelta) {
