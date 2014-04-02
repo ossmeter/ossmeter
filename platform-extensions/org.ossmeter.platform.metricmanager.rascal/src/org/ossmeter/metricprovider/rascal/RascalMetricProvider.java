@@ -152,7 +152,12 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		  
 		  IMap rWorkingCopyFolders = _instance.makeMap(workingCopyFolders);
 		  IMap rScratchFolders = _instance.makeMap(scratchFolders);
-		  _instance.initialize(rascalDelta, rWorkingCopyFolders, rScratchFolders);
+		  try {
+			_instance.initialize(rascalDelta, rWorkingCopyFolders, rScratchFolders);
+		  } catch (Exception e) {
+			System.err.println("Problem in initialization");
+			// Need better handling
+		  }
 			
 		  // TODO: generalize to any return type
 		  // TODO: handle exceptions gracefully
@@ -180,8 +185,8 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 				measurement.setUri(key);
 				db.getMeasurements().add(measurement);
 			}
-			db.sync();
 		  }
+	  db.sync();
 	}
 	
 	private Map<String, Map<String, IValue>> getM3s(Project project, ProjectDelta delta, IConstructor rdelta) {
