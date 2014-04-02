@@ -10,19 +10,20 @@ map[str revision, str churn] churnPerCommit(ProjectDelta delta, map[str, loc] wo
   map[str revision, str churn] result = ();
   
   
-  for (/VcsRepositoryDelta vcsRepoDelta <- delta) {
-    str lastRevision = vcsRepoDelta.commits[-1].revision;
-    int added = 0;
-    int deleted = 0;
-    for (Churn churn <- vcsRepoDelta.churns) {
-      if (\linesAdded(int i) := churn) {
-        added += i;
-      }
-      if (\linesDeleted(int i) := churn) {
-        deleted += i;
-      }
+  for (/VcsCommit commit <- delta) {
+    int linesAdded = 0;
+    int linesDeleted = 0;
+    for (VcsCommitItem item <- commit.items) {
+       visit(item.churns) {
+         case \linesAdded(int i): {
+           linesAdded += i;
+         }
+         case \linesDeleted(int i): {
+           linesDeleted += i;
+         }
+       }
     }
-    result[lastRevision] = "Lines added = <added> : Lines deleted = <deleted>";
+    result[commit.revision] = "added = <linesAdded> : deleted = <linesDeleted>";
   }
   
   return result;
