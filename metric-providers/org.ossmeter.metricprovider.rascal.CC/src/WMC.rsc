@@ -1,19 +1,44 @@
 module WMC
 
-import lang::java::m3::Core;
 import lang::java::m3::AST;
+import lang::java::m3::Core;
 import IO;
 import Node;
 import List;
 import String;
 import Map;
-import Manager;
+import ValueIO;
+
+import analysis::statistics::Frequency;
+import analysis::statistics::Inference;
+
+import org::ossmeter::metricprovider::Manager;
+import org::ossmeter::metricprovider::ProjectDelta;
 
 @metric{WMC}
 @doc{Compute your WMC}
 @friendlyName{Weighted Method Count}
-map[str class, num wmcCount] getWMC(M3 fileM3) {
-  return (replaceAll(replaceFirst(cl.path, "/", ""), "/", ".") : sum([getCC(m, fileM3.ast) | m <- fileM3.model@containment[cl], isMethod(m)]) | <cl,_> <- fileM3.model@declarations, isClass(cl));
+map[str class, num wmcCount] getWMC(ProjectDelta delta, map[str, loc] workingCopyFolders, map[str, loc] scratchFolders) {
+  map[str class, num wmcCount] result = ();
+  map[str, list[str]] changedItemsPerRepo = getChangedItemsPerRepository(delta);
+  
+  for (str repo <- changedItemsPerRepo) {
+    list[str] changedItems = changedItemsPerRepo[repo];
+    loc workingCopyFolder = workingCopyFolders[repo];
+    loc scratchFolder = scratchFolders[repo];
+    
+    for (str changedItem <- changedItems) {
+      if (exists(workingCopyFolder+changedItem)) {
+        loc scratchFile = scratchFolder+changedItem;
+        M3 itemM3 = readBinaryValueFile(#M3, scratchFile[extension = scratchFile.extension+".m3"]);
+        if (!(unknownFileType(_) := itemM3)) {
+          result += (replaceAll(replaceFirst(cl.path, "/", ""), "/", ".") : sum([getCC(m, itemM3.ast) | m <- itemM3.model@containment[cl], isMethod(m)]) | <cl, _> <- itemM3.model@containment, isClass(cl));
+        }
+      }
+    }
+  }
+  
+  return result;
 }
 
 map[str class, num wmcCount] getWMC(unknownFileType(int lines)) = ("": -1);
@@ -22,8 +47,27 @@ map[str class, int cc] getCC(unknownFileType(int lines)) = ("" : -1);
 @metric{CC}
 @doc{Compute your McCabe}
 @friendlyName{McCabe's Cyclomatic Complexity Metric}
-map[str class, int cc] getCC(M3 fileM3) {
-  return (replaceAll(replaceFirst(m.path, "/", ""), "/", ".") : getCC(m, fileM3.ast) | <cl,_> <- fileM3.model@declarations, isClass(cl), m <- fileM3.model@containment[cl], isMethod(m));
+map[str method, int cc] getCC(ProjectDelta delta, map[str, loc] workingCopyFolders, map[str, loc] scratchFolders) {
+  map[str method, int cc] result = ();
+  map[str, list[str]] changedItemsPerRepo = getChangedItemsPerRepository(delta);
+  
+  for (str repo <- changedItemsPerRepo) {
+    list[str] changedItems = changedItemsPerRepo[repo];
+    loc workingCopyFolder = workingCopyFolders[repo];
+    loc scratchFolder = scratchFolders[repo];
+    
+    for (str changedItem <- changedItems) {
+      if (exists(workingCopyFolder+changedItem)) {
+        loc scratchFile = scratchFolder+changedItem;
+        M3 itemM3 = readBinaryValueFile(#M3, scratchFile[extension = scratchFile.extension+".m3"]);
+        if (!(unknownFileType(_) := itemM3)) {
+          result += (replaceAll(replaceFirst(m.path, "/", ""), "/", ".") : getCC(m, itemM3.ast) | <cl, _> <- itemM3.model@containment, isClass(cl), m <- itemM3.model@containment[cl], isMethod(m));
+        }
+      }
+    }
+  }
+  
+  return result;
 }
 
 Declaration getASTOfMethod(loc methodLoc, Declaration fileAST) {
@@ -42,24 +86,28 @@ int getCC(loc m, Declaration ast) {
   Declaration methodAST = getASTOfMethod(m, ast);
   
   visit(methodAST) {
-    case Statement s: {
-      count += getPaths(s);
-    }
+    case \foreach(Declaration parameter, Expression collection, Statement body): count += 1;
+    case \for(list[Expression] initializers, Expression condition, list[Expression] updaters, Statement body): count += 1;
+    case \if(Expression condition, Statement thenBranch, Statement elseBranch): count += 1;
+    case \for(list[Expression] initializers, list[Expression] updaters, Statement body): count += 1;
+    case \if(Expression condition, Statement thenBranch): count += 1;
+    case \case(Expression expression): count += 1;
+    case \while(Expression condition, Statement body): count += 1;
+    case \do(Statement body, Expression condition): count += 1;
+    case \catch(Declaration exception, Statement body): count += 1;
+    case \infix(Expression lhs, "||", Expression rhs, list[Expression] extendedOperands): count += 1 + size(extendedOperands);
+    case \infix(Expression lhs, "&&", Expression rhs, list[Expression] extendedOperands): count += 1 + size(extendedOperands);
   }
   return count;
 }
 
-int getPaths(\foreach(Declaration parameter, Expression collection, Statement body)) = 1;
-int getPaths(\for(list[Expression] initializers, Expression condition, list[Expression] updaters, Statement body))  = 1 + getPaths(condition);
-int getPaths(\for(list[Expression] initializers, list[Expression] updaters, Statement body)) = 1;
-int getPaths(\if(Expression condition, Statement thenBranch, Statement elseBranch)) = 1 + getPaths(condition);
-int getPaths(\if(Expression condition, Statement thenBranch)) = 1 + getPaths(condition);
-int getPaths(\case(Expression expression)) = 1 + getPaths(expression);
-int getPaths(\while(Expression condition, Statement body)) = 1 + getPaths(condition);
-int getPaths(\do(Statement body, Expression condition)) = getPaths(condition);
-int getPaths(\catch(Declaration exception, Statement body)) = 1;
-default int getPaths(Statement s) = 0;
-
-int getPaths(\infix(Expression lhs, "||", Expression rhs, list[Expression] extendedOperands)) = 1 + size(extendedOperands);
-int getPaths(\infix(Expression lhs, "&&", Expression rhs, list[Expression] extendedOperands)) = 1 + size(extendedOperands);
-default int getPaths(Expression e) = 0;
+@metric{ccovermethods}
+@doc{Calculates the gini coefficient of cc over methods}
+@friendlyName{ccovermethods}
+real giniCCOverMethods(ProjectDelta delta, map[str, loc] workingCopyFolders, map[str, loc] scratchFolders) {
+  map[str, int] ccMap = getCC(delta, workingCopyFolders, scratchFolders);
+  
+  distCCOverMethods = distribution(ccMap);
+  
+  return gini([<0,0>]+[<x, distCCOverMethods[x]> | x <- distCCOverMethods]);
+}

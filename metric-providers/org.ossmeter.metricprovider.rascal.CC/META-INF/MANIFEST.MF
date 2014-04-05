@@ -3,4 +3,5 @@ Bundle-ManifestVersion: 2
 Bundle-Name: CC
 Bundle-SymbolicName: org.ossmeter.metricprovider.rascal.CC;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Require-Bundle: rascal
+Require-Bundle: org.ossmeter.metricprovider.rascal;bundle-version="0.0.0",
+ org.apache.commons.math;bundle-version="2.1.0"
