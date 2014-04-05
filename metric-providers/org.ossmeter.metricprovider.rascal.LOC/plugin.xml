@@ -2,26 +2,7 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="com.googlecode.pongo.runtime.osgi">
-      <class
-            name="org.ossmeter.metricprovider.rascal.metric.trans.model.LinesOfCodeData">
-      </class>
-      <class
-            name="org.ossmeter.metricprovider.rascal.metric.trans.model.Loc">
-      </class>
-   </extension>
-   <extension
-         point="org.ossmeter.platform.metricprovider">
-      <metricProvider
-            provider="org.ossmeter.metricprovider.rascal.metric.LinesOfCode">
-      </metricProvider>
-   </extension>
-   <extension
-         point="org.ossmeter.platform.client.api.pongoviz">
-      <visualiser
-            metricProviderId="org.ossmeter.metricprovider.rascal.metric.LinesOfCode"
-            pongoVisualiser="org.ossmeter.metricprovider.rascal.metric.trans.model.LocViz">
-      </visualiser>
+         point="ossmeter.rascal.metricprovider">
    </extension>
 
 </plugin>
