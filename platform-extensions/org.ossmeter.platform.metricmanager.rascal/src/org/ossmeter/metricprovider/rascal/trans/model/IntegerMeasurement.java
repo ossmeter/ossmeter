@@ -14,12 +14,12 @@ public class IntegerMeasurement extends Measurement {
 		super();
 		super.setSuperTypes("org.ossmeter.metricprovider.rascal.trans.model.Measurement");
 		URI.setOwningType("org.ossmeter.metricprovider.rascal.trans.model.IntegerMeasurement");
-		METRIC.setOwningType("org.ossmeter.metricprovider.rascal.trans.model.IntegerMeasurement");
+		DATE.setOwningType("org.ossmeter.metricprovider.rascal.trans.model.IntegerMeasurement");
 		VALUE.setOwningType("org.ossmeter.metricprovider.rascal.trans.model.IntegerMeasurement");
 	}
 	
 	public static StringQueryProducer URI = new StringQueryProducer("uri"); 
-	public static StringQueryProducer METRIC = new StringQueryProducer("metric"); 
+	public static StringQueryProducer DATE = new StringQueryProducer("date"); 
 	public static NumericalQueryProducer VALUE = new NumericalQueryProducer("value");
 	
 	

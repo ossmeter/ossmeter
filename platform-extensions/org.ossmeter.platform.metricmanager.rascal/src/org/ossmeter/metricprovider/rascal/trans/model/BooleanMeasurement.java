@@ -14,12 +14,12 @@ public class BooleanMeasurement extends Measurement {
 		super();
 		super.setSuperTypes("org.ossmeter.metricprovider.rascal.trans.model.Measurement");
 		URI.setOwningType("org.ossmeter.metricprovider.rascal.trans.model.BooleanMeasurement");
-		METRIC.setOwningType("org.ossmeter.metricprovider.rascal.trans.model.BooleanMeasurement");
+		DATE.setOwningType("org.ossmeter.metricprovider.rascal.trans.model.BooleanMeasurement");
 		VALUE.setOwningType("org.ossmeter.metricprovider.rascal.trans.model.BooleanMeasurement");
 	}
 	
 	public static StringQueryProducer URI = new StringQueryProducer("uri"); 
-	public static StringQueryProducer METRIC = new StringQueryProducer("metric"); 
+	public static StringQueryProducer DATE = new StringQueryProducer("date"); 
 	public static StringQueryProducer VALUE = new StringQueryProducer("value"); 
 	
 	

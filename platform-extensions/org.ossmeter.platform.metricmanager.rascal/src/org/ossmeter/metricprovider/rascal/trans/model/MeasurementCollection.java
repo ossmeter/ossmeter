@@ -9,7 +9,7 @@ public class MeasurementCollection extends PongoCollection<Measurement> {
 	public MeasurementCollection(DBCollection dbCollection) {
 		super(dbCollection);
 		createIndex("uri");
-		createIndex("metric");
+		createIndex("date");
 	}
 	
 	public Iterable<Measurement> findById(String id) {
@@ -84,12 +84,12 @@ public class MeasurementCollection extends PongoCollection<Measurement> {
 	public long countByUri(String q) {
 		return dbCollection.count(new BasicDBObject("uri", q + ""));
 	}
-	public Iterable<Measurement> findByMetric(String q) {
-		return new IteratorIterable<Measurement>(new PongoCursorIterator<Measurement>(this, dbCollection.find(new BasicDBObject("metric", q + ""))));
+	public Iterable<Measurement> findByDate(String q) {
+		return new IteratorIterable<Measurement>(new PongoCursorIterator<Measurement>(this, dbCollection.find(new BasicDBObject("date", q + ""))));
 	}
 	
-	public Measurement findOneByMetric(String q) {
-		Measurement measurement = (Measurement) PongoFactory.getInstance().createPongo(dbCollection.findOne(new BasicDBObject("metric", q + "")));
+	public Measurement findOneByDate(String q) {
+		Measurement measurement = (Measurement) PongoFactory.getInstance().createPongo(dbCollection.findOne(new BasicDBObject("date", q + "")));
 		if (measurement != null) {
 			measurement.setPongoCollection(this);
 		}
@@ -97,12 +97,12 @@ public class MeasurementCollection extends PongoCollection<Measurement> {
 	}
 	
 	
-	public Iterable<Measurement> findIntegerMeasurementsByMetric(String q) {
-		return new IteratorIterable<Measurement>(new PongoCursorIterator<Measurement>(this, dbCollection.find(new BasicDBObject("metric", q + "").append("_type", "org.ossmeter.metricprovider.rascal.trans.model.IntegerMeasurement"))));
+	public Iterable<Measurement> findIntegerMeasurementsByDate(String q) {
+		return new IteratorIterable<Measurement>(new PongoCursorIterator<Measurement>(this, dbCollection.find(new BasicDBObject("date", q + "").append("_type", "org.ossmeter.metricprovider.rascal.trans.model.IntegerMeasurement"))));
 	}
 	
-	public Measurement findOneIntegerMeasurementByMetric(String q) {
-		Measurement measurement = (Measurement) PongoFactory.getInstance().createPongo(dbCollection.findOne(new BasicDBObject("metric", q + "").append("_type", "org.ossmeter.metricprovider.rascal.trans.model.IntegerMeasurement")));
+	public Measurement findOneIntegerMeasurementByDate(String q) {
+		Measurement measurement = (Measurement) PongoFactory.getInstance().createPongo(dbCollection.findOne(new BasicDBObject("date", q + "").append("_type", "org.ossmeter.metricprovider.rascal.trans.model.IntegerMeasurement")));
 		if (measurement != null) {
 			measurement.setPongoCollection(this);
 		}
@@ -110,12 +110,12 @@ public class MeasurementCollection extends PongoCollection<Measurement> {
 	}
 	
 	
-	public Iterable<Measurement> findRealMeasurementsByMetric(String q) {
-		return new IteratorIterable<Measurement>(new PongoCursorIterator<Measurement>(this, dbCollection.find(new BasicDBObject("metric", q + "").append("_type", "org.ossmeter.metricprovider.rascal.trans.model.RealMeasurement"))));
+	public Iterable<Measurement> findRealMeasurementsByDate(String q) {
+		return new IteratorIterable<Measurement>(new PongoCursorIterator<Measurement>(this, dbCollection.find(new BasicDBObject("date", q + "").append("_type", "org.ossmeter.metricprovider.rascal.trans.model.RealMeasurement"))));
 	}
 	
-	public Measurement findOneRealMeasurementByMetric(String q) {
-		Measurement measurement = (Measurement) PongoFactory.getInstance().createPongo(dbCollection.findOne(new BasicDBObject("metric", q + "").append("_type", "org.ossmeter.metricprovider.rascal.trans.model.RealMeasurement")));
+	public Measurement findOneRealMeasurementByDate(String q) {
+		Measurement measurement = (Measurement) PongoFactory.getInstance().createPongo(dbCollection.findOne(new BasicDBObject("date", q + "").append("_type", "org.ossmeter.metricprovider.rascal.trans.model.RealMeasurement")));
 		if (measurement != null) {
 			measurement.setPongoCollection(this);
 		}
@@ -123,12 +123,12 @@ public class MeasurementCollection extends PongoCollection<Measurement> {
 	}
 	
 	
-	public Iterable<Measurement> findBooleanMeasurementsByMetric(String q) {
-		return new IteratorIterable<Measurement>(new PongoCursorIterator<Measurement>(this, dbCollection.find(new BasicDBObject("metric", q + "").append("_type", "org.ossmeter.metricprovider.rascal.trans.model.BooleanMeasurement"))));
+	public Iterable<Measurement> findBooleanMeasurementsByDate(String q) {
+		return new IteratorIterable<Measurement>(new PongoCursorIterator<Measurement>(this, dbCollection.find(new BasicDBObject("date", q + "").append("_type", "org.ossmeter.metricprovider.rascal.trans.model.BooleanMeasurement"))));
 	}
 	
-	public Measurement findOneBooleanMeasurementByMetric(String q) {
-		Measurement measurement = (Measurement) PongoFactory.getInstance().createPongo(dbCollection.findOne(new BasicDBObject("metric", q + "").append("_type", "org.ossmeter.metricprovider.rascal.trans.model.BooleanMeasurement")));
+	public Measurement findOneBooleanMeasurementByDate(String q) {
+		Measurement measurement = (Measurement) PongoFactory.getInstance().createPongo(dbCollection.findOne(new BasicDBObject("date", q + "").append("_type", "org.ossmeter.metricprovider.rascal.trans.model.BooleanMeasurement")));
 		if (measurement != null) {
 			measurement.setPongoCollection(this);
 		}
@@ -136,12 +136,12 @@ public class MeasurementCollection extends PongoCollection<Measurement> {
 	}
 	
 	
-	public Iterable<Measurement> findStringMeasurementsByMetric(String q) {
-		return new IteratorIterable<Measurement>(new PongoCursorIterator<Measurement>(this, dbCollection.find(new BasicDBObject("metric", q + "").append("_type", "org.ossmeter.metricprovider.rascal.trans.model.StringMeasurement"))));
+	public Iterable<Measurement> findStringMeasurementsByDate(String q) {
+		return new IteratorIterable<Measurement>(new PongoCursorIterator<Measurement>(this, dbCollection.find(new BasicDBObject("date", q + "").append("_type", "org.ossmeter.metricprovider.rascal.trans.model.StringMeasurement"))));
 	}
 	
-	public Measurement findOneStringMeasurementByMetric(String q) {
-		Measurement measurement = (Measurement) PongoFactory.getInstance().createPongo(dbCollection.findOne(new BasicDBObject("metric", q + "").append("_type", "org.ossmeter.metricprovider.rascal.trans.model.StringMeasurement")));
+	public Measurement findOneStringMeasurementByDate(String q) {
+		Measurement measurement = (Measurement) PongoFactory.getInstance().createPongo(dbCollection.findOne(new BasicDBObject("date", q + "").append("_type", "org.ossmeter.metricprovider.rascal.trans.model.StringMeasurement")));
 		if (measurement != null) {
 			measurement.setPongoCollection(this);
 		}
@@ -149,8 +149,8 @@ public class MeasurementCollection extends PongoCollection<Measurement> {
 	}
 	
 
-	public long countByMetric(String q) {
-		return dbCollection.count(new BasicDBObject("metric", q + ""));
+	public long countByDate(String q) {
+		return dbCollection.count(new BasicDBObject("date", q + ""));
 	}
 	
 	@Override

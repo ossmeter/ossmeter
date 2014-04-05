@@ -13,11 +13,11 @@ public abstract class Measurement extends Pongo {
 	public Measurement() { 
 		super();
 		URI.setOwningType("org.ossmeter.metricprovider.rascal.trans.model.Measurement");
-		METRIC.setOwningType("org.ossmeter.metricprovider.rascal.trans.model.Measurement");
+		DATE.setOwningType("org.ossmeter.metricprovider.rascal.trans.model.Measurement");
 	}
 	
 	public static StringQueryProducer URI = new StringQueryProducer("uri"); 
-	public static StringQueryProducer METRIC = new StringQueryProducer("metric"); 
+	public static StringQueryProducer DATE = new StringQueryProducer("date"); 
 	
 	
 	public String getUri() {
@@ -29,12 +29,12 @@ public abstract class Measurement extends Pongo {
 		notifyChanged();
 		return this;
 	}
-	public String getMetric() {
-		return parseString(dbObject.get("metric")+"", "");
+	public String getDate() {
+		return parseString(dbObject.get("date")+"", "");
 	}
 	
-	public Measurement setMetric(String metric) {
-		dbObject.put("metric", metric);
+	public Measurement setDate(String date) {
+		dbObject.put("date", date);
 		notifyChanged();
 		return this;
 	}

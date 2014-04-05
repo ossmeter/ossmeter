@@ -10,7 +10,9 @@ import java.util.TreeMap;
 
 import org.eclipse.imp.pdb.facts.IConstructor;
 import org.eclipse.imp.pdb.facts.IInteger;
+import org.eclipse.imp.pdb.facts.IList;
 import org.eclipse.imp.pdb.facts.IMap;
+import org.eclipse.imp.pdb.facts.IReal;
 import org.eclipse.imp.pdb.facts.IString;
 import org.eclipse.imp.pdb.facts.IValue;
 import org.eclipse.imp.pdb.facts.type.Type;
@@ -145,10 +147,9 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 					Rasctivator.logException("Working copy manager threw an error", e);
 				}
 			}
+			rascalDelta = rpd.convert(delta, churnPerCommit);
+			System.out.println(rascalDelta);
 		}
-		
-		rascalDelta = rpd.convert(delta, churnPerCommit);
-		System.out.println(rascalDelta);
 		  
 		  IMap rWorkingCopyFolders = _instance.makeMap(workingCopyFolders);
 		  IMap rScratchFolders = _instance.makeMap(scratchFolders);
@@ -158,33 +159,57 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 			System.err.println("Problem in initialization");
 			// Need better handling
 		  }
+		  
+		  System.out.println(rWorkingCopyFolders);
+		  System.out.println(rScratchFolders);
 			
 		  // TODO: generalize to any return type
 		  // TODO: handle exceptions gracefully
 		  // TODO: route warnings to the platform as well
-		  IMap result = (IMap) function.call( new Type[] { rascalDelta.getType(), rWorkingCopyFolders.getType(), rScratchFolders.getType() }, 
+		  IValue result = function.call( new Type[] { rascalDelta.getType(), rWorkingCopyFolders.getType(), rScratchFolders.getType() }, 
 												new IValue[] { rascalDelta, rWorkingCopyFolders, rScratchFolders }, null).getValue();
 		  
-		  for (Iterator<Entry<IValue, IValue>> it = result.entryIterator(); it.hasNext(); ) {
-			Entry<IValue, IValue> currentEntry = (Entry<IValue, IValue>) it.next();
-			// TODO: change to source locations
-			String key = ((IString) currentEntry.getKey()).getValue();
-			
-			if (!key.isEmpty()) {
-				Measurement measurement = null;
-				// for cc need to delete all methods for this file
+		  if (result.getType().isMap()) {
+			  for (Iterator<Entry<IValue, IValue>> it = ((IMap)result).entryIterator(); it.hasNext(); ) {
+				Entry<IValue, IValue> currentEntry = (Entry<IValue, IValue>) it.next();
+				// TODO: change to source locations
+				String key = ((IString) currentEntry.getKey()).getValue();
 				
-				// TODO: dispatch on return type
-				if (currentEntry.getValue().getType().isInteger()) {
-					measurement = new IntegerMeasurement();
-					((IntegerMeasurement) measurement).setValue(((IInteger) currentEntry.getValue()).longValue());
-				} else {
-					measurement = new StringMeasurement();
-					((StringMeasurement) measurement).setValue(((IString) currentEntry.getValue()).getValue());
+				if (!key.isEmpty()) {
+					Measurement measurement = null;
+					// for cc need to delete all methods for this file
+					
+					// TODO: dispatch on return type
+					if (currentEntry.getValue().getType().isInteger()) {
+						measurement = new IntegerMeasurement();
+						((IntegerMeasurement) measurement).setValue(((IInteger) currentEntry.getValue()).longValue());
+					} else if (currentEntry.getValue().getType().isList()) {
+						measurement = new StringMeasurement();
+						((StringMeasurement) measurement).setValue(((IList) currentEntry.getValue()).toString());
+					} else {
+						measurement = new StringMeasurement();
+						((StringMeasurement) measurement).setValue(((IString) currentEntry.getValue()).getValue());
+					}
+					measurement.setUri(key);
+					measurement.setDate(delta.getDate().toString());
+					db.getMeasurements().add(measurement);
 				}
-				measurement.setUri(key);
-				db.getMeasurements().add(measurement);
-			}
+			  }
+		  } else if (result.getType().isReal()) {
+			  StringMeasurement measurement = new StringMeasurement();
+			  measurement.setValue(((IReal) result).getStringRepresentation());
+			  measurement.setDate(delta.getDate().toString());
+			  db.getMeasurements().add(measurement);
+		  } else if (result.getType().isList()) {
+			  StringMeasurement measurement = new StringMeasurement();
+			  measurement.setValue(((IList) result).toString());
+			  measurement.setDate(delta.getDate().toString());
+			  db.getMeasurements().add(measurement);
+		  } else if (result.getType().isInteger()) {
+			  IntegerMeasurement measurement = new IntegerMeasurement();
+			  measurement.setValue(((IInteger) result).longValue());
+			  measurement.setDate(delta.getDate().toString());
+			  db.getMeasurements().add(measurement);
 		  }
 	  db.sync();
 	}

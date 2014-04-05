@@ -10,15 +10,25 @@ import util::Math;
 import IO;
 import String;
 import ValueIO;
+import Relation;
 import org::ossmeter::metricprovider::ProjectDelta;
+import org::ossmeter::metricprovider::diff::DataType;
+import org::ossmeter::metricprovider::diff::MethodComparison;
+import org::ossmeter::metricprovider::diff::ClassComparison;
+import org::ossmeter::metricprovider::diff::FieldComparison;
 
 ProjectDelta previousDelta = ProjectDelta::\empty();
+public set[MethodChange] methodChurn = {};
+public set[ClassChange] classChurn = {};
+public set[FieldChange] fieldChurn = {};
 
 int initialize(ProjectDelta currentDelta, map[str, loc] workingCopyFolders, map[str, loc] scratchFolders) {
   if (currentDelta == previousDelta) {
     return 1;
   }
-  
+  methodChurn = {};
+  classChurn = {};
+  fieldChurn = {};
   // we assume that workingcopymanager has already gotten the needed revision
   // could be optimized to exclude any unnecessary deletions
   for (/VcsRepositoryDelta vcrd <- currentDelta) {
@@ -26,10 +36,25 @@ int initialize(ProjectDelta currentDelta, map[str, loc] workingCopyFolders, map[
     set[VcsCommitItem] filteredVCI = checkSanity([vci | /VcsCommitItem vci <- vcrd.commits]);
     for (VcsCommitItem vci <- filteredVCI) {
       loc scratchFile = scratchFolders[repo]+vci.path;
+      M3 old;
+      if (exists(scratchFile[extension = scratchFile.extension+".m3"])) {
+         old = readBinaryValueFile(#M3, scratchFile[extension = scratchFile.extension+".m3"]);
+      } else {
+        old = unknownFileType(-1);
+      }
       updateChangedItem(workingCopyFolders[repo]+vci.path, scratchFile[extension = scratchFile.extension+".m3"], vci.changeType);
+      M3 new = readBinaryValueFile(#M3, scratchFile[extension = scratchFile.extension+".m3"]);
+      if (old.model? && new.model?) {
+        methodChurn += { c | c <- getMethodChanges(old.model, new.model) };
+        fieldChurn += { c | c <- getFieldChanges(old.model, new.model) };
+        classChurn += { c | c <- getClassChanges(old.model, new.model, fieldChurn, methodChurn) }; 
+      } else if (new.model? ) {
+        methodChurn += { c | c <- getMethodChanges(new.model) };
+        fieldChurn += { c | c <- getFieldChanges(new.model) };
+        classChurn += { c | c <- getClassChanges(new.model) };
+      }
     }
   }
-  
   previousDelta = currentDelta;
   return 0;
 }
@@ -37,11 +62,11 @@ int initialize(ProjectDelta currentDelta, map[str, loc] workingCopyFolders, map[
 // All these functions work under the assumption that both working copy file and m3 store file are present
 //void updateChangedItem(loc workingCopyFile, loc m3StoreFile, \deleted()) 
 //  = delete(m3StoreFile);
-void updateChangedItem(loc workingCopyFile, loc m3StoreFile, \added()) 
+void updateChangedItem(loc workingCopyFile, loc m3StoreFile, VcsChangeType::\added()) 
   = writeBinaryValueFile(m3StoreFile, createFileM3(workingCopyFile));
-void updateChangedItem(loc workingCopyFile, loc m3StoreFile, \updated()) 
+void updateChangedItem(loc workingCopyFile, loc m3StoreFile, VcsChangeType::\updated()) 
   = writeBinaryValueFile(m3StoreFile, createFileM3(workingCopyFile));
-void updateChangedItem(loc workingCopyFile, loc m3StoreFile, \replaced()) 
+void updateChangedItem(loc workingCopyFile, loc m3StoreFile, VcsChangeType::\replaced()) 
   = writeBinaryValueFile(m3StoreFile, createFileM3(workingCopyFile));
 default void updateChangedItem(loc workingCopyFile, loc m3StoreFile, VcsChangeType changeType) {
   //TODO: do nothing for now, should throw an error later 
