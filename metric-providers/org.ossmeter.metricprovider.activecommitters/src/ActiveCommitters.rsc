@@ -17,7 +17,7 @@ list[str] activeCommitters(ProjectDelta delta, map[str, loc] workingCopyFolders,
   list[str] activeAuthors = [];
   datetime today = delta.date;
   writeBinaryValueFile(|home:///ossmeter/<delta.project.name>/activecommitters_<printDate(today.justDate, "yyyy_mm_dd")>.am3|, [ commit.author | /VcsCommit commit <- delta ]);
-  list[datetime] activePeriod = dateRangeByDay(createInterval(decrementDays(delta.date, 7), today));
+  list[datetime] activePeriod = dateRangeByDay(createInterval(decrementDays(delta.date, 15), today));
   
   for (datetime d <- activePeriod) {
     loc activeCommittersForDay = |home:///ossmeter/<delta.project.name>/activecommitters_<printDate(d.justDate, "yyyy_mm_dd")>.am3|;
@@ -33,4 +33,11 @@ list[str] activeCommitters(ProjectDelta delta, map[str, loc] workingCopyFolders,
   map[int, set[str]] comparator = invert(dist);
   
   return [author | numActivity <- activityCount, author <- comparator[numActivity]];
+}
+
+@metric{numberofactivecommitters}
+@doc{numbrofactivecommitters}
+@friendlyName{numberofactivecommitters}
+int numberOfActiveCommitters(ProjectDelta delta, map[str, loc] workingCopyFolders, map[str, loc] scratchFolders) {
+  return size(activeCommitters(delta, workingCopyFolders, scratchFolders));
 }
