@@ -41,3 +41,10 @@ list[str] inactiveCommitters(ProjectDelta delta, map[str, loc] workingCopyFolder
   
   return [*(activeBeforeThreeMonths - threeMonthsActive)];
 }
+
+@metric{numberofinactivecommitters}
+@doc{numbrofinactivecommitters}
+@friendlyName{numberofinactivecommitters}
+int numberOfInactiveCommitters(ProjectDelta delta, map[str, loc] workingCopyFolders, map[str, loc] scratchFolders) {
+  return size(inactiveCommitters(delta, workingCopyFolders, scratchFolders));
+}
