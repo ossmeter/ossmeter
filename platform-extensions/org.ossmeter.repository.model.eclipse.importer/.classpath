@@ -6,5 +6,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/org.ossmeter.repository.model.eclipse.importer.dependencies"/>
 	<classpathentry kind="lib" path="/org.ossmeter.repository.model.eclipse.importer.dependencies/gson-2.2.2.jar"/>
 	<classpathentry kind="lib" path="/org.ossmeter.repository.model.eclipse.importer.dependencies/json-simple-1.1.1.jar"/>
+	<classpathentry kind="lib" path="jsoup-1.7.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
