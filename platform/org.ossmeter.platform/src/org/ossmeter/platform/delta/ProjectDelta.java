@@ -42,14 +42,31 @@ public class ProjectDelta {
 	// some deltas unnecessarily.
 	public boolean create() {
 		try {
+			long startVcsDelta = System.currentTimeMillis();
 			vcsDelta = new VcsProjectDelta(project, date, vcsManager);
+			long endVcsDelta = System.currentTimeMillis();
+			
+			long startCCDelta = System.currentTimeMillis();
 			communicationChannelDelta = new CommunicationChannelProjectDelta(project, date, communicationChannelManager);
+			long endCCDelta = System.currentTimeMillis();
+			
+			long startBTSDelta = System.currentTimeMillis();
 			bugTrackingSystemDelta = new BugTrackingSystemProjectDelta(project, date, bugTrackingSystemManager);
+			long endBTSDelta = System.currentTimeMillis();
+			
+			timings = ""+ (endVcsDelta - startVcsDelta) +"," 
+					+ (endCCDelta - startCCDelta) + ","
+					+ (endBTSDelta - startBTSDelta);
 		} catch (Exception e) {
 			logger.error("Delta creation failed.", e);
 			return false;
 		}
 		return true;
+	}
+	
+	protected String timings; //FIXME: this is temporary. Very temporary.
+	public String getTimingsString() {
+		return timings;
 	}
 
 	public Date getDate() {
