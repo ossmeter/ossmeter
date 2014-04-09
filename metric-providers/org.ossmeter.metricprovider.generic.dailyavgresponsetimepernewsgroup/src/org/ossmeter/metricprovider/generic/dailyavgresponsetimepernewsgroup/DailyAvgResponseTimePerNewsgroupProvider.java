@@ -55,7 +55,7 @@ public class DailyAvgResponseTimePerNewsgroupProvider implements IHistoricalMetr
 		if (uses.size()!=1) {
 			System.err.println("Metric: dailyavgresponsetimepernewsgroup failed to retrieve " + 
 								"the transient metric it needs!");
-			System.exit(-1);
+			throw new RuntimeException();
 		}
 
 		ThreadsRR usedThreads = 
@@ -97,13 +97,15 @@ public class DailyAvgResponseTimePerNewsgroupProvider implements IHistoricalMetr
 		String formatted = null;
 		if (threads>0) {
 			long avgDuration = sumOfDurations/threads;
-			int days = (int) (avgDuration / SECONDS_DAY);
-			long lessThanDay = (avgDuration % SECONDS_DAY);
-			formatted = days + ":" + 
-					DurationFormatUtils.formatDuration(lessThanDay*1000, "HH:mm:ss:SS");
+//			int days = (int) (avgDuration / SECONDS_DAY);
+//			long lessThanDay = (avgDuration % SECONDS_DAY);
+//			formatted = days + ":" + 
+//					DurationFormatUtils.formatDuration(lessThanDay*1000, "HH:mm:ss:SS");
+			formatted = String.valueOf(avgDuration);
 		} else {
-			formatted = 0 + ":" + 
-					DurationFormatUtils.formatDuration(0, "HH:mm:ss:SS");
+//			formatted = 0 + ":" + 
+//					DurationFormatUtils.formatDuration(0, "HH:mm:ss:SS");
+			formatted = String.valueOf(0);
 		}
 		return formatted;
 	}
