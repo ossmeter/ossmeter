@@ -30,8 +30,6 @@ list[str] coreCommitters(ProjectDelta delta, map[str, loc] workingCopyFolders, m
     
   list[int] churns = reverse(sort(range(committerChurn)));
   map[int, set[str]] comparator = invert(committerChurn);
-    
-  println(comparator);
   
   return [author | authorChurn <- churns, author <- comparator[authorChurn]];
 }

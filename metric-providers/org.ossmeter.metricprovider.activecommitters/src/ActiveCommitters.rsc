@@ -9,11 +9,12 @@ import Map;
 import Set;
 import List;
 import DateTime;
+import String;
 
 @metric{activeCommitters}
 @doc{activeCommitters}
 @friendlyName{activeCommitters}
-list[str] activeCommitters(ProjectDelta delta, map[str, loc] workingCopyFolders, map[str, loc] scratchFolders) {
+str activeCommitters(ProjectDelta delta, map[str, loc] workingCopyFolders, map[str, loc] scratchFolders) {
   list[str] activeAuthors = [];
   datetime today = delta.date;
   writeBinaryValueFile(|home:///ossmeter/<delta.project.name>/activecommitters_<printDate(today.justDate, "yyyy_mm_dd")>.am3|, [ commit.author | /VcsCommit commit <- delta ]);
@@ -32,12 +33,13 @@ list[str] activeCommitters(ProjectDelta delta, map[str, loc] workingCopyFolders,
   list[int] activityCount = reverse(sort(range(dist)));
   map[int, set[str]] comparator = invert(dist);
   
-  return [author | numActivity <- activityCount, author <- comparator[numActivity]];
+  return intercalate(", ", [author | numActivity <- activityCount, author <- comparator[numActivity]]);
 }
 
 @metric{numberofactivecommitters}
 @doc{numbrofactivecommitters}
 @friendlyName{numberofactivecommitters}
-int numberOfActiveCommitters(ProjectDelta delta, map[str, loc] workingCopyFolders, map[str, loc] scratchFolders) {
-  return size(activeCommitters(delta, workingCopyFolders, scratchFolders));
+@uses{org.ossmeter.metricprovider.activecommitters.activeCommitters}
+int numberOfActiveCommitters(str metricData) {
+  return size(split(",", metricData));
 }
