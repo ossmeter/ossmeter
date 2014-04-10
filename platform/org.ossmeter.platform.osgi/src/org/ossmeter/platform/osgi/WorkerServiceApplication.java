@@ -13,6 +13,7 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
+import org.ossmeter.platform.client.api.ProjectResource;
 import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.platform.osgi.services.IWorkerService;
 import org.ossmeter.platform.osgi.services.WorkerService;
@@ -67,6 +68,9 @@ public class WorkerServiceApplication implements IApplication, ServiceTrackerCus
 		workerServiceTracker = new ServiceTracker<IWorkerService, IWorkerService>(Activator.getContext(), IWorkerService.class, this);	
 		workerServiceTracker.open();
 
+		// Start web server
+		ProjectResource pr = new ProjectResource();
+		
 		// Now, rest.
 		waitForDone();
 		return IApplication.EXIT_OK;
@@ -163,8 +167,27 @@ public class WorkerServiceApplication implements IApplication, ServiceTrackerCus
 //		projects.add("modeling.mmt.atl");  // jimbook
 //		projects.add("modeling.viatra2"); // jimbook
 //		projects.add("modeling.epsilon"); // esgroup
-		projects.add("modeling.mdt.papyrus"); // esgroup
+//		projects.add("modeling.mdt.papyrus"); // esgroup
 //		projects.add("modeling.gmp.graphiti"); // paige
+		
+		// Hydra-driven Blog
+//		projects.add("tools.pdt");
+//		projects.add("eclipse.platform");
+//		projects.add("modeling.gmp.gmf-runtime");
+//		projects.add("modeling.emf.diffmerge");
+//		projects.add("modeling.emf");
+//		projects.add("modeling.emft.ecoretools"); // FIXME BUG in NNTP
+//		projects.add("modeling.gmp.graphiti");
+//		projects.add("modeling.tmf.xtext");
+//		projects.add("modeling.mdt.uml2");
+//		projects.add("modeling.mdt.ocl");
+//		projects.add("modeling.epsilon");
+//		projects.add("birt");
+//		projects.add("rt.ecf");
+//		projects.add("technology.egit");
+//		projects.add("eclipse.platform.swt");
+//		projects.add("technology.swtbot");
+		projects.add("modeling.mdt.xsd");
 		
 		worker.queueProjects(projects);
 		
