@@ -41,7 +41,7 @@ public class ProjectExecutor implements Runnable {
 		// DEBUG
 		try {
 //			this.writer = null;
-			this.writer = new FileWriter("/Users/esgroup/Desktop/D5.3-logs/" + project.getName() + ".csv");
+			this.writer = new FileWriter("/Users/jimmy/Desktop/D5.3-logs/" + project.getName() + ".csv");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -85,6 +85,7 @@ public class ProjectExecutor implements Runnable {
 			ProjectDelta delta = new ProjectDelta(project, date, 
 					platform.getVcsManager(), platform.getCommunicationChannelManager(), platform.getBugTrackingSystemManager());
 			boolean createdOk = delta.create();
+			String deltaTimes = delta.getTimingsString();
 			long timeDelta = System.currentTimeMillis() - startDelta;
 
 			if (createdOk) {
@@ -123,7 +124,7 @@ public class ProjectExecutor implements Runnable {
 			}
 			
 			try { ///DEBUG
-				writer.write(date.toString() + "," + timeDelta + "," + timeMetrics + "\n");
+				writer.write(date.toString() + "," + deltaTimes + "," + timeDelta + "," + timeMetrics + "\n");
 				writer.flush();
 			} catch (IOException e) {
 				e.printStackTrace();
