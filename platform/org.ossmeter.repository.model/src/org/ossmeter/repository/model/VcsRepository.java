@@ -8,10 +8,12 @@ import com.googlecode.pongo.runtime.querying.*;
 
 public abstract class VcsRepository extends NamedElement {
 	
+	protected List<Person> persons = null;
 	
 	
 	public VcsRepository() { 
 		super();
+		dbObject.put("persons", new BasicDBList());
 		super.setSuperTypes("org.ossmeter.repository.model.NamedElement");
 		NAME.setOwningType("org.ossmeter.repository.model.VcsRepository");
 		CREATED_AT.setOwningType("org.ossmeter.repository.model.VcsRepository");
@@ -54,6 +56,12 @@ public abstract class VcsRepository extends NamedElement {
 	}
 	
 	
+	public List<Person> getPersons() {
+		if (persons == null) {
+			persons = new PongoList<Person>(this, "persons", false);
+		}
+		return persons;
+	}
 	
 	
 }

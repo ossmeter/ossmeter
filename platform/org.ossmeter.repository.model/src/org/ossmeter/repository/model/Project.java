@@ -133,13 +133,13 @@ public class Project extends NamedElement {
 	}
 	public List<Person> getPersons() {
 		if (persons == null) {
-			persons = new PongoList<Person>(this, "persons", true);
+			persons = new PongoList<Person>(this, "persons", false);
 		}
 		return persons;
 	}
 	public List<License> getLicenses() {
 		if (licenses == null) {
-			licenses = new PongoList<License>(this, "licenses", true);
+			licenses = new PongoList<License>(this, "licenses", false);
 		}
 		return licenses;
 	}
