@@ -9,8 +9,11 @@ Require-Bundle: org.ossmeter.repository.model.eclipse,
  org.ossmeter.repository.model.cc.forum,
  org.ossmeter.repository.model.vcs.svn,
  org.ossmeter.repository.model.vcs.git,
- org.ossmeter.repository.model.vcs.cvs
+ org.ossmeter.repository.model.vcs.cvs,
+ org.ossmeter.platform.communicationchannel.nntp;bundle-version="1.0.0",
+ org.ossmeter.repository.model.cc.nntp;bundle-version="1.0.0"
 Export-Package: org.ossmeter.repository.model.eclipse.importer
-Import-Package: org.json.simple,
- org.json.simple.parser,
- org.ossmeter.platform
+Import-Package: org.apache.commons.net,
+ org.ossmeter.platform,
+ org.ossmeter.repository.model.vcs.cvs
+

@@ -32,7 +32,10 @@ import org.json.simple.JSONValue;
 import org.jsoup.Jsoup;
 import org.jsoup.select.Elements;
 import org.ossmeter.platform.Platform;
+import org.ossmeter.repository.model.BugTrackingSystem;
+import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.License;
+import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.VcsRepository;
 import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
 import org.ossmeter.repository.model.cc.forum.Forum;
@@ -59,9 +62,9 @@ public class EclipseProjectImporter {
 	private Map<EclipseProject,String> pendingParentReferences = new HashMap<EclipseProject,String>();
 	private Collection<EclipseProject> importedProjects = new ArrayList<EclipseProject>();
 	
-	private EclipseProject getProjectByName(Collection<EclipseProject> projects, String projectName) {
-		for (EclipseProject p : projects) {
-	         if (p.getName().equals(projectName))
+	private EclipseProject getProjectByName(String projectName) {
+		for (EclipseProject p : importedProjects) {
+	         if (p.getShortName().equals(projectName))
 	             return p;
 	    }
 		return null;	
@@ -77,10 +80,97 @@ public class EclipseProjectImporter {
 	        Map.Entry pr = (Map.Entry)it.next();
 	        
 	        child = (EclipseProject) pr.getKey();
-	        parent = getProjectByName(importedProjects, (String)pr.getValue());
+	        parent = getProjectByName((String)pr.getValue());
 	        if (parent != null)
 	        	child.setParent(parent);
-	        it.remove();
+	        //it.remove();
+	    }
+		
+		return importedProjects;
+	}
+	
+	
+	
+	
+	private Collection<EclipseProject> clenaParernt()
+	{
+
+		EclipseProject child = null;
+	    EclipseProject parent = null;
+	    
+		Iterator it = pendingParentReferences.entrySet().iterator();
+		while (it.hasNext()) {
+	        Map.Entry pr = (Map.Entry)it.next();
+	        
+	        child = (EclipseProject) pr.getKey();
+	        parent = getProjectByName((String)pr.getValue());
+	        int k=0;
+	        if(parent.getShortName().equals("eclipse.jdt"))
+	        	k++;
+	        if (parent != null)
+	        	{
+	        		
+	        		ArrayList<VcsRepository> daEliminareVCS = new ArrayList<VcsRepository>();
+	        		for (VcsRepository i : child.getVcsRepositories()) 
+	        		{
+	        			for (VcsRepository j : parent.getVcsRepositories()) 
+		        		{
+		        			if (i.getUrl().equals(j.getUrl()))
+		        				daEliminareVCS.add(j);
+	        		//parent.getVcsRepositories().remove(j);
+						}
+					}
+	        		for (VcsRepository vcsRepository : daEliminareVCS) {
+						parent.getVcsRepositories().remove(vcsRepository);
+					}
+	        		ArrayList<CommunicationChannel> daEliminareCC = new ArrayList<CommunicationChannel>();
+	        		for (CommunicationChannel i : child.getCommunicationChannels()) 
+	        		{
+	        			for (CommunicationChannel j : parent.getCommunicationChannels()) 
+		        		{
+		        			if (i.getUrl().equals(j.getUrl()))
+		        				//parent.getCommunicationChannels().remove(j);
+		        				daEliminareCC.add(j);
+						}
+					}
+	        		for (CommunicationChannel vcsRepository : daEliminareCC) {
+						parent.getCommunicationChannels().remove(vcsRepository);
+					}
+	        		ArrayList<BugTrackingSystem> daEliminareBTS = new ArrayList<BugTrackingSystem>();
+	        		
+	        		for (BugTrackingSystem i : child.getBugTrackingSystems()) 
+	        		{
+	        			for (BugTrackingSystem j : parent.getBugTrackingSystems()) 
+		        		{
+		        			if (i.getUrl().equals(j.getUrl()))
+		        				//parent.getBugTrackingSystems().remove(j);
+		        				daEliminareBTS.add(j);
+						}
+					}
+	        		for (BugTrackingSystem vcsRepository : daEliminareBTS) {
+						parent.getBugTrackingSystems().remove(vcsRepository);
+					}
+	        	}
+	        //it.remove();
+	    }
+		
+		return importedProjects;
+	}
+	
+	private Collection<EclipseProject> fixDuplicateVcc(){
+
+		EclipseProject child = null;
+	    EclipseProject parent = null;
+	    
+		Iterator it = pendingParentReferences.entrySet().iterator();
+		while (it.hasNext()) {
+	        Map.Entry pr = (Map.Entry)it.next();
+	        
+	        child = (EclipseProject) pr.getKey();
+	        parent = getProjectByName((String)pr.getValue());
+	        if (parent != null)
+	        	child.setParent(parent);
+	        //it.remove();
 	    }
 		
 		return importedProjects;
@@ -135,12 +225,19 @@ public class EclipseProjectImporter {
 			
 			while (iter2.hasNext()) {
 				Map.Entry entry = (Map.Entry) iter2.next();
-				EclipseProject project = importProject((String) entry.getKey(), importedProjects);
-				platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
-				importedProjects.add(project);
+				EclipseProject pi = (EclipseProject)platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByShortName((String) entry.getKey());
+//				if (pi==null)
+//				{
+					EclipseProject project = importProject((String) entry.getKey(), platform);
+					platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
+					importedProjects.add(project);
+//				}
+				
+				
 			}
 			
 			fixPendingParentReferences();
+			clenaParernt();
 			System.out.println("NNPT OK" + nntpOk);
 			System.out.println("NNPT No" + nntpNo);
 			
@@ -158,7 +255,7 @@ public class EclipseProjectImporter {
 	private ArrayList<String> NNTPUrllist;
 	private int nntpOk = 0;
 	private int nntpNo = 0;
-	public EclipseProject importProject(String projectId, Collection<EclipseProject> projects) {
+	public EclipseProject importProject(String projectId, Platform platform) {
 			
 		String URL_PROJECT = "http://projects.eclipse.org/projects/"+ projectId;
 		String html = null;
@@ -196,190 +293,191 @@ public class EclipseProjectImporter {
 			InputStream is = new URL("http://projects.eclipse.org/json/project/" + projectId).openStream();
 			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
 			String jsonText = readAll(rd);
-		      		
-			JSONObject obj=(JSONObject)JSONValue.parse(jsonText);
-			JSONObject currentProg = (JSONObject)((JSONObject)obj.get("projects")).get(projectId);
+			
 				
-			project.setShortName(projectId);
-			if ((isNotNullObj(currentProg,"title")))
-				project.setName(currentProg.get("title").toString());
-			System.out.println("---> Retrieving metadata of " + project.getShortName());
-			System.out.println("---> Retrieving metadata of " + project.getName());
-			
-			if ((isNotNull(currentProg,"description")))
-				project.setDescription(((JSONObject)((JSONArray)currentProg.get("description")).get(0)).get("value").toString());
-		
-			if ((isNotNull(currentProg,"parent_project"))){
-				String parentProjectName = ((JSONObject)((JSONArray)currentProg.get("parent_project")).get(0)).get("id").toString();
-				EclipseProject parentProject = getProjectByName(projects, parentProjectName);
-				if (parentProject != null) {
-					project.setParent(parentProject);
-				    System.out.println("The project " + parentProject.getName() + " is parent of " + project.getName());
-				} else {
-					pendingParentReferences.put(project,parentProjectName);
-				}
-			}		
-			
-			if ((isNotNull(currentProg,"documentation_url")))
-			{
-				JSONArray bugzillaJsonArray = (JSONArray)currentProg.get("documentation_url");
-				for (Object object : bugzillaJsonArray) {
-					Documentation documentation_url = new Documentation();
-					documentation_url.setUrl((String)((JSONObject)object).get("url"));
-					project.getCommunicationChannels().add(documentation_url);
-				}
-			}
+				JSONObject obj=(JSONObject)JSONValue.parse(jsonText);
+				JSONObject currentProg = (JSONObject)((JSONObject)obj.get("projects")).get(projectId);
 				
-
-			
-			
-		
-
-			project.setParagraphUrl(getParagraphUrl(projectId));
-			
-			if ((isNotNull(currentProg,"download_url")))
-					project.setDownloadsUrl(((JSONObject)((JSONArray)currentProg.get("download_url")).get(0)).get("url").toString());
-
-			if ((isNotNull(currentProg,"website_url")))
-				project.setHomePage(((JSONObject)((JSONArray)currentProg.get("website_url")).get(0)).get("url").toString());
-	
-			if ((isNotNull(currentProg,"plan_url")))
-				project.setProjectplanUrl(((JSONObject)((JSONArray)currentProg.get("plan_url")).get(0)).get("url").toString());
-
-			if ((isNotNull(currentProg,"wiki_url"))) {
+					
 				
-				JSONArray bugzillaJsonArray = (JSONArray)currentProg.get("wiki_url");
-				for (Object object : bugzillaJsonArray) {
-					Wiki wiki = new Wiki();
-					wiki.setUrl((String)((JSONObject)object).get("url"));
-					project.getCommunicationChannels().add(wiki);
-				}
+				project.setShortName(projectId);
+				if ((isNotNullObj(currentProg,"title")))
+					project.setName(currentProg.get("title").toString());
+				System.out.println("---> Retrieving metadata of " + project.getShortName());
+				System.out.println("---> Retrieving metadata of " + project.getName());
+				if ((isNotNull(currentProg,"description")))
+					project.setDescription(((JSONObject)((JSONArray)currentProg.get("description")).get(0)).get("value").toString());
+			
+				if ((isNotNull(currentProg,"parent_project"))){
+					String parentProjectName = ((JSONObject)((JSONArray)currentProg.get("parent_project")).get(0)).get("id").toString();
+					EclipseProject parentProject = (EclipseProject)platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByShortName(parentProjectName);
+					
+					if (parentProject != null) {
+						project.setParent(parentProject);
+					    System.out.println("The project " + parentProject.getName() + " is parent of " + project.getName());
+					} else {
+						pendingParentReferences.put(project,parentProjectName);
+					}				    
+				}		
 				
-			}
-			
-			//project.getBugTrackingSystems().add(new Bugzilla());
-			
-			
-			if ((isNotNull(currentProg,"bugzilla"))) {
-//				Bugzilla bugzilla = new Bugzilla();
-				//JSONObject bugzillaJsonObject = (JSONObject)((JSONArray)currentProg.get("bugzilla")).get(0);
-				JSONArray bugzillaJsonArray = (JSONArray)currentProg.get("bugzilla");
-				for (Object object : bugzillaJsonArray) {
-					Bugzilla bugzilla = new Bugzilla();
-					bugzilla.setComponent((String)((JSONObject)object).get("component"));
-					bugzilla.setCgiQueryProgram((String)((JSONObject)object).get("query_url"));
-					bugzilla.setUrl((String)((JSONObject)object).get("create_url"));
-					bugzilla.setComponent((String)((JSONObject)object).get("component"));
-					bugzilla.setProduct((String)((JSONObject)object).get("product"));
-					project.getBugTrackingSystems().add(bugzilla);
-				}
-				
-			}
-			
-			if ((isNotNull(currentProg,"update_sites")))
-				project.setUpdatesiteUrl(((JSONObject)((JSONArray)currentProg.get("update_sites")).get(0)).get("url").toString());
-	
-			if ((isNotNull(currentProg,"licenses"))){			
-				JSONArray licenses = (JSONArray)currentProg.get("licenses");
-				Iterator<JSONObject> iter  = licenses.iterator();
-			    License license = null;
-				while(iter.hasNext()){					
-					JSONObject entry = (JSONObject)iter.next();
-					license = new License();
-					license.setName((String)entry.get("name"));
-					license.setUrl((String)entry.get("url"));
-					project.getLicenses().add(license);
-				}
-			}
-
-			if ((isNotNull(currentProg,"mailing_lists"))){			
-				JSONArray mailingLists = (JSONArray)currentProg.get("mailing_lists");
-				Iterator<JSONObject> iter  = mailingLists.iterator();
-			    MailingList mailingList = null;
-				while(iter.hasNext()){					
-					JSONObject entry = (JSONObject)iter.next();
-					mailingList = new MailingList();
-					mailingList.setName((String)entry.get("name"));
-					mailingList.setUrl((String)entry.get("url"));
-					project.getCommunicationChannels().add(mailingList);
-				}
-			}
-
-			if ((isNotNull(currentProg,"state")))
-				project.setState(((JSONObject)((JSONArray)currentProg.get("state")).get(0)).get("value").toString());		
-			
-			if ((isNotNull(currentProg,"forums"))){
-				JSONArray forums = (JSONArray)currentProg.get("forums");
-				Iterator<JSONObject> iter  = forums.iterator();
-			    Forum forum = null;
-				while(iter.hasNext()){					
-					JSONObject entry = (JSONObject)iter.next();
-					forum = new Forum();
-					forum.setName((String)entry.get("name"));
-					forum.setUrl((String)entry.get("url"));
-					forum.setDescription((String)entry.get("description"));
-					project.getCommunicationChannels().add(forum);
-				}
-			}
-			
-			for (NntpNewsGroup cc : niente(projectId)) {
-				project.getCommunicationChannels().add(cc);
-			}
-			
-			
-//			boolean trovato = false;
-//			for (String string : NNTPUrllist) 
-//			{
-//				if(string.equals("eclipse."+projectId))
-//				{
-//					NntpNewsGroup NNTPuRL = null;
-//					NNTPuRL = new NntpNewsGroup();
-//					NNTPuRL.setName("eclipse." + projectId);
-//					NNTPuRL.setUrl("news://news.eclipse.org/eclipse." + projectId);
-//					project.getCommunicationChannels().add(NNTPuRL);
-//					trovato = true;
-//					break;
-//				}
-//			}
-//			if (!trovato)
-//			{
-//				System.out.println("no nntp url");
-//				nntpNo++;
-//			}
-//			else nntpOk++;
-			
-			if ((isNotNull(currentProg,"source_repo"))){
-				JSONArray source_repo = (JSONArray)currentProg.get("source_repo");
-				Iterator<JSONObject> iter  = source_repo.iterator();
-				while(iter.hasNext()){					
-					JSONObject entry = (JSONObject)iter.next();
-					VcsRepository repository = null;
-					if (((String)entry.get("type")).equals("git")) {
-						repository = new GitRepository();
-					} else if (((String)entry.get("type")).equals("svn")) {
-						repository = new SvnRepository();
-					} else if (((String)entry.get("type")).equals("cvs")) {
-						repository = new CvsRepository();
+				if ((isNotNull(currentProg,"documentation_url")))
+				{
+					JSONArray bugzillaJsonArray = (JSONArray)currentProg.get("documentation_url");
+					for (Object object : bugzillaJsonArray) {
+						Documentation documentation_url = new Documentation();
+						documentation_url.setUrl((String)((JSONObject)object).get("url"));
+						documentation_url.setNonProcessable(true);
+						project.getCommunicationChannels().add(documentation_url);
 					}
-				if (repository != null) {
-					repository.setName((String)entry.get("name"));
-					repository.setUrl((String)entry.get("url"));
 				}
-				project.getVcsRepositories().add(repository);
+					
+	
+				
+				
+			
+	
+				project.setParagraphUrl(getParagraphUrl(projectId));
+				
+				if ((isNotNull(currentProg,"download_url")))
+						project.setDownloadsUrl(((JSONObject)((JSONArray)currentProg.get("download_url")).get(0)).get("url").toString());
+	
+				if ((isNotNull(currentProg,"website_url")))
+					project.setHomePage(((JSONObject)((JSONArray)currentProg.get("website_url")).get(0)).get("url").toString());
+		
+				if ((isNotNull(currentProg,"plan_url")))
+					project.setProjectplanUrl(((JSONObject)((JSONArray)currentProg.get("plan_url")).get(0)).get("url").toString());
+	
+				if ((isNotNull(currentProg,"wiki_url"))) {
+					
+					JSONArray bugzillaJsonArray = (JSONArray)currentProg.get("wiki_url");
+					for (Object object : bugzillaJsonArray) {
+						Wiki wiki = new Wiki();
+						String sApp = (String)((JSONObject)object).get("url");
+						wiki.setUrl(sApp);
+	//					if (sApp.startsWith("http://")!!)
+	//						wiki.setNonProcessable(true);
+						wiki.setNonProcessable(false);
+						project.getCommunicationChannels().add(wiki);
+					}
+					
 				}
-			}	
+				
+				//project.getBugTrackingSystems().add(new Bugzilla());
+				
+				
+				if ((isNotNull(currentProg,"bugzilla"))) {
+	//				Bugzilla bugzilla = new Bugzilla();
+					//JSONObject bugzillaJsonObject = (JSONObject)((JSONArray)currentProg.get("bugzilla")).get(0);
+					JSONArray bugzillaJsonArray = (JSONArray)currentProg.get("bugzilla");
+					for (Object object : bugzillaJsonArray) {
+						Bugzilla bugzilla = new Bugzilla();
+						bugzilla.setComponent((String)((JSONObject)object).get("component"));
+						bugzilla.setCgiQueryProgram((String)((JSONObject)object).get("query_url"));
+						bugzilla.setUrl((String)((JSONObject)object).get("create_url"));
+						bugzilla.setComponent((String)((JSONObject)object).get("component"));
+						bugzilla.setProduct((String)((JSONObject)object).get("product"));
+						project.getBugTrackingSystems().add(bugzilla);
+					}
+					
+				}
+				
+				if ((isNotNull(currentProg,"update_sites")))
+					project.setUpdatesiteUrl(((JSONObject)((JSONArray)currentProg.get("update_sites")).get(0)).get("url").toString());
+		
+				if ((isNotNull(currentProg,"licenses"))){			
+					JSONArray licenses = (JSONArray)currentProg.get("licenses");
+					Iterator<JSONObject> iter  = licenses.iterator();
+				    License license = null;
+					while(iter.hasNext()){					
+						JSONObject entry = (JSONObject)iter.next();
+						license = new License();
+						license.setName((String)entry.get("name"));
+						license.setUrl((String)entry.get("url"));
+						platform.getProjectRepositoryManager().getProjectRepository().getLicenses().add(license);
+						project.getLicenses().add(license);
+					}
+				}
+	
+				if ((isNotNull(currentProg,"mailing_lists"))){			
+					JSONArray mailingLists = (JSONArray)currentProg.get("mailing_lists");
+					Iterator<JSONObject> iter  = mailingLists.iterator();
+				    MailingList mailingList = null;
+					while(iter.hasNext()){					
+						JSONObject entry = (JSONObject)iter.next();
+						mailingList = new MailingList();
+						mailingList.setName((String)entry.get("name"));
+						mailingList.setUrl((String)entry.get("url"));
+						if(mailingList.getUrl().startsWith("news://")
+								|| mailingList.getUrl().startsWith("git://")
+								|| mailingList.getUrl().startsWith("svn://"))
+							mailingList.setNonProcessable(false);
+						else mailingList.setNonProcessable(true);
+						project.getCommunicationChannels().add(mailingList);
+					}
+				}
+	
+				if ((isNotNull(currentProg,"state")))
+					project.setState(((JSONObject)((JSONArray)currentProg.get("state")).get(0)).get("value").toString());		
+				
+				if ((isNotNull(currentProg,"forums"))){
+					JSONArray forums = (JSONArray)currentProg.get("forums");
+					Iterator<JSONObject> iter  = forums.iterator();
+				    Forum forum = null;
+					while(iter.hasNext()){					
+						JSONObject entry = (JSONObject)iter.next();
+						forum = new Forum();
+						forum.setName((String)entry.get("name"));
+						forum.setUrl((String)entry.get("url"));
+						if(forum.getUrl().startsWith("news://")
+								|| forum.getUrl().startsWith("git://")
+								|| forum.getUrl().startsWith("svn://"))
+							forum.setNonProcessable(false);
+						else forum.setNonProcessable(true);
+						forum.setDescription((String)entry.get("description"));
+						project.getCommunicationChannels().add(forum);
+					}
+				}
+				
+				for (NntpNewsGroup cc : getNntoNewsGroup(projectId)) {
+					
+					project.getCommunicationChannels().add(cc);
+				}
+				
+				if ((isNotNull(currentProg,"source_repo"))){
+					JSONArray source_repo = (JSONArray)currentProg.get("source_repo");
+					Iterator<JSONObject> iter  = source_repo.iterator();
+					while(iter.hasNext()){					
+						JSONObject entry = (JSONObject)iter.next();
+						VcsRepository repository = null;
+						if (((String)entry.get("type")).equals("git")) {
+							repository = new GitRepository();
+						} else if (((String)entry.get("type")).equals("svn")) {
+							repository = new SvnRepository();
+						} else if (((String)entry.get("type")).equals("cvs")) {
+							repository = new CvsRepository();
+						}
+					if (repository != null) {
+						repository.setName((String)entry.get("name"));
+						repository.setUrl((String)entry.get("url"));
+					}
+					project.getVcsRepositories().add(repository);
+					}
+				}
+				return project;	
 			
 		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
+			e1.printStackTrace();			
 		} catch (IOException e1) {
 			e1.printStackTrace();
-		} 
+		}
+		//SOLLEVARE ECCEZIONE
+		return project;
 		
-		return project;	
+			
 		
 	}
 
-	private ArrayList<NntpNewsGroup> niente(String projectShortName)
+	private ArrayList<NntpNewsGroup> getNntoNewsGroup(String projectShortName)
 	{
 		ArrayList<NntpNewsGroup> result = new ArrayList<NntpNewsGroup>(); 
 		org.jsoup.nodes.Document doc;
@@ -397,6 +495,12 @@ public class EclipseProjectImporter {
 				NNTPuRL = new NntpNewsGroup();
 				NNTPuRL.setName(projectShortName);
 				NNTPuRL.setUrl(e.get(i).attr("href"));
+				if (NNTPuRL.getUrl().startsWith("news://")
+						|| NNTPuRL.getUrl().startsWith("news://")
+						|| NNTPuRL.getUrl().startsWith("news://"))
+					NNTPuRL.setNonProcessable(false);
+				else NNTPuRL.setNonProcessable(true);
+					
 				result.add(NNTPuRL);				
 			}
 			return result;
