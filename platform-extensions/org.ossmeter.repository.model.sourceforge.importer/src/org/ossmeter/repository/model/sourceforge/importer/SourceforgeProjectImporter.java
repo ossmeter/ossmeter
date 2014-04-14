@@ -209,6 +209,11 @@ public class SourceforgeProjectImporter {
 			
 			MailingList ml = new MailingList();
 			ml.setUrl((String)currentProg.get("mailing-list"));
+			if(ml.getUrl().startsWith("news://")
+					|| ml.getUrl().startsWith("git://")
+					|| ml.getUrl().startsWith("svn://"))
+				ml.setNonProcessable(false);
+			else ml.setNonProcessable(true);
 			project.getCommunicationChannels().add(ml);
 			
 			project.setName((String)currentProg.get("name"));
@@ -238,6 +243,8 @@ public class SourceforgeProjectImporter {
 					license = new License();
 					license.setName((String)entry.get("name"));
 					license.setUrl((String)entry.get("url"));
+					platform.getProjectRepositoryManager().getProjectRepository().getLicenses().add(license);
+					
 					project.getLicenses().add(license);
 				}
 			}
@@ -319,7 +326,7 @@ public class SourceforgeProjectImporter {
 					Role rc = platform.getProjectRepositoryManager().getProjectRepository().getRoles().findOneByName("maintaners");
 					maintainer.getRoles().add(rc);
 					
-					
+					platform.getProjectRepositoryManager().getProjectRepository().getPersons().add(maintainer);
 					project.getPersons().add(maintainer);
 				}
 			}
@@ -334,7 +341,7 @@ public class SourceforgeProjectImporter {
 					developer.setHomePage((String)entry.get("homepage"));					
 					Role rc = platform.getProjectRepositoryManager().getProjectRepository().getRoles().findOneByName("developers");
 					developer.getRoles().add(rc);
-					
+					platform.getProjectRepositoryManager().getProjectRepository().getPersons().add(developer);
 					project.getPersons().add(developer);
 				}
 			}
