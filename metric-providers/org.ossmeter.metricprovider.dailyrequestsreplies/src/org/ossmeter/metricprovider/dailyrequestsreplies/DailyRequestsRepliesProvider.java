@@ -124,10 +124,10 @@ public class DailyRequestsRepliesProvider implements ITransientMetricProvider<Da
 				dayArticles.setNumberOfArticles(dayArticles.getNumberOfArticles()+1);
 
 				String requestReplyClass = getRequestReplyClass(usedClassifier, newsgroup, article);
-				if (requestReplyClass.equals("Reply")) {
+				if (requestReplyClass.equals("Request")) {
 					DayRequests dayRequests = db.getDayRequests().findOneByName(dayName);
 					dayRequests.setNumberOfRequests(dayRequests.getNumberOfRequests()+1);
-				} else if (requestReplyClass.equals("Request")) {
+				} else if (requestReplyClass.equals("Reply")) {
 					DayReplies dayReplies = db.getDayReplies().findOneByName(dayName);
 					dayReplies.setNumberOfReplies(dayReplies.getNumberOfReplies()+1);
 				}
