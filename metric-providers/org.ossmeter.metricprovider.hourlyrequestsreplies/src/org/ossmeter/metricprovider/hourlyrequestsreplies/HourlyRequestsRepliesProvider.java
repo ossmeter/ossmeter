@@ -116,10 +116,10 @@ public class HourlyRequestsRepliesProvider implements ITransientMetricProvider<H
 				hourArticles.setNumberOfArticles(hourArticles.getNumberOfArticles()+1);
 
 				String requestReplyClass = getRequestReplyClass(usedClassifier, newsgroup, article);
-				if (requestReplyClass.equals("Reply")) {
+				if (requestReplyClass.equals("Request")) {
 					HourRequests hourRequests = db.getHourRequests().findOneByHour(hourNumber + ":00");
 					hourRequests.setNumberOfRequests(hourRequests.getNumberOfRequests()+1);
-				} else if (requestReplyClass.equals("Request")) {
+				} else if (requestReplyClass.equals("Reply")) {
 					HourReplies hourReplies = db.getHourReplies().findOneByHour(hourNumber + ":00");
 					hourReplies.setNumberOfReplies(hourReplies.getNumberOfReplies()+1);
 				}
