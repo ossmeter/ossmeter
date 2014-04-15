@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>OSSMETER</title>
+
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,300italic|Open+Sans:300italic,400italic,400,300' rel='stylesheet' type='text/css'>
+        <link href="http://fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet" type="text/css">
+
+        <link href="stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet"/>
+        <link href="stylesheets/nav.css" type="text/css" rel="stylesheet"/>
+        <link href="stylesheets/styles.css" type="text/css" rel="stylesheet"/>
+        <link href="stylesheets/plots.css" type="text/css" rel="stylesheet"/>
+        <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" media="screen">
+
+        <link rel="icon" type="image/png" href="images/favicon.png">
+
+        <script src="javascripts/jquery-1.9.1.js"></script>
+        <script src="javascripts/bootstrap.min.js"></script>
+        <script src="javascripts/knockout-2.3.0.js"></script>
+        <script src="javascripts/d3.v3.min.js"></script>
+        <script src="javascripts/dimple.v1.1.1.min.js"></script>
+        <script src="javascripts/eclipse-projects.js"></script>
+
+        <script type="text/javascript">
+        function querystring(key) {
+            var re=new RegExp('(?:\\?|&)'+key+'=(.*?)(?=&|$)','gi');
+            var r=[], m;
+            while ((m=re.exec(document.location.search)) != null) r.push(m[1]);
+            return r;
+        }
+
+        var projects= querystring("p");
+        var project;
+        if (projects.length ===0) {
+            $('#tmp').html("no project");
+            window.location.replace("projects.html")
+        } else {
+        	
+        	if (!Projects.hasOwnProperty(projects[0])) {
+        		window.location.replace("projects.html")
+        	}
+        	project = Projects[projects[0]];
+		}
+
+        $(function(){
+          	$("#nav").load("nav.html"); 
+        	$("#footer").load("footer.html"); 
+        
+            $("a").tooltip({
+              'selector': '',
+              'placement': 'bottom'
+            });
+
+            $("#p-name").text(project.name);
+            $("#p-desc").text(project.desc);
+            $("a#a-url").attr("href", project.url);
+          });
+        </script>
+    </head>
+    <body>
+  
+  <nav id="nav"></nav>
+    <div class="inner">
+	<section class="row">
+		<div class="span6">
+			<h1 id="p-name"></h1>
+			<p id="p-desc"></p>
+			<p><i class="icon-globe icon-white"></i> <a id="a-url" href="">Website</a></p>
+		</div>
+	</section>
+	<section>
+		<div class="row well">
+			<!-- <div class="plotdescriptionbox span3"> -->
+			<h4 id="plotname"></h4>
+			<p id="plotdesc"></p>
+			<!-- </div> -->
+			<div class="span12 lplot">
+				<div id="compPlot" data-bind="largeplot: plot">
+					<img src="images/loading.gif"/>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<h2>Metrics</h2>
+			<h3>Communication Channels</h3>
+			<ul class="sparklist" data-bind="template: {name: 'spark-template', foreach: commsSparks, as: 'spark'}"></ul>
+		</div>
+	</section>
+
+ 	<script type="text/html" id="spark-template">
+		<li data-bind="click: $parent.setMain">
+	    	<div style="float:left; height:100%">
+	        	<span data-bind="sparkplot: $data" class="spark">
+	        		<img src="images/loading.gif"/>
+	        	</span>
+		    </div>
+		    <div>
+		    	<span data-bind="text: abbreviateNumber(lastValue)" class="sparkValue"></span><br/>
+		    	<span data-bind="text: name" class="sparkName"></span>
+	        </div>
+	    </li>
+	</script>
+
+	<script src="javascripts/ossplots.js"></script>
+	<script type="text/javascript">
+
+		function load() {
+			ko.bindingHandlers.largeplot = {
+				init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+				        // This will be called when the binding is first applied to an element
+				        // Set up any initial state, event handlers, etc. here
+				        $(element).html("<img src=\"images/loading.gif\"/>");	
+				    },
+			    update: function(element, valueAccessor, allBindingsAccessor) {
+			        // First get the latest data that we're bound to
+			        var value = valueAccessor(), allBindings = allBindingsAccessor();
+			 
+			        // Next, whether or not the supplied model property is observable, get its current value
+			        var valueUnwrapped = ko.unwrap(value);
+
+			        if (valueUnwrapped.type === "loading") return;
+
+			        $("#plotname").text(valueUnwrapped.name);
+			        $("#plotdesc").text(valueUnwrapped.description);
+
+					$(element).html(""); // Clear
+
+			        var svg = dimple.newSvg(element, "100%", "100%");
+				    var chart = new dimple.chart(svg, valueUnwrapped.datatable);
+				    chart.setBounds(60,20,800,230);
+
+				    if (valueUnwrapped.vertical) {
+				    	var x = chart.addMeasureAxis("x", valueUnwrapped.xtext);
+					    var y = chart.addCategoryAxis("y", valueUnwrapped.ytext);
+
+					    if (valueUnwrapped.isTimeSeries) {
+						    y.timeField = valueUnwrapped.xtext;
+						    y.dateParseFormat = "%Y%m%d";
+						    y.tickFormat = "%b %Y"
+						}
+					    y.addOrderRule(valueUnwrapped.orderRule);
+				    } else {
+					    var x = chart.addCategoryAxis("x", valueUnwrapped.xtext);
+
+					    if (valueUnwrapped.isTimeSeries) {
+						    x.timeField = valueUnwrapped.xtext;
+						    x.dateParseFormat = "%Y%m%d";
+						    x.tickFormat = "%b %Y"
+						}
+					    x.addOrderRule(valueUnwrapped.orderRule);
+					    var y = chart.addMeasureAxis("y", valueUnwrapped.ytext);
+					}
+
+				    var ser = chart.addSeries(valueUnwrapped.series, dimple.plot[valueUnwrapped.type]);
+				    if (valueUnwrapped.series != null) chart.addLegend(60, 5, 500, 10, "right");
+				    chart.draw();
+
+				    // Color the axes
+				    x.shapes.selectAll("path, line").style("stroke", "#A0A0A0");
+				    x.shapes.selectAll("text").style("fill", "#A0A0A0");
+				    y.shapes.selectAll("path, line").style("stroke", "#A0A0A0");
+				    y.shapes.selectAll("text").style("fill", "#A0A0A0");
+				    y.titleShape.style("fill", "#A0A0A0");
+				    x.titleShape.style("fill", "#A0A0A0");
+			    }
+			};
+
+			ko.bindingHandlers.sparkplot = {
+				init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+				        // This will be called when the binding is first applied to an element
+				        // Set up any initial state, event handlers, etc. here
+				        $(element).html("<img src=\"images/loading.gif\"/>");	
+				    },
+			    update: function(element, valueAccessor, allBindingsAccessor) {
+			        // First get the latest data that we're bound to
+			        var value = valueAccessor(), allBindings = allBindingsAccessor();
+			 
+			        // Next, whether or not the supplied model property is observable, get its current value
+			        var valueUnwrapped = ko.unwrap(value);
+
+			        if (valueUnwrapped.type === "loading") return;
+
+			        $(element).html(""); // clear		
+
+			        var svg = dimple.newSvg(element, 250, 30);
+				    var chart = new dimple.chart(svg, valueUnwrapped.datatable);
+
+				    if (valueUnwrapped.vertical) {
+						var x = chart.addMeasureAxis("x", valueUnwrapped.xtext);
+					    var y = chart.addCategoryAxis("y", valueUnwrapped.ytext);
+					    y.hidden=true;
+					    y.addOrderRule(valueUnwrapped.orderRule);
+					    
+					    if (valueUnwrapped.type === "line") { // hide for line charts
+						    y.hidden = true;
+						} 
+					} else {
+
+					    var x = chart.addAxis("x", valueUnwrapped.xtext);
+					    x.addOrderRule(valueUnwrapped.orderRule);
+
+					    if (valueUnwrapped.type === "line") { // hide for line charts
+						    x.hidden = true;
+						} 
+					    chart.addMeasureAxis("y", valueUnwrapped.ytext).hidden=true;
+					}
+
+				    var ser = chart.addSeries(valueUnwrapped.series, dimple.plot[valueUnwrapped.type]);
+				    chart.draw();
+
+				    if (valueUnwrapped.type === "bar") { // color for bars
+						x.shapes.selectAll("path, line").style("stroke", "#A0A0A0");
+					}
+			    }
+			};
+			
+			var ViewModel = function(plot) {
+				this.plot = ko.observable(plot);
+				this.commsSparks = ko.observableArray();
+				this.addCommsSpark = function(spark) {
+					this.commsSparks.push(spark);
+				};
+				this.setMain = function(spark) {
+					vm.plot(spark);
+				}
+			}
+			var vm = new ViewModel({type:"loading"});
+			ko.applyBindings(vm);
+
+			// Initial main class
+			$.get("data/" + project.shortName + "/requestsreplies.json", function(data) {
+				var metric = data;
+				if (typeof metric != 'object') {
+					metric = JSON.parse(data);
+				}
+
+				if (metric.datatable.length > 0) 
+					vm.setMain(metric);
+			});
+
+			// Sparklines
+			var comms = [ "usersperday",  "threadspernewsgroup", "requestsreplies", "activeusersperday", "articlesrequestsrepliesperthread", "dailyrequestsreplies", "hourlyrequestsreplies"] 
+			// Could potentially inlude:  "articlesperday", "newthreadspernewsgroup",
+			// "avgresponsetimepernewsgroup", 
+						
+			for (var comm in comms) {
+				$.get("data/"+project.shortName+"/"+comms[comm]+".json", function(data) {
+					var metric = data;
+					if (typeof metric != 'object') {
+						metric = JSON.parse(data);
+					}
+
+					if (metric.datatable.length > 0) 
+						vm.addCommsSpark(metric);
+				});
+			}
+		}
+		load();
+	</script>
+</div>
+
+      <footer id="footer"></footer>
+    </body>
+</html>

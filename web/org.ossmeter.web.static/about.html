@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>OSSMETER</title>
+
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,300italic|Open+Sans:300italic,400italic,400,300' rel='stylesheet' type='text/css'>
+        <link href="http://fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet" type="text/css">
+
+        <link href="stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet"/>
+        <link href="stylesheets/nav.css" type="text/css" rel="stylesheet"/>
+        <link href="stylesheets/styles.css" type="text/css" rel="stylesheet"/>
+        <link href="stylesheets/plots.css" type="text/css" rel="stylesheet"/>
+        <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" media="screen">
+
+        <link rel="icon" type="image/png" href="images/favicon.png">
+
+        <script src="javascripts/jquery-1.9.1.js"></script>
+        <script src="javascripts/bootstrap.min.js"></script>
+        <script src="javascripts/knockout-2.3.0.js"></script>
+        <script src="javascripts/d3.v3.min.js"></script>
+        <script src="javascripts/dimple.v1.1.1.min.js"></script>
+        <script type="text/javascript">
+			$(function(){
+			  $("#nav").load("nav.html"); 
+			  $("#footer").load("footer.html"); 
+			});
+          $(document).ready(function () {
+            $("a").tooltip({
+              'selector': '',
+              'placement': 'bottom'
+            });
+          });
+        </script>
+    </head>
+    <body>
+    <div class="inner">
+		<nav id="nav"></nav>
+	<section class="row-fluid spaced-row">
+		<div class="span6">
+			<h1>What is OSSMETER?</h1>
+			<p>OSSMETER aims to extend the state-of-the-art in the field of automated analysis and measurement of open-source software (OSS), and develop a platform that will support decision makers in the process of discovering, comparing, assessing and monitoring the health, quality, impact and activity of open-source software.</p>
+			<p>To achieve this, OSSMETER will compute trustworthy quality indicators by performing advanced analysis and integration of information from diverse sources including the project metadata, source code repositories, communication channels and bug tracking systems of OSS projects.</p>
+			<p>OSSMETER does not aim at building another OSS forge but instead at providing a meta-platform for analysing existing OSS projects that are developed in existing OSS forges and foundations such as SourceForge, Google Code, GitHub, Eclipse, Mozilla and Apache.</p>
+		</div>
+		<div class="span6">
+			<h1>Who will benefit?</h1>
+			<p><strong>Developers and Project Managers</strong> who are responsible for deciding on the adoption of OSS, as it will enable them to make decisions on hard facts and uniform quality indicators;</p>
+			<p><strong>Developers of OSS</strong> as it will enable them to monitor the quality of the OSS projects they contribute to, promote the OSS they contribute to using independently-calculated and trustworthy quality indicators, and identify related projects for establishing synergies with;</p>
+			<p><strong>Funding Bodies</strong> that are funding ICT projects which produce OSS, as it will allow them to monitor the quality and assess the impact of the produced software even after the end of the projects.</p>
+		</div>
+	</section>
+
+	<section class="row-fluid spaced-row">
+		<div class="span6">
+			<h1>Where is my project?</h1>
+			<p>In the future you'll be able to add the projects that you work on, enabling you to benefit from the automated analyse provide by OSSMETER. Moreover, the OSSMETER platform will be made open-source, allowing you to deploy the platform in-house and keep track of the quality and progress of internal projects.</p>
+		</div>
+		<div class="span6">
+			<h1>How do I find out more?</h1>
+			<p>OSSMETER is still at the beginning of its development. If you would like to find out more, you can: </p>
+			<ul>
+				<li>Check out the <a href="http://www.ossmeter.eu">OSSMETER project website</a>.</li>
+				<li>Follow us on <a href="http://www.twitter.com/ossmeter">Twitter</a>.</li>
+				<li>Subscribe to our <a href="index.html#mailing-list">mailing list</a>.</li>
+			</ul>
+		</div>
+	</section>
+</div>
+		<footer id="footer"></footer>
+		
+</body>
+
+</html>

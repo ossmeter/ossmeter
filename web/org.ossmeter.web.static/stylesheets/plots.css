@@ -1,0 +1,74 @@
+div.lplot {
+	height:300px;
+}
+#mainPlot {
+	width:600px;
+	height:150px;
+	margin:auto;
+	text-align: center;
+}
+.spark {
+	width: 100px;
+	height:30px;
+}
+.sparkValue {
+	font-size: 16pt;
+	float:right;
+}	
+.sparkName{
+	font-size:10pt;
+	float:right;
+	clear:left;
+}
+.plotdescriptionbox {
+	text-align: left;
+	padding:5px;
+}
+ul.sparklist {
+	list-style: none;
+	margin:0;
+	clear:both;
+}
+ul.sparklist li {
+	/*clear:both;*/
+	border:1px solid #eee;
+	padding:5px;
+	margin:5px;
+	cursor:pointer;
+	float:left;
+	width:300px;
+}
+ul.sparklist li:hover {
+	background-color:#F0F0F0;
+}
+
+/* Compare plots */
+.highlighted {
+	background-color:#eee;
+}
+.selected {
+	background-color:#eee;
+}
+table#comp th:not(:first-child){
+	cursor: pointer;
+}
+table#comp td:not(:first-child) {
+	/*width:250px;*/
+}
+table#comp th {
+	font-family: "Bree Serif";
+	font-weight:normal;
+	font-size:1.2em;
+}
+#plotTitle {
+	margin:0;
+}
+#compPlot {
+	font-family: "Bree Serif";
+	font-size:1.2em;
+	text-align: center;
+	color : #a0a0a0;
+}
+#metricGuide {
+	font-size:0.7em;
+}

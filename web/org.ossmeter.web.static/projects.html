@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>OSSMETER</title>
+
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,300italic|Open+Sans:300italic,400italic,400,300' rel='stylesheet' type='text/css'>
+        <link href="http://fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet" type="text/css">
+
+        <link href="stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet"/>
+        <link href="stylesheets/nav.css" type="text/css" rel="stylesheet"/>
+        <link href="stylesheets/styles.css" type="text/css" rel="stylesheet"/>
+        <link href="stylesheets/plots.css" type="text/css" rel="stylesheet"/>
+        <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" media="screen">
+
+        <link rel="icon" type="image/png" href="images/favicon.png">
+
+        <script src="javascripts/jquery-1.9.1.js"></script>
+        <script src="javascripts/bootstrap.min.js"></script>
+        <script src="javascripts/knockout-2.3.0.js"></script>
+        <script src="javascripts/d3.v3.min.js"></script>
+        <script src="javascripts/dimple.v1.1.1.min.js"></script>
+        <script type="text/javascript">
+        $(function(){
+          $("#nav").load("nav.html"); 
+          $("#footer").load("footer.html"); 
+        });
+          $(document).ready(function () {
+            $("a").tooltip({
+              'selector': '',
+              'placement': 'bottom'
+            });
+          });
+        </script>
+    </head>
+    <body>
+  
+  <nav id="nav"></nav>
+  
+
+    <div class="inner">
+
+      <section>
+    <h1>Featured Eclipse Projects</h1>
+    <p>Take a look at some of the Eclipse projects that have been analysed so far:</p>
+    <ul class="inline featured">
+      <li class="well well-light">
+          <!-- <img src="images/osslogo-color-48.png" class="project-list-icon"/> -->
+          <h3><a href="project.html?p=birt">BIRT</a></h3>
+          <small>BIRT is an open source Eclipse-based reporting system that integrates with your Java/Java EE ...</small>
+      </li>
+      <li class="well well-light">
+          <!-- <img src="images/osslogo-color-48.png" class="project-list-icon"/> -->
+          <h3><a href="project.html?p=ecf">ECF</a></h3>
+          <small>ECF is a set of frameworks for building distributed servers, applications, and tools. It provides a ...</small>
+      </li>
+      <li class="well well-light">
+          <!-- <img src="images/osslogo-color-48.png" class="project-list-icon"/> -->
+          <h3><a href="project.html?p=ecoretools">EcoreTools</a></h3>
+          <small>EcoreTools 2 provides a complete and state of the art graphical modeler to create, edit and analyze ...</small>
+      </li>
+      <li class="well well-light">
+          <!-- <img src="images/osslogo-color-48.png" class="project-list-icon"/> -->
+          <h3><a href="project.html?p=egit">EGit</a></h3>
+          <small>EGit is an Eclipse Team provider for the Git version control system. Git is a distributed SCM, which ...</small>
+      </li>
+      <li class="well well-light">
+          <!-- <img src="images/osslogo-color-48.png" class="project-list-icon"/> -->
+          <h3><a href="project.html?p=emf">EMF</a></h3>
+          <small>The EMF project is a modeling framework and code generation facility for building tools and ...</small>
+      </li>
+      <li class="well well-light">
+          <!-- <img src="images/osslogo-color-48.png" class="project-list-icon"/> -->
+          <h3><a href="project.html?p=emf-diffmerge">EMF Diff/Merge</a></h3>
+          <small>EMF Diff/Merge is a tool for merging models. More precisely, it is a technical component ...</small>
+      </li>
+      <li class="well well-light">
+          <!-- <img src="images/logos/epsilon.png" class="project-list-icon"/> -->
+          <h3><a href="project.html?p=epsilon">Epsilon</a></h3>
+          <small>Epsilon is a family of languages and tools for code generation, model-to-model transformation ...</small>
+      </li>
+      <li class="well well-light">
+          <!-- <img src="images/osslogo-grey-48.png" class="project-list-icon"/> -->
+          <h3><a href="project.html?p=gmf-runtime">GMF Runtime</a></h3>
+          <small>The GMF runtime is an industry proven application framework for creating graphical editors using ...</small>
+      </li>
+      <li class="well well-light">
+          <!-- <img src="images/osslogo-color-48.png" class="project-list-icon"/> -->
+          <h3><a href="project.html?p=graphiti">Graphiti</a></h3>
+          <small>Graphiti is an Eclipse-based graphics framework that enables rapid development of state-of-the-art ...</small>
+      </li>
+      <li class="well well-light">
+          <!-- <img src="images/osslogo-color-48.png" class="project-list-icon"/> -->
+          <h3><a href="project.html?p=ocl">OCL</a></h3>
+          <small>OCL is an implementation of the Object Constraint Language (OCL) OMG standard for EMF-based ...</small>
+      </li>
+      <li class="well well-light">
+          <!-- <img src="images/osslogo-color-48.png" class="project-list-icon"/> -->
+          <h3><a href="project.html?p=pdt">PDT</a></h3>
+          <small>The PHP IDE project delivers a PHP Integrated Development Environment framework for the ...</small>
+      </li>
+      <li class="well well-light">
+          <!-- <img src="images/osslogo-color-48.png" class="project-list-icon"/> -->
+          <h3><a href="project.html?p=eclipseplatform">Platform</a></h3>
+          <small>The Eclipse Platform defines the set of frameworks and common services that collectively make up ..</small>
+      </li>
+      <li class="well well-light">
+          <!-- <img src="images/osslogo-color-48.png" class="project-list-icon"/> -->
+          <h3><a href="project.html?p=swt">SWT</a></h3>
+          <small>SWT is an open source widget toolkit for Java designed to provide efficient, portable access to the ...</small>
+      </li>
+      <li class="well well-light">
+          <!-- <img src="images/osslogo-color-48.png" class="project-list-icon"/> -->
+          <h3><a href="project.html?p=swtbot">SWTBot</a></h3>
+          <small>SWTBot is an open-source Java based UI/functional testing tool for testing SWT, Eclipse and ...</small>
+      </li>
+      <li class="well well-light">
+          <!-- <img src="images/osslogo-color-48.png" class="project-list-icon"/> -->
+          <h3><a href="project.html?p=uml2">UML2</a></h3>
+          <small>UML2 is an EMF-based implementation of the Unified Modeling Language (UMLTM) 2.x OMG  ...</small>
+      </li>
+      <li class="well well-light">
+          <!-- <img src="images/osslogo-color-48.png" class="project-list-icon"/> -->
+          <h3><a href="project.html?p=xsd">XSD</a></h3>
+          <small>XSD is a library that provides an API for manipulating the components of an XML Schema as described by ...</small>
+      </li>
+      <li class="well well-light">
+          <!-- <img src="images/osslogo-color-48.png" class="project-list-icon"/> -->
+          <h3><a href="project.html?p=xtext">Xtext</a></h3>
+          <small>Xtext is a framework for development of programming languages and domain specific ...</small>
+      </li>
+    </ul>
+  </section>
+</div>
+
+      <footer id="footer"></footer>
+    </body>
+</html>
+

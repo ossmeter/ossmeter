@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>OSSMETER</title>
+
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,300italic|Open+Sans:300italic,400italic,400,300' rel='stylesheet' type='text/css'>
+        <link href="http://fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet" type="text/css">
+
+        <link href="stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet"/>
+        <link href="stylesheets/nav.css" type="text/css" rel="stylesheet"/>
+        <link href="stylesheets/styles.css" type="text/css" rel="stylesheet"/>
+        <link href="stylesheets/plots.css" type="text/css" rel="stylesheet"/>
+        <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" media="screen">
+
+        <link rel="icon" type="image/png" href="images/favicon.png">
+
+        <script src="javascripts/jquery-1.9.1.js"></script>
+        <script src="javascripts/bootstrap.min.js"></script>
+        <script src="javascripts/knockout-2.3.0.js"></script>
+        <script src="javascripts/d3.v3.min.js"></script>
+        <script src="javascripts/dimple.v1.1.1.min.js"></script>
+
+        <script type="text/javascript">
+	        $(function(){
+	          	$("#nav").load("nav.html"); 
+	        	$("#footer").load("footer.html"); 
+	        
+	        	$.ajaxSetup({
+				    async: true
+				});
+
+	            $("a").tooltip({
+	              'selector': '',
+	              'placement': 'bottom'
+	            });
+	          });
+        </script>
+    </head>
+    <body>
+  
+  <nav id="nav"></nav>
+    <div class="inner">
+
+
+	<section class="row">
+		<div class="span12">
+			<h1>Compare Projects</h1>
+			<p>The OSSMETER platform will allow you to discover projects that meet your desired goals, and then compare them on the metrics that are most important to you. Perhaps one potential project that you might adopt is slow at fixing bugs, whereas an alternative project has an active community, who respond quickly to forum questions and fix bugs fast.</p>
+
+			<p>The table and plots below illustrate the kind of comparison that will be possible with the OSSMETER platform. Click on the metric names to display the metric for each project in the large plot.</p>
+
+			<p class="text-warning"><strong>Please note:</strong> This is a demo web application. The page may load slowly and you may encounter some unexpected bugs. Please report them to us at <a href="mailto:ossmeter@gmail.com">ossmeter@gmail.com</a> or <a href="https://www.twitter.com/ossmeter">@ossmeter</a>.  </p>
+		</div>
+	</section>
+	<section>
+		<div class="row well">
+			<h4 id="plotTitle"></h4>
+			<p id="metricDescription"></p>
+			<div class="span12 lplot">
+				<div id="compPlot">
+						<p>Select two projects using the drop-down menus</p>
+						<p>Click the Compare button</p>
+						<p>Click the name of a metric to display the data here</p>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+		<div class="span5">
+			<select id="p-select-1"></select>
+		</div>
+		<div class="span2">
+			<button id="compare-button" type="button" class="btn btn-default">Compare</button>
+		</div>
+		<div class="span5">
+			<select id="p-select-2"></select>			
+		</div>
+		</div>
+		<table id="comp" class="table">
+			    <tbody data-bind="foreach: metrics">
+			        <tr>
+			        	<td><p data-bind="text: $data.niceName" style="cursor:pointer"></p></td>
+		            	<!-- ko foreach: $parent.projects --> <!-- vm.projects -->
+			        	<td >
+			        		<span data-bind="sparkplot: { project: $data, metric: $parent} " class="spark"></span>
+			        	</td>
+			        	<!-- /ko -->
+			        </tr>
+			    </tbody>
+			</table>
+	</section>
+
+	<script src="javascripts/ossplots.js"></script>
+	<script src="javascripts/eclipse-projects.js"></script>
+ 	<script type="text/javascript">
+
+ 			$.each(Projects, function (key, value) {
+ 				$("#p-select-1").append($("<option></option>")
+         				.attr("value",value.shortName)
+         				.text(value.name)); 
+ 				$("#p-select-2").append($("<option></option>")
+         				.attr("value",value.shortName)
+         				.text(value.name)); 
+
+				$("#p-select-1 option:eq(7)").prop("selected", true);
+ 				$("#p-select-2 option:eq(4)").prop("selected", true);
+ 			});
+
+ 			$("#compare-button").click(function() {
+ 				if (vm.metrics().length === 0) {
+					for (m in Metrics) {
+						vm.addMetric(Metrics[m]);
+					}
+ 				}
+
+ 				vm.clearProjects();
+ 				vm.addProject({"id" : $("#p-select-1 :selected").val(), "name" : $("#p-select-1 :selected").text()});
+ 				vm.addProject({"id" : $("#p-select-2 :selected").val(), "name" : $("#p-select-2 :selected").text()});
+ 				// vm.addProject({"id" : "emf", "name" : "EMF"}); // Easy to add more projects
+
+ 			});
+
+    		/*
+				Script to add column/row highlighting
+    		*/
+    		function addInteractivityToCompTable() {
+	    		$('table#comp td:first-child').off('click'); // Remove any existing events
+	    		$('table#comp td:first-child').click(function() {
+	    			$('table#comp tr').removeClass("selected");
+	    
+					var t = parseInt($(this).closest("tr").index()) + 1;
+	    			$(this).closest("t").addClass("selected");
+	    			$('table#comp tr:nth-child('+t+')').addClass("selected");
+
+	    			plotMetric(t);
+	    		});	
+    		}	
+    		// Column index starts from 1
+    		function plotMetric(index){
+    			var metricId = vm.metrics()[index-1].id;
+
+    			var toPlot = {};
+    			toPlot.metricName = vm.metrics()[index-1].niceName;
+    			toPlot.metricDescription = vm.metrics()[index-1].desc;
+    			toPlot.metricGuide = vm.metrics()[index-1].guide;
+    			toPlot["data"] = new Array();
+
+    			$.each(vm.projects(), function(i, project) {
+    				$.each(project.metricsData, function(j, metric) {
+    					if (metric.id === metricId) {
+    						$.map(metric.datatable, function(m, k) {
+    							m["Project"] = project.name;
+    						});
+    						toPlot.vertical = metric.vertical;
+    						toPlot.xtext = metric.xtext;
+    						toPlot.ytext = metric.ytext;
+    						toPlot.type = metric.type;
+    						toPlot.orderRule = metric.orderRule;
+    						toPlot.isTimeSeries = metric.isTimeSeries;
+    						toPlot.containsSeries = false;
+    						if (metric.datatable[0]["Series"] != undefined) {
+    							toPlot.containsSeries = true;
+    						}
+    						toPlot.data = toPlot.data.concat(metric.datatable);
+    					}
+    				});
+    			});
+
+    			plot(toPlot);
+    		}
+
+    		function plot(data) {
+		        $("#compPlot").html("");
+
+		        var svg = dimple.newSvg("#compPlot", "100%", "100%");
+			    var chart = new dimple.chart(svg, data.data);
+			    chart.setBounds(60,20,800,230);
+
+			    if (data.vertical) {
+			    	var x = chart.addMeasureAxis("x", data.xtext);
+				    var y = chart.addCategoryAxis("y", [data.ytext,"Project", "Series"]);
+
+					if (data.isTimeSeries) {
+					    y.timeField = data.ytext;
+					    y.dateParseFormat = "%Y%m%d";
+					    y.tickFormat = "%b %Y"
+					}
+
+				    y.addOrderRule(data.orderRule);
+
+			    } else {
+				    var x = chart.addCategoryAxis("x", [data.xtext,"Project", "Series"]);
+
+					if (data.isTimeSeries) {
+					    x.timeField = data.xtext;
+					    x.dateParseFormat = "%Y%m%d";
+					    x.tickFormat = "%b %Y"
+					}
+				    x.addOrderRule(data.orderRule);
+				    var y = chart.addMeasureAxis("y", data.ytext);
+				}
+				var series = ["Project"];
+				if (data.containsSeries) {
+					series.unshift("Series");
+				}
+			    var ser = chart.addSeries(series, dimple.plot[data.type]);
+
+			    // chart.defaultColors = [  
+			    // 	new dimple.color("#d53e4f"),
+			    // 	new dimple.color("#f46d43"),
+			    // 	new dimple.color("#fdae61"),
+			    // 	new dimple.color("#fee08b"),
+			    // 	new dimple.color("#ffffbf"),
+		    	// 	new dimple.color("#e6f598"),
+		    	// 	new dimple.color("#abdda4"),
+		    	// 	new dimple.color("#66c2a5"),
+		    	// 	new dimple.color("#3288bd") 
+			    // ];
+
+			    chart.addLegend(60, 5, 680, 10, "right");
+			    chart.draw(500);
+
+			    x.shapes.selectAll("path, line").style("stroke", "#A0A0A0");
+			    x.shapes.selectAll("text").style("fill", "#A0A0A0");
+			    y.shapes.selectAll("path, line").style("stroke", "#A0A0A0");
+			    y.shapes.selectAll("text").style("fill", "#A0A0A0");
+			    y.titleShape.style("fill", "#A0A0A0");
+			    x.titleShape.style("fill", "#A0A0A0");
+
+			    $("#plotTitle").text(data.metricName);
+			    $("#metricDescription").text(data.metricDescription);
+			    $('html, body').animate({
+			        scrollTop: $("#plotTitle").offset().top - 50
+			    	}, 200);
+    		}
+	</script>
+	<script type="text/javascript">
+
+		function load() {
+
+			ko.bindingHandlers.sparkplot = {
+				init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+				         $(element).html("<img src=\"images/loading.gif\"/>");	
+				    },
+			    update: function(element, valueAccessor, allBindingsAccessor) {
+			    	$(element).html("<img src=\"images/loading.gif\"/>");	
+
+			        // First get the latest data that we're bound to
+			        var value = valueAccessor(), allBindings = allBindingsAccessor();
+
+			 		// Extract info
+			        var project = value.project;
+			        var metric = value.metric;
+			        var url = "data/" + project.id + "/" + metric.id + ".json"; 
+
+					$.get(url, function(data) {
+						$(element).html("");// Clear
+						if (!('metricsData' in project)) {
+							project.metricsData = new Array();
+							project.findMetricById = function(metricId) {
+								var self = this;
+								for (m in self.metricsData){
+									if (self.metricsData[m].id === metricId) {
+										return self.metricsData[m];
+									}
+								}
+								return -1;
+							};
+						}
+						if(typeof data != 'object') {
+							data = JSON.parse(data);	
+						}
+
+						// console.log("data ("+project.id+","+metric.id+"): " + data.datatable.length);
+
+						if (project.findMetricById(metric.id) === -1) {
+							project.metricsData.push(data);	
+						}
+
+				        var svg = dimple.newSvg(element, 200, 30);
+
+					    var chart = new dimple.chart(svg, data.datatable);
+
+					    if (data.vertical) {
+					    	var x = chart.addMeasureAxis("x", data.xtext);
+						    x.hidden=true;
+						    var y = chart.addCategoryAxis("y", data.ytext);
+						    y.addOrderRule(data.orderRule);
+
+							if (data.type === "line") { // hide for line charts
+							    y.hidden = true;
+							} 
+
+					    } else {
+						    var x = chart.addAxis("x", data.xtext);
+						    x.addOrderRule(data.orderRule);
+
+							if (data.type === "line") { // hide for line charts
+							    x.hidden = true;
+							} 
+
+						    chart.addMeasureAxis("y", data.ytext).hidden=true;
+
+						}
+					    var ser = chart.addSeries(data.series, dimple.plot[data.type]);
+					    chart.draw();
+
+					    if (data.type === "bar") { // color for bars
+							x.shapes.selectAll("path, line").style("stroke", "#A0A0A0");
+						}
+					}).fail(function(jqXHR, textStatus, errorThrown ){ 
+						console.log("Failed to retrieve " + project.shortName + ":" + metric.id);
+						console.log("\t" + textStatus);
+						console.log("\t" + errorThrown);
+					});
+			    }
+			};
+
+			var ComparisonViewModel = function() {
+				var self = this;
+				self.projects = ko.observableArray();
+				self.metrics = ko.observableArray();
+				self.plotMetrics = ko.observableArray();
+				self.addProject = function(project) {
+					self.projects.push(project);
+					addInteractivityToCompTable();
+				};
+				self.addMetric = function(metric) {
+					self.metrics.push(metric);
+					addInteractivityToCompTable();
+				};
+				self.clearProjects = function() {
+					self.projects([]);
+				}
+			}
+
+			vm = new ComparisonViewModel();
+			ko.applyBindings(vm);
+
+		}
+
+		load();
+		addInteractivityToCompTable();
+	    </script>
+	</div>
+ 		<footer id="footer"></footer>
+    </body>
+</html>

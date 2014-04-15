@@ -1,0 +1,1 @@
+{"id":"usersperday","name":"Users","type":"line","description":"A measurement of the number of daily users of the newsgroup.","xtext":"Date","ytext":"Users","orderRule":"Date","datatable":[],"isTimeSeries":true,"lastValue":"","friendlyName":"Number Of Users Per Day Provider","summary":"This metric computes the number of users per day."}
