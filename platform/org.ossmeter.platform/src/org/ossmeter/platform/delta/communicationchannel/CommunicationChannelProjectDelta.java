@@ -17,7 +17,7 @@ public class CommunicationChannelProjectDelta {
 	public CommunicationChannelProjectDelta(Project project, Date date, 
 			ICommunicationChannelManager communicationChannelManager) throws Exception {
 		for (CommunicationChannel communicationChannel: project.getCommunicationChannels()) {
-			communicationChannelDeltas.add(communicationChannelManager.getDelta(communicationChannel, date));
+			communicationChannelDeltas.add(communicationChannelManager.getDelta(project, communicationChannel, date));
 		}
 	}
 	

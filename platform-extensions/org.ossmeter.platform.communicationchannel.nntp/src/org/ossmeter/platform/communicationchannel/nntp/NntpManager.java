@@ -9,6 +9,7 @@ import org.ossmeter.platform.Date;
 import org.ossmeter.platform.delta.communicationchannel.CommunicationChannelArticle;
 import org.ossmeter.platform.delta.communicationchannel.CommunicationChannelDelta;
 import org.ossmeter.platform.delta.communicationchannel.ICommunicationChannelManager;
+import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 
 public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> {
@@ -21,7 +22,7 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 	}
 
 	@Override
-	public CommunicationChannelDelta getDelta(NntpNewsGroup newsgroup, Date date) throws Exception {
+	public CommunicationChannelDelta getDelta(Project project, NntpNewsGroup newsgroup, Date date) throws Exception {
 		NNTPClient nntpClient = NntpUtil.connectToNntpServer(newsgroup);
 
 		NewsgroupInfo newsgroupInfo = NntpUtil.selectNewsgroup(nntpClient, newsgroup);
@@ -108,6 +109,7 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 		newsgroup.setLastArticleChecked(lastArticleChecked+"");
 		System.out.println("delta ("+date.toString()+") contains:\t"+
 								delta.getArticles().size() + " nntp articles");
+		
 		return delta;
 	}
 

@@ -8,6 +8,7 @@ import org.ossmeter.platform.cache.communicationchannel.CommunicationChannelDelt
 import org.ossmeter.platform.cache.communicationchannel.ICommunicationChannelContentsCache;
 import org.ossmeter.platform.cache.communicationchannel.ICommunicationChannelDeltaCache;
 import org.ossmeter.repository.model.CommunicationChannel;
+import org.ossmeter.repository.model.Project;
 
 public abstract class PlatformCommunicationChannelManager implements ICommunicationChannelManager<CommunicationChannel> {
 	
@@ -43,7 +44,7 @@ public abstract class PlatformCommunicationChannelManager implements ICommunicat
 	}
 	
 	@Override
-	public CommunicationChannelDelta getDelta(CommunicationChannel communicationChannel, Date date)  throws Exception {
+	public CommunicationChannelDelta getDelta(Project project, CommunicationChannel communicationChannel, Date date)  throws Exception {
 		CommunicationChannelDelta cache = getDeltaCache().getCachedDelta(communicationChannel.getUrl(), date);
 		if (cache != null) {
 			System.err.println("CommunicationChannelDelta CACHE HIT!");
@@ -52,7 +53,7 @@ public abstract class PlatformCommunicationChannelManager implements ICommunicat
 		
 		ICommunicationChannelManager communicationChannelManager = getCommunicationChannelManager(communicationChannel);
 		if (communicationChannelManager != null) {
-			CommunicationChannelDelta delta = communicationChannelManager.getDelta(communicationChannel, date);
+			CommunicationChannelDelta delta = communicationChannelManager.getDelta(project, communicationChannel, date);
 			getDeltaCache().putDelta(communicationChannel.getUrl(), date, delta);
 			return delta;
 		}
