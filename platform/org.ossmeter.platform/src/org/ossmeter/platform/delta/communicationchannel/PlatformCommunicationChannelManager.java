@@ -35,11 +35,11 @@ public abstract class PlatformCommunicationChannelManager implements ICommunicat
 	}
 	
 	@Override
-	public Date getFirstDate(CommunicationChannel communicationChannel)
+	public Date getFirstDate(DB db, CommunicationChannel communicationChannel)
 			throws Exception {
 		for (ICommunicationChannelManager communicationChannelManager : getCommunicationChannelManagers()) {
 			if (communicationChannelManager.appliesTo(communicationChannel)) {
-				return communicationChannelManager.getFirstDate(communicationChannel);
+				return communicationChannelManager.getFirstDate(db, communicationChannel);
 			}
 		}
 		throw new RuntimeException("No communication channel manager applies to " + communicationChannel);
@@ -63,7 +63,7 @@ public abstract class PlatformCommunicationChannelManager implements ICommunicat
 	}
 
 	@Override
-	public String getContents(CommunicationChannel communicationChannel, CommunicationChannelArticle article) throws Exception {
+	public String getContents(DB db, CommunicationChannel communicationChannel, CommunicationChannelArticle article) throws Exception {
 		String cache = getContentsCache().getCachedContents(article);
 		if (cache != null) {
 			System.err.println("CommunicationChannelArticle CACHE HIT!");
@@ -74,7 +74,7 @@ public abstract class PlatformCommunicationChannelManager implements ICommunicat
 		getCommunicationChannelManager((article.getCommunicationChannel()));
 		
 		if (communicationChannelManager != null) {
-			String contents = communicationChannelManager.getContents(communicationChannel, article);
+			String contents = communicationChannelManager.getContents(db, communicationChannel, article);
 			getContentsCache().putContents(article, contents);
 			return contents;
 		}

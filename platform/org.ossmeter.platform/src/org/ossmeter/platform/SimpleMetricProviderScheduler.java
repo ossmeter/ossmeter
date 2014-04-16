@@ -87,7 +87,7 @@ public class SimpleMetricProviderScheduler {
 				}
 			}
 			for (CommunicationChannel communicationChannel : project.getCommunicationChannels()) {
-				Date d = platform.getCommunicationChannelManager().getFirstDate(communicationChannel).addDays(-1);
+				Date d = platform.getCommunicationChannelManager().getFirstDate(platform.getMetricsRepository(project).getDb(), communicationChannel).addDays(-1);
 				if (lastExec.compareTo(d) < 0) {
 					lastExec = d;
 				}

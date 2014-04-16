@@ -12,6 +12,8 @@ import org.ossmeter.platform.delta.communicationchannel.ICommunicationChannelMan
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 
+import com.mongodb.DB;
+
 public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> {
 	
 	private final static int RETRIEVAL_STEP = 50;
@@ -22,7 +24,7 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 	}
 
 	@Override
-	public CommunicationChannelDelta getDelta(Project project, NntpNewsGroup newsgroup, Date date) throws Exception {
+	public CommunicationChannelDelta getDelta(DB db, NntpNewsGroup newsgroup, Date date) throws Exception {
 		NNTPClient nntpClient = NntpUtil.connectToNntpServer(newsgroup);
 
 		NewsgroupInfo newsgroupInfo = NntpUtil.selectNewsgroup(nntpClient, newsgroup);
@@ -88,7 +90,7 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 						communicationChannelArticle.setSubject(article.getSubject());
 						communicationChannelArticle.setUser(article.getFrom());
 						communicationChannelArticle.setText(
-								getContents(newNewsgroup, communicationChannelArticle));
+								getContents(db, newNewsgroup, communicationChannelArticle));
 						delta.getArticles().add(communicationChannelArticle);
 						lastArticleChecked = article.getArticleNumber();
 //						System.out.println("dayNOTCompleted");
@@ -114,7 +116,7 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 	}
 
 	@Override
-	public Date getFirstDate(NntpNewsGroup newsgroup)
+	public Date getFirstDate(DB db, NntpNewsGroup newsgroup)
 			throws Exception {
 		NNTPClient nntpClient = NntpUtil.connectToNntpServer(newsgroup);
 		NewsgroupInfo newsgroupInfo = NntpUtil.selectNewsgroup(nntpClient, newsgroup);
@@ -135,7 +137,7 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 	}
 
 	@Override
-	public String getContents(NntpNewsGroup newsgroup, CommunicationChannelArticle article) throws Exception {
+	public String getContents(DB db, NntpNewsGroup newsgroup, CommunicationChannelArticle article) throws Exception {
 		NNTPClient nntpClient = NntpUtil.connectToNntpServer(newsgroup);
 		NntpUtil.selectNewsgroup(nntpClient, newsgroup);		
 		String contents = NntpUtil.getArticleBody(nntpClient, article.getArticleNumber());

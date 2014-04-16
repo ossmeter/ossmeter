@@ -11,8 +11,8 @@ public interface ICommunicationChannelManager<T extends CommunicationChannel> {
 	
 	public CommunicationChannelDelta getDelta(DB db, T communicationChannel, Date date) throws Exception;
 	
-	public String getContents(T communicationChannel, CommunicationChannelArticle article) throws Exception;
+	public String getContents(DB db, T communicationChannel, CommunicationChannelArticle article) throws Exception;
 	
-	public Date getFirstDate(T communicationChannel) throws Exception;
+	public Date getFirstDate(DB db, T communicationChannel) throws Exception;
 	
 }
