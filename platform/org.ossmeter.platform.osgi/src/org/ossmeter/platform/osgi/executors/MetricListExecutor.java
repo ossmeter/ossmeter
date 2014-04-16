@@ -161,6 +161,7 @@ public class MetricListExecutor implements Runnable {
 		MetricProvider mp = null;
 		while (it.hasNext()) {
 			mp = it.next();
+			if (mp == null) continue; //FIXME: intermittent bug adds nulls
 			if (mp.getMetricProviderId().equals(iProvider.getShortIdentifier())) {
 				return mp;
 			}

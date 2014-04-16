@@ -69,7 +69,7 @@ public class WorkerServiceApplication implements IApplication, ServiceTrackerCus
 		workerServiceTracker.open();
 
 		// Start web server
-		ProjectResource pr = new ProjectResource();
+//		ProjectResource pr = new ProjectResource();
 		
 		// Now, rest.
 		waitForDone();
@@ -171,8 +171,6 @@ public class WorkerServiceApplication implements IApplication, ServiceTrackerCus
 //		projects.add("modeling.gmp.graphiti"); // paige
 		
 		// Hydra-driven Blog
-//		projects.add("tools.pdt");
-//		projects.add("eclipse.platform");
 //		projects.add("modeling.gmp.gmf-runtime");
 //		projects.add("modeling.emf.diffmerge");
 //		projects.add("modeling.emf");
@@ -187,7 +185,23 @@ public class WorkerServiceApplication implements IApplication, ServiceTrackerCus
 //		projects.add("technology.egit");
 //		projects.add("eclipse.platform.swt");
 //		projects.add("technology.swtbot");
-		projects.add("modeling.mdt.xsd");
+//		projects.add("eclipse.platform");
+//		projects.add("tools.pdt");
+//		projects.add("modeling.mdt.xsd");
+		
+		// Hydra-driven blog, take II
+		projects.add("modeling.mmt.atl");			// 2k
+		projects.add("modeling.emf");				// 72k
+		projects.add("modeling.emft");				// 19k
+		projects.add("modeling.epsilon");			// 6k
+		projects.add("modeling.gmp.gmf-runtime");	// 27k
+		projects.add("modeling.gmp.graphiti");		// 5k
+		projects.add("eclipse.modeling.m2t");		// 8k
+		projects.add("modeling.mdt.papyrus");		// 4k
+		projects.add("modeling.mdt.ocl");			// 5k
+		projects.add("modeling.mdt.uml2");			// 10k
+		projects.add("modeling.mdt.uml2tools");		// 3k
+		projects.add("modeling.tmf.xtext");			// 6k
 		
 		worker.queueProjects(projects);
 		
