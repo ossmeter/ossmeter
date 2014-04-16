@@ -1,6 +1,7 @@
 package org.ossmeter.platform.delta;
 
 import org.ossmeter.platform.Date;
+import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.delta.vcs.IVcsManager;
 import org.ossmeter.platform.delta.vcs.VcsProjectDelta;
 import org.ossmeter.platform.delta.communicationchannel.ICommunicationChannelManager;
@@ -10,6 +11,8 @@ import org.ossmeter.platform.delta.bugtrackingsystem.BugTrackingSystemProjectDel
 import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.repository.model.Project;
 
+import com.mongodb.DB;
+
 public class ProjectDelta {
 	protected Date date;
 	protected Project project;
@@ -17,21 +20,23 @@ public class ProjectDelta {
 	protected ICommunicationChannelManager communicationChannelManager;
 	protected IBugTrackingSystemManager bugTrackingSystemManager;
 	
+	protected final Platform platform;
 	protected VcsProjectDelta vcsDelta;
 	protected CommunicationChannelProjectDelta communicationChannelDelta;
 	protected BugTrackingSystemProjectDelta bugTrackingSystemDelta;
 
 	protected OssmeterLogger logger;
 	
-	public ProjectDelta(Project project, Date date, 
-			IVcsManager vcsManager, 
-			ICommunicationChannelManager communicationChannelManager, 
-			IBugTrackingSystemManager bugTrackingSystemManager) {
+	public ProjectDelta(Project project, Date date, Platform platform) {
+//			IVcsManager vcsManager, 
+//			ICommunicationChannelManager communicationChannelManager, 
+//			IBugTrackingSystemManager bugTrackingSystemManager) {
 		this.project = project;
 		this.date = date;	
-		this.vcsManager = vcsManager;
-		this.communicationChannelManager = communicationChannelManager;
-		this.bugTrackingSystemManager = bugTrackingSystemManager;
+		this.vcsManager = platform.getVcsManager();
+		this.communicationChannelManager = platform.getCommunicationChannelManager();
+		this.bugTrackingSystemManager = platform.getBugTrackingSystemManager();
+		this.platform = platform;
 		
 		this.logger = (OssmeterLogger)OssmeterLogger.getLogger("ProjectDelta ("+project.getName() + "," + date.toString() + ")");
 	}
@@ -46,8 +51,9 @@ public class ProjectDelta {
 			vcsDelta = new VcsProjectDelta(project, date, vcsManager);
 			long endVcsDelta = System.currentTimeMillis();
 			
+			DB db = null;
 			long startCCDelta = System.currentTimeMillis();
-			communicationChannelDelta = new CommunicationChannelProjectDelta(project, date, communicationChannelManager);
+			communicationChannelDelta = new CommunicationChannelProjectDelta(db, project, date, communicationChannelManager);
 			long endCCDelta = System.currentTimeMillis();
 			
 			long startBTSDelta = System.currentTimeMillis();

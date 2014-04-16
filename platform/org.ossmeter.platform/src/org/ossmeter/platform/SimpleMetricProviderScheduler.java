@@ -116,10 +116,10 @@ public class SimpleMetricProviderScheduler {
 			logger.info("Date: " + date + " (" + project.getName() + ")");
 			
 			ProjectDelta delta = new ProjectDelta(	project, 
-													date, 
-													platform.getVcsManager(), 
-													platform.getCommunicationChannelManager(), 
-													platform.getBugTrackingSystemManager());
+													date, platform);
+//													platform.getVcsManager(), 
+//													platform.getCommunicationChannelManager(), 
+//													platform.getBugTrackingSystemManager());
 			delta.create();
 
 			// 2. Execute transient MPs
