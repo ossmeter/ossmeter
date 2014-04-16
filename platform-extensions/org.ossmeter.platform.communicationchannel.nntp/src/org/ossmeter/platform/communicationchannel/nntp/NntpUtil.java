@@ -4,11 +4,14 @@ package org.ossmeter.platform.communicationchannel.nntp;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.net.SocketException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.StringTokenizer;
+
+import javax.mail.internet.MimeUtility;
 
 import org.apache.commons.net.io.DotTerminatedMessageReader;
 import org.apache.commons.net.nntp.Article;
@@ -88,7 +91,7 @@ public class NntpUtil {
 				StringTokenizer stt = new StringTokenizer(st.nextToken(), "\t");
 				Article article = new Article();
 				article.setArticleNumber(Integer.parseInt(stt.nextToken()));
-				article.setSubject(stt.nextToken());
+				article.setSubject(decodeSubject(stt.nextToken()));
 				article.setFrom(stt.nextToken());
 				article.setDate(stt.nextToken());
 				article.setArticleId(stt.nextToken());
@@ -147,7 +150,24 @@ public class NntpUtil {
 
 		return article;*/
 		}
-		
+
+	protected static String decodeSubject(String subject) {
+		if (subject.contains("=?utf-8?")) {
+			System.err.println("D: subject:\t" + subject);
+			String decodedSubject = "";
+        	for (String str: subject.replace("=?utf-8?", " =?utf-8?").split("\\s+"))
+    			try {
+    				decodedSubject += MimeUtility.decodeText(str);
+    			} catch (UnsupportedEncodingException e) {
+    				// TODO Auto-generated catch block
+    				e.printStackTrace();
+    			}
+    		System.err.println("D: decoded:\t" + decodedSubject);
+        	return decodedSubject;
+    	} else
+    		return subject;
+    }
+
 	public  static String getArticleBody(NNTPClient client, int articleNumber)
 			throws IOException {
 			String articleBody = null;
