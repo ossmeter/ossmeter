@@ -153,7 +153,7 @@ public class NntpUtil {
 
 	protected static String decodeSubject(String subject) {
 		if (subject.contains("=?utf-8?")) {
-			System.err.println("D: subject:\t" + subject);
+//			System.err.println("D: subject:\t" + subject);
 			String decodedSubject = "";
         	for (String str: subject.replace("=?utf-8?", " =?utf-8?").split("\\s+"))
     			try {
@@ -162,7 +162,7 @@ public class NntpUtil {
     				// TODO Auto-generated catch block
     				e.printStackTrace();
     			}
-    		System.err.println("D: decoded:\t" + decodedSubject);
+//    		System.err.println("D: decoded:\t" + decodedSubject);
         	return decodedSubject;
     	} else
     		return subject;
