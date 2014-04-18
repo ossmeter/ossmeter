@@ -2,7 +2,7 @@
 <plugin>
   
   <extension point="org.ossmeter.platform.client.api.pongoviz">
-     <visualiser metricProviderId="org.ossmeter.metricprovider.dailyrequestsreplies" pongoVisualiser="org.ossmeter.metricprovider.dailyrequestsreplies.model.DailyRequestsRepliesViz">
+     <visualiser metricProviderId="org.ossmeter.metricprovider.dailyrequestsreplies.DailyRequestsRepliesProvider" pongoVisualiser="org.ossmeter.metricprovider.dailyrequestsreplies.model.DailyRequestsRepliesViz">
      </visualiser>
   </extension>
 

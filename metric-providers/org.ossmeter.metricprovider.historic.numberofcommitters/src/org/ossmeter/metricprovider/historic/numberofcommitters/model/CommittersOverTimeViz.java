@@ -21,7 +21,7 @@ public class CommittersOverTimeViz extends PongoViz {
 	}
 	
 	public void setProjectDB(DB projectDB) {
-		this.collection = projectDB.getCollection("org.ossmeter.metricprovider.generic.numberofrequestsrepliesperday");
+		this.collection = projectDB.getCollection("org.ossmeter.metricprovider.historic.numberofcommitters.model.CommittersOverTime");
 	}
 
 	@Override
@@ -32,7 +32,7 @@ public class CommittersOverTimeViz extends PongoViz {
 			case "json":
 				return ("{ 'id' : 'committersovertime', 'name' : 'Committers over time', 'type' : 'line', " +
 						"'description' : 'The number of committers.', " +
-						"'xtext' : 'Date', 'ytext':'Committers', 'series':'Series', 'orderRule' : 'Date', 'datatable' : " + createD3DataTable("", "", "__date", "", "", "", DateFilter.DAY) + "," +
+						"'xtext' : 'Date', 'ytext':'Quantity', 'series':'Series', 'orderRule' : 'Date', 'datatable' : " + createD3DataTable("", "", "__date", "", "", "", DateFilter.MONTH) + "," +
 						"'isTimeSeries':true, 'lastValue': '"+getLastValue()+"' }").replaceAll("'", "\"");
 		}
 		
@@ -50,27 +50,31 @@ public class CommittersOverTimeViz extends PongoViz {
 			DateFilter filter) {
 		Iterator<DBObject> it = collection.find().iterator();
 		String table = "[";
-		
 		while (it.hasNext()) {
 			DBObject dbobj = it.next();
 			String xval = String.valueOf(dbobj.get(xAxis));
-			
-			table += "{ 'Series' : 'Total', 'Quantity' : " + dbobj.get("totalNumberOfCommitters") + ", 'Date' : '" + xval + "' }," ;
-			table += "{ 'Series' : 'Last One Month', 'Quantity' : " + dbobj.get("numberOfCommittersLast1month") + ", 'Date' : '" + xval + "' }," ;
-			table += "{ 'Series' : 'Last Three Months', 'Quantity' : " + dbobj.get("numberOfCommittersLast3months") + ", 'Date' : '" + xval + "' }," ;
-			table += "{ 'Series' : 'Last Six Months', 'Quantity' : " + dbobj.get("numberOfCommittersLast6months") + ", 'Date' : '" + xval + "' }," ;
-			table += "{ 'Series' : 'Last Twelve Months', 'Quantity' : " + dbobj.get("numberOfCommittersLast12months") + ", 'Date' : '" + xval + "' }" ;
-
-			if (it.hasNext()) table+=",";
+			if (
+					(xAxis.equals("__date") && filter.equals(DateFilter.MONTH) && xval.trim().endsWith("01")) ||
+					(xAxis.equals("__date") && filter.equals(DateFilter.DAY))
+				) {
+				
+				table += "{ 'Series' : 'Total', 'Quantity' : " + dbobj.get("totalNumberOfCommitters") + ", 'Date' : '" + xval + "' }," ;
+				table += "{ 'Series' : 'Last One Month', 'Quantity' : " + dbobj.get("numberOfCommittersLast1month") + ", 'Date' : '" + xval + "' }," ;
+				table += "{ 'Series' : 'Last Three Months', 'Quantity' : " + dbobj.get("numberOfCommittersLast3months") + ", 'Date' : '" + xval + "' }," ;
+				table += "{ 'Series' : 'Last Six Months', 'Quantity' : " + dbobj.get("numberOfCommittersLast6months") + ", 'Date' : '" + xval + "' }," ;
+				table += "{ 'Series' : 'Last Twelve Months', 'Quantity' : " + dbobj.get("numberOfCommittersLast12months") + ", 'Date' : '" + xval + "' }" ;
+	
+				if (it.hasNext()) table+=",";
+			}
 		}
-		
+		if (table.endsWith(",")) table = table.substring(0, table.lastIndexOf(","));
 		table += "]";
 		return table;
 	}
 	
 	public static void main(String[] args) throws Exception {
 		Mongo mongo = new Mongo();
-		DB db = mongo.getDB("modeling.tmf.xtext");
+		DB db = mongo.getDB("modelingmmtatl");
 			
 		CommittersOverTimeViz viz = new CommittersOverTimeViz();
 		viz.setProjectDB(db);

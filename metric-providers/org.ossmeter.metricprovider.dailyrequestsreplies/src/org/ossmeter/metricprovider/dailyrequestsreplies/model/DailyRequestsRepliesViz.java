@@ -24,11 +24,11 @@ public class DailyRequestsRepliesViz extends PongoViz {
 	public String getViz(String type) {
 			
 			if( "json".equals(type)) {
-				String table = "";
+				String table = "[";
 			
-				for (DayArticles day : db.getDayArticles()) {
-					table += "{ 'Series' : 'Articles', 'Day' : '" + day.getName() + "', 'Quantity' : " + day.getNumberOfArticles() + " },";
-				}
+//				for (DayArticles day : db.getDayArticles()) {
+//					table += "{ 'Series' : 'Articles', 'Day' : '" + day.getName() + "', 'Quantity' : " + day.getNumberOfArticles() + " },";
+//				}
 				for (DayRequests day : db.getDayRequests()) {
 					table += "{ 'Series' : 'Requests', 'Day' : '" + day.getName() + "', 'Quantity' : " + day.getNumberOfRequests() + " },";
 				}
@@ -39,16 +39,16 @@ public class DailyRequestsRepliesViz extends PongoViz {
 				table += "]";
 				
 				return ("{ 'id' : 'dailyrequestsreplies', 'name' : 'Daily requests/replies', 'type' : 'bar', " +
-						"'description' : 'Foo bar.', " +
-						"'xtext' : 'Day', 'ytext':'Quantity', 'orderRule' : ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'], " +
+						"'description' : 'The days on which each request, reply, and article take place.', " +
+						"'xtext' : 'Day', 'ytext':'Quantity', 'series' : 'Series', 'orderRule' : ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'], " +
 						"'datatable' : " + table + "," +
 						"'isTimeSeries':false, 'lastValue': '"+getLastValue()+"' }").replaceAll("'", "\"");
 			} else if ("csv".equals(type)) {
 				String table = "Series, Day, Quantity\n";
 				
-				for (DayArticles day : db.getDayArticles()) {
-					table += "Articles," + day.getName() + "," + day.getNumberOfArticles() + "\n";
-				}
+//				for (DayArticles day : db.getDayArticles()) {
+//					table += "Articles," + day.getName() + "," + day.getNumberOfArticles() + "\n";
+//				}
 				for (DayRequests day : db.getDayRequests()) {
 					table += "Requests," + day.getName() + "," + day.getNumberOfRequests() + "\n";
 				}
@@ -63,10 +63,10 @@ public class DailyRequestsRepliesViz extends PongoViz {
 	
 	public static void main(String[] args) throws Exception {
 		Mongo mongo = new Mongo();
-		DB db = mongo.getDB("Subversion");
+		DB db = mongo.getDB("modelinggmpgraphiti");
 		
 		DailyRequestsRepliesViz viz = new DailyRequestsRepliesViz();
 		viz.setProjectDB(db);
-		System.err.println(viz.getViz("d3"));
+		System.err.println(viz.getViz("json"));
 	}
 }

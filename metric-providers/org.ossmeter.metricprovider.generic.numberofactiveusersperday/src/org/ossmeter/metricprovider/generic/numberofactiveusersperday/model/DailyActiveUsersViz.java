@@ -23,7 +23,7 @@ public class DailyActiveUsersViz extends PongoViz {
 			case "json":
 				return ("{ 'id' : 'activeusersperday', 'name' : 'Active Users', 'type' : 'line', " +
 						"'description' : 'A measurement of the number of active daily users of the newsgroup.', " +
-						"'xtext' : 'Date', 'ytext':'Active Users', 'orderRule' : 'Date', 'datatable' : " + createD3DataTable("newsgroups", "_id", "__date", "numberOfActiveUsers", "Date", "Active Users", DateFilter.DAY) + "," +
+						"'xtext' : 'Date', 'ytext':'Active Users', 'orderRule' : 'Date', 'datatable' : " + createD3DataTable("newsgroups", "_id", "__date", "numberOfActiveUsers", "Date", "Active Users", DateFilter.MONTH) + "," +
 						"'isTimeSeries':true, 'lastValue': '"+getLastValue()+"' }").replaceAll("'", "\"");
 			}
 		

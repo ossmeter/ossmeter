@@ -32,7 +32,7 @@ public class DailyNorrViz extends PongoViz {
 			case "json":
 				return ("{ 'id' : 'requestsreplies', 'name' : 'Requests and replies/day', 'type' : 'line', " +
 						"'description' : 'A measure of the number of requests and replies per day posted on the newsgroup.', " +
-						"'xtext' : 'Date', 'ytext':'Quantity', 'series':'Series', 'orderRule' : 'Date', 'datatable' : " + createD3DataTable("repositories", "url", "__date", "numberOfRequests", "Date", "Quantity", DateFilter.DAY) + "," +
+						"'xtext' : 'Date', 'ytext':'Quantity', 'series':'Series', 'orderRule' : 'Date', 'datatable' : " + createD3DataTable("repositories", "url", "__date", "numberOfRequests", "Date", "Quantity", DateFilter.MONTH) + "," +
 						"'isTimeSeries':true, 'lastValue': '"+getLastValue()+"' }").replaceAll("'", "\"");
 		}
 		
@@ -47,7 +47,7 @@ public class DailyNorrViz extends PongoViz {
 		while (it.hasNext()) {
 			DBObject dbobj = it.next();
 			String xval = String.valueOf(dbobj.get(xAxis));
-		
+			
 			// need to be defensive here, as the metric provider will create empty arrays if there is no data.
 			BasicDBList reqsList =  ((BasicDBList) dbobj.get("requests"));
 			BasicDBList repsList =  ((BasicDBList) dbobj.get("replies"));
@@ -65,7 +65,7 @@ public class DailyNorrViz extends PongoViz {
 			table += "Replies," + quantityReplies + "," + xval + "\n" ;
 
 		}
-		
+	
 		return table;
 	}
 	
@@ -79,36 +79,41 @@ public class DailyNorrViz extends PongoViz {
 		while (it.hasNext()) {
 			DBObject dbobj = it.next();
 			String xval = String.valueOf(dbobj.get(xAxis));
-		
-			// need to be defensive here, as the metric provider will create empty arrays if there is no data.
-			BasicDBList reqsList =  ((BasicDBList) dbobj.get("requests"));
-			BasicDBList repsList =  ((BasicDBList) dbobj.get("replies"));
-			
-			DBObject reqs = null;
-			if (reqsList.size()>0) reqs = (DBObject) reqsList.get(0);
-			
-			DBObject reps = null;
-			if (repsList.size()>0) reps = (DBObject) repsList.get(0);
-			
-			String quantityRequests = reqs != null ? String.valueOf(reqs.get("numberOfRequests")) : "0";
-			String quantityReplies = reps != null ? String.valueOf(reps.get("numberOfReplies")) : "0";
-			
-			table += "{ 'Series' : 'Requests', 'Quantity' : " + quantityRequests + ", 'Date' : '" + xval + "' }," ;
-			table += "{ 'Series' : 'Replies', 'Quantity' : " + quantityReplies + ", 'Date' : '" + xval + "' }" ;
-
-			if (it.hasNext()) table+=",";
+			if (
+					(xAxis.equals("__date") && filter.equals(DateFilter.MONTH) && xval.trim().endsWith("01")) ||
+					(xAxis.equals("__date") && filter.equals(DateFilter.DAY))
+					) {
+				// need to be defensive here, as the metric provider will create empty arrays if there is no data.
+				BasicDBList reqsList =  ((BasicDBList) dbobj.get("requests"));
+				BasicDBList repsList =  ((BasicDBList) dbobj.get("replies"));
+				
+				DBObject reqs = null;
+				if (reqsList.size()>0) reqs = (DBObject) reqsList.get(0);
+				
+				DBObject reps = null;
+				if (repsList.size()>0) reps = (DBObject) repsList.get(0);
+				
+				String quantityRequests = reqs != null ? String.valueOf(reqs.get("numberOfRequests")) : "0";
+				String quantityReplies = reps != null ? String.valueOf(reps.get("numberOfReplies")) : "0";
+				
+				table += "{ 'Series' : 'Requests', 'Quantity' : " + quantityRequests + ", 'Date' : '" + xval + "' }," ;
+				table += "{ 'Series' : 'Replies', 'Quantity' : " + quantityReplies + ", 'Date' : '" + xval + "' }" ;
+	
+				if (it.hasNext()) table+=",";
+			}
 		}
 		
+		if (table.endsWith(",")) table = table.substring(0, table.lastIndexOf(","));
 		table += "]";
 		return table;
 	}
 	
 	public static void main(String[] args) throws Exception {
 		Mongo mongo = new Mongo();
-		DB db = mongo.getDB("Subversion");
+		DB db = mongo.getDB("eclipseplatform");
 			
 		DailyNorrViz viz = new DailyNorrViz();
 		viz.setProjectDB(db);
-		System.err.println(viz.getViz("csv"));
+		System.err.println(viz.getViz("json"));
 	}
 }

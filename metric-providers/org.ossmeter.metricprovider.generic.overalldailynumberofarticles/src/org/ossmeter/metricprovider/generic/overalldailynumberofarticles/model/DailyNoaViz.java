@@ -24,7 +24,7 @@ public class DailyNoaViz extends PongoViz {
 			case "json":
 				return ("{ 'id' : 'dailyarticles', 'name' : 'Articles', 'type' : 'line', " +
 						"'description' : 'This metric keeps track of the number of newsgroup articles.', " +
-						"'xtext' : 'Date', 'ytext':'Articles', 'orderRule' : 'Date', 'datatable' : " + createD3DataTable("newsgroups", "_id", "__date", "numberOfArticles", "Date", "Articles", DateFilter.MONTH) + "," +
+						"'xtext' : 'Date', 'ytext':'Articles', 'orderRule' : 'Date', 'datatable' : " + createD3DataTable("newsgroups", "_id", "__date", "numberOfArticles", "Date", "Articles", DateFilter.DAY) + "," +
 						"'isTimeSeries':true, 'lastValue': '"+getLastValue()+"' }").replaceAll("'", "\"");				
 	}
 		return null;

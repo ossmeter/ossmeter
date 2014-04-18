@@ -19,9 +19,9 @@ public class DailyThreadsViz extends PongoViz {
 	public String getViz(String type) {
 		switch (type) {
 			case "json":
-				return ("{ 'id' : 'threadsperdaypernewsgroup', 'name' : 'Users', 'type' : 'line', " +
-						"'description' : 'foo bar.', " +
-						"'xtext' : 'Date', 'ytext':'Threads', 'orderRule' : 'Date', 'datatable' : " + createD3DataTable("newsgroups", "_id", "__date", "numberOfThreads", "Date", "Threads", DateFilter.DAY) + "," +
+				return ("{ 'id' : 'threadspernewsgroup', 'name' : 'Threads', 'type' : 'line', " +
+						"'description' : 'Historical view of the total number of threads in the newsgroup.', " +
+						"'xtext' : 'Date', 'ytext':'Threads', 'orderRule' : 'Date', 'datatable' : " + createD3DataTable("newsgroups", "_id", "__date", "numberOfThreads", "Date", "Threads", DateFilter.MONTH) + "," +
 						"'isTimeSeries':true, 'lastValue': '"+getLastValue()+"' }").replaceAll("'", "\"");
 			
 			case "csv":
