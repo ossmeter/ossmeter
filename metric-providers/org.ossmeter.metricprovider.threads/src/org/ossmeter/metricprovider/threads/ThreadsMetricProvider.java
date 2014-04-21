@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.net.nntp.Threader;
 import org.ossmeter.metricprovider.threads.model.ArticleData;
 import org.ossmeter.metricprovider.threads.model.CurrentDate;
 import org.ossmeter.metricprovider.threads.model.NewsgroupData;
@@ -123,13 +122,13 @@ public class ThreadsMetricProvider implements ITransientMetricProvider<Threads>{
 						articles.add(prepareArticle(deltaArticle));
 				}
 				
-				db.getThreads().getDbCollection().drop();
-				db.sync();
-				
 				System.out.println("Building message thread tree... (" + articles.size() + ")");
 				Threader threader = new Threader();
 				Article root = (Article)threader.thread(articles);
 				List<List<Article>> articleList = zeroLevelCall(root);
+				
+				db.getThreads().getDbCollection().drop();
+				db.sync();
 				
 				int index = 0;
 				for (List<Article> list: articleList) {
