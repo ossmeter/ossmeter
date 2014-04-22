@@ -1,6 +1,8 @@
  
 package org.ossmeter.metricprovider.hourlyrequestsreplies.model;
 
+import java.math.BigDecimal;
+
 import com.googlecode.pongo.runtime.viz.PongoViz;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
@@ -26,18 +28,23 @@ public class HourlyRequestsRepliesViz extends PongoViz {
 //				for (HourArticles hour : db.getHourArticles()) {
 //					table += "{ 'Series' : 'Articles', 'Hour' : '" + hour.getHour() + "', 'Quantity' : " + hour.getNumberOfArticles() + " },";
 //				}
+				double totalRequests = 0;
+				double totalReplies = 0;
+				for (HourRequests day : db.getHourRequests()) totalRequests += day.getNumberOfRequests();
+				for (HourReplies day : db.getHourReplies()) totalReplies += day.getNumberOfReplies();
+				
 				for (HourRequests hour : db.getHourRequests()) {
-					table += "{ 'Series' : 'Requests', 'Hour' : '" + hour.getHour() + "', 'Quantity' : " + hour.getNumberOfRequests() + " },";
+					table += "{ 'Series' : 'Requests', 'Hour' : '" + hour.getHour() + "', 'Proportion' : " + round(((double)hour.getNumberOfRequests())/totalRequests, 2, BigDecimal.ROUND_HALF_UP) + " },";
 				}
 				for (HourReplies hour : db.getHourReplies()) {
-					table += "{ 'Series' : 'Replies', 'Hour' : '" + hour.getHour() + "', 'Quantity' : " + hour.getNumberOfReplies()+ " },";
+					table += "{ 'Series' : 'Replies', 'Hour' : '" + hour.getHour() + "', 'Proportion' : " + round(((double)hour.getNumberOfReplies())/totalReplies, 2, BigDecimal.ROUND_HALF_UP)+ " },";
 				}
 				table = table.substring(0, table.lastIndexOf(","));
 				table += "]";
 				
 				return ("{ 'id' : 'hourlyrequestsreplies', 'name' : 'Hourly requests/replies', 'type' : 'bar', " +
 						"'description' : 'Foo bar.', " +
-						"'xtext' : 'Hour', 'ytext':'Quantity','series' : 'Series', 'orderRule' : ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'], " +
+						"'xtext' : 'Hour', 'ytext':'Proportion', 'tickFormat':',.2f','series' : 'Series', 'orderRule' : ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'], " +
 						"'datatable' : " + table + "," +
 						"'isTimeSeries':false, 'lastValue': '"+getLastValue()+"' }").replaceAll("'", "\"");
 		} else if("csv".equals(type)) {
@@ -57,9 +64,16 @@ public class HourlyRequestsRepliesViz extends PongoViz {
 		return null;
 	}
 	
+	public static double round(double unrounded, int precision, int roundingMode)
+	{
+	    BigDecimal bd = new BigDecimal(unrounded);
+	    BigDecimal rounded = bd.setScale(precision, roundingMode);
+	    return rounded.doubleValue();
+	}
+	
 	public static void main(String[] args) throws Exception {
 		Mongo mongo = new Mongo();
-		DB db = mongo.getDB("modelingtmfxtext");
+		DB db = mongo.getDB("eclipseplatform");
 		
 		HourlyRequestsRepliesViz viz = new HourlyRequestsRepliesViz();
 		viz.setProjectDB(db);
