@@ -69,6 +69,7 @@
   <eClassifiers xsi:type="ecore:EEnum" name="GoogleIssueType">
     <eLiterals name="Defect" value="1"/>
     <eLiterals name="Enhancement" value="2"/>
+    <eLiterals name="Bug" value="3" literal="Bug"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="GoogleIssueStatus">
     <eLiterals name="New" value="1"/>
@@ -89,7 +90,7 @@
         eType="#//GoogleLabel" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="uploaded_at" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="updated_at" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="size" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="size" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="downloadCounts" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GoogleUser" eSuperTypes="#//Person">

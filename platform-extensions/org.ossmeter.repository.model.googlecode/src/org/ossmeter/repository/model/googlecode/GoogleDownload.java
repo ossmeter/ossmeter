@@ -26,7 +26,7 @@ public class GoogleDownload extends Pongo {
 	public static StringQueryProducer FILENAME = new StringQueryProducer("fileName"); 
 	public static StringQueryProducer UPLOADED_AT = new StringQueryProducer("uploaded_at"); 
 	public static StringQueryProducer UPDATED_AT = new StringQueryProducer("updated_at"); 
-	public static NumericalQueryProducer SIZE = new NumericalQueryProducer("size");
+	public static StringQueryProducer SIZE = new StringQueryProducer("size"); 
 	public static NumericalQueryProducer DOWNLOADCOUNTS = new NumericalQueryProducer("downloadCounts");
 	
 	
@@ -66,11 +66,11 @@ public class GoogleDownload extends Pongo {
 		notifyChanged();
 		return this;
 	}
-	public int getSize() {
-		return parseInteger(dbObject.get("size")+"", 0);
+	public String getSize() {
+		return parseString(dbObject.get("size")+"", "");
 	}
 	
-	public GoogleDownload setSize(int size) {
+	public GoogleDownload setSize(String size) {
 		dbObject.put("size", size);
 		notifyChanged();
 		return this;
