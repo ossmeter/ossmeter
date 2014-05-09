@@ -370,24 +370,27 @@ public class GoogleCodeImporter {
 			try {
 				doc = Jsoup.connect(URL_PROJECT).timeout(10000).get();
 				Element e = doc.getElementById("resultstable");
-				e = e.getElementsByTag("tbody").first();
-				Elements tableRows = e.getElementsByTag("tr");
-				for (Element iterable_element : tableRows) {
-					Elements columns = iterable_element.getElementsByTag("td");
-					
-					GoogleDownload gd = new GoogleDownload();
-					gd.setFileName(columns.get(1).text());
-					gd.setUploaded_at(columns.get(3).text());
-					gd.setUpdated_at(columns.get(4).text());
-					gd.setSize(columns.get(5).text());
-					gd.setDownloadCounts(Integer.parseInt(columns.get(6).text()));
-					
-					result.add(gd);
-					
-					
+				if(e!=null)
+				{
+					e = e.getElementsByTag("tbody").first();
+					Elements tableRows = e.getElementsByTag("tr");
+					for (Element iterable_element : tableRows) {
+						Elements columns = iterable_element.getElementsByTag("td");
+						if(columns.size()>6)
+						{
+							GoogleDownload gd = new GoogleDownload();
+							gd.setFileName(columns.get(1).text());
+							gd.setUploaded_at(columns.get(3).text());
+							gd.setUpdated_at(columns.get(4).text());
+							gd.setSize(columns.get(5).text());
+							gd.setDownloadCounts(Integer.parseInt(columns.get(6).text()));
+							
+							result.add(gd);
+						}
+						
+					}
+				
 				}
-				
-				
 				//result.add(e.toString());
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
@@ -401,13 +404,85 @@ public class GoogleCodeImporter {
 	
 	public void importAll(Platform platform) 
 	{
-		String URL_PROJECT = "https://code.google.com/p/gmaps-api-issues/";
-		try {
-			GoogleCodeProject currentProg = importProject(URL_PROJECT, platform);
-			platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(currentProg);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		List<GoogleCodeProject> result = new ArrayList<GoogleCodeProject>();
+		org.jsoup.nodes.Document doc;
+		org.jsoup.nodes.Element content;
+		
+		String URL_PROJECT = "https://code.google.com/hosting/search?q=&sa=Search";
+		
+		
+			try {
+				doc = Jsoup.connect(URL_PROJECT).timeout(10000).get();
+				Element e =  doc.getElementsByClass("mainhdr").first();
+				String pagination = e.text();
+				String endS = "";
+				String startS = "";
+				String totalItemS = "";
+				String [] array = pagination.split(" ");				
+				endS = array[3];
+				startS = array[1];
+				totalItemS = array[5];
+				Integer start = Integer.parseInt(startS);
+				Integer end = Integer.parseInt(endS);
+				Integer totalItem = Integer.parseInt(totalItemS);
+				if(end <= totalItem)
+				{
+					int i = 0;
+					while (i <= totalItem )
+					{
+						String url = "https://code.google.com/hosting/search?q=&filter=0&mode=&start="+ i;
+						result.addAll(importPage(url, platform));
+						System.err.println("FINE PAGINA!");
+						//Attention to last mod 10 elements
+						i= i + 10;
+					}
+				}
+				for (GoogleCodeProject currentProg : result)
+					platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(currentProg);
+				
+				//result.add(e.toString());
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		
+		
+		
+			//SINGLE PROJECT
+//		String URL_PROJECT = "https://code.google.com/p/gmaps-api-issues/";
+//		try {
+//			GoogleCodeProject currentProg = importProject(URL_PROJECT, platform);
+//			platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(currentProg);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
+	private List<GoogleCodeProject> importPage (String url, Platform platform)
+	{
+		List<GoogleCodeProject> result = new ArrayList<GoogleCodeProject>();
+		org.jsoup.nodes.Document doc;
+		org.jsoup.nodes.Element content;
+		
+		String URL_PROJECT = "https://code.google.com/hosting/search?q=&sa=Search";
+		
+		
+			try {
+				doc = Jsoup.connect(URL_PROJECT).timeout(10000).get();
+				Element e =  doc.getElementById("serp");
+				Elements projectList = e.getElementsByTag("table");
+				
+				for (Element element : projectList) 
+				{
+					result.add(importProject("https://code.google.com" + element.getElementsByTag("td").get(1).getElementsByTag("a").first().attr("href"),platform));			
+				}
+				//result.add(e.toString());
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		return result;
+	}
+	
 }
