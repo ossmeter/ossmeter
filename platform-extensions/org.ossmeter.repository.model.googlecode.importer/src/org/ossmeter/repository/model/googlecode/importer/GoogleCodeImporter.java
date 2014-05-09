@@ -40,7 +40,7 @@ public class GoogleCodeImporter {
 			Element e = doc.getElementById("pname");
 			result.setName(e.toString());
 			//SET NAME
-			Jsoup.parse(e.getElementsByTag("span").toString()).text();
+			
 			result.setName(Jsoup.parse(e.getElementsByTag("span").toString()).text());
 			e = doc.getElementById("wikicontent");
 			result.setDescription(Jsoup.parse(e.toString()).text());
@@ -82,9 +82,12 @@ public class GoogleCodeImporter {
 			{
 				GoogleIssueTracker git = new GoogleIssueTracker();
 				git.setUrl("https://code.google.com" + issue.outerHtml().substring(issue.outerHtml().indexOf("href")+6, issue.outerHtml().indexOf("class")-2));
-				System.out.println(git.getUrl());
-				List<GoogleIssue> gi = getGoogleIssueList(platform, git.getUrl());
-				git.getIssues().addAll(gi);
+				
+				//This line work fine but there is a google access limit
+				
+				//System.out.println(git.getUrl());
+				//List<GoogleIssue> gi = getGoogleIssueList(platform, git.getUrl());
+				//git.getIssues().addAll(gi);
 				result.setIssueTracker(git);
 			}
 			
@@ -158,11 +161,12 @@ public class GoogleCodeImporter {
 		try 
 		{
 			doc = Jsoup.connect(URL_PROJECT).timeout(10000).get();
-			//Paginazione
+			
+			//Pagination
 			Element pagination = doc.getElementsByClass("pagination").first();
 			Integer totPagination = Integer.parseInt(pagination.text().split(" ")[4]);
 			Integer numPag = (totPagination % 100) == 0 ? totPagination/100:totPagination/100+1;
-			//fine paginazione
+			//End pagination
 			
 			Element e = doc.getElementById("resultstable");
 			e = e.getElementsByTag("tbody").first();
@@ -173,13 +177,13 @@ public class GoogleCodeImporter {
 						"detail?id="+ iterable_element.getElementsByTag("td").get(1).getElementsByTag("a").first().text();
 				GoogleIssue gi = getGoogleIssue(platform, urlIssue);
 				result.add(gi);//System.out.println(iterable_element.getElementsByTag("td").get(1).toString());
-				//DOPO UN PO GOOGLE SI INCAZZA
+				
 				break;
 			}
 			
-			//Paginazione
+			//Pagination
 			
-			//fine paginazione
+			//End pagination
 			
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
@@ -326,23 +330,24 @@ public class GoogleCodeImporter {
 						
 					}
 					userPending.put(username, gu);
-					String [] arrayRole = columns.get(1).text().split("\\+");
-					for (String string : arrayRole) 
+					
+				}
+				String [] arrayRole = columns.get(1).text().split("\\+");
+				for (String string : arrayRole) 
+				{
+					Role gr = platform.getProjectRepositoryManager().getProjectRepository().getRoles().findOneByName(string);
+					if (gr == null)
 					{
-						Role gr = platform.getProjectRepositoryManager().getProjectRepository().getRoles().findOneByName(string);
-						if (gr == null)
+						gr = rolePending.get(string);
+						if(gr==null)
 						{
-							gr = rolePending.get(string);
-							if(gr==null)
-							{
-								gr = new Role();
-								gr.setName(string);
-								rolePending.put(string, gr);
-								platform.getProjectRepositoryManager().getProjectRepository().getRoles().add(gr);
-							}
+							gr = new Role();
+							gr.setName(string);
+							rolePending.put(string, gr);
+							platform.getProjectRepositoryManager().getProjectRepository().getRoles().add(gr);
 						}
-						gu.getRoles().add(gr);				
 					}
+					gu.getRoles().add(gr);				
 				}
 				result.add((GoogleUser) gu);
 			}
