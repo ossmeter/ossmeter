@@ -2,6 +2,10 @@ package org.ossmeter.repository.model.redmine;
 
 public enum RedmineIssuePriority {
 	
-	normal	
+	Low,	
+	Normal,	
+	High,	
+	Urgent,	
+	Immediate	
 	
 }

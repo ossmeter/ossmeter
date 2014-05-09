@@ -110,10 +110,18 @@
     <eLiterals name="follows" value="6"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="RedmineIssueStatus">
-    <eLiterals name="_new"/>
-    <eLiterals name="closed" value="1"/>
+    <eLiterals name="New" literal="New"/>
+    <eLiterals name="In_Progress" value="1" literal="In Progress"/>
+    <eLiterals name="Resolved" value="2" literal="Resolved"/>
+    <eLiterals name="Feedback" value="3" literal="Feedback"/>
+    <eLiterals name="Closed" value="4" literal="Closed"/>
+    <eLiterals name="Rejected" value="5" literal="Rejected"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="RedmineIssuePriority">
-    <eLiterals name="normal"/>
+    <eLiterals name="Low" literal="Low"/>
+    <eLiterals name="Normal" value="1" literal="Normal"/>
+    <eLiterals name="High" value="2" literal="High"/>
+    <eLiterals name="Urgent" value="3" literal="Urgent"/>
+    <eLiterals name="Immediate" value="4" literal="Immediate"/>
   </eClassifiers>
 </ecore:EPackage>

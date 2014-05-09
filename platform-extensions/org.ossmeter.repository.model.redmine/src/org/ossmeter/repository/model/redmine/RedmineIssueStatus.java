@@ -2,7 +2,11 @@ package org.ossmeter.repository.model.redmine;
 
 public enum RedmineIssueStatus {
 	
-	_new,	
-	closed	
+	New,	
+	In_Progress,	
+	Resolved,	
+	Feedback,	
+	Closed,	
+	Rejected	
 	
 }
