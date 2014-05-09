@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Dependency
+Bundle-SymbolicName: org.ossmeter.repository.model.redmine.importer.dependency
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Import-Package: org.apache.http,
+ org.apache.http.message;version="4.1.4",
+ org.slf4j;version="1.6.4"
