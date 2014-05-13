@@ -13,5 +13,29 @@
          </run>
       </application>
    </extension>
+   <extension
+         id="demoApp"
+         point="org.eclipse.core.runtime.applications">
+      <application
+            cardinality="singleton-global"
+            thread="main"
+            visible="true">
+         <run
+               class="org.ossmeter.platform.app.york.DemoApp">
+         </run>
+      </application>
+   </extension>
+   <extension
+         id="demoproduct"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.ossmeter.platform.app.york.demoApp"
+            name="Demo Product">
+         <property
+               name="appName"
+               value="Demo Product">
+         </property>
+      </product>
+   </extension>
 
 </plugin>
