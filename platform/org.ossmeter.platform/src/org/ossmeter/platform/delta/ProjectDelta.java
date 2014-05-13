@@ -39,6 +39,7 @@ public class ProjectDelta {
 		this.platform = platform;
 		
 		this.logger = (OssmeterLogger)OssmeterLogger.getLogger("ProjectDelta ("+project.getName() + "," + date.toString() + ")");
+		this.logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 	}
 	
 	// TODO: Is it more important to execute SOME metrics or execute ALL metrics?
@@ -51,7 +52,7 @@ public class ProjectDelta {
 			vcsDelta = new VcsProjectDelta(project, date, vcsManager);
 			long endVcsDelta = System.currentTimeMillis();
 			
-			DB db = null;
+			DB db = platform.getMetricsRepository(project).getDb();
 			long startCCDelta = System.currentTimeMillis();
 			communicationChannelDelta = new CommunicationChannelProjectDelta(db, project, date, communicationChannelManager);
 			long endCCDelta = System.currentTimeMillis();
