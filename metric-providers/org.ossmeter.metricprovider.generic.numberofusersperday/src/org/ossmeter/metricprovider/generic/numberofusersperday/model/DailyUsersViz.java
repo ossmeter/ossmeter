@@ -21,7 +21,7 @@ public class DailyUsersViz extends PongoViz {
 		switch (type) {
 			case "json":
 				return ("{ 'id' : 'usersperday', 'name' : 'Users', 'type' : 'line', " +
-						"'description' : 'A measurement of the number of daily users of the newsgroup.', " +
+						"'description' : 'A cumulative count of the number of unique users of the newsgroup. Uniqueness was determined by the author line of the newsgroup article.', " +
 						"'xtext' : 'Date', 'ytext':'Users', 'orderRule' : 'Date', 'datatable' : " + createD3DataTable("newsgroups", "_id", "__date", "numberOfUsers", "Date", "Users", DateFilter.MONTH) + "," +
 						"'isTimeSeries':true, 'lastValue': '"+getLastValue()+"' }").replaceAll("'", "\"");
 			case "csv":
