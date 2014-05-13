@@ -82,8 +82,7 @@ public class ProjectExecutor implements Runnable {
 			logger.info("Date: " + date + ", project: " + project.getName());
 			
 			long startDelta = System.currentTimeMillis();
-			ProjectDelta delta = new ProjectDelta(project, date, 
-					platform.getVcsManager(), platform.getCommunicationChannelManager(), platform.getBugTrackingSystemManager());
+			ProjectDelta delta = new ProjectDelta(project, date, platform);
 			boolean createdOk = delta.create();
 			String deltaTimes = delta.getTimingsString();
 			long timeDelta = System.currentTimeMillis() - startDelta;
@@ -219,7 +218,7 @@ public class ProjectExecutor implements Runnable {
 			}
 			for (CommunicationChannel communicationChannel : project.getCommunicationChannels()) {
 				try {
-					Date d = platform.getCommunicationChannelManager().getFirstDate(communicationChannel).addDays(-1);
+					Date d = platform.getCommunicationChannelManager().getFirstDate(platform.getMetricsRepository(project).getDb(), communicationChannel).addDays(-1);
 					if (d == null) continue;
 					if (lastExec.compareTo(d) > 0) {
 						lastExec = d;
