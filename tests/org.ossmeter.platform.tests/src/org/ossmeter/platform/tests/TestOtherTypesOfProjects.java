@@ -3,7 +3,7 @@ package org.ossmeter.platform.tests;
 import org.junit.Test;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.repository.model.Project;
-import org.ossmeter.repository.model.github.GitHubProject;
+import org.ossmeter.repository.model.github.GitHubRepository;
 
 import com.googlecode.pongo.runtime.PongoFactory;
 import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
@@ -14,7 +14,7 @@ public class TestOtherTypesOfProjects {
 	@Test
 	public void testCreateGitProject() throws Exception {
 		
-		GitHubProject project = new GitHubProject();
+		GitHubRepository project = new GitHubRepository();
 		
 		Platform platform = new Platform(new Mongo());
 		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
