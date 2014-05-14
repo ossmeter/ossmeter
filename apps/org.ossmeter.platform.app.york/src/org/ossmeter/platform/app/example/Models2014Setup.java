@@ -1,4 +1,4 @@
-package org.ossmeter.platform.app.york;
+package org.ossmeter.platform.app.example;
 
 import java.util.ArrayList;
 import java.util.Arrays;

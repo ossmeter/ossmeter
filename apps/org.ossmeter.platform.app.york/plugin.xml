@@ -9,7 +9,7 @@
             thread="main"
             visible="true">
          <run
-               class="org.ossmeter.platform.app.york.App">
+               class="org.ossmeter.platform.app.example.App">
          </run>
       </application>
    </extension>
