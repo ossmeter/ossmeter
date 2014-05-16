@@ -221,10 +221,16 @@ public class GitHubImporter {
 					repository.setSvn_url(currentRepo.get("svn_url").toString());
 				
 				repository.setSize(new Integer(currentRepo.get("size").toString()));
-
-							
-				JSONObject ownerObject = (JSONObject)currentRepo.get("owner");
+								
+				Role gitHubOwnerRole = platform.getProjectRepositoryManager().getProjectRepository().getRoles().findOneByName("gitHub_owner");
 				
+				if (gitHubOwnerRole == null) { 
+					gitHubOwnerRole = new Role();
+					gitHubOwnerRole.setName("gitHub_owner");
+					platform.getProjectRepositoryManager().getProjectRepository().getRoles().add(gitHubOwnerRole);
+				}
+
+				JSONObject ownerObject = (JSONObject)currentRepo.get("owner");
 				Iterable<Person> persons = platform.getProjectRepositoryManager().getProjectRepository().getPersons().findByName((String)ownerObject.get("login"));		
 				Iterator<Person> ipersons = persons.iterator();
 				Person person = null;
@@ -237,26 +243,19 @@ public class GitHubImporter {
 					}
 				}
 			
-				if (user == null)
+				if (user == null) {
 					user = new GitHubUser();
+					user.getRoles().add(gitHubOwnerRole);
+					platform.getProjectRepositoryManager().getProjectRepository().getPersons().add(user);
+					repository.getPersons().add(user);								
+				}
 				
 				user.setHtml_url((String)ownerObject.get("html_url"));
 				user.setHomePage((String)ownerObject.get("html_url"));
 				user.setUrl((String)ownerObject.get("url"));
 				user.setLogin((String)ownerObject.get("login"));
+				user.setName((String)ownerObject.get("login"));
 				user.setFollowers_url((String)ownerObject.get("followers_url"));							
-					
-				Role gitHubOwnerRole = platform.getProjectRepositoryManager().getProjectRepository().getRoles().findOneByName("gitHub_owner");
-				
-				if (gitHubOwnerRole == null) { 
-					gitHubOwnerRole = new Role();
-					gitHubOwnerRole.setName("gitHub_owner");
-					platform.getProjectRepositoryManager().getProjectRepository().getRoles().add(gitHubOwnerRole);
-				}
-				
-				user.getRoles().add(gitHubOwnerRole);
-				platform.getProjectRepositoryManager().getProjectRepository().getPersons().add(user);
-				repository.getPersons().add(user);
 				
 				lastImportedId = new Integer(currentRepo.get("id").toString()); 
 				platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().first().setLastImportedProject(String.valueOf(lastImportedId));
