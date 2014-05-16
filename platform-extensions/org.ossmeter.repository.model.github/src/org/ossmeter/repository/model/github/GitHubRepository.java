@@ -23,7 +23,6 @@ public class GitHubRepository extends org.ossmeter.repository.model.Project {
 		dbObject.put("forks", new BasicDBList());
 		dbObject.put("milestones", new BasicDBList());
 		super.setSuperTypes("org.ossmeter.repository.model.github.Project");
-		NAME.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
 		FULL_NAME.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
 		_PRIVATE.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
 		FORK.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
@@ -38,7 +37,6 @@ public class GitHubRepository extends org.ossmeter.repository.model.Project {
 		MASTER_BRANCH.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
 	}
 	
-	public static StringQueryProducer NAME = new StringQueryProducer("name"); 
 	public static StringQueryProducer FULL_NAME = new StringQueryProducer("full_name"); 
 	public static StringQueryProducer _PRIVATE = new StringQueryProducer("_private"); 
 	public static StringQueryProducer FORK = new StringQueryProducer("fork"); 
@@ -53,15 +51,6 @@ public class GitHubRepository extends org.ossmeter.repository.model.Project {
 	public static StringQueryProducer MASTER_BRANCH = new StringQueryProducer("master_branch"); 
 	
 	
-	public String getName() {
-		return parseString(dbObject.get("name")+"", "");
-	}
-	
-	public GitHubRepository setName(String name) {
-		dbObject.put("name", name);
-		notifyChanged();
-		return this;
-	}
 	public String getFull_name() {
 		return parseString(dbObject.get("full_name")+"", "");
 	}

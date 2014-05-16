@@ -8,19 +8,21 @@ import com.googlecode.pongo.runtime.querying.*;
 
 public class GitHubUser extends org.ossmeter.repository.model.Person {
 	
-	protected List<GitHubUser> followers = null;
 	
 	
 	public GitHubUser() { 
 		super();
-		dbObject.put("followers", new BasicDBList());
 		super.setSuperTypes("org.ossmeter.repository.model.github.Person");
 		LOGIN.setOwningType("org.ossmeter.repository.model.github.GitHubUser");
 		HTML_URL.setOwningType("org.ossmeter.repository.model.github.GitHubUser");
+		URL.setOwningType("org.ossmeter.repository.model.github.GitHubUser");
+		FOLLOWERS_URL.setOwningType("org.ossmeter.repository.model.github.GitHubUser");
 	}
 	
 	public static StringQueryProducer LOGIN = new StringQueryProducer("login"); 
 	public static StringQueryProducer HTML_URL = new StringQueryProducer("html_url"); 
+	public static StringQueryProducer URL = new StringQueryProducer("url"); 
+	public static StringQueryProducer FOLLOWERS_URL = new StringQueryProducer("followers_url"); 
 	
 	
 	public String getLogin() {
@@ -41,14 +43,26 @@ public class GitHubUser extends org.ossmeter.repository.model.Person {
 		notifyChanged();
 		return this;
 	}
-	
-	
-	public List<GitHubUser> getFollowers() {
-		if (followers == null) {
-			followers = new PongoList<GitHubUser>(this, "followers", true);
-		}
-		return followers;
+	public String getUrl() {
+		return parseString(dbObject.get("url")+"", "");
 	}
+	
+	public GitHubUser setUrl(String url) {
+		dbObject.put("url", url);
+		notifyChanged();
+		return this;
+	}
+	public String getFollowers_url() {
+		return parseString(dbObject.get("followers_url")+"", "");
+	}
+	
+	public GitHubUser setFollowers_url(String followers_url) {
+		dbObject.put("followers_url", followers_url);
+		notifyChanged();
+		return this;
+	}
+	
+	
 	
 	
 }

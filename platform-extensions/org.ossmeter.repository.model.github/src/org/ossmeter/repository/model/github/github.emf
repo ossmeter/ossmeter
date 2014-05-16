@@ -19,9 +19,10 @@ class BugTrackingSystem {
 
 class GitHubRepository extends Project {
 
-  @key
+ @key
  // ref GitHubUser owner;
-  attr String name;
+ // attr String name;
+  @searchable
   attr String full_name;
   attr Boolean private;
   attr Boolean fork;
@@ -143,5 +144,6 @@ class GitHubUser extends Person {
   @key
   attr String login;
   attr String html_url;
-  val GitHubUser[*] followers;
+  attr String url;
+  attr String followers_url;
 }
