@@ -3,11 +3,11 @@ package org.ossmeter.metricprovider.generic.numberofnewusersperday;
 import java.util.Arrays;
 import java.util.List;
 
-import org.ossmeter.metricprovider.activeusers.ActiveUsersMetricProvider;
-import org.ossmeter.metricprovider.activeusers.model.ActiveUsers;
-import org.ossmeter.metricprovider.activeusers.model.NewsgroupData;
 import org.ossmeter.metricprovider.generic.numberofnewusersperday.model.DailyNewsgroupData;
 import org.ossmeter.metricprovider.generic.numberofnewusersperday.model.DailyNewUsers;
+import org.ossmeter.metricprovider.trans.activeusers.ActiveUsersMetricProvider;
+import org.ossmeter.metricprovider.trans.activeusers.model.ActiveUsers;
+import org.ossmeter.metricprovider.trans.activeusers.model.NewsgroupData;
 import org.ossmeter.platform.IHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;

@@ -2,7 +2,7 @@
 <plugin>
   
   <extension point="org.ossmeter.platform.metricprovider">
-     <metricProvider provider="org.ossmeter.metricprovider.generic.numberofresolvedclosedbugzillabugs.NumberOfResolvedClosedBugzillaBugsProvider">
+     <metricProvider provider="org.ossmeter.metricprovider.historic.numberofresolvedclosedbugzillabugs.NumberOfResolvedClosedBugzillaBugsProvider">
      </metricProvider>
   </extension>
 
@@ -16,7 +16,7 @@
       point="org.ossmeter.platform.client.api.pongoviz">
    <visualiser
          metricProviderId="org.ossmeter.metricprovider.generic.numberofresolvedclosedbugzillabugs"
-         pongoVisualiser="org.ossmeter.metricprovider.generic.numberofresolvedclosedbugzillabugs.model.DailyNorcbViz">
+         pongoVisualiser="org.ossmeter.metricprovider.historic.numberofresolvedclosedbugzillabugs.model.DailyNorcbViz">
    </visualiser>
 </extension>
 </plugin>

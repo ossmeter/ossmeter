@@ -15,7 +15,7 @@
    <extension
          point="org.ossmeter.platform.metricprovider">
       <metricProvider
-            provider="org.ossmeter.metricprovider.numberofarticles.NoaMetricProvider">
+            provider="org.ossmeter.metricprovider.trans.numberofarticles.NoaMetricProvider">
       </metricProvider>
    </extension>
 

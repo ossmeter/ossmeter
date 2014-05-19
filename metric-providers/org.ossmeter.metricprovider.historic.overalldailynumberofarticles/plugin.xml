@@ -10,14 +10,14 @@
 <extension
       point="org.ossmeter.platform.metricprovider">
    <metricProvider
-         provider="org.ossmeter.metricprovider.generic.overalldailynumberofarticles.OverallDailyNumberOfArticlesProvider">
+         provider="org.ossmeter.metricprovider.historic.overalldailynumberofarticles.OverallDailyNumberOfArticlesProvider">
    </metricProvider>
 </extension>
 <extension
       point="org.ossmeter.platform.client.api.pongoviz">
    <visualiser
          metricProviderId="org.ossmeter.metricprovider.generic.overalldailynumberofarticles"
-         pongoVisualiser="org.ossmeter.metricprovider.generic.overalldailynumberofarticles.model.DailyNoaViz">
+         pongoVisualiser="org.ossmeter.metricprovider.historic.overalldailynumberofarticles.model.DailyNoaViz">
    </visualiser>
 </extension>
 </plugin>

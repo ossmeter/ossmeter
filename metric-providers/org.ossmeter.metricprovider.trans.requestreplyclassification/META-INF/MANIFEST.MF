@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Requestreplyclassification
 Bundle-SymbolicName: org.ossmeter.metricprovider.trans.requestreplyclassification;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.ossmeter.metricprovider.requestreplyclassification.Activator
+Bundle-Activator: org.ossmeter.metricprovider.trans.requestreplyclassification.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.ossmeter.platform,
@@ -13,5 +13,5 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.requestreplyclassifier.opennlptartarus
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.requestreplyclassification,
- org.ossmeter.metricprovider.requestreplyclassification.model
+Export-Package: org.ossmeter.metricprovider.trans.requestreplyclassification,
+ org.ossmeter.metricprovider.trans.requestreplyclassification.model

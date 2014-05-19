@@ -2,7 +2,7 @@
 <?eclipse version="3.4"?><plugin>
    
    <extension point="org.ossmeter.platform.metricprovider">
-      <metricProvider provider="org.ossmeter.metricprovider.numberofnewbugzillabugs.NonbbMetricProvider">
+      <metricProvider provider="org.ossmeter.metricprovider.trans.numberofnewbugzillabugs.NonbbMetricProvider">
       </metricProvider>
    </extension>
 

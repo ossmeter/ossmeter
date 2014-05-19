@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Numberofrequestsrepliesperthread
 Bundle-SymbolicName: org.ossmeter.metricprovider.historic.numberofrequestsrepliesperthread;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.ossmeter.metricprovider.generic.numberofrequestsrepliesperthread.Activator
+Bundle-Activator: org.ossmeter.metricprovider.historic.numberofrequestsrepliesperthread.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.ossmeter.platform,
@@ -14,5 +14,5 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.metricprovider.trans.activeusers;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.generic.numberofrequestsrepliesperthread,
- org.ossmeter.metricprovider.generic.numberofrequestsrepliesperthread.model
+Export-Package: org.ossmeter.metricprovider.historic.numberofrequestsrepliesperthread,
+ org.ossmeter.metricprovider.historic.numberofrequestsrepliesperthread.model

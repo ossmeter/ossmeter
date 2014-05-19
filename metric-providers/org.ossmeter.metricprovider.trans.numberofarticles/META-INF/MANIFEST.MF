@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: NumberOfArticles
 Bundle-SymbolicName: org.ossmeter.metricprovider.trans.numberofarticles;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.ossmeter.metricprovider.numberofarticles.Activator
+Bundle-Activator: org.ossmeter.metricprovider.trans.numberofarticles.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.ossmeter.platform,
@@ -11,5 +11,5 @@ Require-Bundle: org.eclipse.ui,
  com.googlecode.pongo.runtime.osgi
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.numberofarticles,
- org.ossmeter.metricprovider.numberofarticles.model
+Export-Package: org.ossmeter.metricprovider.trans.numberofarticles,
+ org.ossmeter.metricprovider.trans.numberofarticles.model

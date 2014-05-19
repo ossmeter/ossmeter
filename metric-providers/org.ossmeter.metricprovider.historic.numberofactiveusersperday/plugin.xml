@@ -2,7 +2,7 @@
 <?eclipse version="3.4"?><plugin>
    
    <extension point="org.ossmeter.platform.metricprovider">
-      <metricProvider provider="org.ossmeter.metricprovider.generic.numberofactiveusersperday.NumberOfActiveUsersPerDayProvider">
+      <metricProvider provider="org.ossmeter.metricprovider.historic.numberofactiveusersperday.NumberOfActiveUsersPerDayProvider">
       </metricProvider>
    </extension>
 
@@ -17,7 +17,7 @@
       point="org.ossmeter.platform.client.api.pongoviz">
    <visualiser
          metricProviderId="org.ossmeter.metricprovider.generic.numberofactiveusersperday"
-         pongoVisualiser="org.ossmeter.metricprovider.generic.numberofactiveusersperday.model.DailyActiveUsersViz">
+         pongoVisualiser="org.ossmeter.metricprovider.historic.numberofactiveusersperday.model.DailyActiveUsersViz">
    </visualiser>
 </extension>
 </plugin>

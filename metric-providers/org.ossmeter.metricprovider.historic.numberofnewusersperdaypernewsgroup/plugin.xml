@@ -8,13 +8,13 @@
         point="org.ossmeter.platform.client.api.pongoviz">
      <visualiser
            metricProviderId="org.ossmeter.metricprovider.generic.numberofnewusersperdaypernewsgroup"
-           pongoVisualiser="org.ossmeter.metricprovider.generic.numberofnewusersperdaypernewsgroup.model.DailyNewUsersViz">
+           pongoVisualiser="org.ossmeter.metricprovider.historic.numberofnewusersperdaypernewsgroup.model.DailyNewUsersViz">
      </visualiser>
   </extension>
   <extension
         point="org.ossmeter.platform.metricprovider">
      <metricProvider
-           provider="org.ossmeter.metricprovider.generic.numberofnewusersperdaypernewsgroup.NumberOfNewUsersPerDayPerNewsgroupProvider">
+           provider="org.ossmeter.metricprovider.historic.numberofnewusersperdaypernewsgroup.NumberOfNewUsersPerDayPerNewsgroupProvider">
      </metricProvider>
   </extension>
 </plugin>

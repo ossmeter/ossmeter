@@ -2,7 +2,7 @@
 <?eclipse version="3.4"?><plugin>
    
    <extension point="org.ossmeter.platform.metricprovider">
-      <metricProvider provider="org.ossmeter.metricprovider.generic.overalldailynumberofbugzillacomments.OverallDailyNumberOfBugzillaCommentsProvider">
+      <metricProvider provider="org.ossmeter.metricprovider.historic.overalldailynumberofbugzillacomments.OverallDailyNumberOfBugzillaCommentsProvider">
       </metricProvider>
    </extension>
 
@@ -15,7 +15,7 @@
       point="org.ossmeter.platform.client.api.pongoviz">
    <visualiser
          metricProviderId="org.ossmeter.metricprovider.generic.overalldailynumberofbugzillacomments"
-         pongoVisualiser="org.ossmeter.metricprovider.generic.overalldailynumberofbugzillacomments.model.DailyNobcViz">
+         pongoVisualiser="org.ossmeter.metricprovider.historic.overalldailynumberofbugzillacomments.model.DailyNobcViz">
    </visualiser>
 </extension>
 </plugin>

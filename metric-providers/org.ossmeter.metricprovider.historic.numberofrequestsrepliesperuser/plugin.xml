@@ -10,13 +10,13 @@
         point="org.ossmeter.platform.client.api.pongoviz">
      <visualiser
            metricProviderId="org.ossmeter.metricprovider.generic.numberofrequestsrepliesperuser"
-           pongoVisualiser="org.ossmeter.metricprovider.generic.numberofrequestsrepliesperuser.model.AverageRRUserViz">
+           pongoVisualiser="org.ossmeter.metricprovider.historic.numberofrequestsrepliesperuser.model.AverageRRUserViz">
      </visualiser>
   </extension>
   <extension
         point="org.ossmeter.platform.metricprovider">
      <metricProvider
-           provider="org.ossmeter.metricprovider.generic.numberofrequestsrepliesperuser.NumberOfRequestsRepliesPerUserProvider">
+           provider="org.ossmeter.metricprovider.historic.numberofrequestsrepliesperuser.NumberOfRequestsRepliesPerUserProvider">
      </metricProvider>
   </extension>
 </plugin>

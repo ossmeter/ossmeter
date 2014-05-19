@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Numberofusersperday
 Bundle-SymbolicName: org.ossmeter.metricprovider.historic.numberofusersperday;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.ossmeter.metricprovider.generic.numberofusersperday.Activator
+Bundle-Activator: org.ossmeter.metricprovider.historic.numberofusersperday.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.ossmeter.platform,
@@ -13,4 +13,4 @@ Require-Bundle: org.eclipse.ui,
  com.googlecode.pongo.runtime.osgi
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.generic.numberofusersperday.model
+Export-Package: org.ossmeter.metricprovider.historic.numberofusersperday.model

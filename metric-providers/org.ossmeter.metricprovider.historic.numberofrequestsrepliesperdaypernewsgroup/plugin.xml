@@ -2,14 +2,14 @@
 <plugin>
 
    <extension point="org.ossmeter.platform.metricprovider">
-      <metricProvider provider="org.ossmeter.metricprovider.generic.numberofrequestsrepliesperdaypernewsgroup.NumberOfRequestsRepliesPerDayPerNewsgroupProvider"/>
+      <metricProvider provider="org.ossmeter.metricprovider.historic.numberofrequestsrepliesperdaypernewsgroup.NumberOfRequestsRepliesPerDayPerNewsgroupProvider"/>
    </extension>
 
 
 
 
 <extension point="org.ossmeter.platform.client.api.pongoviz">
-   <visualiser metricProviderId="org.ossmeter.metricprovider.generic.numberofrequestsrepliesperdaypernewsgroup" pongoVisualiser="org.ossmeter.metricprovider.generic.numberofrequestsrepliesperdaypernewsgroup.model.DailyNorrViz">
+   <visualiser metricProviderId="org.ossmeter.metricprovider.generic.numberofrequestsrepliesperdaypernewsgroup" pongoVisualiser="org.ossmeter.metricprovider.historic.numberofrequestsrepliesperdaypernewsgroup.model.DailyNorrViz">
    </visualiser>
 </extension>
 <extension point="com.googlecode.pongo.runtime.osgi">

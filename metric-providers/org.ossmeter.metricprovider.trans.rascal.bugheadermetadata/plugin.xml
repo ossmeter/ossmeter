@@ -2,7 +2,7 @@
 <plugin>
   
   <extension point="org.ossmeter.platform.metricprovider">
-     <metricProvider provider="org.ossmeter.metricprovider.bugheadermetadata.BugHeaderMetadataMetricProvider">
+     <metricProvider provider="org.ossmeter.metricprovider.trans.bugheadermetadata.BugHeaderMetadataMetricProvider">
      </metricProvider>
   </extension>
 

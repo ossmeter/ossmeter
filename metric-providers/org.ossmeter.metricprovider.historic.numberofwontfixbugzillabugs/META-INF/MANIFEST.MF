@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Numberofwontfixbugzillabugs
 Bundle-SymbolicName: org.ossmeter.metricprovider.historic.numberofwontfixbugzillabugs;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.ossmeter.metricprovider.generic.numberofwontfixbugzillabugs.Activator
+Bundle-Activator: org.ossmeter.metricprovider.historic.numberofwontfixbugzillabugs.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.ossmeter.metricprovider.trans.bugheadermetadata,
@@ -13,4 +13,4 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.platform.client.api
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.generic.numberofwontfixbugzillabugs
+Export-Package: org.ossmeter.metricprovider.historic.numberofwontfixbugzillabugs

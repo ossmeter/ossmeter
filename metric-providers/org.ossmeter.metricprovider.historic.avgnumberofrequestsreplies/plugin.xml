@@ -3,11 +3,11 @@
   
 
 <extension point="org.ossmeter.platform.metricprovider">
-   <metricProvider provider="org.ossmeter.metricprovider.generic.avgnumberofrequestsreplies.AverageNumberOfRequestsRepliesProvider">
+   <metricProvider provider="org.ossmeter.metricprovider.historic.avgnumberofrequestsreplies.AverageNumberOfRequestsRepliesProvider">
    </metricProvider>
 </extension>
 <extension point="org.ossmeter.platform.client.api.pongoviz">
-   <visualiser metricProviderId="org.ossmeter.metricprovider.generic.avgnumberofrequestsreplies" pongoVisualiser="org.ossmeter.metricprovider.generic.avgnumberofrequestsreplies.model.AverageRRViz">
+   <visualiser metricProviderId="org.ossmeter.metricprovider.generic.avgnumberofrequestsreplies" pongoVisualiser="org.ossmeter.metricprovider.historic.avgnumberofrequestsreplies.model.AverageRRViz">
    </visualiser>
 </extension>
 <extension point="com.googlecode.pongo.runtime.osgi">

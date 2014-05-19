@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: NumberOfActiveUsers
 Bundle-SymbolicName: org.ossmeter.metricprovider.trans.activeusers;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.ossmeter.metricprovider.activeusers.Activator
+Bundle-Activator: org.ossmeter.metricprovider.trans.activeusers.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.ossmeter.platform,
@@ -14,5 +14,5 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.metricprovider.trans.requestreplyclassification
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.activeusers,
- org.ossmeter.metricprovider.activeusers.model
+Export-Package: org.ossmeter.metricprovider.trans.activeusers,
+ org.ossmeter.metricprovider.trans.activeusers.model

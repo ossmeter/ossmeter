@@ -3,7 +3,7 @@
   
 
 <extension point="org.ossmeter.platform.metricprovider">
-   <metricProvider provider="org.ossmeter.metricprovider.generic.overalldailynumberofbugzillapatches.OverallDailyNumberOfBugzillaPatchesProvider">
+   <metricProvider provider="org.ossmeter.metricprovider.historic.overalldailynumberofbugzillapatches.OverallDailyNumberOfBugzillaPatchesProvider">
    </metricProvider>
 </extension>
 <extension point="com.googlecode.pongo.runtime.osgi">
@@ -14,7 +14,7 @@
       point="org.ossmeter.platform.client.api.pongoviz">
    <visualiser
          metricProviderId="org.ossmeter.metricprovider.generic.overalldailynumberofbugzillapatches"
-         pongoVisualiser="org.ossmeter.metricprovider.generic.overalldailynumberofbugzillapatches.model.DailyNobpViz">
+         pongoVisualiser="org.ossmeter.metricprovider.historic.overalldailynumberofbugzillapatches.model.DailyNobpViz">
    </visualiser>
 </extension>
 </plugin>

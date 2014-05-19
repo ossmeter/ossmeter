@@ -2,7 +2,7 @@
 <plugin>
   
   <extension point="org.ossmeter.platform.metricprovider">
-     <metricProvider provider="org.ossmeter.metricprovider.generic.numberofduplicatebugzillabugs.NumberOfDuplicateBugzillaBugsProvider">
+     <metricProvider provider="org.ossmeter.metricprovider.historic.numberofduplicatebugzillabugs.NumberOfDuplicateBugzillaBugsProvider">
      </metricProvider>
   </extension>
 <extension point="com.googlecode.pongo.runtime.osgi">
@@ -13,7 +13,7 @@
       point="org.ossmeter.platform.client.api.pongoviz">
    <visualiser
          metricProviderId="org.ossmeter.metricprovider.generic.numberofduplicatebugzillabugs"
-         pongoVisualiser="org.ossmeter.metricprovider.generic.numberofduplicatebugzillabugs.model.DailyNodbViz">
+         pongoVisualiser="org.ossmeter.metricprovider.historic.numberofduplicatebugzillabugs.model.DailyNodbViz">
    </visualiser>
 </extension>
 </plugin>

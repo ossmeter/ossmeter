@@ -7,14 +7,14 @@
   <extension
         point="org.ossmeter.platform.metricprovider">
      <metricProvider
-           provider="org.ossmeter.metricprovider.generic.numberofusersperdaypernewsgroup.NumberOfUsersPerDayPerNewsgroupProvider">
+           provider="org.ossmeter.metricprovider.historic.numberofusersperdaypernewsgroup.NumberOfUsersPerDayPerNewsgroupProvider">
      </metricProvider>
   </extension>
   <extension
         point="org.ossmeter.platform.client.api.pongoviz">
      <visualiser
            metricProviderId="org.ossmeter.metricprovider.generic.numberofusersperdaypernewsgroup"
-           pongoVisualiser="org.ossmeter.metricprovider.generic.numberofusersperdaypernewsgroup.model.DailyUsersViz">
+           pongoVisualiser="org.ossmeter.metricprovider.historic.numberofusersperdaypernewsgroup.model.DailyUsersViz">
      </visualiser>
   </extension>
 </plugin>

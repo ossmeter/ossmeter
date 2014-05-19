@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Numberofrequestsrepliesperday
 Bundle-SymbolicName: org.ossmeter.metricprovider.historic.numberofrequestsrepliesperday;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.ossmeter.metricprovider.generic.numberofrequestsrepliesperday.Activator
+Bundle-Activator: org.ossmeter.metricprovider.historic.numberofrequestsrepliesperday.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.ossmeter.metricprovider.trans.requestreplyclassification,
@@ -13,5 +13,5 @@ Require-Bundle: org.eclipse.ui,
  com.googlecode.pongo.runtime.osgi
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.generic.numberofrequestsrepliesperday,
- org.ossmeter.metricprovider.generic.numberofrequestsrepliesperday.model
+Export-Package: org.ossmeter.metricprovider.historic.numberofrequestsrepliesperday,
+ org.ossmeter.metricprovider.historic.numberofrequestsrepliesperday.model

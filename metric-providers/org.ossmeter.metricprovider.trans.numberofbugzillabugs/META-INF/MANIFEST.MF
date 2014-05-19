@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: NumberOfNewBugzillaBugs
 Bundle-SymbolicName: org.ossmeter.metricprovider.trans.numberofnewbugzillabugs;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.ossmeter.metricprovider.numberofnewbugzillabugs.Activator
+Bundle-Activator: org.ossmeter.metricprovider.trans.numberofnewbugzillabugs.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.ossmeter.platform,
@@ -12,5 +12,5 @@ Require-Bundle: org.eclipse.ui,
  com.googlecode.pongo.runtime.osgi
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.numberofnewbugzillabugs,
- org.ossmeter.metricprovider.numberofnewbugzillabugs.model
+Export-Package: org.ossmeter.metricprovider.trans.numberofnewbugzillabugs,
+ org.ossmeter.metricprovider.trans.numberofnewbugzillabugs.model

@@ -6,7 +6,7 @@
   
   
   <extension point="org.ossmeter.platform.metricprovider">
-     <metricProvider provider="org.ossmeter.metricprovider.requestreplyclassification.RequestReplyClassificationMetricProvider">
+     <metricProvider provider="org.ossmeter.metricprovider.trans.requestreplyclassification.RequestReplyClassificationMetricProvider">
      </metricProvider>
   </extension>
 

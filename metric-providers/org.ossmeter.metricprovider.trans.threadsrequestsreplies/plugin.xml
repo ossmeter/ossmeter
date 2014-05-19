@@ -6,7 +6,7 @@
 
 
 <extension point="org.ossmeter.platform.metricprovider">
-   <metricProvider provider="org.ossmeter.metricprovider.threadsrequestsreplies.ThreadsRequestsRepliesProvider">
+   <metricProvider provider="org.ossmeter.metricprovider.trans.threadsrequestsreplies.ThreadsRequestsRepliesProvider">
    </metricProvider>
 </extension>
 

@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Bugstatus
 Bundle-SymbolicName: org.ossmeter.metricprovider.trans.bugheadermetadata;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.ossmeter.metricprovider.bugheadermetadata.Activator
+Bundle-Activator: org.ossmeter.metricprovider.trans.bugheadermetadata.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  com.googlecode.pongo.runtime,
@@ -13,5 +13,5 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.platform
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.bugheadermetadata,
- org.ossmeter.metricprovider.bugheadermetadata.model
+Export-Package: org.ossmeter.metricprovider.trans.bugheadermetadata,
+ org.ossmeter.metricprovider.trans.bugheadermetadata.model

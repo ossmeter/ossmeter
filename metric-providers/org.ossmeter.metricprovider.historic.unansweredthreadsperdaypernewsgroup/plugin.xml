@@ -8,14 +8,14 @@
 <extension
       point="org.ossmeter.platform.metricprovider">
    <metricProvider
-         provider="org.ossmeter.metricprovider.generic.unansweredthreadsperdaypernewsgroup.UnsweredThreadsPerDayPerNewsgroupProvider">
+         provider="org.ossmeter.metricprovider.historic.unansweredthreadsperdaypernewsgroup.UnsweredThreadsPerDayPerNewsgroupProvider">
    </metricProvider>
 </extension>
 <extension
       point="org.ossmeter.platform.client.api.pongoviz">
    <visualiser
          metricProviderId="org.ossmeter.metricprovider.generic.unansweredthreadsperdaypernewsgroup"
-         pongoVisualiser="org.ossmeter.metricprovider.generic.unansweredthreadsperdaypernewsgroup.model.DailyUnansweredThreadsViz">
+         pongoVisualiser="org.ossmeter.metricprovider.historic.unansweredthreadsperdaypernewsgroup.model.DailyUnansweredThreadsViz">
    </visualiser>
 </extension>
 </plugin>

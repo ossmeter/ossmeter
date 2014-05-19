@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Threadsrequestsreplies
 Bundle-SymbolicName: org.ossmeter.metricprovider.trans.threadsrequestsreplies;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.ossmeter.metricprovider.threadsrequestsreplies.Activator
+Bundle-Activator: org.ossmeter.metricprovider.trans.threadsrequestsreplies.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.ossmeter.platform,
@@ -15,5 +15,5 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.metricprovider.trans.threads
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.threadsrequestsreplies,
- org.ossmeter.metricprovider.threadsrequestsreplies.model
+Export-Package: org.ossmeter.metricprovider.trans.threadsrequestsreplies,
+ org.ossmeter.metricprovider.trans.threadsrequestsreplies.model

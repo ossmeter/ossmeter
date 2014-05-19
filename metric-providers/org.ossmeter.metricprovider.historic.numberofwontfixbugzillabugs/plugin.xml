@@ -2,12 +2,12 @@
 <plugin>
   
   <extension point="org.ossmeter.platform.metricprovider">
-     <metricProvider provider="org.ossmeter.metricprovider.generic.numberofwontfixbugzillabugs.NumberOfWontFixBugzillaBugsProvider">
+     <metricProvider provider="org.ossmeter.metricprovider.historic.numberofwontfixbugzillabugs.NumberOfWontFixBugzillaBugsProvider">
      </metricProvider>
   </extension>
 
 <extension point="org.ossmeter.platform.client.api.pongoviz">
-   <visualiser metricProviderId="org.ossmeter.metricprovider.generic.numberofwontfixbugzillabugs" pongoVisualiser="org.ossmeter.metricprovider.generic.numberofwontfixbugzillabugs.model.DailyNowfbViz">
+   <visualiser metricProviderId="org.ossmeter.metricprovider.generic.numberofwontfixbugzillabugs" pongoVisualiser="org.ossmeter.metricprovider.historic.numberofwontfixbugzillabugs.model.DailyNowfbViz">
    </visualiser>
 </extension>
 

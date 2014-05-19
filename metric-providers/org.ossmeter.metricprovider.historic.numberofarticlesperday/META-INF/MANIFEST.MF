@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Numberofarticlesperday
 Bundle-SymbolicName: org.ossmeter.metricprovider.historic.numberofarticlesperday;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.ossmeter.metricprovider.generic.numberofarticlesperday.Activator
+Bundle-Activator: org.ossmeter.metricprovider.historic.numberofarticlesperday.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.ossmeter.metricprovider.trans.numberofarticles,
@@ -13,5 +13,5 @@ Require-Bundle: org.eclipse.ui,
  com.googlecode.pongo.runtime.osgi
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.generic.numberofarticlesperday,
- org.ossmeter.metricprovider.generic.numberofarticlesperday.model
+Export-Package: org.ossmeter.metricprovider.historic.numberofarticlesperday,
+ org.ossmeter.metricprovider.historic.numberofarticlesperday.model

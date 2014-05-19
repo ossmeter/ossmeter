@@ -3,7 +3,7 @@
    <extension
          point="org.ossmeter.platform.metricprovider">
       <metricProvider
-            provider="org.ossmeter.metricprovider.generic.numberofinactiveusersperdaypernewsgroup.NumberOfInactiveUsersPerDayPerNewsgroupProvider">
+            provider="org.ossmeter.metricprovider.historic.numberofinactiveusersperdaypernewsgroup.NumberOfInactiveUsersPerDayPerNewsgroupProvider">
       </metricProvider>
    </extension>
   
@@ -15,7 +15,7 @@
       point="org.ossmeter.platform.client.api.pongoviz">
    <visualiser
          metricProviderId="org.ossmeter.metricprovider.generic.numberofinactiveusersperdaypernewsgroup"
-         pongoVisualiser="org.ossmeter.metricprovider.generic.numberofinactiveusersperdaypernewsgroup.model.DailyInactiveUsersViz">
+         pongoVisualiser="org.ossmeter.metricprovider.historic.numberofinactiveusersperdaypernewsgroup.model.DailyInactiveUsersViz">
    </visualiser>
 </extension>
 </plugin>

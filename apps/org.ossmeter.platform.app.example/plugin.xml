@@ -13,5 +13,17 @@
          </run>
       </application>
    </extension>
+   <extension
+         id="OssDemo"
+         point="org.eclipse.core.runtime.applications">
+      <application
+            cardinality="singleton-global"
+            thread="main"
+            visible="true">
+         <run
+               class="org.ossmeter.platform.app.example.DemoApp">
+         </run>
+      </application>
+   </extension>
 
 </plugin>

@@ -4,11 +4,11 @@
 
 
 <extension point="org.ossmeter.platform.metricprovider">
-   <metricProvider provider="org.ossmeter.metricprovider.generic.avgbugcreationclosedtime.AvgBugzillaBugOpenTimeProvider">
+   <metricProvider provider="org.ossmeter.metricprovider.historic.avgbugcreationclosedtime.AvgBugzillaBugOpenTimeProvider">
    </metricProvider>
 </extension>
 <extension point="org.ossmeter.platform.client.api.pongoviz">
-   <visualiser metricProviderId="org.ossmeter.metricprovider.generic.avgbugcreationclosedtime" pongoVisualiser="org.ossmeter.metricprovider.generic.avgbugcreationclosedtime.model.DailyAvgBugOpenTimeViz">
+   <visualiser metricProviderId="org.ossmeter.metricprovider.generic.avgbugcreationclosedtime" pongoVisualiser="org.ossmeter.metricprovider.historic.avgbugcreationclosedtime.model.DailyAvgBugOpenTimeViz">
    </visualiser>
 </extension>
 
