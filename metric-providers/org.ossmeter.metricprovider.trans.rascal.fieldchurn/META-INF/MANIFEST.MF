@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Fieldchurn
-Bundle-SymbolicName: org.ossmeter.metricprovider.fieldchurn;singleton:=true
+Bundle-SymbolicName: org.ossmeter.metricprovider.trans.rascal.fieldchurn;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.ossmeter.metricprovider.rascal;bundle-version="0.0.0"

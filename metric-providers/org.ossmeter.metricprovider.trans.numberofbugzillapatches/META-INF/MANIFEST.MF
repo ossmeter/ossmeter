@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Numberofbugzillapatches
-Bundle-SymbolicName: org.ossmeter.metricprovider.numberofbugzillapatches;singleton:=true
+Bundle-SymbolicName: org.ossmeter.metricprovider.trans.numberofbugzillapatches;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.metricprovider.numberofbugzillapatches.Activator
 Require-Bundle: org.eclipse.ui,

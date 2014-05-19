@@ -1,12 +1,12 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Numberofnonresolvedclosedbugzillabugs
-Bundle-SymbolicName: org.ossmeter.metricprovider.generic.numberofnonresolvedclosedbugzillabugs;singleton:=true
+Bundle-SymbolicName: org.ossmeter.metricprovider.historic.numberofnonresolvedclosedbugzillabugs;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.metricprovider.generic.numberofnonresolvedclosedbugzillabugs.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.ossmeter.metricprovider.bugheadermetadata,
+ org.ossmeter.metricprovider.trans.bugheadermetadata,
  org.ossmeter.platform,
  org.ossmeter.repository.model.bts.bugzilla,
  com.googlecode.pongo.runtime.osgi,

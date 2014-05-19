@@ -1,12 +1,12 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Numberofrequestsrepliesperday
-Bundle-SymbolicName: org.ossmeter.metricprovider.generic.numberofrequestsrepliesperday;singleton:=true
+Bundle-SymbolicName: org.ossmeter.metricprovider.historic.numberofrequestsrepliesperday;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.metricprovider.generic.numberofrequestsrepliesperday.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.ossmeter.metricprovider.requestreplyclassification,
+ org.ossmeter.metricprovider.trans.requestreplyclassification,
  org.ossmeter.repository.model.cc.nntp,
  org.ossmeter.platform.client.api,
  org.ossmeter.platform,

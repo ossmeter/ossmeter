@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: OSSMETER Admin
+Bundle-SymbolicName: org.ossmeter.platform.admin;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.ossmeter.platform.admin.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.restlet
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
+Export-Package: org.ossmeter.platform.admin

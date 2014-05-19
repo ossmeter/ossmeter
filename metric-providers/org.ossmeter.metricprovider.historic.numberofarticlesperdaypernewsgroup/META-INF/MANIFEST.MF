@@ -1,12 +1,12 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Numberofarticlesperdaypernewsgroup
-Bundle-SymbolicName: org.ossmeter.metricprovider.generic.numberofarticlesperdaypernewsgroup;singleton:=true
+Bundle-SymbolicName: org.ossmeter.metricprovider.historic.numberofarticlesperdaypernewsgroup;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.metricprovider.generic.numberofarticlesperdaypernewsgroup.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.ossmeter.metricprovider.numberofarticles,
+ org.ossmeter.metricprovider.trans.numberofarticles,
  org.ossmeter.platform,
  org.ossmeter.repository.model.cc.nntp,
  org.ossmeter.platform.client.api,

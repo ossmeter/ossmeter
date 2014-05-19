@@ -13,6 +13,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.platform.client.api,
  org.ossmeter.repository.model.vcs.svn,
  org.ossmeter.repository.model.bts.bugzilla,
- org.ossmeter.repository.model.cc.nntp
+ org.ossmeter.repository.model.cc.nntp,
+ org.ossmeter.platform.admin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy

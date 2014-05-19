@@ -2,11 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Overalldailynumberofnewbugzillabugs
 Bundle-Version: 1.0.0.qualifier
-Bundle-SymbolicName: org.ossmeter.metricprovider.generic.overalldailynumberofnewbugzillabugs;singleton:=true
+Bundle-SymbolicName: org.ossmeter.metricprovider.historic.overalldailynumberofnewbugzillabugs;singleton:=true
 Bundle-Activator: org.ossmeter.metricprovider.generic.overalldailynumberofnewbugzillabugs.Activator
 Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.platform,
- org.ossmeter.metricprovider.numberofnewbugzillabugs;bundle-version="1.0.0",
+ org.ossmeter.metricprovider.trans.numberofnewbugzillabugs;bundle-version="1.0.0",
  org.ossmeter.platform.client.api,
  org.ossmeter.repository.model.bts.bugzilla,
  com.googlecode.pongo.runtime.osgi

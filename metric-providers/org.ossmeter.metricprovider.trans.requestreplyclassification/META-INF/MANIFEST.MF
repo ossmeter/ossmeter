@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Requestreplyclassification
-Bundle-SymbolicName: org.ossmeter.metricprovider.requestreplyclassification;singleton:=true
+Bundle-SymbolicName: org.ossmeter.metricprovider.trans.requestreplyclassification;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.metricprovider.requestreplyclassification.Activator
 Require-Bundle: org.eclipse.ui,
