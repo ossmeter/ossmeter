@@ -181,8 +181,8 @@ public class EclipseProjectImporter {
 			
 			System.out.println("Retrieving the list of Eclipse projects...");
 
-			InputStream is = new FileInputStream(new File("C:\\eclipse.json"));
-//			InputStream is = new URL("http://projects.eclipse.org/json/projects/all").openStream();
+//			InputStream is = new FileInputStream(new File("C:\\eclipse.json"));
+			InputStream is = new URL("http://projects.eclipse.org/json/projects/all").openStream();
 			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
 			String jsonText = readAll(rd);		
 	
