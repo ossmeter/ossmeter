@@ -24,6 +24,7 @@ public class GoogleCodeImporter {
 	
 	
 	private Map<String, Role> rolePending = new HashMap<String, Role>();
+	private Map<String, License> licensePending = new HashMap<String, License>();
 	private Map<String, Person> userPending = new HashMap<String, Person>();
 	
 	public GoogleCodeProject importProject(String projectId, Platform platform) 
@@ -125,14 +126,30 @@ public class GoogleCodeImporter {
 						if (!listElement.get(i).attr("class").equals("psgap"))
 						{
 							String licenseName = listElement.get(i).text();
+							boolean guardStart = true;
+							boolean guardEnd = true;
+							while (guardStart || guardEnd )
+							{
+								if(licenseName.codePointAt(0)==160)
+									licenseName = licenseName.substring(1);
+								else guardStart = false;
+								if(licenseName.codePointAt(licenseName.length()-1)==160)
+									licenseName.substring(0, licenseName.length()-1);
+								else guardEnd = false;
+							}
 							License l = platform.getProjectRepositoryManager().getProjectRepository().getLicenses().findOneByName(licenseName);
 							if(l==null)
 							{
-								l = new License();
-								Element linkLicense = listElement.get(i).getElementsByTag("a").first();
-								l.setUrl(linkLicense.outerHtml().substring(linkLicense.outerHtml().indexOf("href")+6, linkLicense.outerHtml().indexOf("rel")-2));
-								l.setName(listElement.get(i).text());
-								platform.getProjectRepositoryManager().getProjectRepository().getLicenses().add(l);
+								l = licensePending.get(licenseName);
+								if (l==null)
+								{
+									l = new License();
+									Element linkLicense = listElement.get(i).getElementsByTag("a").first();
+									l.setUrl(linkLicense.outerHtml().substring(linkLicense.outerHtml().indexOf("href")+6, linkLicense.outerHtml().indexOf("rel")-2));
+									l.setName(listElement.get(i).text());
+									platform.getProjectRepositoryManager().getProjectRepository().getLicenses().add(l);
+									licensePending.put(licenseName, l);
+								}
 							}
 							result.getLicenses().add(l);
 							
@@ -231,6 +248,17 @@ public class GoogleCodeImporter {
 			if (status.equals("Acknowledged"))
 				result.setStatus(GoogleIssueStatus.Acknowledged);
 			status = menu.get(1).getElementsByTag("td").first().text();
+			boolean guardStart = true;
+			boolean guardEnd = true;
+			while (guardStart || guardEnd )
+			{
+				if(status.codePointAt(0)==160)
+					status = status.substring(1);
+				else guardStart = false;
+				if(status.codePointAt(status.length()-1)==160)
+					status.substring(0, status.length()-1);
+				else guardEnd = false;
+			}
 			Person gu = userPending.get(status);
 			if (gu==null)
 			{
@@ -317,6 +345,18 @@ public class GoogleCodeImporter {
 			{
 				Elements columns = iterable_element.getElementsByTag("td");
 				String username = columns.get(0).text();
+				username = username.trim();
+				boolean guardStart = true;
+				boolean guardEnd = true;
+				while (guardStart || guardEnd )
+				{
+					if(username.codePointAt(0)==160)
+						username = username.substring(1);
+					else guardStart = false;
+					if(username.codePointAt(username.length()-1)==160)
+						username.substring(0, username.length()-1);
+					else guardEnd = false;
+				}
 				Person gu = userPending.get(username);
 				if (gu==null)
 				{
@@ -335,15 +375,31 @@ public class GoogleCodeImporter {
 				String [] arrayRole = columns.get(1).text().split("\\+");
 				for (String string : arrayRole) 
 				{
-					Role gr = platform.getProjectRepositoryManager().getProjectRepository().getRoles().findOneByName(string);
+					
+					String role = string.trim();
+					
+					guardStart = true;
+					guardEnd = true;
+					while (guardStart || guardEnd )
+					{
+						if(role.codePointAt(0)==160)
+							role = role.substring(1);
+						else guardStart = false;
+						if(role.codePointAt(role.length()-1)==160)
+							role = role.substring(0, role.length()-1);
+						else guardEnd = false;
+					}
+					Role gr = platform.getProjectRepositoryManager().getProjectRepository().getRoles().findOneByName(role);
+					
 					if (gr == null)
 					{
-						gr = rolePending.get(string);
+						
+						gr = rolePending.get(role);
 						if(gr==null)
 						{
 							gr = new Role();
-							gr.setName(string);
-							rolePending.put(string, gr);
+							gr.setName(role);
+							rolePending.put(role, gr);
 							platform.getProjectRepositoryManager().getProjectRepository().getRoles().add(gr);
 						}
 					}
@@ -383,8 +439,14 @@ public class GoogleCodeImporter {
 							gd.setUploaded_at(columns.get(3).text());
 							gd.setUpdated_at(columns.get(4).text());
 							gd.setSize(columns.get(5).text());
-							gd.setDownloadCounts(Integer.parseInt(columns.get(6).text()));
-							
+							try
+							{
+								gd.setDownloadCounts(Integer.parseInt(columns.get(6).text()));
+							}
+							catch(NumberFormatException exc)
+							{
+								
+							}
 							result.add(gd);
 						}
 						
@@ -429,11 +491,11 @@ public class GoogleCodeImporter {
 				if(end <= totalItem)
 				{
 					int i = 0;
-					while (i <= totalItem )
+					while (i <= 100/*totalItem*/ )
 					{
 						String url = "https://code.google.com/hosting/search?q=&filter=0&mode=&start="+ i;
 						result.addAll(importPage(url, platform));
-						System.err.println("FINE PAGINA!");
+						//System.err.println("FINE PAGINA!");
 						//Attention to last mod 10 elements
 						i= i + 10;
 					}
@@ -446,6 +508,7 @@ public class GoogleCodeImporter {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+			System.out.println("PROCES EMD");
 		
 		
 		
