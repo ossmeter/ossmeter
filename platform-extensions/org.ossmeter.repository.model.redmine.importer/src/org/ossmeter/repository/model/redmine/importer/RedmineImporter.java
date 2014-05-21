@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -13,9 +14,9 @@ import org.jsoup.select.Elements;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.repository.model.License;
 import org.ossmeter.repository.model.Person;
+import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.ProjectCollection;
 import org.ossmeter.repository.model.Role;
-
-
 import org.ossmeter.repository.model.redmine.RedmineBugIssueTracker;
 import org.ossmeter.repository.model.redmine.RedmineCategory;
 import org.ossmeter.repository.model.redmine.RedmineIssue;
@@ -26,39 +27,72 @@ import org.ossmeter.repository.model.redmine.RedmineUser;
 import org.ossmeter.repository.model.redmine.RedmineWiki;
 
 public class RedmineImporter {
-	public RedmineProject importProject(String projectId, Platform platform) 
+	public RedmineProject importProject(String projectUrl, Platform platform) 
 	{
 		
 		
-		RedmineProject result = new RedmineProject();
 		org.jsoup.nodes.Document doc;
-		String URL_PROJECT = projectId;
+		String URL_PROJECT = projectUrl;
+		
+		
+			//////Update control
+
+		
+			
+			///////
+		
+		RedmineProject project = null;
 		
 		try {
 			doc = Jsoup.connect(URL_PROJECT).timeout(10000).get();
 			//SET NAME
 			Element e = doc.getElementById("header");
 			Element name =  e.getElementsByTag("h1").first();
+			Boolean projectToBeUpdated = false;
+			Project projectTemp = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByName(name.text());
+			if (projectTemp != null)
+			{
+				if (projectTemp instanceof RedmineProject) 
+				{
+					project = (RedmineProject)projectTemp;
+					projectToBeUpdated = true;
+					System.out.println("-----> project " + projectUrl + " already in the repository. Its metadata will be updated.");	
+				}
+			}
+			if (!projectToBeUpdated)  {
+				project = new RedmineProject();
+				// Clear containments to be updated	
+			}
+			else	
+			{
+				project.getCommunicationChannels().clear();
+				project.getVcsRepositories().clear();	
+				project.getBugTrackingSystems().clear();
+				project.getPersons().clear();
+				project.getLicenses().clear();
+				project.getVersions();
+				platform.getProjectRepositoryManager().getProjectRepository().sync();
+			}
+			project.setName(name.text());
 			
-			result.setName(name.text());
 			
 			
 			
 			//SET WIKI
-			if(exisistWiki(projectId + "/wiki"))
+			if(exisistWiki(projectUrl + "/wiki"))
 			{
 				RedmineWiki wiki = new RedmineWiki();
-				wiki.setUrl(projectId + "/wiki");
-				result.setWiki(wiki);
+				wiki.setUrl(projectUrl + "/wiki");
+				project.setWiki(wiki);
 			}
 			//SET PERSON
 			List<RedmineUser> gul = getPersonProject(platform, doc);
 			for (RedmineUser googleUser : gul) {
 				platform.getProjectRepositoryManager().getProjectRepository().getPersons().add(googleUser);
-				result.getPersons().add(googleUser);
+				project.getPersons().add(googleUser);
 			}
-			result.getPersons().addAll(gul);
-			//SET GoogleIssueTracker
+			project.getPersons().addAll(gul);
+			//SET RedmineBugIssueTracker
 			Element mainManu = e.getElementById("main-menu");
 			Elements issues = mainManu.getElementsByTag("li");
 			Element issue = null;
@@ -72,15 +106,16 @@ public class RedmineImporter {
 			{
 				RedmineBugIssueTracker git = new RedmineBugIssueTracker();
 				
-				String s = projectId.substring(0,projectId.lastIndexOf("project")-1) + issue.getElementsByTag("a").first().attr("href") + "?set_filter=1&f%5B%5D=status_id&op%5Bstatus_id%5D=*&page=1";
+				String s = projectUrl.substring(0,projectUrl.lastIndexOf("project")-1) + issue.getElementsByTag("a").first().attr("href") + "?set_filter=1&f%5B%5D=status_id&op%5Bstatus_id%5D=*&page=1";
 				git.setUrl(s);
 				//This line work fine but there is a google access limit
 				List<RedmineIssue> gi = getRedmineIssueList(platform, git.getUrl());
 				git.getIssues().addAll(gi);
-				result.getBugTrackingSystems().add(git);
+				project.getBugTrackingSystems().add(git);
 			}
 			
-			List<RedmineProjectVersion> versions = getRedmineProjectVersion(platform, projectId +"/roadmap");
+			project.getVersions().addAll(getRedmineProjectVersion(platform, projectUrl +"/roadmap"));
+			//List<RedmineProjectVersion> versions = getRedmineProjectVersion(platform, projectId +"/roadmap");
 			
 
 		} catch (IOException e1) {
@@ -88,7 +123,7 @@ public class RedmineImporter {
 			
 			e1.printStackTrace();
 		}
-		return result;
+		return project;
 	}
 	
 	private List<RedmineProjectVersion> getRedmineProjectVersion(
@@ -101,12 +136,15 @@ public class RedmineImporter {
 			try {
 				doc = Jsoup.connect(URL_PROJECT).timeout(10000).get();
 				Element e = doc.getElementById("roadmap");
-				Elements versioni = e.getElementsByTag("h3");
-				for (Element element : versioni) {
-					RedmineProjectVersion pv = new RedmineProjectVersion();
-					pv.setName(element.text());
-					//Description version miss
-					result.add(pv);
+				if (e!=null)
+				{
+					Elements versioni = e.getElementsByTag("h3");
+					for (Element element : versioni) {
+						RedmineProjectVersion pv = new RedmineProjectVersion();
+						pv.setName(element.text());
+						//Description version miss
+						result.add(pv);
+					}
 				}
 				
 			} catch (IOException e) {
@@ -274,7 +312,7 @@ public class RedmineImporter {
 	private Map<String, Person> categoryPending = new HashMap<String, Person>();
 	public void importAll(Platform platform) 
 	{
-		String URL_PROJECT = "http://demo.redmine.org/projects/demo-ossmeter";
+		String URL_PROJECT = "http://demo.redmine.org/projects/sdk";
 		RedmineProject currentProg = importProject(URL_PROJECT, platform);
 		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(currentProg);
 		
@@ -292,11 +330,16 @@ public class RedmineImporter {
 			doc = Jsoup.connect(URL_PROJECT).timeout(10000).get();
 			
 			Element e = doc.getElementsByClass("description").first();
-			
-			Element summary = e.getElementsByTag("div").get(2);
-			result.setDescription(summary.text());
+			if (e!=null)
+			{
+				if (e.getElementsByTag("div").size() >= 2)
+				{
+					Element summary = e.getElementsByTag("div").get(2);
+					result.setDescription(summary.text());
+				}
 			
 			Elements starsList = e.getElementsByTag("tr");
+			}
 			e = doc.getElementsByClass("attributes").first();
 			Elements el = e.getElementsByTag("tr");
 //			for (Element element : el) {
