@@ -2,9 +2,11 @@ package org.ossmeter.repository.model.googlecode.importer;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -13,11 +15,16 @@ import org.eclipse.ui.progress.PendingUpdateAdapter;
 import org.jsoup.Jsoup;
 import org.ossmeter.repository.model.License;
 import org.ossmeter.repository.model.Person;
+import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.ProjectCollection;
 import org.ossmeter.repository.model.Role;
+import org.ossmeter.repository.model.VcsRepository;
 import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.ossmeter.repository.model.googlecode.*;
+import org.ossmeter.repository.model.vcs.git.GitRepository;
+import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 import org.ossmeter.platform.Platform;
 
 public class GoogleCodeImporter {
@@ -27,24 +34,49 @@ public class GoogleCodeImporter {
 	private Map<String, License> licensePending = new HashMap<String, License>();
 	private Map<String, Person> userPending = new HashMap<String, Person>();
 	
-	public GoogleCodeProject importProject(String projectId, Platform platform) 
+	public GoogleCodeProject importProject(String projectUrl, Platform platform) 
 			throws MalformedURLException, IOException 
 	{
-		GoogleCodeProject result = new GoogleCodeProject();
 		org.jsoup.nodes.Document doc;
 		org.jsoup.nodes.Element content;
 		
-		String URL_PROJECT = projectId;
-		
+		String URL_PROJECT = projectUrl;
+		GoogleCodeProject project = null;
+			
 		try {
 			doc = Jsoup.connect(URL_PROJECT).timeout(10000).get();
 			Element e = doc.getElementById("pname");
-			result.setName(e.toString());
+			Boolean projectToBeUpdated = false;
+			Project projectTemp = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByName(e.text());
+			if (projectTemp != null)
+			{
+				if (projectTemp instanceof GoogleCodeProject) 
+				{
+					project = (GoogleCodeProject)projectTemp;
+					projectToBeUpdated = true;
+					System.out.println("-----> project " + projectUrl + " already in the repository. Its metadata will be updated.");	
+				}
+			}
+			if (!projectToBeUpdated)  {
+				project = new GoogleCodeProject();
+				// Clear containments to be updated	
+			}
+			else
+				
+			{
+				project.getCommunicationChannels().clear();
+				project.getVcsRepositories().clear();	
+				project.getPersons().clear();
+				project.getDownloads().clear();
+				project.getLicenses().clear();
+				platform.getProjectRepositoryManager().getProjectRepository().sync();
+			}
 			//SET NAME
-			
-			result.setName(Jsoup.parse(e.getElementsByTag("span").toString()).text());
+
+			project.setName(e.text());
+			//project.setName(Jsoup.parse(e.getElementsByTag("span").toString()).text());
 			e = doc.getElementById("wikicontent");
-			result.setDescription(Jsoup.parse(e.toString()).text());
+			project.setDescription(Jsoup.parse(e.toString()).text());
 			e = doc.getElementById("mt");
 			//SET WIKI
 			Elements wikis = e.getElementsContainingText("Wiki");
@@ -59,17 +91,16 @@ public class GoogleCodeImporter {
 				GoogleWiki gw = new GoogleWiki();
 				gw.setUrl("https://code.google.com" + wiki.outerHtml().substring(wiki.outerHtml().indexOf("href")+6, wiki.outerHtml().indexOf("class")-2));
 				gw.setNonProcessable(true);
-				result.setWiki(gw);
+				project.setWiki(gw);
 				
 			}
 			//SET PERSON
-			List<GoogleUser> gul = getPersonProject(platform, projectId + "people/list");
+			List<GoogleUser> gul = getPersonProject(platform, projectUrl + "people/list");
 			for (GoogleUser googleUser : gul) {
 				platform.getProjectRepositoryManager().getProjectRepository().getPersons().add(googleUser);
-				result.getPersons().add(googleUser);
+				project.getPersons().add(googleUser);
 			}
-			result.getPersons().addAll(gul);
-			
+			project.getPersons().addAll(gul);
 			//SET GoogleIssueTracker
 			Elements issues = e.getElementsContainingText("Issues");
 			Element issue = null;
@@ -89,7 +120,7 @@ public class GoogleCodeImporter {
 				//System.out.println(git.getUrl());
 				//List<GoogleIssue> gi = getGoogleIssueList(platform, git.getUrl());
 				//git.getIssues().addAll(gi);
-				result.setIssueTracker(git);
+				project.setIssueTracker(git);
 			}
 			
 			//SET DOWNLOAD
@@ -103,9 +134,27 @@ public class GoogleCodeImporter {
 			}
 			if (dwnldLink != null)
 			{
-				downloadPage = "https://code.google.com" + dwnldLink.outerHtml().substring(dwnldLink.outerHtml().indexOf("href")+6, dwnldLink.outerHtml().indexOf("class")-2);
-				result.getDownloads().addAll(getGoogleDownload(downloadPage));
+				downloadPage = "https://code.google.com" + dwnldLink.attr("href");
+				project.getDownloads().addAll(getGoogleDownload(downloadPage));
 			}
+			//SET VCSREPOSITORY
+			
+			Elements sources = e.getElementsContainingText("Source");
+			Element source = null;
+			String sourcePage = "";
+			for (Element element : sources) 
+			{
+				if(element.text().toString().contains("Source"))
+					source = element;
+			}
+			if (source != null)
+			{
+				sourcePage = "https://code.google.com" + source.attr("href");
+				project.getVcsRepositories().addAll(getGoogleVcsRepository(platform, sourcePage));
+			}
+			
+			
+			//
 			
 			
 			
@@ -151,7 +200,7 @@ public class GoogleCodeImporter {
 									licensePending.put(licenseName, l);
 								}
 							}
-							result.getLicenses().add(l);
+							project.getLicenses().add(l);
 							
 						}
 							
@@ -167,9 +216,51 @@ public class GoogleCodeImporter {
 			
 			e1.printStackTrace();
 		}
-		return result;
+		return project;
 	}
 	
+	private List<VcsRepository> getGoogleVcsRepository(Platform platform, String sourcePageLink) {
+		List<VcsRepository> result = new ArrayList<VcsRepository>();
+		org.jsoup.nodes.Document doc;
+		org.jsoup.nodes.Element content;	
+		String URL_PROJECT = sourcePageLink;	
+		try 
+		{
+			doc = Jsoup.connect(URL_PROJECT).timeout(10000).get();
+			Element e = doc.getElementById("checkoutcmd");
+			if (e!=null)
+			{
+				VcsRepository vcsRepository = null;
+				String vcs = e.text();
+				String vcsUrl = e.text().substring(e.text().indexOf("http"));
+				if (vcs.startsWith("git"))
+				{
+					vcsRepository = new GitRepository();
+					vcsRepository.setUrl(vcsUrl);
+					result.add(vcsRepository);
+				}
+				else if (vcs.startsWith("svn"))
+				{
+					vcsRepository = new SvnRepository();
+					vcsRepository.setUrl(vcsUrl);
+					result.add(vcsRepository);
+				}
+				else if (vcs.startsWith("hg"))
+				{
+					vcsRepository = new MercurialRepository();
+					vcsRepository.setUrl(vcsUrl);
+					result.add(vcsRepository);
+				}
+				
+			}
+			else System.out.println("NO");
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		return result;
+	}
+
 	private List<GoogleIssue> getGoogleIssueList(Platform platform, String url) {
 		List<GoogleIssue> result = new ArrayList<GoogleIssue>();
 		org.jsoup.nodes.Document doc;
@@ -454,7 +545,12 @@ public class GoogleCodeImporter {
 				
 				}
 				//result.add(e.toString());
-			} catch (IOException e1) {
+			}
+			catch (SocketTimeoutException e2)
+			{
+				e2.printStackTrace();
+			}
+			catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
@@ -491,7 +587,7 @@ public class GoogleCodeImporter {
 				if(end <= totalItem)
 				{
 					int i = 0;
-					while (i <= 100/*totalItem*/ )
+					while (i <= totalItem )
 					{
 						String url = "https://code.google.com/hosting/search?q=&filter=0&mode=&start="+ i;
 						result.addAll(importPage(url, platform));
