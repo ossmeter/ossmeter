@@ -13,9 +13,8 @@ public class Project extends NamedElement {
 	protected List<BugTrackingSystem> bugTrackingSystems = null;
 	protected List<Person> persons = null;
 	protected List<License> licenses = null;
-	protected List<MetricProvider> metricProviderData = null;
 	protected Project parent = null;
-	protected LocalStorage storage = null;
+	protected PlatformInternal internal = null;
 	
 	
 	public Project() { 
@@ -26,16 +25,12 @@ public class Project extends NamedElement {
 		dbObject.put("bugTrackingSystems", new BasicDBList());
 		dbObject.put("persons", new BasicDBList());
 		dbObject.put("licenses", new BasicDBList());
-		dbObject.put("metricProviderData", new BasicDBList());
 		super.setSuperTypes("org.ossmeter.repository.model.NamedElement");
 		NAME.setOwningType("org.ossmeter.repository.model.Project");
 		SHORTNAME.setOwningType("org.ossmeter.repository.model.Project");
 		DESCRIPTION.setOwningType("org.ossmeter.repository.model.Project");
 		YEAR.setOwningType("org.ossmeter.repository.model.Project");
 		ACTIVE.setOwningType("org.ossmeter.repository.model.Project");
-		LASTEXECUTED.setOwningType("org.ossmeter.repository.model.Project");
-		MONITOR.setOwningType("org.ossmeter.repository.model.Project");
-		INERRORSTATE.setOwningType("org.ossmeter.repository.model.Project");
 	}
 	
 	public static StringQueryProducer NAME = new StringQueryProducer("name"); 
@@ -43,9 +38,6 @@ public class Project extends NamedElement {
 	public static StringQueryProducer DESCRIPTION = new StringQueryProducer("description"); 
 	public static NumericalQueryProducer YEAR = new NumericalQueryProducer("year");
 	public static StringQueryProducer ACTIVE = new StringQueryProducer("active"); 
-	public static StringQueryProducer LASTEXECUTED = new StringQueryProducer("lastExecuted"); 
-	public static StringQueryProducer MONITOR = new StringQueryProducer("monitor"); 
-	public static StringQueryProducer INERRORSTATE = new StringQueryProducer("inErrorState"); 
 	
 	
 	public String getShortName() {
@@ -84,33 +76,6 @@ public class Project extends NamedElement {
 		notifyChanged();
 		return this;
 	}
-	public String getLastExecuted() {
-		return parseString(dbObject.get("lastExecuted")+"", "");
-	}
-	
-	public Project setLastExecuted(String lastExecuted) {
-		dbObject.put("lastExecuted", lastExecuted);
-		notifyChanged();
-		return this;
-	}
-	public boolean getMonitor() {
-		return parseBoolean(dbObject.get("monitor")+"", true);
-	}
-	
-	public Project setMonitor(boolean monitor) {
-		dbObject.put("monitor", monitor);
-		notifyChanged();
-		return this;
-	}
-	public boolean getInErrorState() {
-		return parseBoolean(dbObject.get("inErrorState")+"", false);
-	}
-	
-	public Project setInErrorState(boolean inErrorState) {
-		dbObject.put("inErrorState", inErrorState);
-		notifyChanged();
-		return this;
-	}
 	
 	
 	public List<VcsRepository> getVcsRepositories() {
@@ -133,21 +98,15 @@ public class Project extends NamedElement {
 	}
 	public List<Person> getPersons() {
 		if (persons == null) {
-			persons = new PongoList<Person>(this, "persons", false);
+			persons = new PongoList<Person>(this, "persons", true);
 		}
 		return persons;
 	}
 	public List<License> getLicenses() {
 		if (licenses == null) {
-			licenses = new PongoList<License>(this, "licenses", false);
+			licenses = new PongoList<License>(this, "licenses", true);
 		}
 		return licenses;
-	}
-	public List<MetricProvider> getMetricProviderData() {
-		if (metricProviderData == null) {
-			metricProviderData = new PongoList<MetricProvider>(this, "metricProviderData", true);
-		}
-		return metricProviderData;
 	}
 	
 	public Project setParent(Project parent) {
@@ -171,22 +130,22 @@ public class Project extends NamedElement {
 		return parent;
 	}
 	
-	public LocalStorage getStorage() {
-		if (storage == null && dbObject.containsField("storage")) {
-			storage = (LocalStorage) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("storage"));
+	public PlatformInternal getInternal() {
+		if (internal == null && dbObject.containsField("internal")) {
+			internal = (PlatformInternal) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("internal"));
 		}
-		return storage;
+		return internal;
 	}
 	
-	public Project setStorage(LocalStorage storage) {
-		if (this.storage != storage) {
-			if (storage == null) {
-				dbObject.removeField("storage");
+	public Project setInternal(PlatformInternal internal) {
+		if (this.internal != internal) {
+			if (internal == null) {
+				dbObject.removeField("internal");
 			}
 			else {
-				dbObject.put("storage", storage.getDbObject());
+				dbObject.put("internal", internal.getDbObject());
 			}
-			this.storage = storage;
+			this.internal = internal;
 			notifyChanged();
 		}
 		return this;

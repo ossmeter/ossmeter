@@ -8,12 +8,10 @@ import com.googlecode.pongo.runtime.querying.*;
 
 public abstract class BugTrackingSystem extends Pongo {
 	
-	protected List<Person> persons = null;
 	
 	
 	public BugTrackingSystem() { 
 		super();
-		dbObject.put("persons", new BasicDBList());
 		URL.setOwningType("org.ossmeter.repository.model.BugTrackingSystem");
 	}
 	
@@ -31,12 +29,6 @@ public abstract class BugTrackingSystem extends Pongo {
 	}
 	
 	
-	public List<Person> getPersons() {
-		if (persons == null) {
-			persons = new PongoList<Person>(this, "persons", false);
-		}
-		return persons;
-	}
 	
 	
 }

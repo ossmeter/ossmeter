@@ -30,7 +30,6 @@ public class Platform {
 
 	protected ProjectRepositoryManager projectRepositoryManager = null;
 	protected IMetricProviderManager metricProviderManager = null;
-	protected SimpleMetricProviderScheduler scheduler = null;
 	protected PlatformVcsManager vcsManager = null;
 	protected PlatformCommunicationChannelManager communicationChannelManager = null;
 	protected PlatformBugTrackingSystemManager bugTrackingSystemManager = null;
@@ -42,15 +41,10 @@ public class Platform {
 		this.mongo = mongo;
 		projectRepositoryManager = new ProjectRepositoryManager(mongo);
 		metricProviderManager = new ExtensionPointMetricProviderManager();
-		scheduler = new SimpleMetricProviderScheduler(this);
 		vcsManager = new ExtensionPointVcsManager();
 		communicationChannelManager = new ExtensionPointCommunicationChannelManager();
 		bugTrackingSystemManager = new ExtensionPointBugTrackingSystemManager();
 		initialisePlatformLocalStorage();
-	}
-	
-	public void run() throws Exception {
-		scheduler.run();
 	}
 	
 	public Path getLocalStorageHomeDirectory() {

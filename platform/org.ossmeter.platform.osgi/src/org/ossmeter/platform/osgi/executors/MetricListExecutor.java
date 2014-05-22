@@ -69,7 +69,7 @@ public class MetricListExecutor implements Runnable {
 			MetricProvider mpd = getProjectModelMetricProvider(project,m);
 			if (mpd == null) {
 				mpd = new MetricProvider();
-				project.getMetricProviderData().add(mpd);
+				project.getInternal().getMetricProviderData().add(mpd);
 				mpd.setMetricProviderId(m.getShortIdentifier());
 				mpd.setType(type);
 			}
@@ -100,7 +100,7 @@ public class MetricListExecutor implements Runnable {
 				platform.getProjectRepositoryManager().getProjectRepository().sync();
 			} catch (Exception e) {
 				logger.error("Exception thrown during metric provider execution ("+m.getShortIdentifier()+").", e);
-				project.setInErrorState(true);
+				project.getInternal().setInErrorState(true);
 				platform.getProjectRepositoryManager().getProjectRepository().sync();
 				break;
 			}
@@ -142,7 +142,7 @@ public class MetricListExecutor implements Runnable {
 		MetricProvider mp = getProjectModelMetricProvider(project, provider);
 		if (mp == null) {
 			mp = new MetricProvider();
-			project.getMetricProviderData().add(mp);
+			project.getInternal().getMetricProviderData().add(mp);
 			mp.setMetricProviderId(provider.getShortIdentifier());
 			mp.setType(type);
 		}
@@ -157,7 +157,7 @@ public class MetricListExecutor implements Runnable {
 	 * @return A MetricProvider (part of the Project DB) that matches the given IMetricProvider.
 	 */
 	protected MetricProvider getProjectModelMetricProvider(Project project, IMetricProvider iProvider) {
-		Iterator<MetricProvider> it = project.getMetricProviderData().iterator();
+		Iterator<MetricProvider> it = project.getInternal().getMetricProviderData().iterator();
 		MetricProvider mp = null;
 		while (it.hasNext()) {
 			mp = it.next();

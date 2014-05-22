@@ -56,7 +56,7 @@ public class ProjectExecutor implements Runnable {
 		logger.info("Beginning execution.");
 		
 		// Clear any open flags
-		project.setInErrorState(false);
+		project.getInternal().setInErrorState(false);
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 		
 		// Split metrics into branches
@@ -89,7 +89,7 @@ public class ProjectExecutor implements Runnable {
 
 			if (createdOk) {
 			} else {
-				project.setInErrorState(true);
+				project.getInternal().setInErrorState(true);
 				platform.getProjectRepositoryManager().getProjectRepository().sync();
 				
 				logger.error("Project delta creation failed. Aborting.");
@@ -112,13 +112,13 @@ public class ProjectExecutor implements Runnable {
 			}
 			long timeMetrics = System.currentTimeMillis() - startMetrics;
 			
-			if (project.getInErrorState()) {
+			if (project.getInternal().getInErrorState()) {
 				// TODO: what should we do? Is the act of not-updating the lastExecuted flag enough?
 				// If it continues to loop, it simply tries tomorrow. We need to stop this happening.
 				logger.warn("Project in error state. Stopping execution.");
 				break;
 			} else {
-				project.setLastExecuted(date.toString());
+				project.getInternal().setLastExecuted(date.toString());
 				platform.getProjectRepositoryManager().getProjectRepository().sync();
 			}
 			
@@ -134,7 +134,7 @@ public class ProjectExecutor implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		logger.info("Project execution complete. In error state: " + project.getInErrorState());
+		logger.info("Project execution complete. In error state: " + project.getInternal().getInErrorState());
 	}
 
 	/**
@@ -197,7 +197,7 @@ public class ProjectExecutor implements Runnable {
 		
 	protected Date getLastExecutedDate() {
 		Date lastExec;
-		String lastExecuted = project.getLastExecuted();
+		String lastExecuted = project.getInternal().getLastExecuted();
 		
 		if(lastExecuted.equals("null") || lastExecuted.equals("")) {
 			lastExec = new Date();
