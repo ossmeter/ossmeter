@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?eclipse version="3.4"?><plugin>
+   
+   <extension point="org.ossmeter.platform.metricprovider">
+      <metricProvider provider="org.ossmeter.metricprovider.generic.overalldailynumberofnewbugzillabugs.OverallDailyNumberOfNewBugzillaBugsProvider">
+      </metricProvider>
+   </extension>
+   <extension point="org.ossmeter.platform.client.api.pongoviz">
+      <visualiser metricProviderId="org.ossmeter.metricprovider.generic.overalldailynumberofnewbugzillabugs" pongoVisualiser="org.ossmeter.metricprovider.generic.overalldailynumberofnewbugzillabugs.model.DailyNonbbViz">
+      </visualiser>
+   </extension>
+
+<extension point="com.googlecode.pongo.runtime.osgi">
+    <class name="org.ossmeter.metricprovider.generic.overalldailynumberofnewbugzillabugs.model.DailyNonbb"/>
+    <class name="org.ossmeter.metricprovider.generic.overalldailynumberofnewbugzillabugs.model.DailyBugzillaData"/>
+  </extension>
+</plugin>

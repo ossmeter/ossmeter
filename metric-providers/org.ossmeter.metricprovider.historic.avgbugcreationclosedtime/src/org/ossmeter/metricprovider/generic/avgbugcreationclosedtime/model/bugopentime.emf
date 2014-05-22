@@ -1,0 +1,14 @@
+package org.ossmeter.metricprovider.generic.avgbugcreationclosedtime.model;
+
+@viz(target="gcharts", chart="line")
+class DailyAvgBugOpenTime {
+	@series
+	val DailyBugzillaData[*] bugzillas;
+}
+
+class DailyBugzillaData {
+	@yaxis(title="Average time between creating and closing bugzilla bugs")
+	attr String avgBugOpenTime;
+	attr int bugsConsidered;
+}
+

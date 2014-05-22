@@ -1,0 +1,13 @@
+package org.ossmeter.metricprovider.generic.overalldailynumberofnewbugzillabugs.model;
+
+@viz(target="gcharts", chart="line")
+class DailyNonbb {
+	@series
+	val DailyBugzillaData[*] bugzillas;
+}
+
+class DailyBugzillaData {
+   @yaxis(title="Number of new bugs")
+   attr int numberOfBugs;
+}
+

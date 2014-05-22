@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<plugin>
+
+   <extension point="org.ossmeter.platform.metricprovider">
+      <metricProvider provider="org.ossmeter.metricprovider.generic.numberofrequestsrepliesperdaypernewsgroup.NumberOfRequestsRepliesPerDayPerNewsgroupProvider"/>
+   </extension>
+
+
+
+
+<extension point="org.ossmeter.platform.client.api.pongoviz">
+   <visualiser metricProviderId="org.ossmeter.metricprovider.generic.numberofrequestsrepliesperdaypernewsgroup" pongoVisualiser="org.ossmeter.metricprovider.generic.numberofrequestsrepliesperdaypernewsgroup.model.DailyNorrViz">
+   </visualiser>
+</extension>
+<extension point="com.googlecode.pongo.runtime.osgi">
+    <class name="org.ossmeter.metricprovider.generic.numberofrequestsrepliesperdaypernewsgroup.model.DailyNorr"/>
+    <class name="org.ossmeter.metricprovider.generic.numberofrequestsrepliesperdaypernewsgroup.model.DailyNewsgroupRequestsData"/>
+    <class name="org.ossmeter.metricprovider.generic.numberofrequestsrepliesperdaypernewsgroup.model.DailyNewsgroupRepliesData"/>
+  </extension>
+</plugin>

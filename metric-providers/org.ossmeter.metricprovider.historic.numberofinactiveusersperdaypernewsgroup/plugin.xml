@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<plugin>
+   <extension
+         point="org.ossmeter.platform.metricprovider">
+      <metricProvider
+            provider="org.ossmeter.metricprovider.generic.numberofinactiveusersperdaypernewsgroup.NumberOfInactiveUsersPerDayPerNewsgroupProvider">
+      </metricProvider>
+   </extension>
+  
+<extension point="com.googlecode.pongo.runtime.osgi">
+    <class name="org.ossmeter.metricprovider.generic.numberofinactiveusersperdaypernewsgroup.model.DailyInactiveUsers"/>
+    <class name="org.ossmeter.metricprovider.generic.numberofinactiveusersperdaypernewsgroup.model.DailyNewsgroupData"/>
+  </extension>
+<extension
+      point="org.ossmeter.platform.client.api.pongoviz">
+   <visualiser
+         metricProviderId="org.ossmeter.metricprovider.generic.numberofinactiveusersperdaypernewsgroup"
+         pongoVisualiser="org.ossmeter.metricprovider.generic.numberofinactiveusersperdaypernewsgroup.model.DailyInactiveUsersViz">
+   </visualiser>
+</extension>
+</plugin>

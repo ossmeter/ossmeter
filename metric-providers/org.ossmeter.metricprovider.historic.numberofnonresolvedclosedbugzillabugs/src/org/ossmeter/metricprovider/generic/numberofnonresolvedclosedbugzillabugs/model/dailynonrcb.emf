@@ -1,0 +1,12 @@
+package org.ossmeter.metricprovider.generic.numberofnonresolvedclosedbugzillabugs.model;
+
+@viz(target="gcharts", chart="line")
+class DailyNonrcb {
+	@series
+	val DailyBugzillaData[*] bugzillas;
+}
+
+class DailyBugzillaData {
+	@yaxis(title="Number of non resolved or closed bugs")
+	attr int numberOfNonResolvedClosedBugs;
+}

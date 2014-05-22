@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ASCII"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="org.ossmeter.metricprovider.generic.numberofrequestsrepliesperuser.model">
+  <eClassifiers xsi:type="ecore:EClass" name="AverageRRUser">
+    <eAnnotations source="viz">
+      <details key="target" value="gcharts"/>
+      <details key="chart" value="line"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="articles" upperBound="-1" eType="//AverageArticlesPerUserData" containment="true">
+      <eAnnotations source="series">
+        <details key="label" value="articles"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="requests" upperBound="-1" eType="//AverageRequestsPerUserData" containment="true">
+      <eAnnotations source="series">
+        <details key="label" value="requests"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="replies" upperBound="-1" eType="//AverageRepliesPerUserData" containment="true">
+      <eAnnotations source="series">
+        <details key="label" value="replies"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AverageArticlesPerUserData">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="averageArticlesPerUser">
+      <eAnnotations source="yaxis">
+        <details key="title" value="articles per user"/>
+      </eAnnotations>
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EFloat"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AverageRequestsPerUserData">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="averageRequestsPerUser">
+      <eAnnotations source="yaxis">
+        <details key="title" value="requests per user"/>
+      </eAnnotations>
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EFloat"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AverageRepliesPerUserData">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="averageRepliesPerUser">
+      <eAnnotations source="yaxis">
+        <details key="title" value="replies per user"/>
+      </eAnnotations>
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EFloat"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+</ecore:EPackage>

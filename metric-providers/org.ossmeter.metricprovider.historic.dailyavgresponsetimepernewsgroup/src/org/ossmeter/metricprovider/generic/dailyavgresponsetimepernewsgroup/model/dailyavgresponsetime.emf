@@ -1,0 +1,16 @@
+package org.ossmeter.metricprovider.generic.dailyavgresponsetimepernewsgroup.model;
+
+@viz(target="gcharts", chart="line")
+class DailyAverageThreadResponseTime {
+	@series
+	val DailyNewsgroupData[*] newsgroups;
+}
+
+class DailyNewsgroupData {
+	@searchable
+	attr String url_name;
+	@yaxis(title="Average response time")
+   	attr String avgResponseTime;
+	attr int threadsConsidered;
+}
+

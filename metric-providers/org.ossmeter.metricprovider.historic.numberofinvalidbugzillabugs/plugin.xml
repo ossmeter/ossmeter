@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<plugin>
+  
+  <extension point="org.ossmeter.platform.metricprovider">
+     <metricProvider provider="org.ossmeter.metricprovider.generic.numberofinvalidbugzillabugs.NumberOfInvalidBugzillaBugsProvider">
+     </metricProvider>
+  </extension>
+<extension point="com.googlecode.pongo.runtime.osgi">
+    <class name="org.ossmeter.metricprovider.generic.numberofinvalidbugzillabugs.model.DailyNoib"/>
+    <class name="org.ossmeter.metricprovider.generic.numberofinvalidbugzillabugs.model.DailyBugzillaData"/>
+  </extension>
+<extension
+      point="org.ossmeter.platform.client.api.pongoviz">
+   <visualiser
+         metricProviderId="org.ossmeter.metricprovider.generic.numberofinvalidbugzillabugs"
+         pongoVisualiser="org.ossmeter.metricprovider.generic.numberofinvalidbugzillabugs.model.DailyNoibViz">
+   </visualiser>
+</extension>
+</plugin>
