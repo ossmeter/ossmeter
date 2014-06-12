@@ -218,7 +218,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 //  assert manager != null = throw new RuntimeException("manager isn't initializer");
   Map<String, Map<String, IValue>> m3sPerRevision = new TreeMap<>();
   Map<String, IValue> fileM3s = new HashMap<>();
-  File localStorage = new File(project.getInternal().getStorage().getPath());
+  File localStorage = new File(project.getExecutionInformation().getStorage().getPath());
   VcsProjectDelta vcsDelta = delta.getVcsDelta();
 //  ProjectRascalManager manager = RascalManager.getInstance().getInstance(project.getName());
 

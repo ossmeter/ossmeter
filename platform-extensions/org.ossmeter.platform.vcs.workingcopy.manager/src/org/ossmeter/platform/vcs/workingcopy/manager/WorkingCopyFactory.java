@@ -66,7 +66,7 @@ public class WorkingCopyFactory {
    * @throws WorkingCopyCheckoutException  when a working copy manager generates an exception while producing the working copy.
    */
   public void checkout(Project project, String revision, Map<String,File> workingCopyFolders, Map<String,File> scratchFolders) throws WorkingCopyManagerUnavailable, WorkingCopyCheckoutException {
-    File storage = new File(project.getInternal().getStorage().getPath());
+    File storage = new File(project.getExecutionInformation().getStorage().getPath());
     File wc = new File(storage, WORKING_COPY_DIRECTORY);
     File md = new File(storage, MODEL_DIRECTORY);
     
