@@ -6,6 +6,7 @@ import java.util.List;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.repository.model.MetricProvider;
+import org.ossmeter.repository.model.MetricProviderExecution;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectRepository;
 import org.restlet.data.Form;
@@ -63,7 +64,7 @@ public class MetricsResource extends ServerResource {
 		}
 
 		IMetricProvider metricProvider = null;
-		for (MetricProvider mp : project.getMetricProviderData()) {
+		for (MetricProviderExecution mp : project.getExecutionInformation().getMetricProviderData()) {
 			for (IMetricProvider imp : platform.getMetricProviderManager().getMetricProviders()) { // This is ugly. Required as repo.model.MetricProvider doesn't have the info
 				if (imp.getShortIdentifier().equals(metricName)) {
 					metricProvider = imp;

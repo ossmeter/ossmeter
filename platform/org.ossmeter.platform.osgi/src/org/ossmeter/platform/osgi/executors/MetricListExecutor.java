@@ -18,6 +18,7 @@ import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.platform.logging.OssmeterLoggerFactory;
 import org.ossmeter.repository.model.MetricProvider;
+import org.ossmeter.repository.model.MetricProviderExecution;
 import org.ossmeter.repository.model.MetricProviderType;
 import org.ossmeter.repository.model.Project;
 
@@ -66,11 +67,11 @@ public class MetricListExecutor implements Runnable {
 			MetricProviderType type = MetricProviderType.TRANSIENT;
 			if (m instanceof IHistoricalMetricProvider) type = MetricProviderType.HISTORIC;
 			
-			MetricProvider mpd = getProjectModelMetricProvider(project,m);
+			MetricProviderExecution mpd = getProjectModelMetricProvider(project,m);
 			if (mpd == null) {
-				mpd = new MetricProvider();
-				project.getInternal().getMetricProviderData().add(mpd);
-				mpd.setMetricProviderId(m.getShortIdentifier());
+				mpd = new MetricProviderExecution();
+				project.getExecutionInformation().getMetricProviderData().add(mpd);
+				mpd.setMetricProviderId(m.getIdentifier());
 				mpd.setType(type);
 			}
 			
@@ -100,7 +101,7 @@ public class MetricListExecutor implements Runnable {
 				platform.getProjectRepositoryManager().getProjectRepository().sync();
 			} catch (Exception e) {
 				logger.error("Exception thrown during metric provider execution ("+m.getShortIdentifier()+").", e);
-				project.getInternal().setInErrorState(true);
+				project.getExecutionInformation().setInErrorState(true);
 				platform.getProjectRepositoryManager().getProjectRepository().sync();
 				break;
 			}
@@ -139,13 +140,13 @@ public class MetricListExecutor implements Runnable {
 	 */
 	protected void updateMetricProviderMetaData(Project project, IMetricProvider provider, Date date, MetricProviderType type) {
 		// Update project MP meta-data
-		MetricProvider mp = getProjectModelMetricProvider(project, provider);
+		MetricProviderExecution mp = getProjectModelMetricProvider(project, provider);
 		if (mp == null) {
-			mp = new MetricProvider();
-			project.getInternal().getMetricProviderData().add(mp);
+			mp = new MetricProviderExecution();
+			project.getExecutionInformation().getMetricProviderData().add(mp);
 			mp.setMetricProviderId(provider.getShortIdentifier());
 			mp.setType(type);
-		}
+		}	
 		mp.setLastExecuted(date.toString()); 
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 	}
@@ -156,9 +157,9 @@ public class MetricListExecutor implements Runnable {
 	 * @param iProvider
 	 * @return A MetricProvider (part of the Project DB) that matches the given IMetricProvider.
 	 */
-	protected MetricProvider getProjectModelMetricProvider(Project project, IMetricProvider iProvider) {
-		Iterator<MetricProvider> it = project.getInternal().getMetricProviderData().iterator();
-		MetricProvider mp = null;
+	protected MetricProviderExecution getProjectModelMetricProvider(Project project, IMetricProvider iProvider) {
+		Iterator<MetricProviderExecution> it = project.getExecutionInformation().getMetricProviderData().iterator();
+		MetricProviderExecution mp = null;
 		while (it.hasNext()) {
 			mp = it.next();
 			if (mp == null) continue; //FIXME: intermittent bug adds nulls

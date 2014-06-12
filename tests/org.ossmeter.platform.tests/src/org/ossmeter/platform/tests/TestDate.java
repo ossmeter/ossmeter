@@ -46,8 +46,6 @@ public class TestDate {
 		Date jToday = new Date(today);
 		Date sToday = new Date(jToday.toString());
 		assertEquals(0, jToday.compareTo(sToday));
-	
-	
 	}
 
 	@Test
@@ -61,6 +59,9 @@ public class TestDate {
 		Date[] dates = Date.range(d1, d2);
 		assertEquals("19860812", dates[0].toString());
 		assertEquals("19860813", dates[1].toString());
+		
+		dates = Date.range(d1, d1.addDays(-1));
+		assertEquals(0, dates.length);
 	}
 	
 }

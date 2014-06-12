@@ -6,30 +6,39 @@ import com.googlecode.pongo.runtime.*;
 import com.googlecode.pongo.runtime.querying.*;
 
 
-public class PlatformInternal extends Pongo {
+public class ProjectExecutionInformation extends Pongo {
 	
-	protected List<MetricProvider> metricProviderData = null;
+	protected List<MetricProviderExecution> metricProviderData = null;
 	protected LocalStorage storage = null;
 	
 	
-	public PlatformInternal() { 
+	public ProjectExecutionInformation() { 
 		super();
 		dbObject.put("metricProviderData", new BasicDBList());
-		MONITOR.setOwningType("org.ossmeter.repository.model.PlatformInternal");
-		INERRORSTATE.setOwningType("org.ossmeter.repository.model.PlatformInternal");
-		LASTEXECUTED.setOwningType("org.ossmeter.repository.model.PlatformInternal");
+		LASTEXECUTED.setOwningType("org.ossmeter.repository.model.ProjectExecutionInformation");
+		MONITOR.setOwningType("org.ossmeter.repository.model.ProjectExecutionInformation");
+		INERRORSTATE.setOwningType("org.ossmeter.repository.model.ProjectExecutionInformation");
 	}
 	
+	public static StringQueryProducer LASTEXECUTED = new StringQueryProducer("lastExecuted"); 
 	public static StringQueryProducer MONITOR = new StringQueryProducer("monitor"); 
 	public static StringQueryProducer INERRORSTATE = new StringQueryProducer("inErrorState"); 
-	public static StringQueryProducer LASTEXECUTED = new StringQueryProducer("lastExecuted"); 
 	
 	
+	public String getLastExecuted() {
+		return parseString(dbObject.get("lastExecuted")+"", "");
+	}
+	
+	public ProjectExecutionInformation setLastExecuted(String lastExecuted) {
+		dbObject.put("lastExecuted", lastExecuted);
+		notifyChanged();
+		return this;
+	}
 	public boolean getMonitor() {
 		return parseBoolean(dbObject.get("monitor")+"", true);
 	}
 	
-	public PlatformInternal setMonitor(boolean monitor) {
+	public ProjectExecutionInformation setMonitor(boolean monitor) {
 		dbObject.put("monitor", monitor);
 		notifyChanged();
 		return this;
@@ -38,25 +47,16 @@ public class PlatformInternal extends Pongo {
 		return parseBoolean(dbObject.get("inErrorState")+"", false);
 	}
 	
-	public PlatformInternal setInErrorState(boolean inErrorState) {
+	public ProjectExecutionInformation setInErrorState(boolean inErrorState) {
 		dbObject.put("inErrorState", inErrorState);
 		notifyChanged();
 		return this;
 	}
-	public String getLastExecuted() {
-		return parseString(dbObject.get("lastExecuted")+"", "");
-	}
-	
-	public PlatformInternal setLastExecuted(String lastExecuted) {
-		dbObject.put("lastExecuted", lastExecuted);
-		notifyChanged();
-		return this;
-	}
 	
 	
-	public List<MetricProvider> getMetricProviderData() {
+	public List<MetricProviderExecution> getMetricProviderData() {
 		if (metricProviderData == null) {
-			metricProviderData = new PongoList<MetricProvider>(this, "metricProviderData", true);
+			metricProviderData = new PongoList<MetricProviderExecution>(this, "metricProviderData", true);
 		}
 		return metricProviderData;
 	}
@@ -69,7 +69,7 @@ public class PlatformInternal extends Pongo {
 		return storage;
 	}
 	
-	public PlatformInternal setStorage(LocalStorage storage) {
+	public ProjectExecutionInformation setStorage(LocalStorage storage) {
 		if (this.storage != storage) {
 			if (storage == null) {
 				dbObject.removeField("storage");

@@ -1,5 +1,7 @@
 package org.ossmeter.platform.osgi.services;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
 
 import org.ossmeter.platform.osgi.executors.SchedulerStatus;
@@ -35,5 +37,32 @@ public class WorkerService implements IWorkerService {
 	public SchedulerStatus getStatus() {
 		return scheduler.getStatus();
 	}
-	
+
+	@Override
+	public void pause() {
+		scheduler.pause();
+	}
+
+	@Override
+	public void resume() {
+		scheduler.resume();
+	}
+
+	@Override
+	public void shutdown() {
+		boolean clean = scheduler.finish(); // Blocking. Waits for worker to complete.
+		if (!clean) {
+			throw new RuntimeException("Slave scheduler did not shutdown cleanly.");
+		}
+	}
+
+	@Override
+	public String getIdentifier() {
+		try {
+			return InetAddress.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+		return "Unknown IP"; //FIXME
+	}
 }

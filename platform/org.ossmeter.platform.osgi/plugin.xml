@@ -9,7 +9,7 @@
             thread="main"
             visible="true">
          <run
-               class="org.ossmeter.platform.osgi.WorkerServiceApplication">
+               class="org.ossmeter.platform.osgi.OssmeterApplication">
          </run>
       </application>
    </extension>

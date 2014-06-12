@@ -16,6 +16,7 @@ import org.osgi.util.tracker.ServiceTrackerCustomizer;
 import org.ossmeter.platform.client.api.ProjectResource;
 import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.platform.osgi.services.IWorkerService;
+import org.ossmeter.platform.osgi.services.MasterService;
 import org.ossmeter.platform.osgi.services.WorkerService;
 
 import com.googlecode.pongo.runtime.PongoFactory;
@@ -23,8 +24,9 @@ import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
 import com.mongodb.Mongo;
 import com.mongodb.ServerAddress;
 
-public class WorkerServiceApplication implements IApplication, ServiceTrackerCustomizer<IWorkerService, IWorkerService> {
+public class OssmeterApplication implements IApplication, ServiceTrackerCustomizer<IWorkerService, IWorkerService> {
 	
+	protected boolean master = false;
 	protected OssmeterLogger logger;
 	protected boolean done = false;
 	protected Object appLock = new Object();
@@ -36,6 +38,13 @@ public class WorkerServiceApplication implements IApplication, ServiceTrackerCus
 	protected ServiceTracker<IWorkerService, IWorkerService> workerServiceTracker;
 	protected ServiceRegistration<IWorkerService> workerRegistration;
 	
+	protected List<IWorkerService> workers;
+	private MasterService masterService;
+	
+	public OssmeterApplication() {
+		workers = new ArrayList<IWorkerService>();
+	}
+	
 	@SuppressWarnings({ "unchecked", "rawtypes", "restriction" })// FIXME !!! (I just hate yellow squiggles...)
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
@@ -43,7 +52,7 @@ public class WorkerServiceApplication implements IApplication, ServiceTrackerCus
 		processArguments(context);
 		loadConfiguration();
 
-		logger = (OssmeterLogger)OssmeterLogger.getLogger("WorkerServiceApplication");
+		logger = (OssmeterLogger)OssmeterLogger.getLogger("OssmeterApplication");
 		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 		logger.info("Application initialising.");
 		
@@ -67,6 +76,12 @@ public class WorkerServiceApplication implements IApplication, ServiceTrackerCus
 		// Detect other workers
 		workerServiceTracker = new ServiceTracker<IWorkerService, IWorkerService>(Activator.getContext(), IWorkerService.class, this);	
 		workerServiceTracker.open();
+		
+		// If master, start
+		if (master) {
+			masterService = new MasterService(workers);
+			masterService.start();
+		}
 
 		// Start web server
 		ProjectResource pr = new ProjectResource();
@@ -85,13 +100,15 @@ public class WorkerServiceApplication implements IApplication, ServiceTrackerCus
 				configuration = new Properties();
 				configuration.load(new FileReader(args[i+1]));
 				i++;
+			} else if ("-master".equals(args[i])) { 
+				master = true;
 			}
 		}
 	}
 
 	protected void loadConfiguration() throws Exception {
 		if (configuration == null) {
-			// TODO Create default configuration
+			// TODO Create default configuration. Maybe a config class?
 			configuration = new Properties();
 		}
 
@@ -103,8 +120,7 @@ public class WorkerServiceApplication implements IApplication, ServiceTrackerCus
 		}
 		
 		// Storage
-		// TODO: Perhaps pass a configuration file as the constructor to the Platform?
-		
+		// TODO
 	}
 
 	@Override
@@ -114,6 +130,7 @@ public class WorkerServiceApplication implements IApplication, ServiceTrackerCus
 			appLock.notifyAll();
 			
 			// Clean up
+			if (master && masterService != null) masterService.shutdown();
 			mongo.close();
 			workerRegistration.unregister();
 			workerServiceTracker.close();
@@ -133,84 +150,12 @@ public class WorkerServiceApplication implements IApplication, ServiceTrackerCus
 		}
 	}
 
-
 	@Override
 	public IWorkerService addingService(ServiceReference<IWorkerService> reference) {
-		// TODO: This essentially acts as the master at the moment
-		/* Something like:
-		if (iAmMaster) {
-			worker.setMaster(me);
-			addToWOrkers(worker);
-		} else {
-			keepTrack(worker);
-		}
-		Need a voting thing too
-		*/
-		
-		System.err.println("Worker registered!");
 		IWorkerService worker = Activator.getContext().getService(reference);
-		
-		List<String> projects = new ArrayList<String>(); 
-
-		// MODELS:
-//		projects.add("modeling.mmt.atl");  // jimbook
-//		projects.add("modeling.epsilon"); // jimbook
-//		projects.add("modeling.gmp.gmf-runtime"); // esgroup
-//		projects.add("modeling.tmf.xtext"); // esgroup
-//		projects.add("modeling.viatra2"); // jimbook
-//		projects.add("modeling.gmt.amw"); // paige
-//		projects.add("modeling.mdt.papyrus"); // esgroup
-//		projects.add("modeling.mdt.modisco"); // paige
-//		projects.add("modeling.gmp.graphiti"); // paige
-
-		// Deliverable:
-//		projects.add("modeling.mmt.atl");  // jimbook
-//		projects.add("modeling.viatra2"); // jimbook
-//		projects.add("modeling.epsilon"); // esgroup
-//		projects.add("modeling.mdt.papyrus"); // esgroup
-//		projects.add("modeling.gmp.graphiti"); // paige
-		
-		// Hydra-driven Blog
-//		projects.add("modeling.gmp.gmf-runtime");
-//		projects.add("modeling.emf.diffmerge");
-//		projects.add("modeling.emf");
-//		projects.add("modeling.emft.ecoretools"); // FIXME BUG in NNTP
-//		projects.add("modeling.gmp.graphiti");
-//		projects.add("modeling.tmf.xtext");
-//		projects.add("modeling.mdt.uml2");
-//		projects.add("modeling.mdt.ocl");
-//		projects.add("modeling.epsilon");
-//		projects.add("birt");
-//		projects.add("rt.ecf");
-//		projects.add("technology.egit");
-//		projects.add("eclipse.platform.swt");
-//		projects.add("technology.swtbot");
-//		projects.add("eclipse.platform");
-//		projects.add("tools.pdt");
-//		projects.add("modeling.mdt.xsd");
-		
-		// Hydra-driven blog, take II
-//		projects.add("modeling.mmt.atl");			// 2k
-//		projects.add("modeling.epsilon");			// 6k
-//		projects.add("modeling.gmp.graphiti");		// 5k
-//		projects.add("modeling.mdt.papyrus");		// 4k
-//		projects.add("modeling.mdt.ocl");			// 5k
-//		projects.add("modeling.mdt.uml2tools");		// 3k
-
-//		projects.add("eclipse.modeling.m2t");		// 8k
-//		projects.add("eclipse.technology.emft");	// 19k
-//		projects.add("modeling.mdt.uml2");			// 10k
-
-//		Do with the new NNTP downloader
-//		projects.add("modeling.gmp.gmf-runtime");	// 27k
-//		projects.add("modeling.emf");				// 72k
-//		projects.add("modeling.tmf.xtext");			// 6k
-		
-		worker.queueProjects(projects);
-		
+		workers.add(worker);
 		return worker;
 	}
-
 
 	@Override
 	public void modifiedService(ServiceReference<IWorkerService> reference, IWorkerService service) {
@@ -218,10 +163,8 @@ public class WorkerServiceApplication implements IApplication, ServiceTrackerCus
 		
 	}
 
-
 	@Override
 	public void removedService(ServiceReference<IWorkerService> reference, IWorkerService service) {
-		
+		workers.remove(service);
 	}
-
 }

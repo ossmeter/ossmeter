@@ -21,6 +21,7 @@ public class SlaveScheduler implements IScheduler {
 	final protected Mongo mongo;
 	protected Platform platform;
 	
+	private volatile boolean running = true;
 	
 	public SlaveScheduler(Mongo mongo) {
 		status = SchedulerStatus.AVAILABLE;
@@ -36,18 +37,23 @@ public class SlaveScheduler implements IScheduler {
 		if (status.equals(SchedulerStatus.BUSY)) {
 			return false;
 		}
-		queue.addAll(projects);
+		synchronized (queue) {
+			queue.addAll(projects);
+			queue.notify();
+		}
 		return true;
 	}
 
 	@Override
 	public void run() {
+	
 		if (status.equals(SchedulerStatus.AVAILABLE) && queue.size() > 0) {
 			status = SchedulerStatus.BUSY;
 			
 			worker = new Thread() {
 				@Override
 				public void run() {
+					
 					// Focus on a single project at a time. Sequential.
 					for (String projectName : queue) {
 						Project project = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByShortName(projectName); //FIXME This should be just NAME
@@ -69,6 +75,18 @@ public class SlaveScheduler implements IScheduler {
 		} else {
 			System.err.println("Tried to start slave when slave already started.");
 		}
+	}
+	
+	public void pause() {
+		try {
+			worker.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void resume() {
+		worker.notify();
 	}
 	
 	@Override

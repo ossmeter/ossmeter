@@ -8,36 +8,36 @@ import com.googlecode.pongo.runtime.querying.*;
 
 public class Project extends NamedElement {
 	
+	protected List<Person> persons = null;
+	protected List<License> licenses = null;
 	protected List<VcsRepository> vcsRepositories = null;
 	protected List<CommunicationChannel> communicationChannels = null;
 	protected List<BugTrackingSystem> bugTrackingSystems = null;
-	protected List<Person> persons = null;
-	protected List<License> licenses = null;
 	protected Project parent = null;
-	protected PlatformInternal internal = null;
+	protected ProjectExecutionInformation executionInformation = null;
 	
 	
 	public Project() { 
 		super();
 		dbObject.put("parent", new BasicDBObject());
+		dbObject.put("persons", new BasicDBList());
+		dbObject.put("licenses", new BasicDBList());
 		dbObject.put("vcsRepositories", new BasicDBList());
 		dbObject.put("communicationChannels", new BasicDBList());
 		dbObject.put("bugTrackingSystems", new BasicDBList());
-		dbObject.put("persons", new BasicDBList());
-		dbObject.put("licenses", new BasicDBList());
 		super.setSuperTypes("org.ossmeter.repository.model.NamedElement");
 		NAME.setOwningType("org.ossmeter.repository.model.Project");
 		SHORTNAME.setOwningType("org.ossmeter.repository.model.Project");
 		DESCRIPTION.setOwningType("org.ossmeter.repository.model.Project");
-		YEAR.setOwningType("org.ossmeter.repository.model.Project");
 		ACTIVE.setOwningType("org.ossmeter.repository.model.Project");
+		YEAR.setOwningType("org.ossmeter.repository.model.Project");
 	}
 	
 	public static StringQueryProducer NAME = new StringQueryProducer("name"); 
 	public static StringQueryProducer SHORTNAME = new StringQueryProducer("shortName"); 
 	public static StringQueryProducer DESCRIPTION = new StringQueryProducer("description"); 
-	public static NumericalQueryProducer YEAR = new NumericalQueryProducer("year");
 	public static StringQueryProducer ACTIVE = new StringQueryProducer("active"); 
+	public static NumericalQueryProducer YEAR = new NumericalQueryProducer("year");
 	
 	
 	public String getShortName() {
@@ -58,15 +58,6 @@ public class Project extends NamedElement {
 		notifyChanged();
 		return this;
 	}
-	public int getYear() {
-		return parseInteger(dbObject.get("year")+"", 0);
-	}
-	
-	public Project setYear(int year) {
-		dbObject.put("year", year);
-		notifyChanged();
-		return this;
-	}
 	public boolean getActive() {
 		return parseBoolean(dbObject.get("active")+"", false);
 	}
@@ -76,8 +67,29 @@ public class Project extends NamedElement {
 		notifyChanged();
 		return this;
 	}
+	public int getYear() {
+		return parseInteger(dbObject.get("year")+"", 0);
+	}
+	
+	public Project setYear(int year) {
+		dbObject.put("year", year);
+		notifyChanged();
+		return this;
+	}
 	
 	
+	public List<Person> getPersons() {
+		if (persons == null) {
+			persons = new PongoList<Person>(this, "persons", false);
+		}
+		return persons;
+	}
+	public List<License> getLicenses() {
+		if (licenses == null) {
+			licenses = new PongoList<License>(this, "licenses", false);
+		}
+		return licenses;
+	}
 	public List<VcsRepository> getVcsRepositories() {
 		if (vcsRepositories == null) {
 			vcsRepositories = new PongoList<VcsRepository>(this, "vcsRepositories", true);
@@ -95,18 +107,6 @@ public class Project extends NamedElement {
 			bugTrackingSystems = new PongoList<BugTrackingSystem>(this, "bugTrackingSystems", true);
 		}
 		return bugTrackingSystems;
-	}
-	public List<Person> getPersons() {
-		if (persons == null) {
-			persons = new PongoList<Person>(this, "persons", true);
-		}
-		return persons;
-	}
-	public List<License> getLicenses() {
-		if (licenses == null) {
-			licenses = new PongoList<License>(this, "licenses", true);
-		}
-		return licenses;
 	}
 	
 	public Project setParent(Project parent) {
@@ -130,22 +130,22 @@ public class Project extends NamedElement {
 		return parent;
 	}
 	
-	public PlatformInternal getInternal() {
-		if (internal == null && dbObject.containsField("internal")) {
-			internal = (PlatformInternal) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("internal"));
+	public ProjectExecutionInformation getExecutionInformation() {
+		if (executionInformation == null && dbObject.containsField("executionInformation")) {
+			executionInformation = (ProjectExecutionInformation) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("executionInformation"));
 		}
-		return internal;
+		return executionInformation;
 	}
 	
-	public Project setInternal(PlatformInternal internal) {
-		if (this.internal != internal) {
-			if (internal == null) {
-				dbObject.removeField("internal");
+	public Project setExecutionInformation(ProjectExecutionInformation executionInformation) {
+		if (this.executionInformation != executionInformation) {
+			if (executionInformation == null) {
+				dbObject.removeField("executionInformation");
 			}
 			else {
-				dbObject.put("internal", internal.getDbObject());
+				dbObject.put("executionInformation", executionInformation.getDbObject());
 			}
-			this.internal = internal;
+			this.executionInformation = executionInformation;
 			notifyChanged();
 		}
 		return this;

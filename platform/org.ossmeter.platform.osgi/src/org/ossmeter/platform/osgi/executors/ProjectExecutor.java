@@ -20,6 +20,7 @@ import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.ProjectExecutionInformation;
 import org.ossmeter.repository.model.VcsRepository;
 
 public class ProjectExecutor implements Runnable {
@@ -56,7 +57,10 @@ public class ProjectExecutor implements Runnable {
 		logger.info("Beginning execution.");
 		
 		// Clear any open flags
-		project.getInternal().setInErrorState(false);
+		if (project.getExecutionInformation() == null) {
+			project.setExecutionInformation(new ProjectExecutionInformation());
+		}
+		project.getExecutionInformation().setInErrorState(false);
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 		
 		// Split metrics into branches
@@ -72,7 +76,7 @@ public class ProjectExecutor implements Runnable {
 		}
 		Date today = new Date();
 		
-		Date[] dates = Date.range(lastExecuted.addDays(1), today);
+		Date[] dates = Date.range(lastExecuted.addDays(1), today.addDays(-1));
 		
 		
 		for (Date date : dates) {
@@ -89,7 +93,7 @@ public class ProjectExecutor implements Runnable {
 
 			if (createdOk) {
 			} else {
-				project.getInternal().setInErrorState(true);
+				project.getExecutionInformation().setInErrorState(true);
 				platform.getProjectRepositoryManager().getProjectRepository().sync();
 				
 				logger.error("Project delta creation failed. Aborting.");
@@ -112,13 +116,13 @@ public class ProjectExecutor implements Runnable {
 			}
 			long timeMetrics = System.currentTimeMillis() - startMetrics;
 			
-			if (project.getInternal().getInErrorState()) {
+			if (project.getExecutionInformation().getInErrorState()) {
 				// TODO: what should we do? Is the act of not-updating the lastExecuted flag enough?
 				// If it continues to loop, it simply tries tomorrow. We need to stop this happening.
 				logger.warn("Project in error state. Stopping execution.");
 				break;
 			} else {
-				project.getInternal().setLastExecuted(date.toString());
+				project.getExecutionInformation().setLastExecuted(date.toString());
 				platform.getProjectRepositoryManager().getProjectRepository().sync();
 			}
 			
@@ -134,7 +138,7 @@ public class ProjectExecutor implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		logger.info("Project execution complete. In error state: " + project.getInternal().getInErrorState());
+		logger.info("Project execution complete. In error state: " + project.getExecutionInformation().getInErrorState());
 	}
 
 	/**
@@ -197,7 +201,7 @@ public class ProjectExecutor implements Runnable {
 		
 	protected Date getLastExecutedDate() {
 		Date lastExec;
-		String lastExecuted = project.getInternal().getLastExecuted();
+		String lastExecuted = project.getExecutionInformation().getLastExecuted();
 		
 		if(lastExecuted.equals("null") || lastExecuted.equals("")) {
 			lastExec = new Date();
