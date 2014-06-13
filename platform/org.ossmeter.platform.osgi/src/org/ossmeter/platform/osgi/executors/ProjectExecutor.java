@@ -2,6 +2,9 @@ package org.ossmeter.platform.osgi.executors;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,14 +22,13 @@ import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.CommunicationChannel;
+import org.ossmeter.repository.model.LocalStorage;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectExecutionInformation;
 import org.ossmeter.repository.model.VcsRepository;
 
 public class ProjectExecutor implements Runnable {
 	
-	protected FileWriter writer;
-
 	protected Project project;
 	protected int numberOfCores;
 	protected Platform platform;
@@ -39,11 +41,18 @@ public class ProjectExecutor implements Runnable {
 		this.logger = (OssmeterLogger)OssmeterLogger.getLogger("ProjectExecutor (" + project.getName() +")");
 		this.logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 		
-		// DEBUG
-		try {
-//			this.writer = null;
-			this.writer = new FileWriter("/Users/jimmy/Desktop/D5.3-logs/" + project.getName() + ".csv");
-		} catch (IOException e) {
+	}
+	
+	protected void initialiseProjectLocalStorage (Project project) {
+		try{	
+			Path projectLocalStoragePath = Paths.get(platform.getLocalStorageHomeDirectory().toString(), project.getName());		
+			if (Files.notExists(projectLocalStoragePath)) {
+				Files.createDirectory(projectLocalStoragePath);
+			}
+			LocalStorage projectLocalStorage = new LocalStorage();
+			projectLocalStorage.setPath(projectLocalStoragePath.toString());
+			project.getExecutionInformation().setStorage(projectLocalStorage);
+		} catch(IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -55,6 +64,8 @@ public class ProjectExecutor implements Runnable {
 			return;
 		}
 		logger.info("Beginning execution.");
+		
+		initialiseProjectLocalStorage(project);
 		
 		// Clear any open flags
 		if (project.getExecutionInformation() == null) {
@@ -126,17 +137,6 @@ public class ProjectExecutor implements Runnable {
 				platform.getProjectRepositoryManager().getProjectRepository().sync();
 			}
 			
-			try { ///DEBUG
-				writer.write(date.toString() + "," + deltaTimes + "," + timeDelta + "," + timeMetrics + "\n");
-				writer.flush();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		try {
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 		logger.info("Project execution complete. In error state: " + project.getExecutionInformation().getInErrorState());
 	}
@@ -162,6 +162,8 @@ public class ProjectExecutor implements Runnable {
 			if (!mBranch.contains(m)) mBranch.add(m);
 			if (!branches.contains(mBranch)) branches.add(mBranch);
 
+			//FIXME: Test m.getIdentifiersOfUses() for null
+			
 			for (String id : m.getIdentifiersOfUses()) {
 				IMetricProvider use = lookupMetricProviderById(metrics, id);
 				if (use == null) continue;
