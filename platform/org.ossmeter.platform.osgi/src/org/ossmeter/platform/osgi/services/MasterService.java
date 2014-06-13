@@ -42,12 +42,13 @@ public class MasterService implements IMasterService {
 	
 		SchedulingInformationCollection schedCol = platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation();
 		
+		SchedulingInformation schedulingInformation = null;
 		if (schedCol == null || schedCol.size() ==0) {
-			SchedulingInformation schedulingInformation = new SchedulingInformation();
+			schedulingInformation = new SchedulingInformation();
 			schedCol.add(schedulingInformation);
-			
+		} else {
+			schedulingInformation = schedCol.first();
 		}
-		SchedulingInformation schedulingInformation = schedCol.first();
 		schedulingInformation.setMasterNodeIdentifier(InetAddress.getLocalHost().getHostAddress());
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 		
