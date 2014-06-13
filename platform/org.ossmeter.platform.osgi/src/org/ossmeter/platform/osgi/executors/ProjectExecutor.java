@@ -1,7 +1,5 @@
 package org.ossmeter.platform.osgi.executors;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,8 +23,6 @@ import org.ossmeter.repository.model.VcsRepository;
 
 public class ProjectExecutor implements Runnable {
 	
-	protected FileWriter writer;
-
 	protected Project project;
 	protected int numberOfCores;
 	protected Platform platform;
@@ -38,14 +34,6 @@ public class ProjectExecutor implements Runnable {
 		this.project = project;
 		this.logger = (OssmeterLogger)OssmeterLogger.getLogger("ProjectExecutor (" + project.getName() +")");
 		this.logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
-		
-		// DEBUG
-		try {
-//			this.writer = null;
-			this.writer = new FileWriter("/Users/jimmy/Desktop/D5.3-logs/" + project.getName() + ".csv");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	@Override
@@ -126,17 +114,6 @@ public class ProjectExecutor implements Runnable {
 				platform.getProjectRepositoryManager().getProjectRepository().sync();
 			}
 			
-			try { ///DEBUG
-				writer.write(date.toString() + "," + deltaTimes + "," + timeDelta + "," + timeMetrics + "\n");
-				writer.flush();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		try {
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 		logger.info("Project execution complete. In error state: " + project.getExecutionInformation().getInErrorState());
 	}

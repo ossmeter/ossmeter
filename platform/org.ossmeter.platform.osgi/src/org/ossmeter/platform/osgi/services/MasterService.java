@@ -45,10 +45,10 @@ public class MasterService implements IMasterService {
 		if (schedCol == null || schedCol.size() ==0) {
 			SchedulingInformation schedulingInformation = new SchedulingInformation();
 			schedCol.add(schedulingInformation);
-			
+			platform.getProjectRepositoryManager().getProjectRepository().sync();
 		}
 		SchedulingInformation schedulingInformation = schedCol.first();
-		schedulingInformation.setMasterNodeIdentifier(InetAddress.getLocalHost().getHostAddress());
+//		schedulingInformation.setMasterNodeIdentifier(InetAddress.getLocalHost().getHostAddress());
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 		
 		// Now start scheduling

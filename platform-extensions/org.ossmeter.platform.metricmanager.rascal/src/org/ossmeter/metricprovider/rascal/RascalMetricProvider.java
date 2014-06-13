@@ -1,6 +1,7 @@
 package org.ossmeter.metricprovider.rascal;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -98,7 +99,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return null;
+		return Collections.emptyList();
 	}
 
 	@Override

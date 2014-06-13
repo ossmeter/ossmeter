@@ -3,7 +3,9 @@ package org.ossmeter.platform.app.example;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.ossmeter.platform.Platform;
+import org.ossmeter.platform.app.example.util.ProjectCreationUtil;
 import org.ossmeter.platform.osgi.OssmeterApplication;
+import org.ossmeter.repository.model.LocalStorage;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectRepository;
 
@@ -21,6 +23,8 @@ public class App implements IApplication {
 		Platform platform = new Platform(mongo);
 		ProjectRepository repo = platform.getProjectRepositoryManager().getProjectRepository();
 		
+		Project pongo = ProjectCreationUtil.createSvnProject("pongo", "http://pongo.googlecode.com/svn/trunk");
+		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(pongo);
 		
 		// Synchronise the changes and close the connection
 		repo.sync();
