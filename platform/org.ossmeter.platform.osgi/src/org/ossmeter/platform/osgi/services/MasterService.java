@@ -11,6 +11,7 @@ import org.ossmeter.platform.logging.OssmeterLoggerFactory;
 import org.ossmeter.platform.osgi.executors.SchedulerStatus;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.SchedulingInformation;
+import org.ossmeter.repository.model.SchedulingInformationCollection;
 import org.ossmeter.repository.model.WorkerNode;
 
 import com.mongodb.Mongo;
@@ -39,11 +40,14 @@ public class MasterService implements IMasterService {
 		mongo = new Mongo(); //FIXME: should use replica set / conf
 		platform = new Platform(mongo);
 	
-		SchedulingInformation schedulingInformation = platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().first();
-		if (schedulingInformation == null) {
-			schedulingInformation = new SchedulingInformation();
-			platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().add(schedulingInformation);
+		SchedulingInformationCollection schedCol = platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation();
+		
+		if (schedCol == null || schedCol.size() ==0) {
+			SchedulingInformation schedulingInformation = new SchedulingInformation();
+			schedCol.add(schedulingInformation);
+			
 		}
+		SchedulingInformation schedulingInformation = schedCol.first();
 		schedulingInformation.setMasterNodeIdentifier(InetAddress.getLocalHost().getHostAddress());
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 		
@@ -90,7 +94,7 @@ public class MasterService implements IMasterService {
 								if (wn == null) {
 									wn = new WorkerNode();
 									wn.setIdentifier(worker.getIdentifier());
-									 platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().first().getNodes().add(wn);
+									platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().first().getNodes().add(wn);
 								}
 								wn.getCurrentLoad().clear();
 								wn.getCurrentLoad().addAll(projects);
