@@ -44,6 +44,10 @@ public class ProjectExecutor implements Runnable {
 	}
 	
 	protected void initialiseProjectLocalStorage (Project project) {
+		if (project.getExecutionInformation() == null) {
+			project.setExecutionInformation(new ProjectExecutionInformation());
+		}
+		
 		try{	
 			Path projectLocalStoragePath = Paths.get(platform.getLocalStorageHomeDirectory().toString(), project.getName());		
 			if (Files.notExists(projectLocalStoragePath)) {
@@ -68,9 +72,6 @@ public class ProjectExecutor implements Runnable {
 		initialiseProjectLocalStorage(project);
 		
 		// Clear any open flags
-		if (project.getExecutionInformation() == null) {
-			project.setExecutionInformation(new ProjectExecutionInformation());
-		}
 		project.getExecutionInformation().setInErrorState(false);
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 		
