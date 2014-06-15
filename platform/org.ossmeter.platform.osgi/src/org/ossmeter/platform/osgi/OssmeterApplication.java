@@ -6,7 +6,6 @@ import java.util.Dictionary;
 import java.util.List;
 import java.util.Properties;
 
-import org.eclipse.ecf.osgi.services.distribution.IDistributionConstants;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.osgi.framework.ServiceReference;
@@ -64,9 +63,9 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 		
 		// Advertise as being a worker
 		Dictionary props = new Properties();
-		props.put(IDistributionConstants.SERVICE_EXPORTED_INTERFACES, IDistributionConstants.SERVICE_EXPORTED_INTERFACES_WILDCARD);
-		props.put(IDistributionConstants.SERVICE_EXPORTED_CONFIGS, "ecf.generic.server");
-		props.put(IDistributionConstants.SERVICE_EXPORTED_CONTAINER_FACTORY_ARGUMENTS, "ecftcp://localhost:3788/worker");
+//		props.put(IDistributionConstants.SERVICE_EXPORTED_INTERFACES, IDistributionConstants.SERVICE_EXPORTED_INTERFACES_WILDCARD);
+//		props.put(IDistributionConstants.SERVICE_EXPORTED_CONFIGS, "ecf.generic.server");
+//		props.put(IDistributionConstants.SERVICE_EXPORTED_CONTAINER_FACTORY_ARGUMENTS, "ecftcp://localhost:3788/worker");
 		// FIXME: Understand the above: commenting out the props has no effect (at least locally - maybe a clue to network issue).
 		
 		// TODO: Pass the service any configuration details it needs
