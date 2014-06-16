@@ -1,5 +1,7 @@
 module Manager
 
+// TODO remove this file
+
 import util::ShellExec;
 import List;
 import Set;
