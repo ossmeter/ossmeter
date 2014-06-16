@@ -27,7 +27,7 @@ public class RascalMetrics extends PongoDB {
 	@Override
 	public void setDb(DB db) {
 		super.setDb(db);
-		measurements = new MeasurementCollection(db.getCollection("RascalMetrics.measurements"));
+		measurements = new MeasurementCollection(db.getCollection(collectionName));
 		pongoCollections.add(measurements);
 	}
 }
