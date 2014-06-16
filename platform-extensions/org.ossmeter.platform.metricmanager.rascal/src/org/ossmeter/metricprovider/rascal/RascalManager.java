@@ -8,7 +8,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,51 +46,6 @@ public class RascalManager {
 	}
 
 	public static final String MODULE = "org::ossmeter::metricprovider::Manager";
-
-	/**
-	 * This code is taken from
-	 * http://wiki.eclipse.org/BundleProxyClassLoader_recipe
-	 */
-	private static class BundleClassLoader extends ClassLoader {
-		private Bundle bundle;
-		private ClassLoader parent;
-
-		public BundleClassLoader(Bundle bundle) {
-			this.bundle = bundle;
-		}
-
-		@Override
-		public Enumeration<URL> getResources(String name) throws IOException {
-			return bundle.getResources(name);
-		}
-
-		@Override
-		public URL findResource(String name) {
-			return bundle.getResource(name);
-		}
-
-		@Override
-		public Class<?> findClass(String name) throws ClassNotFoundException {
-			return bundle.loadClass(name);
-		}
-
-		@Override
-		public URL getResource(String name) {
-			return (parent == null) ? findResource(name) : super
-					.getResource(name);
-		}
-
-		@Override
-		protected Class<?> loadClass(String name, boolean resolve)
-				throws ClassNotFoundException {
-			Class<?> clazz = (parent == null) ? findClass(name) : super
-					.loadClass(name, false);
-			if (resolve)
-				super.resolveClass(clazz);
-
-			return clazz;
-		}
-	}
 
 	public void configureRascalMetricProviders(Set<Bundle> providers) {
 		assert eval != null;
