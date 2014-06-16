@@ -1,4 +1,4 @@
-module Main
+module Generic
 
 extend Extractors;
  
@@ -8,31 +8,37 @@ void setBlackListedExtensions(set[str] extensions) {
 	  blackListedExtensions += extensions;
 	}
 
-@extractor{generic()}
-M3 genericM3(loc file) {
+@extractor{}
+rel[Language, loc, M3] genericM3(loc project, set[loc] files) {
   //if (file.extension in blackListedExtensions) {
   //}
-  m = m3(file);
+  rel[Language, loc, M3] result = {};
+  for (file <- files) {
   
-  m@declarations = { };
-  m@uses = { };
-  m@containment = { };
-  m@documentation = { };
-  m@modifiers = { };
-  m@messages = [ ];
-  m@names = { };
-  m@types = { };
-  
-  try {
-    content = readFile(file);
-    chs = size(content);
-    lines = chs == 0 ? 1 : (1 | it + 1 | /\n/ := content);
-    lastline = size(readFileLines(file)[-1]);
-    m@declarations = { <file[scheme="m3+unit"], file(0,chs,<1,0>,<lines - 1,lastline>)> }; 
+    m = m3(file);
+    
+    m@declarations = { };
+    m@uses = { };
+    m@containment = { };
+    m@documentation = { };
+    m@modifiers = { };
+    m@messages = [ ];
+    m@names = { };
+    m@types = { };
+    
+    try {
+      content = readFile(file);
+      chs = size(content);
+      lines = chs == 0 ? 1 : (1 | it + 1 | /\n/ := content);
+      lastline = size(readFileLines(file)[-1]);
+      m@declarations = { <file[scheme="m3+unit"], file(0,chs,<1,0>,<lines - 1,lastline>)> }; 
+    }
+    catch IO(str msg) : {
+      m@messages += [error(msg, file)];
+    }
+    
+    result += { generic(), file, m };
   }
-  catch IO(str msg) : {
-    m@messages += [error(msg, file)];
-  }
   
-  return m;
+  return result;
 }
