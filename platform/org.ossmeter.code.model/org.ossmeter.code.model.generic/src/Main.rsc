@@ -1,7 +1,7 @@
 module Main
 
 extend Extractors;
-
+ 
 set[str] blackListedExtensions = {};
 
 void setBlackListedExtensions(set[str] extensions) {

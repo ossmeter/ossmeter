@@ -5,7 +5,7 @@ Description:
 
 This module facilitates extension for different kinds of M3 extractors (e.g. for different languages)  
 }
-module analysis::m3::Extractors
+module Extractors
 
 extend analysis::m3::Core;
 import util::FileSystem;
