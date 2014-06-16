@@ -28,6 +28,7 @@ import org.ossmeter.metricprovider.rascal.trans.model.Measurement;
 import org.ossmeter.metricprovider.rascal.trans.model.MeasurementCollection;
 import org.ossmeter.metricprovider.rascal.trans.model.RascalMetrics;
 import org.ossmeter.metricprovider.rascal.trans.model.RealMeasurement;
+import org.ossmeter.metricprovider.rascal.trans.model.SetMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.StringMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.URIMeasurement;
 import org.ossmeter.platform.IMetricProvider;
@@ -327,17 +328,21 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 			@Override
 			public Void visitList(IList o) throws RuntimeException {
 				ListMeasurement m = new ListMeasurement();
+				final MeasurementCollection col = m.getValue();
 				
 				for (IValue val : o) {
-					convert(measurements, loc, val);
+					convert(col, loc, val);
 				}
 				return null;
 			}
 			
 			@Override
 			public Void visitSet(ISet o) throws RuntimeException {
+				SetMeasurement m = new SetMeasurement();
+				final MeasurementCollection col = m.getValue();
+				
 				for (IValue val : o) {
-					convert(measurements, loc, val);
+					convert(col, loc, val);
 				}
 				return null;
 			}

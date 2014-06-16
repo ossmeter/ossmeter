@@ -1,34 +1,29 @@
 package org.ossmeter.metricprovider.rascal.trans.model;
 
-import com.mongodb.*;
-import java.util.*;
-import com.googlecode.pongo.runtime.*;
-import com.googlecode.pongo.runtime.querying.*;
+import com.googlecode.pongo.runtime.PongoDB;
+import com.mongodb.DB;
 
-
-public class SetMeasurement extends Measurement {
+public class SetMeasurement extends PongoDB {
 	
-	protected List<Measurement> value = null;
+	public SetMeasurement() {}
 	
-	
-	public SetMeasurement() { 
-		super();
-		dbObject.put("value", new BasicDBList());
-		super.setSuperTypes("org.ossmeter.metricprovider.rascal.trans.model.Measurement");
-		URI.setOwningType("org.ossmeter.metricprovider.rascal.trans.model.SetMeasurement");
+	public SetMeasurement(DB db) {
+		setDb(db);
 	}
 	
-	public static StringQueryProducer URI = new StringQueryProducer("uri"); 
+	protected MeasurementCollection value = null;
 	
 	
 	
-	
-	public List<Measurement> getValue() {
-		if (value == null) {
-			value = new PongoList<Measurement>(this, "value", true);
-		}
+	public MeasurementCollection getValue() {
 		return value;
 	}
 	
 	
+	@Override
+	public void setDb(DB db) {
+		super.setDb(db);
+		value = new MeasurementCollection(db.getCollection("SetMeasurement.value"));
+		pongoCollections.add(value);
+	}
 }
