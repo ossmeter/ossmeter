@@ -5,7 +5,7 @@ Description:
 
 This module facilitates extension for different kinds of M3 extractors (e.g. for different languages)  
 }
-module Extractors
+module analysis::m3::Extractors
 
 extend analysis::m3::Core;
 import util::FileSystem;
@@ -23,31 +23,31 @@ data \AST(loc file = |unknown:///|)
 alias M3Extractor = set[M3] (loc project, set[loc] files);
 alias ASTExtractor = set[\AST] (loc project, set[loc] files);
 
-private rel[Language, M3Extractor] M3Registry = {};
-private rel[Language, ASTExtractor] ASTRegistry = {};
+private set[M3Extractor] M3Registry = {};
+private set[ASTExtractor] ASTRegistry = {};
 
-void registerExtractor(Language language, M3Extractor extractor) {
-  M3Registry += {<language, extractor>};
+void registerExtractor(M3Extractor extractor) {
+  M3Registry += extractor;
 }
 
-void registerExtractor(Language language, ASTExtractor extractor) {
-  ASTRegistry += {<language, extractor>};
+void registerExtractor(ASTExtractor extractor) {
+  ASTRegistry += extractor;
 }
 
-rel[Language, M3] extractM3(loc project) = extractM3(project, {project});
-rel[Language, \AST] extractAST(loc project) = extractAST(project, {project});
+rel[Language, loc, M3] extractM3(loc project) = extractM3(project, {project});
+rel[Language, loc, \AST] extractAST(loc project) = extractAST(project, {project});
 
 @doc{
 Synopsis: runs all extractors on a project to return one M3 model per file in the project
 }
-rel[Language, M3] extractM3(loc project, set[loc] roots) {
+rel[Language, loc, M3] extractM3(loc project, set[loc] roots) {
   allFiles = { *files(r) | r <- roots };
   
-  return {<e<0>, f> |  e<-M3Registry, f <- e<1>(project, allFiles)}; 
+  return { *extractor(project, allFiles) | extractor <- M3Registry }; 
 }
 
-rel[Language, \AST] extractAST(loc project, set[loc] roots) {
+rel[Language, loc, \AST] extractAST(loc project, set[loc] roots) {
   allFiles = { *files(r) | r <- roots };
   
-  return {<e<0>, f> |  e<-ASTRegistry, f <- e<1>(project, allFiles)}; 
+  return { *extractor(project, allFiles) | extractor <- ASTRegistry }; 
 }
