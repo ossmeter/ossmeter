@@ -278,7 +278,8 @@ public class RascalManager {
 				if (f.hasTag("extractor")) {
 					// note this has a side effect storing the extractor in a
 					// Rascal global variable.
-					eval.call("registerExtractor", f);
+//					eval.call("registerExtractor", f);
+					eval.eval(new NullRascalMonitor(),"registerExtractor(" + f.getName() + ");" , module.getLocation().getURI());
 				}
 			}
 		}
