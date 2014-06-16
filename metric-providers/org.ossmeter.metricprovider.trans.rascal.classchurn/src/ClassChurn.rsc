@@ -7,7 +7,8 @@ import Set;
 @metric{classChurn}
 @doc{classChurn}
 @friendlyName{classChurn}
-int getClassChurn(ProjectDelta delta, map[str, loc] workingCopyFolders, map[str, loc] scratchFolders) {
+@appliesTo{java()}
+int getClassChurn(ProjectDelta delta = \empty()) {
   int churnCount = 0;
   visit(classChurn) {
     case classContentChanged(loc changedClass, set[loc] changedContent): churnCount += size(changedContent);
