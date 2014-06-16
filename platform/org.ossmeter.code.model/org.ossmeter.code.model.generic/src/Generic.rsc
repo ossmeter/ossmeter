@@ -15,16 +15,7 @@ rel[Language, loc, M3] genericM3(loc project, set[loc] files) {
   rel[Language, loc, M3] result = {};
   for (file <- files) {
   
-    m = m3(file);
-    
-    m@declarations = { };
-    m@uses = { };
-    m@containment = { };
-    m@documentation = { };
-    m@modifiers = { };
-    m@messages = [ ];
-    m@names = { };
-    m@types = { };
+    m = emptyM3(file);
     
     try {
       content = readFile(file);
