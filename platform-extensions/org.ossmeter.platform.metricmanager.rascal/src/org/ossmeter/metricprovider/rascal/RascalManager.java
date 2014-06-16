@@ -3,7 +3,6 @@ package org.ossmeter.metricprovider.rascal;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;

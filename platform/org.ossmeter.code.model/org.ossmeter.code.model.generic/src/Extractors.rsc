@@ -27,7 +27,7 @@ private set[M3Extractor] M3Registry = {};
 private set[ASTExtractor] ASTRegistry = {};
 
 void registerExtractor(M3Extractor extractor) {
-  M3Registry += extractor;
+  M3Registry += {extractor};
 }
 
 void registerExtractor(ASTExtractor extractor) {
