@@ -298,24 +298,20 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 						((StringMeasurement) measurement).setValue(((IString) currentEntry.getValue()).getValue());
 					}
 					measurement.setUri(key);
-					measurement.setDate(delta.getDate().toString());
 					db.getMeasurements().add(measurement);
 				}
 			}
 		} else if (result.getType().isReal()) {
 			StringMeasurement measurement = new StringMeasurement();
 			measurement.setValue(((IReal) result).getStringRepresentation());
-			measurement.setDate(delta.getDate().toString());
 			db.getMeasurements().add(measurement);
 		} else if (result.getType().isList()) {
 			StringMeasurement measurement = new StringMeasurement();
 			measurement.setValue(((IList) result).toString());
-			measurement.setDate(delta.getDate().toString());
 			db.getMeasurements().add(measurement);
 		} else if (result.getType().isInteger()) {
 			IntegerMeasurement measurement = new IntegerMeasurement();
 			measurement.setValue(((IInteger) result).longValue());
-			measurement.setDate(delta.getDate().toString());
 			db.getMeasurements().add(measurement);
 		}
 
