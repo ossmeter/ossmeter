@@ -6,26 +6,26 @@ import com.googlecode.pongo.runtime.*;
 import com.googlecode.pongo.runtime.querying.*;
 
 
-public class BooleanMeasurement extends Measurement {
+public class URIMeasurement extends Measurement {
 	
 	
 	
-	public BooleanMeasurement() { 
+	public URIMeasurement() { 
 		super();
 		super.setSuperTypes("org.ossmeter.metricprovider.rascal.trans.model.Measurement");
-		URI.setOwningType("org.ossmeter.metricprovider.rascal.trans.model.BooleanMeasurement");
-		VALUE.setOwningType("org.ossmeter.metricprovider.rascal.trans.model.BooleanMeasurement");
+		URI.setOwningType("org.ossmeter.metricprovider.rascal.trans.model.URIMeasurement");
+		VALUE.setOwningType("org.ossmeter.metricprovider.rascal.trans.model.URIMeasurement");
 	}
 	
 	public static StringQueryProducer URI = new StringQueryProducer("uri"); 
 	public static StringQueryProducer VALUE = new StringQueryProducer("value"); 
 	
 	
-	public boolean getValue() {
-		return parseBoolean(dbObject.get("value")+"", false);
+	public String getValue() {
+		return parseString(dbObject.get("value")+"", "");
 	}
 	
-	public BooleanMeasurement setValue(boolean value) {
+	public URIMeasurement setValue(String value) {
 		dbObject.put("value", value);
 		notifyChanged();
 		return this;

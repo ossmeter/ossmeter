@@ -1,6 +1,5 @@
 module NOM
 
-import lang::java::m3::Core;
 import List;
 import String;
 import Map;
