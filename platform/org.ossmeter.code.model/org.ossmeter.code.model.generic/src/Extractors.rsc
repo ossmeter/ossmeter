@@ -8,17 +8,9 @@ This module facilitates extension for different kinds of M3 extractors (e.g. for
 module Extractors
 
 extend analysis::m3::Core;
+import analysis::m3::AST;
 import util::FileSystem;
 import String;
-
-data Language(str version = "")
-  = generic()
-  ;
-  
-data \AST(loc file = |unknown:///|)
-  = \genericAST(str contents)
-  | noAST(Message msg)
-  ;
 
 alias M3Extractor = rel[Language, loc, M3] (loc project, set[loc] files);
 alias ASTExtractor = rel[Language, loc, \AST] (loc project, set[loc] files);
