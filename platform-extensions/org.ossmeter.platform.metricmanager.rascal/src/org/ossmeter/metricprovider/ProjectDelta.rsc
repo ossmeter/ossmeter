@@ -10,7 +10,7 @@ data Project
   ;
   
 data VcsRepository
-  = vcsRepository(str url)
+  = vcsRepository(loc url)
   ;
   
 data VcsRepositoryDelta
