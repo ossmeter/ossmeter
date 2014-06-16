@@ -8,7 +8,8 @@ import IO;
 @metric{committersoverfile}
 @doc{Calculates the gini coefficient of committeroverfile}
 @friendlyName{committersoverfile}
-real giniCommittersOverFile(ProjectDelta delta, map[str, loc] workingCopyFolders, map[str, loc] scratchFolders) {
+@appliesTo{generic()}
+real giniCommittersOverFile(ProjectDelta delta = \empty()) {
   rel[str, str] filesCommitters = {< commitItem.path, vcC.author > | /VcsCommit vcC <- delta, commitItem <- vcC.items};
 
   committersOverFile = distribution(filesCommitters<1,0>);

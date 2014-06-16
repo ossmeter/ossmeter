@@ -6,7 +6,8 @@ import org::ossmeter::metricprovider::ProjectDelta;
 @metric{churnPerFile}
 @doc{Count churn}
 @friendlyName{Counts number of lines added and deleted per file}
-map[str file, str churn] churnPerFile(ProjectDelta delta, map[str, loc] workingCopyFolders, map[str, loc] scratchFolders)
+@appliesTo{generic()}
+map[str file, str churn] churnPerFile(ProjectDelta delta = \empty())
   = (co.path : churn(co) | /VcsCommitItem co := delta)
   ;
   
