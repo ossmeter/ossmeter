@@ -237,7 +237,13 @@ public class RascalManager {
           
           ICallableValue overloadedFunc = (ICallableValue) module.getVariable(f.getName()).getValue();
           // TODO: friendly feedback in case of missing tags
-          providers.add(new RascalMetricProvider(metricId, funcName, friendlyName, description, overloadedFunc));
+          RascalMetricProvider transientMetric = new RascalMetricProvider(metricId, funcName, friendlyName, description, overloadedFunc);
+          providers.add(transientMetric);
+          
+//          if (f.hasTag("historic")) {
+//        	  // now we also story the results historically
+//        	  providers.add(new RascalMetricHistoryWrapper(transientMetric));
+//          }
         }
       }
     }
