@@ -14,12 +14,10 @@ public class RealMeasurement extends Measurement {
 		super();
 		super.setSuperTypes("org.ossmeter.metricprovider.rascal.trans.model.Measurement");
 		URI.setOwningType("org.ossmeter.metricprovider.rascal.trans.model.RealMeasurement");
-		DATE.setOwningType("org.ossmeter.metricprovider.rascal.trans.model.RealMeasurement");
 		VALUE.setOwningType("org.ossmeter.metricprovider.rascal.trans.model.RealMeasurement");
 	}
 	
 	public static StringQueryProducer URI = new StringQueryProducer("uri"); 
-	public static StringQueryProducer DATE = new StringQueryProducer("date"); 
 	public static NumericalQueryProducer VALUE = new NumericalQueryProducer("value");
 	
 	

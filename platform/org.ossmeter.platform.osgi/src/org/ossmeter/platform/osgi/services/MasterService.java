@@ -74,7 +74,7 @@ public class MasterService implements IMasterService {
 							worker = nextFreeWorker();
 							if (worker == null) {
 								try {
-									logger.info("No workers available. Sleeping.");
+//									logger.info("No workers available. Sleeping.");
 									Thread.sleep(1000);
 								} catch (InterruptedException e) {
 									e.printStackTrace();
