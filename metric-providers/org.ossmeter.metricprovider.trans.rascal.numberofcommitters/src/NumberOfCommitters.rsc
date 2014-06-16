@@ -8,14 +8,14 @@ import Set;
 @metric{NumberOfCommittersperFile}
 @doc{Count the number of committers that have touced a file}
 @friendlyName{Number of Committers per file}
-map[str file, int numberOfCommitters] countCommittersPerFile(ProjectDelta delta, map[loc, loc] workingCopyFolders, map[loc, loc] scratchFolders) {
-  map[str, set[str]] result = committersPerFile(delta, workingCopyFolders, scratchFolders);
-  
-  return (key : size(result[key]) | key <- result);
+@appliesTo{generic()}
+map[loc file, int numberOfCommitters] countCommittersPerFile(ProjectDelta delta = \empty()) {
+	commPerFile = committersPerFile(delta);
+	return (f : size(commPerFile[f]) | f <- commPerFile);
 }
 
-map[str, set[str]] committersPerFile(ProjectDelta delta, map[loc, loc] workingCopyFolders, map[loc, loc] scratchFolders) {
-  map[str file, set[str] committers] result = ();
+map[loc, set[str]] committersPerFile(ProjectDelta delta) {
+  map[loc file, set[str] committers] result = ();
   set[str] emptySet = {};
   for (/VcsCommit vc <- delta, vc.author != "null") {
     for (VcsCommitItem vci <- vc.items) {

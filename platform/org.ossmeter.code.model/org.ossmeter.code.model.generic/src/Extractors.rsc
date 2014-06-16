@@ -20,8 +20,8 @@ data \AST(loc file = |unknown:///|)
   | noAST(Message msg)
   ;
 
-alias M3Extractor = set[M3] (loc project, set[loc] files);
-alias ASTExtractor = set[\AST] (loc project, set[loc] files);
+alias M3Extractor = rel[Language, loc, M3] (loc project, set[loc] files);
+alias ASTExtractor = rel[Language, loc, \AST] (loc project, set[loc] files);
 
 private set[M3Extractor] M3Registry = {};
 private set[ASTExtractor] ASTRegistry = {};

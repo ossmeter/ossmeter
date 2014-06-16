@@ -15,59 +15,47 @@ import analysis::statistics::Inference;
 import org::ossmeter::metricprovider::Manager;
 import org::ossmeter::metricprovider::ProjectDelta;
 
+
 @metric{WMC}
 @doc{Compute your WMC}
 @friendlyName{Weighted Method Count}
-map[str class, num wmcCount] getWMC(ProjectDelta delta, map[str, loc] workingCopyFolders, map[str, loc] scratchFolders) {
-  map[str class, num wmcCount] result = ();
-  map[str, list[str]] changedItemsPerRepo = getChangedItemsPerRepository(delta);
-  
-  for (str repo <- changedItemsPerRepo) {
-    list[str] changedItems = changedItemsPerRepo[repo];
-    loc workingCopyFolder = workingCopyFolders[repo];
-    loc scratchFolder = scratchFolders[repo];
-    
-    for (str changedItem <- changedItems) {
-      if (exists(workingCopyFolder+changedItem)) {
-        loc scratchFile = scratchFolder+changedItem;
-        M3 itemM3 = readBinaryValueFile(#M3, scratchFile[extension = scratchFile.extension+".m3"]);
-        if (!(unknownFileType(_) := itemM3)) {
-          result += (replaceAll(replaceFirst(cl.path, "/", ""), "/", ".") : sum([getCC(m, itemM3.ast) | m <- itemM3.model@containment[cl], isMethod(m)]) | <cl, _> <- itemM3.model@containment, isClass(cl));
-        }
-      }
-    }
-  }
-  
-  return result;
+@appliesTo{java()}
+map[loc class, num wmcCount] getWMC(
+	ProjectDelta delta = \empty(),
+	map[str, loc] workingCopyFolders = (),
+	rel[Language, loc, M3] m3s = (),
+	rel[Language, loc, AST] asts = ())
+{
+	map[loc class, num wmcCount] result = ();
+	changed = getChangedFilesInWorkingCopyFolders(delta, workingCopyFolders);
+	
+	for (file <- changed, m3 <- m3s[java(), file], ast <- asts[java(), file])
+	{
+		result += (cl : sum([getCC(m, ast) | m <- m3@containment[cl], isMethod(m)]) | <cl, _> <- m3@containment, isClass(cl));
+	}
+	 
+	return result;
 }
-
-map[str class, num wmcCount] getWMC(unknownFileType(int lines)) = ("": -1);
-map[str class, int cc] getCC(unknownFileType(int lines)) = ("" : -1);
 
 @metric{CC}
 @doc{Compute your McCabe}
 @friendlyName{McCabe's Cyclomatic Complexity Metric}
-map[str method, int cc] getCC(ProjectDelta delta, map[str, loc] workingCopyFolders, map[str, loc] scratchFolders) {
-  map[str method, int cc] result = ();
-  map[str, list[str]] changedItemsPerRepo = getChangedItemsPerRepository(delta);
-  
-  for (str repo <- changedItemsPerRepo) {
-    list[str] changedItems = changedItemsPerRepo[repo];
-    loc workingCopyFolder = workingCopyFolders[repo];
-    loc scratchFolder = scratchFolders[repo];
-    
-    for (str changedItem <- changedItems) {
-      if (exists(workingCopyFolder+changedItem)) {
-        loc scratchFile = scratchFolder+changedItem;
-        M3 itemM3 = readBinaryValueFile(#M3, scratchFile[extension = scratchFile.extension+".m3"]);
-        if (!(unknownFileType(_) := itemM3)) {
-          result += (replaceAll(replaceFirst(m.path, "/", ""), "/", ".") : getCC(m, itemM3.ast) | <cl, _> <- itemM3.model@containment, isClass(cl), m <- itemM3.model@containment[cl], isMethod(m));
-        }
-      }
-    }
-  }
-  
-  return result;
+@appliesTo{java()}
+map[loc method, int cc] getCC(
+	ProjectDelta delta = \empty(),
+	map[str, loc] workingCopyFolders = (),
+	rel[Language, loc, M3] m3s = (),
+	rel[Language, loc, AST] asts = ())
+{
+	map[loc method, int cc] result = ();
+	changed = getChangedFilesInWorkingCopyFolders(delta, workingCopyFolders);
+
+	for (file <- changed, m3 <- m3s[java(), file], ast <- asts[java(), file])
+	{
+		result += (m : getCC(m, ast) | <cl, m> <- m3@containment, isClass(cl), isMethod(m));
+	}
+
+	return result;
 }
 
 Declaration getASTOfMethod(loc methodLoc, Declaration fileAST) {
@@ -104,8 +92,14 @@ int getCC(loc m, Declaration ast) {
 @metric{ccovermethods}
 @doc{Calculates the gini coefficient of cc over methods}
 @friendlyName{ccovermethods}
-real giniCCOverMethods(ProjectDelta delta, map[str, loc] workingCopyFolders, map[str, loc] scratchFolders) {
-  map[str, int] ccMap = getCC(delta, workingCopyFolders, scratchFolders);
+@appliesTo{java()}
+real giniCCOverMethods(
+	ProjectDelta delta = \empty(),
+	map[str, loc] workingCopyFolders = (),
+	rel[Language, loc, M3] m3s = (),
+	rel[Language, loc, AST] asts = ())
+{
+  map[loc, int] ccMap = getCC(delta=delta, workingCopyFolders=workingCopyFolders, m3s=m3s, asts=asts);
   
   distCCOverMethods = distribution(ccMap);
   

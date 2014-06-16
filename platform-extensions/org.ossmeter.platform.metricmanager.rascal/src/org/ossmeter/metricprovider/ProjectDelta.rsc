@@ -22,7 +22,7 @@ data VcsCommit
   ;
   
 data VcsCommitItem
-  = vcsCommitItem(str path, VcsChangeType changeType, list[Churn] churns)
+  = vcsCommitItem(str path, VcsChangeType changeType, list[Churn] churns) // TODO path as loc?
   ;
   
 data VcsChangeType
@@ -56,4 +56,12 @@ set[VcsCommitItem] checkSanity(list[VcsCommitItem] items) {
     }
   }
   return result;
+}
+
+list[loc] getChangedFilesInWorkingCopyFolders(ProjectDelta delta, map[str, loc] workingCopyFolders)
+{
+  list[loc] result = [];
+  map[str, list[str]] changedItemsPerRepo = getChangedItemsPerRepository(delta);
+  
+  return [workingCopyFolders[repo] + item | repo <- changedItemsPerRepo, item <- changedItemsPerRepo[repo]];
 }
