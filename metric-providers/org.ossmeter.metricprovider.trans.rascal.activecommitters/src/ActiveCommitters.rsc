@@ -40,10 +40,10 @@ list[str] activeCommitters(ProjectDelta delta = \empty()) {
   return [author | numActivity <- activityCount, author <- comparator[numActivity]];
 }
 
-// @metric{numberofactivecommitters}
+@metric{numberofactivecommitters}
 @doc{numbrofactivecommitters}
 @friendlyName{numberofactivecommitters}
-@uses{(org.ossmeter.metricprovider.activecommitters.activeCommitters:activeCommitersData)}
+@uses{("org.ossmeter.metricprovider.activecommitters.activeCommitters":"activeCommitersData")}
 int numberOfActiveCommitters(ProjectDelta delta = \empty()) {
   return size(activeCommitters(delta=delta));
 }

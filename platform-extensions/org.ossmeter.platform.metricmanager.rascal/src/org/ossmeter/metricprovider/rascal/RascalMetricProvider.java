@@ -8,18 +8,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.lang.model.type.TypeVisitor;
+
 import org.eclipse.imp.pdb.facts.IConstructor;
 import org.eclipse.imp.pdb.facts.IInteger;
 import org.eclipse.imp.pdb.facts.IList;
 import org.eclipse.imp.pdb.facts.IMap;
 import org.eclipse.imp.pdb.facts.IReal;
+import org.eclipse.imp.pdb.facts.ISet;
+import org.eclipse.imp.pdb.facts.ISourceLocation;
 import org.eclipse.imp.pdb.facts.IString;
 import org.eclipse.imp.pdb.facts.IValue;
+import org.eclipse.imp.pdb.facts.type.ITypeVisitor;
 import org.eclipse.imp.pdb.facts.type.Type;
+import org.eclipse.imp.pdb.facts.visitors.NullVisitor;
 import org.ossmeter.metricprovider.rascal.trans.model.IntegerMeasurement;
+import org.ossmeter.metricprovider.rascal.trans.model.ListMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.Measurement;
+import org.ossmeter.metricprovider.rascal.trans.model.MeasurementCollection;
 import org.ossmeter.metricprovider.rascal.trans.model.RascalMetrics;
+import org.ossmeter.metricprovider.rascal.trans.model.RealMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.StringMeasurement;
+import org.ossmeter.metricprovider.rascal.trans.model.URIMeasurement;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.ITransientMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
@@ -33,7 +43,6 @@ import org.ossmeter.platform.vcs.workingcopy.manager.WorkingCopyManagerUnavailab
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.VcsRepository;
 import org.rascalmpl.interpreter.env.KeywordParameter;
-import org.rascalmpl.interpreter.result.AbstractFunction;
 import org.rascalmpl.interpreter.result.ICallableValue;
 import org.rascalmpl.interpreter.result.OverloadedFunction;
 import org.rascalmpl.interpreter.result.RascalFunction;
@@ -108,19 +117,6 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		}
 		
 		return false;
-
-		// TODO while the function parameter types don't know about kwparams, we have to assume they need everything.
-		// this is being fixed in Rascal on a branch already and should be mainstream soon.
-
-		//		Type type = function.getType();
-		//		
-		//		if (type instanceof OverloadedFunctionType) {
-		//			OverloadedFunctionType of = (OverloadedFunctionType) type;
-		//			assert of.getAlternatives().size() == 1;
-		//			type = of.getAlternatives().iterator().next();
-		//		}
-		//		
-		//		return ((FunctionType) type).getArgumentTypes().hasField(param);
 	}
 
 	@Override
@@ -275,51 +271,77 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		return cachedAsts;
 	}
 
-	private void storeResult(ProjectDelta delta, RascalMetrics db, IValue result) {
-		if (result.getType().isMap()) {
-			for (Iterator<Entry<IValue, IValue>> it = ((IMap)result).entryIterator(); it.hasNext(); ) {
-				Entry<IValue, IValue> currentEntry = (Entry<IValue, IValue>) it.next();
-				// TODO: change to source locations
-				String key = ((IString) currentEntry.getKey()).getValue();
-
-				if (!key.isEmpty()) {
-					Measurement measurement = null;
-					// for cc need to delete all methods for this file
-
-					// TODO: dispatch on return type
-					if (currentEntry.getValue().getType().isInteger()) {
-						measurement = new IntegerMeasurement();
-						((IntegerMeasurement) measurement).setValue(((IInteger) currentEntry.getValue()).longValue());
-					} else if (currentEntry.getValue().getType().isList()) {
-						measurement = new StringMeasurement();
-						((StringMeasurement) measurement).setValue(((IList) currentEntry.getValue()).toString());
-					} else {
-						measurement = new StringMeasurement();
-						((StringMeasurement) measurement).setValue(((IString) currentEntry.getValue()).getValue());
-					}
-					measurement.setUri(key);
-					measurement.setDate(delta.getDate().toString());
-					db.getMeasurements().add(measurement);
-				}
-			}
-		} else if (result.getType().isReal()) {
-			StringMeasurement measurement = new StringMeasurement();
-			measurement.setValue(((IReal) result).getStringRepresentation());
-			measurement.setDate(delta.getDate().toString());
-			db.getMeasurements().add(measurement);
-		} else if (result.getType().isList()) {
-			StringMeasurement measurement = new StringMeasurement();
-			measurement.setValue(((IList) result).toString());
-			measurement.setDate(delta.getDate().toString());
-			db.getMeasurements().add(measurement);
-		} else if (result.getType().isInteger()) {
-			IntegerMeasurement measurement = new IntegerMeasurement();
-			measurement.setValue(((IInteger) result).longValue());
-			measurement.setDate(delta.getDate().toString());
-			db.getMeasurements().add(measurement);
-		}
-
+	private void storeResult(ProjectDelta delta, RascalMetrics db, IValue result, RascalManager _instance) {
+		convert(db.getMeasurements(), _instance.makeProjectLoc(delta.getProject()), result);
 		db.sync();
+	}
+	
+	private void convert(final MeasurementCollection measurements, final ISourceLocation loc, IValue result) {
+		result.accept(new NullVisitor<Void,RuntimeException>() {
+			@Override
+			public Void visitInteger(IInteger o) throws RuntimeException {
+				IntegerMeasurement m = new IntegerMeasurement();
+				m.setUri(loc.getURI().toString());
+				m.setValue(o.longValue());
+				measurements.add(m);
+				return null;
+			}
+			
+			@Override
+			public Void visitString(IString o) throws RuntimeException {
+				StringMeasurement m = new StringMeasurement();
+				m.setUri(loc.getURI().toString());
+				m.setValue(o.getValue());
+				measurements.add(m);
+				return null;
+			}
+			
+			@Override
+			public Void visitReal(IReal o) throws RuntimeException {
+				RealMeasurement m = new RealMeasurement();
+				m.setUri(loc.getURI().toString());
+				m.setValue((float) o.doubleValue());
+				measurements.add(m);
+				return null;
+			}
+			
+			@Override
+			public Void visitSourceLocation(ISourceLocation o) {
+				URIMeasurement m = new URIMeasurement();
+				m.setUri(loc.getURI().toString());
+				m.setValue(o.getURI().toString());
+				measurements.add(m);
+				return null;
+			}
+			
+			@Override
+			public Void visitMap(IMap o) throws RuntimeException {
+				for (Iterator<Entry<IValue, IValue>> it = o.entryIterator(); it.hasNext(); ) {
+					Entry<IValue, IValue> currentEntry = (Entry<IValue, IValue>) it.next();
+					ISourceLocation key = (ISourceLocation) currentEntry.getKey();
+					convert(measurements, key, currentEntry.getValue());
+				}
+				return null;
+			}
+
+			@Override
+			public Void visitList(IList o) throws RuntimeException {
+				ListMeasurement m = new ListMeasurement();
+				
+				for (IValue val : o) {
+					convert(measurements, loc, val);
+				}
+				return null;
+			}
+			
+			@Override
+			public Void visitSet(ISet o) throws RuntimeException {
+				for (IValue val : o) {
+					convert(measurements, loc, val);
+				}
+				return null;
+			}
+		});
 	}
 
 	private IConstructor computeDelta(Project project, ProjectDelta delta,
