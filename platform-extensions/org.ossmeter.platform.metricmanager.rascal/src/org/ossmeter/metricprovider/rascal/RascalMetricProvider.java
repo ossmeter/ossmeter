@@ -13,7 +13,6 @@ import org.eclipse.imp.pdb.facts.IInteger;
 import org.eclipse.imp.pdb.facts.IList;
 import org.eclipse.imp.pdb.facts.IMap;
 import org.eclipse.imp.pdb.facts.IReal;
-import org.eclipse.imp.pdb.facts.ISetWriter;
 import org.eclipse.imp.pdb.facts.IString;
 import org.eclipse.imp.pdb.facts.IValue;
 import org.eclipse.imp.pdb.facts.type.Type;
@@ -33,10 +32,12 @@ import org.ossmeter.platform.vcs.workingcopy.manager.WorkingCopyFactory;
 import org.ossmeter.platform.vcs.workingcopy.manager.WorkingCopyManagerUnavailable;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.VcsRepository;
+import org.rascalmpl.interpreter.env.KeywordParameter;
+import org.rascalmpl.interpreter.result.AbstractFunction;
 import org.rascalmpl.interpreter.result.ICallableValue;
+import org.rascalmpl.interpreter.result.OverloadedFunction;
 import org.rascalmpl.interpreter.result.RascalFunction;
 import org.rascalmpl.interpreter.result.Result;
-import org.rascalmpl.uri.URIUtil;
 
 import com.mongodb.DB;
 
@@ -90,7 +91,23 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 	}
 
 	private boolean hasParameter(String param) {
-		return true;
+		ICallableValue f = function;
+		
+		if (f instanceof OverloadedFunction) {
+			f = ((OverloadedFunction) f).getFunctions().get(0);
+		}
+		
+		assert f instanceof RascalFunction;
+		
+		RascalFunction rf = (RascalFunction) f;
+		
+		for (KeywordParameter p : rf.getKeywordParameterDefaults()) {
+			if (p.getName().equals(param)) {
+				return true;
+			}
+		}
+		
+		return false;
 
 		// TODO while the function parameter types don't know about kwparams, we have to assume they need everything.
 		// this is being fixed in Rascal on a branch already and should be mainstream soon.
