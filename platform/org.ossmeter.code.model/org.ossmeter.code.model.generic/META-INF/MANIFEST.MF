@@ -4,3 +4,4 @@ Bundle-Name: Generic
 Bundle-SymbolicName: org.ossmeter.code.model.generic;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.ossmeter.metricprovider.rascal;bundle-version="0.0.1"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

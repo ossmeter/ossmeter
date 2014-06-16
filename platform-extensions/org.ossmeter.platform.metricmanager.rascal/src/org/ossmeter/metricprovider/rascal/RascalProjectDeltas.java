@@ -42,6 +42,10 @@ public class RascalProjectDeltas {
 	store.extendStore(eval.getHeap().getModule(MODULE).getStore());
   }
 
+  public IConstructor emptyDelta() {
+	  return createConstructor("ProjectDelta", "projectDelta");
+  }
+  
   public IConstructor convert(final ProjectDelta delta, Map<VcsCommit, List<Churn>> churnPerCommit) {
 	List<IValue> children = new ArrayList<>();
 	this.churns = churnPerCommit;
