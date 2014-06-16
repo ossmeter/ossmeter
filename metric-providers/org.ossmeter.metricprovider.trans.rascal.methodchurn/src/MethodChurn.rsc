@@ -7,7 +7,8 @@ import Set;
 @metric{methodChurn}
 @doc{methodChurn}
 @friendlyName{methodChurn}
-int getMethodChurn(ProjectDelta delta, map[str, loc] workingCopyFolders, map[str, loc] scratchFolders) {
+@appliesTo{java()}
+int getMethodChurn(ProjectDelta delta = \empty()) {
   int churnCount = 0;
   visit(methodChurn) {
     case unchanged(loc locator): churnCount += 0; 
