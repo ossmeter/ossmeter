@@ -17,7 +17,7 @@ import analysis::statistics::Inference;
 @doc{loc}
 @friendlyName{loc}
 @appliesTo{generic()}
-map[loc, int] countLoc(rel[Location, loc, M3] m3s = {}) {
+map[loc, int] countLoc(rel[Language, loc, M3] m3s = {}) {
   return (f:f.end.line | <_, m3> <- m3s[generic()], f <- range(m3@declarations));
 }
 
@@ -25,7 +25,7 @@ map[loc, int] countLoc(rel[Location, loc, M3] m3s = {}) {
 @doc{locoverfiles}
 @friendlyName{locoverfiles}
 @appliesTo{generic()}
-real giniLOCOverFiles(rel[Location, loc, M3] m3s = {}) {
+real giniLOCOverFiles(rel[Language, loc, M3] m3s = {}) {
   map[loc, int] locMap = countLoc(m3s=m3s);
     
   distLOCOverFiles = distribution(locMap);  

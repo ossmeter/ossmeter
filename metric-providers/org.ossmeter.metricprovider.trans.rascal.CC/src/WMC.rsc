@@ -21,7 +21,7 @@ import org::ossmeter::metricprovider::ProjectDelta;
 @friendlyName{Weighted Method Count}
 @appliesTo{java()}
 map[loc class, num wmcCount] getWMC(
-	ProjectDelta delta = \empty(),
+	ProjectDelta delta = ProjectDelta::\empty(),
 	map[str, loc] workingCopyFolders = (),
 	rel[Language, loc, M3] m3s = (),
 	rel[Language, loc, AST] asts = ())
