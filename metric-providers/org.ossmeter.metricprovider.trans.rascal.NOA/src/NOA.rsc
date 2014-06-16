@@ -20,9 +20,9 @@ map[loc class, int nom] getNOA(M3 m3) {
 @friendlyName{Number of attributes}
 @appliesTo{java()}
 map[loc class, int noa] NOA(
-	ProjectDelta delta = \empty(),
+	ProjectDelta delta = ProjectDelta::\empty(),
 	map[str, loc] workingCopyFolders = (),
-	rel[Language, loc, M3] m3s = ())
+	rel[Language, loc, M3] m3s = {})
 {
 	map[loc class, int noa] result = ();
 	changed = getChangedFilesInWorkingCopyFolders(delta, workingCopyFolders);

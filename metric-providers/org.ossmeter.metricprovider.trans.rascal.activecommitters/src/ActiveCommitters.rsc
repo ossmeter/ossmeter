@@ -15,7 +15,7 @@ import String;
 @doc{activeCommitters}
 @friendlyName{activeCommitters}
 @appliesTo{generic()}
-list[str] activeCommitters(ProjectDelta delta = \empty()) {
+str activeCommitters(ProjectDelta delta = \empty()) {
 
 	// TODO once we have metric dependencies, don't store intermediate results on disk, but use a separate metric for it
 
@@ -37,7 +37,7 @@ list[str] activeCommitters(ProjectDelta delta = \empty()) {
   list[int] activityCount = reverse(sort(range(dist)));
   map[int, set[str]] comparator = invert(dist);
   
-  return [author | numActivity <- activityCount, author <- comparator[numActivity]];
+  return "<[author | numActivity <- activityCount, author <- comparator[numActivity]]>";
 }
 
 @metric{numberofactivecommitters}

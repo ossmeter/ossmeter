@@ -23,8 +23,8 @@ import org::ossmeter::metricprovider::ProjectDelta;
 map[loc class, num wmcCount] getWMC(
 	ProjectDelta delta = ProjectDelta::\empty(),
 	map[str, loc] workingCopyFolders = (),
-	rel[Language, loc, M3] m3s = (),
-	rel[Language, loc, AST] asts = ())
+	rel[Language, loc, M3] m3s = {},
+	rel[Language, loc, AST] asts = {})
 {
 	map[loc class, num wmcCount] result = ();
 	changed = getChangedFilesInWorkingCopyFolders(delta, workingCopyFolders);
@@ -42,10 +42,10 @@ map[loc class, num wmcCount] getWMC(
 @friendlyName{McCabe's Cyclomatic Complexity Metric}
 @appliesTo{java()}
 map[loc method, int cc] getCC(
-	ProjectDelta delta = \empty(),
+	ProjectDelta delta = ProjectDelta::\empty(),
 	map[str, loc] workingCopyFolders = (),
-	rel[Language, loc, M3] m3s = (),
-	rel[Language, loc, AST] asts = ())
+	rel[Language, loc, M3] m3s = {},
+	rel[Language, loc, AST] asts = {})
 {
 	map[loc method, int cc] result = ();
 	changed = getChangedFilesInWorkingCopyFolders(delta, workingCopyFolders);
@@ -94,10 +94,10 @@ int getCC(loc m, Declaration ast) {
 @friendlyName{ccovermethods}
 @appliesTo{java()}
 real giniCCOverMethods(
-	ProjectDelta delta = \empty(),
+	ProjectDelta delta = ProjectDelta::\empty(),
 	map[str, loc] workingCopyFolders = (),
-	rel[Language, loc, M3] m3s = (),
-	rel[Language, loc, AST] asts = ())
+	rel[Language, loc, M3] m3s = {},
+	rel[Language, loc, AST] asts = {})
 {
   map[loc, int] ccMap = getCC(delta=delta, workingCopyFolders=workingCopyFolders, m3s=m3s, asts=asts);
   

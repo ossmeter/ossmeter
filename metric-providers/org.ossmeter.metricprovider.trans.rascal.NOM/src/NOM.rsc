@@ -22,7 +22,7 @@ map[loc class, int nom] getNOM(M3 m3) {
 map[loc class, int nom] NOM(
 	ProjectDelta delta = \empty(),
 	map[str, loc] workingCopyFolders = (),
-	rel[Language, loc, M3] m3s = ())
+	rel[Language, loc, M3] m3s = {})
 {
 	map[loc class, int nom] result = ();
 	changed = getChangedFilesInWorkingCopyFolders(delta, workingCopyFolders);

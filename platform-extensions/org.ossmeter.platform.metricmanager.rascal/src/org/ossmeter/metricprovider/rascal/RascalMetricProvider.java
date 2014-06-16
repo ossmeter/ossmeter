@@ -400,7 +400,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		assert !workingCopyFolders.isEmpty();
 
 		if (cachedM3 == null) {
-			cachedM3 = function.getEval().call("extractM3", man.makeMap(workingCopyFolders));
+			cachedM3 = function.getEval().call("extractM3", man.makeProjectLoc(project), man.makeMap(workingCopyFolders));
 		}
 
 		return cachedM3;

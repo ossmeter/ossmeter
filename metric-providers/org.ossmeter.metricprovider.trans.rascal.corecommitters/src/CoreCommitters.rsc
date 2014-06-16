@@ -15,7 +15,7 @@ import List;
 @friendlyName{Core committers}
 @appliesTo{generic()}
 list[str] coreCommitters(ProjectDelta delta = \empty()) {
-  map[str author, int churn] committerChurn = churnPerCommitter(delta);
+  map[str author, int churn] committerChurn = churnPerCommitter(delta=delta);
   map[str author, int churn] olderResult = ();
   
   loc coreCommittersHistory = |home:///ossmeter/<delta.project.name>/corecommitters.am3|; // TODO remove cache, use helper metric instead 
