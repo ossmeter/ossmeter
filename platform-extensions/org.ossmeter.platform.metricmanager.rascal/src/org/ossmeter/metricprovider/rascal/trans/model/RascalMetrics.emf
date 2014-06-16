@@ -37,7 +37,6 @@ class SetMeasurement extends Measurement {
 	val Measurement[*] value;
 }
 
-@db(qualifiedCollectionNames="true")
 class URIMeasurement extends Measurement {
 	attr String value;
 }
