@@ -274,17 +274,12 @@ public class RascalManager {
 		ModuleEnvironment module = eval.getHeap().getModule(moduleName);
 
 		for (Pair<String, List<AbstractFunction>> func : module.getFunctions()) {
-			final String funcName = func.getFirst();
-
 			for (final AbstractFunction f : func.getSecond()) {
 				// TODO: add some type checking on the arguments
 				if (f.hasTag("extractor")) {
-					String language = f.getTag("extractor");
 					// note this has a side effect storing the extractor in a
 					// Rascal global variable.
-					eval.eval(new NullRascalMonitor(), "registerExtractor("
-							+ language + "," + funcName + ")",
-							URI.create("tmp:///tmp.tmp"));
+					eval.call("registerExtractor", f);
 				}
 			}
 		}
