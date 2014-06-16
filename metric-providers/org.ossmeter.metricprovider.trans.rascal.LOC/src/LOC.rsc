@@ -13,68 +13,35 @@ import org::ossmeter::metricprovider::ProjectDelta;
 import analysis::statistics::Frequency;
 import analysis::statistics::Inference;
 
-alias locResult = tuple[int total, int comment, int empty, int source];
-
 @metric{loc}
 @doc{loc}
 @friendlyName{loc}
-map[str, int] countLoc(ProjectDelta delta, map[str, loc] workingCopyFolders, map[str, loc] scratchFolders) {
-  map[str file, int lines] result = ();
-  map[str, list[str]] changedItemsPerRepo = getChangedItemsPerRepository(delta);
-  
-  for (str repo <- changedItemsPerRepo) {
-    list[str] changedItems = changedItemsPerRepo[repo];
-    loc workingCopyFolder = workingCopyFolders[repo];
-    loc scratchFolder = scratchFolders[repo];
-    
-    for (str changedItem <- changedItems) {
-      if (exists(workingCopyFolder+changedItem)) {
-        loc scratchFile = scratchFolder+changedItem;
-        M3 itemM3 = readBinaryValueFile(#M3, scratchFile[extension = scratchFile.extension+".m3"]);
-        if ((unknownFileType(int i) := itemM3)) {
-          result[changedItem] = i;
-        } else {
-          result[changedItem] = itemM3.total;
-        }
-      }
-    }
-  }
-  
-  return result;
+@appliesTo{generic()}
+map[loc, int] countLoc(rel[Location, loc, M3] m3s = {}) {
+  return (f:f.end.line | <_, m3> <- m3s[generic()], f <- range(m3@declarations));
 }
 
 @metric{locoverfiles}
 @doc{locoverfiles}
 @friendlyName{locoverfiles}
-real giniLOCOverFiles(ProjectDelta delta, map[str, loc] workingCopyFolders, map[str, loc] scratchFolders) {
-  map[str, int] locMap = countLoc(delta, workingCopyFolders, scratchFolders);
+@appliesTo{generic()}
+real giniLOCOverFiles(rel[Location, loc, M3] m3s = {}) {
+  map[loc, int] locMap = countLoc(m3s=m3s);
+    
+  distLOCOverFiles = distribution(locMap);  
   
-  distLOCOverMethods = distribution(locMap);
-  
-  return gini([<0,0>]+[<x, distLOCOverMethods[x]> | x <- distLOCOverMethods]);
+  return gini([<0,0>]+[<x, distLOCOverFiles[x]> | x <- distLOCOverFiles]);
 }
 
 @metric{locoverclass}
 @doc{locoverclass}
 @friendlyName{locoverclass}
-real giniLOCOverClass(ProjectDelta delta, map[str, loc] workingCopyFolders, map[str, loc] scratchFolders) {
-  map[str class, int lines] result = ();
-  map[str, list[str]] changedItemsPerRepo = getChangedItemsPerRepository(delta);
-  
-  for (str repo <- changedItemsPerRepo) {
-    list[str] changedItems = changedItemsPerRepo[repo];
-    loc workingCopyFolder = workingCopyFolders[repo];
-    loc scratchFolder = scratchFolders[repo];
-    
-    for (str changedItem <- changedItems) {
-      if (exists(workingCopyFolder+changedItem)) {
-        loc scratchFile = scratchFolder+changedItem;
-        M3 itemM3 = readBinaryValueFile(#M3, scratchFile[extension = scratchFile.extension+".m3"]);
-        if (!(unknownFileType(_) := itemM3)) {
-          result += (lc.path : sc.end.line - sc.begin.line + 1 | <lc, sc> <- itemM3.model@declarations, isInterface(lc) || isClass(lc) || lc.scheme == "java+enum");
-        }
-      }
-    }
+@appliesTo{java()}
+real giniLOCOverClass(rel[Language, loc, M3] m3s = {}) {
+  map[loc class, int lines] result = ();
+
+  for (<_, m3> <- m3s[java()]) {
+    result += (lc : sc.end.line - sc.begin.line + 1 | <lc, sc> <- m3@declarations, isInterface(lc) || isClass(lc) || lc.scheme == "java+enum");
   }
   
   distLOCOverClass = distribution(result);
