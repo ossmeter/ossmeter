@@ -5,7 +5,6 @@ import java.util.*;
 import com.mongodb.*;
 
 public class MeasurementCollection extends PongoCollection<Measurement> {
-	
 	public MeasurementCollection(DBCollection dbCollection) {
 		super(dbCollection);
 		createIndex("uri");

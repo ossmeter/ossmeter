@@ -5,6 +5,7 @@ import String;
 import Map;
 import ValueIO;
 import IO;
+import analysis::m3::Core;
 import org::ossmeter::metricprovider::Manager;
 import org::ossmeter::metricprovider::ProjectDelta;
 

@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.lang.model.type.TypeVisitor;
-
 import org.eclipse.imp.pdb.facts.IConstructor;
 import org.eclipse.imp.pdb.facts.IInteger;
 import org.eclipse.imp.pdb.facts.IList;
@@ -19,7 +17,6 @@ import org.eclipse.imp.pdb.facts.ISet;
 import org.eclipse.imp.pdb.facts.ISourceLocation;
 import org.eclipse.imp.pdb.facts.IString;
 import org.eclipse.imp.pdb.facts.IValue;
-import org.eclipse.imp.pdb.facts.type.ITypeVisitor;
 import org.eclipse.imp.pdb.facts.type.Type;
 import org.eclipse.imp.pdb.facts.visitors.NullVisitor;
 import org.ossmeter.metricprovider.rascal.trans.model.IntegerMeasurement;
@@ -49,6 +46,7 @@ import org.rascalmpl.interpreter.result.OverloadedFunction;
 import org.rascalmpl.interpreter.result.RascalFunction;
 import org.rascalmpl.interpreter.result.Result;
 
+import com.googlecode.pongo.runtime.Pongo;
 import com.mongodb.DB;
 
 public class RascalMetricProvider implements ITransientMetricProvider<RascalMetrics> {
@@ -172,7 +170,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 	@Override
 	public void measure(Project project, ProjectDelta delta, RascalMetrics db) {
 		try {
-			RascalManager _instance = RascalManager.getInstance();
+			RascalManager manager = RascalManager.getInstance();
 			List<VcsRepositoryDelta> repoDeltas = delta.getVcsDelta().getRepoDeltas();
 			Map<String, IValue> params = new HashMap<>();
 
@@ -190,40 +188,38 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 					rascalDelta = null;
 				}
 
-
-
 				if (needsScratch || needsWc || needsM3 || needsAsts || needsDelta) {
 					if (workingCopyFolders.isEmpty() || scratchFolders.isEmpty()) {
-						computeFolders(project, delta, _instance, workingCopyFolders, scratchFolders);
+						computeFolders(project, delta, manager, workingCopyFolders, scratchFolders);
 					}
 
 					if (needsWc) {
-						params.put(WORKING_COPIES_PARAM, _instance.makeMap(workingCopyFolders));
+						params.put(WORKING_COPIES_PARAM, manager.makeMap(workingCopyFolders));
 					}
 
 					if (needsScratch) {
-						params.put(SCRATCH_FOLDERS_PARAM, _instance.makeMap(scratchFolders));
+						params.put(SCRATCH_FOLDERS_PARAM, manager.makeMap(scratchFolders));
 					}
 				}
 
 				if (needsDelta) {
-					params.put(DELTA_PARAM, computeDelta(project, delta, _instance));
+					params.put(DELTA_PARAM, computeDelta(project, delta, manager));
 				}
 
 				if (needsAsts) {
-					params.put(ASTS_PARAM, computeAsts(project, delta, _instance));
+					params.put(ASTS_PARAM, computeAsts(project, delta, manager));
 				}
 
 				if (needsM3) {
-					params.put(M3S_PARAM, computeM3(project, delta, _instance));
+					params.put(M3S_PARAM, computeM3(project, delta, manager));
 				}
 
 				if (needsHistory) {
-					params.put(HISTORY_PARAM, computeHistory(project, delta, _instance));
+					params.put(HISTORY_PARAM, computeHistory(project, delta, manager));
 				}
 
 				if (needsPrevious) {
-					params.put(PREVIOUS_PARAM, computePrevious(project, delta, _instance));
+					params.put(PREVIOUS_PARAM, computePrevious(project, db, delta, manager));
 				}
 			}
 
@@ -231,16 +227,14 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 
 			lastRevision = getLastRevision(delta);
 
-			storeResult(delta, db, result.getValue());
+			storeResult(delta, db, result.getValue(), manager);
 		} catch (WorkingCopyManagerUnavailable | WorkingCopyCheckoutException  e) {
 			Rasctivator.logException("unexpected exception while measuring " + getIdentifier(), e);
 		}
 	}
 
-	private IValue computePrevious(Project project, ProjectDelta delta,
-			RascalManager _instance) {
-		// TODO
-		throw new UnsupportedOperationException();
+	private IValue computePrevious(Project project, RascalMetrics db, ProjectDelta delta, RascalManager man) {
+		return convertBack(db, man);
 	}
 
 	private IValue computeHistory(Project project, ProjectDelta delta,
@@ -273,8 +267,17 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 	}
 
 	private void storeResult(ProjectDelta delta, RascalMetrics db, IValue result, RascalManager _instance) {
-		convert(db.getMeasurements(), _instance.makeProjectLoc(delta.getProject()), result);
+		// TODO: instead save the current state and do a diff later for optimal communication with the db.
+		MeasurementCollection ms = db.getMeasurements();
+		for (Measurement m : ms) {
+			ms.remove(m);
+		}
+		convert(ms, _instance.makeProjectLoc(delta.getProject()), result);
 		db.sync();
+	}
+	
+	private IValue convertBack(RascalMetrics m, RascalManager man) {
+		return man.toValue(m);
 	}
 	
 	private void convert(final MeasurementCollection measurements, final ISourceLocation loc, IValue result) {

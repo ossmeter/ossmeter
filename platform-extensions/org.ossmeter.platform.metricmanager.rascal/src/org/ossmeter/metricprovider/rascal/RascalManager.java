@@ -25,6 +25,13 @@ import org.eclipse.imp.pdb.facts.IValueFactory;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.wiring.BundleWire;
 import org.osgi.framework.wiring.BundleWiring;
+import org.ossmeter.metricprovider.rascal.trans.model.BooleanMeasurement;
+import org.ossmeter.metricprovider.rascal.trans.model.IntegerMeasurement;
+import org.ossmeter.metricprovider.rascal.trans.model.Measurement;
+import org.ossmeter.metricprovider.rascal.trans.model.RascalMetrics;
+import org.ossmeter.metricprovider.rascal.trans.model.RealMeasurement;
+import org.ossmeter.metricprovider.rascal.trans.model.StringMeasurement;
+import org.ossmeter.metricprovider.rascal.trans.model.URIMeasurement;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.repository.model.Project;
 import org.rascalmpl.interpreter.Evaluator;
@@ -35,6 +42,7 @@ import org.rascalmpl.interpreter.env.Pair;
 import org.rascalmpl.interpreter.load.StandardLibraryContributor;
 import org.rascalmpl.interpreter.result.AbstractFunction;
 import org.rascalmpl.interpreter.result.ICallableValue;
+import org.rascalmpl.interpreter.staticErrors.StaticError;
 import org.rascalmpl.uri.URIUtil;
 import org.rascalmpl.values.ValueFactoryFactory;
 
@@ -292,5 +300,55 @@ public class RascalManager {
 			Rasctivator.logException("unexpected URI problem", e);
 			return VF.sourceLocation(URIUtil.rootScheme("error"));
 		}
+	}
+	
+	public IValue toValue(RascalMetrics m) {
+		IMapWriter w = VF.mapWriter();
+		
+		for (Measurement e : m.getMeasurements()) {
+			w.put(VF.sourceLocation(URIUtil.assumeCorrect(e.getUri())), toValue(e));
+		}
+		
+		return w.done();
+	}
+
+	private IValue toValue(Measurement e) {
+		if (e instanceof IntegerMeasurement) {
+			return toIntValue((IntegerMeasurement) e);
+		}
+		else if (e instanceof RealMeasurement) {
+			return toRealValue((RealMeasurement) e);
+		}
+		else if (e instanceof StringMeasurement) {
+			return toStringValue((StringMeasurement) e);
+		}
+		else if (e instanceof URIMeasurement) {
+			return toURIValue((URIMeasurement) e);
+		}
+		else if (e instanceof BooleanMeasurement) {
+			return toBoolValue((BooleanMeasurement) e);
+		}
+		
+		throw new IllegalArgumentException(e.toString());
+	}
+
+	private IValue toBoolValue(BooleanMeasurement e) {
+		return VF.bool(e.getValue());
+	}
+
+	private IValue toURIValue(URIMeasurement e) {
+		return VF.sourceLocation(URIUtil.assumeCorrect(e.getValue()));
+	}
+
+	private IValue toStringValue(StringMeasurement e) {
+		return VF.string(e.getValue());
+	}
+
+	private IValue toRealValue(RealMeasurement e) {
+		return VF.real(e.getValue());
+	}
+
+	private IValue toIntValue(IntegerMeasurement e) {
+		return VF.integer(e.getValue());
 	}
 }
