@@ -26,6 +26,7 @@ int initialize(ProjectDelta currentDelta, map[str, loc] workingCopyFolders, map[
   if (currentDelta == previousDelta) {
     return 1;
   }
+  
   methodChurn = {};
   classChurn = {};
   fieldChurn = {};

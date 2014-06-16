@@ -18,12 +18,15 @@ import java.util.Set;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.imp.pdb.facts.IMap;
 import org.eclipse.imp.pdb.facts.IMapWriter;
+import org.eclipse.imp.pdb.facts.ISet;
+import org.eclipse.imp.pdb.facts.ISetWriter;
 import org.eclipse.imp.pdb.facts.IValue;
 import org.eclipse.imp.pdb.facts.IValueFactory;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.wiring.BundleWire;
 import org.osgi.framework.wiring.BundleWiring;
 import org.ossmeter.platform.IMetricProvider;
+import org.ossmeter.repository.model.Project;
 import org.rascalmpl.interpreter.Evaluator;
 import org.rascalmpl.interpreter.NullRascalMonitor;
 import org.rascalmpl.interpreter.env.GlobalEnvironment;
@@ -32,6 +35,7 @@ import org.rascalmpl.interpreter.env.Pair;
 import org.rascalmpl.interpreter.load.StandardLibraryContributor;
 import org.rascalmpl.interpreter.result.AbstractFunction;
 import org.rascalmpl.interpreter.result.ICallableValue;
+import org.rascalmpl.uri.URIUtil;
 import org.rascalmpl.values.ValueFactoryFactory;
 
 public class RascalManager {
@@ -247,6 +251,16 @@ public class RascalManager {
 
 		return result.done();
 	}
+	
+	public ISet makeLocSet(Map<String, File> foldersMap) {
+		ISetWriter result = VF.setWriter();
+
+		for (Entry<String, File> entry : foldersMap.entrySet()) {
+			result.insert(VF.sourceLocation(entry.getValue().getAbsolutePath()));
+		}
+
+		return result.done();
+	}
 
 	public void registerExtractor(Bundle bundle) {
 		configureRascalPath(eval, bundle);
@@ -273,6 +287,15 @@ public class RascalManager {
 							URI.create("tmp:///tmp.tmp"));
 				}
 			}
+		}
+	}
+
+	public IValue makeProjectLoc(Project project) {
+		try {
+			return VF.sourceLocation(URIUtil.create("project", project.getName(),""));
+		} catch (URISyntaxException e) {
+			Rasctivator.logException("unexpected URI problem", e);
+			return VF.sourceLocation(URIUtil.rootScheme("error"));
 		}
 	}
 }
