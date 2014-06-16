@@ -24,14 +24,22 @@ public class Rasctivator implements BundleActivator {
 		IExtensionPoint extensionPoint = Platform.getExtensionRegistry()
         .getExtensionPoint("ossmeter.rascal.metricprovider");
                    
-    if (extensionPoint == null) {
-      return; // this may happen when nobody extends this point.
+    if (extensionPoint != null) {
+    	for (IExtension element : extensionPoint.getExtensions()) {
+	      String name = element.getContributor().getName();
+	      Bundle bundle = Platform.getBundle(name);
+	      RascalManager.getInstance().registerRascalMetricProvider(bundle);
+	    }
     }
     
-    for (IExtension element : extensionPoint.getExtensions()) {
-      String name = element.getContributor().getName();
-      Bundle bundle = Platform.getBundle(name);
-      RascalManager.getInstance().registerRascalMetricProvider(bundle);
+    extensionPoint = Platform.getExtensionRegistry().getExtensionPoint("ossmeter.rascal.extractor");
+    
+    if (extensionPoint != null) {
+    	for (IExtension element : extensionPoint.getExtensions()) {
+    		String name = element.getContributor().getName();
+    		Bundle bundle = Platform.getBundle(name);
+    		RascalManager.getInstance().registerExtractor(bundle);
+    	}
     }
     
 	}

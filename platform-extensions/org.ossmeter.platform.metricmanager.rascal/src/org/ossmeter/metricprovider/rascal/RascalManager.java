@@ -3,6 +3,7 @@ package org.ossmeter.metricprovider.rascal;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -97,7 +98,7 @@ public class RascalManager {
 	  assert eval != null;
 	  
 		for (Bundle provider : providers) {
-		  configureRascalMetricProvider(eval, provider);
+		  configureRascalPath(eval, provider);
 		}
 	}
 	
@@ -125,7 +126,7 @@ public class RascalManager {
 	  return eval;
   }
 
-  private void configureRascalMetricProvider(Evaluator evaluator, Bundle bundle) {
+  private void configureRascalPath(Evaluator evaluator, Bundle bundle) {
     try {
       List<String> roots = new RascalBundleManifest().getSourceRoots(bundle);
 
@@ -135,8 +136,6 @@ public class RascalManager {
 
       evaluator.addClassLoader(new BundleClassLoader(bundle));
       configureClassPath(bundle, evaluator);
-      
-      metricBundles.add(bundle);
     }
     catch (Throwable e) {
        Rasctivator.logException("failed to configure metrics bundle " + bundle, e);
@@ -211,7 +210,8 @@ public class RascalManager {
 	}
 
   public void registerRascalMetricProvider(Bundle bundle) {
-    configureRascalMetricProvider(eval, bundle);
+    configureRascalPath(eval, bundle);
+    metricBundles.add(bundle);
   }
 
   private void addMetricProviders(Bundle bundle, List<IMetricProvider> providers) {
@@ -266,5 +266,29 @@ public class RascalManager {
 	}
 	
 	return result.done();
+  }
+
+  public void registerExtractor(Bundle bundle) {
+	  configureRascalPath(eval, bundle);
+	  RascalBundleManifest mf = new RascalBundleManifest();
+	  String moduleName = mf.getMainModule(bundle);
+	    
+	  if (!eval.getHeap().existsModule(moduleName)) {
+	    importModule(moduleName);
+	  }
+	    
+	  ModuleEnvironment module = eval.getHeap().getModule(moduleName);
+	    
+	  for (Pair<String, List<AbstractFunction>> func : module.getFunctions()) {
+	    final String funcName = func.getFirst();
+	      
+	    for (final AbstractFunction f : func.getSecond()) {
+	      // TODO: add some type checking on the arguments
+	      if (f.hasTag("extractor")) {
+	        String language = f.getTag("extractor");
+	        eval.eval(new NullRascalMonitor(), "registerExtractor(" + language + "," + funcName + ")", URI.create("file:///tmp/tmp.tmp"));
+	      }
+	    }
+	  }
   }
 }
