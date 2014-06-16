@@ -15,7 +15,7 @@ import String;
 @doc{activeCommitters}
 @friendlyName{activeCommitters}
 @appliesTo{generic()}
-str activeCommitters(ProjectDelta delta = \empty()) {
+list[str] activeCommitters(ProjectDelta delta = \empty()) {
 
 	// TODO once we have metric dependencies, don't store intermediate results on disk, but use a separate metric for it
 
@@ -37,13 +37,13 @@ str activeCommitters(ProjectDelta delta = \empty()) {
   list[int] activityCount = reverse(sort(range(dist)));
   map[int, set[str]] comparator = invert(dist);
   
-  return intercalate(", ", [author | numActivity <- activityCount, author <- comparator[numActivity]]);
+  return [author | numActivity <- activityCount, author <- comparator[numActivity]];
 }
 
-@metric{numberofactivecommitters}
+// @metric{numberofactivecommitters}
 @doc{numbrofactivecommitters}
 @friendlyName{numberofactivecommitters}
 @uses{(org.ossmeter.metricprovider.activecommitters.activeCommitters:activeCommitersData)}
-int numberOfActiveCommitters(str activeCommitersData = "") {
-  return size(split(",", activeCommitersData));
+int numberOfActiveCommitters(ProjectDelta delta = \empty()) {
+  return size(activeCommitters(delta=delta));
 }

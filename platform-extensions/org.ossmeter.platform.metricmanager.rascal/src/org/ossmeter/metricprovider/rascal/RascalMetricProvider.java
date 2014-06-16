@@ -34,6 +34,7 @@ import org.ossmeter.platform.vcs.workingcopy.manager.WorkingCopyManagerUnavailab
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.VcsRepository;
 import org.rascalmpl.interpreter.result.ICallableValue;
+import org.rascalmpl.interpreter.result.RascalFunction;
 import org.rascalmpl.interpreter.result.Result;
 import org.rascalmpl.uri.URIUtil;
 
@@ -84,6 +85,8 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		this.needsPrevious = hasParameter(PREVIOUS_PARAM);
 		this.needsWc = hasParameter(WORKING_COPIES_PARAM);
 		this.needsScratch = hasParameter(SCRATCH_FOLDERS_PARAM);
+		
+		assert function instanceof RascalFunction;
 	}
 
 	private boolean hasParameter(String param) {
