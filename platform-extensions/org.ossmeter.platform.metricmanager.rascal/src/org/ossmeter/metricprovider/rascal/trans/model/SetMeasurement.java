@@ -1,7 +1,7 @@
 package org.ossmeter.metricprovider.rascal.trans.model;
 
-import com.googlecode.pongo.runtime.PongoDB;
-import com.mongodb.DB;
+import com.googlecode.pongo.runtime.*;
+import com.mongodb.*;
 
 public class SetMeasurement extends PongoDB {
 	
