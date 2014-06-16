@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Rascal Metric Provider Definition
 Bundle-SymbolicName: org.ossmeter.metricprovider.rascal;singleton:=true
-Bundle-Version: 0.0.0.qualifier
+Bundle-Version: 0.0.1.qualifier
 Bundle-Activator: org.ossmeter.metricprovider.rascal.Rasctivator
 Bundle-Vendor: OSSMETER
 Require-Bundle: org.eclipse.core.runtime,
@@ -10,10 +10,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.repository.model,
  com.googlecode.pongo.runtime,
  org.ossmeter.platform.vcs.svn,
- rascal,
- org.eclipse.imp.pdb.values,
  org.eclipse.osgi,
- org.ossmeter.platform.vcs.workingcopy.manager
+ org.ossmeter.platform.vcs.workingcopy.manager,
+ rascal4ossmeter
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: org.ossmeter.metricprovider.rascal
