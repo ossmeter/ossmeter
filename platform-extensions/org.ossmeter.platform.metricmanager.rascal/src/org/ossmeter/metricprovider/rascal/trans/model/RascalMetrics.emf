@@ -27,10 +27,12 @@ class StringMeasurement extends Measurement {
     attr String value;
 }
 
+@db(qualifiedCollectionNames="true")
 class ListMeasurement extends Measurement {
 	val Measurement[*] value;
 }
 
+@db(qualifiedCollectionNames="true")
 class SetMeasurement extends Measurement {
 	val Measurement[*] value;
 }

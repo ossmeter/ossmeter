@@ -19,6 +19,7 @@ import org.eclipse.imp.pdb.facts.IMap;
 import org.eclipse.imp.pdb.facts.IMapWriter;
 import org.eclipse.imp.pdb.facts.ISet;
 import org.eclipse.imp.pdb.facts.ISetWriter;
+import org.eclipse.imp.pdb.facts.ISourceLocation;
 import org.eclipse.imp.pdb.facts.IValue;
 import org.eclipse.imp.pdb.facts.IValueFactory;
 import org.osgi.framework.Bundle;
@@ -278,14 +279,13 @@ public class RascalManager {
 				if (f.hasTag("extractor")) {
 					// note this has a side effect storing the extractor in a
 					// Rascal global variable.
-//					eval.call("registerExtractor", f);
 					eval.eval(new NullRascalMonitor(),"registerExtractor(" + f.getName() + ");" , module.getLocation().getURI());
 				}
 			}
 		}
 	}
 
-	public IValue makeProjectLoc(Project project) {
+	public ISourceLocation makeProjectLoc(Project project) {
 		try {
 			return VF.sourceLocation(URIUtil.create("project", project.getName(),""));
 		} catch (URISyntaxException e) {

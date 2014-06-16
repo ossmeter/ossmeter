@@ -34,9 +34,15 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ListMeasurement" eSuperTypes="//Measurement">
+    <eAnnotations source="db">
+      <details key="qualifiedCollectionNames" value="true"/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="value" upperBound="-1" eType="//Measurement" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SetMeasurement" eSuperTypes="//Measurement">
+    <eAnnotations source="db">
+      <details key="qualifiedCollectionNames" value="true"/>
+    </eAnnotations>
     <eStructuralFeatures xsi:type="ecore:EReference" name="value" upperBound="-1" eType="//Measurement" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="URIMeasurement" eSuperTypes="//Measurement">
