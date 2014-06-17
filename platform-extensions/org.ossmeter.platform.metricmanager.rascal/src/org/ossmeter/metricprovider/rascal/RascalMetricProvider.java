@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.log4j.Priority;
 import org.eclipse.imp.pdb.facts.IConstructor;
 import org.eclipse.imp.pdb.facts.IInteger;
 import org.eclipse.imp.pdb.facts.IList;
@@ -42,7 +41,6 @@ import org.ossmeter.platform.vcs.workingcopy.manager.WorkingCopyFactory;
 import org.ossmeter.platform.vcs.workingcopy.manager.WorkingCopyManagerUnavailable;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.VcsRepository;
-import org.rascalmpl.interpreter.control_exceptions.ControlException;
 import org.rascalmpl.interpreter.control_exceptions.MatchFailed;
 import org.rascalmpl.interpreter.env.KeywordParameter;
 import org.rascalmpl.interpreter.result.ICallableValue;
@@ -51,7 +49,6 @@ import org.rascalmpl.interpreter.result.RascalFunction;
 import org.rascalmpl.interpreter.result.Result;
 import org.rascalmpl.interpreter.staticErrors.StaticError;
 
-import com.googlecode.pongo.runtime.Pongo;
 import com.mongodb.DB;
 
 public class RascalMetricProvider implements ITransientMetricProvider<RascalMetrics> {
