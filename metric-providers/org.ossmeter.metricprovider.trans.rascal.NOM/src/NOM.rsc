@@ -11,15 +11,21 @@ import analysis::m3::Core;
 import org::ossmeter::metricprovider::Manager;
 import org::ossmeter::metricprovider::ProjectDelta;
 
-int numberOfMethodsJava(loc cl, M3 model) = size([ m | m <- model@containment[cl], lang::java::m3::Core::isMethod(m)]);
-int numberOfMethodsPHP(loc cl, M3 model) = size([ m | m <- model@containment[cl], lang::php::m3::Core::isMethod(m)]);
 
-map[loc class, int nom] getNOMJava(M3 m3) {
-  return ( cl:numberOfMethodsJava(cl, m3) | <cl,_> <- m3@containment, lang::java::m3::Core::isClass(cl));
-}
-
-map[loc class, int nom] getNOMPHP(M3 m3) {
-  return ( cl:numberOfMethodsPHP(cl, m3) | <cl,_> <- m3@containment, lang::php::m3::Core::isClass(cl));
+map[loc class, int nom] getNOM(ProjectDelta delta, map[str, loc] workingCopyFolders, rel[loc, M3] m3s, bool(loc) isClass, bool(loc) isMethod)
+{ 
+	map[loc class, int nom] result = ();
+	changed = getChangedFilesInWorkingCopyFolders(delta, workingCopyFolders);
+	
+	for (file <- changed, m3 <- m3s[file])
+	{
+		for (<cl, m> <- m3@containment, isClass(cl), isMethod(m))
+		{
+			result[cl]?0 += 1;
+		}
+	}
+	
+	return result;
 }
 
 @metric{NOMJava}
@@ -31,15 +37,7 @@ map[loc class, int nom] NOMJava(
 	map[str, loc] workingCopyFolders = (),
 	rel[Language, loc, M3] m3s = {})
 {
-	map[loc class, int nom] result = ();
-	changed = getChangedFilesInWorkingCopyFolders(delta, workingCopyFolders);
-	
-	for (file <- changed, m3 <- m3s[java(), file])
-	{  
-		result += getNOMJava(m3);
-	}
-	
-	return result;
+	return getNOM(delta, workingCopyFolders, m3s[java()], lang::java::m3::Core::isClass, lang::java::m3::Core::isMethod);
 }
 
 @metric{NOMPHP}
@@ -51,13 +49,5 @@ map[loc class, int nom] NOMPHP(
 	map[str, loc] workingCopyFolders = (),
 	rel[Language, loc, M3] m3s = {})
 {
-	map[loc class, int nom] result = ();
-	changed = getChangedFilesInWorkingCopyFolders(delta, workingCopyFolders);
-	
-	for (file <- changed, m3 <- m3s[php(), file])
-	{  
-		result += getNOMPHP(m3);
-	}
-	
-	return result;
+	return getNOM(delta, workingCopyFolders, m3s[php()], lang::php::m3::Core::isClass, lang::php::m3::Core::isMethod);
 }

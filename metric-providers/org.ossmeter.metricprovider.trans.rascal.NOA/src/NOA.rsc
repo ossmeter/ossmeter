@@ -5,21 +5,27 @@ import lang::php::m3::Core;
 import List;
 import String;
 import Map;
-import org::ossmeter::metricprovider::Manager;
 import org::ossmeter::metricprovider::ProjectDelta;
 import IO;
 import ValueIO;
 
-int numberOfAttributesJava(loc cl, M3 model) = size([ m | m <- model@containment[cl], lang::java::m3::Core::isField(m)]);
-int numberOfAttributesPHP(loc cl, M3 model) = size([ m | m <- model@containment[cl], lang::php::m3::Core::isField(m)]);
 
-map[loc class, int nom] getNOAJava(M3 m3) {
-  return (cl:numberOfAttributesJava(cl, m3) | <cl,_> <- m3@containment, lang::java::m3::Core::isClass(cl));
+map[loc class, int noa] getNOA(ProjectDelta delta, map[str, loc] workingCopyFolders, rel[loc, M3] m3s, bool(loc) isClass, bool(loc) isAttribute)
+{ 
+	map[loc class, int noa] result = ();
+	changed = getChangedFilesInWorkingCopyFolders(delta, workingCopyFolders);
+	
+	for (file <- changed, m3 <- m3s[file])
+	{
+		for (<cl, a> <- m3@containment, isClass(cl), isAttribute(a))
+		{
+			result[cl]?0 += 1;
+		}
+	}
+	
+	return result;
 }
 
-map[loc class, int nom] getNOAPHP(M3 m3) {
-  return (cl:numberOfAttributesPHP(cl, m3) | <cl,_> <- m3@containment, lang::php::m3::Core::isClass(cl));
-}
 
 @metric{NOAJava}
 @doc{Compute the number of attributes per Java class}
@@ -30,15 +36,7 @@ map[loc class, int noa] NOAJava(
 	map[str, loc] workingCopyFolders = (),
 	rel[Language, loc, M3] m3s = {})
 {
-	map[loc class, int noa] result = ();
-	changed = getChangedFilesInWorkingCopyFolders(delta, workingCopyFolders);
-	
-	for (file <- changed, m3 <- m3s[java(), file])
-	{  
-		result += getNOAJava(m3);
-	}
-	
-	return result;
+	return getNOA(delta, workingCopyFolders, m3s[java()], lang::java::m3::Core::isClass, lang::java::m3::Core::isField);
 }
 
 @metric{NOAPHP}
@@ -50,13 +48,5 @@ map[loc class, int noa] NOAPHP(
 	map[str, loc] workingCopyFolders = (),
 	rel[Language, loc, M3] m3s = {})
 {
-	map[loc class, int noa] result = ();
-	changed = getChangedFilesInWorkingCopyFolders(delta, workingCopyFolders);
-	
-	for (file <- changed, m3 <- m3s[php(), file])
-	{  
-		result += getNOAPHP(m3);
-	}
-	
-	return result;
+	return getNOA(delta, workingCopyFolders, m3s[php()], lang::php::m3::Core::isClass, lang::php::m3::Core::isField);
 }
