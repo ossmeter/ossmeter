@@ -35,7 +35,9 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 //		if (Integer.parseInt(newsgroup.getLastArticleChecked())<134500)
 //			newsgroup.setLastArticleChecked("134500"); //137500");
 
-		int lastArticleChecked = Integer.parseInt(newsgroup.getLastArticleChecked());
+		String lac = newsgroup.getLastArticleChecked();
+		if (lac == null || lac.equals("") || lac.equals("null")) lac = "-1";
+		int lastArticleChecked = Integer.parseInt(lac);
 		if (lastArticleChecked<0) lastArticleChecked = newsgroupInfo.getFirstArticle();
 
 		CommunicationChannelDelta delta = new CommunicationChannelDelta();
