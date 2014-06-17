@@ -13,7 +13,8 @@ import DateTime;
 @metric{inactiveCommitters}
 @doc{inactiveCommitters}
 @friendlyName{inactiveCommitters}
-list[str] inactiveCommitters(ProjectDelta delta, map[str, loc] workingCopyFolders, map[str, loc] scratchFolders) {
+@appliesTo{generic()}
+list[str] inactiveCommitters(ProjectDelta delta = \empty()) {
   set[str] threeMonthsActive = {};
   set[str] activeBeforeThreeMonths = {};
   datetime today = delta.date;
@@ -45,6 +46,7 @@ list[str] inactiveCommitters(ProjectDelta delta, map[str, loc] workingCopyFolder
 @metric{numberofinactivecommitters}
 @doc{numbrofinactivecommitters}
 @friendlyName{numberofinactivecommitters}
-int numberOfInactiveCommitters(ProjectDelta delta, map[str, loc] workingCopyFolders, map[str, loc] scratchFolders) {
-  return size(inactiveCommitters(delta, workingCopyFolders, scratchFolders));
+@appliesTo{generic()}
+int numberOfInactiveCommitters(ProjectDelta delta = \empty()) {
+  return size(inactiveCommitters(delta));
 }

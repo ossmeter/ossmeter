@@ -1,7 +1,7 @@
 package org.ossmeter.metricprovider.rascal.trans.model;
 
-import com.googlecode.pongo.runtime.*;
-import com.mongodb.*;
+import com.googlecode.pongo.runtime.PongoDB;
+import com.mongodb.DB;
 // protected region custom-imports on begin
 // protected region custom-imports end
 

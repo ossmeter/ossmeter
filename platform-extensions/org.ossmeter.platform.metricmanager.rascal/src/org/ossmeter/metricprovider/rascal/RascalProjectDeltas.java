@@ -1,5 +1,6 @@
 package org.ossmeter.metricprovider.rascal;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -9,6 +10,7 @@ import org.eclipse.imp.pdb.facts.IConstructor;
 import org.eclipse.imp.pdb.facts.IDateTime;
 import org.eclipse.imp.pdb.facts.IList;
 import org.eclipse.imp.pdb.facts.IListWriter;
+import org.eclipse.imp.pdb.facts.ISourceLocation;
 import org.eclipse.imp.pdb.facts.IString;
 import org.eclipse.imp.pdb.facts.IValue;
 import org.eclipse.imp.pdb.facts.IValueFactory;
@@ -26,6 +28,7 @@ import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.VcsRepository;
 import org.rascalmpl.interpreter.Evaluator;
 import org.rascalmpl.interpreter.NullRascalMonitor;
+import org.rascalmpl.uri.URIUtil;
 import org.rascalmpl.values.ValueFactoryFactory;
 
 public class RascalProjectDeltas {
@@ -42,6 +45,10 @@ public class RascalProjectDeltas {
 	store.extendStore(eval.getHeap().getModule(MODULE).getStore());
   }
 
+  public IConstructor emptyDelta() {
+	  return createConstructor("ProjectDelta", "projectDelta");
+  }
+  
   public IConstructor convert(final ProjectDelta delta, Map<VcsCommit, List<Churn>> churnPerCommit) {
 	List<IValue> children = new ArrayList<>();
 	this.churns = churnPerCommit;
@@ -92,7 +99,7 @@ public class RascalProjectDeltas {
   }
   
   private IConstructor convert(VcsRepository repo) {
-	return values.constructor(store.lookupConstructor(store.lookupAbstractDataType("VcsRepository"), "vcsRepository", TF.tupleType(TF.stringType())), convert(repo.getUrl()));
+	return values.constructor(store.lookupConstructor(store.lookupAbstractDataType("VcsRepository"), "vcsRepository", TF.tupleType(TF.sourceLocationType())), convertToLocation(repo.getUrl()));
   }
   
   private IConstructor convert(VcsRepositoryDelta vcsRepoDelta) {
@@ -122,6 +129,18 @@ public class RascalProjectDeltas {
 	  return values.string("null");
 	}
 	return values.string(toConvert);
+  }
+  
+  private ISourceLocation convertToLocation(String url) {
+	  if (url == null) {
+		  try {
+			return values.sourceLocation("unknown", null, null, null, null);
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	  }
+	  return values.sourceLocation(URIUtil.assumeCorrect(url));
   }
   
   private IConstructor convert(VcsCommitItem commitItem) {

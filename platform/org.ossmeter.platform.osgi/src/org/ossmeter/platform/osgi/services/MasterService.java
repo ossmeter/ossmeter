@@ -45,6 +45,7 @@ public class MasterService implements IMasterService {
 		if (schedCol == null || schedCol.size() ==0) {
 			schedulingInformation = new SchedulingInformation();
 			schedCol.add(schedulingInformation);
+			platform.getProjectRepositoryManager().getProjectRepository().sync();
 		} else {
 			schedulingInformation = schedCol.first();
 		}

@@ -11,36 +11,26 @@ import ValueIO;
 
 int numberOfAttributes(loc cl, M3 model) = size([ m | m <- model@containment[cl], isField(m)]);
 
-map[str class, int nom] getNOA(M3 fileM3) {
-  return (replaceAll(replaceFirst(cl.path, "/", ""), "/", "."):numberOfAttributes(cl, fileM3.model) | <cl,_> <- fileM3.model@containment, isClass(cl));
-}
-
-map[str class, int nom] getNOA(unknownFileType(int lines)) {
-  return ("": -1);
+map[loc class, int nom] getNOA(M3 m3) {
+  return (cl:numberOfAttributes(cl, m3) | <cl,_> <- m3@containment, isClass(cl));
 }
 
 @metric{NOA}
 @doc{Compute your NOA}
 @friendlyName{Number of attributes}
-map[str class, int noa] NOA(ProjectDelta delta, map[str, loc] workingCopyFolders, map[str, loc] scratchFolders) {
-  map[str class, int noa] result = ();
-  map[str, list[str]] changedItemsPerRepo = getChangedItemsPerRepository(delta);
-  
-  for (str repo <- changedItemsPerRepo) {
-    list[str] changedItems = changedItemsPerRepo[repo];
-    loc workingCopyFolder = workingCopyFolders[repo];
-    loc scratchFolder = scratchFolders[repo];
-    
-    for (str changedItem <- changedItems) {
-      if (exists(workingCopyFolder+changedItem)) {
-        loc scratchFile = scratchFolder+changedItem;
-        M3 itemM3 = readBinaryValueFile(#M3, scratchFile[extension = scratchFile.extension+".m3"]);
-        if (!(unknownFileType(_) := itemM3)) {
-          result += (replaceAll(replaceFirst(cl.path, "/", ""), "/", "."):numberOfAttributes(cl, itemM3.model) | <cl,_> <- itemM3.model@containment, isClass(cl));
-        }
-      }
-    }
-  }
-  
-  return result;
+@appliesTo{java()}
+map[loc class, int noa] NOA(
+	ProjectDelta delta = ProjectDelta::\empty(),
+	map[str, loc] workingCopyFolders = (),
+	rel[Language, loc, M3] m3s = {})
+{
+	map[loc class, int noa] result = ();
+	changed = getChangedFilesInWorkingCopyFolders(delta, workingCopyFolders);
+	
+	for (file <- changed, m3 <- m3s[java(), file])
+	{  
+		result += getNOA(m3);
+	}
+	
+	return result;
 }

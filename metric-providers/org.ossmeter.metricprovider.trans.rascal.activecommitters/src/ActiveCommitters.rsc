@@ -14,7 +14,11 @@ import String;
 @metric{activeCommitters}
 @doc{activeCommitters}
 @friendlyName{activeCommitters}
-str activeCommitters(ProjectDelta delta, map[str, loc] workingCopyFolders, map[str, loc] scratchFolders) {
+@appliesTo{generic()}
+str activeCommitters(ProjectDelta delta = \empty()) {
+
+	// TODO once we have metric dependencies, don't store intermediate results on disk, but use a separate metric for it
+
   list[str] activeAuthors = [];
   datetime today = delta.date;
   writeBinaryValueFile(|home:///ossmeter/<delta.project.name>/activecommitters_<printDate(today.justDate, "yyyy_mm_dd")>.am3|, [ commit.author | /VcsCommit commit <- delta ]);
@@ -33,13 +37,13 @@ str activeCommitters(ProjectDelta delta, map[str, loc] workingCopyFolders, map[s
   list[int] activityCount = reverse(sort(range(dist)));
   map[int, set[str]] comparator = invert(dist);
   
-  return intercalate(", ", [author | numActivity <- activityCount, author <- comparator[numActivity]]);
+  return "<[author | numActivity <- activityCount, author <- comparator[numActivity]]>";
 }
 
 @metric{numberofactivecommitters}
 @doc{numbrofactivecommitters}
 @friendlyName{numberofactivecommitters}
-@uses{org.ossmeter.metricprovider.activecommitters.activeCommitters}
-int numberOfActiveCommitters(str metricData) {
-  return size(split(",", metricData));
+@uses{("org.ossmeter.metricprovider.activecommitters.activeCommitters":"activeCommitersData")}
+int numberOfActiveCommitters(ProjectDelta delta = \empty()) {
+  return size(activeCommitters(delta=delta));
 }

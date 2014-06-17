@@ -1,0 +1,9 @@
+package org.ossmeter.metricprovider.rascal.historic.model;
+
+import "platform:/resource/org.ossmeter.platform-extensions.platform.metricmanager.rascal/src/org/ossmeter/metricprovider/rascal/trans/model/RascalMetrics.ecore";
+
+@db(qualifiedCollectionNames="true")
+@customize
+class RascalHistoricMetrics {
+    val org.ossmeter.metricprovider.rascal.trans.model.Measurement[*] measurements;
+}

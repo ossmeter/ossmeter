@@ -9,8 +9,6 @@ class RascalMetrics {
 abstract class Measurement {
     @searchable
     attr String uri;
-    @searchable
-    attr String date; // TODO throw away
 }
 
 class IntegerMeasurement extends Measurement {
@@ -27,4 +25,18 @@ class BooleanMeasurement extends Measurement {
 
 class StringMeasurement extends Measurement {
     attr String value;
+}
+
+@db(qualifiedCollectionNames="true")
+class ListMeasurement extends Measurement {
+	val Measurement[*] value;
+}
+
+@db(qualifiedCollectionNames="true")
+class SetMeasurement extends Measurement {
+	val Measurement[*] value;
+}
+
+class URIMeasurement extends Measurement {
+	attr String value;
 }

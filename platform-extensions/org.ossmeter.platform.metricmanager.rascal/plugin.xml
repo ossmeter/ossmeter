@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?eclipse version="3.4"?><plugin>
    <extension-point id="ossmeter.rascal.metricprovider" name="OSSMETER Rascal metric provider" schema="schema/ossmeter.rascal.metricprovider.exsd"/>
+   <extension-point id="ossmeter.rascal.extractor" name="Ossmeter Rascal Extractor extension point" schema="schema/ossmeter.rascal.extractor.exsd"/>
    <extension point="org.ossmeter.platform.managers.metricprovider">
       <metricProviderManager manager="org.ossmeter.metricprovider.rascal.RascalMetricProviderManager">
       </metricProviderManager>
    </extension>
+
+
+
+
+
+
+
+
 
 
 
@@ -15,5 +24,8 @@
     <class name="org.ossmeter.metricprovider.rascal.trans.model.RealMeasurement"/>
     <class name="org.ossmeter.metricprovider.rascal.trans.model.BooleanMeasurement"/>
     <class name="org.ossmeter.metricprovider.rascal.trans.model.StringMeasurement"/>
+    <class name="org.ossmeter.metricprovider.rascal.trans.model.ListMeasurement"/>
+    <class name="org.ossmeter.metricprovider.rascal.trans.model.SetMeasurement"/>
+    <class name="org.ossmeter.metricprovider.rascal.trans.model.URIMeasurement"/>
   </extension>
 </plugin>

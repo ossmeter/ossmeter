@@ -13,11 +13,12 @@ import List;
 @metric{coreCommitters}
 @doc{Finds the core committers per file based on the churn they produce}
 @friendlyName{Core committers}
-list[str] coreCommitters(ProjectDelta delta, map[str, loc] workingCopyFolders, map[str, loc] scratchFolders) {
-  map[str author, int churn] committerChurn = churnPerCommitter(delta, workingCopyFolders, scratchFolders);
+@appliesTo{generic()}
+list[str] coreCommitters(ProjectDelta delta = \empty()) {
+  map[str author, int churn] committerChurn = churnPerCommitter(delta=delta);
   map[str author, int churn] olderResult = ();
   
-  loc coreCommittersHistory = |home:///ossmeter/<delta.project.name>/corecommitters.am3|;
+  loc coreCommittersHistory = |home:///ossmeter/<delta.project.name>/corecommitters.am3|; // TODO remove cache, use helper metric instead 
   
   if (exists(coreCommittersHistory)) {
     olderResult = readBinaryValueFile(#map[str, int], coreCommittersHistory);
