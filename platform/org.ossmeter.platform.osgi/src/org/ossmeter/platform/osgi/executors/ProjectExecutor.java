@@ -1,6 +1,5 @@
 package org.ossmeter.platform.osgi.executors;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -76,10 +75,14 @@ public class ProjectExecutor implements Runnable {
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 		
 		// Split metrics into branches
+		logger.info("Creating metric branches.");
 		List<List<IMetricProvider>> metricBranches = splitIntoBranches(platform.getMetricProviderManager().getMetricProviders());
+		logger.info("Created metric branches.");
 		
 		// Find the date to start from 
 		Date lastExecuted = getLastExecutedDate();
+		
+		logger.info("Last executed: " + lastExecuted);
 		
 		if (lastExecuted == null) {
 			// TODO: Perhaps flag the project as being in a fatal error state? This will potentially keep occurring.
@@ -89,7 +92,7 @@ public class ProjectExecutor implements Runnable {
 		Date today = new Date();
 		
 		Date[] dates = Date.range(lastExecuted.addDays(1), today.addDays(-1));
-		
+		logger.info("Dates: " + dates.length);
 		
 		for (Date date : dates) {
 			// TODO: An alternative would be to have a single thread pool for the node. I briefly tried this
@@ -97,14 +100,10 @@ public class ProjectExecutor implements Runnable {
 			ExecutorService executorService = Executors.newFixedThreadPool(numberOfCores);
 			logger.info("Date: " + date + ", project: " + project.getName());
 			
-			long startDelta = System.currentTimeMillis();
 			ProjectDelta delta = new ProjectDelta(project, date, platform);
 			boolean createdOk = delta.create();
-			String deltaTimes = delta.getTimingsString();
-			long timeDelta = System.currentTimeMillis() - startDelta;
 
-			if (createdOk) {
-			} else {
+			if (!createdOk) {
 				project.getExecutionInformation().setInErrorState(true);
 				platform.getProjectRepositoryManager().getProjectRepository().sync();
 				
@@ -112,7 +111,6 @@ public class ProjectExecutor implements Runnable {
 				return;
 			}
 			
-			long startMetrics = System.currentTimeMillis();
 			for (List<IMetricProvider> branch : metricBranches) {
 				MetricListExecutor mExe = new MetricListExecutor(platform, project, delta, date);
 				mExe.setMetricList(branch);
@@ -126,7 +124,6 @@ public class ProjectExecutor implements Runnable {
 			} catch (InterruptedException e) {
 				logger.error("Exception thrown when shutting down executor service.", e);
 			}
-			long timeMetrics = System.currentTimeMillis() - startMetrics;
 			
 			if (project.getExecutionInformation().getInErrorState()) {
 				// TODO: what should we do? Is the act of not-updating the lastExecuted flag enough?
@@ -134,6 +131,7 @@ public class ProjectExecutor implements Runnable {
 				logger.warn("Project in error state. Stopping execution.");
 				break;
 			} else {
+				logger.info("Updating last executed date."); //FIXME: This is not persisting to the database. 
 				project.getExecutionInformation().setLastExecuted(date.toString());
 				platform.getProjectRepositoryManager().getProjectRepository().sync();
 			}
@@ -163,23 +161,23 @@ public class ProjectExecutor implements Runnable {
 			if (!mBranch.contains(m)) mBranch.add(m);
 			if (!branches.contains(mBranch)) branches.add(mBranch);
 
-			//FIXME: Test m.getIdentifiersOfUses() for null
-			
-			for (String id : m.getIdentifiersOfUses()) {
-				IMetricProvider use = lookupMetricProviderById(metrics, id);
-				if (use == null) continue;
-				boolean foundUse = false;
-				for (Set<IMetricProvider> branch : branches) {
-					if (branch.contains(use)) {
-						branch.addAll(mBranch);
-						branches.remove(mBranch);
-						mBranch = branch;
-						foundUse = true;
-						break;
+			if (m.getIdentifiersOfUses() != null) {
+				for (String id : m.getIdentifiersOfUses()) {
+					IMetricProvider use = lookupMetricProviderById(metrics, id);
+					if (use == null) continue;
+					boolean foundUse = false;
+					for (Set<IMetricProvider> branch : branches) {
+						if (branch.contains(use)) {
+							branch.addAll(mBranch);
+							branches.remove(mBranch);
+							mBranch = branch;
+							foundUse = true;
+							break;
+						}
 					}
-				}
-				if (!foundUse) {
-					mBranch.add(use);
+					if (!foundUse) {
+						mBranch.add(use);
+					}
 				}
 			}
 			if (!branches.contains(mBranch)) branches.add(mBranch);
@@ -225,8 +223,9 @@ public class ProjectExecutor implements Runnable {
 			}
 			for (CommunicationChannel communicationChannel : project.getCommunicationChannels()) {
 				try {
-					Date d = platform.getCommunicationChannelManager().getFirstDate(platform.getMetricsRepository(project).getDb(), communicationChannel).addDays(-1);
+					Date d = platform.getCommunicationChannelManager().getFirstDate(platform.getMetricsRepository(project).getDb(), communicationChannel);
 					if (d == null) continue;
+					d = d.addDays(-1);
 					if (lastExec.compareTo(d) > 0) {
 						lastExec = d;
 					}

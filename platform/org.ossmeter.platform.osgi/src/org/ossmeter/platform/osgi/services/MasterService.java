@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.logging.OssmeterLogger;
-import org.ossmeter.platform.logging.OssmeterLoggerFactory;
 import org.ossmeter.platform.osgi.executors.SchedulerStatus;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.SchedulingInformation;
@@ -49,7 +48,7 @@ public class MasterService implements IMasterService {
 		} else {
 			schedulingInformation = schedCol.first();
 		}
-		schedulingInformation.setMasterNodeIdentifier(InetAddress.getLocalHost().getHostAddress());
+		schedulingInformation.setMasterNodeIdentifier("Master Node");// TODO: InetAddress.getLocalHost().getHostAddress()); // Causes exceptions on some machines.
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 		
 		// Now start scheduling
@@ -74,7 +73,7 @@ public class MasterService implements IMasterService {
 							if (worker == null) {
 								try {
 									logger.info("No workers available. Sleeping.");
-									Thread.sleep(1000);
+									Thread.sleep(5000);
 								} catch (InterruptedException e) {
 									e.printStackTrace();
 								}
