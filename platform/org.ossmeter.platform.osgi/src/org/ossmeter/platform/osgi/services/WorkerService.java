@@ -58,11 +58,11 @@ public class WorkerService implements IWorkerService {
 
 	@Override
 	public String getIdentifier() {
-		try {
-			return InetAddress.getLocalHost().getHostAddress();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
-		return "Unknown IP"; //FIXME
+//		try {
+			return "SLAVE - FIXME";//InetAddress.getLocalHost().getHostAddress(); //FIXME
+//		} catch (UnknownHostException e) {
+//			e.printStackTrace();
+//		}
+//		return "Unknown IP"; //FIXME
 	}
 }
