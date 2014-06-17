@@ -1,9 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Forum
-Bundle-SymbolicName: org.ossmeter.repository.model.cc.forum
+Bundle-SymbolicName: org.ossmeter.repository.model.cc.forum;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Export-Package: org.ossmeter.repository.model.cc.forum
 Require-Bundle: com.googlecode.pongo.runtime.dependencies,
- org.ossmeter.repository.model;bundle-version="1.0.0"
-Import-Package: com.googlecode.pongo
+ org.ossmeter.repository.model

@@ -42,7 +42,9 @@ public abstract class PlatformCommunicationChannelManager implements ICommunicat
 				return communicationChannelManager.getFirstDate(db, communicationChannel);
 			}
 		}
-		throw new RuntimeException("No communication channel manager applies to " + communicationChannel);
+//		throw new RuntimeException("No communication channel manager applies to " + communicationChannel);
+		//FIXME: Needs to log this error. 
+		return null;
 	}
 	
 	@Override

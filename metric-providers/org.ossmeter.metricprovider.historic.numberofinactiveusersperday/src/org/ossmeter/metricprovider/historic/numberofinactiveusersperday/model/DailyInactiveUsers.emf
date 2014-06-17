@@ -7,6 +7,6 @@ class DailyInactiveUsers {
 }
 
 class DailyNewsgroupData {
-	@yaxis(title="Number of new inactive users")
+	@yaxis(title="Number of inactive users")
 	attr int numberOfInactiveUsers;
 }
