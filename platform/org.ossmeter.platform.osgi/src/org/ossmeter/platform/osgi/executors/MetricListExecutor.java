@@ -85,7 +85,7 @@ public class MetricListExecutor implements Runnable {
 				}
 			} catch (ParseException e1) {
 				// we can ignore this
-			}
+			} 
 			
 			// Now execute
 			try {

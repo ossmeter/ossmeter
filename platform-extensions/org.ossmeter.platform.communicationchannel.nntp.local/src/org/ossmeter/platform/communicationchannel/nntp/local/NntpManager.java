@@ -10,6 +10,7 @@ import org.ossmeter.platform.communicationchannel.nntp.local.model.NewsgroupData
 import org.ossmeter.platform.delta.communicationchannel.CommunicationChannelArticle;
 import org.ossmeter.platform.delta.communicationchannel.CommunicationChannelDelta;
 import org.ossmeter.platform.delta.communicationchannel.ICommunicationChannelManager;
+import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 
 import com.mongodb.DB;
@@ -21,7 +22,7 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 	private Messages dbMessages = null;
 	
 	@Override
-	public boolean appliesTo(NntpNewsGroup newsgroup) {
+	public boolean appliesTo(CommunicationChannel newsgroup) {
 		return newsgroup instanceof NntpNewsGroup;
 	}
 

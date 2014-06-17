@@ -7,7 +7,7 @@ import com.mongodb.DB;
 
 public interface ICommunicationChannelManager<T extends CommunicationChannel> {
 	
-	public boolean appliesTo(T communicationChannel);
+	public boolean appliesTo(CommunicationChannel communicationChannel);
 	
 	public CommunicationChannelDelta getDelta(DB db, T communicationChannel, Date date) throws Exception;
 	

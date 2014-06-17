@@ -9,7 +9,7 @@ import org.ossmeter.platform.Date;
 import org.ossmeter.platform.delta.communicationchannel.CommunicationChannelArticle;
 import org.ossmeter.platform.delta.communicationchannel.CommunicationChannelDelta;
 import org.ossmeter.platform.delta.communicationchannel.ICommunicationChannelManager;
-import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 
 import com.mongodb.DB;
@@ -19,7 +19,7 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 	private final static int RETRIEVAL_STEP = 50;
 
 	@Override
-	public boolean appliesTo(NntpNewsGroup newsgroup) {
+	public boolean appliesTo(CommunicationChannel newsgroup) {
 		return newsgroup instanceof NntpNewsGroup;
 	}
 
@@ -35,7 +35,9 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 //		if (Integer.parseInt(newsgroup.getLastArticleChecked())<134500)
 //			newsgroup.setLastArticleChecked("134500"); //137500");
 
-		int lastArticleChecked = Integer.parseInt(newsgroup.getLastArticleChecked());
+		String lac = newsgroup.getLastArticleChecked();
+		if (lac == null || lac.equals("") || lac.equals("null")) lac = "-1";
+		int lastArticleChecked = Integer.parseInt(lac);
 		if (lastArticleChecked<0) lastArticleChecked = newsgroupInfo.getFirstArticle();
 
 		CommunicationChannelDelta delta = new CommunicationChannelDelta();
