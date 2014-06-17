@@ -1,6 +1,6 @@
 module PHPMetrics
 
-extends lang::php::m3::Core;
+extend lang::php::m3::Core;
 import lang::php::m3::Uses;
 import lang::php::stats::Stats;
 import PHP;
