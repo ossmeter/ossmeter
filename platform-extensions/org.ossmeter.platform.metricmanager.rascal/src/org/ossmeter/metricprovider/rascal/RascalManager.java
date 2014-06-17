@@ -2,7 +2,6 @@ package org.ossmeter.metricprovider.rascal;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -36,6 +35,7 @@ import org.ossmeter.metricprovider.rascal.trans.model.RealMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.StringMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.URIMeasurement;
 import org.ossmeter.platform.IMetricProvider;
+import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.repository.model.Project;
 import org.rascalmpl.interpreter.Evaluator;
 import org.rascalmpl.interpreter.NullRascalMonitor;
@@ -71,15 +71,18 @@ public class RascalManager {
 
 	private Evaluator createEvaluator() {
 		GlobalEnvironment heap = new GlobalEnvironment();
-		ModuleEnvironment moduleRoot = new ModuleEnvironment(
-				"******ossmeter******", heap);
+		ModuleEnvironment moduleRoot = new ModuleEnvironment("******ossmeter******", heap);
 
-		Evaluator eval = new Evaluator(VF, new PrintWriter(System.err),
-				new PrintWriter(System.out), moduleRoot, heap);
-		eval.getResolverRegistry().registerInput(
-				new BundleURIResolver(eval.getResolverRegistry()));
-		eval.addRascalSearchPathContributor(StandardLibraryContributor
-				.getInstance());
+		OssmeterLogger log = (OssmeterLogger) OssmeterLogger.getLogger("Rascal console");
+		log.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
+		LoggerWriter stderr = new LoggerWriter(true, log);
+		LoggerWriter stdout = new LoggerWriter(false, log);
+		
+		Evaluator eval = new Evaluator(VF, stderr, stdout, moduleRoot, heap);
+		
+		eval.setMonitor(new RascalMonitor(log));
+		eval.getResolverRegistry().registerInput(new BundleURIResolver(eval.getResolverRegistry()));
+		eval.addRascalSearchPathContributor(StandardLibraryContributor.getInstance());
 		try {
 			Bundle currentBundle = Rasctivator.getContext().getBundle();
 			List<String> roots = new RascalBundleManifest()
@@ -90,10 +93,7 @@ public class RascalManager {
 						.toURI());
 			}
 		} catch (URISyntaxException e) {
-			Rasctivator
-					.logException(
-							"failed to add the current bundle path to rascal search path",
-							e);
+			Rasctivator.logException("failed to add the current bundle path to rascal search path", e);
 		}
 		return eval;
 	}
