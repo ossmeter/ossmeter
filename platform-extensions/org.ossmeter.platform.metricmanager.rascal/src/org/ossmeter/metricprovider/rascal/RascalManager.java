@@ -15,6 +15,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.imp.pdb.facts.IMap;
 import org.eclipse.imp.pdb.facts.IMapWriter;
 import org.eclipse.imp.pdb.facts.ISet;
@@ -42,7 +45,6 @@ import org.rascalmpl.interpreter.env.Pair;
 import org.rascalmpl.interpreter.load.StandardLibraryContributor;
 import org.rascalmpl.interpreter.result.AbstractFunction;
 import org.rascalmpl.interpreter.result.ICallableValue;
-import org.rascalmpl.interpreter.staticErrors.StaticError;
 import org.rascalmpl.uri.URIUtil;
 import org.rascalmpl.values.ValueFactoryFactory;
 
@@ -234,8 +236,28 @@ public class RascalManager {
 		}
 	}
 
-	public List<IMetricProvider> getMetricProviders() {
+	public synchronized List<IMetricProvider> getMetricProviders() {
 		List<IMetricProvider> providers = new LinkedList<>();
+		
+		IExtensionPoint extensionPoint = Platform.getExtensionRegistry()
+				.getExtensionPoint("ossmeter.rascal.metricprovider");
+
+		if (extensionPoint != null) {
+			for (IExtension element : extensionPoint.getExtensions()) {
+				String name = element.getContributor().getName();
+				Bundle bundle = Platform.getBundle(name);
+				registerRascalMetricProvider(bundle);
+			}
+		}
+
+		extensionPoint = Platform.getExtensionRegistry().getExtensionPoint("ossmeter.rascal.extractor");
+		if (extensionPoint != null) {
+			for (IExtension element : extensionPoint.getExtensions()) {
+				String name = element.getContributor().getName();
+				Bundle bundle = Platform.getBundle(name);
+				registerExtractor(bundle);
+			}
+		}
 
 		for (Bundle bundle : metricBundles) {
 			addMetricProviders(bundle, providers);

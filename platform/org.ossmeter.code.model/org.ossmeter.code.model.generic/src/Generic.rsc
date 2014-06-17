@@ -22,13 +22,13 @@ rel[Language, loc, M3] genericM3(loc project, set[loc] files) {
       chs = size(content);
       lines = chs == 0 ? 1 : (1 | it + 1 | /\n/ := content);
       lastline = size(readFileLines(file)[-1]);
-      m@declarations = { <file[scheme="m3+unit"], file(0,chs,<1,0>,<lines - 1,lastline>)> }; 
+      m@declarations = { <file[scheme="m3+unit"], file(0,chs,<1,0>,<lines, lastline>)> }; 
     }
     catch IO(str msg) : {
       m@messages += [error(msg, file)];
     }
     
-    result += { generic(), file, m };
+    result += { <generic(), file, m> };
   }
   
   return result;

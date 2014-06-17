@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.log4j.Priority;
 import org.eclipse.imp.pdb.facts.IConstructor;
 import org.eclipse.imp.pdb.facts.IInteger;
 import org.eclipse.imp.pdb.facts.IList;
@@ -34,17 +35,21 @@ import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.platform.delta.vcs.VcsCommit;
 import org.ossmeter.platform.delta.vcs.VcsRepositoryDelta;
+import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.platform.vcs.workingcopy.manager.Churn;
 import org.ossmeter.platform.vcs.workingcopy.manager.WorkingCopyCheckoutException;
 import org.ossmeter.platform.vcs.workingcopy.manager.WorkingCopyFactory;
 import org.ossmeter.platform.vcs.workingcopy.manager.WorkingCopyManagerUnavailable;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.VcsRepository;
+import org.rascalmpl.interpreter.control_exceptions.ControlException;
+import org.rascalmpl.interpreter.control_exceptions.MatchFailed;
 import org.rascalmpl.interpreter.env.KeywordParameter;
 import org.rascalmpl.interpreter.result.ICallableValue;
 import org.rascalmpl.interpreter.result.OverloadedFunction;
 import org.rascalmpl.interpreter.result.RascalFunction;
 import org.rascalmpl.interpreter.result.Result;
+import org.rascalmpl.interpreter.staticErrors.StaticError;
 
 import com.googlecode.pongo.runtime.Pongo;
 import com.mongodb.DB;
@@ -71,6 +76,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 	private final String shortMetricId;
 	private final String metricId;
 	private final ICallableValue function;
+	private final OssmeterLogger logger;
 
 	private static String lastRevision = null;
 	private static IValue cachedM3 = null;
@@ -79,7 +85,8 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 	private static Map<String, File> workingCopyFolders = new HashMap<>();
 	private static Map<String, File> scratchFolders = new HashMap<>();
 	private static IConstructor rascalDelta;
-
+	
+	
 	public RascalMetricProvider(String metricId, String shortMetricId, String friendlyName, String description, ICallableValue function) {
 		this.metricId = metricId;
 		this.shortMetricId =  shortMetricId;
@@ -95,6 +102,10 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		this.needsWc = hasParameter(WORKING_COPIES_PARAM);
 		this.needsScratch = hasParameter(SCRATCH_FOLDERS_PARAM);
 		
+		this.logger = (OssmeterLogger) OssmeterLogger.getLogger("RascalMetricProvider (" + metricId + ")");
+		this.logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
+
+
 		assert function instanceof RascalFunction;
 	}
 
@@ -181,6 +192,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 				}
 
 				if (needCacheClearance(delta)) {
+					logger.info("\tclearing caches");
 					cachedM3 = null;
 					cachedAsts = null;
 					workingCopyFolders.clear();
@@ -190,6 +202,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 
 				if (needsScratch || needsWc || needsM3 || needsAsts || needsDelta) {
 					if (workingCopyFolders.isEmpty() || scratchFolders.isEmpty()) {
+						logger.info("creating working copies");
 						computeFolders(project, delta, manager, workingCopyFolders, scratchFolders);
 					}
 
@@ -203,36 +216,52 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 				}
 
 				if (needsDelta) {
+					logger.info("computing delta model");
 					params.put(DELTA_PARAM, computeDelta(project, delta, manager));
 				}
 
 				if (needsAsts) {
+					logger.info("parsing to asts");
 					params.put(ASTS_PARAM, computeAsts(project, delta, manager));
 				}
 
 				if (needsM3) {
+					logger.info("extracting M3 models");
 					params.put(M3S_PARAM, computeM3(project, delta, manager));
 				}
 
 				if (needsHistory) {
+					logger.info("recovering historical metric data");
 					params.put(HISTORY_PARAM, computeHistory(project, delta, manager));
 				}
 
 				if (needsPrevious) {
+					logger.info("computing previous metric values");
 					params.put(PREVIOUS_PARAM, computePrevious(project, db, delta, manager));
 				}
 			
 				// measurement is included in the sync block to avoid sharing evaluators between metrics
+				logger.info("calling measurement function");
+				logger.info("with parameters: " + params);
 				Result<IValue> result = function.call(new Type[] { }, new IValue[] { }, params);
 
 				lastRevision = getLastRevision(delta);
+				
+				logger.info("storing metric result");
 				storeResult(delta, db, result.getValue(), manager);
 			}
 		} catch (WorkingCopyManagerUnavailable | WorkingCopyCheckoutException  e) {
-			Rasctivator.logException("unexpected exception while measuring " + getIdentifier(), e);
-			throw new RuntimeException("Metric failed due to missing workinh copy", e);
+			logger.error("unexpected exception while measuring", e);
+			throw new RuntimeException("Metric failed due to missing working copy", e);
+		} catch (StaticError e) {
+			logger.error("a static error in a Rascal function was detected", e);
+			throw e;
+		} catch (MatchFailed e) {
+			logger.error("a Rascal function was called with illegal arguments", e);
+			throw e;
 		} catch (Throwable e) {
-			throw new RuntimeException("Metric failed with " + e.getMessage() + " at\n: " + function.getEval().getStackTrace().toString(), e);
+			logger.error("unexpected exception while measuring", e);
+			throw e;
 		}
 	}
 
@@ -411,7 +440,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		assert !workingCopyFolders.isEmpty();
 
 		if (cachedM3 == null) {
-			cachedM3 = function.getEval().call("extractM3", man.makeProjectLoc(project), man.makeMap(workingCopyFolders));
+			cachedM3 = function.getEval().call("extractM3", man.makeProjectLoc(project), man.makeLocSet(workingCopyFolders));
 		}
 
 		return cachedM3;
