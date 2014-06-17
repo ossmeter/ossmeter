@@ -1,34 +1,35 @@
 package org.ossmeter.metricprovider.rascal.historic.model;
 
-import com.mongodb.*;
-import java.util.*;
+import org.ossmeter.metricprovider.rascal.trans.model.MeasurementCollection;
 
-import org.ossmeter.metricprovider.rascal.trans.model.Measurement;
+import com.googlecode.pongo.runtime.PongoDB;
+import com.mongodb.DB;
+// protected region custom-imports on begin
+// protected region custom-imports end
 
-import com.googlecode.pongo.runtime.*;
-import com.googlecode.pongo.runtime.querying.*;
-
-
-public class RascalHistoricMetrics extends Pongo {
+public class RascalHistoricMetrics extends PongoDB {
+	private final String collectionName;
 	
-	protected List<Measurement> measurements = null;
-	
-	
-	public RascalHistoricMetrics() { 
-		super();
-		dbObject.put("measurements", new BasicDBList());
+	public RascalHistoricMetrics(DB db, String collectionName) {
+		this.collectionName = collectionName;
+		setDb(db);
 	}
 	
+	protected MeasurementCollection measurements = null;
+	
+	// protected region custom-fields-and-methods on begin
+	// protected region custom-fields-and-methods end
 	
 	
-	
-	
-	public List<Measurement> getMeasurements() {
-		if (measurements == null) {
-			measurements = new PongoList<Measurement>(this, "measurements", true);
-		}
+	public MeasurementCollection getMeasurements() {
 		return measurements;
 	}
 	
 	
+	@Override
+	public void setDb(DB db) {
+		super.setDb(db);
+		measurements = new MeasurementCollection(db.getCollection(collectionName));
+		pongoCollections.add(measurements);
+	}
 }

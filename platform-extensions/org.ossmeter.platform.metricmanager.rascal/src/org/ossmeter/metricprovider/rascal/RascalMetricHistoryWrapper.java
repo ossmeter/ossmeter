@@ -13,6 +13,7 @@ import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.repository.model.Project;
 
 import com.googlecode.pongo.runtime.Pongo;
+import com.mongodb.DB;
 
 /**
  * Wraps a transient metric provider to be an historic one
@@ -68,16 +69,18 @@ public class RascalMetricHistoryWrapper implements IHistoricalMetricProvider {
 
 	@Override
 	public Pongo measure(Project project) {
-		RascalMetrics result = transientId.adapt(context.getProjectDB(project));
+		DB db = context.getProjectDB(project);
+		RascalMetrics result = transientId.adapt(db);
 		
-		// TODO: this needs to get an adapted table name still:
-		RascalHistoricMetrics history = new RascalHistoricMetrics();
+		RascalHistoricMetrics history = new RascalHistoricMetrics(db, getIdentifier());
 		
 		for (Measurement m : result.getMeasurements()) {
 			history.getMeasurements().add(m);
 		}
-		
-		return history;
+
+		// TODO: now what?
+//		return history;
+		return null;
 	}
 	
 }

@@ -224,11 +224,11 @@ public class RascalManager {
 							overloadedFunc);
 					providers.add(transientMetric);
 
-					// if (f.hasTag("historic")) {
-					// // now we also story the results historically
-					// providers.add(new
-					// RascalMetricHistoryWrapper(transientMetric));
-					// }
+					 if (f.hasTag("historic")) {
+					 // now we also story the results historically
+						 // TODO: turned off because historic providers need additional support from platform
+//						 providers.add(new RascalMetricHistoryWrapper(transientMetric));
+					 }
 				}
 			}
 		}

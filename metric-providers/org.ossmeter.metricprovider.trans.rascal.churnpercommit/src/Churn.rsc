@@ -7,6 +7,7 @@ import org::ossmeter::metricprovider::ProjectDelta;
 @doc{Count churn}
 @friendlyName{Counts number of lines added and deleted per commit}
 @appliesTo{generic()}
+@historic
 map[loc, int] churnPerCommit(ProjectDelta delta = \empty()) {
    map[loc, int] result = ();
    for (/VcsRepositoryDelta vcsDelta := delta) {

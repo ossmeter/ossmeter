@@ -8,7 +8,7 @@ import org::ossmeter::metricprovider::ProjectDelta;
 @friendlyName{Counts number of lines added and deleted per file}
 @appliesTo{generic()}
 map[loc file, int churn] churnPerFile(ProjectDelta delta = \empty())
-  = (co : churn(co) | /VcsCommitItem co := delta)
+  = (rd.repository.url + co.path : churn(co) | /VcsRepositoryDelta rd := delta, /VcsCommitItem co := rd)
   ;
   
 int churn(VcsCommitItem item) 

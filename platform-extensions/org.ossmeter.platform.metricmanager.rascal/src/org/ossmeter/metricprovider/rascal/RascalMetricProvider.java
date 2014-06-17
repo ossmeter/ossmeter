@@ -221,15 +221,18 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 				if (needsPrevious) {
 					params.put(PREVIOUS_PARAM, computePrevious(project, db, delta, manager));
 				}
+			
+				// measurement is included in the sync block to avoid sharing evaluators between metrics
+				Result<IValue> result = function.call(new Type[] { }, new IValue[] { }, params);
+
+				lastRevision = getLastRevision(delta);
+				storeResult(delta, db, result.getValue(), manager);
 			}
-
-			Result<IValue> result = function.call(new Type[] { }, new IValue[] { }, params);
-
-			lastRevision = getLastRevision(delta);
-
-			storeResult(delta, db, result.getValue(), manager);
 		} catch (WorkingCopyManagerUnavailable | WorkingCopyCheckoutException  e) {
 			Rasctivator.logException("unexpected exception while measuring " + getIdentifier(), e);
+			throw new RuntimeException("Metric failed due to missing workinh copy", e);
+		} catch (Throwable e) {
+			throw new RuntimeException("Metric failed with " + e.getMessage() + " at\n: " + function.getEval().getStackTrace().toString(), e);
 		}
 	}
 
