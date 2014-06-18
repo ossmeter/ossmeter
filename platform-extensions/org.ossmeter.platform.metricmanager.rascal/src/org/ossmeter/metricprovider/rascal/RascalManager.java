@@ -275,7 +275,7 @@ public class RascalManager {
 		IMapWriter result = VF.mapWriter();
 
 		for (Entry<String, File> entry : foldersMap.entrySet()) {
-			result.put(VF.string(entry.getKey()),
+			result.put(VF.sourceLocation(URIUtil.assumeCorrect(entry.getKey())),
 					VF.sourceLocation(entry.getValue().getAbsolutePath()));
 		}
 
