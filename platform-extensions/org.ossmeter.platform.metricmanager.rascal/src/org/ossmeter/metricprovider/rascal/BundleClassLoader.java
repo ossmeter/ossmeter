@@ -35,17 +35,17 @@ class BundleClassLoader extends ClassLoader {
 
 	@Override
 	public URL getResource(String name) {
-		return (parent == null) ? findResource(name) : super
-				.getResource(name);
+		return (parent == null) ? findResource(name) : super.getResource(name);
 	}
 
 	@Override
 	protected Class<?> loadClass(String name, boolean resolve)
 			throws ClassNotFoundException {
-		Class<?> clazz = (parent == null) ? findClass(name) : super
-				.loadClass(name, false);
-		if (resolve)
+		Class<?> clazz = (parent == null) ? findClass(name) : super.loadClass(name, false);
+		
+		if (resolve) {
 			super.resolveClass(clazz);
+		}
 
 		return clazz;
 	}

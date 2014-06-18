@@ -29,8 +29,7 @@ map[loc class, num wmcCount] getWMC(
 	map[loc class, num wmcCount] result = ();
 	changed = getChangedFilesInWorkingCopyFolders(delta, workingCopyFolders);
 	
-	for (file <- changed, m3 <- m3s[java(), file], ast <- asts[java(), file])
-	{
+	for (file <- changed, m3 <- m3s[java(), file], ast <- asts[java(), file]) {
 		result += (cl : sum([getCC(m, ast) | m <- m3@containment[cl], isMethod(m)]) | <cl, _> <- m3@containment, isClass(cl));
 	}
 	 
@@ -50,8 +49,7 @@ map[loc method, int cc] getCC(
 	map[loc method, int cc] result = ();
 	changed = getChangedFilesInWorkingCopyFolders(delta, workingCopyFolders);
 
-	for (file <- changed, m3 <- m3s[java(), file], ast <- asts[java(), file])
-	{
+	for (file <- changed, m3 <- m3s[java(), file], ast <- asts[java(), file]) {
 		result += (m : getCC(m, ast) | <cl, m> <- m3@containment, isClass(cl), isMethod(m));
 	}
 
