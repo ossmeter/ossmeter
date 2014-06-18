@@ -5,8 +5,6 @@ import lang::java::m3::AST;
 import util::FileSystem;
 import org::ossmeter::metricprovider::ProjectDelta;
 
-data Language(str version="") = java();
-
 @M3Extractor{}
 rel[Language, loc, M3] javaM3(loc project, set[loc] checkouts, ProjectDelta delta) {
   println("extracting Java M3 for <project>");

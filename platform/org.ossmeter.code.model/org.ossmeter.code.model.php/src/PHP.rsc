@@ -1,18 +1,13 @@
 module PHP
 
 import lang::php::m3::Core;
+import lang::php::m3::AST;
 import lang::php::m3::FillM3;
 import lang::php::ast::AbstractSyntax;
 import lang::php::util::Utils;
 import org::ossmeter::metricprovider::ProjectDelta; 
 
 import IO;
-
-public data Language(str version="")
-	= php();
-
-public data AST(loc file = |file:///unknown|)
-	= phpAST(Script script);
 
 
 @M3Extractor{}

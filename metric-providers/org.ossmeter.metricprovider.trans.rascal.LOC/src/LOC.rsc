@@ -2,8 +2,6 @@ module LOC
 
 import lang::java::m3::Core;
 import lang::java::php::Core;
-import Java;
-import PHP;
 import analysis::graphs::Graph;
 import analysis::m3::AST;
 import IO;
