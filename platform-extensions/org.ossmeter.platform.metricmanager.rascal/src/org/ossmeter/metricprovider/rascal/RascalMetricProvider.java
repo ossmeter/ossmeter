@@ -360,7 +360,73 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 			@Override
 			public Void visitList(IList o) throws RuntimeException {
 				ListMeasurement m = new ListMeasurement();
-				final MeasurementCollection col = m.getValue();
+				convert(m.getValue(), loc, o);
+				measurements.add(m);
+				return null;
+			}
+			
+			@Override
+			public Void visitSet(ISet o) throws RuntimeException {
+				SetMeasurement m = new SetMeasurement();
+				convert(m.getValue(), loc, o);
+				measurements.add(m);
+				return null;
+			}
+		});
+	}
+	
+	private void convert(final List<Measurement> measurements, final ISourceLocation loc, IValue result) {
+		result.accept(new NullVisitor<Void,RuntimeException>() {
+			@Override
+			public Void visitInteger(IInteger o) throws RuntimeException {
+				IntegerMeasurement m = new IntegerMeasurement();
+				m.setUri(loc.getURI().toString());
+				m.setValue(o.longValue());
+				measurements.add(m);
+				return null;
+			}
+			
+			@Override
+			public Void visitString(IString o) throws RuntimeException {
+				StringMeasurement m = new StringMeasurement();
+				m.setUri(loc.getURI().toString());
+				m.setValue(o.getValue());
+				measurements.add(m);
+				return null;
+			}
+			
+			@Override
+			public Void visitReal(IReal o) throws RuntimeException {
+				RealMeasurement m = new RealMeasurement();
+				m.setUri(loc.getURI().toString());
+				m.setValue((float) o.doubleValue());
+				measurements.add(m);
+				return null;
+			}
+			
+			@Override
+			public Void visitSourceLocation(ISourceLocation o) {
+				URIMeasurement m = new URIMeasurement();
+				m.setUri(loc.getURI().toString());
+				m.setValue(o.getURI().toString());
+				measurements.add(m);
+				return null;
+			}
+			
+			@Override
+			public Void visitMap(IMap o) throws RuntimeException {
+				for (Iterator<Entry<IValue, IValue>> it = o.entryIterator(); it.hasNext(); ) {
+					Entry<IValue, IValue> currentEntry = (Entry<IValue, IValue>) it.next();
+					ISourceLocation key = (ISourceLocation) currentEntry.getKey();
+					convert(measurements, key, currentEntry.getValue());
+				}
+				return null;
+			}
+
+			@Override
+			public Void visitList(IList o) throws RuntimeException {
+				ListMeasurement m = new ListMeasurement();
+				final List<Measurement> col = m.getValue();
 				
 				for (IValue val : o) {
 					convert(col, loc, val);
@@ -371,7 +437,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 			@Override
 			public Void visitSet(ISet o) throws RuntimeException {
 				SetMeasurement m = new SetMeasurement();
-				final MeasurementCollection col = m.getValue();
+				final List<Measurement> col = m.getValue();
 				
 				for (IValue val : o) {
 					convert(col, loc, val);
