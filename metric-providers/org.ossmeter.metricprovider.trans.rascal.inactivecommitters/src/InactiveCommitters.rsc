@@ -1,6 +1,5 @@
 module InactiveCommitters
 
-import org::ossmeter::metricprovider::Manager;
 import org::ossmeter::metricprovider::ProjectDelta;
 
 import ValueIO;
@@ -48,5 +47,5 @@ list[str] inactiveCommitters(ProjectDelta delta = \empty()) {
 @friendlyName{numberofinactivecommitters}
 @appliesTo{generic()}
 int numberOfInactiveCommitters(ProjectDelta delta = \empty()) {
-  return size(inactiveCommitters(delta));
+  return size(inactiveCommitters(delta = delta));
 }

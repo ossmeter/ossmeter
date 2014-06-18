@@ -1,7 +1,7 @@
 module Churn
 
-import org::ossmeter::metricprovider::Manager;
 import org::ossmeter::metricprovider::ProjectDelta;
+import IO;
 
 @metric{churnPerCommit}
 @doc{Count churn}
@@ -9,6 +9,7 @@ import org::ossmeter::metricprovider::ProjectDelta;
 @appliesTo{generic()}
 @historic
 map[loc, int] churnPerCommit(ProjectDelta delta = \empty()) {
+   println(delta);
    map[loc, int] result = ();
    for (/VcsRepositoryDelta vcsDelta := delta) {
     result += (vcsDelta.repository.url + co.revision : churn(co) | /VcsCommit co := vcsDelta);

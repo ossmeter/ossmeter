@@ -1,6 +1,5 @@
 module ActiveCommitters
 
-import org::ossmeter::metricprovider::Manager;
 import org::ossmeter::metricprovider::ProjectDelta;
 
 import ValueIO;

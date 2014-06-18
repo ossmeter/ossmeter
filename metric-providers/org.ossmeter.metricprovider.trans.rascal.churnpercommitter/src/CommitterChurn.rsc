@@ -1,6 +1,5 @@
 module CommitterChurn
 
-import org::ossmeter::metricprovider::Manager;
 import org::ossmeter::metricprovider::ProjectDelta;
 
 @metric{churnPerCommitter}
