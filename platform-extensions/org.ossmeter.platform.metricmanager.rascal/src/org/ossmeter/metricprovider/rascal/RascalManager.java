@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.imp.pdb.facts.IConstructor;
 import org.eclipse.imp.pdb.facts.IMap;
 import org.eclipse.imp.pdb.facts.IMapWriter;
 import org.eclipse.imp.pdb.facts.ISet;
@@ -24,6 +25,7 @@ import org.eclipse.imp.pdb.facts.ISetWriter;
 import org.eclipse.imp.pdb.facts.ISourceLocation;
 import org.eclipse.imp.pdb.facts.IValue;
 import org.eclipse.imp.pdb.facts.IValueFactory;
+import org.eclipse.imp.pdb.facts.type.Type;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.wiring.BundleWire;
 import org.osgi.framework.wiring.BundleWiring;
@@ -45,6 +47,7 @@ import org.rascalmpl.interpreter.env.Pair;
 import org.rascalmpl.interpreter.load.StandardLibraryContributor;
 import org.rascalmpl.interpreter.result.AbstractFunction;
 import org.rascalmpl.interpreter.result.ICallableValue;
+import org.rascalmpl.interpreter.result.Result;
 import org.rascalmpl.uri.URIUtil;
 import org.rascalmpl.values.ValueFactoryFactory;
 
@@ -59,6 +62,29 @@ public class RascalManager {
 		public static final RascalManager sInstance = new RascalManager();
 	}
 
+	public class Extractor {
+		public ModuleEnvironment module;
+		public AbstractFunction function;
+		public IValue language;
+		
+		public Extractor(AbstractFunction fun, ModuleEnvironment env, IValue lang) {
+			function = fun;
+			module = env;
+			language = lang;
+		}
+		
+		public IValue call(ISourceLocation projectLocation, ISet workingCopyFolders, IConstructor delta) {
+			Result<IValue> result = function.call(new NullRascalMonitor(),
+					new Type[]{projectLocation.getType(), workingCopyFolders.getType(), delta.getType()},
+					new IValue[]{projectLocation, workingCopyFolders, delta}, null);
+			// TODO error handling
+			return result.getValue();
+		}
+	}
+	
+	private final Set<Extractor> m3Extractors = new HashSet<>();
+	private final Set<Extractor> astExtractors = new HashSet<>();
+	
 	public static final String MODULE = "org::ossmeter::metricprovider::Manager";
 
 	public void configureRascalMetricProviders(Set<Bundle> providers) {
@@ -235,6 +261,14 @@ public class RascalManager {
 			}
 		}
 	}
+	
+	public Set<Extractor> getM3Extractors() {
+		return m3Extractors;
+	}
+	
+	public Set<Extractor> getASTExtractors() {
+		return astExtractors;
+	}
 
 	public synchronized List<IMetricProvider> getMetricProviders() {
 		List<IMetricProvider> providers = new LinkedList<>();
@@ -305,11 +339,10 @@ public class RascalManager {
 
 		for (Pair<String, List<AbstractFunction>> func : module.getFunctions()) {
 			for (final AbstractFunction f : func.getSecond()) {
-				// TODO: add some type checking on the arguments
-				if (f.hasTag("extractor")) {
-					// note this has a side effect storing the extractor in a
-					// Rascal global variable.
-					eval.eval(new NullRascalMonitor(),"registerExtractor(" + f.getName() + ");" , module.getLocation().getURI());
+				if (f.hasTag("M3Extractor")) {
+					m3Extractors.add(new Extractor(f, module, null));
+				} else if (f.hasTag("ASTExtractor")) {
+					astExtractors.add(new Extractor(f, module, null));								
 				}
 			}
 		}

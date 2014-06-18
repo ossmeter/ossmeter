@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.eclipse.imp.pdb.facts.IConstructor;
 import org.eclipse.imp.pdb.facts.IInteger;
@@ -284,12 +285,11 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		return revision;
 	}
 
-	private IValue computeAsts(Project project, ProjectDelta delta,
-			RascalManager _instance) {
+	private IValue computeAsts(Project project, ProjectDelta delta,	RascalManager _instance) {
 		assert !workingCopyFolders.isEmpty();
 
 		if (cachedAsts == null) {
-			cachedAsts = function.getEval().call("extractAST", _instance.makeProjectLoc(project), _instance.makeLocSet(workingCopyFolders));
+			cachedAsts = callExtractors(project, delta, _instance, _instance.getASTExtractors());
 		}
 
 		return cachedAsts;
@@ -437,9 +437,28 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		assert !workingCopyFolders.isEmpty();
 
 		if (cachedM3 == null) {
-			cachedM3 = function.getEval().call("extractM3", man.makeProjectLoc(project), man.makeLocSet(workingCopyFolders));
+			cachedM3 = callExtractors(project, delta, man, man.getM3Extractors());
 		}
 
 		return cachedM3;
+	}
+	
+	private IValue callExtractors(Project project, ProjectDelta delta, RascalManager man, Set<RascalManager.Extractor> extractors) {
+		ISet allResults = null;
+		
+		ISourceLocation projectLoc = man.makeProjectLoc(project);
+		ISet wcf = man.makeLocSet(workingCopyFolders);
+		IConstructor rascalDelta = computeDelta(project, delta, man);
+		
+		for (RascalManager.Extractor e : extractors) {
+			ISet result = (ISet) e.call(projectLoc, wcf, rascalDelta);
+			if (allResults == null) {
+				allResults = result;
+			} else {
+				allResults = allResults.union(result);
+			}
+		}
+		
+		return allResults; // TODO what if null?
 	}
 }
