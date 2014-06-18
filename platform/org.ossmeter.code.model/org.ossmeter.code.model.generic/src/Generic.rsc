@@ -4,6 +4,8 @@ import util::FileSystem;
 import analysis::m3::Core;
 import analysis::m3::AST;
 import org::ossmeter::metricprovider::ProjectDelta;
+import IO;
+import String;
  
 set[str] blackListedExtensions = {};
 
@@ -22,9 +24,9 @@ rel[Language, loc, M3] genericM3(loc project, set[loc] workingCopyFolders, Proje
     try {
       content = readFile(file);
       chs = size(content);
-      lines = chs == 0 ? 1 : (1 | it + 1 | /\n/ := content);
+      numLines = chs == 0 ? 1 : (1 | it + 1 | /\n/ := content);
       lastline = size(readFileLines(file)[-1]);
-      m@declarations = { <file[scheme="m3+unit"], file(0,chs,<1,0>,<lines, lastline>)> }; // TODO remove
+      m@declarations = { <file[scheme="m3+unit"], file(0,chs,<1,0>,<numLines, lastline>)> }; // TODO remove
     }
     catch IO(str msg) : {
       m@messages += [error(msg, file)];
@@ -37,6 +39,6 @@ rel[Language, loc, M3] genericM3(loc project, set[loc] workingCopyFolders, Proje
 }
 
 @ASTExtractor{}
-rel[Language, loc, M3] genericAST(loc project, set[loc] workingCopyFolders, ProjectDelta delta) {
+rel[Language, loc, \AST] genericAST(loc project, set[loc] workingCopyFolders, ProjectDelta delta) {
 	return {<generic(), file, lines(readFileLines(file))> | folder <- workingCopyFolders, file <- files(folder)};
 }
