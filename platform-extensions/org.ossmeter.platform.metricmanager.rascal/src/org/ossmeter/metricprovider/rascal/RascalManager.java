@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.imp.pdb.facts.IConstructor;
+import org.eclipse.imp.pdb.facts.IListWriter;
 import org.eclipse.imp.pdb.facts.IMap;
 import org.eclipse.imp.pdb.facts.IMapWriter;
 import org.eclipse.imp.pdb.facts.ISet;
@@ -31,9 +32,11 @@ import org.osgi.framework.wiring.BundleWire;
 import org.osgi.framework.wiring.BundleWiring;
 import org.ossmeter.metricprovider.rascal.trans.model.BooleanMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.IntegerMeasurement;
+import org.ossmeter.metricprovider.rascal.trans.model.ListMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.Measurement;
 import org.ossmeter.metricprovider.rascal.trans.model.RascalMetrics;
 import org.ossmeter.metricprovider.rascal.trans.model.RealMeasurement;
+import org.ossmeter.metricprovider.rascal.trans.model.SetMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.StringMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.URIMeasurement;
 import org.ossmeter.platform.IMetricProvider;
@@ -254,8 +257,7 @@ public class RascalManager {
 
 					 if (f.hasTag("historic")) {
 					 // now we also story the results historically
-						 // TODO: turned off because historic providers need additional support from platform
-//						 providers.add(new RascalMetricHistoryWrapper(transientMetric));
+						 providers.add(new RascalMetricHistoryWrapper(transientMetric));
 					 }
 				}
 			}
@@ -383,8 +385,34 @@ public class RascalManager {
 		else if (e instanceof BooleanMeasurement) {
 			return toBoolValue((BooleanMeasurement) e);
 		}
+		else if (e instanceof ListMeasurement) {
+			return toListValue((ListMeasurement) e);
+		}
+		else if (e instanceof SetMeasurement) {
+			return toSetValue((SetMeasurement) e);
+		}
 		
 		throw new IllegalArgumentException(e.toString());
+	}
+
+	private IValue toSetValue(SetMeasurement e) {
+		ISetWriter w = VF.setWriter();
+		
+		for (Measurement m : e.getValue()) {
+			w.insert(toValue(m));
+		}
+		
+		return w.done();
+	}
+
+	private IValue toListValue(ListMeasurement e) {
+		IListWriter w = VF.listWriter();
+		
+		for (Measurement m : e.getValue()) {
+			w.insert(toValue(m));
+		}
+		
+		return w.done();
 	}
 
 	private IValue toBoolValue(BooleanMeasurement e) {
