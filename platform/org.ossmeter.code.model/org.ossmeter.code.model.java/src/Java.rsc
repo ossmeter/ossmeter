@@ -1,14 +1,14 @@
 module Java
 
-extend Extractors;
-import lang::java::m3::Core;
+extend lang::java::m3::Core;
 import lang::java::m3::AST;
 import util::FileSystem;
+import org::ossmeter::metricprovider::ProjectDelta;
 
 data Language(str version="") = java();
 
-@extractor{}
-rel[Language, loc, M3] javaM3(loc project, set[loc] checkouts) {
+@M3Extractor{}
+rel[Language, loc, M3] javaM3(loc project, set[loc] checkouts, ProjectDelta delta) {
   println("extracting Java M3 for <project>");
   
   sources = findSourceRoots(checkouts);
@@ -18,6 +18,8 @@ rel[Language, loc, M3] javaM3(loc project, set[loc] checkouts) {
   
   return {<java(), f, createM3FromFile(f)> | c <- checkouts, f <- find(c, "java")};
 }
+
+// TODO add an @ASTExtractor{} function
 
 // this will become more interesting if we try to recover build information from meta-data
 // for now we do a simple file search

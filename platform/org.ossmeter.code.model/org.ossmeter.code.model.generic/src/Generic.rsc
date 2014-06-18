@@ -1,6 +1,9 @@
 module Generic
 
-extend Extractors;
+import util::FileSystem;
+import analysis::m3::Core;
+import analysis::m3::AST;
+import org::ossmeter::metricprovider::ProjectDelta;
  
 set[str] blackListedExtensions = {};
 
@@ -8,13 +11,12 @@ void setBlackListedExtensions(set[str] extensions) {
 	  blackListedExtensions += extensions;
 	}
 
-@extractor{}
-rel[Language, loc, M3] genericM3(loc project, set[loc] files) {
+@M3Extractor{}
+rel[Language, loc, M3] genericM3(loc project, set[loc] workingCopyFolders, ProjectDelta delta) {
   //if (file.extension in blackListedExtensions) {
   //}
   rel[Language, loc, M3] result = {};
-  for (file <- files) {
-  
+  for (folder <- workingCopyFolders, file <- files(folder)) {  
     m = emptyM3(file);
     
     try {
@@ -22,7 +24,7 @@ rel[Language, loc, M3] genericM3(loc project, set[loc] files) {
       chs = size(content);
       lines = chs == 0 ? 1 : (1 | it + 1 | /\n/ := content);
       lastline = size(readFileLines(file)[-1]);
-      m@declarations = { <file[scheme="m3+unit"], file(0,chs,<1,0>,<lines, lastline>)> }; 
+      m@declarations = { <file[scheme="m3+unit"], file(0,chs,<1,0>,<lines, lastline>)> }; // TODO remove
     }
     catch IO(str msg) : {
       m@messages += [error(msg, file)];
@@ -32,4 +34,9 @@ rel[Language, loc, M3] genericM3(loc project, set[loc] files) {
   }
   
   return result;
+}
+
+@ASTExtractor{}
+rel[Language, loc, M3] genericAST(loc project, set[loc] workingCopyFolders, ProjectDelta delta) {
+	return {<generic(), file, lines(readFileLines(file))> | folder <- workingCopyFolders, file <- files(folder)};
 }

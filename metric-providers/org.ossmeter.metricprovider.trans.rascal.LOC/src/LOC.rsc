@@ -1,46 +1,49 @@
 module LOC
 
 import lang::java::m3::Core;
+import Java;
 import analysis::graphs::Graph;
+import analysis::m3::AST;
 import IO;
 import List;
 import String;
 import Set;
 import ValueIO;
+import Relation;
 import org::ossmeter::metricprovider::Manager;
 import org::ossmeter::metricprovider::ProjectDelta;
 
 import analysis::statistics::Frequency;
 import analysis::statistics::Inference;
 
-@metric{loc}
+@metric{genericLOC}
 @doc{loc}
-@friendlyName{loc}
+@friendlyName{Language independent physical lines of code}
 @appliesTo{generic()}
-map[loc, int] countLoc(rel[Language, loc, M3] m3s = {}) {
-  return (f:f.end.line | <_, m3> <- m3s[generic()], f <- range(m3@declarations));
+map[loc, int] countLoc(rel[Language, loc, AST] asts = {}) {
+  return (f:size(ls) | <generic(), _, lines(ls)> <- asts);
 }
 
-@metric{locoverfiles}
+@metric{genericLOCoverFiles}
 @doc{locoverfiles}
-@friendlyName{locoverfiles}
+@friendlyName{Language independent physical lines of code over files}
 @appliesTo{generic()}
-real giniLOCOverFiles(rel[Language, loc, M3] m3s = {}) {
-  map[loc, int] locMap = countLoc(m3s=m3s);
+real giniLOCOverFiles(rel[Language, loc, AST] asts = {}) {
+  map[loc, int] locMap = countLoc(asts=asts);
     
   distLOCOverFiles = distribution(locMap);  
   
   return gini([<0,0>]+[<x, distLOCOverFiles[x]> | x <- distLOCOverFiles]);
 }
 
-@metric{locoverclass}
+@metric{LOCoverClass}
 @doc{locoverclass}
-@friendlyName{locoverclass}
+@friendlyName{Physical lines of code over class}
 @appliesTo{java()}
 real giniLOCOverClass(rel[Language, loc, M3] m3s = {}) {
   map[loc class, int lines] result = ();
 
-  for (<_, m3> <- m3s[java()]) {
+  for (<java(), _, m3> <- m3s) {
     result += (lc : sc.end.line - sc.begin.line + 1 | <lc, sc> <- m3@declarations, isInterface(lc) || isClass(lc) || lc.scheme == "java+enum");
   }
   
