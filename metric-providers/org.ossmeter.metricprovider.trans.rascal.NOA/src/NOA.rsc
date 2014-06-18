@@ -9,8 +9,7 @@ import org::ossmeter::metricprovider::ProjectDelta;
 import IO;
 import ValueIO;
 
-
-map[loc class, int noa] getNOA(ProjectDelta delta, map[str, loc] workingCopyFolders, rel[loc, M3] m3s, bool(loc) isClass, bool(loc) isAttribute)
+map[loc class, int noa] getNOA(ProjectDelta delta, map[loc, loc] workingCopyFolders, rel[loc, M3] m3s, bool(loc) isClass, bool(loc) isAttribute)
 { 
 	map[loc class, int noa] result = ();
 	changed = getChangedFilesInWorkingCopyFolders(delta, workingCopyFolders);
@@ -33,19 +32,19 @@ map[loc class, int noa] getNOA(ProjectDelta delta, map[str, loc] workingCopyFold
 @appliesTo{java()}
 map[loc class, int noa] NOAJava(
 	ProjectDelta delta = ProjectDelta::\empty(),
-	map[str, loc] workingCopyFolders = (),
+	map[loc, loc] workingCopyFolders = (),
 	rel[Language, loc, M3] m3s = {})
 {
 	return getNOA(delta, workingCopyFolders, m3s[java()], lang::java::m3::Core::isClass, lang::java::m3::Core::isField);
 }
 
-@metric{NOAPHP}
+//@metric{NOAPHP}
 @doc{Compute the number of attributes per PHP class}
 @friendlyName{Number of attributes PHP}
 @appliesTo{php()}
 map[loc class, int noa] NOAPHP(
 	ProjectDelta delta = ProjectDelta::\empty(),
-	map[str, loc] workingCopyFolders = (),
+	map[loc, loc] workingCopyFolders = (),
 	rel[Language, loc, M3] m3s = {})
 {
 	return getNOA(delta, workingCopyFolders, m3s[php()], lang::php::m3::Core::isClass, lang::php::m3::Core::isField);

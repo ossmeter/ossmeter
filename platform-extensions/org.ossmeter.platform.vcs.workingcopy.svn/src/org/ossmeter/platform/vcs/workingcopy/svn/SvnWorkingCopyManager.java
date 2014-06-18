@@ -66,10 +66,9 @@ public class SvnWorkingCopyManager implements WorkingCopyManager {
   @Override
   public List<Churn> getDiff(File workingDirectory, String lastRevision) {
 	List<Churn> result = new ArrayList<>();
-	StringBuilder option = new StringBuilder("-r");
+	StringBuilder option = new StringBuilder("-c");
 	if (lastRevision == null) {
-	  option.setLength(0);
-	  option.append("-c");
+	  lastRevision = "1";
 	}
 	option.append(lastRevision);
 	try {
@@ -78,12 +77,13 @@ public class SvnWorkingCopyManager implements WorkingCopyManager {
 	   * this little workaround makes sure the indexes we get for the diffs is in the form
 	   * workingCopyRoot+"/"+itemPath (relative - in the sense how I made it relative in the SVNManager)
 	   */
-	  for (String path: workingDirectory.list()) {
-		  // I hate this!!! :(
-		  if (!path.contains(".DS_Store")) {
-			  commandArgs.add(path);
-		  }
-	  }
+//	  for (String path: workingDirectory.list()) {
+//		  // I hate this!!! :(
+//		  if (!path.contains(".DS_Store")) {
+//			  commandArgs.add(path);
+//		  }
+//	  }
+	  
 	  ProcessBuilder pb = new ProcessBuilder(commandArgs);
 	  pb.redirectErrorStream(true);
 	  pb.directory(workingDirectory);

@@ -49,10 +49,10 @@ public class GitWorkingCopyManager implements WorkingCopyManager {
   @Override
   public List<Churn> getDiff(File workingDirectory, String lastRevision) {
 	  List<Churn> result = new ArrayList<>();
-	  List<String> commandArgs = new ArrayList<>(Arrays.asList(new String[] { "git", "log", "--numstat" }));
+	  List<String> commandArgs = new ArrayList<>(Arrays.asList(new String[] { "git", "show", "--numstat" }));
 	  
 	  if (lastRevision != null) {
-		  commandArgs.add(2, lastRevision.concat(".."));
+		  commandArgs.add(2, lastRevision);
 	  }
 		try {
 		  

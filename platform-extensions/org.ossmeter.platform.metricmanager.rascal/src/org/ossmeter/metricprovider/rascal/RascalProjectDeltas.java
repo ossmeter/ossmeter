@@ -146,6 +146,7 @@ public class RascalProjectDeltas {
   private IConstructor convert(VcsCommitItem commitItem) {
 	List<IValue> children = new ArrayList<>();
 	
+//	children.add(convertToLocation(commitItem.getCommit().getDelta().getRepository().getUrl() + "/" + commitItem.getPath()));
 	children.add(convert(commitItem.getPath()));
 	children.add(convert(commitItem.getChangeType()));
 	children.add(createChurn(churns.get(commitItem.getCommit()), commitItem.getPath()));

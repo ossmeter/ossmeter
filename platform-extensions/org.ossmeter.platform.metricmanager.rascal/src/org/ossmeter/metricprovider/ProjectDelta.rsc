@@ -38,9 +38,9 @@ data Churn
   | linesDeleted(int i)
   ;
   
-map[str, list[str]] getChangedItemsPerRepository(ProjectDelta delta) {
+map[loc, list[str]] getChangedItemsPerRepository(ProjectDelta delta) {
   list[str] emptyList = [];
-  map[str, list[str]] result = ();
+  map[loc, list[str]] result = ();
   for (/VcsRepositoryDelta vcrd <- delta) {
     result[vcrd.repository.url]? emptyList += [ fVCI.path | VcsCommitItem fVCI <- checkSanity([ vci | /VcsCommitItem vci <- vcrd ]) ];
   }
@@ -58,10 +58,10 @@ set[VcsCommitItem] checkSanity(list[VcsCommitItem] items) {
   return result;
 }
 
-list[loc] getChangedFilesInWorkingCopyFolders(ProjectDelta delta, map[str, loc] workingCopyFolders)
+list[loc] getChangedFilesInWorkingCopyFolders(ProjectDelta delta, map[loc, loc] workingCopyFolders)
 {
   list[loc] result = [];
-  map[str, list[str]] changedItemsPerRepo = getChangedItemsPerRepository(delta);
+  map[loc, list[str]] changedItemsPerRepo = getChangedItemsPerRepository(delta);
   
   return [workingCopyFolders[repo] + item | repo <- changedItemsPerRepo, item <- changedItemsPerRepo[repo]];
 }

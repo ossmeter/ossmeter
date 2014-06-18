@@ -4,28 +4,28 @@ import lang::java::m3::Core;
 import lang::java::php::Core;
 import analysis::graphs::Graph;
 import analysis::m3::AST;
-import IO;
-import List;
-import String;
-import Set;
-import ValueIO;
-import Relation;
 import org::ossmeter::metricprovider::Manager;
 import org::ossmeter::metricprovider::ProjectDelta;
 
 import analysis::statistics::Frequency;
 import analysis::statistics::Inference;
 
+import Prelude;
+
 @metric{genericLOC}
 @doc{loc}
 @friendlyName{Language independent physical lines of code}
 @appliesTo{generic()}
 map[loc, int] countLoc(rel[Language, loc, AST] asts = {}) {
-  return (f:size(ls) | <generic(), _, lines(ls)> <- asts);
+  return (f:size(ls) | <generic(), f, lines(ls)> <- asts);
 }
 
 real giniLOC(map[loc, int] locs) {
-  return gini([<0,0>] + toList(distribution(locs)));
+  dist = distribution(locs);
+  if (size(dist) < 1) {
+  	return -1.0; // TODO how can we return no result at all?
+  }
+  return gini([<0,0>] + [<x, dist[x]> | x <- dist]);
 }
 
 @metric{genericLOCoverFiles}
