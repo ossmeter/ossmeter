@@ -21,6 +21,7 @@ rel[Language, loc, M3] javaM3(loc project, set[loc] checkouts) {
 
 // this will become more interesting if we try to recover build information from meta-data
 // for now we do a simple file search
+// we have to find out what are "external" dependencies and also measure these!
 set[loc] findSourceRoots(set[loc] checkouts) {
   bool containsFile(loc d) = isDirectory(d) ? (x <- d.ls && x.extension == "java") : false;
   return {*find(dir, containsFile) | dir <- checkouts};       
