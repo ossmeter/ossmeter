@@ -3,7 +3,6 @@ module PHPMetrics
 extend lang::php::m3::Core;
 import lang::php::m3::Uses;
 import lang::php::stats::Stats;
-import PHP;
 
 @metric{StaticNameResolutionHistogram}
 @doc{Histogram counting type names that could be resolved to a certain number of declarations}
