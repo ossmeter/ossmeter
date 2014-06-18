@@ -25,7 +25,7 @@ public rel[Language, loc, AST] extractASTsPHP(loc project, set[loc] roots, Proje
 	for (root <- roots)
 	{
 		System sys = loadPHPFiles(root);
-		result += { <php(), file, (errscript(m) := sys[file] ? noAST(m) : phpAST(sys[file]))> | file <- sys };
+		result += { <php(), file, (errscript(m) := sys[file]) ? noAST(m) : phpAST(sys[file])> | file <- sys };
 	}
 	
 	return result;
