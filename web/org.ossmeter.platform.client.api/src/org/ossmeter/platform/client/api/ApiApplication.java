@@ -11,6 +11,7 @@ public class ApiApplication extends Application {
 		Router router = new Router(getContext());
 
 		router.attach("/metrics", MetricListResource.class);
+		router.attach("/metrics/", MetricListResource.class);
 		router.attach("/projects", ProjectListResource.class);
 		router.attach("/projects/", ProjectListResource.class);
 		router.attach("/projects/{page}", ProjectListResource.class);
