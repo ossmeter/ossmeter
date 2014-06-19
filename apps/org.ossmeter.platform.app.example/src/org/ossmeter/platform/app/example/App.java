@@ -7,6 +7,7 @@ import org.ossmeter.platform.app.example.util.ProjectCreationUtil;
 import org.ossmeter.platform.osgi.OssmeterApplication;
 import org.ossmeter.repository.model.LocalStorage;
 import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.ProjectCollection;
 import org.ossmeter.repository.model.ProjectRepository;
 
 import com.googlecode.pongo.runtime.PongoFactory;
@@ -23,8 +24,15 @@ public class App implements IApplication {
 		Platform platform = new Platform(mongo);
 		ProjectRepository repo = platform.getProjectRepositoryManager().getProjectRepository();
 		
-		Project pongo = ProjectCreationUtil.createSvnProject("pongo", "http://pongo.googlecode.com/svn/trunk");
-		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(pongo);
+//		Project pongo = ProjectCreationUtil.createSvnProject("pongo", "http://pongo.googlecode.com/svn/trunk");
+//		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(pongo);
+		ProjectCollection coll = repo.getProjects();
+		for (Project p : coll) {
+			coll.remove(p);
+		}
+		
+		Project pdb = ProjectCreationUtil.createGitProject("pdb.values", "file:///Users/jurgenv/Workspaces/Rascal/pdb.values");
+		coll.add(pdb);
 		
 		// Synchronise the changes and close the connection
 		repo.sync();

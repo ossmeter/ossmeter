@@ -3,8 +3,8 @@ package org.ossmeter.platform.app.example.util;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
 import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
-import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 import org.ossmeter.repository.model.vcs.git.GitRepository;
+import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 
 /**
  * This class is purely for illustration purposes and is not intended for release.
@@ -63,6 +63,8 @@ public class ProjectCreationUtil {
 	public static Project createGitProject(String name, String url) {
 		Project project = new Project();
 		project.setName(name);
+		project.setShortName(name);
+		project.setDescription(name);
 		
 		GitRepository repo = new GitRepository();
 		repo.setUrl(url);
