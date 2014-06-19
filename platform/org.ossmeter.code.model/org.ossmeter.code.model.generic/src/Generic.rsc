@@ -15,12 +15,14 @@ void setBlackListedExtensions(set[str] extensions) {
 	  blackListedExtensions += extensions;
 	}
 
-@M3Extractor{}
-rel[Language, loc, M3] genericM3(loc project, set[loc] workingCopyFolders, ProjectDelta delta) {
+@M3Extractor
+@memo
+rel[Language, loc, M3] genericM3(loc project, ProjectDelta delta, map[loc repos,loc folders] checkouts, map[loc,loc] scratch) {
   //if (file.extension in blackListedExtensions) {
   //}
   rel[Language, loc, M3] result = {};
-  for (folder <- workingCopyFolders, file <- files(folder)) {  
+  folders = checkouts<folders>;
+  for (folder <- folders, file <- files(folder)) {  
     m = emptyM3(file);
     
     try {
@@ -40,7 +42,8 @@ rel[Language, loc, M3] genericM3(loc project, set[loc] workingCopyFolders, Proje
   return result;
 }
 
-@ASTExtractor{}
-rel[Language, loc, AST] genericAST(loc project, set[loc] workingCopyFolders, ProjectDelta delta) {
-	return {<generic(), file, lines(readFileLines(file))> | folder <- workingCopyFolders, file <- files(folder)};
+@ASTExtractor
+@memo
+rel[Language, loc, AST] genericAST(loc project, ProjectDelta delta, map[loc repos,loc folders] checkouts, map[loc,loc] scratch) {
+	return {<generic(), file, lines(readFileLines(file))> | folder <- checkouts<folders>, file <- files(folder)};
 }
