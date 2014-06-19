@@ -1,0 +1,17 @@
+package org.ossmeter.platform.factoids;
+
+@db
+class Factoids {
+	val Factoid[*] factoids;
+} 
+
+class Factoid {
+	@searchable
+	attr String metricId;
+	attr String factoid;
+	attr StarRating stars;
+}
+
+enum StarRating {
+	ONE; TWO; THREE; FOUR;
+}
