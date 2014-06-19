@@ -10,6 +10,7 @@ class Factoid {
 	attr String metricId;
 	attr String factoid;
 	attr StarRating stars;
+	attr String[*] metricDependencies;
 }
 
 enum StarRating {

@@ -8,18 +8,22 @@ import com.googlecode.pongo.runtime.querying.*;
 
 public class Factoid extends Pongo {
 	
+	protected List<String> metricDependencies = null;
 	
 	
 	public Factoid() { 
 		super();
+		dbObject.put("metricDependencies", new BasicDBList());
 		METRICID.setOwningType("org.ossmeter.platform.factoids.Factoid");
 		FACTOID.setOwningType("org.ossmeter.platform.factoids.Factoid");
 		STARS.setOwningType("org.ossmeter.platform.factoids.Factoid");
+		METRICDEPENDENCIES.setOwningType("org.ossmeter.platform.factoids.Factoid");
 	}
 	
 	public static StringQueryProducer METRICID = new StringQueryProducer("metricId"); 
 	public static StringQueryProducer FACTOID = new StringQueryProducer("factoid"); 
 	public static StringQueryProducer STARS = new StringQueryProducer("stars"); 
+	public static ArrayQueryProducer METRICDEPENDENCIES = new ArrayQueryProducer("metricDependencies");
 	
 	
 	public String getMetricId() {
@@ -55,6 +59,12 @@ public class Factoid extends Pongo {
 		return this;
 	}
 	
+	public List<String> getMetricDependencies() {
+		if (metricDependencies == null) {
+			metricDependencies = new PrimitiveList<String>(this, (BasicDBList) dbObject.get("metricDependencies"));
+		}
+		return metricDependencies;
+	}
 	
 	
 	

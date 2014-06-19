@@ -47,6 +47,12 @@ public abstract class AbstractFactoidMetricProvider implements ITransientMetricP
 		if (factoid == null) {
 			factoid = new Factoid();
 			factoid.setMetricId(getIdentifier());
+			List<String> uses = getIdentifiersOfUses();
+			if (uses != null) {
+				for (String dep : uses) {
+					factoid.getMetricDependencies().add(dep);
+				}
+			}
 			db.getFactoids().add(factoid);
 		}
 		measureImpl(project, factoid);
