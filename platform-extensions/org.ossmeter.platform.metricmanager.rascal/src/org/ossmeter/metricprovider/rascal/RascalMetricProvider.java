@@ -1,7 +1,8 @@
 package org.ossmeter.metricprovider.rascal;
 
 import java.io.File;
-import java.util.Collections;
+import java.lang.ref.SoftReference;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -44,8 +45,7 @@ import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.VcsRepository;
 import org.rascalmpl.interpreter.control_exceptions.MatchFailed;
 import org.rascalmpl.interpreter.env.KeywordParameter;
-import org.rascalmpl.interpreter.result.ICallableValue;
-import org.rascalmpl.interpreter.result.OverloadedFunction;
+import org.rascalmpl.interpreter.result.AbstractFunction;
 import org.rascalmpl.interpreter.result.RascalFunction;
 import org.rascalmpl.interpreter.result.Result;
 import org.rascalmpl.interpreter.staticErrors.StaticError;
@@ -68,30 +68,38 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 	private final boolean needsPrevious;
 	private final boolean needsWc;
 	private final boolean needsScratch;
+	
+	private final Map<String,String> uses;
+	private final Map<String, IMetricProvider> providers;
 
 	private final String description;
 	private final String friendlyName;
 	private final String shortMetricId;
 	private final String metricId;
-	private final ICallableValue function;
+	private final AbstractFunction function;
 	private final OssmeterLogger logger;
+	private MetricProviderContext context;
 
+	
 	private static String lastRevision = null;
-	private static IValue cachedM3 = null;
-	private static IValue cachedAsts = null;
+	
+	private static SoftReference<IValue> cachedM3;
+	private static SoftReference<IValue> cachedAsts;
 
 	private static Map<String, File> workingCopyFolders = new HashMap<>();
 	private static Map<String, File> scratchFolders = new HashMap<>();
 	private static IConstructor rascalDelta;
 	
 	
-	public RascalMetricProvider(String metricId, String shortMetricId, String friendlyName, String description, ICallableValue function) {
+	public RascalMetricProvider(String metricId, String shortMetricId, String friendlyName, String description, AbstractFunction function, Map<String,String> uses) {
 		this.metricId = metricId;
 		this.shortMetricId =  shortMetricId;
 		this.friendlyName = friendlyName;
 		this.description = description;
 		this.function = function;
-
+		this.uses = uses;
+		this.providers = new HashMap<String,IMetricProvider>();
+		
 		this.needsM3 = hasParameter(M3S_PARAM);
 		this.needsAsts = hasParameter(ASTS_PARAM);
 		this.needsDelta = hasParameter(DELTA_PARAM);
@@ -103,22 +111,11 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		this.logger = (OssmeterLogger) OssmeterLogger.getLogger("RascalMetricProvider (" + metricId + ")");
 		this.logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 
-
 		assert function instanceof RascalFunction;
 	}
 
 	private boolean hasParameter(String param) {
-		ICallableValue f = function;
-		
-		if (f instanceof OverloadedFunction) {
-			f = ((OverloadedFunction) f).getFunctions().get(0);
-		}
-		
-		assert f instanceof RascalFunction;
-		
-		RascalFunction rf = (RascalFunction) f;
-		
-		for (KeywordParameter p : rf.getKeywordParameterDefaults()) {
+		for (KeywordParameter p : function.getKeywordParameterDefaults()) {
 			if (p.getName().equals(param)) {
 				return true;
 			}
@@ -126,6 +123,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		
 		return false;
 	}
+	
 
 	@Override
 	public String toString() {
@@ -159,21 +157,26 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 
 	@Override
 	public void setUses(List<IMetricProvider> uses) {
-
+		for (IMetricProvider provider : uses) {
+			providers.put(provider.getIdentifier(), provider);
+		}
 	}
 
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return Collections.emptyList();
+		List<String> names = new ArrayList<String>(uses.size());
+		names.addAll(uses.keySet());
+		return names;
 	}
 
 	@Override
-	public void setMetricProviderContext(MetricProviderContext context) {	}
+	public void setMetricProviderContext(MetricProviderContext context) {	
+		this.context = context;
+	}
 
 	@Override
 	public RascalMetrics adapt(DB db) {
-		RascalMetrics rm = new RascalMetrics(db, this.metricId);
-		return rm;
+		return new RascalMetrics(db, this.metricId);
 	}
 
 	@Override
@@ -237,7 +240,14 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 					logger.info("computing previous metric values");
 					params.put(PREVIOUS_PARAM, computePrevious(project, db, delta, manager));
 				}
-			
+				
+				for (String use : uses.keySet()) {
+					IMetricProvider provider = providers.get(use);
+					String label = uses.get(use);
+					IValue val = getMetricResult(project, provider, manager);
+					params.put(label, val);
+				}
+				
 				// measurement is included in the sync block to avoid sharing evaluators between metrics
 				logger.info("calling measurement function");
 				//logger.info("with parameters: " + params);
@@ -261,6 +271,12 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 			logger.error("unexpected exception while measuring", e);
 			throw e;
 		}
+	}
+
+	private IValue getMetricResult(Project project, IMetricProvider provider, RascalManager man) {
+		DB db = context.getProjectDB(project);
+		RascalMetrics rascalMetrics = new RascalMetrics(db, provider.getIdentifier());
+		return convertBack(rascalMetrics, man);
 	}
 
 	private IValue computePrevious(Project project, RascalMetrics db, ProjectDelta delta, RascalManager man) {
@@ -287,12 +303,14 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 
 	private IValue computeAsts(Project project, ProjectDelta delta,	RascalManager _instance) {
 		assert !workingCopyFolders.isEmpty();
-
-		if (cachedAsts == null) {
-			cachedAsts = callExtractors(project, delta, _instance, _instance.getASTExtractors());
+		IValue excs;
+		
+		if (cachedAsts == null || (excs = cachedAsts.get()) == null) {
+			excs = callExtractors(project, delta, _instance, _instance.getASTExtractors());
+			cachedAsts = new SoftReference<>(excs);
 		}
 
-		return cachedAsts;
+		return excs;
 	}
 
 	private void storeResult(ProjectDelta delta, RascalMetrics db, IValue result, RascalManager _instance) {
@@ -501,12 +519,15 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 
 	private IValue computeM3(Project project, ProjectDelta delta, RascalManager man) {
 		assert !workingCopyFolders.isEmpty();
-
-		if (cachedM3 == null) {
-			cachedM3 = callExtractors(project, delta, man, man.getM3Extractors());
+		IValue exs;
+		
+		if (cachedM3 == null || (exs = cachedM3.get()) == null) {
+			exs = callExtractors(project, delta, man, man.getM3Extractors());
+			cachedM3 = new SoftReference<>(exs);
 		}
 
-		return cachedM3;
+		assert exs != null;
+		return exs;
 	}
 	
 	private IValue callExtractors(Project project, ProjectDelta delta, RascalManager man, Set<RascalManager.Extractor> extractors) {

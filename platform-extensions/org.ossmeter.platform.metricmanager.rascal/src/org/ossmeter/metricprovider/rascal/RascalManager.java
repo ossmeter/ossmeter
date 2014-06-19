@@ -2,10 +2,13 @@ package org.ossmeter.metricprovider.rascal;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,8 +27,11 @@ import org.eclipse.imp.pdb.facts.IMapWriter;
 import org.eclipse.imp.pdb.facts.ISet;
 import org.eclipse.imp.pdb.facts.ISetWriter;
 import org.eclipse.imp.pdb.facts.ISourceLocation;
+import org.eclipse.imp.pdb.facts.IString;
 import org.eclipse.imp.pdb.facts.IValue;
 import org.eclipse.imp.pdb.facts.IValueFactory;
+import org.eclipse.imp.pdb.facts.exceptions.FactTypeUseException;
+import org.eclipse.imp.pdb.facts.io.StandardTextReader;
 import org.eclipse.imp.pdb.facts.type.Type;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.wiring.BundleWire;
@@ -49,7 +55,6 @@ import org.rascalmpl.interpreter.env.ModuleEnvironment;
 import org.rascalmpl.interpreter.env.Pair;
 import org.rascalmpl.interpreter.load.StandardLibraryContributor;
 import org.rascalmpl.interpreter.result.AbstractFunction;
-import org.rascalmpl.interpreter.result.ICallableValue;
 import org.rascalmpl.interpreter.result.Result;
 import org.rascalmpl.uri.URIUtil;
 import org.rascalmpl.values.ValueFactoryFactory;
@@ -223,7 +228,7 @@ public class RascalManager {
 		configureRascalPath(eval, bundle);
 		metricBundles.add(bundle);
 	}
-
+	
 	private void addMetricProviders(Bundle bundle,
 			List<IMetricProvider> providers) {
 		RascalBundleManifest mf = new RascalBundleManifest();
@@ -246,13 +251,12 @@ public class RascalManager {
 							+ metricName;
 					String friendlyName = f.getTag("friendlyName");
 					String description = f.getTag("doc");
-
-					ICallableValue overloadedFunc = (ICallableValue) module
-							.getVariable(f.getName()).getValue();
+					Map<String,String> uses = getUses(f);
+					
 					// TODO: friendly feedback in case of missing tags
 					RascalMetricProvider transientMetric = new RascalMetricProvider(
-							metricId, funcName, friendlyName, description,
-							overloadedFunc);
+							metricId, funcName, friendlyName, description, f, uses); 
+					
 					providers.add(transientMetric);
 
 					 if (f.hasTag("historic")) {
@@ -264,6 +268,27 @@ public class RascalManager {
 		}
 	}
 	
+	private Map<String,String> getUses(AbstractFunction f) {
+		try {
+			StandardTextReader reader = new StandardTextReader();
+			Map<String,String> map = new HashMap<>();
+			
+			if (f.hasTag("uses")) {
+				IMap m = (IMap) reader.read(VF, new StringReader(f.getTag("uses")));
+
+				for (IValue key : m) {
+					map.put(((IString) key).getValue(), ((IString) m.get(key)).getValue());
+				}
+				
+				return map;
+			}
+		} catch (FactTypeUseException | IOException e) {
+			Rasctivator.logException("could not parse uses tag", e);
+		}
+		
+		return Collections.emptyMap();
+	}
+
 	public Set<Extractor> getM3Extractors() {
 		return m3Extractors;
 	}
