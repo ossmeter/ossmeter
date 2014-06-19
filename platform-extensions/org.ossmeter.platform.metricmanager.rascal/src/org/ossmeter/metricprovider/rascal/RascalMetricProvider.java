@@ -1,7 +1,6 @@
 package org.ossmeter.metricprovider.rascal;
 
 import java.io.File;
-import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,6 +15,7 @@ import org.eclipse.imp.pdb.facts.IList;
 import org.eclipse.imp.pdb.facts.IMap;
 import org.eclipse.imp.pdb.facts.IReal;
 import org.eclipse.imp.pdb.facts.ISet;
+import org.eclipse.imp.pdb.facts.ISetWriter;
 import org.eclipse.imp.pdb.facts.ISourceLocation;
 import org.eclipse.imp.pdb.facts.IString;
 import org.eclipse.imp.pdb.facts.IValue;
@@ -80,12 +80,8 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 	private final OssmeterLogger logger;
 	private MetricProviderContext context;
 
-	
 	private static String lastRevision = null;
 	
-	private static SoftReference<IValue> cachedM3;
-	private static SoftReference<IValue> cachedAsts;
-
 	private static Map<String, File> workingCopyFolders = new HashMap<>();
 	private static Map<String, File> scratchFolders = new HashMap<>();
 	private static IConstructor rascalDelta;
@@ -194,8 +190,6 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 
 				if (needCacheClearance(delta)) {
 					logger.info("\tclearing caches");
-					cachedM3 = null;
-					cachedAsts = null;
 					workingCopyFolders.clear();
 					scratchFolders.clear();
 					rascalDelta = null;
@@ -302,15 +296,8 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 	}
 
 	private IValue computeAsts(Project project, ProjectDelta delta,	RascalManager _instance) {
-		assert !workingCopyFolders.isEmpty();
-		IValue excs;
-		
-		if (cachedAsts == null || (excs = cachedAsts.get()) == null) {
-			excs = callExtractors(project, delta, _instance, _instance.getASTExtractors());
-			cachedAsts = new SoftReference<>(excs);
-		}
-
-		return excs;
+		assert !workingCopyFolders.isEmpty() && delta != null;
+		return callExtractors(project, delta, _instance, _instance.getASTExtractors());
 	}
 
 	private void storeResult(ProjectDelta delta, RascalMetrics db, IValue result, RascalManager _instance) {
@@ -518,34 +505,24 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 
 
 	private IValue computeM3(Project project, ProjectDelta delta, RascalManager man) {
-		assert !workingCopyFolders.isEmpty();
-		IValue exs;
-		
-		if (cachedM3 == null || (exs = cachedM3.get()) == null) {
-			exs = callExtractors(project, delta, man, man.getM3Extractors());
-			cachedM3 = new SoftReference<>(exs);
-		}
-
-		assert exs != null;
-		return exs;
+		assert !workingCopyFolders.isEmpty() && delta != null;
+		return callExtractors(project, delta, man, man.getM3Extractors());
 	}
 	
 	private IValue callExtractors(Project project, ProjectDelta delta, RascalManager man, Set<RascalManager.Extractor> extractors) {
-		ISet allResults = null;
+		ISetWriter allResults = man.getEvaluator().getValueFactory().setWriter();;
 		
 		ISourceLocation projectLoc = man.makeProjectLoc(project);
-		ISet wcf = man.makeLocSet(workingCopyFolders);
+		IMap wcf = man.makeMap(workingCopyFolders);
+		IMap scratch = man.makeMap(scratchFolders);
 		IConstructor rascalDelta = computeDelta(project, delta, man);
 		
 		for (RascalManager.Extractor e : extractors) {
-			ISet result = (ISet) e.call(projectLoc, wcf, rascalDelta);
-			if (allResults == null) {
-				allResults = result;
-			} else {
-				allResults = allResults.union(result);
-			}
+			// generally extractors are assume to use @memo
+			ISet result = (ISet) e.call(projectLoc, rascalDelta, wcf, scratch);
+			allResults.insertAll(result);
 		}
 		
-		return allResults; // TODO what if null?
+		return allResults.done(); // TODO what if null?
 	}
 }
