@@ -1,6 +1,7 @@
 package org.ossmeter.metricprovider.rascal;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,6 +20,7 @@ import org.eclipse.imp.pdb.facts.ISetWriter;
 import org.eclipse.imp.pdb.facts.ISourceLocation;
 import org.eclipse.imp.pdb.facts.IString;
 import org.eclipse.imp.pdb.facts.IValue;
+import org.eclipse.imp.pdb.facts.io.StandardTextWriter;
 import org.eclipse.imp.pdb.facts.type.Type;
 import org.eclipse.imp.pdb.facts.visitors.NullVisitor;
 import org.ossmeter.metricprovider.rascal.trans.model.IntegerMeasurement;
@@ -49,6 +51,8 @@ import org.rascalmpl.interpreter.result.AbstractFunction;
 import org.rascalmpl.interpreter.result.RascalFunction;
 import org.rascalmpl.interpreter.result.Result;
 import org.rascalmpl.interpreter.staticErrors.StaticError;
+import org.rascalmpl.interpreter.utils.LimitedResultWriter;
+import org.rascalmpl.interpreter.utils.LimitedResultWriter.IOLimitReachedException;
 
 import com.mongodb.DB;
 
@@ -104,9 +108,9 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		this.needsWc = hasParameter(WORKING_COPIES_PARAM);
 		this.needsScratch = hasParameter(SCRATCH_FOLDERS_PARAM);
 		
-		this.logger = (OssmeterLogger) OssmeterLogger.getLogger("RascalMetricProvider (" + metricId + ")");
+		this.logger = (OssmeterLogger) OssmeterLogger.getLogger("RascalMetricProvider (" + friendlyName + ")");
 		this.logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
-
+		
 		assert function instanceof RascalFunction;
 	}
 
@@ -247,6 +251,8 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 				//logger.info("with parameters: " + params);
 				Result<IValue> result = function.call(new Type[] { }, new IValue[] { }, params);
 
+				logResult(result);
+				
 				lastRevision = getLastRevision(delta);
 				
 				logger.info("storing metric result");
@@ -261,9 +267,24 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		} catch (MatchFailed e) {
 			logger.error("a Rascal function was called with illegal arguments", e);
 			throw e;
-		} catch (Throwable e) {
+		} catch (IOException e) {
+			logger.error("could not print result for some reason to logger");
+			throw new RuntimeException("Metric failed for unknown reasons", e);
+		}
+		catch (Throwable e) {
 			logger.error("unexpected exception while measuring", e);
 			throw e;
+		}
+	}
+
+	private void logResult(Result<IValue> result) throws IOException {
+		LimitedResultWriter str = new LimitedResultWriter(100);
+		try {
+			new StandardTextWriter().write(result.getValue(), str);
+		}
+		catch (IOLimitReachedException e) { }
+		finally {
+			logger.info("measurement result: " + str.toString());
 		}
 	}
 
@@ -454,6 +475,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 
 	private IConstructor computeDelta(Project project, ProjectDelta delta,
 			RascalManager _instance) {
+		logger.info("\tretrieving from VcsProvider");
 		RascalProjectDeltas rpd = new RascalProjectDeltas(_instance.getEvaluator());
 		List<VcsRepositoryDelta> repoDeltas = delta.getVcsDelta().getRepoDeltas();
 
@@ -467,6 +489,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		if (rascalDelta == null) {
 			Map<VcsCommit, List<Churn>> churnPerCommit = new HashMap<>();
 
+			logger.info("\tcomputing actual source code differences");
 			for (VcsCommit commit: deltaCommits) {
 				assert !workingCopyFolders.isEmpty();
 				VcsRepository repo = commit.getDelta().getRepository();
@@ -479,6 +502,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 				}
 			}
 
+			logger.info("\tconverting delta model to Rascal values");
 			rascalDelta = rpd.convert(delta, churnPerCommit);
 		}
 
