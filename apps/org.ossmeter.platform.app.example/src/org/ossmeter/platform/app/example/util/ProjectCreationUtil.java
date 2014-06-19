@@ -4,6 +4,7 @@ import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
 import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 import org.ossmeter.repository.model.vcs.svn.SvnRepository;
+import org.ossmeter.repository.model.vcs.git.GitRepository;
 
 /**
  * This class is purely for illustration purposes and is not intended for release.
@@ -59,7 +60,6 @@ public class ProjectCreationUtil {
 		return project;
 	}
 	
-	/*
 	public static Project createGitProject(String name, String url) {
 		Project project = new Project();
 		project.setName(name);
@@ -69,7 +69,7 @@ public class ProjectCreationUtil {
 		
 		project.getVcsRepositories().add(repo);
 		return project;
-	}*/
+	}
 	
 	public static Project createProjectWithBugTrackingSystem(String name, String url, String product, String component){
 		Project project = new Project();
