@@ -1,7 +1,6 @@
 package org.ossmeter.platform.osgi.executors;
 
 import java.io.FileWriter;
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,7 +16,6 @@ import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.platform.logging.OssmeterLoggerFactory;
-import org.ossmeter.repository.model.MetricProvider;
 import org.ossmeter.repository.model.MetricProviderExecution;
 import org.ossmeter.repository.model.MetricProviderType;
 import org.ossmeter.repository.model.Project;

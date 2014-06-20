@@ -20,5 +20,6 @@ Export-Package: org.ossmeter.platform,
  org.ossmeter.platform.delta.bugtrackingsystem,
  org.ossmeter.platform.delta.communicationchannel,
  org.ossmeter.platform.delta.vcs,
+ org.ossmeter.platform.factoids,
  org.ossmeter.platform.logging,
  org.ossmeter.platform.util
