@@ -20,6 +20,8 @@ public class ApiApplication extends Application {
 		router.attach("/projects/p/{name}/", ProjectResource.class);
 		router.attach("/projects/p/{name}/m/{metricId}", MetricsResource.class);
 		router.attach("/projects/p/{name}/m/{metricId}/", MetricsResource.class);
+		router.attach("/projects/p/{name}/v/{metricId}", MetricsResource.class);
+		router.attach("/projects/p/{name}/v/{metricId}/", MetricsResource.class);
 		
 		return router;
 	}

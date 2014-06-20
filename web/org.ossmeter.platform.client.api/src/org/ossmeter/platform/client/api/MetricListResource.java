@@ -27,7 +27,7 @@ public class MetricListResource extends ServerResource {
 		Iterator<IMetricProvider> it = platform.getMetricProviderManager().getMetricProviders().iterator();
 		
 		while (it.hasNext()) {
-			IMetricProvider ip = it.next();
+			IMetricProvider ip =  it.next();
 			json += "{ \"name\" : \"" + ip.getFriendlyName() + "\", \"type\" : \"" + ip.getClass().getName() + "\", \"description\" : \"" + ip.getSummaryInformation() + "\" }";
 			if (it.hasNext()) json += ",";
 		}
