@@ -1,49 +1,64 @@
 module LOC
 
 import lang::java::m3::Core;
+import lang::java::php::Core;
 import analysis::graphs::Graph;
-import IO;
-import List;
-import String;
-import Set;
-import ValueIO;
+import analysis::m3::AST;
 import org::ossmeter::metricprovider::Manager;
 import org::ossmeter::metricprovider::ProjectDelta;
 
 import analysis::statistics::Frequency;
 import analysis::statistics::Inference;
 
-@metric{loc}
+import Prelude;
+
+@metric{genericLOC}
 @doc{loc}
-@friendlyName{loc}
+@friendlyName{Language independent physical lines of code}
 @appliesTo{generic()}
-map[loc, int] countLoc(rel[Language, loc, M3] m3s = {}) {
-  return (f:f.end.line | <_, m3> <- m3s[generic()], f <- range(m3@declarations));
+map[loc, int] countLoc(rel[Language, loc, AST] asts = {}) {
+  return (f:size(ls) | <generic(), f, lines(ls)> <- asts);
 }
 
-@metric{locoverfiles}
-@doc{locoverfiles}
-@friendlyName{locoverfiles}
-@appliesTo{generic()}
-real giniLOCOverFiles(rel[Language, loc, M3] m3s = {}) {
-  map[loc, int] locMap = countLoc(m3s=m3s);
-    
-  distLOCOverFiles = distribution(locMap);  
-  
-  return gini([<0,0>]+[<x, distLOCOverFiles[x]> | x <- distLOCOverFiles]);
-}
-
-@metric{locoverclass}
-@doc{locoverclass}
-@friendlyName{locoverclass}
-@appliesTo{java()}
-real giniLOCOverClass(rel[Language, loc, M3] m3s = {}) {
-  map[loc class, int lines] result = ();
-
-  for (<_, m3> <- m3s[java()]) {
-    result += (lc : sc.end.line - sc.begin.line + 1 | <lc, sc> <- m3@declarations, isInterface(lc) || isClass(lc) || lc.scheme == "java+enum");
+real giniLOC(map[loc, int] locs) {
+  dist = distribution(locs);
+  if (size(dist) < 1) {
+  	return -1.0; // TODO how can we return no result at all?
   }
-  
-  distLOCOverClass = distribution(result);
-  return gini([<0,0>]+[<x, distLOCOverClass[x]> | x <- distLOCOverClass]);
+  return gini([<0,0>] + [<x, dist[x]> | x <- dist]);
+}
+
+@metric{genericLOCoverFiles}
+@doc{Language independent physical lines of code over files}
+@friendlyName{Language independent physical lines of code over files}
+@appliesTo{generic()}
+real giniLOCOverFiles(rel[Language, loc, AST] asts = {}) {
+  return giniLOC(countLoc(asts=asts));
+}
+
+real giniLOCOverClass(set[M3] m3s, bool(loc) isClass) {
+  classLines = (lc : sc.end.line - sc.begin.line + 1 | m3 <- m3s, <lc, sc> <- m3@declarations, isClass(lc));
+  return giniLOC(classLines);
+}
+
+@metric{LOCoverJavaClass}
+@doc{Physical lines of code over Java classes, interfaces and enums}
+@friendlyName{Physical lines of code over Java classes, interfaces and enums}
+@appliesTo{java()}
+real giniLOCOverClassJava(rel[Language, loc, M3] m3s = {}) {
+  return giniLOCOverClass({m3 | <java(), _, m3> <- m3s}, 
+  	bool(loc lc) {
+  		return lang::java::m3::Core::isInterface(lc) || lang::java::m3::Core::isClass(lc) || lc.scheme == "java+enum";
+  	});
+}
+
+@metric{LOCoverPHPClass}
+@doc{Physical lines of code over PHP classes and interfaces}
+@friendlyName{Physical lines of code over PHP classes and interfaces}
+@appliesTo{php()}
+real giniLOCOverClassPHP(rel[Language, loc, M3] m3s = {}) {
+  return giniLOCOverClass({m3 | <php(), _, m3> <- m3s}, 
+  	bool(loc lc) {
+  		return lang::php::m3::Core::isInterface(lc) || lang::php::m3::Core::isClass(lc);
+  	});
 }

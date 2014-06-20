@@ -3,7 +3,7 @@ package org.ossmeter.metricprovider.rascal;
 import java.util.Arrays;
 import java.util.List;
 
-import org.ossmeter.metricprovider.rascal.historic.model.RascalHistoricMetrics;
+import org.ossmeter.metricprovider.rascal.trans.model.ListMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.Measurement;
 import org.ossmeter.metricprovider.rascal.trans.model.RascalMetrics;
 import org.ossmeter.platform.IHistoricalMetricProvider;
@@ -72,15 +72,14 @@ public class RascalMetricHistoryWrapper implements IHistoricalMetricProvider {
 		DB db = context.getProjectDB(project);
 		RascalMetrics result = transientId.adapt(db);
 		
-		RascalHistoricMetrics history = new RascalHistoricMetrics(db, getIdentifier());
+		ListMeasurement list = new ListMeasurement();
+		List<Measurement> collection = list.getValue();
 		
 		for (Measurement m : result.getMeasurements()) {
-			history.getMeasurements().add(m);
+			collection.add(m);
 		}
-
-		// TODO: now what?
-//		return history;
-		return null;
+  
+		return list;
 	}
 	
 }

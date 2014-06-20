@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import org.ossmeter.platform.Date;
@@ -44,6 +45,14 @@ public class SvnManager extends AbstractVcsManager {
 		VcsRepositoryDelta delta = new VcsRepositoryDelta();
 		delta.setRepository(repository);
 		
+		String userProviderURL = _svnRepository.getUrl();
+		String rootURL = svnRepository.getRepositoryRoot(false).toDecodedString();
+		
+		String overLappedURL = makeRelative(rootURL, userProviderURL);
+		if (!overLappedURL.startsWith("/")) {
+			overLappedURL = "/" + overLappedURL;
+		}
+		
 //		if (!startRevision.equals(endRevision)) {
 			Collection<?> c = svnRepository.log(new String[]{""}, null, Long.valueOf(startRevision), Long.valueOf(endRevision), true, true);
 
@@ -77,7 +86,12 @@ public class SvnManager extends AbstractVcsManager {
 							VcsCommitItem commitItem = new VcsCommitItem();
 							commit.getItems().add(commitItem);
 							commitItem.setCommit(commit);
-							commitItem.setPath(path);
+							
+							String relativePath = makeRelative(overLappedURL, path);
+							if (!relativePath.startsWith("/")) {
+								relativePath = "/" + path;
+							}
+							commitItem.setPath(relativePath);
 							
 							if (svnLogEntryPath.getType() == 'A') {
 								commitItem.setChangeType(VcsChangeType.ADDED);
@@ -199,5 +213,18 @@ public class SvnManager extends AbstractVcsManager {
 			}
 		}
 		return null;
+	}
+	
+	private String makeRelative(String base, String extension) {
+		StringBuilder result = new StringBuilder();
+		List<String> baseSegments = Arrays.asList(base.split("/"));
+		String[] extensionSegments = extension.split("/");
+		for (String ext : extensionSegments) {
+			if (!baseSegments.contains(ext)) {
+				result.append(extension.substring(extension.indexOf(ext)));
+				break;
+			}
+		}
+		return result.toString();
 	}
 }

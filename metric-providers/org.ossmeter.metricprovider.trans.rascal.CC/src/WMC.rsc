@@ -12,7 +12,6 @@ import ValueIO;
 import analysis::statistics::Frequency;
 import analysis::statistics::Inference;
 
-import org::ossmeter::metricprovider::Manager;
 import org::ossmeter::metricprovider::ProjectDelta;
 
 
@@ -22,15 +21,14 @@ import org::ossmeter::metricprovider::ProjectDelta;
 @appliesTo{java()}
 map[loc class, num wmcCount] getWMC(
 	ProjectDelta delta = ProjectDelta::\empty(),
-	map[str, loc] workingCopyFolders = (),
+	map[loc, loc] workingCopyFolders = (),
 	rel[Language, loc, M3] m3s = {},
 	rel[Language, loc, AST] asts = {})
 {
 	map[loc class, num wmcCount] result = ();
 	changed = getChangedFilesInWorkingCopyFolders(delta, workingCopyFolders);
 	
-	for (file <- changed, m3 <- m3s[java(), file], ast <- asts[java(), file])
-	{
+	for (file <- changed, m3 <- m3s[java(), file], ast <- asts[java(), file]) {
 		result += (cl : sum([getCC(m, ast) | m <- m3@containment[cl], isMethod(m)]) | <cl, _> <- m3@containment, isClass(cl));
 	}
 	 
@@ -43,15 +41,14 @@ map[loc class, num wmcCount] getWMC(
 @appliesTo{java()}
 map[loc method, int cc] getCC(
 	ProjectDelta delta = ProjectDelta::\empty(),
-	map[str, loc] workingCopyFolders = (),
+	map[loc, loc] workingCopyFolders = (),
 	rel[Language, loc, M3] m3s = {},
 	rel[Language, loc, AST] asts = {})
 {
 	map[loc method, int cc] result = ();
 	changed = getChangedFilesInWorkingCopyFolders(delta, workingCopyFolders);
 
-	for (file <- changed, m3 <- m3s[java(), file], ast <- asts[java(), file])
-	{
+	for (file <- changed, m3 <- m3s[java(), file], ast <- asts[java(), file]) {
 		result += (m : getCC(m, ast) | <cl, m> <- m3@containment, isClass(cl), isMethod(m));
 	}
 
@@ -89,19 +86,23 @@ int getCC(loc m, Declaration ast) {
   return count;
 }
 
-@metric{ccovermethods}
+//@metric{ccovermethods}
 @doc{Calculates the gini coefficient of cc over methods}
 @friendlyName{ccovermethods}
 @appliesTo{java()}
 real giniCCOverMethods(
 	ProjectDelta delta = ProjectDelta::\empty(),
-	map[str, loc] workingCopyFolders = (),
+	map[loc, loc] workingCopyFolders = (),
 	rel[Language, loc, M3] m3s = {},
 	rel[Language, loc, AST] asts = {})
 {
   map[loc, int] ccMap = getCC(delta=delta, workingCopyFolders=workingCopyFolders, m3s=m3s, asts=asts);
   
   distCCOverMethods = distribution(ccMap);
+  
+  if (size(distCCOverMethods) < 2) {
+    return -1.0;
+  }
   
   return gini([<0,0>]+[<x, distCCOverMethods[x]> | x <- distCCOverMethods]);
 }

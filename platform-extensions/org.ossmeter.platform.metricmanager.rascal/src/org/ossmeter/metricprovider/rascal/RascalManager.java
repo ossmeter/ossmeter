@@ -2,11 +2,13 @@ package org.ossmeter.metricprovider.rascal;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.StringReader;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,24 +17,36 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IExtension;
+import org.eclipse.core.runtime.IExtensionPoint;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.imp.pdb.facts.IConstructor;
+import org.eclipse.imp.pdb.facts.IListWriter;
 import org.eclipse.imp.pdb.facts.IMap;
 import org.eclipse.imp.pdb.facts.IMapWriter;
 import org.eclipse.imp.pdb.facts.ISet;
 import org.eclipse.imp.pdb.facts.ISetWriter;
 import org.eclipse.imp.pdb.facts.ISourceLocation;
+import org.eclipse.imp.pdb.facts.IString;
 import org.eclipse.imp.pdb.facts.IValue;
 import org.eclipse.imp.pdb.facts.IValueFactory;
+import org.eclipse.imp.pdb.facts.exceptions.FactTypeUseException;
+import org.eclipse.imp.pdb.facts.io.StandardTextReader;
+import org.eclipse.imp.pdb.facts.type.Type;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.wiring.BundleWire;
 import org.osgi.framework.wiring.BundleWiring;
 import org.ossmeter.metricprovider.rascal.trans.model.BooleanMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.IntegerMeasurement;
+import org.ossmeter.metricprovider.rascal.trans.model.ListMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.Measurement;
 import org.ossmeter.metricprovider.rascal.trans.model.RascalMetrics;
 import org.ossmeter.metricprovider.rascal.trans.model.RealMeasurement;
+import org.ossmeter.metricprovider.rascal.trans.model.SetMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.StringMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.URIMeasurement;
 import org.ossmeter.platform.IMetricProvider;
+import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.repository.model.Project;
 import org.rascalmpl.interpreter.Evaluator;
 import org.rascalmpl.interpreter.NullRascalMonitor;
@@ -41,8 +55,7 @@ import org.rascalmpl.interpreter.env.ModuleEnvironment;
 import org.rascalmpl.interpreter.env.Pair;
 import org.rascalmpl.interpreter.load.StandardLibraryContributor;
 import org.rascalmpl.interpreter.result.AbstractFunction;
-import org.rascalmpl.interpreter.result.ICallableValue;
-import org.rascalmpl.interpreter.staticErrors.StaticError;
+import org.rascalmpl.interpreter.result.Result;
 import org.rascalmpl.uri.URIUtil;
 import org.rascalmpl.values.ValueFactoryFactory;
 
@@ -57,6 +70,33 @@ public class RascalManager {
 		public static final RascalManager sInstance = new RascalManager();
 	}
 
+	public class Extractor {
+		public ModuleEnvironment module;
+		public AbstractFunction function;
+		public IValue language;
+		
+		public Extractor(AbstractFunction fun, ModuleEnvironment env, IValue lang) {
+			function = fun;
+			module = env;
+			language = lang;
+			
+			if (!fun.hasTag("memo")) {
+				throw new IllegalArgumentException("Rascal M3 extractor functions should have an @memo tag.");
+			}
+		}
+		
+		public IValue call(ISourceLocation projectLocation, IConstructor delta, IMap workingCopyFolders, IMap scratchFolders) {
+			Result<IValue> result = function.call(new NullRascalMonitor(),
+					new Type[]{projectLocation.getType(), delta.getType(), workingCopyFolders.getType(), scratchFolders.getType()},
+					new IValue[]{projectLocation, delta, workingCopyFolders, scratchFolders}, null);
+			// TODO error handling
+			return result.getValue();
+		}
+	}
+	
+	private final Set<Extractor> m3Extractors = new HashSet<>();
+	private final Set<Extractor> astExtractors = new HashSet<>();
+	
 	public static final String MODULE = "org::ossmeter::metricprovider::Manager";
 
 	public void configureRascalMetricProviders(Set<Bundle> providers) {
@@ -69,15 +109,18 @@ public class RascalManager {
 
 	private Evaluator createEvaluator() {
 		GlobalEnvironment heap = new GlobalEnvironment();
-		ModuleEnvironment moduleRoot = new ModuleEnvironment(
-				"******ossmeter******", heap);
+		ModuleEnvironment moduleRoot = new ModuleEnvironment("******ossmeter******", heap);
 
-		Evaluator eval = new Evaluator(VF, new PrintWriter(System.err),
-				new PrintWriter(System.out), moduleRoot, heap);
-		eval.getResolverRegistry().registerInput(
-				new BundleURIResolver(eval.getResolverRegistry()));
-		eval.addRascalSearchPathContributor(StandardLibraryContributor
-				.getInstance());
+		OssmeterLogger log = (OssmeterLogger) OssmeterLogger.getLogger("Rascal console");
+		log.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
+		LoggerWriter stderr = new LoggerWriter(true, log);
+		LoggerWriter stdout = new LoggerWriter(false, log);
+		
+		Evaluator eval = new Evaluator(VF, stderr, stdout, moduleRoot, heap);
+		
+		eval.setMonitor(new RascalMonitor(log));
+		eval.getResolverRegistry().registerInput(new BundleURIResolver(eval.getResolverRegistry()));
+		eval.addRascalSearchPathContributor(StandardLibraryContributor.getInstance());
 		try {
 			Bundle currentBundle = Rasctivator.getContext().getBundle();
 			List<String> roots = new RascalBundleManifest()
@@ -88,10 +131,7 @@ public class RascalManager {
 						.toURI());
 			}
 		} catch (URISyntaxException e) {
-			Rasctivator
-					.logException(
-							"failed to add the current bundle path to rascal search path",
-							e);
+			Rasctivator.logException("failed to add the current bundle path to rascal search path", e);
 		}
 		return eval;
 	}
@@ -192,7 +232,7 @@ public class RascalManager {
 		configureRascalPath(eval, bundle);
 		metricBundles.add(bundle);
 	}
-
+	
 	private void addMetricProviders(Bundle bundle,
 			List<IMetricProvider> providers) {
 		RascalBundleManifest mf = new RascalBundleManifest();
@@ -215,27 +255,74 @@ public class RascalManager {
 							+ metricName;
 					String friendlyName = f.getTag("friendlyName");
 					String description = f.getTag("doc");
-
-					ICallableValue overloadedFunc = (ICallableValue) module
-							.getVariable(f.getName()).getValue();
+					Map<String,String> uses = getUses(f);
+					
 					// TODO: friendly feedback in case of missing tags
 					RascalMetricProvider transientMetric = new RascalMetricProvider(
-							metricId, funcName, friendlyName, description,
-							overloadedFunc);
+							metricId, funcName, friendlyName, description, f, uses); 
+					
 					providers.add(transientMetric);
 
 					 if (f.hasTag("historic")) {
 					 // now we also story the results historically
-						 // TODO: turned off because historic providers need additional support from platform
-//						 providers.add(new RascalMetricHistoryWrapper(transientMetric));
+						 providers.add(new RascalMetricHistoryWrapper(transientMetric));
 					 }
 				}
 			}
 		}
 	}
+	
+	private Map<String,String> getUses(AbstractFunction f) {
+		try {
+			StandardTextReader reader = new StandardTextReader();
+			Map<String,String> map = new HashMap<>();
+			
+			if (f.hasTag("uses")) {
+				IMap m = (IMap) reader.read(VF, new StringReader(f.getTag("uses")));
 
-	public List<IMetricProvider> getMetricProviders() {
+				for (IValue key : m) {
+					map.put(((IString) key).getValue(), ((IString) m.get(key)).getValue());
+				}
+				
+				return map;
+			}
+		} catch (FactTypeUseException | IOException e) {
+			Rasctivator.logException("could not parse uses tag", e);
+		}
+		
+		return Collections.emptyMap();
+	}
+
+	public Set<Extractor> getM3Extractors() {
+		return m3Extractors;
+	}
+	
+	public Set<Extractor> getASTExtractors() {
+		return astExtractors;
+	}
+
+	public synchronized List<IMetricProvider> getMetricProviders() {
 		List<IMetricProvider> providers = new LinkedList<>();
+		
+		IExtensionPoint extensionPoint = Platform.getExtensionRegistry()
+				.getExtensionPoint("ossmeter.rascal.metricprovider");
+
+		if (extensionPoint != null) {
+			for (IExtension element : extensionPoint.getExtensions()) {
+				String name = element.getContributor().getName();
+				Bundle bundle = Platform.getBundle(name);
+				registerRascalMetricProvider(bundle);
+			}
+		}
+
+		extensionPoint = Platform.getExtensionRegistry().getExtensionPoint("ossmeter.rascal.extractor");
+		if (extensionPoint != null) {
+			for (IExtension element : extensionPoint.getExtensions()) {
+				String name = element.getContributor().getName();
+				Bundle bundle = Platform.getBundle(name);
+				registerExtractor(bundle);
+			}
+		}
 
 		for (Bundle bundle : metricBundles) {
 			addMetricProviders(bundle, providers);
@@ -253,7 +340,7 @@ public class RascalManager {
 		IMapWriter result = VF.mapWriter();
 
 		for (Entry<String, File> entry : foldersMap.entrySet()) {
-			result.put(VF.string(entry.getKey()),
+			result.put(VF.sourceLocation(URIUtil.assumeCorrect(entry.getKey())),
 					VF.sourceLocation(entry.getValue().getAbsolutePath()));
 		}
 
@@ -283,11 +370,10 @@ public class RascalManager {
 
 		for (Pair<String, List<AbstractFunction>> func : module.getFunctions()) {
 			for (final AbstractFunction f : func.getSecond()) {
-				// TODO: add some type checking on the arguments
-				if (f.hasTag("extractor")) {
-					// note this has a side effect storing the extractor in a
-					// Rascal global variable.
-					eval.eval(new NullRascalMonitor(),"registerExtractor(" + f.getName() + ");" , module.getLocation().getURI());
+				if (f.hasTag("M3Extractor")) {
+					m3Extractors.add(new Extractor(f, module, null));
+				} else if (f.hasTag("ASTExtractor")) {
+					astExtractors.add(new Extractor(f, module, null));								
 				}
 			}
 		}
@@ -328,8 +414,34 @@ public class RascalManager {
 		else if (e instanceof BooleanMeasurement) {
 			return toBoolValue((BooleanMeasurement) e);
 		}
+		else if (e instanceof ListMeasurement) {
+			return toListValue((ListMeasurement) e);
+		}
+		else if (e instanceof SetMeasurement) {
+			return toSetValue((SetMeasurement) e);
+		}
 		
 		throw new IllegalArgumentException(e.toString());
+	}
+
+	private IValue toSetValue(SetMeasurement e) {
+		ISetWriter w = VF.setWriter();
+		
+		for (Measurement m : e.getValue()) {
+			w.insert(toValue(m));
+		}
+		
+		return w.done();
+	}
+
+	private IValue toListValue(ListMeasurement e) {
+		IListWriter w = VF.listWriter();
+		
+		for (Measurement m : e.getValue()) {
+			w.insert(toValue(m));
+		}
+		
+		return w.done();
 	}
 
 	private IValue toBoolValue(BooleanMeasurement e) {

@@ -3,7 +3,6 @@ module PHPMetrics
 extend lang::php::m3::Core;
 import lang::php::m3::Uses;
 import lang::php::stats::Stats;
-import PHP;
 
 @metric{StaticNameResolutionHistogram}
 @doc{Histogram counting type names that could be resolved to a certain number of declarations}
@@ -62,13 +61,15 @@ private set[str] varLabelMetrics = {
 						"continue with non-literal argument"};	
 
 @memo
-private map[str, int] getCounts(System sys) = featureCounts(sys);
+private map[str, int] getCounts(rel[Language, loc, AST] asts)
+{
+	System sys = ( ast.file : ast.script  | <php(), _, ast> <- asts );
+	return featureCounts(sys);
+}
 
 private int sumMetrics(rel[Language, loc, AST] asts, set[str] metricNames)
 {
-	System sys = ( ast.file : ast.script  | <php(), _, ast> <- asts );
-
-	counts = getCounts(sys);
+	counts = getCounts(asts);
 
 	return sum([counts[n] | n <- metricNames]);
 }
@@ -142,5 +143,5 @@ public int getNumberOfVarLabelUses(rel[Language, loc, AST] asts = ())
 @appliesTo{php()}
 public int getNumberOfEvalCalls(rel[Language, loc, AST] asts = ())
 {
-	return (0 | it + 1 | /call(name(name(/eval/i)), _) <- asts);
+	return (0 | it + 1 | <php(), _, ast> <- asts, /call(name(name(/eval/i)), _) <- ast);
 }

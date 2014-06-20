@@ -1,6 +1,5 @@
 module MethodChurn
 
-import org::ossmeter::metricprovider::Manager;
 import org::ossmeter::metricprovider::ProjectDelta;
 import Set;
 

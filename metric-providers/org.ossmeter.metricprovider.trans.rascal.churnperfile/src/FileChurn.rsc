@@ -1,6 +1,5 @@
 module FileChurn
 
-import org::ossmeter::metricprovider::Manager;
 import org::ossmeter::metricprovider::ProjectDelta;
 
 @metric{churnPerFile}

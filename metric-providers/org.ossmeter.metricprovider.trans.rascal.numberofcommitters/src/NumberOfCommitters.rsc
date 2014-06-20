@@ -1,6 +1,5 @@
 module NumberOfCommitters
 
-import org::ossmeter::metricprovider::Manager;
 import org::ossmeter::metricprovider::ProjectDelta;
 
 import Set;
@@ -17,10 +16,13 @@ map[loc file, int numberOfCommitters] countCommittersPerFile(ProjectDelta delta 
 map[loc, set[str]] committersPerFile(ProjectDelta delta) {
   map[loc file, set[str] committers] result = ();
   set[str] emptySet = {};
-  for (/VcsCommit vc <- delta, vc.author != "null") {
-    for (VcsCommitItem vci <- vc.items) {
-      // Need to check that the committer is not already counted
-      result[vci]? emptySet += {vc.author};
+  for (/VcsRepositoryDelta vcrd <- delta) {
+    loc repo = vcrd.repository.url;
+    for (/VcsCommit vc <- delta, vc.author != "null") {
+      for (VcsCommitItem vci <- vc.items) {
+        // Need to check that the committer is not already counted
+        result[repo+vci.path]? emptySet += {vc.author};
+      }
     }
   }
   

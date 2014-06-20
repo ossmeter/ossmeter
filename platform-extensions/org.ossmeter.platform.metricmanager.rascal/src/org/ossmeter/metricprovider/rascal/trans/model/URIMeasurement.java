@@ -1,9 +1,6 @@
 package org.ossmeter.metricprovider.rascal.trans.model;
 
-import com.mongodb.*;
-import java.util.*;
-import com.googlecode.pongo.runtime.*;
-import com.googlecode.pongo.runtime.querying.*;
+import com.googlecode.pongo.runtime.querying.StringQueryProducer;
 
 
 public class URIMeasurement extends Measurement {

@@ -8,6 +8,6 @@ import org.ossmeter.platform.IMetricProviderManager;
 public class RascalMetricProviderManager implements IMetricProviderManager {
 	@Override
 	public List<IMetricProvider> getMetricProviders() {
-	  return RascalManager.getInstance().getMetricProviders();
+		return RascalManager.getInstance().getMetricProviders();
 	}
 }
