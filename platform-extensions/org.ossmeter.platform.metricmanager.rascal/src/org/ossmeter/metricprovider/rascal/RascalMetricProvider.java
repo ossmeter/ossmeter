@@ -310,6 +310,9 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 
 	private String getLastRevision(ProjectDelta delta) {
 		List<VcsRepositoryDelta> repoDeltas = delta.getVcsDelta().getRepoDeltas();
+		if (repoDeltas.isEmpty()) {
+			return lastRevision;
+		}
 		VcsRepositoryDelta deltas = repoDeltas.get(repoDeltas.size() - 1);
 		List<VcsCommit> commits = deltas.getCommits();
 		String revision = commits.get(commits.size() - 1).getRevision();
