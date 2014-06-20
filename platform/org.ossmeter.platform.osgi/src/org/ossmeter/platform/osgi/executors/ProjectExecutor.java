@@ -13,6 +13,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.ossmeter.platform.AbstractFactoidMetricProvider;
 import org.ossmeter.platform.Date;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.Platform;
@@ -75,8 +76,11 @@ public class ProjectExecutor implements Runnable {
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 		
 		// Split metrics into branches
+		List<IMetricProvider> metricProviders = platform.getMetricProviderManager().getMetricProviders();
+		List<IMetricProvider> factoids = extractFactoidProviders(metricProviders);
+		
 		logger.info("Creating metric branches.");
-		List<List<IMetricProvider>> metricBranches = splitIntoBranches(platform.getMetricProviderManager().getMetricProviders());
+		List<List<IMetricProvider>> metricBranches = splitIntoBranches(metricProviders);
 		logger.info("Created metric branches.");
 		
 		// Find the date to start from 
@@ -125,6 +129,17 @@ public class ProjectExecutor implements Runnable {
 				logger.error("Exception thrown when shutting down executor service.", e);
 			}
 			
+			// Now fun the factoids: 
+			// FIXME: Should factoids only run on the last date..? It depends on whether factoid results can 
+			// depend on other factoids...
+			if (factoids.size() > 0) {
+				logger.info("Executing factoids.");
+				MetricListExecutor mExe = new MetricListExecutor(platform, project, delta, date);
+				mExe.setMetricList(factoids);
+				mExe.run(); // TODO Blocking (as desired). But should it have its own thread?
+			}
+			
+			// Update meta-data
 			if (project.getExecutionInformation().getInErrorState()) {
 				// TODO: what should we do? Is the act of not-updating the lastExecuted flag enough?
 				// If it continues to loop, it simply tries tomorrow. We need to stop this happening.
@@ -140,13 +155,28 @@ public class ProjectExecutor implements Runnable {
 		logger.info("Project execution complete. In error state: " + project.getExecutionInformation().getInErrorState());
 	}
 
+	protected List<IMetricProvider> extractFactoidProviders(List<IMetricProvider> allProviders) {
+		List<IMetricProvider> factoids = new ArrayList<>();
+		
+		for (IMetricProvider imp : allProviders) {
+			if (imp instanceof AbstractFactoidMetricProvider) {
+				factoids.add(imp);
+			}
+		}
+		
+		allProviders.removeAll(factoids);
+		
+		return factoids;
+	}
+	
+	
 	/**
 	 * Algorithm to split a list of metric providers into dependency branches. Current implementation isn't
 	 * wonderful - it was built to work, not to perform - and needs relooking at in the future. 
 	 * @param metrics
 	 * @return
 	 */
-	public List<List<IMetricProvider>> splitIntoBranches(List<IMetricProvider> metrics) {
+	protected List<List<IMetricProvider>> splitIntoBranches(List<IMetricProvider> metrics) {
 		List<Set<IMetricProvider>> branches = new ArrayList<Set<IMetricProvider>>();
 		
 		for (IMetricProvider m : metrics) {

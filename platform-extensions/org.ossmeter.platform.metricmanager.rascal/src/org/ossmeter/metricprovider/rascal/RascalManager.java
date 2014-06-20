@@ -79,12 +79,16 @@ public class RascalManager {
 			function = fun;
 			module = env;
 			language = lang;
+			
+			if (!fun.hasTag("memo")) {
+				throw new IllegalArgumentException("Rascal M3 extractor functions should have an @memo tag.");
+			}
 		}
 		
-		public IValue call(ISourceLocation projectLocation, ISet workingCopyFolders, IConstructor delta) {
+		public IValue call(ISourceLocation projectLocation, IConstructor delta, IMap workingCopyFolders, IMap scratchFolders) {
 			Result<IValue> result = function.call(new NullRascalMonitor(),
-					new Type[]{projectLocation.getType(), workingCopyFolders.getType(), delta.getType()},
-					new IValue[]{projectLocation, workingCopyFolders, delta}, null);
+					new Type[]{projectLocation.getType(), delta.getType(), workingCopyFolders.getType(), scratchFolders.getType()},
+					new IValue[]{projectLocation, delta, workingCopyFolders, scratchFolders}, null);
 			// TODO error handling
 			return result.getValue();
 		}
