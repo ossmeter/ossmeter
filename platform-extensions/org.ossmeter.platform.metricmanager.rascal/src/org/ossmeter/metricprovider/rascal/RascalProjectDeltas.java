@@ -2,6 +2,7 @@ package org.ossmeter.metricprovider.rascal;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -45,8 +46,8 @@ public class RascalProjectDeltas {
 	store.extendStore(eval.getHeap().getModule(MODULE).getStore());
   }
 
-  public IConstructor emptyDelta() {
-	  return createConstructor("ProjectDelta", "empty");
+  public IConstructor emptyDelta(ProjectDelta delta) {
+	  return convert(delta, Collections.<VcsCommit, List<Churn>>emptyMap());
   }
   
   public IConstructor convert(final ProjectDelta delta, Map<VcsCommit, List<Churn>> churnPerCommit) {

@@ -513,7 +513,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		List<VcsRepositoryDelta> repoDeltas = delta.getVcsDelta().getRepoDeltas();
 
 		if (repoDeltas.isEmpty()) { 
-			return rpd.emptyDelta();
+			return rpd.emptyDelta(delta);
 		}
 
 		List<VcsCommit> deltaCommits = repoDeltas.get(repoDeltas.size()-1).getCommits();

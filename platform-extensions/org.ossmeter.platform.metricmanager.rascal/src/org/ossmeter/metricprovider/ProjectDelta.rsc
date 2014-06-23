@@ -2,8 +2,9 @@ module org::ossmeter::metricprovider::ProjectDelta
 
 data ProjectDelta
   = projectDelta(datetime date, Project project, list[VcsRepositoryDelta] vcsProjectDelta)
-  | \empty()
   ;
+  
+ProjectDelta empty() = projectDelta($1970-01-01$, project("", []), []);
   
 data Project
   = project(str name, list[VcsRepository] vcsRepositories)
