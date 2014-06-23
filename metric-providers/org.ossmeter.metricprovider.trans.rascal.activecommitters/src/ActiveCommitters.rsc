@@ -43,5 +43,6 @@ list[str] activeCommitters(ProjectDelta delta = \empty()) {
 @doc{numbrofactivecommitters}
 @friendlyName{numberofactivecommitters}
 @uses{("org.ossmeter.metricprovider.trans.rascal.activecommitters.activeCommitters":"activeCommittersData")}
+@historic{}
 int numberOfActiveCommitters(ProjectDelta delta = \empty(), map[loc project,list[str] lst] activeCommittersData = ()) 
   = {l} := activeCommittersData<lst> ? size(l) : 0;
