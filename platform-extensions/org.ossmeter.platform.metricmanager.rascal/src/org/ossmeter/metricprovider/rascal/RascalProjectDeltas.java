@@ -46,7 +46,7 @@ public class RascalProjectDeltas {
   }
 
   public IConstructor emptyDelta() {
-	  return createConstructor("ProjectDelta", "projectDelta");
+	  return createConstructor("ProjectDelta", "empty");
   }
   
   public IConstructor convert(final ProjectDelta delta, Map<VcsCommit, List<Churn>> churnPerCommit) {
