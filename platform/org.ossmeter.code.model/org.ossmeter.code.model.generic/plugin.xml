@@ -4,7 +4,4 @@
    <extension
          point="ossmeter.rascal.extractor">
    </extension>
-   <extension
-          point="rascal_eclipse.rascalLibrary">
-   </extension>
 </plugin>
