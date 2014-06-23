@@ -157,6 +157,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 
 	@Override
 	public void setUses(List<IMetricProvider> uses) {
+		
 		for (IMetricProvider provider : uses) {
 			providers.put(provider.getIdentifier(), provider);
 		}
@@ -241,9 +242,21 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 				
 				for (String use : uses.keySet()) {
 					IMetricProvider provider = providers.get(use);
-					String label = uses.get(use);
-					IValue val = getMetricResult(project, provider, manager);
-					params.put(label, val);
+					
+					if (provider != null) {
+						String label = uses.get(use);
+						IValue val = getMetricResult(project, provider, manager);
+						params.put(label, val);
+					} else {
+						logger.error("Used metric provider " + use + " was not found! " + use);
+							// name mismatch!
+						logger.info("Select from:");
+						for (IMetricProvider imp : manager.getMetricProviders()) {
+							logger.info("\t" + imp.getIdentifier());
+						}
+						return;
+					}
+					
 				}
 				
 				// measurement is included in the sync block to avoid sharing evaluators between metrics
@@ -389,7 +402,13 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 			@Override
 			public Void visitList(IList o) throws RuntimeException {
 				ListMeasurement m = new ListMeasurement();
-				convert(m.getValue(), loc, o);
+				final List<Measurement> col = m.getValue();
+				
+				for (IValue val : o) {
+					convert(col, loc, val);
+				}
+				
+				m.setUri(loc.getURI().toString());
 				measurements.add(m);
 				return null;
 			}
@@ -397,7 +416,13 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 			@Override
 			public Void visitSet(ISet o) throws RuntimeException {
 				SetMeasurement m = new SetMeasurement();
-				convert(m.getValue(), loc, o);
+				final List<Measurement> col = m.getValue();
+				
+				for (IValue val : o) {
+					convert(col, loc, val);
+				}
+				
+				m.setUri(loc.getURI().toString());
 				measurements.add(m);
 				return null;
 			}
@@ -444,6 +469,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 			
 			@Override
 			public Void visitMap(IMap o) throws RuntimeException {
+				// TODO: add Map measurement!
 				for (Iterator<Entry<IValue, IValue>> it = o.entryIterator(); it.hasNext(); ) {
 					Entry<IValue, IValue> currentEntry = (Entry<IValue, IValue>) it.next();
 					ISourceLocation key = (ISourceLocation) currentEntry.getKey();
@@ -460,6 +486,8 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 				for (IValue val : o) {
 					convert(col, loc, val);
 				}
+				
+				measurements.add(m);
 				return null;
 			}
 			
@@ -471,6 +499,8 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 				for (IValue val : o) {
 					convert(col, loc, val);
 				}
+				
+				measurements.add(m);
 				return null;
 			}
 		});
