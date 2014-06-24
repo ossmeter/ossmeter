@@ -6,8 +6,12 @@ import java.io.StringReader;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -37,6 +41,7 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.wiring.BundleWire;
 import org.osgi.framework.wiring.BundleWiring;
 import org.ossmeter.metricprovider.rascal.trans.model.BooleanMeasurement;
+import org.ossmeter.metricprovider.rascal.trans.model.DatetimeMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.IntegerMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.ListMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.Measurement;
@@ -44,6 +49,7 @@ import org.ossmeter.metricprovider.rascal.trans.model.RascalMetrics;
 import org.ossmeter.metricprovider.rascal.trans.model.RealMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.SetMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.StringMeasurement;
+import org.ossmeter.metricprovider.rascal.trans.model.TupleMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.URIMeasurement;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.logging.OssmeterLogger;
@@ -389,10 +395,27 @@ public class RascalManager {
 	}
 	
 	public IValue toValue(RascalMetrics m) {
-		IMapWriter w = VF.mapWriter();
+		ISetWriter w = VF.setWriter();
+		SimpleDateFormat df = new SimpleDateFormat("yyyymmdd");
 		
 		for (Measurement e : m.getMeasurements()) {
-			w.put(VF.sourceLocation(URIUtil.assumeCorrect(e.getUri())), toValue(e));
+			Object date = e.getDbObject().get("__date");
+			IValue value = toValue(e);
+			IValue tbi = value;
+			
+			try {
+				if (date != null) {
+					Date parse = df.parse(date.toString());
+					ArrayList<IValue> tuple = new ArrayList<>(3);
+					tuple.add(VF.datetime(parse.getTime()));
+					tuple.add(value);
+					tbi = VF.tuple(tuple.toArray(new IValue[] { }));
+				}
+
+				w.insert(tbi);
+			} catch (ParseException e1) {
+				Rasctivator.logException("error in parsing date: " + date, e1);
+			}
 		}
 		
 		return w.done();
@@ -411,6 +434,9 @@ public class RascalManager {
 		else if (e instanceof URIMeasurement) {
 			return toURIValue((URIMeasurement) e);
 		}
+		else if (e instanceof DatetimeMeasurement) {
+			return toDatetimeValue((DatetimeMeasurement) e);
+		}
 		else if (e instanceof BooleanMeasurement) {
 			return toBoolValue((BooleanMeasurement) e);
 		}
@@ -420,8 +446,26 @@ public class RascalManager {
 		else if (e instanceof SetMeasurement) {
 			return toSetValue((SetMeasurement) e);
 		}
+		else if (e instanceof TupleMeasurement) {
+			return toTupleValue((TupleMeasurement) e);
+		}
 		
 		throw new IllegalArgumentException(e.toString());
+	}
+
+	private IValue toDatetimeValue(DatetimeMeasurement e) {
+		return VF.datetime(e.getValue());
+	}
+
+	private IValue toTupleValue(TupleMeasurement e) {
+		List<Measurement> col = e.getValue();
+		IValue[] elems = new IValue[col.size()];
+		
+		for (int i = 0; i < elems.length; i++) {
+			elems[i] = toValue(col.get(i));
+		}
+		
+		return VF.tuple(elems);
 	}
 
 	private IValue toSetValue(SetMeasurement e) {

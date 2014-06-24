@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.imp.pdb.facts.IConstructor;
+import org.eclipse.imp.pdb.facts.IDateTime;
 import org.eclipse.imp.pdb.facts.IInteger;
 import org.eclipse.imp.pdb.facts.IList;
 import org.eclipse.imp.pdb.facts.IMap;
@@ -19,10 +20,12 @@ import org.eclipse.imp.pdb.facts.ISet;
 import org.eclipse.imp.pdb.facts.ISetWriter;
 import org.eclipse.imp.pdb.facts.ISourceLocation;
 import org.eclipse.imp.pdb.facts.IString;
+import org.eclipse.imp.pdb.facts.ITuple;
 import org.eclipse.imp.pdb.facts.IValue;
 import org.eclipse.imp.pdb.facts.io.StandardTextWriter;
 import org.eclipse.imp.pdb.facts.type.Type;
 import org.eclipse.imp.pdb.facts.visitors.NullVisitor;
+import org.ossmeter.metricprovider.rascal.trans.model.DatetimeMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.IntegerMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.ListMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.Measurement;
@@ -31,6 +34,7 @@ import org.ossmeter.metricprovider.rascal.trans.model.RascalMetrics;
 import org.ossmeter.metricprovider.rascal.trans.model.RealMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.SetMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.StringMeasurement;
+import org.ossmeter.metricprovider.rascal.trans.model.TupleMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.URIMeasurement;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.ITransientMetricProvider;
@@ -59,8 +63,7 @@ import com.mongodb.DB;
 public class RascalMetricProvider implements ITransientMetricProvider<RascalMetrics> {
 	private static final String SCRATCH_FOLDERS_PARAM = "scratchFolders";
 	private static final String WORKING_COPIES_PARAM = "workingCopies";
-	private static final String PREVIOUS_PARAM = "previous";
-	private static final String HISTORY_PARAM = "history";
+	private static final String PREVIOUS_PARAM = "prev";
 	private static final String DELTA_PARAM = "delta";
 	private static final String ASTS_PARAM = "asts";
 	private static final String M3S_PARAM = "m3s";
@@ -68,8 +71,6 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 	private final boolean needsM3;
 	private final boolean needsAsts;
 	private final boolean needsDelta;
-	private final boolean needsHistory;
-	private final boolean needsPrevious;
 	private final boolean needsWc;
 	private final boolean needsScratch;
 	
@@ -83,6 +84,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 	private final AbstractFunction function;
 	private final OssmeterLogger logger;
 	private MetricProviderContext context;
+	private boolean needsPrev;
 
 	private static String lastRevision = null;
 	
@@ -103,10 +105,9 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		this.needsM3 = hasParameter(M3S_PARAM);
 		this.needsAsts = hasParameter(ASTS_PARAM);
 		this.needsDelta = hasParameter(DELTA_PARAM);
-		this.needsHistory = hasParameter(HISTORY_PARAM);
-		this.needsPrevious = hasParameter(PREVIOUS_PARAM);
 		this.needsWc = hasParameter(WORKING_COPIES_PARAM);
 		this.needsScratch = hasParameter(SCRATCH_FOLDERS_PARAM);
+		this.needsPrev = hasParameter(PREVIOUS_PARAM);
 		
 		this.logger = (OssmeterLogger) OssmeterLogger.getLogger("RascalMetricProvider (" + friendlyName + ")");
 		this.logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
@@ -225,21 +226,16 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 					params.put(ASTS_PARAM, computeAsts(project, delta, manager));
 				}
 
+				if (needsPrev) {
+					logger.info("retrieving current result");
+					params.put(PREVIOUS_PARAM, getMetricResult(project, this, manager));
+				}
+				
 				if (needsM3) {
 					logger.info("extracting M3 models");
 					params.put(M3S_PARAM, computeM3(project, delta, manager));
 				}
 
-				if (needsHistory) {
-					logger.info("recovering historical metric data");
-					params.put(HISTORY_PARAM, computeHistory(project, delta, manager));
-				}
-
-				if (needsPrevious) {
-					logger.info("computing previous metric values");
-					params.put(PREVIOUS_PARAM, computePrevious(project, db, delta, manager));
-				}
-				
 				for (String use : uses.keySet()) {
 					IMetricProvider provider = providers.get(use);
 					
@@ -304,17 +300,8 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 	private IValue getMetricResult(Project project, IMetricProvider provider, RascalManager man) {
 		DB db = context.getProjectDB(project);
 		RascalMetrics rascalMetrics = new RascalMetrics(db, provider.getIdentifier());
+		
 		return convertBack(rascalMetrics, man);
-	}
-
-	private IValue computePrevious(Project project, RascalMetrics db, ProjectDelta delta, RascalManager man) {
-		return convertBack(db, man);
-	}
-
-	private IValue computeHistory(Project project, ProjectDelta delta,
-			RascalManager _instance) {
-		// TODO
-		throw new UnsupportedOperationException();
 	}
 
 	private void computeFolders(Project project, ProjectDelta delta, RascalManager _instance, Map<String, File> wc, Map<String, File> scratch) throws WorkingCopyManagerUnavailable, WorkingCopyCheckoutException {
@@ -343,20 +330,24 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		for (Measurement m : ms) {
 			ms.remove(m);
 		}
-		convert(ms, _instance.makeProjectLoc(delta.getProject()), result);
+		db.sync();
+		convert(ms, result);
 		db.sync();
 	}
 	
 	private IValue convertBack(RascalMetrics m, RascalManager man) {
+		
 		return man.toValue(m);
 	}
 	
-	private void convert(final MeasurementCollection measurements, final ISourceLocation loc, IValue result) {
+	/**
+	 * This creates the top-level table and adds uri entries where necessary.
+	 */
+	private void convert(final MeasurementCollection measurements, IValue result) {
 		result.accept(new NullVisitor<Void,RuntimeException>() {
 			@Override
 			public Void visitInteger(IInteger o) throws RuntimeException {
 				IntegerMeasurement m = new IntegerMeasurement();
-				m.setUri(loc.getURI().toString());
 				m.setValue(o.longValue());
 				measurements.add(m);
 				return null;
@@ -365,8 +356,15 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 			@Override
 			public Void visitString(IString o) throws RuntimeException {
 				StringMeasurement m = new StringMeasurement();
-				m.setUri(loc.getURI().toString());
 				m.setValue(o.getValue());
+				measurements.add(m);
+				return null;
+			}
+			
+			@Override
+			public Void visitDateTime(IDateTime o) throws RuntimeException {
+				DatetimeMeasurement m = new DatetimeMeasurement();
+				m.setValue(o.getInstant());
 				measurements.add(m);
 				return null;
 			}
@@ -374,7 +372,6 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 			@Override
 			public Void visitReal(IReal o) throws RuntimeException {
 				RealMeasurement m = new RealMeasurement();
-				m.setUri(loc.getURI().toString());
 				m.setValue((float) o.doubleValue());
 				measurements.add(m);
 				return null;
@@ -383,7 +380,6 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 			@Override
 			public Void visitSourceLocation(ISourceLocation o) {
 				URIMeasurement m = new URIMeasurement();
-				m.setUri(loc.getURI().toString());
 				m.setValue(o.getURI().toString());
 				measurements.add(m);
 				return null;
@@ -393,49 +389,73 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 			public Void visitMap(IMap o) throws RuntimeException {
 				for (Iterator<Entry<IValue, IValue>> it = o.entryIterator(); it.hasNext(); ) {
 					Entry<IValue, IValue> currentEntry = (Entry<IValue, IValue>) it.next();
-					ISourceLocation key = (ISourceLocation) currentEntry.getKey();
-					convert(measurements, key, currentEntry.getValue());
+					TupleMeasurement t = new TupleMeasurement();
+					convert(t.getValue(), currentEntry.getKey());
+					convert(t.getValue(), currentEntry.getValue());
+					measurements.add(t);
 				}
 				return null;
 			}
 
 			@Override
-			public Void visitList(IList o) throws RuntimeException {
-				ListMeasurement m = new ListMeasurement();
-				final List<Measurement> col = m.getValue();
-				
+			public Void visitListRelation(IList o) throws RuntimeException {
 				for (IValue val : o) {
-					convert(col, loc, val);
+					convert(measurements, val);
 				}
-				
-				m.setUri(loc.getURI().toString());
-				measurements.add(m);
+				return null;
+			}
+			
+			@Override
+			public Void visitList(IList o) throws RuntimeException {
+				for (IValue val : o) {
+					convert(measurements, val);
+				}
 				return null;
 			}
 			
 			@Override
 			public Void visitSet(ISet o) throws RuntimeException {
-				SetMeasurement m = new SetMeasurement();
+				for (IValue val : o) {
+					convert(measurements, val);
+				}
+				return null;
+			}
+			
+			@Override
+			public Void visitTuple(ITuple o) throws RuntimeException {
+				TupleMeasurement m = new TupleMeasurement();
 				final List<Measurement> col = m.getValue();
 				
 				for (IValue val : o) {
-					convert(col, loc, val);
+					convert(col, val);
 				}
 				
-				m.setUri(loc.getURI().toString());
 				measurements.add(m);
 				return null;
 			}
 		});
 	}
 	
-	private void convert(final List<Measurement> measurements, final ISourceLocation loc, IValue result) {
+	/**
+	 * This recursively constructs Pongo objects to be stored in the database (single documents) 
+	 * @param measurements
+	 * @param loc
+	 * @param result
+	 */
+	private void convert(final List<Measurement> measurements, IValue result) {
 		result.accept(new NullVisitor<Void,RuntimeException>() {
 			@Override
 			public Void visitInteger(IInteger o) throws RuntimeException {
 				IntegerMeasurement m = new IntegerMeasurement();
-				m.setUri(loc.getURI().toString());
 				m.setValue(o.longValue());
+				measurements.add(m);
+				return null;
+			}
+			
+			@Override
+			public Void visitDateTime(IDateTime o) throws RuntimeException {
+				DatetimeMeasurement m = new DatetimeMeasurement();
+				m.setValue(o.getInstant());
 				measurements.add(m);
 				return null;
 			}
@@ -443,7 +463,6 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 			@Override
 			public Void visitString(IString o) throws RuntimeException {
 				StringMeasurement m = new StringMeasurement();
-				m.setUri(loc.getURI().toString());
 				m.setValue(o.getValue());
 				measurements.add(m);
 				return null;
@@ -452,7 +471,6 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 			@Override
 			public Void visitReal(IReal o) throws RuntimeException {
 				RealMeasurement m = new RealMeasurement();
-				m.setUri(loc.getURI().toString());
 				m.setValue((float) o.doubleValue());
 				measurements.add(m);
 				return null;
@@ -461,7 +479,6 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 			@Override
 			public Void visitSourceLocation(ISourceLocation o) {
 				URIMeasurement m = new URIMeasurement();
-				m.setUri(loc.getURI().toString());
 				m.setValue(o.getURI().toString());
 				measurements.add(m);
 				return null;
@@ -469,12 +486,22 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 			
 			@Override
 			public Void visitMap(IMap o) throws RuntimeException {
-				// TODO: add Map measurement!
+				// maps are stored as relations
+				SetMeasurement m = new SetMeasurement();
+				final List<Measurement> col = m.getValue();
+				
 				for (Iterator<Entry<IValue, IValue>> it = o.entryIterator(); it.hasNext(); ) {
 					Entry<IValue, IValue> currentEntry = (Entry<IValue, IValue>) it.next();
-					ISourceLocation key = (ISourceLocation) currentEntry.getKey();
-					convert(measurements, key, currentEntry.getValue());
+					
+					TupleMeasurement t = new TupleMeasurement();
+					List<Measurement> elems = t.getValue();
+					convert(measurements, currentEntry.getKey());
+					convert(elems, currentEntry.getValue());
+
+					col.add(t);
 				}
+				
+				measurements.add(m);
 				return null;
 			}
 
@@ -484,7 +511,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 				final List<Measurement> col = m.getValue();
 				
 				for (IValue val : o) {
-					convert(col, loc, val);
+					convert(col, val);
 				}
 				
 				measurements.add(m);
@@ -497,7 +524,20 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 				final List<Measurement> col = m.getValue();
 				
 				for (IValue val : o) {
-					convert(col, loc, val);
+					convert(col, val);
+				}
+				
+				measurements.add(m);
+				return null;
+			}
+			
+			@Override
+			public Void visitTuple(ITuple o) throws RuntimeException {
+				TupleMeasurement m = new TupleMeasurement();
+				final List<Measurement> col = m.getValue();
+				
+				for (IValue val : o) {
+					convert(col, val);
 				}
 				
 				measurements.add(m);
