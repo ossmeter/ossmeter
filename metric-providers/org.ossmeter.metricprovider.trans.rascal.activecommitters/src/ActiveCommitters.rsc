@@ -9,6 +9,7 @@ import Set;
 import List;
 import DateTime;
 import String;
+import util::Math;
 
 @metric{committersToday}
 @doc{activeCommitters}
@@ -38,4 +39,13 @@ rel[datetime, set[str]] activeCommitters(ProjectDelta delta = \empty(), rel[date
 @historic{}
 int numberOfActiveCommitters(rel[datetime, set[str]] activeCommitters = {}) 
   = size({c | /str c := activeCommitters});
+
+@metric{maximumActiveCommittersEver}
+@doc{What is the maximum number of committers which have been active together in any two week period}
+@friendlyName{maximumActiveCommittersEver}
+@uses{("org.ossmeter.metricprovider.trans.rascal.activecommitters.numberOfActiveCommitters.historic" :"history")}
+@appliesTo{generic()}
+int maximumActiveCommittersEver(rel[datetime d, int n] history = {}) {
+  return max(history<n>);
+}
 
