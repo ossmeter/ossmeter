@@ -28,7 +28,9 @@ public class EclipseProject extends org.ossmeter.repository.model.Project {
 		HOMEPAGE.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
 		PROJECTPLANURL.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
 		UPDATESITEURL.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
-		STATE.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
+		STATUS.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
+		USERNAME.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
+		PASSWORD.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
 	}
 	
 	public static StringQueryProducer SHORTNAME = new StringQueryProducer("shortName"); 
@@ -38,7 +40,9 @@ public class EclipseProject extends org.ossmeter.repository.model.Project {
 	public static StringQueryProducer HOMEPAGE = new StringQueryProducer("homePage"); 
 	public static StringQueryProducer PROJECTPLANURL = new StringQueryProducer("projectplanUrl"); 
 	public static StringQueryProducer UPDATESITEURL = new StringQueryProducer("updatesiteUrl"); 
-	public static StringQueryProducer STATE = new StringQueryProducer("state"); 
+	public static StringQueryProducer STATUS = new StringQueryProducer("status"); 
+	public static StringQueryProducer USERNAME = new StringQueryProducer("userName"); 
+	public static StringQueryProducer PASSWORD = new StringQueryProducer("password"); 
 	
 	
 	public String getShortName() {
@@ -104,12 +108,30 @@ public class EclipseProject extends org.ossmeter.repository.model.Project {
 		notifyChanged();
 		return this;
 	}
-	public String getState() {
-		return parseString(dbObject.get("state")+"", "");
+	public String getStatus() {
+		return parseString(dbObject.get("status")+"", "");
 	}
 	
-	public EclipseProject setState(String state) {
-		dbObject.put("state", state);
+	public EclipseProject setStatus(String status) {
+		dbObject.put("status", status);
+		notifyChanged();
+		return this;
+	}
+	public String getUserName() {
+		return parseString(dbObject.get("userName")+"", "exquisitus");
+	}
+	
+	public EclipseProject setUserName(String userName) {
+		dbObject.put("userName", userName);
+		notifyChanged();
+		return this;
+	}
+	public String getPassword() {
+		return parseString(dbObject.get("password")+"", "flinder1f7");
+	}
+	
+	public EclipseProject setPassword(String password) {
+		dbObject.put("password", password);
 		notifyChanged();
 		return this;
 	}
