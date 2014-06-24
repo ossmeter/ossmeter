@@ -9,40 +9,43 @@ import Set;
 import List;
 import DateTime;
 import String;
+import util::Math;
 
-@metric{activeCommitters}
+@metric{committersToday}
 @doc{activeCommitters}
 @friendlyName{activeCommitters}
 @appliesTo{generic()}
-list[str] activeCommitters(ProjectDelta delta = \empty()) {
-
-	// TODO once we have metric dependencies, don't store intermediate results on disk, but use a separate metric for it
-
-  list[str] activeAuthors = [];
-  datetime today = delta.date;
-  writeBinaryValueFile(|home:///ossmeter/<delta.project.name>/activecommitters_<printDate(today.justDate, "yyyy_mm_dd")>.am3|, [ commit.author | /VcsCommit commit <- delta ]);
-  list[datetime] activePeriod = dateRangeByDay(createInterval(decrementDays(delta.date, 15), today));
-  
-  for (datetime d <- activePeriod) {
-    loc activeCommittersForDay = |home:///ossmeter/<delta.project.name>/activecommitters_<printDate(d.justDate, "yyyy_mm_dd")>.am3|;
-    
-    if (exists(activeCommittersForDay)) {
-      activeAuthors += readBinaryValueFile(#list[str], activeCommittersForDay);
-    }
-  }
-  
-  map[str, int] dist = distribution(activeAuthors);
-  
-  list[int] activityCount = reverse(sort(range(dist)));
-  map[int, set[str]] comparator = invert(dist);
-  
-  return [author | numActivity <- activityCount, author <- comparator[numActivity]];
+set[str] committersToday(ProjectDelta delta = \empty()) {
+  return {co.author | /VcsCommit co := delta};
 }
 
-@metric{numberofactivecommitters}
-@doc{numbrofactivecommitters}
-@friendlyName{numberofactivecommitters}
-@uses{("org.ossmeter.metricprovider.trans.rascal.activecommitters.activeCommitters":"activeCommittersData")}
+@metric{activeCommitters}
+@doc{Committers who have been active the last two weeks}
+@friendlyName{committersLastTwoWeeks}
+@uses{("org.ossmeter.metricprovider.trans.rascal.activecommitters.committersToday":"committersToday")}
+@appliesTo{generic()}
+rel[datetime, set[str]] activeCommitters(ProjectDelta delta = \empty(), rel[datetime,set[str]] prev = {}, set[str] committersToday = {}) {
+  today    = delta.date;
+  twoweeks = decrementDays(today, 14);
+  return {<d,t> | <d,t> <- prev, d > twoweeks} + {<today, committersToday>};  
+}
+
+
+@metric{numberOfActiveCommitters}
+@doc{Number of active committers over time}
+@friendlyName{numberOfActiveCommitters}
+@uses{("org.ossmeter.metricprovider.trans.rascal.activecommitters.activeCommitters" :"activeCommitters")}
+@appliesTo{generic()}
 @historic{}
-int numberOfActiveCommitters(ProjectDelta delta = \empty(), map[loc project,list[str] lst] activeCommittersData = ()) 
-  = {l} := activeCommittersData<lst> ? size(l) : 0;
+int numberOfActiveCommitters(rel[datetime, set[str]] activeCommitters = {}) 
+  = size({c | /str c := activeCommitters});
+
+@metric{maximumActiveCommittersEver}
+@doc{What is the maximum number of committers which have been active together in any two week period}
+@friendlyName{maximumActiveCommittersEver}
+@uses{("org.ossmeter.metricprovider.trans.rascal.activecommitters.numberOfActiveCommitters.historic" :"history")}
+@appliesTo{generic()}
+int maximumActiveCommittersEver(rel[datetime d, int n] history = {}) {
+  return max(history<n>);
+}
+

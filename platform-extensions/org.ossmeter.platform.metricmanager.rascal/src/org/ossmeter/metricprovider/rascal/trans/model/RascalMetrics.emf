@@ -27,8 +27,20 @@ class StringMeasurement extends Measurement {
     attr String value;
 }
 
+class DatetimeMeasurement extends Measurement {
+    attr String value;
+}
+
+class DatetimeMeasurement extends Measurement {
+    attr long value;
+}
+
 class ListMeasurement extends Measurement {
 	val Measurement[*] value;
+}
+
+class TupleMeasurement extends Measurement {
+    val Measurement[*] value;
 }
 
 class SetMeasurement extends Measurement {
