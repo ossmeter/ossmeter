@@ -9,12 +9,13 @@ import org.ossmeter.repository.model.LocalStorage;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectCollection;
 import org.ossmeter.repository.model.ProjectRepository;
+import org.ossmeter.repository.model.eclipse.importer.EclipseProjectImporter;
 
 import com.googlecode.pongo.runtime.PongoFactory;
 import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
 import com.mongodb.Mongo;
 
-public class App implements IApplication {
+public class App implements IApplication { 
 
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
@@ -31,10 +32,14 @@ public class App implements IApplication {
 			coll.remove(p);
 		}
 		
-		Project pdb = ProjectCreationUtil.createGitProject("pdb.values", "file:///Users/jurgenv/Workspaces/Rascal/pdb.values");
-		coll.add(pdb);
+		//Project pdb = ProjectCreationUtil.createGitProject("pdb.values", "file:///Users/jurgenv/Workspaces/Rascal/pdb.values");
+		//coll.add(pdb);
 		
 		// Synchronise the changes and close the connection
+		
+		EclipseProjectImporter importer = new EclipseProjectImporter();
+		System.err.println(importer.importProject("modeling.epsilon", platform));
+		
 		repo.sync();
 		mongo.close();
 		

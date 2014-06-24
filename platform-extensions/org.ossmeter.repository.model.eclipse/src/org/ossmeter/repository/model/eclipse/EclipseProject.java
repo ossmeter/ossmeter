@@ -118,7 +118,7 @@ public class EclipseProject extends org.ossmeter.repository.model.Project {
 		return this;
 	}
 	public String getUserName() {
-		return parseString(dbObject.get("userName")+"", "exquisitus");
+		return parseString(dbObject.get("userName")+"", "");
 	}
 	
 	public EclipseProject setUserName(String userName) {
@@ -127,7 +127,7 @@ public class EclipseProject extends org.ossmeter.repository.model.Project {
 		return this;
 	}
 	public String getPassword() {
-		return parseString(dbObject.get("password")+"", "flinder1f7");
+		return parseString(dbObject.get("password")+"", "");
 	}
 	
 	public EclipseProject setPassword(String password) {
@@ -161,6 +161,4 @@ public class EclipseProject extends org.ossmeter.repository.model.Project {
 		}
 		return releases;
 	}
-	
-	
 }
