@@ -255,6 +255,16 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 					
 				}
 				
+				// remove the null parameters such the defaults can trigger.
+				Set<Entry<String, IValue>> entrySet = params.entrySet();
+				Iterator<Entry<String, IValue>> it = entrySet.iterator();
+				while (it.hasNext()) {
+					Entry<String,IValue> entry = it.next(); 
+					if (entry.getValue() == null) {
+						it.remove();
+					}
+				}
+				
 				// measurement is included in the sync block to avoid sharing evaluators between metrics
 				logger.info("calling measurement function");
 				//logger.info("with parameters: " + params);
@@ -297,11 +307,17 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		}
 	}
 
+	// TODO: add support for other kinds of metric providers
 	private IValue getMetricResult(Project project, IMetricProvider provider, RascalManager man) {
+		Type type = provider instanceof RascalMetricProvider ? ((RascalMetricProvider) provider).getReturnType() : ((RascalMetricHistoryWrapper) provider).getValueType();
 		DB db = context.getProjectDB(project);
 		RascalMetrics rascalMetrics = new RascalMetrics(db, provider.getIdentifier());
 		
-		return convertBack(rascalMetrics, man);
+		return convertBack(rascalMetrics, type, man, provider instanceof RascalMetricHistoryWrapper);
+	}
+
+	public Type getReturnType() {
+		return function.getReturnType();
 	}
 
 	private void computeFolders(Project project, ProjectDelta delta, RascalManager _instance, Map<String, File> wc, Map<String, File> scratch) throws WorkingCopyManagerUnavailable, WorkingCopyCheckoutException {
@@ -331,19 +347,18 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 			ms.remove(m);
 		}
 		db.sync();
-		convert(ms, result);
+		toPongo(ms, result);
 		db.sync();
 	}
 	
-	private IValue convertBack(RascalMetrics m, RascalManager man) {
-		
-		return man.toValue(m);
+	private IValue convertBack(RascalMetrics m, Type type, RascalManager man, boolean historic) {
+		return man.toValue(m, type, historic);
 	}
 	
 	/**
 	 * This creates the top-level table and adds uri entries where necessary.
 	 */
-	private void convert(final MeasurementCollection measurements, IValue result) {
+	private void toPongo(final MeasurementCollection measurements, IValue result) {
 		result.accept(new NullVisitor<Void,RuntimeException>() {
 			@Override
 			public Void visitInteger(IInteger o) throws RuntimeException {
@@ -400,7 +415,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 			@Override
 			public Void visitListRelation(IList o) throws RuntimeException {
 				for (IValue val : o) {
-					convert(measurements, val);
+					toPongo(measurements, val);
 				}
 				return null;
 			}
@@ -408,7 +423,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 			@Override
 			public Void visitList(IList o) throws RuntimeException {
 				for (IValue val : o) {
-					convert(measurements, val);
+					toPongo(measurements, val);
 				}
 				return null;
 			}
@@ -416,7 +431,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 			@Override
 			public Void visitSet(ISet o) throws RuntimeException {
 				for (IValue val : o) {
-					convert(measurements, val);
+					toPongo(measurements, val);
 				}
 				return null;
 			}

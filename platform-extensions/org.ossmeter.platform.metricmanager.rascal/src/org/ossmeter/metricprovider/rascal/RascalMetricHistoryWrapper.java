@@ -3,12 +3,12 @@ package org.ossmeter.metricprovider.rascal;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.imp.pdb.facts.type.Type;
 import org.ossmeter.metricprovider.rascal.trans.model.ListMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.Measurement;
 import org.ossmeter.metricprovider.rascal.trans.model.RascalMetrics;
 import org.ossmeter.platform.IHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
-import org.ossmeter.platform.ITransientMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.repository.model.Project;
 
@@ -19,10 +19,10 @@ import com.mongodb.DB;
  * Wraps a transient metric provider to be an historic one
  */
 public class RascalMetricHistoryWrapper implements IHistoricalMetricProvider {
-	private final ITransientMetricProvider<RascalMetrics> transientId;
+	private final RascalMetricProvider transientId;
 	private MetricProviderContext context;
 
-	public RascalMetricHistoryWrapper(ITransientMetricProvider<RascalMetrics> transientProvider) {
+	public RascalMetricHistoryWrapper(RascalMetricProvider transientProvider) {
 		this.transientId = transientProvider;
 	}
 	
@@ -67,6 +67,10 @@ public class RascalMetricHistoryWrapper implements IHistoricalMetricProvider {
 		this.context = context;
 	}
 
+	public Type getValueType() {
+		return transientId.getReturnType();
+	}
+	
 	@Override
 	public Pongo measure(Project project) {
 		DB db = context.getProjectDB(project);
