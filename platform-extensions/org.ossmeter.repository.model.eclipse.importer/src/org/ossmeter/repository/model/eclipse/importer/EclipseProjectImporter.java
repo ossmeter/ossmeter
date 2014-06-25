@@ -303,8 +303,10 @@ public class EclipseProjectImporter {
 				project.setUpdatesiteUrl(((JSONObject)((JSONArray)currentProg.get("update_sites")).get(0)).get("url").toString());
 
 			if ((isNotNull(currentProg,"state")))
-				project.setState(((JSONObject)((JSONArray)currentProg.get("state")).get(0)).get("value").toString());		
-
+				project.setStatus(((JSONObject)((JSONArray)currentProg.get("state")).get(0)).get("value").toString());	
+		// Set project credentials
+			project.setUserName("exquisitus");
+			project.setPassword("flinder1f7");
 			
 		// BEGIN Management of Communication Channels 		
 			if (projectToBeUpdated) {
