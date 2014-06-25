@@ -39,8 +39,8 @@ public class App implements IApplication {
 		
 		// Synchronise the changes and close the connection
 		
-//		EclipseProjectImporter importer = new EclipseProjectImporter();
-//		System.err.println(importer.importProject("modeling.epsilon", platform));
+		EclipseProjectImporter importer = new EclipseProjectImporter();
+		System.err.println(importer.importProject("modeling.epsilon", platform));
 		
 		repo.sync();
 		mongo.close();
