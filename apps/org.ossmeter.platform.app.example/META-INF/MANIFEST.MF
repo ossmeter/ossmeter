@@ -17,6 +17,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.platform.admin,
  org.ossmeter.platform.osgi,
  org.ossmeter.repository.model.vcs.git,
+ org.ossmeter.repository.model.eclipse,
  org.ossmeter.repository.model.eclipse.importer
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
