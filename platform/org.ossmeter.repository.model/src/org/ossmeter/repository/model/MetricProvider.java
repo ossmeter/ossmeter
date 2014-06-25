@@ -16,13 +16,13 @@ public class MetricProvider extends NamedElement {
 		NAME.setOwningType("org.ossmeter.repository.model.MetricProvider");
 		METRICPROVIDERID.setOwningType("org.ossmeter.repository.model.MetricProvider");
 		TYPE.setOwningType("org.ossmeter.repository.model.MetricProvider");
-		CATEGORY.setOwningType("org.ossmeter.repository.model.MetricProvider");
+		LASTEXECUTED.setOwningType("org.ossmeter.repository.model.MetricProvider");
 	}
 	
 	public static StringQueryProducer NAME = new StringQueryProducer("name"); 
 	public static StringQueryProducer METRICPROVIDERID = new StringQueryProducer("metricProviderId"); 
 	public static StringQueryProducer TYPE = new StringQueryProducer("type"); 
-	public static StringQueryProducer CATEGORY = new StringQueryProducer("category"); 
+	public static StringQueryProducer LASTEXECUTED = new StringQueryProducer("lastExecuted"); 
 	
 	
 	public String getMetricProviderId() {
@@ -48,17 +48,12 @@ public class MetricProvider extends NamedElement {
 		notifyChanged();
 		return this;
 	}
-	public MetricProviderCategory getCategory() {
-		MetricProviderCategory category = null;
-		try {
-			category = MetricProviderCategory.valueOf(dbObject.get("category")+"");
-		}
-		catch (Exception ex) {}
-		return category;
+	public String getLastExecuted() {
+		return parseString(dbObject.get("lastExecuted")+"", "-1");
 	}
 	
-	public MetricProvider setCategory(MetricProviderCategory category) {
-		dbObject.put("category", category.toString());
+	public MetricProvider setLastExecuted(String lastExecuted) {
+		dbObject.put("lastExecuted", lastExecuted);
 		notifyChanged();
 		return this;
 	}

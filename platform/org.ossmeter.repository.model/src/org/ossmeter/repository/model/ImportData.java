@@ -12,23 +12,12 @@ public class ImportData extends Pongo {
 	
 	public ImportData() { 
 		super();
-		FORGE.setOwningType("org.ossmeter.repository.model.ImportData");
 		LASTIMPORTEDPROJECT.setOwningType("org.ossmeter.repository.model.ImportData");
 	}
 	
-	public static StringQueryProducer FORGE = new StringQueryProducer("forge"); 
 	public static StringQueryProducer LASTIMPORTEDPROJECT = new StringQueryProducer("lastImportedProject"); 
 	
 	
-	public String getForge() {
-		return parseString(dbObject.get("forge")+"", "");
-	}
-	
-	public ImportData setForge(String forge) {
-		dbObject.put("forge", forge);
-		notifyChanged();
-		return this;
-	}
 	public String getLastImportedProject() {
 		return parseString(dbObject.get("lastImportedProject")+"", "");
 	}

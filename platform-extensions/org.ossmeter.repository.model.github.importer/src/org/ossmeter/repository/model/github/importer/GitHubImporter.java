@@ -154,7 +154,8 @@ public class GitHubImporter {
 
 			int lastImportedId = new Integer(platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().first().getLastImportedProject());
 
-			GitHubRepository repository = new GitHubRepository();
+			GitHubRepository repository = null;
+			
 			JSONObject currentRepo = null;
 			Boolean projectToBeUpdated = false;
 			
@@ -183,6 +184,11 @@ public class GitHubImporter {
 					}
 				}
 					
+				if (!projectToBeUpdated)  {
+					repository = new GitHubRepository();
+				}
+								
+				
 				if ((isNotNull(currentRepo,"description")))					
 					repository.setDescription(currentRepo.get("description").toString());
 

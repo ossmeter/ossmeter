@@ -83,24 +83,20 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="comment">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="//DonationStatus"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="charities" upperBound="-1">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="DonationStatus">
-    <eLiterals name="notAccepting" value="1"/>
-    <eLiterals name="accepting" value="2"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="TrackerStatus">
-    <eLiterals name="open" value="1"/>
-    <eLiterals name="closed" value="2"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Tracker" abstract="true" eSuperTypes="//NamedElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="location">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="//TrackerStatus"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SourceForgeBugTrackingSystem" eSuperTypes="//BugTrackingSystem">
     <eStructuralFeatures xsi:type="ecore:EReference" name="bugsTS" upperBound="-1" eType="//BugTS" containment="true"/>
@@ -115,16 +111,12 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="priority">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="resolutionStatus" eType="//ResolutionStatus"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bugVisibility" eType="//BugVisibility"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="BugVisibility">
-    <eLiterals name="public" value="1"/>
-    <eLiterals name="private" value="2"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="ResolutionStatus">
-    <eLiterals name="none" value="1"/>
-    <eLiterals name="fixed" value="2"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="resolutionStatus">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bugVisibility">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Request" abstract="true" eSuperTypes="//Tracker">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="summary">
