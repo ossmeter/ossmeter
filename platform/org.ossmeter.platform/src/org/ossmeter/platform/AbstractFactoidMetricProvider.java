@@ -23,7 +23,7 @@ public abstract class AbstractFactoidMetricProvider implements ITransientMetricP
 	public abstract boolean appliesTo(Project project);
 
 	@Override
-	public final void setUses(List<IMetricProvider> uses) {
+	public void setUses(List<IMetricProvider> uses) {
 		this.uses = uses;
 	}
 
@@ -31,7 +31,7 @@ public abstract class AbstractFactoidMetricProvider implements ITransientMetricP
 	public abstract List<String> getIdentifiersOfUses();
 
 	@Override
-	public final void setMetricProviderContext(MetricProviderContext context) {
+	public void setMetricProviderContext(MetricProviderContext context) {
 		this.context = context;
 	}
 

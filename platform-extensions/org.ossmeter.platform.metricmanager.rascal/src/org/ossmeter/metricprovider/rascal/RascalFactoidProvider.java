@@ -7,6 +7,8 @@ import org.eclipse.imp.pdb.facts.IConstructor;
 import org.eclipse.imp.pdb.facts.IString;
 import org.eclipse.imp.pdb.facts.IValue;
 import org.ossmeter.platform.AbstractFactoidMetricProvider;
+import org.ossmeter.platform.IMetricProvider;
+import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.platform.factoids.Factoid;
 import org.ossmeter.repository.model.Project;
@@ -22,6 +24,17 @@ public class RascalFactoidProvider extends AbstractFactoidMetricProvider {
 		metric = new RascalMetricProvider(metricId, funcName, friendlyName, description, f, uses);
 	}
 
+	@Override
+	public void setUses(List<IMetricProvider> uses) {
+		super.setUses(uses);
+		metric.setUses(uses);
+	}
+	
+	@Override
+	public void setMetricProviderContext(MetricProviderContext context) {
+		metric.setMetricProviderContext(context);
+	}
+	
 	@Override
 	public String getShortIdentifier() {
 		return metric.getShortIdentifier();
@@ -50,6 +63,10 @@ public class RascalFactoidProvider extends AbstractFactoidMetricProvider {
 	@Override
 	public void measureImpl(Project project, ProjectDelta delta, Factoid factoid) {
 		IValue result = metric.compute(project, delta);
+		
+		if (result == null) {
+			return; // something else went wrong and we should have seen error messages from that
+		}
 		
 		if (!(result instanceof IConstructor)) {
 			throw new IllegalArgumentException("factoids should return Factoid data-types");
