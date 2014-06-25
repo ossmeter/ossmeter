@@ -107,9 +107,12 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 	}
 
 	private boolean hasParameter(String param) {
-		for (KeywordParameter p : function.getKeywordParameterDefaults()) {
-			if (p.getName().equals(param)) {
-				return true;
+		List<KeywordParameter> defs = function.getKeywordParameterDefaults();
+		if (defs != null) {
+			for (KeywordParameter p : defs) {
+				if (p.getName().equals(param)) {
+					return true;
+				}
 			}
 		}
 		
@@ -254,6 +257,11 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 				}
 				
 				filterNullParameters(params);
+				
+				// workaround:
+				if (params.isEmpty()) {
+					params = null;
+				}
 				
 				// measurement is included in the sync block to avoid sharing evaluators between metrics
 				logger.info("calling measurement function");

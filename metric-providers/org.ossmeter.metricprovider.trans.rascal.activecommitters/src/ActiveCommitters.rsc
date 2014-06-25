@@ -1,6 +1,6 @@
 module ActiveCommitters
 
-import org::ossmeter::metricprovider::ProjectDelta;
+import org::ossmeter::metricprovider::MetricProvider;
 
 import ValueIO;
 import IO;
@@ -47,5 +47,13 @@ int numberOfActiveCommitters(rel[datetime, set[str]] activeCommitters = {})
 @appliesTo{generic()}
 int maximumActiveCommittersEver(rel[datetime d, int n] history = {}) {
   return max(history<n>);
+}
+
+@metric{programmerCommunity}
+@doc{based on committer activity, what is the health of the community?}
+@friendlyName{community of programmers}
+@appliesTo{generic()}
+Factoid programmerCommunity() {
+  return factoid("This is a test", four());
 }
 
