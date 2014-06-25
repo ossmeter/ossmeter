@@ -25,6 +25,11 @@ public class RascalFactoidProvider extends AbstractFactoidMetricProvider {
 	}
 
 	@Override
+	public String getIdentifier() {
+		return metric.getIdentifier();
+	}
+	
+	@Override
 	public void setUses(List<IMetricProvider> uses) {
 		super.setUses(uses);
 		metric.setUses(uses);
