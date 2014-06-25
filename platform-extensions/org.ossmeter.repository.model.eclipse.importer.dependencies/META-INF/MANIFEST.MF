@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Dependencies
+Bundle-SymbolicName: org.ossmeter.repository.model.eclipse.importer.dependencies
+Bundle-Version: 1.0.0
+Bundle-ClassPath: gson-2.2.2.jar,
+ json-simple-1.1.1.jar
+Export-Package: com.google.gson,
+ com.google.gson.annotations,
+ com.google.gson.internal,
+ com.google.gson.internal.bind,
+ com.google.gson.reflect,
+ com.google.gson.stream,
+ org.json.simple,
+ org.json.simple.parser
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
