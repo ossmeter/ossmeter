@@ -16,6 +16,7 @@ public class Project extends NamedElement {
 	protected List<MetricProvider> metricProviderData = null;
 	protected Project parent = null;
 	protected LocalStorage storage = null;
+	protected ProjectExecutionInformation executionInformation = null;
 	
 	
 	public Project() { 
@@ -187,6 +188,26 @@ public class Project extends NamedElement {
 				dbObject.put("storage", storage.getDbObject());
 			}
 			this.storage = storage;
+			notifyChanged();
+		}
+		return this;
+	}
+	public ProjectExecutionInformation getExecutionInformation() {
+		if (executionInformation == null && dbObject.containsField("executionInformation")) {
+			executionInformation = (ProjectExecutionInformation) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("executionInformation"));
+		}
+		return executionInformation;
+	}
+	
+	public Project setExecutionInformation(ProjectExecutionInformation executionInformation) {
+		if (this.executionInformation != executionInformation) {
+			if (executionInformation == null) {
+				dbObject.removeField("executionInformation");
+			}
+			else {
+				dbObject.put("executionInformation", executionInformation.getDbObject());
+			}
+			this.executionInformation = executionInformation;
 			notifyChanged();
 		}
 		return this;
