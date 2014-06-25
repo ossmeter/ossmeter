@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Dependences
-Bundle-SymbolicName: org.ossmeter.repository.model.sourceforge.importer.dependences; singleton:=true
+Bundle-SymbolicName: org.ossmeter.repository.model.sourceforge.importer.dependencies;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.repository.model.sourceforge.importer.dependences.Activator
 Require-Bundle: org.eclipse.ui,

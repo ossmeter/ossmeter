@@ -9,12 +9,12 @@ Require-Bundle: org.ossmeter.repository.model.eclipse,
  org.ossmeter.repository.model.cc.forum,
  org.ossmeter.repository.model.vcs.svn,
  org.ossmeter.repository.model.vcs.git;bundle-version="1.0.0",
- org.ossmeter.repository.model.sourceforge.importer.dependences;bundle-version="1.0.0",
  org.ossmeter.repository.model.vcs.cvs,
  org.ossmeter.repository.model.sourceforge,
  org.ossmeter.platform;bundle-version="1.0.0",
  com.googlecode.pongo;bundle-version="0.5.0",
- org.ossmeter.platform.vcs.svn;bundle-version="1.0.0"
+ org.ossmeter.platform.vcs.svn;bundle-version="1.0.0",
+ org.ossmeter.repository.model.sourceforge.importer.dependencies
 Export-Package: org.ossmeter.repository.model.sourceforge.importer
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

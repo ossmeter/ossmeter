@@ -51,7 +51,7 @@ class Language  {
 }
 
 class GitHubContent {
-  attr GitHubContentType type;
+  attr String type;
   attr String envoding;
   attr Integer size;
   attr String name;
@@ -59,10 +59,10 @@ class GitHubContent {
   attr String sha;
 }
 
-enum GitHubContentType {
-   file = 0;
-   dir = 1;
-}
+//enum GitHubContentType {
+//   file = 0;
+//   dir = 1;
+//}
 
 class GitHubDownload {
   attr Integer _id;
@@ -91,7 +91,7 @@ class GitHubBugTracker extends BugTrackingSystem {
 
 class GitHubIssue {
   attr Integer number;
-  attr GitHubIssueState state;
+  attr String state;
   attr String title;
   attr String body;
   val GitHubUser creator;
@@ -104,10 +104,10 @@ class GitHubIssue {
   attr String closed_at;
 }
 
-enum GitHubIssueState {
-   open = 0;
-   closed = 1;
-}
+//enum GitHubIssueState {
+//   open = 0;
+//   closed = 1;
+//}
 
 //class GitHubComment {
 //  attr String url;
@@ -124,7 +124,7 @@ enum GitHubIssueState {
 class GitHubMilestone {
   attr String url;
   attr Integer number;
-  attr GitHubMilestoneState state;
+  attr String state;
   attr String title;
   attr String description;
   val GitHubUser[1] creator;
@@ -134,10 +134,10 @@ class GitHubMilestone {
   attr String due_on;
 }
 
-enum GitHubMilestoneState {
-   open = 0;
-   closed = 1;
-}
+//enum GitHubMilestoneState {
+//   open = 0;
+//   closed = 1;
+//}
 
 class GitHubUser extends Person {
 

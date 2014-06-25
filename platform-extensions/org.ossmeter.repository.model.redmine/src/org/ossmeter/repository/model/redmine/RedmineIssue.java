@@ -47,45 +47,30 @@ public class RedmineIssue extends Pongo {
 		notifyChanged();
 		return this;
 	}
-	public RedmineIssueStatus getStatus() {
-		RedmineIssueStatus status = null;
-		try {
-			status = RedmineIssueStatus.valueOf(dbObject.get("status")+"");
-		}
-		catch (Exception ex) {}
-		return status;
+	public String getStatus() {
+		return parseString(dbObject.get("status")+"", "");
 	}
 	
-	public RedmineIssue setStatus(RedmineIssueStatus status) {
-		dbObject.put("status", status.toString());
+	public RedmineIssue setStatus(String status) {
+		dbObject.put("status", status);
 		notifyChanged();
 		return this;
 	}
-	public RedmineIssuePriority getPriority() {
-		RedmineIssuePriority priority = null;
-		try {
-			priority = RedmineIssuePriority.valueOf(dbObject.get("priority")+"");
-		}
-		catch (Exception ex) {}
-		return priority;
+	public String getPriority() {
+		return parseString(dbObject.get("priority")+"", "");
 	}
 	
-	public RedmineIssue setPriority(RedmineIssuePriority priority) {
-		dbObject.put("priority", priority.toString());
+	public RedmineIssue setPriority(String priority) {
+		dbObject.put("priority", priority);
 		notifyChanged();
 		return this;
 	}
-	public RedminIssueTemplate getTemplate() {
-		RedminIssueTemplate template = null;
-		try {
-			template = RedminIssueTemplate.valueOf(dbObject.get("template")+"");
-		}
-		catch (Exception ex) {}
-		return template;
+	public String getTemplate() {
+		return parseString(dbObject.get("template")+"", "");
 	}
 	
-	public RedmineIssue setTemplate(RedminIssueTemplate template) {
-		dbObject.put("template", template.toString());
+	public RedmineIssue setTemplate(String template) {
+		dbObject.put("template", template);
 		notifyChanged();
 		return this;
 	}

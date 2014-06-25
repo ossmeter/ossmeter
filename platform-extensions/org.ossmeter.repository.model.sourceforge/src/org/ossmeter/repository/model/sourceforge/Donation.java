@@ -33,17 +33,12 @@ public class Donation extends Pongo {
 		notifyChanged();
 		return this;
 	}
-	public DonationStatus getStatus() {
-		DonationStatus status = null;
-		try {
-			status = DonationStatus.valueOf(dbObject.get("status")+"");
-		}
-		catch (Exception ex) {}
-		return status;
+	public String getStatus() {
+		return parseString(dbObject.get("status")+"", "");
 	}
 	
-	public Donation setStatus(DonationStatus status) {
-		dbObject.put("status", status.toString());
+	public Donation setStatus(String status) {
+		dbObject.put("status", status);
 		notifyChanged();
 		return this;
 	}

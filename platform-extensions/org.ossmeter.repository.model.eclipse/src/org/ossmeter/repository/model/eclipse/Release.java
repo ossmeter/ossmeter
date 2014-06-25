@@ -23,17 +23,12 @@ public class Release extends org.ossmeter.repository.model.NamedElement {
 	public static StringQueryProducer LINK = new StringQueryProducer("link"); 
 	
 	
-	public ReleaseType getType() {
-		ReleaseType type = null;
-		try {
-			type = ReleaseType.valueOf(dbObject.get("type")+"");
-		}
-		catch (Exception ex) {}
-		return type;
+	public String getType() {
+		return parseString(dbObject.get("type")+"", "");
 	}
 	
-	public Release setType(ReleaseType type) {
-		dbObject.put("type", type.toString());
+	public Release setType(String type) {
+		dbObject.put("type", type);
 		notifyChanged();
 		return this;
 	}

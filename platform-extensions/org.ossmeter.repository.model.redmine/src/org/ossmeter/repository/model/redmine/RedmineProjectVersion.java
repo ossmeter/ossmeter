@@ -62,17 +62,12 @@ public class RedmineProjectVersion extends Pongo {
 		notifyChanged();
 		return this;
 	}
-	public RedmineProjectVersionStatus getStatus() {
-		RedmineProjectVersionStatus status = null;
-		try {
-			status = RedmineProjectVersionStatus.valueOf(dbObject.get("status")+"");
-		}
-		catch (Exception ex) {}
-		return status;
+	public String getStatus() {
+		return parseString(dbObject.get("status")+"", "");
 	}
 	
-	public RedmineProjectVersion setStatus(RedmineProjectVersionStatus status) {
-		dbObject.put("status", status.toString());
+	public RedmineProjectVersion setStatus(String status) {
+		dbObject.put("status", status);
 		notifyChanged();
 		return this;
 	}

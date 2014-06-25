@@ -20,17 +20,12 @@ public class RedminIssueRelation extends Pongo {
 	public static StringQueryProducer TYPE = new StringQueryProducer("type"); 
 	
 	
-	public RedminIssueRelationType getType() {
-		RedminIssueRelationType type = null;
-		try {
-			type = RedminIssueRelationType.valueOf(dbObject.get("type")+"");
-		}
-		catch (Exception ex) {}
-		return type;
+	public String getType() {
+		return parseString(dbObject.get("type")+"", "");
 	}
 	
-	public RedminIssueRelation setType(RedminIssueRelationType type) {
-		dbObject.put("type", type.toString());
+	public RedminIssueRelation setType(String type) {
+		dbObject.put("type", type);
 		notifyChanged();
 		return this;
 	}

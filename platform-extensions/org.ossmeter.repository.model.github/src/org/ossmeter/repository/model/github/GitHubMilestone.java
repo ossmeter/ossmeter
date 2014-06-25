@@ -53,17 +53,12 @@ public class GitHubMilestone extends Pongo {
 		notifyChanged();
 		return this;
 	}
-	public GitHubMilestoneState getState() {
-		GitHubMilestoneState state = null;
-		try {
-			state = GitHubMilestoneState.valueOf(dbObject.get("state")+"");
-		}
-		catch (Exception ex) {}
-		return state;
+	public String getState() {
+		return parseString(dbObject.get("state")+"", "");
 	}
 	
-	public GitHubMilestone setState(GitHubMilestoneState state) {
-		dbObject.put("state", state.toString());
+	public GitHubMilestone setState(String state) {
+		dbObject.put("state", state);
 		notifyChanged();
 		return this;
 	}

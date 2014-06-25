@@ -30,17 +30,12 @@ public abstract class Tracker extends org.ossmeter.repository.model.NamedElement
 		notifyChanged();
 		return this;
 	}
-	public TrackerStatus getStatus() {
-		TrackerStatus status = null;
-		try {
-			status = TrackerStatus.valueOf(dbObject.get("status")+"");
-		}
-		catch (Exception ex) {}
-		return status;
+	public String getStatus() {
+		return parseString(dbObject.get("status")+"", "");
 	}
 	
-	public Tracker setStatus(TrackerStatus status) {
-		dbObject.put("status", status.toString());
+	public Tracker setStatus(String status) {
+		dbObject.put("status", status);
 		notifyChanged();
 		return this;
 	}

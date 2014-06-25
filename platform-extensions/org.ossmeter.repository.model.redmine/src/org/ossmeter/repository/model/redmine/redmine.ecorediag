@@ -46,7 +46,7 @@
     </children>
     <styles xmi:type="notation:ShapeStyle" xmi:id="_u5_mmhcJEeOlBPxqRM-fSw" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
     <element xmi:type="ecore:EClass" href="redmine.ecore#//BugTrackingSystem"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_u5_mmxcJEeOlBPxqRM-fSw" x="1118" y="480"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_u5_mmxcJEeOlBPxqRM-fSw" x="1120" y="465"/>
   </children>
   <children xmi:type="notation:Node" xmi:id="_u6ANqRcJEeOlBPxqRM-fSw" type="1001">
     <children xmi:type="notation:Node" xmi:id="_u6A0sBcJEeOlBPxqRM-fSw" type="4001"/>
@@ -182,30 +182,7 @@
     </children>
     <styles xmi:type="notation:ShapeStyle" xmi:id="_u6FGIRcJEeOlBPxqRM-fSw" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
     <element xmi:type="ecore:EClass" href="redmine.ecore#//RedmineProjectVersion"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_u6FGIhcJEeOlBPxqRM-fSw" x="450" y="660"/>
-  </children>
-  <children xmi:type="notation:Node" xmi:id="_u6GURhcJEeOlBPxqRM-fSw" type="1005">
-    <children xmi:type="notation:Node" xmi:id="_u6G7UBcJEeOlBPxqRM-fSw" type="4010"/>
-    <children xmi:type="notation:Node" xmi:id="_u6G7URcJEeOlBPxqRM-fSw" type="5008">
-      <children xmi:type="notation:Node" xmi:id="_u6G7VRcJEeOlBPxqRM-fSw" type="2006">
-        <element xmi:type="ecore:EEnumLiteral" href="redmine.ecore#//RedmineProjectVersionStatus/open"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_u6G7VhcJEeOlBPxqRM-fSw"/>
-      </children>
-      <children xmi:type="notation:Node" xmi:id="_u6HiYBcJEeOlBPxqRM-fSw" type="2006">
-        <element xmi:type="ecore:EEnumLiteral" href="redmine.ecore#//RedmineProjectVersionStatus/locked"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_u6HiYRcJEeOlBPxqRM-fSw"/>
-      </children>
-      <children xmi:type="notation:Node" xmi:id="_u6HiYhcJEeOlBPxqRM-fSw" type="2006">
-        <element xmi:type="ecore:EEnumLiteral" href="redmine.ecore#//RedmineProjectVersionStatus/closed"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_u6HiYxcJEeOlBPxqRM-fSw"/>
-      </children>
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_u6G7UhcJEeOlBPxqRM-fSw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_u6G7UxcJEeOlBPxqRM-fSw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_u6G7VBcJEeOlBPxqRM-fSw"/>
-    </children>
-    <styles xmi:type="notation:ShapeStyle" xmi:id="_u6GURxcJEeOlBPxqRM-fSw" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
-    <element xmi:type="ecore:EEnum" href="redmine.ecore#//RedmineProjectVersionStatus"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_u6GUSBcJEeOlBPxqRM-fSw" x="195" y="655"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_u6FGIhcJEeOlBPxqRM-fSw" x="505" y="590"/>
   </children>
   <children xmi:type="notation:Node" xmi:id="_u6HiZBcJEeOlBPxqRM-fSw" type="1001">
     <children xmi:type="notation:Node" xmi:id="_u6HiZxcJEeOlBPxqRM-fSw" type="4001"/>
@@ -245,7 +222,7 @@
     </children>
     <styles xmi:type="notation:ShapeStyle" xmi:id="_u6JXkRcJEeOlBPxqRM-fSw" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
     <element xmi:type="ecore:EClass" href="redmine.ecore#//RedmineBugIssueTracker"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_u6JXkhcJEeOlBPxqRM-fSw" x="850" y="460"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_u6JXkhcJEeOlBPxqRM-fSw" x="810" y="460"/>
   </children>
   <children xmi:type="notation:Node" xmi:id="_u6KlshcJEeOlBPxqRM-fSw" type="1001">
     <children xmi:type="notation:Node" xmi:id="_u6KltRcJEeOlBPxqRM-fSw" type="4001"/>
@@ -311,29 +288,6 @@
     <element xmi:type="ecore:EClass" href="redmine.ecore#//RedminIssueRelation"/>
     <layoutConstraint xmi:type="notation:Bounds" xmi:id="_u6Ma5hcJEeOlBPxqRM-fSw" x="825" y="110"/>
   </children>
-  <children xmi:type="notation:Node" xmi:id="_u6NB-hcJEeOlBPxqRM-fSw" type="1005">
-    <children xmi:type="notation:Node" xmi:id="_u6NpABcJEeOlBPxqRM-fSw" type="4010"/>
-    <children xmi:type="notation:Node" xmi:id="_u6NpARcJEeOlBPxqRM-fSw" type="5008">
-      <children xmi:type="notation:Node" xmi:id="_u6OQEhcJEeOlBPxqRM-fSw" type="2006">
-        <element xmi:type="ecore:EEnumLiteral" href="redmine.ecore#//RedminIssueTemplate/reviewRequest"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_u6OQExcJEeOlBPxqRM-fSw"/>
-      </children>
-      <children xmi:type="notation:Node" xmi:id="_u6NpBRcJEeOlBPxqRM-fSw" type="2006">
-        <element xmi:type="ecore:EEnumLiteral" href="redmine.ecore#//RedminIssueTemplate/defectReportFromUser"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_u6NpBhcJEeOlBPxqRM-fSw"/>
-      </children>
-      <children xmi:type="notation:Node" xmi:id="_u6OQEBcJEeOlBPxqRM-fSw" type="2006">
-        <element xmi:type="ecore:EEnumLiteral" href="redmine.ecore#//RedminIssueTemplate/defectReportFromDeveloper"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_u6OQERcJEeOlBPxqRM-fSw"/>
-      </children>
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_u6NpAhcJEeOlBPxqRM-fSw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_u6NpAxcJEeOlBPxqRM-fSw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_u6NpBBcJEeOlBPxqRM-fSw"/>
-    </children>
-    <styles xmi:type="notation:ShapeStyle" xmi:id="_u6NB-xcJEeOlBPxqRM-fSw" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
-    <element xmi:type="ecore:EEnum" href="redmine.ecore#//RedminIssueTemplate"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_u6NB_BcJEeOlBPxqRM-fSw" x="1055" y="655" height="118"/>
-  </children>
   <children xmi:type="notation:Node" xmi:id="_u6OQFBcJEeOlBPxqRM-fSw" type="1001">
     <children xmi:type="notation:Node" xmi:id="_u6OQFxcJEeOlBPxqRM-fSw" type="4001"/>
     <children xmi:type="notation:Node" xmi:id="_u6O3IBcJEeOlBPxqRM-fSw" type="5001">
@@ -353,71 +307,6 @@
     <styles xmi:type="notation:ShapeStyle" xmi:id="_u6OQFRcJEeOlBPxqRM-fSw" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
     <element xmi:type="ecore:EClass" href="redmine.ecore#//RedmineFeature"/>
     <layoutConstraint xmi:type="notation:Bounds" xmi:id="_u6OQFhcJEeOlBPxqRM-fSw" x="1135" y="270"/>
-  </children>
-  <children xmi:type="notation:Node" xmi:id="_u6O3KhcJEeOlBPxqRM-fSw" type="1005">
-    <children xmi:type="notation:Node" xmi:id="_u6PeMBcJEeOlBPxqRM-fSw" type="4010"/>
-    <children xmi:type="notation:Node" xmi:id="_u6PeMRcJEeOlBPxqRM-fSw" type="5008">
-      <children xmi:type="notation:Node" xmi:id="_u6PeNRcJEeOlBPxqRM-fSw" type="2006">
-        <element xmi:type="ecore:EEnumLiteral" href="redmine.ecore#//RedminIssueRelationType/related"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_u6PeNhcJEeOlBPxqRM-fSw"/>
-      </children>
-      <children xmi:type="notation:Node" xmi:id="_u6PeNxcJEeOlBPxqRM-fSw" type="2006">
-        <element xmi:type="ecore:EEnumLiteral" href="redmine.ecore#//RedminIssueRelationType/duplicates"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_u6PeOBcJEeOlBPxqRM-fSw"/>
-      </children>
-      <children xmi:type="notation:Node" xmi:id="_u6QFQBcJEeOlBPxqRM-fSw" type="2006">
-        <element xmi:type="ecore:EEnumLiteral" href="redmine.ecore#//RedminIssueRelationType/duplicated"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_u6QFQRcJEeOlBPxqRM-fSw"/>
-      </children>
-      <children xmi:type="notation:Node" xmi:id="_u6QFQhcJEeOlBPxqRM-fSw" type="2006">
-        <element xmi:type="ecore:EEnumLiteral" href="redmine.ecore#//RedminIssueRelationType/block"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_u6QFQxcJEeOlBPxqRM-fSw"/>
-      </children>
-      <children xmi:type="notation:Node" xmi:id="_u6QFRBcJEeOlBPxqRM-fSw" type="2006">
-        <element xmi:type="ecore:EEnumLiteral" href="redmine.ecore#//RedminIssueRelationType/blocked"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_u6QFRRcJEeOlBPxqRM-fSw"/>
-      </children>
-      <children xmi:type="notation:Node" xmi:id="_u6QsUBcJEeOlBPxqRM-fSw" type="2006">
-        <element xmi:type="ecore:EEnumLiteral" href="redmine.ecore#//RedminIssueRelationType/precedes"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_u6QsURcJEeOlBPxqRM-fSw"/>
-      </children>
-      <children xmi:type="notation:Node" xmi:id="_u6QsUhcJEeOlBPxqRM-fSw" type="2006">
-        <element xmi:type="ecore:EEnumLiteral" href="redmine.ecore#//RedminIssueRelationType/follows"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_u6QsUxcJEeOlBPxqRM-fSw"/>
-      </children>
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_u6PeMhcJEeOlBPxqRM-fSw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_u6PeMxcJEeOlBPxqRM-fSw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_u6PeNBcJEeOlBPxqRM-fSw"/>
-    </children>
-    <styles xmi:type="notation:ShapeStyle" xmi:id="_u6O3KxcJEeOlBPxqRM-fSw" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
-    <element xmi:type="ecore:EEnum" href="redmine.ecore#//RedminIssueRelationType"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_u6O3LBcJEeOlBPxqRM-fSw" x="845" y="625"/>
-  </children>
-  <children xmi:type="notation:Node" xmi:id="_u6QsVBcJEeOlBPxqRM-fSw" type="1005">
-    <children xmi:type="notation:Node" xmi:id="_u6RTYBcJEeOlBPxqRM-fSw" type="4010"/>
-    <children xmi:type="notation:Node" xmi:id="_u6RTYRcJEeOlBPxqRM-fSw" type="5008">
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_u6RTYhcJEeOlBPxqRM-fSw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_u6RTYxcJEeOlBPxqRM-fSw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_u6RTZBcJEeOlBPxqRM-fSw"/>
-    </children>
-    <styles xmi:type="notation:ShapeStyle" xmi:id="_u6QsVRcJEeOlBPxqRM-fSw" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
-    <element xmi:type="ecore:EEnum" href="redmine.ecore#//RedmineIssueStatus"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_u6QsVhcJEeOlBPxqRM-fSw" x="865" y="540"/>
-  </children>
-  <children xmi:type="notation:Node" xmi:id="_u6RTZxcJEeOlBPxqRM-fSw" type="1005">
-    <children xmi:type="notation:Node" xmi:id="_u6R6cBcJEeOlBPxqRM-fSw" type="4010"/>
-    <children xmi:type="notation:Node" xmi:id="_u6R6cRcJEeOlBPxqRM-fSw" type="5008">
-      <children xmi:type="notation:Node" xmi:id="_u6R6dRcJEeOlBPxqRM-fSw" type="2006">
-        <element xmi:type="ecore:EEnumLiteral" href="redmine.ecore#//RedmineIssuePriority/normal"/>
-        <layoutConstraint xmi:type="notation:Location" xmi:id="_u6R6dhcJEeOlBPxqRM-fSw"/>
-      </children>
-      <styles xmi:type="notation:DrawerStyle" xmi:id="_u6R6chcJEeOlBPxqRM-fSw"/>
-      <styles xmi:type="notation:SortingStyle" xmi:id="_u6R6cxcJEeOlBPxqRM-fSw"/>
-      <styles xmi:type="notation:FilteringStyle" xmi:id="_u6R6dBcJEeOlBPxqRM-fSw"/>
-    </children>
-    <styles xmi:type="notation:ShapeStyle" xmi:id="_u6RTaBcJEeOlBPxqRM-fSw" fontColor="4210752" fontName="Segoe UI" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
-    <element xmi:type="ecore:EEnum" href="redmine.ecore#//RedmineIssuePriority"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_u6RTaRcJEeOlBPxqRM-fSw" x="1055" y="575" width="193"/>
   </children>
   <children xmi:type="notation:Node" xmi:id="_t3aQYBlHEeOlBPxqRM-fSw" type="1001">
     <children xmi:type="notation:Node" xmi:id="_t3a3cBlHEeOlBPxqRM-fSw" type="4001"/>
@@ -583,8 +472,8 @@
     <styles xmi:type="notation:ConnectorStyle" xmi:id="_u6WL4RcJEeOlBPxqRM-fSw" routing="Rectilinear" lineColor="4210752"/>
     <styles xmi:type="notation:FontStyle" xmi:id="_u6WL4hcJEeOlBPxqRM-fSw" fontName="Segoe UI"/>
     <element xsi:nil="true"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_u6WL4xcJEeOlBPxqRM-fSw" points="[124, 40, -147, -21]$[205, 40, -66, -21]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_u7s2wBcJEeOlBPxqRM-fSw" id="(0.2469879518072289,0.0)"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_u6WL4xcJEeOlBPxqRM-fSw" points="[8, 0, -212, -22]$[154, 0, -66, -22]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_u7s2wBcJEeOlBPxqRM-fSw" id="(0.9518072289156626,0.49019607843137253)"/>
     <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_u7s2wRcJEeOlBPxqRM-fSw" id="(0.5,1.0)"/>
   </edges>
   <edges xmi:type="notation:Edge" xmi:id="_u6WL5BcJEeOlBPxqRM-fSw" type="3002" source="_u6KlshcJEeOlBPxqRM-fSw" target="_u6OQFBcJEeOlBPxqRM-fSw">
@@ -639,7 +528,7 @@
     <styles xmi:type="notation:ConnectorStyle" xmi:id="_u6XaARcJEeOlBPxqRM-fSw" lineColor="4210752"/>
     <styles xmi:type="notation:FontStyle" xmi:id="_u6XaAhcJEeOlBPxqRM-fSw" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
     <element xmi:type="ecore:EReference" href="redmine.ecore#//RedminIssueRelation/relatedIssue"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_u6XaAxcJEeOlBPxqRM-fSw" points="[12, -8, 109, -96]$[68, -8, 165, -96]$[68, 97, 165, 9]$[12, 97, 109, 9]"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_u6XaAxcJEeOlBPxqRM-fSw" points="[8, -8, 69, -96]$[80, -8, 141, -96]$[80, 97, 141, 9]$[16, 97, 77, 9]"/>
     <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_u7whIBcJEeOlBPxqRM-fSw" id="(0.9441860465116279,0.45098039215686275)"/>
     <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_u7whIRcJEeOlBPxqRM-fSw" id="(0.5,0.0)"/>
   </edges>
@@ -653,7 +542,7 @@
     <styles xmi:type="notation:ConnectorStyle" xmi:id="__Gn48RlIEeOlBPxqRM-fSw" lineColor="4210752"/>
     <styles xmi:type="notation:FontStyle" xmi:id="__Gn48hlIEeOlBPxqRM-fSw" fontColor="4210752" fontName="Segoe UI" fontHeight="10"/>
     <element xmi:type="ecore:EReference" href="redmine.ecore#//RedmineIssue/category"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="__Gn48xlIEeOlBPxqRM-fSw" points="[-7, 31, -219, -41]$[-7, 60, -219, -12]$[133, 60, -79, -12]"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="__Gn48xlIEeOlBPxqRM-fSw" points="[7, 31, -255, -41]$[7, 60, -255, -12]$[183, 60, -79, -12]"/>
     <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="__GqVMBlIEeOlBPxqRM-fSw" id="(0.7681818181818182,0.7973856209150327)"/>
     <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="__GqVMRlIEeOlBPxqRM-fSw" id="(0.6428571428571429,0.7906976744186046)"/>
   </edges>

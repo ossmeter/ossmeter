@@ -75,23 +75,23 @@ class Category extends NamedElement {
 
 class Donation {
   attr String comment;
-  attr DonationStatus status;
+  attr String status;
   attr String[*] charities;
 }
 
-enum DonationStatus {
-  notAccepting = 1;
-  accepting = 2;
-}
+//enum DonationStatus {
+//  notAccepting = 1;
+//  accepting = 2;
+//}
 
-enum TrackerStatus {
-  open = 1;
-  closed = 2;
-}
+//enum TrackerStatus {
+//  open = 1;
+// closed = 2;
+//}
 
 abstract class Tracker extends NamedElement {
   attr String location;
-  attr TrackerStatus status;
+  attr String status;
 }
 
 class SourceForgeBugTrackingSystem extends BugTrackingSystem {
@@ -105,19 +105,19 @@ class BugTS extends Tracker {
   val Person assignee;
   val Person submitted;
   attr int priority;
-  attr ResolutionStatus resolutionStatus;
-  attr BugVisibility bugVisibility;
+  attr String resolutionStatus;
+  attr String bugVisibility;
 }
 
-enum BugVisibility {
-  public = 1;
-  private = 2;
-}
+//enum BugVisibility {
+//  public = 1;
+//  private = 2;
+//}
 
-enum ResolutionStatus {
-  none = 1;
-  fixed = 2;
-}
+//enum ResolutionStatus {
+//  none = 1;
+//  fixed = 2;
+//}
 
 abstract class Request extends Tracker {
   attr String summary;
