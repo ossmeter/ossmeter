@@ -55,10 +55,10 @@ public abstract class AbstractFactoidMetricProvider implements ITransientMetricP
 			}
 			db.getFactoids().add(factoid);
 		}
-		measureImpl(project, factoid);
+		measureImpl(project, delta, factoid);
 		db.sync();
 	}
 
-	abstract public void measureImpl(Project project, Factoid factoid);
+	abstract public void measureImpl(Project project, ProjectDelta delta, Factoid factoid);
 }
 

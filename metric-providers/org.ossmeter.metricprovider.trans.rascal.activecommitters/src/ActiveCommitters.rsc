@@ -41,7 +41,7 @@ int numberOfActiveCommitters(rel[datetime, set[str]] activeCommitters = {})
   = size({c | /str c := activeCommitters});
 
 @metric{maximumActiveCommittersEver}
-@doc{What is the maximum number of committers which have been active together in any two week period}
+@doc{What is the maximum number of committers which have been active together in any two week period?}
 @friendlyName{maximumActiveCommittersEver}
 @uses{("org.ossmeter.metricprovider.trans.rascal.activecommitters.numberOfActiveCommitters.historic" :"history")}
 @appliesTo{generic()}
