@@ -87,7 +87,7 @@ Factoid developmentTeamStability(rel[datetime day, int active] history = {}, int
   stability = \one();
   team = "";
   
-  if (-0.25 < sl && sl < 0.25 && longTermActive > 0) {
+  if (-0.1 < sl && sl < 0.1 && longTermActive > 0) {
     stability = \three(); 
     team = "In the last half year the development team was stable and active.";
   }
@@ -99,7 +99,7 @@ Factoid developmentTeamStability(rel[datetime day, int active] history = {}, int
     stability = \two(); 
     team = "People have been leaving the development team in the last half year.";
   }
-  else if (sl > 1) {
+  else if (sl > 0) {
     stability = \four(); // people are coming
     team = "In the last half year the development team has been growing.";
   }
