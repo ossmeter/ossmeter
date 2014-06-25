@@ -25,21 +25,22 @@ public class App implements IApplication {
 		Platform platform = new Platform(mongo);
 		ProjectRepository repo = platform.getProjectRepositoryManager().getProjectRepository();
 		
-//		Project pongo = ProjectCreationUtil.createSvnProject("pongo", "http://pongo.googlecode.com/svn/trunk");
-//		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(pongo);
+		Project pongo = ProjectCreationUtil.createSvnProject("pongo", "http://pongo.googlecode.com/svn/trunk");
+		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(pongo);
+		
 		ProjectCollection coll = repo.getProjects();
 		for (Project p : coll) {
 			coll.remove(p);
 		}
 		
-		Project pdb = ProjectCreationUtil.createGitProject("rascal", "file:///Users/jurgenv/Workspaces/Rascal/rascal");
-		coll.add(pdb);
+//		Project pdb = ProjectCreationUtil.createGitProject("rascal", "file:///Users/jurgenv/Workspaces/Rascal/rascal");
+//		coll.add(pdb);
 
 		
 		// Synchronise the changes and close the connection
 		
-		EclipseProjectImporter importer = new EclipseProjectImporter();
-		System.err.println(importer.importProject("modeling.epsilon", platform));
+//		EclipseProjectImporter importer = new EclipseProjectImporter();
+//		System.err.println(importer.importProject("modeling.epsilon", platform));
 		
 		repo.sync();
 		mongo.close();
