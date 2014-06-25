@@ -82,7 +82,7 @@ Factoid developmentTeamStability(rel[datetime day, int active] history = {}, int
   
   halfYearAgo = decrementMonths(sorted[-1].day, 6);  
   lastYear = [<d,m> | <d,m> <- sorted, d > halfYearAgo];
-  sl = slope([<i,lastYear[i][1]> | i <- index(lastYear)]);
+  sl = size(lastYear) > 2 ? slope([<i,lastYear[i][1]> | i <- index(lastYear)]) : 0;
 
   stability = \one();
   team = "";
