@@ -25,7 +25,7 @@ import com.mongodb.ServerAddress;
 
 public class OssmeterApplication implements IApplication, ServiceTrackerCustomizer<IWorkerService, IWorkerService> {
 	
-	protected boolean master = true;
+	protected boolean master = false;
 	protected OssmeterLogger logger;
 	protected boolean done = false;
 	protected Object appLock = new Object();
