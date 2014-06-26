@@ -71,10 +71,12 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 	private final String friendlyName;
 	private final String shortMetricId;
 	private final String metricId;
+	private final String bundleId;
 	private final AbstractFunction function;
 	private final OssmeterLogger logger;
 	private MetricProviderContext context;
 	private boolean needsPrev;
+	
 	private static final RascalManager manager = RascalManager.getInstance();
 
 	private static String lastRevision = null;
@@ -84,13 +86,14 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 	private static IConstructor rascalDelta;
 	
 	
-	public RascalMetricProvider(String metricId, String shortMetricId, String friendlyName, String description, AbstractFunction function, Map<String,String> uses) {
+	public RascalMetricProvider(String bundleId, String metricId, String shortMetricId, String friendlyName, String description, AbstractFunction function, Map<String,String> uses) {
+		this.bundleId = bundleId;
 		this.metricId = metricId;
 		this.shortMetricId =  shortMetricId;
 		this.friendlyName = friendlyName;
 		this.description = description;
 		this.function = function;
-		this.uses = uses;
+		this.uses = qualifyNames(bundleId, uses);
 		this.providers = new HashMap<String,IMetricProvider>();
 		
 		this.needsM3 = hasParameter(M3S_PARAM);
@@ -104,6 +107,22 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		this.logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 		
 		assert function instanceof RascalFunction;
+	}
+
+	private Map<String, String> qualifyNames(String qualifier, Map<String, String> uses) {
+		Map<String,String> output = new HashMap<>();
+		
+		for (String use : uses.keySet()) {
+			String qualifiedUse = use.trim();
+
+			if (!use.replaceAll("\\.historic","").contains(".")) {
+				qualifiedUse = bundleId + "." + use;
+			}
+			
+			output.put(qualifiedUse, uses.get(use));
+		}
+		
+		return output;
 	}
 
 	private boolean hasParameter(String param) {
