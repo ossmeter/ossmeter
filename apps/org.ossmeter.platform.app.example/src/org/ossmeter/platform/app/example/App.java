@@ -31,8 +31,11 @@ public class App implements IApplication {
 			coll.remove(p);
 		}
 		
-		Project pdb = ProjectCreationUtil.createGitProject("pdb.values", "file:///Users/jurgenv/Workspaces/Rascal/pdb.values");
-		coll.add(pdb);
+//		Project pdb = ProjectCreationUtil.createGitProject("pdb_values", "file:///Users/shahi/Documents/CWI/l1_workspace/pdb.values");
+//		coll.add(pdb);
+		
+		Project pongo = ProjectCreationUtil.createSvnProject("pongo", "file:///Users/shahi/svn/pongo");
+		coll.add(pongo);
 		
 		// Synchronise the changes and close the connection
 		repo.sync();
