@@ -14,6 +14,7 @@ public class ProjectExecutionInformation extends Pongo {
 	
 	public ProjectExecutionInformation() { 
 		super();
+		dbObject.put("storage", new BasicDBObject());
 		dbObject.put("metricProviderData", new BasicDBList());
 		LASTEXECUTED.setOwningType("org.ossmeter.repository.model.ProjectExecutionInformation");
 		MONITOR.setOwningType("org.ossmeter.repository.model.ProjectExecutionInformation");
@@ -65,6 +66,7 @@ public class ProjectExecutionInformation extends Pongo {
 	public LocalStorage getStorage() {
 		if (storage == null && dbObject.containsField("storage")) {
 			storage = (LocalStorage) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("storage"));
+			storage.setContainer(this);
 		}
 		return storage;
 	}

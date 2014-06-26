@@ -10,19 +10,15 @@ class ProjectRepository extends NamedElement {
   val Person[*] persons;
   val License[*] licenses;
   val MetricProvider[*] metricProviders;
-  val SchedulingInformation[*] schedulingInformation; //FIXME: bug in Pongo, HAS to have a multiplicity
+  val SchedulingInformation[*] schedulingInformation; 
 }
 
 class SchedulingInformation {
-  attr String masterNodeIdentifier;
-  val WorkerNode[*] nodes;
+  @searchable
+  attr String workerIdentifier;
+  attr Boolean isMaster;
+  attr String[*] currentLoad; // List of projects its executing
 }
-
-class WorkerNode {
-	attr String identifier; // Probably the IP
-	attr String[*] currentLoad; // List of projects its executing
-}
-
 
 class ImportData {
   @searchable
@@ -42,7 +38,7 @@ class Project extends NamedElement {
   attr String shortName;
   attr String description;
   attr int year;
-  attr boolean active;
+  attr boolean active = true;
   attr String lastExecuted;
   ref Project parent;
   val VcsRepository[*] vcsRepositories;
@@ -54,7 +50,7 @@ class Project extends NamedElement {
   val MetricProvider[*] metricProviderData;
   attr boolean monitor = true;
   attr boolean inErrorState = false;
-   val ProjectExecutionInformation executionInformation;
+  val ProjectExecutionInformation executionInformation;
 }
 
 class MetricProviderExecution {
