@@ -21,7 +21,6 @@ public class EclipseProject extends org.ossmeter.repository.model.Project {
 		dbObject.put("articles", new BasicDBList());
 		dbObject.put("releases", new BasicDBList());
 		super.setSuperTypes("org.ossmeter.repository.model.eclipse.Project");
-		SHORTNAME.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
 		PARAGRAPHURL.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
 		DESCRIPTIONURL.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
 		DOWNLOADSURL.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
@@ -31,7 +30,6 @@ public class EclipseProject extends org.ossmeter.repository.model.Project {
 		STATE.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
 	}
 	
-	public static StringQueryProducer SHORTNAME = new StringQueryProducer("shortName"); 
 	public static StringQueryProducer PARAGRAPHURL = new StringQueryProducer("paragraphUrl"); 
 	public static StringQueryProducer DESCRIPTIONURL = new StringQueryProducer("descriptionUrl"); 
 	public static StringQueryProducer DOWNLOADSURL = new StringQueryProducer("downloadsUrl"); 
@@ -41,15 +39,6 @@ public class EclipseProject extends org.ossmeter.repository.model.Project {
 	public static StringQueryProducer STATE = new StringQueryProducer("state"); 
 	
 	
-	public String getShortName() {
-		return parseString(dbObject.get("shortName")+"", "");
-	}
-	
-	public EclipseProject setShortName(String shortName) {
-		dbObject.put("shortName", shortName);
-		notifyChanged();
-		return this;
-	}
 	public String getParagraphUrl() {
 		return parseString(dbObject.get("paragraphUrl")+"", "");
 	}

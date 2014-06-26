@@ -22,31 +22,21 @@ public class Review extends Pongo {
 	public static StringQueryProducer ENDDATE = new StringQueryProducer("endDate"); 
 	
 	
-	public ReviewType getType() {
-		ReviewType type = null;
-		try {
-			type = ReviewType.valueOf(dbObject.get("type")+"");
-		}
-		catch (Exception ex) {}
-		return type;
+	public String getType() {
+		return parseString(dbObject.get("type")+"", "");
 	}
 	
-	public Review setType(ReviewType type) {
-		dbObject.put("type", type.toString());
+	public Review setType(String type) {
+		dbObject.put("type", type);
 		notifyChanged();
 		return this;
 	}
-	public ReviewState getState() {
-		ReviewState state = null;
-		try {
-			state = ReviewState.valueOf(dbObject.get("state")+"");
-		}
-		catch (Exception ex) {}
-		return state;
+	public String getState() {
+		return parseString(dbObject.get("state")+"", "");
 	}
 	
-	public Review setState(ReviewState state) {
-		dbObject.put("state", state.toString());
+	public Review setState(String state) {
+		dbObject.put("state", state);
 		notifyChanged();
 		return this;
 	}

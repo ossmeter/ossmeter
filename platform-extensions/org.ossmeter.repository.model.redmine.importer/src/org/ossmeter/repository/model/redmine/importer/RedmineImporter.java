@@ -1,6 +1,13 @@
 package org.ossmeter.repository.model.redmine.importer;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -8,6 +15,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
+import org.json.simple.JSONArray;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -21,25 +32,36 @@ import org.ossmeter.repository.model.redmine.RedmineBugIssueTracker;
 import org.ossmeter.repository.model.redmine.RedmineCategory;
 import org.ossmeter.repository.model.redmine.RedmineIssue;
 import org.ossmeter.repository.model.redmine.RedmineIssuePriority;
+import org.ossmeter.repository.model.redmine.RedmineIssueStatus;
 import org.ossmeter.repository.model.redmine.RedmineProject;
 import org.ossmeter.repository.model.redmine.RedmineProjectVersion;
+import org.ossmeter.repository.model.redmine.RedmineProjectVersionStatus;
 import org.ossmeter.repository.model.redmine.RedmineUser;
 import org.ossmeter.repository.model.redmine.RedmineWiki;
 
 public class RedmineImporter {
-	public RedmineProject importProject(String projectUrl, Platform platform) 
+	private String key;
+	private String baseRepo;
+	private String user;
+	private String password;
+	private String essentialRepo;
+	
+	
+	public RedmineImporter(String baseRepo, String key, String user, String password)
+	{
+		this.baseRepo = baseRepo;
+		this.essentialRepo = baseRepo.substring(7);
+		this.key = key;
+		this.user = user;
+		this.password = password;
+	}
+
+	public RedmineProject importProjectFromHTML(String projectUrl, Platform platform) 
 	{
 		
 		
 		org.jsoup.nodes.Document doc;
 		String URL_PROJECT = projectUrl;
-		
-		
-			//////Update control
-
-		
-			
-			///////
 		
 		RedmineProject project = null;
 		
@@ -87,9 +109,9 @@ public class RedmineImporter {
 			}
 			//SET PERSON
 			List<RedmineUser> gul = getPersonProject(platform, doc);
-			for (RedmineUser googleUser : gul) {
-				platform.getProjectRepositoryManager().getProjectRepository().getPersons().add(googleUser);
-				project.getPersons().add(googleUser);
+			for (RedmineUser redmineUser : gul) {
+				platform.getProjectRepositoryManager().getProjectRepository().getPersons().add(redmineUser);
+				project.getPersons().add(redmineUser);
 			}
 			project.getPersons().addAll(gul);
 			//SET RedmineBugIssueTracker
@@ -228,92 +250,98 @@ public class RedmineImporter {
 	{
 		List<RedmineUser> result = new ArrayList<RedmineUser>();
 		Element e = doc.getElementsByClass("memebers").first();
-		String members = doc.getElementsByClass("splitcontentright").first().getElementsByClass("members").first().text().substring(8);
-		String[] membersArray = members.split(":");
-		for (int i = 1; i < membersArray.length; i=i+2  ) 
+		if (doc.getElementsByClass("splitcontentright").first().getElementsByClass("members").size() != 0)
 		{
-			String role = "";
-			if (i==1)
-				role = membersArray[i-1];
-			else
-				role = membersArray[i-1].substring(membersArray[i-1].lastIndexOf(" "));
-			String user = membersArray[i].substring(0,membersArray[i].lastIndexOf(" ")).trim();
-			
-			Person ru = userPending.get(user);
-			if (ru==null)
+			String members = doc.getElementsByClass("splitcontentright").first().getElementsByClass("members").first().text().substring(8);
+		
+			String[] membersArray = members.split(":");
+			for (int i = 1; i < membersArray.length; i=i+2  ) 
 			{
-				ru = platform.getProjectRepositoryManager().getProjectRepository().getPersons().findOneByName(user);			
-				if(ru==null)
+				String role = "";
+				if (i==1)
+					role = membersArray[i-1];
+				else
+					role = membersArray[i-1].substring(membersArray[i-1].lastIndexOf(" "));
+				String user = membersArray[i].substring(0,membersArray[i].lastIndexOf(" ")).trim();
+				
+				Person ru = userPending.get(user);
+				if (ru==null)
 				{
-					ru = new RedmineUser();
-					ru.setName(user);
-					platform.getProjectRepositoryManager().getProjectRepository().getPersons().add(ru);
+					ru = platform.getProjectRepositoryManager().getProjectRepository().getPersons().findOneByName(user);			
+					if(ru==null)
+					{
+						ru = new RedmineUser();
+						ru.setName(user);
+						platform.getProjectRepositoryManager().getProjectRepository().getPersons().add(ru);
+					}
+					userPending.put(user, ru);
 				}
-				userPending.put(user, ru);
+				Role gr = platform.getProjectRepositoryManager().getProjectRepository().getRoles().findOneByName(role);
+				if (gr == null)
+				{
+					gr = rolePending.get(role);
+					if(gr==null)
+					{
+						gr = new Role();
+						gr.setName(role);
+						
+						platform.getProjectRepositoryManager().getProjectRepository().getRoles().add(gr);
+					}
+				}
+				rolePending.put(role, gr);
+				ru.getRoles().add(gr);
+				result.add((RedmineUser) ru);
 			}
-			Role gr = platform.getProjectRepositoryManager().getProjectRepository().getRoles().findOneByName(role);
-			if (gr == null)
+			if(membersArray.length % 2 == 1  && membersArray.length-2 >0)
 			{
-				gr = rolePending.get(role);
-				if(gr==null)
+				String role = "";
+				role = membersArray[membersArray.length-2].substring(membersArray[membersArray.length-2].lastIndexOf(" "));
+				
+				String user = membersArray[membersArray.length-1];
+				
+				Person ru = userPending.get(user);
+				if (ru==null)
 				{
-					gr = new Role();
-					gr.setName(role);
-					
-					platform.getProjectRepositoryManager().getProjectRepository().getRoles().add(gr);
+					ru = platform.getProjectRepositoryManager().getProjectRepository().getPersons().findOneByName(user);			
+					if(ru==null)
+					{
+						ru = new RedmineUser();
+						ru.setName(user);
+						platform.getProjectRepositoryManager().getProjectRepository().getPersons().add(ru);
+						
+						
+					}
+					userPending.put(user, ru);
 				}
+	
+				Role gr = platform.getProjectRepositoryManager().getProjectRepository().getRoles().findOneByName(role);
+				if (gr == null)
+				{
+					gr = rolePending.get(role);
+					if(gr==null)
+					{
+						gr = new Role();
+						gr.setName(role);
+						rolePending.put(role, gr);
+						platform.getProjectRepositoryManager().getProjectRepository().getRoles().add(gr);
+					}
+				}
+				ru.getRoles().add(gr);	
+				result.add((RedmineUser) ru);
 			}
-			rolePending.put(role, gr);
-			ru.getRoles().add(gr);
-			result.add((RedmineUser) ru);
 		}
-		if(membersArray.length % 2 == 1  && membersArray.length-2 >0)
-		{
-			String role = "";
-			role = membersArray[membersArray.length-2].substring(membersArray[membersArray.length-2].lastIndexOf(" "));
-			
-			String user = membersArray[membersArray.length-1];
-			
-			Person ru = userPending.get(user);
-			if (ru==null)
-			{
-				ru = platform.getProjectRepositoryManager().getProjectRepository().getPersons().findOneByName(user);			
-				if(ru==null)
-				{
-					ru = new RedmineUser();
-					ru.setName(user);
-					platform.getProjectRepositoryManager().getProjectRepository().getPersons().add(ru);
-					
-					
-				}
-				userPending.put(user, ru);
-			}
-
-			Role gr = platform.getProjectRepositoryManager().getProjectRepository().getRoles().findOneByName(role);
-			if (gr == null)
-			{
-				gr = rolePending.get(role);
-				if(gr==null)
-				{
-					gr = new Role();
-					gr.setName(role);
-					rolePending.put(role, gr);
-					platform.getProjectRepositoryManager().getProjectRepository().getRoles().add(gr);
-				}
-			}
-			ru.getRoles().add(gr);	
-			result.add((RedmineUser) ru);
-		}
-
 		return result;
 	}
 	private Map<String, Role> rolePending = new HashMap<String, Role>();
 	private Map<String, Person> userPending = new HashMap<String, Person>();
-	private Map<String, Person> categoryPending = new HashMap<String, Person>();
-	public void importAll(Platform platform) 
+	private Map<String, RedmineCategory> categoryPending = new HashMap<String, RedmineCategory>();
+	private JSONArray issueArray = new JSONArray();
+	
+	
+	public void importAllFromHTML(Platform platform) 
 	{
 		String URL_PROJECT = "http://demo.redmine.org/projects/sdk";
-		RedmineProject currentProg = importProject(URL_PROJECT, platform);
+		RedmineProject currentProg = importProjectFromHTML(URL_PROJECT, platform);
 		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(currentProg);
 		
 	}
@@ -342,9 +370,7 @@ public class RedmineImporter {
 			}
 			e = doc.getElementsByClass("attributes").first();
 			Elements el = e.getElementsByTag("tr");
-//			for (Element element : el) {
-//				System.out.println(element.text());
-//			}
+//			
 			String cat = el.get(4).getElementsByClass("category").get(1).text();
 			if (!cat.equals("-"))
 			{
@@ -355,10 +381,11 @@ public class RedmineImporter {
 			
 			String priority = el.get(1).getElementsByClass("priority").get(1).text();
 			if (!priority.equals("-"))
-			{
+				result.setPriority(priority);
+/*			{
 				switch (priority) {
 				case "Normal":
-					result.setPriority(RedmineIssuePriority.Normal);
+					result.setPriority(<RedmineIssuePriority.Normal);
 					break;
 				case "Low":
 					result.setPriority(RedmineIssuePriority.Low);
@@ -374,6 +401,7 @@ public class RedmineImporter {
 					break;
 				}
 			}
+*/
 			String startDate = el.get(0).getElementsByTag("td").get(1).text();
 			if (!startDate.equals("-"))
 			{
@@ -390,7 +418,7 @@ public class RedmineImporter {
 			String author = e.getElementsByTag("a").first().text();
 			result.setAuthor((RedmineUser)userPending.get(author));		
 			//Set Relation
-			e = doc.getElementById("relations");
+			
 			
 			
 			
@@ -400,5 +428,390 @@ public class RedmineImporter {
 		}
 		return result;
 	}
+	
+	public void importAll(Platform platform ) 
+	{
+		int offset = 0;
+		int total = 0;
+		while (offset <= total)
+		{ 
+			String issuesUrlString = baseRepo + "issues.json?key=" + key + "&offset=" + offset;
+			InputStream is2;
+			try {
+				is2 = new URL(issuesUrlString).openStream();
+				BufferedReader rd2 = new BufferedReader(new InputStreamReader(is2, Charset.forName("UTF-8")));
+				String jsonText2 = readAll(rd2);
+				JSONObject obj2 = (JSONObject)JSONValue.parse(jsonText2);
+				total = Integer.parseInt(obj2.get("total_count").toString());
+				issueArray.addAll((JSONArray)obj2.get("issues"));
+				offset += 25;
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		
+		for (Role role : getRoles()) {
+			platform.getProjectRepositoryManager().getProjectRepository().getRoles().add(role);
+		}
+		platform.getProjectRepositoryManager().getProjectRepository().sync();
+		
+		offset = 0;
+		total = 0;
+		getRedmineUsers(platform);
+		
+		
+		while (offset <= total)
+		{ 
+			InputStream is;
+			try {
+				is = new URL(baseRepo + "projects.json?key=" + key).openStream();
+				BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+				String jsonText = readAll(rd);
+				JSONObject obj=(JSONObject)JSONValue.parse(jsonText);
+				JSONArray projArray = ((JSONArray)obj.get("projects"));
+				for (Object proj : projArray) {
+					String shortName = ((JSONObject)proj).get("identifier").toString();
+					String longName = ((JSONObject)proj).get("name").toString();
+					String description = ((JSONObject)proj).get("description").toString();
+					String createOn = ((JSONObject)proj).get("created_on").toString();
+					String updatedOn = ((JSONObject)proj).get("updated_on").toString();
+					String id = ((JSONObject)proj).get("id").toString();
+					platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(importProject(shortName, description, longName,
+																														createOn, updatedOn, id, platform));
+					platform.getProjectRepositoryManager().getProjectRepository().sync();
+				}
+				total = Integer.parseInt(obj.get("total_count").toString());
+				offset += 25;
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public RedmineProject importProject(String projectId, String description,
+			String longName, String createdOn, String updatedOn,String id, Platform platform) 
+	{	
+		RedmineProject project = null;
+	
+		Boolean projectToBeUpdated = false;
+		Project projectTemp = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByName(longName);
+		if (projectTemp != null)
+		{
+			if (projectTemp instanceof RedmineProject) 
+			{
+				project = (RedmineProject)projectTemp;
+				projectToBeUpdated = true;
+				System.out.println("-----> project " + projectId + " already in the repository. Its metadata will be updated.");	
+			}
+		}
+		
+		if (!projectToBeUpdated)  {
+			project = new RedmineProject();
+		}
+		else	
+		{
+			project.getCommunicationChannels().clear();
+			project.getVcsRepositories().clear();	
+			project.getBugTrackingSystems().clear();
+			project.getPersons().clear();
+			project.getLicenses().clear();
+			project.getVersions();
+			platform.getProjectRepositoryManager().getProjectRepository().sync();
+		}
+		
+		project.setName(longName);
+		project.setDescription(description);
+		project.setCreated_on(createdOn);
+		project.setUpdated_on(updatedOn);
+		project.setIdentifier(id);
+		
+		
+		if(exisistWiki( baseRepo + "projects/" + projectId + "/wiki"))
+		{
+			RedmineWiki wiki = new RedmineWiki();
+			wiki.setUrl(baseRepo + "projects/" + projectId + "/wiki");
+			wiki.setNonProcessable(true);
+			project.setWiki(wiki);
+		}
+		
+		
+		project.getPersons().addAll(getPersonProject(id, platform));
 
+		RedmineBugIssueTracker bit = new RedmineBugIssueTracker();
+		bit.setName("Redmine_" + projectId);
+		bit.getIssues().addAll(getIssue(id, platform));
+		project.getBugTrackingSystems().add(bit);
+		
+		
+		project.getVersions().addAll(getRedmineProjectVersion(id));
+		
+		return project;
+	}
+	
+	private List<Person> getPersonProject(String id, Platform platform) {
+		ArrayList<Person> result = new ArrayList<Person>();
+		
+		InputStream is;
+		try {
+			is = new URL("http://" + user + ":" + password + "@" + essentialRepo + "projects/" + id +  "/memberships.json?key=" + key).openStream();
+			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+			String jsonText = readAll(rd);
+			JSONObject obj=(JSONObject)JSONValue.parse(jsonText);
+			JSONArray memberships = (JSONArray)obj.get("memberships");
+			for (Object version : memberships) {
+				JSONObject projId = (JSONObject)((JSONObject)version).get("project");
+				
+				if((projId.get("id").toString()).equals(id))
+				{
+					Person us = platform.getProjectRepositoryManager().getProjectRepository().getPersons().findOneByName(((JSONObject)((JSONObject)version).get("user")).get("name").toString());
+					if( us != null && us instanceof RedmineUser)
+					{
+						JSONArray roleName = (JSONArray)((JSONObject)version).get("roles");
+						for (Object object : roleName) {
+							Role r = platform.getProjectRepositoryManager().getProjectRepository().getRoles().findOneByName(((JSONObject)object).get("name").toString());
+							if (r != null)
+								us.getRoles().add(r);
+						}
+						
+						//us.getRoles().add(e)
+						
+						result.add(us);
+					}
+				}
+			}
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	private ArrayList<Role> getRoles()
+	{
+		ArrayList<Role> result = new ArrayList<Role>();
+		
+		InputStream is;
+		try {
+			is = new URL(baseRepo + "roles.json?key=" + key).openStream();
+			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+			String jsonText = readAll(rd);
+			JSONObject obj=(JSONObject)JSONValue.parse(jsonText);
+			JSONArray roles = (JSONArray)obj.get("roles");
+			for (Object version : roles) {
+				Role role = new Role();
+				role.setName(((JSONObject)version).get("name").toString());
+				result.add(role);
+			}
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	private ArrayList<RedmineProjectVersion> getRedmineProjectVersion(String projectID) {
+		ArrayList<RedmineProjectVersion> result = new ArrayList<RedmineProjectVersion>();
+		InputStream is;
+		try {
+			is = new URL(baseRepo + "projects/"+ projectID +"/versions.json?key=" + key).openStream();
+			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+			String jsonText = readAll(rd);
+			JSONObject obj=(JSONObject)JSONValue.parse(jsonText);
+			JSONArray versions = (JSONArray)obj.get("versions");
+			for (Object version : versions) {
+				RedmineProjectVersion rpv = new RedmineProjectVersion();
+				rpv.setName(((JSONObject)version).get("name").toString());
+				rpv.setDescription(((JSONObject)version).get("description").toString());
+				rpv.setUpdated_on(((JSONObject)version).get("updated_on").toString());
+				rpv.setCreated_on(((JSONObject)version).get("created_on").toString());
+				String vs = ((JSONObject)version).get("status").toString();
+				rpv.setStatus(vs);
+/*				switch (vs) {
+				case "open":
+					rpv.setStatus(RedmineProjectVersionStatus.open);	
+					break;
+				case "locked":
+					rpv.setStatus(RedmineProjectVersionStatus.locked);
+					break;
+				case "closed":
+					rpv.setStatus(RedmineProjectVersionStatus.closed);
+					break;
+				default:
+					break;
+				}
+*/
+				result.add(rpv);
+			}
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+
+	private static String readAll(Reader rd) throws IOException 
+	{
+		StringBuilder sb = new StringBuilder();
+		int cp;
+		while ((cp = rd.read()) != -1) {
+			sb.append((char) cp);
+		}
+		return sb.toString();
+	}
+	
+	private List<RedmineIssue> getIssue(String id, Platform platform)
+	{
+		ArrayList<RedmineIssue> result = new ArrayList<RedmineIssue>();
+		for (Object issue : issueArray) 
+		{
+			String issueProgId = ((JSONObject)((JSONObject)issue).get("project")).get("id").toString();
+			if (issueProgId.equals(id))
+			{
+				RedmineIssue ri = new RedmineIssue();
+				ri.setDescription(((JSONObject)issue).get("description").toString());
+				String status = ((JSONObject)((JSONObject)issue).get("status")).get("name").toString();
+				ri.setStatus(status);
+/*				switch (status) {
+				case "New":
+					ri.setStatus(RedmineIssueStatus.New);
+					break;
+				case "Closed":
+					ri.setStatus(RedmineIssueStatus.Closed);
+					break;
+				case "Feedback":
+					ri.setStatus(RedmineIssueStatus.Feedback);
+					break;
+				case "In Progress":
+					ri.setStatus(RedmineIssueStatus.In_Progress);
+					break;
+				case "Rejected":
+					ri.setStatus(RedmineIssueStatus.Rejected);
+					break;
+				case "Resolved":
+					ri.setStatus(RedmineIssueStatus.Resolved);
+					break;
+				default:
+					break;
+				}
+*/
+				if(((JSONObject)issue).get("start_date")!=null)
+					ri.setStart_date(((JSONObject)issue).get("start_date").toString());
+				if(((JSONObject)issue).get("due_date")!=null)
+					ri.setDue_date(((JSONObject)issue).get("due_date").toString());
+				if(((JSONObject)issue).get("update_date")!=null)
+					ri.setUpdate_date(((JSONObject)issue).get("update_date").toString());
+				if(((JSONObject)issue).get("description")!=null)
+					ri.setDescription(((JSONObject)issue).get("description").toString());
+				String priority = ((JSONObject)issue).get("priority").toString();
+				ri.setPriority(priority);
+/*
+				switch (priority) {
+				case "High":
+					ri.setPriority(RedmineIssuePriority.High);
+					break;
+				case "Immediate":
+					ri.setPriority(RedmineIssuePriority.Immediate);
+					break;
+				case "Low":
+					ri.setPriority(RedmineIssuePriority.Low);
+					break;
+				case "Normal":
+					ri.setPriority(RedmineIssuePriority.Normal);
+					break;
+				case "Urgent":
+					ri.setPriority(RedmineIssuePriority.Urgent);
+					break;
+				default:
+					break;
+				}
+*/				
+				JSONObject cat = (JSONObject)((JSONObject)issue).get("category");
+				
+				if (cat != null)
+				{
+					RedmineCategory g = new RedmineCategory();
+					g.setName(cat.get("name").toString());
+					ri.setCategory(g);
+				}
+				JSONObject author = (JSONObject)((JSONObject)issue).get("author");
+				Person p = platform.getProjectRepositoryManager().getProjectRepository().getPersons().findOneByName(author.get("name").toString());
+				if (p!=null && p instanceof RedmineUser)
+					ri.setAuthor((RedmineUser)p);
+				JSONObject assigned = (JSONObject)((JSONObject)issue).get("assigned_to");
+				if (assigned != null)
+				{
+					Person assignedPerson = platform.getProjectRepositoryManager().getProjectRepository().getPersons().findOneByName(assigned.get("name").toString());
+					if (assignedPerson !=null && assignedPerson instanceof RedmineUser)
+						ri.setAssignedTo((RedmineUser)assignedPerson);
+				}
+				result.add(ri);
+				
+				
+			}
+		}
+		return result;
+	}
+
+	private void getRedmineUsers(Platform platform)
+	{
+		ArrayList<RedmineUser> result = new ArrayList<RedmineUser>();
+		
+		InputStream is;
+		try {
+			is = new URL("http://" + user + ":" + password + "@" + essentialRepo + "users.json?key=" + key).openStream();
+			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+			String jsonText = readAll(rd);
+			JSONObject obj=(JSONObject)JSONValue.parse(jsonText);
+			JSONArray users = (JSONArray)obj.get("users");
+			int offset = 0;
+			int total = 0;
+			while (offset <= total)
+			{ 
+				for (Object user : users) {
+					String fullname = ((JSONObject)user).get("firstname").toString() + " " + ((JSONObject)user).get("lastname").toString();
+					
+					RedmineUser ru = (RedmineUser) platform.getProjectRepositoryManager().getProjectRepository().getPersons().findOneByName(fullname);
+					if(ru==null)
+					{
+						ru = new RedmineUser();
+					}
+					ru.setName(((JSONObject)user).get("firstname").toString() + " " +
+							((JSONObject)user).get("lastname").toString());
+					ru.setLogin(((JSONObject)user).get("login").toString());
+					platform.getProjectRepositoryManager().getProjectRepository().getPersons().add(ru);
+					platform.getProjectRepositoryManager().getProjectRepository().sync();
+					result.add(ru);
+				}
+				total = Integer.parseInt(obj.get("total_count").toString());
+				offset += 25;
+			}
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
 }

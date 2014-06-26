@@ -1,5 +1,9 @@
 package org.ossmeter.metricprovider.rascal;
 
+import static org.ossmeter.metricprovider.rascal.PongoToRascal.makeMap;
+import static org.ossmeter.metricprovider.rascal.PongoToRascal.makeProjectLoc;
+import static org.ossmeter.metricprovider.rascal.RascalToPongo.toPongo;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,31 +15,16 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.imp.pdb.facts.IConstructor;
-import org.eclipse.imp.pdb.facts.IDateTime;
-import org.eclipse.imp.pdb.facts.IInteger;
-import org.eclipse.imp.pdb.facts.IList;
 import org.eclipse.imp.pdb.facts.IMap;
-import org.eclipse.imp.pdb.facts.IReal;
 import org.eclipse.imp.pdb.facts.ISet;
 import org.eclipse.imp.pdb.facts.ISetWriter;
 import org.eclipse.imp.pdb.facts.ISourceLocation;
-import org.eclipse.imp.pdb.facts.IString;
-import org.eclipse.imp.pdb.facts.ITuple;
 import org.eclipse.imp.pdb.facts.IValue;
 import org.eclipse.imp.pdb.facts.io.StandardTextWriter;
 import org.eclipse.imp.pdb.facts.type.Type;
-import org.eclipse.imp.pdb.facts.visitors.NullVisitor;
-import org.ossmeter.metricprovider.rascal.trans.model.DatetimeMeasurement;
-import org.ossmeter.metricprovider.rascal.trans.model.IntegerMeasurement;
-import org.ossmeter.metricprovider.rascal.trans.model.ListMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.Measurement;
 import org.ossmeter.metricprovider.rascal.trans.model.MeasurementCollection;
 import org.ossmeter.metricprovider.rascal.trans.model.RascalMetrics;
-import org.ossmeter.metricprovider.rascal.trans.model.RealMeasurement;
-import org.ossmeter.metricprovider.rascal.trans.model.SetMeasurement;
-import org.ossmeter.metricprovider.rascal.trans.model.StringMeasurement;
-import org.ossmeter.metricprovider.rascal.trans.model.TupleMeasurement;
-import org.ossmeter.metricprovider.rascal.trans.model.URIMeasurement;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.ITransientMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
@@ -50,6 +39,7 @@ import org.ossmeter.platform.vcs.workingcopy.manager.WorkingCopyManagerUnavailab
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.VcsRepository;
 import org.rascalmpl.interpreter.control_exceptions.MatchFailed;
+import org.rascalmpl.interpreter.control_exceptions.Throw;
 import org.rascalmpl.interpreter.env.KeywordParameter;
 import org.rascalmpl.interpreter.result.AbstractFunction;
 import org.rascalmpl.interpreter.result.RascalFunction;
@@ -81,10 +71,13 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 	private final String friendlyName;
 	private final String shortMetricId;
 	private final String metricId;
+	private final String bundleId;
 	private final AbstractFunction function;
 	private final OssmeterLogger logger;
 	private MetricProviderContext context;
 	private boolean needsPrev;
+	
+	private static final RascalManager manager = RascalManager.getInstance();
 
 	private static String lastRevision = null;
 	
@@ -93,13 +86,14 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 	private static IConstructor rascalDelta;
 	
 	
-	public RascalMetricProvider(String metricId, String shortMetricId, String friendlyName, String description, AbstractFunction function, Map<String,String> uses) {
+	public RascalMetricProvider(String bundleId, String metricId, String shortMetricId, String friendlyName, String description, AbstractFunction function, Map<String,String> uses) {
+		this.bundleId = bundleId;
 		this.metricId = metricId;
 		this.shortMetricId =  shortMetricId;
 		this.friendlyName = friendlyName;
 		this.description = description;
 		this.function = function;
-		this.uses = uses;
+		this.uses = qualifyNames(bundleId, uses);
 		this.providers = new HashMap<String,IMetricProvider>();
 		
 		this.needsM3 = hasParameter(M3S_PARAM);
@@ -115,10 +109,29 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		assert function instanceof RascalFunction;
 	}
 
+	private Map<String, String> qualifyNames(String qualifier, Map<String, String> uses) {
+		Map<String,String> output = new HashMap<>();
+		
+		for (String use : uses.keySet()) {
+			String qualifiedUse = use.trim();
+
+			if (!use.replaceAll("\\.historic","").contains(".")) {
+				qualifiedUse = bundleId + "." + use;
+			}
+			
+			output.put(qualifiedUse, uses.get(use));
+		}
+		
+		return output;
+	}
+
 	private boolean hasParameter(String param) {
-		for (KeywordParameter p : function.getKeywordParameterDefaults()) {
-			if (p.getName().equals(param)) {
-				return true;
+		List<KeywordParameter> defs = function.getKeywordParameterDefaults();
+		if (defs != null) {
+			for (KeywordParameter p : defs) {
+				if (p.getName().equals(param)) {
+					return true;
+				}
 			}
 		}
 		
@@ -158,7 +171,6 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 
 	@Override
 	public void setUses(List<IMetricProvider> uses) {
-		
 		for (IMetricProvider provider : uses) {
 			providers.put(provider.getIdentifier(), provider);
 		}
@@ -183,8 +195,16 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 
 	@Override
 	public void measure(Project project, ProjectDelta delta, RascalMetrics db) {
+		IValue result = compute(project, delta);
+		
+		if (result != null) {
+			logger.info("storing metric result");
+			storeResult(delta, db, result);
+		}
+	}
+	
+	public IValue compute(Project project, ProjectDelta delta) {
 		try {
-			RascalManager manager = RascalManager.getInstance();
 			List<VcsRepositoryDelta> repoDeltas = delta.getVcsDelta().getRepoDeltas();
 			Map<String, IValue> params = new HashMap<>();
 
@@ -204,15 +224,15 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 				if (needsScratch || needsWc || needsM3 || needsAsts || needsDelta) {
 					if (workingCopyFolders.isEmpty() || scratchFolders.isEmpty()) {
 						logger.info("creating working copies");
-						computeFolders(project, delta, manager, workingCopyFolders, scratchFolders);
+						computeFolders(project, delta, workingCopyFolders, scratchFolders);
 					}
 
 					if (needsWc) {
-						params.put(WORKING_COPIES_PARAM, manager.makeMap(workingCopyFolders));
+						params.put(WORKING_COPIES_PARAM, makeMap(workingCopyFolders));
 					}
 
 					if (needsScratch) {
-						params.put(SCRATCH_FOLDERS_PARAM, manager.makeMap(scratchFolders));
+						params.put(SCRATCH_FOLDERS_PARAM, makeMap(scratchFolders));
 					}
 				}
 
@@ -250,19 +270,16 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 						for (IMetricProvider imp : manager.getMetricProviders()) {
 							logger.info("\t" + imp.getIdentifier());
 						}
-						return;
+						return null;
 					}
 					
 				}
 				
-				// remove the null parameters such the defaults can trigger.
-				Set<Entry<String, IValue>> entrySet = params.entrySet();
-				Iterator<Entry<String, IValue>> it = entrySet.iterator();
-				while (it.hasNext()) {
-					Entry<String,IValue> entry = it.next(); 
-					if (entry.getValue() == null) {
-						it.remove();
-					}
+				filterNullParameters(params);
+				
+				// workaround:
+				if (params.isEmpty()) {
+					params = null;
 				}
 				
 				// measurement is included in the sync block to avoid sharing evaluators between metrics
@@ -273,10 +290,17 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 				logResult(result);
 				
 				lastRevision = getLastRevision(delta);
-				
-				logger.info("storing metric result");
-				storeResult(delta, db, result.getValue(), manager);
+				return result.getValue();
 			}
+		} catch (Throw e) {
+		    if (!(e.getException() instanceof IConstructor && ((IConstructor) e.getException()).getName().equals("undefined"))) {
+		    	logger.error("metric threw an exception: " + e.getMessage() + " at " + e.getLocation(), e);
+		    	throw e;
+		    }
+		    else {
+		    	logger.info("metric was undefined for the input of today, ignoring.");
+		    	return null;
+		    }
 		} catch (WorkingCopyManagerUnavailable | WorkingCopyCheckoutException  e) {
 			logger.error("unexpected exception while measuring", e);
 			throw new RuntimeException("Metric failed due to missing working copy", e);
@@ -287,12 +311,18 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 			logger.error("a Rascal function was called with illegal arguments", e);
 			throw e;
 		} catch (IOException e) {
-			logger.error("could not print result for some reason to logger");
 			throw new RuntimeException("Metric failed for unknown reasons", e);
 		}
-		catch (Throwable e) {
-			logger.error("unexpected exception while measuring", e);
-			throw e;
+	}
+
+	private void filterNullParameters(Map<String, IValue> params) {
+		Set<Entry<String, IValue>> entrySet = params.entrySet();
+		Iterator<Entry<String, IValue>> it = entrySet.iterator();
+		while (it.hasNext()) {
+			Entry<String,IValue> entry = it.next(); 
+			if (entry.getValue() == null) {
+				it.remove();
+			}
 		}
 	}
 
@@ -313,14 +343,14 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		DB db = context.getProjectDB(project);
 		RascalMetrics rascalMetrics = new RascalMetrics(db, provider.getIdentifier());
 		
-		return convertBack(rascalMetrics, type, man, provider instanceof RascalMetricHistoryWrapper);
+		return PongoToRascal.toValue(rascalMetrics, type, provider instanceof RascalMetricHistoryWrapper);
 	}
 
 	public Type getReturnType() {
 		return function.getReturnType();
 	}
 
-	private void computeFolders(Project project, ProjectDelta delta, RascalManager _instance, Map<String, File> wc, Map<String, File> scratch) throws WorkingCopyManagerUnavailable, WorkingCopyCheckoutException {
+	private void computeFolders(Project project, ProjectDelta delta, Map<String, File> wc, Map<String, File> scratch) throws WorkingCopyManagerUnavailable, WorkingCopyCheckoutException {
 		WorkingCopyFactory.getInstance().checkout(project, getLastRevision(delta), wc, scratch);
 	}
 
@@ -340,7 +370,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		return callExtractors(project, delta, _instance, _instance.getASTExtractors());
 	}
 
-	private void storeResult(ProjectDelta delta, RascalMetrics db, IValue result, RascalManager _instance) {
+	protected void storeResult(ProjectDelta delta, RascalMetrics db, IValue result) {
 		// TODO: instead save the current state and do a diff later for optimal communication with the db.
 		MeasurementCollection ms = db.getMeasurements();
 		for (Measurement m : ms) {
@@ -351,216 +381,6 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		db.sync();
 	}
 	
-	private IValue convertBack(RascalMetrics m, Type type, RascalManager man, boolean historic) {
-		return man.toValue(m, type, historic);
-	}
-	
-	/**
-	 * This creates the top-level table and adds uri entries where necessary.
-	 */
-	private void toPongo(final MeasurementCollection measurements, IValue result) {
-		result.accept(new NullVisitor<Void,RuntimeException>() {
-			@Override
-			public Void visitInteger(IInteger o) throws RuntimeException {
-				IntegerMeasurement m = new IntegerMeasurement();
-				m.setValue(o.longValue());
-				measurements.add(m);
-				return null;
-			}
-			
-			@Override
-			public Void visitString(IString o) throws RuntimeException {
-				StringMeasurement m = new StringMeasurement();
-				m.setValue(o.getValue());
-				measurements.add(m);
-				return null;
-			}
-			
-			@Override
-			public Void visitDateTime(IDateTime o) throws RuntimeException {
-				DatetimeMeasurement m = new DatetimeMeasurement();
-				m.setValue(o.getInstant());
-				measurements.add(m);
-				return null;
-			}
-			
-			@Override
-			public Void visitReal(IReal o) throws RuntimeException {
-				RealMeasurement m = new RealMeasurement();
-				m.setValue((float) o.doubleValue());
-				measurements.add(m);
-				return null;
-			}
-			
-			@Override
-			public Void visitSourceLocation(ISourceLocation o) {
-				URIMeasurement m = new URIMeasurement();
-				m.setValue(o.getURI().toString());
-				measurements.add(m);
-				return null;
-			}
-			
-			@Override
-			public Void visitMap(IMap o) throws RuntimeException {
-				for (Iterator<Entry<IValue, IValue>> it = o.entryIterator(); it.hasNext(); ) {
-					Entry<IValue, IValue> currentEntry = (Entry<IValue, IValue>) it.next();
-					TupleMeasurement t = new TupleMeasurement();
-					convert(t.getValue(), currentEntry.getKey());
-					convert(t.getValue(), currentEntry.getValue());
-					measurements.add(t);
-				}
-				return null;
-			}
-
-			@Override
-			public Void visitListRelation(IList o) throws RuntimeException {
-				for (IValue val : o) {
-					toPongo(measurements, val);
-				}
-				return null;
-			}
-			
-			@Override
-			public Void visitList(IList o) throws RuntimeException {
-				for (IValue val : o) {
-					toPongo(measurements, val);
-				}
-				return null;
-			}
-			
-			@Override
-			public Void visitSet(ISet o) throws RuntimeException {
-				for (IValue val : o) {
-					toPongo(measurements, val);
-				}
-				return null;
-			}
-			
-			@Override
-			public Void visitTuple(ITuple o) throws RuntimeException {
-				TupleMeasurement m = new TupleMeasurement();
-				final List<Measurement> col = m.getValue();
-				
-				for (IValue val : o) {
-					convert(col, val);
-				}
-				
-				measurements.add(m);
-				return null;
-			}
-		});
-	}
-	
-	/**
-	 * This recursively constructs Pongo objects to be stored in the database (single documents) 
-	 * @param measurements
-	 * @param loc
-	 * @param result
-	 */
-	private void convert(final List<Measurement> measurements, IValue result) {
-		result.accept(new NullVisitor<Void,RuntimeException>() {
-			@Override
-			public Void visitInteger(IInteger o) throws RuntimeException {
-				IntegerMeasurement m = new IntegerMeasurement();
-				m.setValue(o.longValue());
-				measurements.add(m);
-				return null;
-			}
-			
-			@Override
-			public Void visitDateTime(IDateTime o) throws RuntimeException {
-				DatetimeMeasurement m = new DatetimeMeasurement();
-				m.setValue(o.getInstant());
-				measurements.add(m);
-				return null;
-			}
-			
-			@Override
-			public Void visitString(IString o) throws RuntimeException {
-				StringMeasurement m = new StringMeasurement();
-				m.setValue(o.getValue());
-				measurements.add(m);
-				return null;
-			}
-			
-			@Override
-			public Void visitReal(IReal o) throws RuntimeException {
-				RealMeasurement m = new RealMeasurement();
-				m.setValue((float) o.doubleValue());
-				measurements.add(m);
-				return null;
-			}
-			
-			@Override
-			public Void visitSourceLocation(ISourceLocation o) {
-				URIMeasurement m = new URIMeasurement();
-				m.setValue(o.getURI().toString());
-				measurements.add(m);
-				return null;
-			}
-			
-			@Override
-			public Void visitMap(IMap o) throws RuntimeException {
-				// maps are stored as relations
-				SetMeasurement m = new SetMeasurement();
-				final List<Measurement> col = m.getValue();
-				
-				for (Iterator<Entry<IValue, IValue>> it = o.entryIterator(); it.hasNext(); ) {
-					Entry<IValue, IValue> currentEntry = (Entry<IValue, IValue>) it.next();
-					
-					TupleMeasurement t = new TupleMeasurement();
-					List<Measurement> elems = t.getValue();
-					convert(measurements, currentEntry.getKey());
-					convert(elems, currentEntry.getValue());
-
-					col.add(t);
-				}
-				
-				measurements.add(m);
-				return null;
-			}
-
-			@Override
-			public Void visitList(IList o) throws RuntimeException {
-				ListMeasurement m = new ListMeasurement();
-				final List<Measurement> col = m.getValue();
-				
-				for (IValue val : o) {
-					convert(col, val);
-				}
-				
-				measurements.add(m);
-				return null;
-			}
-			
-			@Override
-			public Void visitSet(ISet o) throws RuntimeException {
-				SetMeasurement m = new SetMeasurement();
-				final List<Measurement> col = m.getValue();
-				
-				for (IValue val : o) {
-					convert(col, val);
-				}
-				
-				measurements.add(m);
-				return null;
-			}
-			
-			@Override
-			public Void visitTuple(ITuple o) throws RuntimeException {
-				TupleMeasurement m = new TupleMeasurement();
-				final List<Measurement> col = m.getValue();
-				
-				for (IValue val : o) {
-					convert(col, val);
-				}
-				
-				measurements.add(m);
-				return null;
-			}
-		});
-	}
-
 	private IConstructor computeDelta(Project project, ProjectDelta delta,
 			RascalManager _instance) {
 		logger.info("\tretrieving from VcsProvider");
@@ -624,9 +444,9 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 	private IValue callExtractors(Project project, ProjectDelta delta, RascalManager man, Set<RascalManager.Extractor> extractors) {
 		ISetWriter allResults = man.getEvaluator().getValueFactory().setWriter();;
 		
-		ISourceLocation projectLoc = man.makeProjectLoc(project);
-		IMap wcf = man.makeMap(workingCopyFolders);
-		IMap scratch = man.makeMap(scratchFolders);
+		ISourceLocation projectLoc = makeProjectLoc(project);
+		IMap wcf = makeMap(workingCopyFolders);
+		IMap scratch = makeMap(scratchFolders);
 		IConstructor rascalDelta = computeDelta(project, delta, man);
 		
 		for (RascalManager.Extractor e : extractors) {
@@ -637,4 +457,6 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		
 		return allResults.done(); // TODO what if null?
 	}
+	
+	
 }

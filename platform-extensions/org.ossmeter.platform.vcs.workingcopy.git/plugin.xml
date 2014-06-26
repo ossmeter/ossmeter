@@ -7,11 +7,5 @@
             manager="org.ossmeter.platform.vcs.workingcopy.git.GitWorkingCopyManager">
       </workingCopyManager>
    </extension>
-   <extension
-         point="org.ossmeter.vcs.workingcopymanager">
-      <workingCopyManager
-            manager="org.ossmeter.platform.vcs.workingcopy.git.WorkingCopyManager1">
-      </workingCopyManager>
-   </extension>
 
 </plugin>

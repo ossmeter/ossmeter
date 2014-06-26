@@ -34,6 +34,7 @@ public class GoogleCodeImporter {
 	private Map<String, License> licensePending = new HashMap<String, License>();
 	private Map<String, Person> userPending = new HashMap<String, Person>();
 	
+	
 	public GoogleCodeProject importProject(String projectUrl, Platform platform) 
 			throws MalformedURLException, IOException 
 	{
@@ -42,12 +43,15 @@ public class GoogleCodeImporter {
 		
 		String URL_PROJECT = projectUrl;
 		GoogleCodeProject project = null;
-			
+		Boolean projectToBeUpdated = false;
+		
 		try {
 			doc = Jsoup.connect(URL_PROJECT).timeout(10000).get();
 			Element e = doc.getElementById("pname");
-			Boolean projectToBeUpdated = false;
+
 			Project projectTemp = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByName(e.text());
+			
+			System.out.println("---> Importing project " + projectUrl);
 			if (projectTemp != null)
 			{
 				if (projectTemp instanceof GoogleCodeProject) 
@@ -61,18 +65,16 @@ public class GoogleCodeImporter {
 				project = new GoogleCodeProject();
 				// Clear containments to be updated	
 			}
-			else
-				
-			{
-				project.getCommunicationChannels().clear();
-				project.getVcsRepositories().clear();	
-				project.getPersons().clear();
-				project.getDownloads().clear();
-				project.getLicenses().clear();
-				platform.getProjectRepositoryManager().getProjectRepository().sync();
-			}
+			
+			project.getCommunicationChannels().clear();
+			project.getVcsRepositories().clear();	
+			project.getPersons().clear();
+			project.getDownloads().clear();
+			project.getLicenses().clear();
+			platform.getProjectRepositoryManager().getProjectRepository().sync();
+			
+			
 			//SET NAME
-
 			project.setName(e.text());
 			//project.setName(Jsoup.parse(e.getElementsByTag("span").toString()).text());
 			e = doc.getElementById("wikicontent");
@@ -137,8 +139,8 @@ public class GoogleCodeImporter {
 				downloadPage = "https://code.google.com" + dwnldLink.attr("href");
 				project.getDownloads().addAll(getGoogleDownload(downloadPage));
 			}
-			//SET VCSREPOSITORY
 			
+			//SET VCSREPOSITORY
 			Elements sources = e.getElementsContainingText("Source");
 			Element source = null;
 			String sourcePage = "";
@@ -153,11 +155,7 @@ public class GoogleCodeImporter {
 				project.getVcsRepositories().addAll(getGoogleVcsRepository(platform, sourcePage));
 			}
 			
-			
-			//
-			
-			
-			
+		
 			
 			//SET CODE LICENSE
 			Elements leftColumns = doc.getElementsByClass("pscolumnl");
@@ -209,15 +207,20 @@ public class GoogleCodeImporter {
 					}
 				}
 			}
-			
-
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			
 			e1.printStackTrace();
 		}
+		
+		if ((project != null) & (!projectToBeUpdated)) {	
+			platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
+			platform.getProjectRepositoryManager().getProjectRepository().getProjects().sync();
+		}
+		
 		return project;
 	}
+	
 	
 	private List<VcsRepository> getGoogleVcsRepository(Platform platform, String sourcePageLink) {
 		List<VcsRepository> result = new ArrayList<VcsRepository>();
@@ -253,7 +256,6 @@ public class GoogleCodeImporter {
 				}
 				
 			}
-			else System.out.println("NO");
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -289,9 +291,6 @@ public class GoogleCodeImporter {
 				break;
 			}
 			
-			//Pagination
-			
-			//End pagination
 			
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
@@ -322,22 +321,20 @@ public class GoogleCodeImporter {
 				result.setStars(Integer.parseInt(stars));
 				
 			}
-			
-			
 			result.setCreated_at(doc.getElementById("cursorarea").getElementsByClass("date").first().text());
 			e = doc.getElementById("issuemeta");
 			Elements menu = e.getElementsByTag("tr");
 			String status = menu.get(0).getElementsByTag("td").first().text();
 			if (status.equals("Started"))
-				result.setStatus(GoogleIssueStatus.Started);
+				result.setStatus("Started");
 			if (status.equals("New"))
-				result.setStatus(GoogleIssueStatus.Started);
+				result.setStatus("New");
 			if (status.equals("Accepted"))
-				result.setStatus(GoogleIssueStatus.Accepted);
+				result.setStatus("Accepted");
 			if (status.equals("Reviewed"))
-				result.setStatus(GoogleIssueStatus.Reviewed);
+				result.setStatus("Reviewed");
 			if (status.equals("Acknowledged"))
-				result.setStatus(GoogleIssueStatus.Acknowledged);
+				result.setStatus("Acknowledged");
 			status = menu.get(1).getElementsByTag("td").first().text();
 			boolean guardStart = true;
 			boolean guardEnd = true;
@@ -373,19 +370,19 @@ public class GoogleCodeImporter {
 							String string = element.text();
 							if(string.startsWith("Type"))
 							{	if (string.substring(5).equals("Bug"))
-									result.setType(GoogleIssueType.Bug);
+									result.setType("Bug");
 								if (string.substring(5).equals("Defect"))
-									result.setType(GoogleIssueType.Defect);
+									result.setType("Defect");
 								if (string.substring(5).equals("Enhancement"))
-									result.setType(GoogleIssueType.Enhancement);
+									result.setType("Enhancement");
 							}
 							if(string.startsWith("Pri"))
 							{	if (string.substring(4).equals("3") || string.substring(4).equals("Low") )
-									result.setPriority(GoogleIssuePriority.Low);
+									result.setPriority("Low");
 								if (string.substring(4).equals("2") || string.substring(4).equals("Medium"))
-									result.setPriority(GoogleIssuePriority.Medium);
+									result.setPriority("Medium");
 								if (string.substring(4).equals("1") || string.substring(4).equals("High"))
-									result.setPriority(GoogleIssuePriority.High);
+									result.setPriority("High");
 							}
 							
 						}
@@ -407,11 +404,7 @@ public class GoogleCodeImporter {
 					result.getComments().add(gic);
 				}
 			}
-			
-			
-			
-			
-			//###DA QUI
+
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -561,86 +554,69 @@ public class GoogleCodeImporter {
 	}
 	
 	public void importAll(Platform platform) 
-	{
-		
+	{	
 		List<GoogleCodeProject> result = new ArrayList<GoogleCodeProject>();
 		org.jsoup.nodes.Document doc;
 		org.jsoup.nodes.Element content;
 		
 		String URL_PROJECT = "https://code.google.com/hosting/search?q=&sa=Search";
 		
-		
-			try {
-				doc = Jsoup.connect(URL_PROJECT).timeout(10000).get();
-				Element e =  doc.getElementsByClass("mainhdr").first();
-				String pagination = e.text();
-				String endS = "";
-				String startS = "";
-				String totalItemS = "";
-				String [] array = pagination.split(" ");				
-				endS = array[3];
-				startS = array[1];
-				totalItemS = array[5];
-				Integer start = Integer.parseInt(startS);
-				Integer end = Integer.parseInt(endS);
-				Integer totalItem = Integer.parseInt(totalItemS);
-				if(end <= totalItem)
-				{
-					int i = 0;
-					while (i <= totalItem )
-					{
-						String url = "https://code.google.com/hosting/search?q=&filter=0&mode=&start="+ i;
-						result.addAll(importPage(url, platform));
-						//System.err.println("FINE PAGINA!");
-						//Attention to last mod 10 elements
-						i= i + 10;
-					}
+		try {
+			doc = Jsoup.connect(URL_PROJECT).timeout(10000).get();
+			Element e =  doc.getElementsByClass("mainhdr").first();
+			String pagination = e.text();
+			String endS = "";
+			String startS = "";
+			String totalItemS = "";
+			String [] array = pagination.split(" ");				
+			endS = array[3];
+			startS = array[1];
+			totalItemS = array[5];
+			Integer start = Integer.parseInt(startS);
+			Integer end = Integer.parseInt(endS);
+			Integer totalItem = Integer.parseInt(totalItemS);
+			if(end <= totalItem)
+			{
+				int i = 0;
+				while (i <= totalItem )
+				{					
+					String url = "https://code.google.com/hosting/search?q=&filter=0&mode=&start=" + i;
+					System.out.println("Processing the content of the page " + url + " from project " + i);
+					result.addAll(importPage(url, platform));
+					//System.err.println("FINE PAGINA!");
+					//Attention to last mod 10 elements
+					i= i + 10;
 				}
-				for (GoogleCodeProject currentProg : result)
-					platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(currentProg);
-				
-				//result.add(e.toString());
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
 			}
-			System.out.println("PROCES EMD");
-		
-		
-		
-			//SINGLE PROJECT
-//		String URL_PROJECT = "https://code.google.com/p/gmaps-api-issues/";
-//		try {
-//			GoogleCodeProject currentProg = importProject(URL_PROJECT, platform);
-//			platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(currentProg);
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+			
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
-	private List<GoogleCodeProject> importPage (String url, Platform platform)
+	
+	private List<GoogleCodeProject> importPage(String url, Platform platform)
 	{
 		List<GoogleCodeProject> result = new ArrayList<GoogleCodeProject>();
 		org.jsoup.nodes.Document doc;
 		org.jsoup.nodes.Element content;
 		
 		String URL_PROJECT = "https://code.google.com/hosting/search?q=&sa=Search";
-		
-		
-			try {
-				doc = Jsoup.connect(URL_PROJECT).timeout(10000).get();
-				Element e =  doc.getElementById("serp");
-				Elements projectList = e.getElementsByTag("table");
 				
-				for (Element element : projectList) 
-				{
-					result.add(importProject("https://code.google.com" + element.getElementsByTag("td").get(1).getElementsByTag("a").first().attr("href"),platform));			
-				}
-				//result.add(e.toString());
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+		try {
+			doc = Jsoup.connect(url).timeout(10000).get();
+			Element e =  doc.getElementById("serp");
+			Elements projectList = e.getElementsByTag("table");
+			
+			for (Element element : projectList) 
+			{
+				result.add(importProject("https://code.google.com" + element.getElementsByTag("td").get(1).getElementsByTag("a").first().attr("href"),platform));			
 			}
+			//result.add(e.toString());
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		return result;
 	}
 	

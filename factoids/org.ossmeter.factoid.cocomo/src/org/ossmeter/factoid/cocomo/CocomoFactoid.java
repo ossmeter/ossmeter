@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.ossmeter.platform.AbstractFactoidMetricProvider;
+import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.platform.factoids.Factoid;
 import org.ossmeter.platform.factoids.StarRating;
 import org.ossmeter.repository.model.Project;
@@ -36,7 +37,7 @@ public class CocomoFactoid extends AbstractFactoidMetricProvider{
 	}
 
 	@Override
-	public void measureImpl(Project project, Factoid factoid) {
+	public void measureImpl(Project project, ProjectDelta delta, Factoid factoid) {
 		// Assumes ALL projects are "semi-detached"
 		double a = 3.0;
 		double b = 1.12;

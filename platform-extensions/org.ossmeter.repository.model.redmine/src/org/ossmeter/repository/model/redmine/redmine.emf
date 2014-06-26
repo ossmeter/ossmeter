@@ -45,14 +45,14 @@ class RedmineProjectVersion {
   attr String description;
   attr String created_on;
   attr String updated_on;
-  attr RedmineProjectVersionStatus status;
+  attr String status;
 }
 
-enum RedmineProjectVersionStatus {
-  open = 0;
-  locked = 1;
-  closed = 2;
-}
+//enum RedmineProjectVersionStatus {
+//  open = 0;
+//  locked = 1;
+//  closed = 2;
+//}
 
 class RedmineUser extends Person {
   attr String login;
@@ -71,11 +71,11 @@ class RedmineBugIssueTracker extends BugTrackingSystem {
 class RedmineIssue {
   val RedmineCategory category;
   attr String description;
-  attr RedmineIssueStatus status;
+  attr String status;
   val RedmineFeature feature;
-  attr RedmineIssuePriority priority;
+  attr String priority;
   ref RedmineUser[1] author;
-  attr RedminIssueTemplate template;
+  attr String template;
   val RedminIssueRelation[*] relations;
   attr String start_date;
   attr String update_date;
@@ -90,35 +90,35 @@ class RedmineCategory {
 
 class RedminIssueRelation {
   ref RedmineIssue relatedIssue;
-  attr RedminIssueRelationType type;
+  attr String type;
 }
 
-enum RedminIssueTemplate {
-  defectReportFromUser = 0;
-  defectReportFromDeveloper = 1;
-  reviewRequest = 2;
-}
+//enum RedminIssueTemplate {
+//  defectReportFromUser = 0;
+//  defectReportFromDeveloper = 1;
+//  reviewRequest = 2;
+//}
 
 class RedmineFeature {
   attr String name;
 }
 
-enum RedminIssueRelationType {
-  related = 0;
-  duplicates = 1;
-  duplicated = 2;
-  block = 3;
-  blocked = 4;
-  precedes = 5;
-  follows = 6;
-}
+//enum RedminIssueRelationType {
+//  related = 0;
+//  duplicates = 1;
+//  duplicated = 2;
+//  block = 3;
+//  blocked = 4;
+//  precedes = 5;
+//  follows = 6;
+//}
 
-enum RedmineIssueStatus {
-  _new = 0;
-  closed = 1;
-}
+//enum RedmineIssueStatus {
+//  _new = 0;
+//  closed = 1;
+//}
 
-enum RedmineIssuePriority {
-  normal = 0;
-}
+//enum RedmineIssuePriority {
+//  normal = 0;
+//}
 

@@ -21,9 +21,6 @@
     </eAnnotations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EclipseProject" eSuperTypes="//Project">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="shortName">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="paragraphUrl">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
@@ -51,16 +48,10 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="releases" upperBound="-1" eType="//Release" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EclipsePlatform" eSuperTypes="//NamedElement"/>
-  <eClassifiers xsi:type="ecore:EEnum" name="ProjectStatus">
-    <eLiterals name="prepoposal"/>
-    <eLiterals name="proposal" value="1"/>
-    <eLiterals name="incubation" value="2"/>
-    <eLiterals name="mature" value="3"/>
-    <eLiterals name="toplevel" value="4"/>
-    <eLiterals name="archived" value="5"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Release" eSuperTypes="//NamedElement">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="//ReleaseType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="date">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
@@ -74,7 +65,9 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EclipseNewsGroup" eSuperTypes="//NntpNewsGroup">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="//NewsGroupType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MailingList" eSuperTypes="//CommunicationChannel">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name">
@@ -83,7 +76,9 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="description">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="//MailingListType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="archiveUrl">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
@@ -91,32 +86,14 @@
   <eClassifiers xsi:type="ecore:EClass" name="Wiki" eSuperTypes="//CommunicationChannel"/>
   <eClassifiers xsi:type="ecore:EClass" name="Documentation" eSuperTypes="//CommunicationChannel"/>
   <eClassifiers xsi:type="ecore:EClass" name="Review">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="//ReviewType"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="state" eType="//ReviewState"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="state">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="endDate">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="NewsGroupType">
-    <eLiterals name="main"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="MailingListType">
-    <eLiterals name="main"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="ReviewType">
-    <eLiterals name="creation"/>
-    <eLiterals name="graduation" value="1"/>
-    <eLiterals name="release" value="2"/>
-    <eLiterals name="promotion" value="3"/>
-    <eLiterals name="continuation" value="4"/>
-    <eLiterals name="termination" value="5"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="ReviewState">
-    <eLiterals name="successful"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="ReleaseType">
-    <eLiterals name="scheduled"/>
-    <eLiterals name="completed" value="1"/>
-    <eLiterals name="tentative" value="2"/>
   </eClassifiers>
 </ecore:EPackage>

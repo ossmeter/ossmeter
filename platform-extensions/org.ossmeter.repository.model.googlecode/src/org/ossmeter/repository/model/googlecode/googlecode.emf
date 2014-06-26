@@ -1,3 +1,4 @@
+@namespace(uri="org.ossmeter.repository.model.googlecode", prefix="org.ossmeter.repository.model.googlecode")
 package org.ossmeter.repository.model.googlecode;
 
 @stub(javaClass="org.ossmeter.repository.model.Project")
@@ -17,26 +18,21 @@ class Person {
 }
 
 @stub(javaClass="org.ossmeter.repository.model.BugTrackingSystem")
-class BugTrackingSystem {   
+class BugTrackingSystem {
 }
 
 class GoogleCodeProject extends Project {
   val GoogleWiki wiki;
   val GoogleForum forum;
- // val GoogleUser owner;
-//  val GoogleUser[*] committers;
-//  val GoogleUser[*] contributors;
   val GoogleDownload[*] downloads;
   val GoogleIssueTracker issueTracker;
-
-  //The following attributes will be droped since they are considered by dedicated metric providers
-  attr Integer stars = 0;
+  attr Integer stars = "0";
 }
 
 class GoogleWiki extends CommunicationChannel {
 }
 
-class GoogleForum extends CommunicationChannel{
+class GoogleForum extends CommunicationChannel {
 }
 
 class GoogleIssueTracker extends BugTrackingSystem {
@@ -44,43 +40,43 @@ class GoogleIssueTracker extends BugTrackingSystem {
   val GoogleIssue[*] issues;
 }
 
-
 class GoogleIssue {
   val GoogleUser[1] owner;
   attr String created_at;
   attr String updated_at;
-  attr GoogleIssuePriority priority;
-  attr GoogleIssueType type;
+  attr String priority;
+  attr String type;
   attr String component;
-  attr GoogleIssueStatus status;
+  attr String status;
   val GoogleIssueComment[*] comments;
   val GoogleLabel[*] labels;
   attr Integer stars;
   attr String summary;
 }
 
-enum GoogleIssuePriority {
-  Low = 1;
-  Medium = 2;
-  High = 2;
-}
+//enum GoogleIssuePriority {
+//  Low = 1;
+//  Medium = 2;
+//  High = 2;
+//}
 
-enum GoogleIssueType {
-  Defect = 1;
-  Enhancement = 2;
-}
+//enum GoogleIssueType {
+//  Defect = 1;
+//  Enhancement = 2;
+//  Bug = 3;
+//}
 
-enum GoogleIssueStatus {
-  New = 1;
-  Started = 2;
-  Accepted = 3;
-  Reviewed = 4;
-  Acknowledged = 5;
-}
+//enum GoogleIssueStatus {
+// New = 1;
+//  Started = 2;
+//  Accepted = 3;
+//  Reviewed = 4;
+//  Acknowledged = 5;
+//}
 
 class GoogleIssueComment {
   attr String text;
-  attr String date; 
+  attr String date;
 }
 
 class GoogleLabel extends NamedElement {
@@ -92,12 +88,11 @@ class GoogleDownload {
   val GoogleLabel[*] labels;
   attr String uploaded_at;
   attr String updated_at;
-  attr Integer size;
+  attr String size;
   attr Integer downloadCounts;
 }
 
 class GoogleUser extends Person {
   attr String email;
 }
-
 

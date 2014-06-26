@@ -28,17 +28,12 @@ public class GitHubContent extends Pongo {
 	public static StringQueryProducer SHA = new StringQueryProducer("sha"); 
 	
 	
-	public GitHubContentType getType() {
-		GitHubContentType type = null;
-		try {
-			type = GitHubContentType.valueOf(dbObject.get("type")+"");
-		}
-		catch (Exception ex) {}
-		return type;
+	public String getType() {
+		return parseString(dbObject.get("type")+"", "");
 	}
 	
-	public GitHubContent setType(GitHubContentType type) {
-		dbObject.put("type", type.toString());
+	public GitHubContent setType(String type) {
+		dbObject.put("type", type);
 		notifyChanged();
 		return this;
 	}

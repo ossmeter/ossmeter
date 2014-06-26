@@ -8,7 +8,7 @@ public class ResetApp {
 		
 		Mongo mongo = new Mongo();
 		mongo.dropDatabase("ossmeter");
-		mongo.dropDatabase("pdb");
+		mongo.dropDatabase("pdb_values");
 		mongo.dropDatabase("pongo");
 		mongo.dropDatabase("fedora");
 //		mongo.dropDatabase("epsilon");

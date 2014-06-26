@@ -43,17 +43,12 @@ public class MailingList extends org.ossmeter.repository.model.CommunicationChan
 		notifyChanged();
 		return this;
 	}
-	public MailingListType getType() {
-		MailingListType type = null;
-		try {
-			type = MailingListType.valueOf(dbObject.get("type")+"");
-		}
-		catch (Exception ex) {}
-		return type;
+	public String getType() {
+		return parseString(dbObject.get("type")+"", "");
 	}
 	
-	public MailingList setType(MailingListType type) {
-		dbObject.put("type", type.toString());
+	public MailingList setType(String type) {
+		dbObject.put("type", type);
 		notifyChanged();
 		return this;
 	}

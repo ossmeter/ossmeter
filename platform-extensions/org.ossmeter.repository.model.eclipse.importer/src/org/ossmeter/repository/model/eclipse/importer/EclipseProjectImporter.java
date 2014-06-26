@@ -30,12 +30,15 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.License;
+import org.ossmeter.repository.model.Person;
 import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.Role;
 import org.ossmeter.repository.model.VcsRepository;
 import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
 import org.ossmeter.repository.model.cc.forum.Forum;
@@ -51,7 +54,7 @@ import org.ossmeter.repository.model.vcs.cvs.CvsRepository;
 import org.ossmeter.repository.model.vcs.git.GitRepository;
 import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+//import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -61,6 +64,10 @@ public class EclipseProjectImporter {
 	private Map<EclipseProject,String> pendingParentReferences = new HashMap<EclipseProject,String>();
 	private Collection<EclipseProject> importedProjects = new ArrayList<EclipseProject>();
 	private ArrayList<String> NNTPUrllist;
+	
+	private Map<String, Role> rolePending = new HashMap<String, Role>();
+	private Map<String, License> licensePending = new HashMap<String, License>();
+	private Map<String, Person> userPending = new HashMap<String, Person>();
 	
 	private EclipseProject getProjectByName(String projectName) {
 		for (EclipseProject p : importedProjects) {
@@ -181,7 +188,7 @@ public class EclipseProjectImporter {
 			
 			System.out.println("Retrieving the list of Eclipse projects...");
 
-//			InputStream is = new FileInputStream(new File("C:\\eclipse.json"));
+			//InputStream is = new FileInputStream(new File("C:\\eclipse.json"));
 			InputStream is = new URL("http://projects.eclipse.org/json/projects/all").openStream();
 			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
 			String jsonText = readAll(rd);		
@@ -200,6 +207,7 @@ public class EclipseProjectImporter {
 				EclipseProject pi = (EclipseProject)platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByShortName((String) entry.getKey());
 				EclipseProject project = importProject((String) entry.getKey(), platform);
 				importedProjects.add(project);
+				
 			}			
 			fixPendingParentReferences();
 			cleanParent();
@@ -374,7 +382,6 @@ public class EclipseProjectImporter {
 			for (NntpNewsGroup cc : getNntpNewsGroup(projectId)) {
 				project.getCommunicationChannels().add(cc);
 			}
-	
 		// END Management of Communication Channels
 						
 			
@@ -455,6 +462,13 @@ public class EclipseProjectImporter {
 		// END Management of VcsRepositories
 
 			
+		List<Person> ps = getProjectPersons(platform, projectId);
+		for (Person person : ps) {
+			project.getPersons().add(person);
+		}
+
+			
+			
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();			
 		} catch (IOException e1) {
@@ -503,7 +517,72 @@ public class EclipseProjectImporter {
 			return new ArrayList<NntpNewsGroup>();
 		}	
 	}
-
+	
+	private List<Person> getProjectPersons(Platform platform,
+			String projectId) 
+	{
+		List<Person> result = new ArrayList<Person>();
+		org.jsoup.nodes.Document doc;
+		org.jsoup.nodes.Element content;	
+		String URL_PROJECT = "http://projects.eclipse.org/projects/" + projectId + "/who";	
+		
+		try 
+		{
+			doc = Jsoup.connect(URL_PROJECT).timeout(10000).get();
+			org.jsoup.nodes.Element e = doc.getElementsByClass("field-name-field-projects-members-members").first().
+											getElementsByClass("field-items").first();
+			
+			Elements divUsers = e.getElementsByClass("field-item");
+			for (Element iterable_element : divUsers) 
+			{
+				String roleName = iterable_element.getElementsByTag("h3").text();
+				Role gr = platform.getProjectRepositoryManager().getProjectRepository().getRoles().findOneByName(roleName);
+				if (gr == null)
+				{				
+					gr = rolePending.get(roleName);
+					if(gr==null)
+					{
+						gr = new Role();
+						gr.setName("Eclipse " + roleName);
+						rolePending.put(roleName, gr);
+						platform.getProjectRepositoryManager().getProjectRepository().getRoles().add(gr);
+					}
+				}
+				roleName = iterable_element.getElementsByTag("h3").first().text();
+				
+				Elements usersInRole = iterable_element.getElementsByTag("li");
+				for (Element element : usersInRole) {
+					System.out.println(element.text());
+					String username = element.text();
+					String url = "http://projects.eclipse.org/" + element.getElementsByAttribute("href").attr("href");
+					Person gu = userPending.get(username);
+					if (gu==null)
+					{
+						gu = platform.getProjectRepositoryManager().getProjectRepository().getPersons().findOneByName(username);			
+						if(gu==null)
+						{
+							gu = new Person();
+							gu.setName(username);
+							gu.setHomePage(url);
+							
+							platform.getProjectRepositoryManager().getProjectRepository().getPersons().add(gu);
+							
+						}
+						userPending.put(username, gu);
+						
+					}
+					gu.getRoles().add(gr);
+					result.add(gu);
+				}
+			}
+		} catch (NullPointerException e){
+			System.err.println("Problems occurred during the collection of the persons in volved in the project " + projectId);			
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		return result;
+	}
 
 	private List<String> getPlatforms(Node xml) {
 		List<String> result = new ArrayList<>();

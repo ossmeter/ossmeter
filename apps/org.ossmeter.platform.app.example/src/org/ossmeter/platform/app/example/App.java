@@ -9,12 +9,13 @@ import org.ossmeter.repository.model.LocalStorage;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectCollection;
 import org.ossmeter.repository.model.ProjectRepository;
+import org.ossmeter.repository.model.eclipse.importer.EclipseProjectImporter;
 
 import com.googlecode.pongo.runtime.PongoFactory;
 import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
 import com.mongodb.Mongo;
 
-public class App implements IApplication {
+public class App implements IApplication { 
 
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
@@ -24,8 +25,6 @@ public class App implements IApplication {
 		Platform platform = new Platform(mongo);
 		ProjectRepository repo = platform.getProjectRepositoryManager().getProjectRepository();
 		
-//		Project pongo = ProjectCreationUtil.createSvnProject("pongo", "http://pongo.googlecode.com/svn/trunk");
-//		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(pongo);
 		ProjectCollection coll = repo.getProjects();
 		for (Project p : coll) {
 			coll.remove(p);
@@ -38,6 +37,10 @@ public class App implements IApplication {
 		coll.add(pongo);
 		
 		// Synchronise the changes and close the connection
+		
+		EclipseProjectImporter importer = new EclipseProjectImporter();
+		System.err.println(importer.importProject("modeling.epsilon", platform));
+		
 		repo.sync();
 		mongo.close();
 		
