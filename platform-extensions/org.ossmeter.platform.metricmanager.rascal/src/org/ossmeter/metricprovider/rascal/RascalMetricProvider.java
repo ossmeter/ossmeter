@@ -583,7 +583,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 				VcsRepository repo = commit.getDelta().getRepository();
 
 				try {
-					List<Churn> currentChurn = WorkingCopyFactory.getInstance().getDiff(repo, workingCopyFolders.get(repo.getUrl()), RascalMetricProvider.lastRevision);
+					List<Churn> currentChurn = WorkingCopyFactory.getInstance().getDiff(repo, workingCopyFolders.get(repo.getUrl()), commit.getRevision());
 					churnPerCommit.put(commit, currentChurn);
 				} catch (WorkingCopyManagerUnavailable e) {
 					Rasctivator.logException("exception while diffing " + repo.getUrl(), e);
