@@ -17,11 +17,11 @@ import org.rascalmpl.interpreter.result.AbstractFunction;
 public class RascalFactoidProvider extends AbstractFactoidMetricProvider {
 	private RascalMetricProvider metric;
 	
-	public RascalFactoidProvider(String metricId, String funcName,
+	public RascalFactoidProvider(String bundleId, String metricId, String funcName,
 			String friendlyName, String description, AbstractFunction f,
 			Map<String, String> uses) {
 	
-		metric = new RascalMetricProvider(metricId, funcName, friendlyName, description, f, uses);
+		metric = new RascalMetricProvider(bundleId, metricId, funcName, friendlyName, description, f, uses);
 	}
 
 	@Override

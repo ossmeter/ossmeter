@@ -236,17 +236,16 @@ public class RascalManager {
 				// TODO: add some type checking on the arguments
 				if (f.hasTag("metric")) {
 					String metricName = f.getTag("metric");
-					String metricId = bundle.getSymbolicName() + "."
-							+ metricName;
+					String metricId = bundle.getSymbolicName() + "." + metricName;
 					String friendlyName = f.getTag("friendlyName");
 					String description = f.getTag("doc");
 					Map<String,String> uses = getUses(f);
 
 					if (f.getReturnType().toString().equals("Factoid")) {
-						providers.add(new RascalFactoidProvider(metricId, funcName, friendlyName, description, f, uses));
+						providers.add(new RascalFactoidProvider(bundle.getSymbolicName(), metricId, funcName, friendlyName, description, f, uses));
 					}
-					else {
-						RascalMetricProvider m = new RascalMetricProvider(metricId, funcName, friendlyName, description, f, uses); 
+					else { 
+						RascalMetricProvider m = new RascalMetricProvider(bundle.getSymbolicName(), metricId, funcName, friendlyName, description, f, uses); 
 					
 						providers.add(m);
 

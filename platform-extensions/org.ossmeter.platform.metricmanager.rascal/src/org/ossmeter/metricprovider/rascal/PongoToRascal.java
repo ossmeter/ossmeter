@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.NoSuchElementException;
 
 import org.eclipse.imp.pdb.facts.IDateTime;
 import org.eclipse.imp.pdb.facts.IListWriter;
@@ -85,15 +86,22 @@ public class PongoToRascal {
 					java.util.Date parse = df.parse(date.toString());
 					IDateTime dt = VF.datetime(parse.getTime());
 					ListMeasurement l = (ListMeasurement) x;
-					IValue val = type.accept(new MeasurementsToValue(l
-							.getValue()));
+					
+					try {
+						IValue val = type.accept(new MeasurementsToValue(l.getValue()));
 
-					if (val != null) {
-						w.insert(VF.tuple(new IValue[] { dt, val }));
+						if (val != null) {
+							w.insert(VF.tuple(new IValue[] { dt, val }));
+						}
 					}
-				} catch (ParseException e) {
-					Rasctivator.logException("error in parsing date: "
-							+ x.getDbObject().get("__date"), e);
+					catch (NoSuchElementException e) {
+						// Ignore; may happen for the first record when there is a date but no measured values yet,
+						// or on dates where just nothing happened and a metric was undefined because of this fact.
+						// In this case the historic data will skip the date as well.
+					}
+				} 
+				catch (ParseException e) {
+					Rasctivator.logException("error in parsing date: "+ x.getDbObject().get("__date"), e);
 				}
 			}
 			return w.done();
