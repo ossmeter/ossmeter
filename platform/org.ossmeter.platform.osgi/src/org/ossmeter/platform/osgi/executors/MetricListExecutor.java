@@ -76,7 +76,7 @@ public class MetricListExecutor implements Runnable {
 			
 			try {
 				Date lastExec = new Date(mpd.getLastExecuted());
-				System.out.println(lastExec + " < " + date);
+				
 				// Check we haven't already executed the MP for this day.
 				if (date.compareTo(lastExec) < 0) {
 					logger.warn("Metric provider '" + m.getIdentifier() + "' has been executed for this date already. Ignoring.");
