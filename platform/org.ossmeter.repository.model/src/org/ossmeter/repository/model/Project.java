@@ -22,6 +22,8 @@ public class Project extends NamedElement {
 	public Project() { 
 		super();
 		dbObject.put("parent", new BasicDBObject());
+		dbObject.put("storage", new BasicDBObject());
+		dbObject.put("executionInformation", new BasicDBObject());
 		dbObject.put("vcsRepositories", new BasicDBList());
 		dbObject.put("communicationChannels", new BasicDBList());
 		dbObject.put("bugTrackingSystems", new BasicDBList());
@@ -77,7 +79,7 @@ public class Project extends NamedElement {
 		return this;
 	}
 	public boolean getActive() {
-		return parseBoolean(dbObject.get("active")+"", false);
+		return parseBoolean(dbObject.get("active")+"", true);
 	}
 	
 	public Project setActive(boolean active) {
@@ -175,6 +177,7 @@ public class Project extends NamedElement {
 	public LocalStorage getStorage() {
 		if (storage == null && dbObject.containsField("storage")) {
 			storage = (LocalStorage) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("storage"));
+			storage.setContainer(this);
 		}
 		return storage;
 	}
@@ -195,6 +198,7 @@ public class Project extends NamedElement {
 	public ProjectExecutionInformation getExecutionInformation() {
 		if (executionInformation == null && dbObject.containsField("executionInformation")) {
 			executionInformation = (ProjectExecutionInformation) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("executionInformation"));
+			executionInformation.setContainer(this);
 		}
 		return executionInformation;
 	}
