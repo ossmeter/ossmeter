@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Googlecodeimporter
+Bundle-SymbolicName: org.ossmeter.metricprovider.historic.googlecodeimporter;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.ossmeter.metricprovider.historic.googlecodeimporter.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ com.googlecode.pongo.runtime.osgi,
+ org.ossmeter.platform.client.api,
+ org.ossmeter.repository.model.googlecode.importer,
+ org.ossmeter.repository.model,
+ org.ossmeter.platform,
+ org.apache.commons.lang
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
+Import-Package: org.ossmeter.repository.model.googlecode
