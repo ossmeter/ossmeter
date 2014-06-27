@@ -52,7 +52,7 @@ public class EclipseImporterProvider implements IHistoricalMetricProvider {
 	@Override
 	public String getSummaryInformation() {
 		// TODO Auto-generated method stub
-		return "This provider enable to update a projects calling a importProject from importer";
+		return "This provider enable to update a projects calling a importProject from eclipse importer";
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class EclipseImporterProvider implements IHistoricalMetricProvider {
 			PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
 			//Lo posso prendere da qualche altra parte
 			Platform platform = new Platform(mongo);
-			ep = epi.importProject(project.getName(), platform);
+			ep = epi.importProject(project.getShortName(), platform);
 			
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
