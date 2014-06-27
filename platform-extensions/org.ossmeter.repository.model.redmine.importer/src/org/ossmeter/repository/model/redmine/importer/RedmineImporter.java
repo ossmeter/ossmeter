@@ -49,8 +49,9 @@ public class RedmineImporter {
 	
 	public RedmineImporter(String baseRepo, String key, String user, String password)
 	{
-		this.baseRepo = baseRepo ;
+		
 		this.essentialRepo = baseRepo.substring(7);
+		this.baseRepo = baseRepo ;
 		this.key = key;
 		this.user = user;
 		this.password = password;
