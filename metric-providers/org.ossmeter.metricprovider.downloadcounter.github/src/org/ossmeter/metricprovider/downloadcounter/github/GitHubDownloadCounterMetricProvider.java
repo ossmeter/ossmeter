@@ -1,5 +1,7 @@
 package org.ossmeter.metricprovider.downloadcounter.github;
 
+import java.net.UnknownHostException;
+
 import org.eclipse.egit.github.core.Download;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.service.DownloadService;
@@ -7,19 +9,22 @@ import org.eclipse.egit.github.core.service.RepositoryService;
 import org.ossmeter.metricprovider.downloadcounter.model.DownloadCounter;
 import org.ossmeter.platform.AbstractTransientMetricProvider;
 import org.ossmeter.platform.Date;
+import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.repository.model.Project;
-import org.ossmeter.repository.model.github.GitHubProject;
-import org.ossmeter.repository.model.github.GitHubRepository;
-import org.ossmeter.repository.model.github.GitHubUser;
+import org.ossmeter.repository.model.github.*;
+import org.ossmeter.repository.model.vcs.git.GitRepository;
 
+import com.googlecode.pongo.runtime.PongoFactory;
+import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
 import com.mongodb.DB;
+import com.mongodb.Mongo;
 
 public class GitHubDownloadCounterMetricProvider extends AbstractTransientMetricProvider<DownloadCounter>{
 
 	@Override
 	public boolean appliesTo(Project project) {
-		return project instanceof GitHubProject;
+		return project instanceof GitHubRepository;
 	}
 
 	@Override
@@ -32,10 +37,10 @@ public class GitHubDownloadCounterMetricProvider extends AbstractTransientMetric
 		
 		if (!new Date().toString().equals(delta.getDate().toString())) return;
 		
-		GitHubProject gitHubProject = (GitHubProject) project;
+		GitHubRepository gitHubProject = (GitHubRepository) project;
 		
-		GitHubRepository gitHubRepository = ((GitHubRepository)gitHubProject.getVcsRepositories().get(0));
-		String owner = gitHubRepository.getOwner().getLogin();
+		GitRepository gitHubRepository = ((GitRepository)gitHubProject.getVcsRepositories().get(0));
+		String owner = gitHubRepository.getUsername();
 		
 		try {
 			RepositoryService repositoryService = new RepositoryService();
@@ -66,21 +71,32 @@ public class GitHubDownloadCounterMetricProvider extends AbstractTransientMetric
 	}
 	
 	public static void main(String[] args) {
+		Date d = new Date();
 		
 		GitHubDownloadCounterMetricProvider provider = new GitHubDownloadCounterMetricProvider();
-		provider.measure(provider.createGitHubProject("mojombo", "grit"), null, null);
+		Project p1 = (Project)provider.createGitHubProject("mojombo", "grit");
 		
+		try 
+		{
+			Mongo mongo;
+			mongo = new Mongo();
+			PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
+			Platform platform = new Platform(mongo);
+			provider.measure(p1, new ProjectDelta(p1, d, platform),new DownloadCounter());
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
 	}
 	
-	public GitHubProject createGitHubProject(String login, String repository) {
-		GitHubProject project = new GitHubProject();
+	public GitHubRepository createGitHubProject(String login, String repository) {
+		GitHubRepository project = new GitHubRepository();
 		
-		GitHubRepository gitHubRepository = new GitHubRepository();
+		GitRepository gitHubRepository = new GitRepository();
 		gitHubRepository.setName(repository);
 		
 		GitHubUser owner = new GitHubUser();
 		owner.setLogin(login);
-		gitHubRepository.setOwner(owner);
+		gitHubRepository.setUsername(owner.getLogin());
 		
 		project.getVcsRepositories().add(gitHubRepository);
 		
