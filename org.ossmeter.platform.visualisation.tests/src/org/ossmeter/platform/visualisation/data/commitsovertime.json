@@ -1,8 +1,9 @@
 {
-	"metricid" : "org.ossmeter.metricprovider.historic.commitsovertime",
+	"metricid" : "org.ossmeter.metricprovider.historic.commitsovertime.CommitsOverTimeHistoricMetricProvider",
 	"vis" : [ 
 		{
 			"name" : "commitsovertimeline",
+			"description" : "This metric shows a cumulative count of the commits.",
 			"type" : "LineChart",
 			"datatable" : {
 				"rows" : "$repositories",

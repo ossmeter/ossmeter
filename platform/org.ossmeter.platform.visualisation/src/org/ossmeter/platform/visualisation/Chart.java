@@ -16,20 +16,29 @@ import com.mongodb.DBObject;
 public class Chart {
 	
 	protected String chartName;
-	protected List<String> fields;
+	protected List<String> requiredFields;
+	protected List<String> optionalFields;
 	
+	// TODO: Validate the specification. 
 	public Chart(JsonNode chartDefinition) {
-		fields = new ArrayList<>();
+		requiredFields = new ArrayList<>();
+		optionalFields = new ArrayList<>();
+		
 		chartName = chartDefinition.path("name").textValue();
+		
 		ArrayNode fields = (ArrayNode) chartDefinition.get("fields");
 		for (JsonNode f : fields) {
 			String name = f.get("name").textValue();
 			// TODO: the field type, for type checking the data
-			boolean required = false; // TODO use this.
+			boolean required = false; 
 			if (f.has("required")){
 				required = f.path("required").asBoolean(true);
 			}
-			this.fields.add(name);
+			if (required) {
+				this.requiredFields.add(name);
+			} else {
+				this.optionalFields.add(name);
+			}
 		}
 	}
 	/*
@@ -43,16 +52,7 @@ public class Chart {
 
 }
 	 */
-	// TODO: How do we deal with multiple visualisations? 
-	protected void visualise(JsonNode specification) {
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode result = mapper.createObjectNode();
-		
-		String metricId = specification.path("metricid").textValue();
-		String description = specification.path("metricid").textValue();
-		result.put("metricid", metricId);
-	}
-	
+
 	protected ArrayNode createDatatable(JsonNode datatableSpec, DBCollection collection) {
 		String rowName = null;
 		if (datatableSpec.has("rows")) {
@@ -116,7 +116,14 @@ public class Chart {
 		return results;
 	}
 
-	public void completeFields(ObjectNode visualisation, JsonNode metricSpecification) {
-		
+	public void completeFields(ObjectNode visualisation, JsonNode vis) {
+		for (String field : requiredFields) {
+			visualisation.put(field, vis.path(field).textValue());
+		}
+		for (String field : optionalFields) {
+			if (vis.has(field)) {
+				visualisation.put(field, vis.path(field).textValue());
+			}
+		}
 	}
 }

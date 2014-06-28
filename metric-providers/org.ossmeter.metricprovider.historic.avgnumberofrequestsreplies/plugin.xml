@@ -10,10 +10,9 @@
    <visualiser metricProviderId="org.ossmeter.metricprovider.generic.avgnumberofrequestsreplies" pongoVisualiser="org.ossmeter.metricprovider.historic.avgnumberofrequestsreplies.model.AverageRRViz">
    </visualiser>
 </extension>
+
+
 <extension point="com.googlecode.pongo.runtime.osgi">
-    <class name="org.ossmeter.metricprovider.generic.avgnumberofrequestsreplies.model.AverageRR"/>
-    <class name="org.ossmeter.metricprovider.generic.avgnumberofrequestsreplies.model.ArticleData"/>
-    <class name="org.ossmeter.metricprovider.generic.avgnumberofrequestsreplies.model.RequestData"/>
-    <class name="org.ossmeter.metricprovider.generic.avgnumberofrequestsreplies.model.ReplyData"/>
+    <class name="org.ossmeter.metricprovider.historic.avgnumberofrequestsreplies.model.AverageRR"/>
   </extension>
 </plugin>

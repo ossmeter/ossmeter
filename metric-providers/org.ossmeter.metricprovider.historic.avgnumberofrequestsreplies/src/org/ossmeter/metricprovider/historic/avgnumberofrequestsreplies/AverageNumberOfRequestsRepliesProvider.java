@@ -3,10 +3,7 @@ package org.ossmeter.metricprovider.historic.avgnumberofrequestsreplies;
 import java.util.Arrays;
 import java.util.List;
 
-import org.ossmeter.metricprovider.historic.avgnumberofrequestsreplies.model.ArticleData;
 import org.ossmeter.metricprovider.historic.avgnumberofrequestsreplies.model.AverageRR;
-import org.ossmeter.metricprovider.historic.avgnumberofrequestsreplies.model.ReplyData;
-import org.ossmeter.metricprovider.historic.avgnumberofrequestsreplies.model.RequestData;
 import org.ossmeter.metricprovider.trans.activeusers.ActiveUsersMetricProvider;
 import org.ossmeter.metricprovider.trans.activeusers.model.ActiveUsers;
 import org.ossmeter.metricprovider.trans.activeusers.model.NewsgroupData;
@@ -71,22 +68,10 @@ public class AverageNumberOfRequestsRepliesProvider implements IHistoricalMetric
 				days = newsgroup.getDays();
 		}
 		
-		ArticleData avgArticles = new ArticleData();
-		avgArticles.setAverageArticles( 
-				((float) numberOfArticles) / days );
-			
-		ReplyData avgReplies = new ReplyData();
-		avgReplies.setAverageReplies(
-				((float) numberOrReplies) / days);
-
-		RequestData avgRequests = new RequestData();
-		avgRequests.setAverageRequests( 
-				((float) numberOrRequests) / days );
-
 		AverageRR avgRRThread = new AverageRR();
-		avgRRThread.getArticles().add(avgArticles);
-		avgRRThread.getReplies().add(avgReplies);
-		avgRRThread.getRequests().add(avgRequests);
+		avgRRThread.setAverageArticles(((float) numberOfArticles) / days);
+		avgRRThread.setAverageReplies(((float) numberOrReplies) / days);
+		avgRRThread.setAverageRequests(((float) numberOrRequests) / days);
 		
 		return avgRRThread;
 	}

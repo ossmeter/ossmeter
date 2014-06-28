@@ -47,7 +47,7 @@ public class MetricVisualisation {
 		visualisation.put("description", vis.path("description").textValue());
 		visualisation.put("datatable", datatable);
 		
-		chart.completeFields(visualisation, metricSpecification);
+		chart.completeFields(visualisation, vis);
 		
 		return visualisation;
 	}

@@ -1,13 +1,8 @@
 package org.ossmeter.metricprovider.generic.numberofrequestsrepliesperthread.model;
 
-// The visualisation doesn't work!
-@viz(target="gcharts", chart="line")
 class AverageRRThread {
- @series(label="articles")
 	val AverageArticlesPerThreadData[*] articles;
- @series(label="requests")
 	val AverageRequestsPerThreadData[*] requests;
- @series(label="replies")
 	val AverageRepliesPerThreadData[*] replies;
 }
 
@@ -24,4 +19,12 @@ class AverageRequestsPerThreadData {
 class AverageRepliesPerThreadData {
 	@yaxis(title="replies per thread")
 	attr float averageRepliesPerThread;
+}
+
+
+/////////
+class AverageRRThreadFIX {
+	attr float averageArticlesPerThread;
+	attr float averageRepliesPerThread;
+	attr float averageRequestsPerThread;
 }
