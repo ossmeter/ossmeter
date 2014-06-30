@@ -454,7 +454,7 @@ public class EclipseProjectImporter {
 					}
 				if (repository != null) {
 					repository.setName((String)entry.get("name"));
-					repository.setUrl((String)entry.get("url"));
+					repository.setUrl("http://git.eclipse.org" + (String)entry.get("path"));
 				}
 				project.getVcsRepositories().add(repository);
 				}
