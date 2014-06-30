@@ -4,7 +4,8 @@ Bundle-Name: Importer
 Bundle-SymbolicName: org.ossmeter.repository.model.github.importer;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Export-Package: org.ossmeter.repository.model.github.importer
-Require-Bundle: org.ossmeter.repository.model.github.importer.dependencies,
- org.ossmeter.repository.model,
+Require-Bundle: org.ossmeter.repository.model,
  org.ossmeter.repository.model.github,
- org.ossmeter.platform
+ org.ossmeter.platform,
+ org.ossmeter.repository.model.importerdependencies
+Import-Package: org.json.simple

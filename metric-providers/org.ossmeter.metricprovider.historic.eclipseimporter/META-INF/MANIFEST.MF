@@ -14,5 +14,5 @@ Require-Bundle: org.eclipse.ui,
  org.apache.commons.lang
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
-Import-Package: com.mongodb;version="2.9.3.RELEASE",
+Import-Package: com.mongodb,
  org.ossmeter.repository.model.eclipse

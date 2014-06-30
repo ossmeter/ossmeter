@@ -52,7 +52,7 @@ public class EclipseImporterProvider implements IHistoricalMetricProvider {
 	@Override
 	public String getSummaryInformation() {
 		// TODO Auto-generated method stub
-		return "This provider enable to update a projects calling a importProject from eclipse importer";
+		return "This provider imports the prpoject metadata from the Eclipse forge by calling the corresponding importer.";
 	}
 
 	@Override
@@ -85,7 +85,7 @@ public class EclipseImporterProvider implements IHistoricalMetricProvider {
 			EclipseProjectImporter epi = new EclipseProjectImporter();
 			mongo = new Mongo();
 			PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
-			//Lo posso prendere da qualche altra parte
+
 			Platform platform = new Platform(mongo);
 			ep = epi.importProject(project.getShortName(), platform);
 			
