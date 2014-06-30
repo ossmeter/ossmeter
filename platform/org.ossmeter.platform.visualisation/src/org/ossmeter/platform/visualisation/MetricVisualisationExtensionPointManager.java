@@ -1,7 +1,7 @@
 package org.ossmeter.platform.visualisation;
 
-import java.io.File;
 import java.net.URL;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +32,11 @@ public class MetricVisualisationExtensionPointManager {
 	}
 	
 	public MetricVisualisation findVisualisationById(String id) {
-		return null;
+		return visMap.get(id);
+	}
+	
+	public Collection<String> getListOfVisualisationIds() {
+		return visMap.keySet();
 	}
 	
 	public Map<String, MetricVisualisation> getRegisteredVisualisations() {
