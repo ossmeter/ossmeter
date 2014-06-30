@@ -2,5 +2,11 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="org.ossmeter.platform.visualisation.type" name="OSSMETER Visualisation Type" schema="schema/org.ossmeter.platform.visualisation.type.exsd"/>
+   <extension
+         point="org.ossmeter.platform.visualisation.type">
+      <visualisationKind
+            json="chartdefs/linechart.json">
+      </visualisationKind>
+   </extension>
 
 </plugin>

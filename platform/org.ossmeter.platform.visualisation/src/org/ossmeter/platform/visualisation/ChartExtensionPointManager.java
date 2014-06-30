@@ -1,6 +1,7 @@
 package org.ossmeter.platform.visualisation;
 
 import java.io.File;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ChartExtensionPointManager {
 
-	protected String extensionPointId = "";
+	protected final String extensionPointId = "org.ossmeter.platform.visualisation.type";
 	protected Map<String, Chart> chartMap;
 	
 	public Map<String, Chart> getRegisteredCharts() {
@@ -31,10 +32,11 @@ public class ChartExtensionPointManager {
 				Bundle bundle = Platform.getBundle(name);
 
 				for (IConfigurationElement ice : element.getConfigurationElements()) {
-					String url = ice.getAttribute("url");
-					if (url != null) {
+					String path = ice.getAttribute("json");
+					if (path!= null) {
 						// TODO: More validation is needed here, as it's very susceptible
-						// to error.
+						// to error. Only load the chart if it passes validation.
+						URL url = bundle.getResource(path);
 						JsonNode json;
 						try {
 							json = loadJsonFile(url);
@@ -42,7 +44,7 @@ public class ChartExtensionPointManager {
 							e.printStackTrace(); // FIXME
 							continue;
 						}
-						chartMap.put(json.path("type").textValue(), new Chart(json));
+						chartMap.put(json.path("name").textValue(), new Chart(json));
 					}
 				}
 			}
@@ -50,10 +52,9 @@ public class ChartExtensionPointManager {
 		return chartMap;
 	}
 	
-	protected JsonNode loadJsonFile(String path) throws Exception {
-		File jsonFile = new File(this.getClass().getResource(path).toURI());
+	protected JsonNode loadJsonFile(URL url) throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
-		return mapper.readTree(jsonFile);
+		return mapper.readTree(url);
 	}
 	
 }
