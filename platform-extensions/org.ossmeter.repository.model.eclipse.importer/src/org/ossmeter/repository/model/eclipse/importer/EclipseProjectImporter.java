@@ -228,14 +228,21 @@ public class EclipseProjectImporter {
 		String html = null;
 		XML xml = null;
 		
-		Project p = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByShortName(projectId);
+		Iterable<Project> pl = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(projectId);
+		Iterator<Project> iprojects = pl.iterator();
+		EclipseProject p = null;
+		Project projectTemp = null;
 		EclipseProject project = new EclipseProject();
 		Boolean projectToBeUpdated = false;
-		
-		if ((p != null) & (p instanceof EclipseProject)) {
-			project = (EclipseProject)p;
-			System.out.println("Project " + p.getShortName() + " already in the repository. Its metadata will be updated.");
-			projectToBeUpdated = true;
+		while (iprojects.hasNext()) {
+			projectTemp = iprojects.next();
+			if (projectTemp instanceof EclipseProject) {
+				p = (EclipseProject)projectTemp;
+				projectToBeUpdated = true;
+				System.out.println("-----> project " + projectId + " already in the repository. Its metadata will be updated.");
+				break;
+					
+			}
 		}
 		
 		//Retrieving data by parsing the Web page of the project
@@ -445,7 +452,7 @@ public class EclipseProjectImporter {
 				while(iter.hasNext()){					
 					JSONObject entry = (JSONObject)iter.next();
 					VcsRepository repository = null;
-					if (((String)entry.get("type")).equals("git")) {
+					if (((String)entry.get("type")).equals("git")  || ((String)entry.get("type")).equals("github")) {
 						repository = new GitRepository();
 					} else if (((String)entry.get("type")).equals("svn")) {
 						repository = new SvnRepository();
@@ -454,7 +461,12 @@ public class EclipseProjectImporter {
 					}
 				if (repository != null) {
 					repository.setName((String)entry.get("name"));
-					repository.setUrl("http://git.eclipse.org" + (String)entry.get("path"));
+					if (!((String)entry.get("path")).startsWith("/") && ((String)entry.get("type")).equals("github"))
+						repository.setUrl((String)entry.get("path"));
+					if (((String)entry.get("path")).startsWith("/") && ((String)entry.get("type")).equals("git"))
+						repository.setUrl("http://git.eclipse.org" + (String)entry.get("path"));
+					if (((String)entry.get("path")).startsWith("/") && ((String)entry.get("type")).equals("svn"))
+						repository.setUrl("http://dev.eclipse.org/" + (String)entry.get("path"));
 				}
 				project.getVcsRepositories().add(repository);
 				}
@@ -503,9 +515,7 @@ public class EclipseProjectImporter {
 				NNTPuRL = new NntpNewsGroup();
 				NNTPuRL.setName(projectShortName);
 				NNTPuRL.setUrl(e.get(i).attr("href"));
-				if (NNTPuRL.getUrl().startsWith("news://")
-						|| NNTPuRL.getUrl().startsWith("news://")
-						|| NNTPuRL.getUrl().startsWith("news://"))
+				if (NNTPuRL.getUrl().startsWith("news://"))
 					NNTPuRL.setNonProcessable(false);
 				else NNTPuRL.setNonProcessable(true);
 					
@@ -552,7 +562,7 @@ public class EclipseProjectImporter {
 				
 				Elements usersInRole = iterable_element.getElementsByTag("li");
 				for (Element element : usersInRole) {
-					System.out.println(element.text());
+					//System.out.println(element.text());
 					String username = element.text();
 					String url = "http://projects.eclipse.org/" + element.getElementsByAttribute("href").attr("href");
 					Person gu = userPending.get(username);

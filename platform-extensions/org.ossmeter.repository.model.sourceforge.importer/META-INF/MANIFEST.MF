@@ -11,7 +11,6 @@ Require-Bundle: org.ossmeter.repository.model.bts.bugzilla,
  org.ossmeter.repository.model.vcs.cvs,
  org.ossmeter.repository.model.sourceforge,
  org.ossmeter.platform;bundle-version="1.0.0",
- com.googlecode.pongo;bundle-version="0.5.0",
  org.ossmeter.platform.vcs.svn;bundle-version="1.0.0",
  org.ossmeter.repository.model.importerdependencies,
  org.jsoup
