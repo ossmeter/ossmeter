@@ -1,5 +1,6 @@
 package org.ossmeter.platform.visualisation;
 
+import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,30 +13,31 @@ import org.osgi.framework.Bundle;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 
-public class ChartExtensionPointManager {
+public class MetricVisualisationExtensionPointManager {
 
-	protected final String extensionPointId = "org.ossmeter.platform.visualisation.type";
-	protected Map<String, Chart> chartMap;
+	protected final String extensionPointId = "org.ossmeter.platform.visualisation.metric";
+	protected Map<String, MetricVisualisation> visMap;
 	
-	protected static ChartExtensionPointManager instance;
+	protected static MetricVisualisationExtensionPointManager instance;
 	
-	private ChartExtensionPointManager() {	}
+	private MetricVisualisationExtensionPointManager() {	}
 	
-	public static ChartExtensionPointManager getInstance() {
+	public static MetricVisualisationExtensionPointManager getInstance() {
 		if (instance == null) {
-			instance = new ChartExtensionPointManager();
+			instance = new MetricVisualisationExtensionPointManager();
 		}
 		return instance;
 	}
 	
-	public Chart findChartByType(String type) {
-		return chartMap.get(type);
+	public MetricVisualisation findVisualisationById(String id) {
+		return null;
 	}
 	
-	public Map<String, Chart> getRegisteredCharts() {
-		if (chartMap == null) {
-			chartMap = new HashMap<>();
+	public Map<String, MetricVisualisation> getRegisteredVisualisations() {
+		if (visMap == null) {
+			visMap = new HashMap<>();
 		}
 		
 		IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(extensionPointId);
@@ -58,12 +60,24 @@ public class ChartExtensionPointManager {
 							e.printStackTrace(); // FIXME
 							continue;
 						}
-						chartMap.put(json.path("name").textValue(), new Chart(json));
+						
+						ArrayNode visses = (ArrayNode)json.get("vis");
+						for (JsonNode vis : visses) {
+							String chartType = vis.path("type").textValue();
+							String visName = vis.path("name").textValue();
+							Chart chart = ChartExtensionPointManager.getInstance().findChartByType(chartType);
+							if (chart == null) {
+								// FIXME: Use logger.
+								System.err.println("Chart type '" + chartType + "' for visualisation '" + visName + "' not found in registry. ");
+								continue;
+							}
+							visMap.put(visName, new MetricVisualisation(chart, json, vis));
+						}
 					}
 				}
 			}
 		}
-		return chartMap;
+		return visMap;
 	}
 	
 	protected JsonNode loadJsonFile(URL url) throws Exception {

@@ -3,10 +3,10 @@
 <schema targetNamespace="org.ossmeter.platform.visualisation" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="org.ossmeter.platform.visualisation" id="org.ossmeter.platform.visualiation.type" name="OSSMETER Visualisation Type"/>
+         <meta.schema plugin="org.ossmeter.platform.visualisation" id="org.ossmeter.platform.visualisation.metric" name="Metric visualisation"/>
       </appinfo>
       <documentation>
-         The extension point for registering custom OSSMETER metric visualisation types.
+         This extension point allows you to register JSON specifications of the visualisation of metric providers.
       </documentation>
    </annotation>
 
@@ -18,7 +18,7 @@
       </annotation>
       <complexType>
          <sequence>
-            <element ref="visualisationKind" minOccurs="1" maxOccurs="unbounded"/>
+            <element ref="visualisation" minOccurs="1" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -47,9 +47,9 @@
       </complexType>
    </element>
 
-   <element name="visualisationKind">
+   <element name="visualisation">
       <complexType>
-         <attribute name="json" type="string" use="required">
+         <attribute name="json" type="string">
             <annotation>
                <documentation>
                   
