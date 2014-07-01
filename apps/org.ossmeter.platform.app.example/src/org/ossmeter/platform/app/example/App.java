@@ -5,11 +5,9 @@ import org.eclipse.equinox.app.IApplicationContext;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.app.example.util.ProjectCreationUtil;
 import org.ossmeter.platform.osgi.OssmeterApplication;
-import org.ossmeter.repository.model.LocalStorage;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectCollection;
 import org.ossmeter.repository.model.ProjectRepository;
-import org.ossmeter.repository.model.eclipse.importer.EclipseProjectImporter;
 
 import com.googlecode.pongo.runtime.PongoFactory;
 import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
@@ -39,9 +37,9 @@ public class App implements IApplication {
 		
 		// Synchronise the changes and close the connection
 		
-		EclipseProjectImporter importer = new EclipseProjectImporter();
-		System.err.println(importer.importProject("modeling.epsilon", platform));
-		
+//		EclipseProjectImporter importer = new EclipseProjectImporter();
+//		System.err.println(importer.importProject("modeling.epsilon", platform));
+//		
 		repo.sync();
 		mongo.close();
 		
