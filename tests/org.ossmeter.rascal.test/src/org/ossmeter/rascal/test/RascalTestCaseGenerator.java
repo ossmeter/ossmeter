@@ -1,0 +1,230 @@
+package org.ossmeter.rascal.test;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.eclipse.equinox.app.IApplication;
+import org.eclipse.equinox.app.IApplicationContext;
+import org.eclipse.imp.pdb.facts.IList;
+import org.eclipse.imp.pdb.facts.IString;
+import org.eclipse.imp.pdb.facts.ITuple;
+import org.eclipse.imp.pdb.facts.IValue;
+import org.eclipse.imp.pdb.facts.io.BinaryValueReader;
+import org.eclipse.imp.pdb.facts.io.BinaryValueWriter;
+import org.eclipse.imp.pdb.facts.io.StandardTextReader;
+import org.eclipse.imp.pdb.facts.type.Type;
+import org.ossmeter.metricprovider.rascal.RascalManager;
+import org.ossmeter.metricprovider.rascal.RascalMetricProvider;
+import org.ossmeter.platform.Date;
+import org.ossmeter.platform.IMetricProvider;
+import org.ossmeter.platform.Platform;
+import org.ossmeter.platform.app.example.util.ProjectCreationUtil;
+import org.ossmeter.platform.delta.ProjectDelta;
+import org.ossmeter.platform.logging.OssmeterLogger;
+import org.ossmeter.platform.osgi.executors.MetricListExecutor;
+import org.ossmeter.repository.model.LocalStorage;
+import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.ProjectExecutionInformation;
+import org.ossmeter.repository.model.VcsRepository;
+import org.rascalmpl.interpreter.Evaluator;
+
+import com.googlecode.pongo.runtime.PongoFactory;
+import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
+import com.mongodb.Mongo;
+
+public class RascalTestCaseGenerator implements IApplication  {
+
+	@Override
+	public Object start(IApplicationContext context) throws Exception {
+		// create platform with mongo db
+		Mongo mongo = new Mongo();
+		PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
+		Platform platform = new Platform(mongo);
+		OssmeterLogger logger = (OssmeterLogger) OssmeterLogger.getLogger("RascalTestCaseGenerator");
+		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
+		
+		// load rascal manager and metric providers
+		RascalManager manager = RascalManager.getInstance();
+		Evaluator eval = manager.getEvaluator();
+		
+		List<IMetricProvider> metricProviders = manager.getMetricProviders();
+
+		System.out.println("Available metric providers:");
+		for (IMetricProvider mp : metricProviders) {
+			System.out.println(mp.getIdentifier());
+		}
+		
+		// initialise test data dir and read project settings
+		File testDataDir = new File(Platform.getInstance().getLocalStorageHomeDirectory().toFile(), "rascaltestdata");
+		testDataDir.mkdirs();
+				
+		List<Project> projects = null;
+		File settingsFile = new File(testDataDir, "projects.txt");
+		if (settingsFile.exists()) {
+			IValue projectSettings = readTextValue(settingsFile, eval);
+			projects = loadProjects(projectSettings, platform);
+		}
+		
+		if (projects == null || projects.size() == 0) {
+			logger.error("Please specify projects to import test data from in " + settingsFile.getAbsolutePath());
+			logger.error("Format: \"[<name, type, url>, ...]\" where type can be \"svn\" or \"git\".");
+			return null;
+		}
+
+		// generate test data
+		for (Project project : projects) {
+			for (VcsRepository repo : project.getVcsRepositories()) {
+				Date startDate = platform.getVcsManager().getDateForRevision(repo, platform.getVcsManager().getFirstRevision(repo)).addDays(-1);
+				Date today = new Date();
+				
+				Date[] dates = Date.range(startDate.addDays(1), today.addDays(-1));
+				
+				for (Date date : dates) {			
+					ProjectDelta delta = new ProjectDelta(project, date, platform);
+					if (delta.create()) {
+						File dir = new File(testDataDir, project.getName() + "/" + encode(repo.getUrl()) + "/" + date.toString());
+						dir.mkdirs();
+						
+						IValue rascalDelta = RascalMetricProvider.computeDelta(project, delta, manager, logger);
+						IValue rascalASTs = RascalMetricProvider.computeAsts(project, delta, manager, logger);
+						IValue rascalM3s = RascalMetricProvider.computeM3(project, delta, manager, logger);
+						
+						handleNewValue(new File(dir, "delta.bin"), rascalDelta, eval, logger);
+						handleNewValue(new File(dir, "asts.bin"), rascalASTs, eval, logger);
+						handleNewValue(new File(dir, "m3s.bin"), rascalM3s, eval, logger);
+						
+						MetricListExecutor ex = new MetricListExecutor(platform, project, delta, date);
+						ex.setMetricList(metricProviders);
+						ex.run();
+						
+						for (IMetricProvider mp : metricProviders) {
+							if (mp instanceof RascalMetricProvider) {
+								IValue result = ((RascalMetricProvider) mp).getMetricResult(project, mp, manager);
+								handleNewValue(new File(dir, mp.getIdentifier()), result, eval, logger);
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return null;
+	}
+
+	private List<Project> loadProjects(IValue projectSettings, Platform platform) {
+		List<Project> projects = new LinkedList<Project>();
+
+		if (projectSettings instanceof IList) {
+			for (IValue v : ((IList) projectSettings)) {
+				if (v instanceof ITuple && ((ITuple) v).arity() == 3) {
+					ITuple t = (ITuple) v;
+					List<String> entries = new LinkedList<String>();
+					for (IValue s : t) {
+						if (s instanceof IString) {
+							entries.add(((IString) s).getValue());
+						}
+					}
+					if (entries.size() == 3) {
+						String name = entries.get(0);
+						String type = entries.get(1);
+						String repo = entries.get(2);
+						
+						Project project = null;
+						
+						if (type.equals("svn")) {
+							project = ProjectCreationUtil.createSvnProject(name, repo);
+						} else if (type.equals("git")) {
+							project = ProjectCreationUtil.createGitProject(name, repo);
+						}
+
+						if (project != null) {
+							project.setShortName(name);		
+							initialiseProjectLocalStorage(project, platform);
+							projects.add(project);
+						}
+					}
+				}
+			}
+		}
+		return projects;
+	}
+
+	private void handleNewValue(File path, IValue value, Evaluator eval, OssmeterLogger logger) throws IOException {
+		if (path.exists()) {
+			// data already exists from previous run, test if current value is equal
+			if (value == null) {
+				logger.error("Null value for: " + path.toString());
+				return;
+			}
+			
+			IValue previous = readValue(path, value.getType(), eval);
+			
+			if (!value.isEqual(previous)) {
+				logger.error("Different value in file: " + path.toString());
+				
+				File path2 = new File(path.getAbsolutePath() + ".conflict");
+				writeValue(path2, value, eval);
+			}
+		} else if (value != null) {
+			writeValue(path, value, eval);
+		}
+	}
+	
+	@Override
+	public void stop() {
+	}
+
+	private static void initialiseProjectLocalStorage (Project project, Platform platform) {
+		project.setExecutionInformation(new ProjectExecutionInformation());
+		
+		try{	
+			Path projectLocalStoragePath = Paths.get(platform.getLocalStorageHomeDirectory().toString(), project.getName());		
+			if (Files.notExists(projectLocalStoragePath)) {
+				Files.createDirectory(projectLocalStoragePath);
+			}
+			LocalStorage projectLocalStorage = new LocalStorage();
+			projectLocalStorage.setPath(projectLocalStoragePath.toString());
+			project.getExecutionInformation().setStorage(projectLocalStorage);
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void writeValue(File path, IValue value, Evaluator eval) throws IOException {
+		OutputStream out = eval.getResolverRegistry().getOutputStream(path.toURI(), false);
+		new BinaryValueWriter().write(value, out);
+	}
+	
+	private static IValue readValue(File path, Type type, Evaluator eval) throws IOException {
+		InputStream in = eval.getResolverRegistry().getInputStream(path.toURI());		
+		return new BinaryValueReader().read(eval.getValueFactory(), type, in);
+	}
+	
+	private static IValue readTextValue(File path, Evaluator eval) throws IOException {
+		InputStream in = eval.getResolverRegistry().getInputStream(path.toURI());		
+		return new StandardTextReader().read(eval.getValueFactory(), new InputStreamReader(in));
+	}
+	
+	private static String encode(String url) {
+		StringBuilder b = new StringBuilder();
+
+		for (char ch : url.toCharArray()) {
+			if (Character.isLetterOrDigit(ch)) {
+				b.append(ch);
+			}
+			else {
+				b.append(String.format("_%x_", (int) ch));
+			}
+		}
+
+		return b.toString();
+	}
+}

@@ -238,12 +238,12 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 
 				if (needsDelta) {
 					logger.info("computing delta model");
-					params.put(DELTA_PARAM, computeDelta(project, delta, manager));
+					params.put(DELTA_PARAM, computeDelta(project, delta, manager, logger));
 				}
 
 				if (needsAsts) {
 					logger.info("parsing to asts");
-					params.put(ASTS_PARAM, computeAsts(project, delta, manager));
+					params.put(ASTS_PARAM, computeAsts(project, delta, manager, logger));
 				}
 
 				if (needsPrev) {
@@ -253,7 +253,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 				
 				if (needsM3) {
 					logger.info("extracting M3 models");
-					params.put(M3S_PARAM, computeM3(project, delta, manager));
+					params.put(M3S_PARAM, computeM3(project, delta, manager, logger));
 				}
 
 				for (String use : uses.keySet()) {
@@ -338,8 +338,11 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 	}
 
 	// TODO: add support for other kinds of metric providers
-	private IValue getMetricResult(Project project, IMetricProvider provider, RascalManager man) {
+	public IValue getMetricResult(Project project, IMetricProvider provider, RascalManager man) {
 		Type type = provider instanceof RascalMetricProvider ? ((RascalMetricProvider) provider).getReturnType() : ((RascalMetricHistoryWrapper) provider).getValueType();
+		if (context == null) {
+			return null;
+		}
 		DB db = context.getProjectDB(project);
 		RascalMetrics rascalMetrics = new RascalMetrics(db, provider.getIdentifier());
 		
@@ -365,9 +368,9 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		return revision;
 	}
 
-	private IValue computeAsts(Project project, ProjectDelta delta,	RascalManager _instance) {
+	public static IValue computeAsts(Project project, ProjectDelta delta, RascalManager _instance, OssmeterLogger logger) {
 		assert !workingCopyFolders.isEmpty() && delta != null;
-		return callExtractors(project, delta, _instance, _instance.getASTExtractors());
+		return callExtractors(project, delta, _instance, _instance.getASTExtractors(), logger);
 	}
 
 	protected void storeResult(ProjectDelta delta, RascalMetrics db, IValue result) {
@@ -381,8 +384,8 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		db.sync();
 	}
 	
-	private IConstructor computeDelta(Project project, ProjectDelta delta,
-			RascalManager _instance) {
+	public static IConstructor computeDelta(Project project, ProjectDelta delta,
+			RascalManager _instance, OssmeterLogger logger) {
 		logger.info("\tretrieving from VcsProvider");
 		RascalProjectDeltas rpd = new RascalProjectDeltas(_instance.getEvaluator());
 		List<VcsRepositoryDelta> repoDeltas = delta.getVcsDelta().getRepoDeltas();
@@ -436,18 +439,18 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 	}
 
 
-	private IValue computeM3(Project project, ProjectDelta delta, RascalManager man) {
+	public static IValue computeM3(Project project, ProjectDelta delta, RascalManager man, OssmeterLogger logger) {
 		assert !workingCopyFolders.isEmpty() && delta != null;
-		return callExtractors(project, delta, man, man.getM3Extractors());
+		return callExtractors(project, delta, man, man.getM3Extractors(), logger);
 	}
 	
-	private IValue callExtractors(Project project, ProjectDelta delta, RascalManager man, Set<RascalManager.Extractor> extractors) {
+	public static IValue callExtractors(Project project, ProjectDelta delta, RascalManager man, Set<RascalManager.Extractor> extractors, OssmeterLogger logger) {
 		ISetWriter allResults = man.getEvaluator().getValueFactory().setWriter();;
 		
 		ISourceLocation projectLoc = makeProjectLoc(project);
 		IMap wcf = makeMap(workingCopyFolders);
 		IMap scratch = makeMap(scratchFolders);
-		IConstructor rascalDelta = computeDelta(project, delta, man);
+		IConstructor rascalDelta = computeDelta(project, delta, man, logger);
 		
 		for (RascalManager.Extractor e : extractors) {
 			// generally extractors are assume to use @memo
