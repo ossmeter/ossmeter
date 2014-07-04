@@ -46,10 +46,7 @@ class Project extends NamedElement {
   val BugTrackingSystem[*] bugTrackingSystems;
   ref Person[*] persons;
   ref License[*] licenses;
-  val LocalStorage storage;
   val MetricProvider[*] metricProviderData;
-  attr boolean monitor = true;
-  attr boolean inErrorState = false;
   val ProjectExecutionInformation executionInformation;
 }
 

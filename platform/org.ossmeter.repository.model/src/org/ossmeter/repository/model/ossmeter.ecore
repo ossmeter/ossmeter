@@ -61,14 +61,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="bugTrackingSystems" upperBound="-1" eType="//BugTrackingSystem" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="persons" upperBound="-1" eType="//Person"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="licenses" upperBound="-1" eType="//License"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="storage" eType="//LocalStorage" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="metricProviderData" upperBound="-1" eType="//MetricProvider" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="monitor" defaultValueLiteral="true">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="inErrorState" defaultValueLiteral="false">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="executionInformation" eType="//ProjectExecutionInformation" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MetricProviderExecution">

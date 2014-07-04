@@ -63,7 +63,7 @@ public class MasterService implements IMasterService {
 						
 						while (it.hasNext()) {
 							Project next = it.next();
-							if (next.getMonitor()) {
+							if (next.getExecutionInformation().getMonitor()) {
 								projects.add(next.getShortName());
 							}
 							if (projects.size() >= 3) break;
@@ -75,7 +75,7 @@ public class MasterService implements IMasterService {
 							if (worker == null) {
 								try {
 									logger.info("No workers available. Sleeping.");
-									Thread.sleep(5000);
+									Thread.sleep(60000);
 								} catch (InterruptedException e) {
 									e.printStackTrace();
 								}
