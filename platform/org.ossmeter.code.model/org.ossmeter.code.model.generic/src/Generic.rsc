@@ -8,12 +8,7 @@ import org::ossmeter::metricprovider::ProjectDelta;
 import IO;
 import List;
 import String;
- 
-set[str] blackListedExtensions = {};
 
-void setBlackListedExtensions(set[str] extensions) {
-	  blackListedExtensions += extensions;
-	}
 
 @M3Extractor{generic()}
 @memo
@@ -22,7 +17,7 @@ rel[Language, loc, M3] genericM3(loc project, ProjectDelta delta, map[loc repos,
   //}
   rel[Language, loc, M3] result = {};
   folders = checkouts<folders>;
-  for (folder <- folders, file <- files(folder)) {  
+  for (folder <- folders, file <- visibleFiles(folder)) { 
     m = emptyM3(file);
     
     try {
@@ -45,5 +40,5 @@ rel[Language, loc, M3] genericM3(loc project, ProjectDelta delta, map[loc repos,
 @ASTExtractor{generic()}
 @memo
 rel[Language, loc, AST] genericAST(loc project, ProjectDelta delta, map[loc repos,loc folders] checkouts, map[loc,loc] scratch) {
-	return {<generic(), file, lines(readFileLines(file))> | folder <- checkouts<folders>, file <- files(folder)};
+	return {<generic(), file, lines(readFileLines(file))> | folder <- checkouts<folders>, file <- visibleFiles(folder)};
 }

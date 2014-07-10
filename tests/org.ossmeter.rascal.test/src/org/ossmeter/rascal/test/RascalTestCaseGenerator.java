@@ -1,5 +1,6 @@
 package org.ossmeter.rascal.test;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,8 +22,10 @@ import org.eclipse.imp.pdb.facts.io.BinaryValueReader;
 import org.eclipse.imp.pdb.facts.io.BinaryValueWriter;
 import org.eclipse.imp.pdb.facts.io.StandardTextReader;
 import org.eclipse.imp.pdb.facts.type.Type;
+import org.eclipse.imp.pdb.facts.type.TypeStore;
 import org.ossmeter.metricprovider.rascal.RascalManager;
 import org.ossmeter.metricprovider.rascal.RascalMetricProvider;
+import org.ossmeter.metricprovider.rascal.RascalProjectDeltas;
 import org.ossmeter.platform.Date;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.Platform;
@@ -62,6 +65,9 @@ public class RascalTestCaseGenerator implements IApplication  {
 			System.out.println(mp.getIdentifier());
 		}
 		
+		TypeStore extractedTypes = manager.getExtractedTypes();
+		TypeStore deltaTypes = new RascalProjectDeltas(eval).getStore();		
+		
 		// initialise test data dir and read project settings
 		File testDataDir = new File(Platform.getInstance().getLocalStorageHomeDirectory().toFile(), "rascaltestdata");
 		testDataDir.mkdirs();
@@ -97,9 +103,9 @@ public class RascalTestCaseGenerator implements IApplication  {
 						IValue rascalASTs = RascalMetricProvider.computeAsts(project, delta, manager, logger);
 						IValue rascalM3s = RascalMetricProvider.computeM3(project, delta, manager, logger);
 						
-						handleNewValue(new File(dir, "delta.bin"), rascalDelta, eval, logger);
-						handleNewValue(new File(dir, "asts.bin"), rascalASTs, eval, logger);
-						handleNewValue(new File(dir, "m3s.bin"), rascalM3s, eval, logger);
+						handleNewValue(new File(dir, "delta.bin"), rascalDelta, deltaTypes, eval, logger);
+						handleNewValue(new File(dir, "asts.bin"), rascalASTs, extractedTypes, eval, logger);
+						handleNewValue(new File(dir, "m3s.bin"), rascalM3s, extractedTypes, eval, logger);
 						
 						MetricListExecutor ex = new MetricListExecutor(platform, project, delta, date);
 						ex.setMetricList(metricProviders);
@@ -108,7 +114,7 @@ public class RascalTestCaseGenerator implements IApplication  {
 						for (IMetricProvider mp : metricProviders) {
 							if (mp instanceof RascalMetricProvider) {
 								IValue result = ((RascalMetricProvider) mp).getMetricResult(project, mp, manager);
-								handleNewValue(new File(dir, mp.getIdentifier()), result, eval, logger);
+								handleNewValue(new File(dir, mp.getIdentifier()), result, null, eval, logger);
 							}
 						}
 					}
@@ -157,7 +163,11 @@ public class RascalTestCaseGenerator implements IApplication  {
 		return projects;
 	}
 
-	private void handleNewValue(File path, IValue value, Evaluator eval, OssmeterLogger logger) throws IOException {
+	private void handleNewValue(File path, IValue value, TypeStore store, Evaluator eval, OssmeterLogger logger) throws IOException {
+		if (store == null) {
+			store = eval.getCurrentModuleEnvironment().getStore();
+		}
+		
 		if (path.exists()) {
 			// data already exists from previous run, test if current value is equal
 			if (value == null) {
@@ -165,7 +175,7 @@ public class RascalTestCaseGenerator implements IApplication  {
 				return;
 			}
 			
-			IValue previous = readValue(path, value.getType(), eval);
+			IValue previous = readValue(path, value.getType(), store, eval);
 			
 			if (!value.isEqual(previous)) {
 				logger.error("Different value in file: " + path.toString());
@@ -201,13 +211,15 @@ public class RascalTestCaseGenerator implements IApplication  {
 	private static void writeValue(File path, IValue value, Evaluator eval) throws IOException {
 		OutputStream out = eval.getResolverRegistry().getOutputStream(path.toURI(), false);
 		new BinaryValueWriter().write(value, out);
+		//new StandardTextWriter().write(value, new OutputStreamWriter(out, "UTF8"));
 	}
 	
-	private static IValue readValue(File path, Type type, Evaluator eval) throws IOException {
-		InputStream in = eval.getResolverRegistry().getInputStream(path.toURI());		
-		return new BinaryValueReader().read(eval.getValueFactory(), type, in);
+	private static IValue readValue(File path, Type type, TypeStore store, Evaluator eval) throws IOException {
+		InputStream in = new BufferedInputStream(eval.getResolverRegistry().getInputStream(path.toURI()));		
+		return new BinaryValueReader().read(eval.getValueFactory(), store, type, in);		
+		//return new StandardTextReader().read(eval.getValueFactory(), store, type, new InputStreamReader(in, "UTF8"));
 	}
-	
+
 	private static IValue readTextValue(File path, Evaluator eval) throws IOException {
 		InputStream in = eval.getResolverRegistry().getInputStream(path.toURI());		
 		return new StandardTextReader().read(eval.getValueFactory(), new InputStreamReader(in));

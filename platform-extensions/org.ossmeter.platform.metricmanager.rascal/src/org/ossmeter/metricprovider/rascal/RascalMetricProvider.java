@@ -445,7 +445,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 	}
 	
 	public static IValue callExtractors(Project project, ProjectDelta delta, RascalManager man, Set<RascalManager.Extractor> extractors, OssmeterLogger logger) {
-		ISetWriter allResults = man.getEvaluator().getValueFactory().setWriter();;
+		ISetWriter allResults = man.getEvaluator().getValueFactory().setWriter();
 		
 		ISourceLocation projectLoc = makeProjectLoc(project);
 		IMap wcf = makeMap(workingCopyFolders);
@@ -453,7 +453,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		IConstructor rascalDelta = computeDelta(project, delta, man, logger);
 		
 		for (RascalManager.Extractor e : extractors) {
-			// generally extractors are assume to use @memo
+			// generally extractors are assumed to use @memo
 			ISet result = (ISet) e.call(projectLoc, rascalDelta, wcf, scratch);
 			allResults.insertAll(result);
 		}

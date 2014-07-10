@@ -46,6 +46,10 @@ public class RascalProjectDeltas {
 	store.extendStore(eval.getHeap().getModule(MODULE).getStore());
   }
 
+  public TypeStore getStore() {
+    return store;
+  }
+
   public IConstructor emptyDelta(ProjectDelta delta) {
 	  return convert(delta, Collections.<VcsCommit, List<Churn>>emptyMap());
   }
