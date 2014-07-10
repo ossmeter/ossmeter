@@ -30,6 +30,7 @@ import org.eclipse.imp.pdb.facts.io.StandardTextReader;
 import org.eclipse.imp.pdb.facts.type.Type;
 import org.eclipse.imp.pdb.facts.type.TypeStore;
 import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleException;
 import org.osgi.framework.wiring.BundleWire;
 import org.osgi.framework.wiring.BundleWiring;
 import org.ossmeter.platform.IMetricProvider;
@@ -50,7 +51,7 @@ public class RascalManager {
 	private final static IValueFactory VF = ValueFactoryFactory.getValueFactory();
 	private final Evaluator eval = createEvaluator();
 
-	private final Set<Bundle> metricBundles = new HashSet<>();
+	private final Set<Bundle> registeredBundles = new HashSet<>();
 
 	
 	// thread safe way of keeping a static instance
@@ -134,11 +135,28 @@ public class RascalManager {
 	}
 
 	private void configureRascalPath(Evaluator evaluator, Bundle bundle) {
+		if (registeredBundles.contains(bundle)) {
+			return;
+		}
+		
+		registeredBundles.add(bundle);
+		
 		try {
-			List<String> roots = new RascalBundleManifest()
-					.getSourceRoots(bundle);
-
-			for (String root : roots) {
+			RascalBundleManifest mf = new RascalBundleManifest();
+			
+			List<String> dependencies = mf.getRequiredBundles(bundle);
+			if (dependencies != null) {
+				for (String bundleName : dependencies) {
+					Bundle dep = Platform.getBundle(bundleName);
+					if (dep != null) {
+						configureRascalPath(evaluator, dep);
+					} else {
+						throw new BundleException("Bundle " + bundleName + " not found.");
+					}
+				}
+			}
+			
+			for (String root : mf.getSourceRoots(bundle)) {
 				evaluator.addRascalSearchPath(bundle.getResource(root).toURI());
 			}
 
@@ -221,11 +239,6 @@ public class RascalManager {
 		return result.toString();
 	}
 
-	public void registerRascalMetricProvider(Bundle bundle) {
-		configureRascalPath(eval, bundle);
-		metricBundles.add(bundle);
-	}
-	
 	private void addMetricProviders(Bundle bundle, List<IMetricProvider> providers, Set<String> extractedLanguages) {
 		RascalBundleManifest mf = new RascalBundleManifest();
 		String moduleName = mf.getMainModule(bundle);
@@ -316,13 +329,19 @@ public class RascalManager {
 	public synchronized List<IMetricProvider> getMetricProviders() {
 		List<IMetricProvider> providers = new LinkedList<>();
 		
+		Set<Bundle> extractorBundles = new HashSet<>();
 		IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint("ossmeter.rascal.extractor");
 		if (extensionPoint != null) {
 			for (IExtension element : extensionPoint.getExtensions()) {
 				String name = element.getContributor().getName();
 				Bundle bundle = Platform.getBundle(name);
-				registerExtractor(bundle);
+				configureRascalPath(eval, bundle);
+				extractorBundles.add(bundle);
 			}
+		}
+		
+		for (Bundle bundle : extractorBundles) {
+			addExtractors(bundle);
 		}
 		
 		Set<String> extractedLanguages = new HashSet<>();
@@ -333,13 +352,15 @@ public class RascalManager {
 			extractedLanguages.add(e.language);
 		}
 
+		Set<Bundle> metricBundles = new HashSet<>();
 		extensionPoint = Platform.getExtensionRegistry().getExtensionPoint("ossmeter.rascal.metricprovider");
-
+		
 		if (extensionPoint != null) {
 			for (IExtension element : extensionPoint.getExtensions()) {
 				String name = element.getContributor().getName();
 				Bundle bundle = Platform.getBundle(name);
-				registerRascalMetricProvider(bundle);
+				configureRascalPath(eval, bundle);
+				metricBundles.add(bundle);
 			}
 		}
 
@@ -355,7 +376,7 @@ public class RascalManager {
 		eval.call("initialize", MODULE, null, parameters);
 	}
 
-	public void registerExtractor(Bundle bundle) {
+	public void addExtractors(Bundle bundle) {
 		configureRascalPath(eval, bundle);
 		RascalBundleManifest mf = new RascalBundleManifest();
 		String moduleName = mf.getMainModule(bundle);

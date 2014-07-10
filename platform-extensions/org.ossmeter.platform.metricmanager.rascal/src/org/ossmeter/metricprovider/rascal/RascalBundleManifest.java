@@ -26,6 +26,10 @@ public class RascalBundleManifest extends RascalManifest {
   public String getMainFunction(Bundle project) {
     return getMainFunction(manifest(project));
   }
+
+  public List<String> getRequiredBundles(Bundle project) {
+    return getRequiredBundles(manifest(project));
+  }
   
   private InputStream manifest(Bundle bundle) {
     URL rascalMF = bundle.getResource(META_INF_RASCAL_MF);
