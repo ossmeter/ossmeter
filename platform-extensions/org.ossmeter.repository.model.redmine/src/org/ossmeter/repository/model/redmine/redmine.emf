@@ -63,6 +63,7 @@ class RedmineUser extends Person {
  // attr String name;
 //}
 
+@customize
 class RedmineBugIssueTracker extends BugTrackingSystem {
   attr String name;
   val RedmineIssue[*] issues;

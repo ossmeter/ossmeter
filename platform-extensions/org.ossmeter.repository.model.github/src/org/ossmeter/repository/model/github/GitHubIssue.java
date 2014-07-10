@@ -16,6 +16,8 @@ public class GitHubIssue extends Pongo {
 	
 	public GitHubIssue() { 
 		super();
+		dbObject.put("creator", new BasicDBObject());
+		dbObject.put("assignee", new BasicDBObject());
 		dbObject.put("subscribed_users", new BasicDBList());
 		dbObject.put("mentioned_users", new BasicDBList());
 		NUMBER.setOwningType("org.ossmeter.repository.model.github.GitHubIssue");
@@ -118,6 +120,7 @@ public class GitHubIssue extends Pongo {
 	public GitHubUser getCreator() {
 		if (creator == null && dbObject.containsField("creator")) {
 			creator = (GitHubUser) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("creator"));
+			creator.setContainer(this);
 		}
 		return creator;
 	}
@@ -138,6 +141,7 @@ public class GitHubIssue extends Pongo {
 	public GitHubUser getAssignee() {
 		if (assignee == null && dbObject.containsField("assignee")) {
 			assignee = (GitHubUser) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("assignee"));
+			assignee.setContainer(this);
 		}
 		return assignee;
 	}

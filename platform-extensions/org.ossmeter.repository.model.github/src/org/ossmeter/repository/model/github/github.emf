@@ -85,7 +85,12 @@ class GitHubDownload {
 //  val GitHubCommit[*] parents;
 //}
 
+@customize
 class GitHubBugTracker extends BugTrackingSystem {
+  attr String user;
+  attr String repository;
+  attr String login;
+  attr String password;
   val GitHubIssue[*] issues;
 }
 

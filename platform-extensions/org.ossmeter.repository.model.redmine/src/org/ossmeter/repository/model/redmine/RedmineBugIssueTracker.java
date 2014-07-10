@@ -1,15 +1,30 @@
 package org.ossmeter.repository.model.redmine;
 
 import com.mongodb.*;
+
 import java.util.*;
 import com.googlecode.pongo.runtime.*;
 import com.googlecode.pongo.runtime.querying.*;
+
+//protected region custom-imports on begin
+//protected region custom-imports end
 
 
 public class RedmineBugIssueTracker extends org.ossmeter.repository.model.BugTrackingSystem {
 	
 	protected List<RedmineIssue> issues = null;
 	
+	// protected region custom-fields-and-methods on begin
+    @Override
+    public String getBugTrackerType() {
+        return "redmine";
+    }
+
+    @Override
+    public String getInstanceId() {
+        return "TODO";
+    }
+    // protected region custom-fields-and-methods end
 	
 	public RedmineBugIssueTracker() { 
 		super();
