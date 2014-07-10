@@ -11,6 +11,7 @@ import org.ossmeter.platform.delta.bugtrackingsystem.BugTrackingSystemBug;
 import org.ossmeter.platform.delta.bugtrackingsystem.BugTrackingSystemComment;
 import org.ossmeter.platform.delta.bugtrackingsystem.BugTrackingSystemDelta;
 import org.ossmeter.platform.delta.bugtrackingsystem.IBugTrackingSystemManager;
+import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
 
 import utils.BugSearch.SearchLimiter;
@@ -32,7 +33,7 @@ public class BugzillaManager implements IBugTrackingSystemManager<Bugzilla> {
 	private Storage storage = new Storage();
 
 	@Override
-	public boolean appliesTo(Bugzilla bugzilla) {
+	public boolean appliesTo(BugTrackingSystem bugzilla) {
 		return bugzilla instanceof Bugzilla;
 	}
 
