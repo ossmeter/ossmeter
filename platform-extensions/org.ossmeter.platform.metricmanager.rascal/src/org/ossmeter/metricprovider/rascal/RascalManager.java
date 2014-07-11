@@ -62,10 +62,10 @@ public class RascalManager {
 	public class Extractor {
 		public ModuleEnvironment module;
 		public AbstractFunction function;
-		public String language;
+		public IValue language;
 		
-		public Extractor(AbstractFunction fun, ModuleEnvironment env, String lang) throws Exception {
-			if (lang == null || lang.length() == 0) {
+		public Extractor(AbstractFunction fun, ModuleEnvironment env, IValue lang) throws Exception {
+			if (lang == null || (lang instanceof IString && ((IString)lang).length() == 0)) {
 				throw new Exception("Invalid language");
 			}
 			
@@ -239,7 +239,7 @@ public class RascalManager {
 		return result.toString();
 	}
 
-	private void addMetricProviders(Bundle bundle, List<IMetricProvider> providers, Set<String> extractedLanguages) {
+	private void addMetricProviders(Bundle bundle, List<IMetricProvider> providers, Set<IValue> extractedLanguages) {
 		RascalBundleManifest mf = new RascalBundleManifest();
 		String moduleName = mf.getMainModule(bundle);
 
@@ -255,15 +255,15 @@ public class RascalManager {
 			for (final AbstractFunction f : func.getSecond()) {
 				// TODO: add some type checking on the arguments
 				if (f.hasTag("metric")) {
-					String metricName = f.getTag("metric");
+					String metricName = getTag(f, "metric");
 					String metricId = bundle.getSymbolicName() + "." + metricName;
-					String friendlyName = f.getTag("friendlyName");
-					String description = f.getTag("doc");
-					String language = f.getTag("appliesTo");
+					String friendlyName = getTag(f, "friendlyName");
+					String description = getTag(f, "doc");
+					IValue language = f.getTag("appliesTo");
 					Map<String,String> uses = getUses(f);
 					
 					if (!extractedLanguages.contains(language)) {
-						eval.getStdOut().println("Warning: metric " + f.toString() + " not loaded, no extractors available for language " + language);
+						eval.getStdOut().println("Warning: metric " + f + " not loaded, no extractors available for language " + language);
 						continue;
 					}
 
@@ -283,14 +283,22 @@ public class RascalManager {
 			}
 		}
 	}
+
+	private String getTag(final AbstractFunction f, String name) {
+		IValue val = f.getTag(name);
+		if (val instanceof IString) {
+			return ((IString) val).getValue();
+		} else {
+			return val.toString();
+		}
+	}
 	
 	private Map<String,String> getUses(AbstractFunction f) {
 		try {
-			StandardTextReader reader = new StandardTextReader();
 			Map<String,String> map = new HashMap<>();
 			
 			if (f.hasTag("uses")) {
-				IMap m = (IMap) reader.read(VF, new StringReader(f.getTag("uses")));
+				IMap m = (IMap) f.getTag("uses");
 
 				for (IValue key : m) {
 					map.put(((IString) key).getValue(), ((IString) m.get(key)).getValue());
@@ -298,7 +306,7 @@ public class RascalManager {
 				
 				return map;
 			}
-		} catch (FactTypeUseException | IOException e) {
+		} catch (FactTypeUseException e) {
 			Rasctivator.logException("could not parse uses tag", e);
 		}
 		
@@ -344,7 +352,7 @@ public class RascalManager {
 			addExtractors(bundle);
 		}
 		
-		Set<String> extractedLanguages = new HashSet<>();
+		Set<IValue> extractedLanguages = new HashSet<>();
 		for (Extractor e : m3Extractors) {
 			extractedLanguages.add(e.language);
 		}

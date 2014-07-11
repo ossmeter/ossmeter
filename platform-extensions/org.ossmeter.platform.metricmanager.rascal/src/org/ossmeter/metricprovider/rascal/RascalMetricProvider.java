@@ -277,11 +277,6 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 				
 				filterNullParameters(params);
 				
-				// workaround:
-				if (params.isEmpty()) {
-					params = null;
-				}
-				
 				// measurement is included in the sync block to avoid sharing evaluators between metrics
 				logger.info("calling measurement function");
 				//logger.info("with parameters: " + params);
