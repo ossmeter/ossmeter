@@ -69,6 +69,13 @@ public class MetricVisualisationExtensionPointManager {
 						for (JsonNode vis : visses) {
 							String chartType = vis.path("type").textValue();
 							String visName = vis.path("name").textValue();
+							
+							if (visMap.containsKey(visName)) {
+								// FIXME: Use logger.
+								System.err.println("Visualisation already defined for id '" + visName + "'. \nAttempted to add: " + vis + "\nPreviously registered: " + visMap.get(visName));
+								continue;
+							}
+							
 							Chart chart = ChartExtensionPointManager.getInstance().findChartByType(chartType);
 							if (chart == null) {
 								// FIXME: Use logger.

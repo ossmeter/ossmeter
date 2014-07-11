@@ -35,6 +35,10 @@ public class MetricVisualisation {
 		this.metricId = metricSpecification.path("metricid").textValue();
 	}
 	
+	public JsonNode getVis() {
+		return vis;
+	}
+	
 	public JsonNode visualise(DB db) {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode visualisation = mapper.createObjectNode();

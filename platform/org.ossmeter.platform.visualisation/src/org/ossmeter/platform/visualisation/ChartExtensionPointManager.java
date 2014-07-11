@@ -30,6 +30,10 @@ public class ChartExtensionPointManager {
 	}
 	
 	public Chart findChartByType(String type) {
+		if (chartMap == null) {
+			getRegisteredCharts();
+		}
+		
 		return chartMap.get(type);
 	}
 	
@@ -70,5 +74,4 @@ public class ChartExtensionPointManager {
 		ObjectMapper mapper = new ObjectMapper();
 		return mapper.readTree(url);
 	}
-	
 }
