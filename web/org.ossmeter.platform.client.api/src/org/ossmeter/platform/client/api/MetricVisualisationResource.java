@@ -42,6 +42,7 @@ public class MetricVisualisationResource extends ServerResource {
 		}
 		
 		MetricVisualisationExtensionPointManager manager = MetricVisualisationExtensionPointManager.getInstance();
+		manager.getRegisteredVisualisations();
 		MetricVisualisation vis = manager.findVisualisationById(metricName);
 		
 		if (vis == null) {
