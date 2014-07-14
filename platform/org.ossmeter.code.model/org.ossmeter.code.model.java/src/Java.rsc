@@ -5,7 +5,7 @@ import lang::java::m3::AST;
 import util::FileSystem;
 import org::ossmeter::metricprovider::ProjectDelta;
 
-@M3Extractor
+@M3Extractor{java()}
 @memo
 rel[Language, loc, M3] javaM3(loc project, ProjectDelta delta, map[loc repos,loc folders] checkouts, map[loc,loc] scratch) {
   println("extracting Java M3 for <project>");
@@ -20,7 +20,7 @@ rel[Language, loc, M3] javaM3(loc project, ProjectDelta delta, map[loc repos,loc
   return {<java(), f, createM3FromFile(f)> | c <- checkouts, f <- find(c, "java")};
 }
 
-@ASTExtractor
+@ASTExtractor{java()}
 @memo
 rel[Language, loc, AST] javaAST(loc project, ProjectDelta delta, map[loc repos,loc folders] checkouts, map[loc,loc] scratch) {
   println("extracting Java ASTs for <project>");

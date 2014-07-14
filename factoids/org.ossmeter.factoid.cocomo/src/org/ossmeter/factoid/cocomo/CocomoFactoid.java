@@ -64,12 +64,6 @@ public class CocomoFactoid extends AbstractFactoidMetricProvider{
 		} else {
 			factoid.setStars(StarRating.FOUR);
 		}
-		
-		System.err.println("effort applied: " + effortApplied);
-		System.err.println("dev time: " + devTime);
-		System.err.println("people required: " + peopleRequired);
-		System.err.println("years: " + years);
-		
 	}
 
 }

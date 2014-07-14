@@ -28,7 +28,9 @@ import org.eclipse.imp.pdb.facts.IValueFactory;
 import org.eclipse.imp.pdb.facts.exceptions.FactTypeUseException;
 import org.eclipse.imp.pdb.facts.io.StandardTextReader;
 import org.eclipse.imp.pdb.facts.type.Type;
+import org.eclipse.imp.pdb.facts.type.TypeStore;
 import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleException;
 import org.osgi.framework.wiring.BundleWire;
 import org.osgi.framework.wiring.BundleWiring;
 import org.ossmeter.platform.IMetricProvider;
@@ -44,10 +46,12 @@ import org.rascalmpl.interpreter.result.Result;
 import org.rascalmpl.values.ValueFactoryFactory;
 
 public class RascalManager {
+	private static final String EXTRACTOR_TAG_AST = "ASTExtractor";
+	private static final String EXTRACTOR_TAG_M3 = "M3Extractor";
 	private final static IValueFactory VF = ValueFactoryFactory.getValueFactory();
 	private final Evaluator eval = createEvaluator();
 
-	private final Set<Bundle> metricBundles = new HashSet<>();
+	private final Set<Bundle> registeredBundles = new HashSet<>();
 
 	
 	// thread safe way of keeping a static instance
@@ -60,13 +64,18 @@ public class RascalManager {
 		public AbstractFunction function;
 		public IValue language;
 		
-		public Extractor(AbstractFunction fun, ModuleEnvironment env, IValue lang) {
+		public Extractor(AbstractFunction fun, ModuleEnvironment env, IValue lang) throws Exception {
+			if (lang == null || (lang instanceof IString && ((IString)lang).length() == 0)) {
+				throw new Exception("Invalid language");
+			}
+			
 			function = fun;
 			module = env;
 			language = lang;
 			
 			if (!fun.hasTag("memo")) {
-				throw new IllegalArgumentException("Rascal M3 extractor functions should have an @memo tag.");
+				// TODO enable once we can distinguish between tags and annotations
+				//throw new IllegalArgumentException("Rascal M3 extractor functions should have an @memo tag.");
 			}
 		}
 		
@@ -126,11 +135,28 @@ public class RascalManager {
 	}
 
 	private void configureRascalPath(Evaluator evaluator, Bundle bundle) {
+		if (registeredBundles.contains(bundle)) {
+			return;
+		}
+		
+		registeredBundles.add(bundle);
+		
 		try {
-			List<String> roots = new RascalBundleManifest()
-					.getSourceRoots(bundle);
-
-			for (String root : roots) {
+			RascalBundleManifest mf = new RascalBundleManifest();
+			
+			List<String> dependencies = mf.getRequiredBundles(bundle);
+			if (dependencies != null) {
+				for (String bundleName : dependencies) {
+					Bundle dep = Platform.getBundle(bundleName);
+					if (dep != null) {
+						configureRascalPath(evaluator, dep);
+					} else {
+						throw new BundleException("Bundle " + bundleName + " not found.");
+					}
+				}
+			}
+			
+			for (String root : mf.getSourceRoots(bundle)) {
 				evaluator.addRascalSearchPath(bundle.getResource(root).toURI());
 			}
 
@@ -213,13 +239,7 @@ public class RascalManager {
 		return result.toString();
 	}
 
-	public void registerRascalMetricProvider(Bundle bundle) {
-		configureRascalPath(eval, bundle);
-		metricBundles.add(bundle);
-	}
-	
-	private void addMetricProviders(Bundle bundle,
-			List<IMetricProvider> providers) {
+	private void addMetricProviders(Bundle bundle, List<IMetricProvider> providers, Set<IValue> extractedLanguages) {
 		RascalBundleManifest mf = new RascalBundleManifest();
 		String moduleName = mf.getMainModule(bundle);
 
@@ -235,11 +255,17 @@ public class RascalManager {
 			for (final AbstractFunction f : func.getSecond()) {
 				// TODO: add some type checking on the arguments
 				if (f.hasTag("metric")) {
-					String metricName = f.getTag("metric");
+					String metricName = getTag(f, "metric");
 					String metricId = bundle.getSymbolicName() + "." + metricName;
-					String friendlyName = f.getTag("friendlyName");
-					String description = f.getTag("doc");
+					String friendlyName = getTag(f, "friendlyName");
+					String description = getTag(f, "doc");
+					IValue language = f.getTag("appliesTo");
 					Map<String,String> uses = getUses(f);
+					
+					if (!extractedLanguages.contains(language)) {
+						eval.getStdOut().println("Warning: metric " + f + " not loaded, no extractors available for language " + language);
+						continue;
+					}
 
 					if (f.getReturnType().toString().equals("Factoid")) {
 						providers.add(new RascalFactoidProvider(bundle.getSymbolicName(), metricId, funcName, friendlyName, description, f, uses));
@@ -257,14 +283,22 @@ public class RascalManager {
 			}
 		}
 	}
+
+	private String getTag(final AbstractFunction f, String name) {
+		IValue val = f.getTag(name);
+		if (val instanceof IString) {
+			return ((IString) val).getValue();
+		} else {
+			return val.toString();
+		}
+	}
 	
 	private Map<String,String> getUses(AbstractFunction f) {
 		try {
-			StandardTextReader reader = new StandardTextReader();
 			Map<String,String> map = new HashMap<>();
 			
 			if (f.hasTag("uses")) {
-				IMap m = (IMap) reader.read(VF, new StringReader(f.getTag("uses")));
+				IMap m = (IMap) f.getTag("uses");
 
 				for (IValue key : m) {
 					map.put(((IString) key).getValue(), ((IString) m.get(key)).getValue());
@@ -272,7 +306,7 @@ public class RascalManager {
 				
 				return map;
 			}
-		} catch (FactTypeUseException | IOException e) {
+		} catch (FactTypeUseException e) {
 			Rasctivator.logException("could not parse uses tag", e);
 		}
 		
@@ -286,32 +320,60 @@ public class RascalManager {
 	public Set<Extractor> getASTExtractors() {
 		return astExtractors;
 	}
+	
+	public TypeStore getExtractedTypes() {
+		TypeStore store = new TypeStore();
+		
+		for (Extractor e : m3Extractors) {
+			store.extendStore(e.function.getEnv().getStore());
+		}
+		for (Extractor e : astExtractors) {
+			store.extendStore(e.function.getEnv().getStore());
+		}
+		
+		return store; 
+	}
 
 	public synchronized List<IMetricProvider> getMetricProviders() {
 		List<IMetricProvider> providers = new LinkedList<>();
 		
-		IExtensionPoint extensionPoint = Platform.getExtensionRegistry()
-				.getExtensionPoint("ossmeter.rascal.metricprovider");
-
+		Set<Bundle> extractorBundles = new HashSet<>();
+		IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint("ossmeter.rascal.extractor");
 		if (extensionPoint != null) {
 			for (IExtension element : extensionPoint.getExtensions()) {
 				String name = element.getContributor().getName();
 				Bundle bundle = Platform.getBundle(name);
-				registerRascalMetricProvider(bundle);
+				configureRascalPath(eval, bundle);
+				extractorBundles.add(bundle);
 			}
 		}
+		
+		for (Bundle bundle : extractorBundles) {
+			addExtractors(bundle);
+		}
+		
+		Set<IValue> extractedLanguages = new HashSet<>();
+		for (Extractor e : m3Extractors) {
+			extractedLanguages.add(e.language);
+		}
+		for (Extractor e : astExtractors) {
+			extractedLanguages.add(e.language);
+		}
 
-		extensionPoint = Platform.getExtensionRegistry().getExtensionPoint("ossmeter.rascal.extractor");
+		Set<Bundle> metricBundles = new HashSet<>();
+		extensionPoint = Platform.getExtensionRegistry().getExtensionPoint("ossmeter.rascal.metricprovider");
+		
 		if (extensionPoint != null) {
 			for (IExtension element : extensionPoint.getExtensions()) {
 				String name = element.getContributor().getName();
 				Bundle bundle = Platform.getBundle(name);
-				registerExtractor(bundle);
+				configureRascalPath(eval, bundle);
+				metricBundles.add(bundle);
 			}
 		}
 
 		for (Bundle bundle : metricBundles) {
-			addMetricProviders(bundle, providers);
+			addMetricProviders(bundle, providers, extractedLanguages);
 		}
 
 		return providers;
@@ -322,9 +384,7 @@ public class RascalManager {
 		eval.call("initialize", MODULE, null, parameters);
 	}
 
-	
-	
-	public void registerExtractor(Bundle bundle) {
+	public void addExtractors(Bundle bundle) {
 		configureRascalPath(eval, bundle);
 		RascalBundleManifest mf = new RascalBundleManifest();
 		String moduleName = mf.getMainModule(bundle);
@@ -337,17 +397,17 @@ public class RascalManager {
 
 		for (Pair<String, List<AbstractFunction>> func : module.getFunctions()) {
 			for (final AbstractFunction f : func.getSecond()) {
-				if (f.hasTag("M3Extractor")) {
-					m3Extractors.add(new Extractor(f, module, null));
-				} else if (f.hasTag("ASTExtractor")) {
-					astExtractors.add(new Extractor(f, module, null));								
+				try {
+					if (f.hasTag(EXTRACTOR_TAG_M3)) {
+						m3Extractors.add(new Extractor(f, module, f.getTag(EXTRACTOR_TAG_M3)));
+					} else if (f.hasTag(EXTRACTOR_TAG_AST)) {
+						astExtractors.add(new Extractor(f, module, f.getTag(EXTRACTOR_TAG_AST)));								
+					}
+				} catch (Exception e) {
+					eval.getStdErr().println("Error while loading extractor " + f.toString());
+					e.printStackTrace(eval.getStdErr());
 				}
 			}
 		}
 	}
-
-	
-	
-	
-	
 }

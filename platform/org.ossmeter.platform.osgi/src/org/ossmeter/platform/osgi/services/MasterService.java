@@ -1,6 +1,5 @@
 package org.ossmeter.platform.osgi.services;
 
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -11,7 +10,6 @@ import org.ossmeter.platform.osgi.executors.SchedulerStatus;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.SchedulingInformation;
 import org.ossmeter.repository.model.SchedulingInformationCollection;
-import org.ossmeter.repository.model.WorkerNode;
 
 import com.mongodb.Mongo;
 
@@ -49,7 +47,7 @@ public class MasterService implements IMasterService {
 		} else {
 			schedulingInformation = schedCol.first();
 		}
-		schedulingInformation.setMasterNodeIdentifier("Master Node");// TODO: InetAddress.getLocalHost().getHostAddress()); // Causes exceptions on some machines.
+		schedulingInformation.setIsMaster(true);
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 		
 		// Now start scheduling
@@ -64,7 +62,10 @@ public class MasterService implements IMasterService {
 						List<String> projects = new ArrayList<String>();
 						
 						while (it.hasNext()) {
-							projects.add(it.next().getShortName());
+							Project next = it.next();
+							if (next.getMonitor()) {
+								projects.add(next.getShortName());
+							}
 							if (projects.size() >= 3) break;
 						}
 						
@@ -85,17 +86,17 @@ public class MasterService implements IMasterService {
 								worker.queueProjects(projects);
 								
 								// Update DB with load
-								WorkerNode wn = null;
-								for (WorkerNode n : platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().first().getNodes()) {
-									if (n.getIdentifier().equals(worker.getIdentifier())) { 
+								SchedulingInformation wn = null;
+								for (SchedulingInformation n : platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation()) {
+									if (n.getWorkerIdentifier().equals(worker.getIdentifier())) { 
 										wn = n;
 										break;
 									}
 								}
 								if (wn == null) {
-									wn = new WorkerNode();
-									wn.setIdentifier(worker.getIdentifier());
-									platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().first().getNodes().add(wn);
+									wn = new SchedulingInformation();
+									wn.setWorkerIdentifier(worker.getIdentifier());
+									platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().add(wn);
 								}
 								wn.getCurrentLoad().clear();
 								wn.getCurrentLoad().addAll(projects);

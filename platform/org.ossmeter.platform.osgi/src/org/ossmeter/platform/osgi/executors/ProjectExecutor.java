@@ -80,6 +80,7 @@ public class ProjectExecutor implements Runnable {
 		List<IMetricProvider> factoids = extractFactoidProviders(metricProviders);
 		
 		logger.info("Creating metric branches.");
+		// FIXME: Need to check that no metrics depend on factoids!
 		List<List<IMetricProvider>> metricBranches = splitIntoBranches(metricProviders);
 		logger.info("Created metric branches.");
 		
@@ -132,6 +133,7 @@ public class ProjectExecutor implements Runnable {
 			// Now fun the factoids: 
 			// FIXME: Should factoids only run on the last date..? It depends on whether factoid results can 
 			// depend on other factoids...
+			// TODO: Should check if in error state before and after factoids
 			if (factoids.size() > 0) {
 				logger.info("Executing factoids.");
 				MetricListExecutor mExe = new MetricListExecutor(platform, project, delta, date);

@@ -12,8 +12,12 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.repository.model.cc.nntp;bundle-version="1.0.0",
  org.ossmeter.repository.model.vcs.cvs;bundle-version="1.0.0",
  org.ossmeter.repository.model.vcs.git;bundle-version="1.0.0",
- org.ossmeter.repository.model.vcs.svn;bundle-version="1.0.0"
+ org.ossmeter.repository.model.vcs.svn;bundle-version="1.0.0",
+ org.ossmeter.repository.model.importerdependencies
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Import-Package: org.ossmeter.platform
+Import-Package: org.jsoup;version="1.6.1",
+ org.jsoup.nodes;version="1.6.1",
+ org.jsoup.select;version="1.6.1",
+ org.ossmeter.platform
 Export-Package: org.ossmeter.repository.model.googlecode.importer

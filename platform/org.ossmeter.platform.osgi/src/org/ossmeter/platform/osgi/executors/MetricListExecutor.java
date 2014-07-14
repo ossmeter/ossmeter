@@ -71,14 +71,15 @@ public class MetricListExecutor implements Runnable {
 				project.getExecutionInformation().getMetricProviderData().add(mpd);
 				mpd.setMetricProviderId(m.getIdentifier());
 				mpd.setType(type);
+				platform.getProjectRepositoryManager().getProjectRepository().sync();
 			}
 			
 			try {
 				Date lastExec = new Date(mpd.getLastExecuted());
-				
+				System.out.println(lastExec + " < " + date);
 				// Check we haven't already executed the MP for this day.
-				if (date.compareTo(lastExec) > 1) {
-					logger.warn("Metric provider '" + m.getShortIdentifier() + "' has been executed for this date already. Ignoring.");
+				if (date.compareTo(lastExec) < 0) {
+					logger.warn("Metric provider '" + m.getIdentifier() + "' has been executed for this date already. Ignoring.");
 					continue;
 				}
 			} catch (ParseException e1) {
@@ -161,7 +162,7 @@ public class MetricListExecutor implements Runnable {
 		while (it.hasNext()) {
 			mp = it.next();
 			if (mp == null) continue; //FIXME: intermittent bug adds nulls
-			if (mp.getMetricProviderId().equals(iProvider.getShortIdentifier())) {
+			if (mp.getMetricProviderId().equals(iProvider.getIdentifier())) {
 				return mp;
 			}
 		}

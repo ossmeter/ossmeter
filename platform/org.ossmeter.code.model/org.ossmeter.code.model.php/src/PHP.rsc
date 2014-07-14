@@ -9,16 +9,16 @@ import org::ossmeter::metricprovider::ProjectDelta;
 
 import IO;
 
-@M3Extractor
+@M3Extractor{php()}
 @memo
-public rel[Language, loc, M3] extractM3sPHP(loc project, ProjectDelta delta, map[loc repos,loc folders] checkouts, map[loc,loc] scratch)
+public rel[Language, loc, M3] extractM3sPHP(loc project, ProjectDelta delta, map[loc repos, loc folders] checkouts, map[loc, loc] scratch)
 {
-	return { <php(), file, createM3forScript(file, script)> | <php(), file, phpAST(script)> <- extractASTsPHP(project, roots, delta) };
+	return { <php(), file, createM3forScript(file, script)> | <php(), file, phpAST(script)> <- extractASTsPHP(project, delta, checkouts, scratch) };
 }
 
-@ASTExtractor
+@ASTExtractor{php()}
 @memo
-public rel[Language, loc, AST] extractASTsPHP(loc project, ProjectDelta delta, map[loc repos,loc folders] checkouts, map[loc,loc] scratch)
+public rel[Language, loc, AST] extractASTsPHP(loc project, ProjectDelta delta, map[loc repos, loc folders] checkouts, map[loc, loc] scratch)
 {
 	rel[Language, loc, AST] result = {};
 	

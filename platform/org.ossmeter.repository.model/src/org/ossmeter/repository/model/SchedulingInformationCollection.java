@@ -8,12 +8,29 @@ public class SchedulingInformationCollection extends PongoCollection<SchedulingI
 	
 	public SchedulingInformationCollection(DBCollection dbCollection) {
 		super(dbCollection);
+		createIndex("workerIdentifier");
 	}
 	
 	public Iterable<SchedulingInformation> findById(String id) {
 		return new IteratorIterable<SchedulingInformation>(new PongoCursorIterator<SchedulingInformation>(this, dbCollection.find(new BasicDBObject("_id", id))));
 	}
 	
+	public Iterable<SchedulingInformation> findByWorkerIdentifier(String q) {
+		return new IteratorIterable<SchedulingInformation>(new PongoCursorIterator<SchedulingInformation>(this, dbCollection.find(new BasicDBObject("workerIdentifier", q + ""))));
+	}
+	
+	public SchedulingInformation findOneByWorkerIdentifier(String q) {
+		SchedulingInformation schedulingInformation = (SchedulingInformation) PongoFactory.getInstance().createPongo(dbCollection.findOne(new BasicDBObject("workerIdentifier", q + "")));
+		if (schedulingInformation != null) {
+			schedulingInformation.setPongoCollection(this);
+		}
+		return schedulingInformation;
+	}
+	
+
+	public long countByWorkerIdentifier(String q) {
+		return dbCollection.count(new BasicDBObject("workerIdentifier", q + ""));
+	}
 	
 	@Override
 	public Iterator<SchedulingInformation> iterator() {
