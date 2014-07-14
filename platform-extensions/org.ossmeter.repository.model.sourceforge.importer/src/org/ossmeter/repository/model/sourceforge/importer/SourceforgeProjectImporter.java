@@ -191,7 +191,7 @@ public class SourceforgeProjectImporter {
 		
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 		
-		ProjectCollection projects = platform.getProjectRepositoryManager().getProjectRepository().getProjects();
+		Iterable<Project> projects = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(projectId);
 		Iterator<Project> iprojects = projects.iterator();
 		SourceForgeProject project = null;
 		Project projectTemp = null;

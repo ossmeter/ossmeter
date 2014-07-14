@@ -39,6 +39,8 @@ public class App implements IApplication {
 			p.getExecutionInformation().setMonitor(false);
 		}
 		
+		mongo.close();
+		
 		// Start the application
 		return  new OssmeterApplication().start(context);
 	}

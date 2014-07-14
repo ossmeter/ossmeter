@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.JSONArray;
@@ -503,14 +502,19 @@ public class RedmineImporter {
 		RedmineProject project = null;
 	
 		Boolean projectToBeUpdated = false;
-		Project projectTemp = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByName(longName);
-		if (projectTemp != null)
-		{
-			if (projectTemp instanceof RedmineProject) 
-			{
+		Project projectTemp = null;
+		Iterable<Project> pl = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByName(longName);
+		Iterator<Project> iprojects = pl.iterator();
+		
+		
+		while (iprojects.hasNext()) {
+			projectTemp = iprojects.next();
+			if (projectTemp instanceof RedmineProject) {
 				project = (RedmineProject)projectTemp;
 				projectToBeUpdated = true;
-				System.out.println("-----> project " + projectId + " already in the repository. Its metadata will be updated.");	
+				System.out.println("-----> project " + projectId + " already in the repository. Its metadata will be updated.");
+				break;
+					
 			}
 		}
 		

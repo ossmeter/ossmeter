@@ -1,28 +1,23 @@
 module Generic
 
 import util::FileSystem;
-import analysis::m3::Core;
-import analysis::m3::AST;
+extend analysis::m3::Core;
+extend analysis::m3::AST;
 import org::ossmeter::metricprovider::ProjectDelta;
 
 import IO;
 import List;
 import String;
- 
-set[str] blackListedExtensions = {};
 
-void setBlackListedExtensions(set[str] extensions) {
-	  blackListedExtensions += extensions;
-	}
 
-@M3Extractor
+@M3Extractor{generic()}
 @memo
 rel[Language, loc, M3] genericM3(loc project, ProjectDelta delta, map[loc repos,loc folders] checkouts, map[loc,loc] scratch) {
   //if (file.extension in blackListedExtensions) {
   //}
   rel[Language, loc, M3] result = {};
   folders = checkouts<folders>;
-  for (folder <- folders, file <- files(folder)) {  
+  for (folder <- folders, file <- visibleFiles(folder)) { 
     m = emptyM3(file);
     
     try {
@@ -42,8 +37,8 @@ rel[Language, loc, M3] genericM3(loc project, ProjectDelta delta, map[loc repos,
   return result;
 }
 
-@ASTExtractor
+@ASTExtractor{generic()}
 @memo
 rel[Language, loc, AST] genericAST(loc project, ProjectDelta delta, map[loc repos,loc folders] checkouts, map[loc,loc] scratch) {
-	return {<generic(), file, lines(readFileLines(file))> | folder <- checkouts<folders>, file <- files(folder)};
+	return {<generic(), file, lines(readFileLines(file))> | folder <- checkouts<folders>, file <- visibleFiles(folder)};
 }

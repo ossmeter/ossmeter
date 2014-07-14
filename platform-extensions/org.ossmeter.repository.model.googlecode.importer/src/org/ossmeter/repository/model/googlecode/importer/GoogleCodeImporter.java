@@ -10,7 +10,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-
 import org.eclipse.ui.progress.PendingUpdateAdapter;
 import org.jsoup.Jsoup;
 import org.ossmeter.repository.model.License;
@@ -42,29 +41,32 @@ public class GoogleCodeImporter {
 		org.jsoup.nodes.Element content;
 		
 		String URL_PROJECT = projectUrl;
-		GoogleCodeProject project = null;
+		GoogleCodeProject project = new GoogleCodeProject();;
 		Boolean projectToBeUpdated = false;
 		
 		try {
 			doc = Jsoup.connect(URL_PROJECT).timeout(10000).get();
 			Element e = doc.getElementById("pname");
 
-			Project projectTemp = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByName(e.text());
+			Project projectTemp = null;
 			
-			System.out.println("---> Importing project " + projectUrl);
-			if (projectTemp != null)
-			{
-				if (projectTemp instanceof GoogleCodeProject) 
-				{
-					project = (GoogleCodeProject)projectTemp;
+			
+			Iterable<Project> pl = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(e.text());
+			Iterator<Project> iprojects = pl.iterator();
+			GoogleCodeProject p = null;
+			
+			while (iprojects.hasNext()) {
+				projectTemp = iprojects.next();
+				if (projectTemp instanceof GoogleCodeProject) {
+					p = (GoogleCodeProject)projectTemp;
 					projectToBeUpdated = true;
-					System.out.println("-----> project " + projectUrl + " already in the repository. Its metadata will be updated.");	
+					System.out.println("-----> project " + e.text() + " already in the repository. Its metadata will be updated.");
+					break;
+						
 				}
 			}
-			if (!projectToBeUpdated)  {
-				project = new GoogleCodeProject();
-				// Clear containments to be updated	
-			}
+			
+						
 			
 			project.getCommunicationChannels().clear();
 			project.getVcsRepositories().clear();	

@@ -4,15 +4,22 @@ extend lang::php::m3::Core;
 import lang::php::m3::Uses;
 import lang::php::stats::Stats;
 
+import util::Math;
+
 @metric{StaticNameResolutionHistogram}
 @doc{Histogram counting type names that could be resolved to a certain number of declarations}
 @friendlyName{StaticNameResolutionHistogram}
 @appliesTo{php()}
-map[int, int] getNameResolutionHistogram(rel[Language, loc, M3] m3s = ())
+map[int, int] getNameResolutionHistogram(rel[Language, loc, M3] m3s = {})
 {
+	if (m3s == {})
+	{
+		return ();
+	}
+
 	models = { m | <php(), _, m> <- m3s };
 
-	m3 = composeM3s(|project:///|, models);
+	M3 m3 = composeM3(|project:///|, models);
 
 	m3@uses = { <l, n> | <l, n> <- m3@uses, n.scheme in ["php+class", "php+interface", "php+trait"] };
 
@@ -71,14 +78,14 @@ private int sumMetrics(rel[Language, loc, AST] asts, set[str] metricNames)
 {
 	counts = getCounts(asts);
 
-	return sum([counts[n] | n <- metricNames]);
+	return toInt(sum([counts[n] | n <- metricNames]));
 }
 
 @metric{numVarVar}
 @doc{number of variable variable references}
 @friendlyName{numVarVar}
 @appliesTo{php()}
-public int getNumberOfVarVarUses(rel[Language, loc, AST] asts = ())
+public int getNumberOfVarVarUses(rel[Language, loc, AST] asts = {})
 {
 	 return sumMetrics(asts, varVarMetrics);
 }
@@ -87,7 +94,7 @@ public int getNumberOfVarVarUses(rel[Language, loc, AST] asts = ())
 @doc{number of variable class references}
 @friendlyName{numVarClass}
 @appliesTo{php()}
-public int getNumberOfVarClassUses(rel[Language, loc, AST] asts = ())
+public int getNumberOfVarClassUses(rel[Language, loc, AST] asts = {})
 {
 	 return sumMetrics(asts, varClassMetrics);
 }
@@ -96,7 +103,7 @@ public int getNumberOfVarClassUses(rel[Language, loc, AST] asts = ())
 @doc{number of variable accesses to functions or methods}
 @friendlyName{numVarFunc}
 @appliesTo{php()}
-public int getNumberOfVarFuncUses(rel[Language, loc, AST] asts = ())
+public int getNumberOfVarFuncUses(rel[Language, loc, AST] asts = {})
 {
 	 return sumMetrics(asts, varFuncMetrics);
 }
@@ -105,7 +112,7 @@ public int getNumberOfVarFuncUses(rel[Language, loc, AST] asts = ())
 @doc{number of var args methods}
 @friendlyName{numVarArgs}
 @appliesTo{php()}
-public int getNumberOfVarArgsUses(rel[Language, loc, AST] asts = ())
+public int getNumberOfVarArgsUses(rel[Language, loc, AST] asts = {})
 {
 	 return sumMetrics(asts, varArgsMetrics);
 }
@@ -114,7 +121,7 @@ public int getNumberOfVarArgsUses(rel[Language, loc, AST] asts = ())
 @doc{number of variable includes}
 @friendlyName{numVarIncludes}
 @appliesTo{php()}
-public int getNumberOfVarIncludeUses(rel[Language, loc, AST] asts = ())
+public int getNumberOfVarIncludeUses(rel[Language, loc, AST] asts = {})
 {
 	 return sumMetrics(asts, varIncludeMetrics);
 }
@@ -123,7 +130,7 @@ public int getNumberOfVarIncludeUses(rel[Language, loc, AST] asts = ())
 @doc{number of overload uses}
 @friendlyName{numVarOverloads}
 @appliesTo{php()}
-public int getNumberOfOverloadUses(rel[Language, loc, AST] asts = ())
+public int getNumberOfOverloadUses(rel[Language, loc, AST] asts = {})
 {
 	 return sumMetrics(asts, overloadMetrics);
 }
@@ -132,7 +139,7 @@ public int getNumberOfOverloadUses(rel[Language, loc, AST] asts = ())
 @doc{number of variable label references}
 @friendlyName{numVarLabels}
 @appliesTo{php()}
-public int getNumberOfVarLabelUses(rel[Language, loc, AST] asts = ())
+public int getNumberOfVarLabelUses(rel[Language, loc, AST] asts = {})
 {
 	 return sumMetrics(asts, varLabelMetrics);
 }
@@ -141,7 +148,7 @@ public int getNumberOfVarLabelUses(rel[Language, loc, AST] asts = ())
 @doc{number of calls to eval}
 @friendlyName{numEvals}
 @appliesTo{php()}
-public int getNumberOfEvalCalls(rel[Language, loc, AST] asts = ())
+public int getNumberOfEvalCalls(rel[Language, loc, AST] asts = {})
 {
 	return (0 | it + 1 | <php(), _, ast> <- asts, /call(name(name(/eval/i)), _) <- ast);
 }

@@ -7,10 +7,11 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.ossmeter.repository.model.redmine;bundle-version="1.0.0",
  org.ossmeter.repository.model.vcs.cvs;bundle-version="1.0.0",
  org.ossmeter.repository.model.vcs.git;bundle-version="1.0.0",
- org.ossmeter.repository.model.vcs.svn;bundle-version="1.0.0"
+ org.ossmeter.repository.model.vcs.svn;bundle-version="1.0.0",
+ org.ossmeter.repository.model.importerdependencies
+Export-Package: org.ossmeter.repository.model.redmine.importer
 Import-Package: org.json.simple,
  org.jsoup;version="1.6.1",
  org.jsoup.nodes;version="1.6.1",
  org.jsoup.select;version="1.6.1",
  org.ossmeter.platform
-Export-Package: org.ossmeter.repository.model.redmine.importer
