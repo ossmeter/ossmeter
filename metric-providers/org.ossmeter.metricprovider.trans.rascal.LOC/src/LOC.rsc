@@ -36,3 +36,16 @@ real giniLOCOverFiles(rel[Language, loc, AST] asts = {}) {
   return giniLOC(countLoc(asts=asts));
 }
 
+
+@metric{locPerLanguage}
+@doc{physical lines of code per language}
+@friendlyName{Physical lines of code per language}
+@appliesTo{generic()}
+@uses{("genericLOC" :"genericLoc")}
+map[str, int] locPerLanguage(rel[Language, loc, AST] asts = {}, map[loc, int] genericLoc = ()) {
+  map[str, int] result = ();
+  for (<l, f, a> <- asts, l != generic()) {
+    result["<l>"]?0 += genericLoc[f];
+  }
+  return result;
+}
