@@ -7,6 +7,6 @@ abstract class BugTrackingSystem {
 @customize
 class JiraBugTrackingSystem extends BugTrackingSystem {
     attr String project;
-    attr String user;
+    attr String login;
     attr String password;
 }

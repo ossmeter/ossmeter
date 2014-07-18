@@ -67,7 +67,7 @@ public abstract class ExtendedJsonDeserialiser<T> extends JsonDeserializer<T> {
     }
 
     protected static String getText(JsonNode node, String field) {
-        JsonNode n = node.get(field);
+        JsonNode n = node.path(field);
         return processString(n, null);
     }
 

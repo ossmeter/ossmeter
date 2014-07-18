@@ -8,6 +8,7 @@ import org.joda.time.DateTime;
 public class GitHubIssueQuery {
     private static final String STATE_OPEN = "open";
     private static final String STATE_CLOSED = "closed";
+    private static final String STATE_ALL = "all";
 
     private DateTime since;
     private String user;
@@ -36,9 +37,14 @@ public class GitHubIssueQuery {
         return this;
     }
 
-    public GitHubIssueQuery setClosedStated() {
+    public GitHubIssueQuery setClosedState() {
         state = STATE_CLOSED;
         return this;
+    }
+    
+    public GitHubIssueQuery setAllState() {
+    	state = STATE_ALL;
+    	return this;
     }
     
     public GitHubIssueQuery setAscendingDirection() {

@@ -1,10 +1,9 @@
 package org.ossmeter.repository.model.jira;
 
 import com.mongodb.*;
-
 import java.util.*;
-
 import com.googlecode.pongo.runtime.*;
+import com.googlecode.pongo.runtime.querying.*;
 
 // protected region custom-imports on begin
 // protected region custom-imports end
@@ -27,23 +26,32 @@ public class JiraBugTrackingSystem extends org.ossmeter.repository.model.BugTrac
 	
 	public JiraBugTrackingSystem() { 
 		super();
+		super.setSuperTypes("org.ossmeter.repository.model.jira.BugTrackingSystem");
+		PROJECT.setOwningType("org.ossmeter.repository.model.jira.JiraBugTrackingSystem");
+		LOGIN.setOwningType("org.ossmeter.repository.model.jira.JiraBugTrackingSystem");
+		PASSWORD.setOwningType("org.ossmeter.repository.model.jira.JiraBugTrackingSystem");
 	}
+	
+	public static StringQueryProducer PROJECT = new StringQueryProducer("project"); 
+	public static StringQueryProducer LOGIN = new StringQueryProducer("login"); 
+	public static StringQueryProducer PASSWORD = new StringQueryProducer("password"); 
+	
 	
 	public String getProject() {
 		return parseString(dbObject.get("project")+"", "");
 	}
 	
 	public JiraBugTrackingSystem setProject(String project) {
-		dbObject.put("project", project + "");
+		dbObject.put("project", project);
 		notifyChanged();
 		return this;
 	}
-	public String getUser() {
-		return parseString(dbObject.get("user")+"", "");
+	public String getLogin() {
+		return parseString(dbObject.get("login")+"", "");
 	}
 	
-	public JiraBugTrackingSystem setUser(String user) {
-		dbObject.put("user", user + "");
+	public JiraBugTrackingSystem setLogin(String login) {
+		dbObject.put("login", login);
 		notifyChanged();
 		return this;
 	}
@@ -52,12 +60,11 @@ public class JiraBugTrackingSystem extends org.ossmeter.repository.model.BugTrac
 	}
 	
 	public JiraBugTrackingSystem setPassword(String password) {
-		dbObject.put("password", password + "");
+		dbObject.put("password", password);
 		notifyChanged();
 		return this;
 	}
-
-   
+	
 	
 	
 	

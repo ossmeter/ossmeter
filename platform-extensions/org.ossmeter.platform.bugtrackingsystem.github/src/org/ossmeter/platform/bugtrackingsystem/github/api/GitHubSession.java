@@ -48,12 +48,8 @@ public class GitHubSession {
         github = new GitHubClient(url);
     }
 
-    public void login(String user, String password) {
+    public void setCredentials(String user, String password) {
         github.setCredentials(user, password);
-    }
-
-    public void login(String oAuth2Token) {
-        github.setOAuth2Token(oAuth2Token);
     }
 
     public PageIterator<Repository> getAllRepositories() {

@@ -12,171 +12,178 @@ import org.ossmeter.repository.model.BugTrackingSystem;
 
 public class BugTrackerItemCache<T, K> {
 
-    public static abstract class Provider<T, K> {
-        public abstract Iterable<T> getItems(Date after, Date before,
-                BugTrackingSystem bugTracker) throws Exception;
+	public static abstract class Provider<T, K> {
+		public abstract Iterator<T> getItems(Date after, Date before,
+				BugTrackingSystem bugTracker) throws Exception;
 
-        public abstract boolean changedOnDate(T item, Date date,
-                BugTrackingSystem bugTracker);
+		public abstract boolean changedOnDate(T item, Date date,
+				BugTrackingSystem bugTracker);
 
-        public abstract boolean changedSinceDate(T item, Date date,
-                BugTrackingSystem bugTracker);
+		public abstract boolean changedSinceDate(T item, Date date,
+				BugTrackingSystem bugTracker);
 
-        public abstract K getKey(T item);
+		public abstract K getKey(T item);
 
-        /**
-         * returns true if one of dates matches date.
-         * 
-         * @param date
-         * @param dates
-         * @return
-         */
-        public static boolean findMatchOnDate(Date date, Date... dates) {
-            for (Date d : dates) {
-                if (DateUtils.isSameDay(date, d)) {
-                    return true;
-                }
-            }
+		public abstract void process(T item, BugTrackingSystem bugTracker);
 
-            return false;
-        }
+		/**
+		 * returns true if one of dates matches date.
+		 * 
+		 * @param date
+		 * @param dates
+		 * @return
+		 */
+		public static boolean findMatchOnDate(Date date, Date... dates) {
+			for (Date d : dates) {
+				if (DateUtils.isSameDay(date, d)) {
+					return true;
+				}
+			}
 
-        /**
-         * returns true if one of dates occurred after date.
-         * 
-         * @param date
-         * @param dates
-         * @return
-         */
-        public static boolean findMatchSinceDate(Date date, Date... dates) {
-            for (Date d : dates) {
-                if (d.after(date)) {
-                    return true;
-                }
-            }
+			return false;
+		}
 
-            return false;
-        }
+		/**
+		 * returns true if one of dates occurred after date.
+		 * 
+		 * @param date
+		 * @param dates
+		 * @return
+		 */
+		public static boolean findMatchSinceDate(Date date, Date... dates) {
+			for (Date d : dates) {
+				if (d.after(date)) {
+					return true;
+				}
+			}
 
-    }
+			return false;
+		}
 
-    protected Provider<T, K> provider;
+	}
 
-    // TODO Could move to Google Guava Caches, if we want a smarter strategy to
-    // conserve memory. For example, maybe purge cache after 24 hours?
-    private Date latestDate;
-    private Date earliestDate;
-    private int minUpdateIntervalMillis = 600000;
-    private BugTrackingSystem bugTracker;
-    private Map<K, T> cache = new HashMap<K, T>();
+	protected Provider<T, K> provider;
 
-    public BugTrackerItemCache(BugTrackingSystem bugTracker,
-            Provider<T, K> provider) {
-        this.bugTracker = bugTracker;
-        this.provider = provider;
-    }
+	// TODO Could move to Google Guava Caches, if we want a smarter strategy to
+	// conserve memory. For example, maybe purge cache after 24 hours?
+	private Date latestDate;
+	private Date earliestDate;
+	private int minUpdateIntervalMillis = 600000;
+	private BugTrackingSystem bugTracker;
+	private Map<K, T> cache = new HashMap<K, T>();
 
-    public BugTrackerItemCache(BugTrackingSystem bugTracker,
-            Provider<T, K> provider, int minUpdateIntervalSecs) {
-        this.bugTracker = bugTracker;
-        this.provider = provider;
-        this.minUpdateIntervalMillis = minUpdateIntervalSecs * 1000;
-    }
+	public BugTrackerItemCache(BugTrackingSystem bugTracker,
+			Provider<T, K> provider) {
+		this.bugTracker = bugTracker;
+		this.provider = provider;
+	}
 
-    public Iterable<T> getItemsOnDate(Date date) throws Exception {
-        update(date);
-        return new Items(date, false);
-    }
+	public BugTrackerItemCache(BugTrackingSystem bugTracker,
+			Provider<T, K> provider, int minUpdateIntervalSecs) {
+		this.bugTracker = bugTracker;
+		this.provider = provider;
+		this.minUpdateIntervalMillis = minUpdateIntervalSecs * 1000;
+	}
 
-    public Iterable<T> getItemsAfterDate(Date date) throws Exception {
-        update(date);
-        return new Items(date, true);
-    }
+	public Iterable<T> getItemsOnDate(Date date) throws Exception {
+		update(date);
+		return new Items(date, false);
+	}
 
-    private void update(Date date) throws Exception {
-        Date now = Calendar.getInstance().getTime();
+	public Iterable<T> getItemsAfterDate(Date date) throws Exception {
+		update(date);
+		return new Items(date, true);
+	}
 
-        if (null == latestDate) {
-            Iterable<T> items = provider.getItems(date, null, bugTracker);
-            cacheItems(items);
-            earliestDate = date;
-            latestDate = now;
-        } else if (new Interval(latestDate.getTime(), now.getTime())
-                .toDurationMillis() > minUpdateIntervalMillis) {
-            Iterable<T> items = provider.getItems(latestDate, null, bugTracker);
-            cacheItems(items);
-            latestDate = now;
-        }
+	private void update(Date date) throws Exception {
+		Date now = Calendar.getInstance().getTime();
 
-        if (date.before(earliestDate)) {
-            Iterable<T> items = provider.getItems(date, earliestDate,
-                    bugTracker);
-            cacheItems(items);
-            earliestDate = date;
-        }
-    }
+		// By passing in 'null' as the value to 'after' in provider.getItems(),
+		// we will possibly reduce the number of web service calls (this is
+		// certainly the case for the GitHub implementation).
+		if (null == latestDate) {
+			Iterator<T> items = provider.getItems(date, null, bugTracker);
+			cacheItems(items);
+			earliestDate = date;
+			latestDate = now;
+		} else if (new Interval(latestDate.getTime(), now.getTime())
+				.toDurationMillis() > minUpdateIntervalMillis) {
+			Iterator<T> items = provider.getItems(latestDate, null, bugTracker);
+			cacheItems(items);
+			latestDate = now;
+		}
 
-    private void cacheItems(Iterable<T> items) {
-        for (T item : items) {
-            // Will automatically overwrite any existing representation of the
-            // item
-            cache.put(provider.getKey(item), item);
-        }
-    }
+		if (date.before(earliestDate)) {
+			Iterator<T> items = provider.getItems(date, earliestDate,
+					bugTracker);
+			cacheItems(items);
+			earliestDate = date;
+		}
+	}
 
-    private class Items implements Iterable<T> {
-        private Date date;
-        private boolean itemsAfterDate;
+	private void cacheItems(Iterator<T> itemsIterator) {
+		while (itemsIterator.hasNext()) {
+			// Will automatically overwrite any existing representation of the
+			// item
+			T item = itemsIterator.next();
+			provider.process(item, bugTracker);
+			cache.put(provider.getKey(item), item);
+		}
+	}
 
-        public Items(Date date, boolean itemsAfterDate) {
-            this.date = date;
-            this.itemsAfterDate = itemsAfterDate;
-        }
+	private class Items implements Iterable<T> {
+		private Date date;
+		private boolean itemsAfterDate;
 
-        @Override
-        public Iterator<T> iterator() {
-            return new ItemsIterator(cache.values().iterator());
-        }
+		public Items(Date date, boolean itemsAfterDate) {
+			this.date = date;
+			this.itemsAfterDate = itemsAfterDate;
+		}
 
-        private class ItemsIterator implements Iterator<T> {
-            private T next;
-            private Iterator<T> iterator;
+		@Override
+		public Iterator<T> iterator() {
+			return new ItemsIterator(cache.values().iterator());
+		}
 
-            public ItemsIterator(Iterator<T> iterator) {
-                this.iterator = iterator;
-            }
+		private class ItemsIterator implements Iterator<T> {
+			private T next;
+			private Iterator<T> iterator;
 
-            @Override
-            public boolean hasNext() {
-                if (itemsAfterDate) {
-                    while (iterator.hasNext()) {
-                        next = iterator.next();
-                        if (provider.changedSinceDate(next, date, bugTracker)) {
-                            return true;
-                        }
-                    }
-                } else {
-                    while (iterator.hasNext()) {
-                        next = iterator.next();
-                        if (provider.changedOnDate(next, date, bugTracker)) {
-                            return true;
-                        }
-                    }
-                }
+			public ItemsIterator(Iterator<T> iterator) {
+				this.iterator = iterator;
+			}
 
-                return false;
-            }
+			@Override
+			public boolean hasNext() {
+				if (itemsAfterDate) {
+					while (iterator.hasNext()) {
+						next = iterator.next();
+						if (provider.changedSinceDate(next, date, bugTracker)) {
+							return true;
+						}
+					}
+				} else {
+					while (iterator.hasNext()) {
+						next = iterator.next();
+						if (provider.changedOnDate(next, date, bugTracker)) {
+							return true;
+						}
+					}
+				}
 
-            @Override
-            public T next() {
-                return next;
-            }
+				return false;
+			}
 
-            @Override
-            public void remove() {
-                throw new UnsupportedOperationException();
-            }
-        }
-    }
+			@Override
+			public T next() {
+				return next;
+			}
+
+			@Override
+			public void remove() {
+				throw new UnsupportedOperationException();
+			}
+		}
+	}
 
 }

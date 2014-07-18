@@ -17,6 +17,8 @@ public class RedmineProject extends org.ossmeter.repository.model.Project {
 	
 	public RedmineProject() { 
 		super();
+		dbObject.put("wiki", new BasicDBObject());
+		dbObject.put("queryManager", new BasicDBObject());
 		dbObject.put("issueTracker", new BasicDBList());
 		dbObject.put("members", new BasicDBList());
 		dbObject.put("versions", new BasicDBList());
@@ -94,6 +96,7 @@ public class RedmineProject extends org.ossmeter.repository.model.Project {
 	public RedmineWiki getWiki() {
 		if (wiki == null && dbObject.containsField("wiki")) {
 			wiki = (RedmineWiki) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("wiki"));
+			wiki.setContainer(this);
 		}
 		return wiki;
 	}
@@ -114,6 +117,7 @@ public class RedmineProject extends org.ossmeter.repository.model.Project {
 	public RedmineQueryManager getQueryManager() {
 		if (queryManager == null && dbObject.containsField("queryManager")) {
 			queryManager = (RedmineQueryManager) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("queryManager"));
+			queryManager.setContainer(this);
 		}
 		return queryManager;
 	}
