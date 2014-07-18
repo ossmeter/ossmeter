@@ -126,16 +126,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 	}
 
 	private boolean hasParameter(String param) {
-		List<KeywordParameter> defs = function.getKeywordParameterDefaults();
-		if (defs != null) {
-			for (KeywordParameter p : defs) {
-				if (p.getName().equals(param)) {
-					return true;
-				}
-			}
-		}
-		
-		return false;
+		return function.hasKeywordParameter(param);
 	}
 	
 
