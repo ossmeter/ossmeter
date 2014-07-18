@@ -5,6 +5,7 @@ import analysis::m3::AST;
 import analysis::graphs::Graph;
 import org::ossmeter::metricprovider::Manager;
 import org::ossmeter::metricprovider::ProjectDelta;
+import org::ossmeter::metricprovider::MetricProvider;
 
 import analysis::statistics::Frequency;
 import analysis::statistics::Inference;
@@ -49,3 +50,33 @@ map[str, int] locPerLanguage(rel[Language, loc, AST] asts = {}, map[loc, int] ge
   }
   return result;
 }
+
+
+@metric{mainLanguage}
+@doc{Main development language of the project}
+@friendlyName{Main development language of the project}
+@appliesTo{generic()}
+@uses{("locPerLanguage" :"locPerLanguage")}
+Factoid mainLanguage(map[str, int] locPerLanguage = ()) {
+  if (isEmpty(locPerLanguage)) {
+    throw undefined("No LOC data available", |unknown:///|);
+  }
+
+  // generic() is already removed in locPerLanguage
+  lrel[str, int] sorted = sort(toRel(locPerLanguage),
+    bool (tuple[str, int] a, tuple[str, int] b) {
+    	return a[1] < b[1];
+    });
+
+  mainLang = sorted[0];
+
+  txt = "The main development language of the project is <mainLang[0]>, with <mainLang[1]> physical lines of code.";
+  if (size(sorted) > 1) {
+    otherTxt = intercalate(", ", ["<l[0]> (<l[1]>)" | l <- sorted[1..]]);
+  
+    txt += " Other used languages are <otherTxt>.";
+  } 
+
+  return factoid(txt, \four()); // star rating by language level? weighted by LOC? // http://www.cs.bsu.edu/homepages/dmz/cs697/langtbl.htm	
+}
+
