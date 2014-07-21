@@ -76,6 +76,7 @@ public class RedmineRestClient {
 		password = "PASSWORD_NOT_NEEDED";
 	}
 
+	// TODO think we don't need the created clauses in here, for our caching purposes.
 	public Iterator<RedmineIssue> getIssues(String projectIdOrName, Date after,
 			Date before) throws UnirestException {
 

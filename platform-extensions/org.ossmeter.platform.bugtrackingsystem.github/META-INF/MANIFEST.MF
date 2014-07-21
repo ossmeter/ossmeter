@@ -12,7 +12,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.egit.github.core;bundle-version="2.1.5",
  org.joda.time;bundle-version="2.3.0",
  org.apache.commons.lang;bundle-version="1.0.0",
- com.google.guava;bundle-version="16.0.0"
+ com.google.guava;bundle-version="16.0.0",
+ org.ossmeter.platform.bugtrackingsystem
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Import-Package: com.google.gson.reflect,

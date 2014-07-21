@@ -1,7 +1,6 @@
 package org.ossmeter.platform.bugtrackingsystem.github;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,13 +18,9 @@ public class GitHubBugTrackingSystemDelta extends BugTrackingSystemDelta {
     private List<GitHubPullRequest> pullRequests = new ArrayList<GitHubPullRequest>();
     
     // Pull Requests
-    
-    public void addGitHubPullRequest(GitHubPullRequest pullRequest) {
-        pullRequests.add(pullRequest);
-    }
-    
+ 
     public List<GitHubPullRequest> getPullRequests() {
-        return Collections.unmodifiableList(pullRequests);
+        return pullRequests;
     }
     
     // Milestones

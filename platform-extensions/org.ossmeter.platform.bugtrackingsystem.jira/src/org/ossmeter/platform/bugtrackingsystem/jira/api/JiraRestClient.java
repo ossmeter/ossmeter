@@ -76,6 +76,7 @@ public class JiraRestClient {
 		this.pageSize = pageSize;
 	}
 
+	// TODO think we don't need the created clauses in here, for our caching purposes.
 	public Iterator<JiraIssue> getIssues(String projectId, Date after,
 			Date before) throws UnirestException {
 

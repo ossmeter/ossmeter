@@ -35,7 +35,7 @@ public class BugTrackerItemCache<T, K> {
 		 */
 		public static boolean findMatchOnDate(Date date, Date... dates) {
 			for (Date d : dates) {
-				if (DateUtils.isSameDay(date, d)) {
+				if (null != d && DateUtils.isSameDay(date, d)) {
 					return true;
 				}
 			}
@@ -52,7 +52,7 @@ public class BugTrackerItemCache<T, K> {
 		 */
 		public static boolean findMatchSinceDate(Date date, Date... dates) {
 			for (Date d : dates) {
-				if (d.after(date)) {
+				if (null != d && d.after(date)) {
 					return true;
 				}
 			}
@@ -68,7 +68,7 @@ public class BugTrackerItemCache<T, K> {
 	// conserve memory. For example, maybe purge cache after 24 hours?
 	private Date latestDate;
 	private Date earliestDate;
-	private int minUpdateIntervalMillis = 600000;
+	private int minUpdateIntervalMillis = 3600000;
 	private BugTrackingSystem bugTracker;
 	private Map<K, T> cache = new HashMap<K, T>();
 
