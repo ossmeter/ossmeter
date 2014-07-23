@@ -17,13 +17,15 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.GetRequest;
 
 public class BitbucketRestClient {
-	private static final String BITBUCKET_API_URL = "https://bitbucket.org/api/1.0/";
+	private static final String BITBUCKET_API_V1_URL = "https://bitbucket.org/api/1.0/";
+	private static final String BITBUCKET_API_V2_URL = "https://bitbucket.org/api/2.0/";
 
 	private static final ObjectMapper objectMapper;
 	private static final ObjectReader issueReader;
 	private static final ObjectReader commentReader;
 	private static final ObjectReader commentsReader;
 	private static final ObjectReader searchReader;
+	private static final ObjectReader pullRequestsReader;
 
 	static {
 		objectMapper = new ObjectMapper();
@@ -34,6 +36,10 @@ public class BitbucketRestClient {
 				new BitbucketIssueDeserialiser());
 		module.addDeserializer(BitbucketIssueComment.class,
 				new BitbucketIssueCommentDeserialiser());
+		module.addDeserializer(BitbucketLinks.class,
+				new BitbucketLinksDeserialiser());
+		module.addDeserializer(BitbucketPullRequest.class,
+				new BitbucketPullRequestDeserialiser());
 		objectMapper.registerModule(module);
 
 		issueReader = objectMapper.reader(BitbucketIssue.class);
@@ -42,6 +48,8 @@ public class BitbucketRestClient {
 				.reader(new TypeReference<List<BitbucketIssueComment>>() {
 				});
 		searchReader = objectMapper.reader(BitbucketSearchResult.class);
+		pullRequestsReader = objectMapper
+				.reader(BitbucketPullRequestPage.class);
 	}
 
 	private String login;
@@ -59,7 +67,7 @@ public class BitbucketRestClient {
 	public BitbucketIssue getIssue(String user, String repository,
 			String issueId, boolean retrieveComments) throws UnirestException,
 			JsonProcessingException, IOException {
-		String url = BITBUCKET_API_URL + "repositories/" + user + '/'
+		String url = BITBUCKET_API_V1_URL + "repositories/" + user + '/'
 				+ repository + "/issues/" + issueId;
 		GetRequest getRequest = Unirest.get(url);
 		HttpResponse<InputStream> response = executeRestCall(getRequest);
@@ -78,7 +86,7 @@ public class BitbucketRestClient {
 	public BitbucketIssueComment getIssueComment(String user,
 			String repository, String issueId, String commentId)
 			throws UnirestException, JsonProcessingException, IOException {
-		String url = BITBUCKET_API_URL + "repositories/" + user + '/'
+		String url = BITBUCKET_API_V1_URL + "repositories/" + user + '/'
 				+ repository + "/issues/" + issueId + "/comments/" + commentId;
 		GetRequest getRequest = Unirest.get(url);
 		HttpResponse<InputStream> response = executeRestCall(getRequest);
@@ -94,7 +102,7 @@ public class BitbucketRestClient {
 	public List<BitbucketIssueComment> getIssueComments(String user,
 			String repository, String issueId) throws UnirestException,
 			JsonProcessingException, IOException {
-		String url = BITBUCKET_API_URL + "repositories/" + user + '/'
+		String url = BITBUCKET_API_V1_URL + "repositories/" + user + '/'
 				+ repository + "/issues/" + issueId + "/comments/";
 		GetRequest getRequest = Unirest.get(url);
 		HttpResponse<InputStream> response = executeRestCall(getRequest);
@@ -109,7 +117,7 @@ public class BitbucketRestClient {
 
 	public Iterator<BitbucketIssue> getIssues(BitbucketIssueQuery query,
 			boolean retrieveComments) {
-		return new BitbucketIssueIterator(this, query, true);
+		return new BitbucketIssueIterator(this, query, retrieveComments);
 	}
 
 	public BitbucketSearchResult search(BitbucketIssueQuery query,
@@ -126,7 +134,7 @@ public class BitbucketRestClient {
 		String user = query.getUser();
 		String repository = query.getRepository();
 
-		String url = BITBUCKET_API_URL + "repositories/" + user + '/'
+		String url = BITBUCKET_API_V1_URL + "repositories/" + user + '/'
 				+ repository + "/issues";
 
 		GetRequest get = Unirest.get(url);
@@ -164,13 +172,30 @@ public class BitbucketRestClient {
 		return result;
 	}
 
+	public Iterator<BitbucketPullRequest> getPullRequests(String user,
+			String repository) {
+		return new BitbucketPullRequestIterator(this, user, repository);
+	}
+
+	BitbucketPullRequestPage getPullRequests(String user, String repository,
+			int page) throws JsonProcessingException, IOException,
+			UnirestException {
+		String url = BITBUCKET_API_V2_URL + "repositories/" + user + '/'
+				+ repository + "/pullrequests";
+
+		GetRequest get = Unirest.get(url);
+		get = get.field("page", page).field("state", "OPEN,MERGED,DECLINED");
+
+		HttpResponse<InputStream> response = executeRestCall(get);
+		return pullRequestsReader.readValue(response.getRawBody());
+
+	}
+
 	protected HttpResponse<InputStream> executeRestCall(GetRequest getRequest)
 			throws UnirestException {
 		if (null != login && null != password) {
 			getRequest = getRequest.basicAuth(login, password);
 		}
-
-		//System.out.println(getRequest.getUrl());
 
 		HttpResponse<InputStream> response = getRequest.asBinary();
 		if (response.getCode() != 200) {
@@ -183,6 +208,23 @@ public class BitbucketRestClient {
 	public static void main(String[] args) throws JsonProcessingException,
 			UnirestException, IOException {
 		BitbucketRestClient bitbucket = new BitbucketRestClient();
+
+		Iterator<BitbucketPullRequest> prs = bitbucket.getPullRequests(
+				"jmurty", "jets3t");
+		int i = 0;
+		while (prs.hasNext()) {
+			BitbucketPullRequest pr = prs.next();
+			System.out.println(i++ + " " + pr.getTitle());
+		}
+
+		BitbucketIssueQuery query2 = new BitbucketIssueQuery("jmurty", "jets3t");
+		query2.setSort("-utc_last_updated");
+
+		Iterator<BitbucketIssue> issues = bitbucket.getIssues(query2, false);
+		while (issues.hasNext()) {
+			BitbucketIssue iss = issues.next();
+			System.out.println(iss.getBugId() + " " + iss.getTitle());
+		}
 
 		BitbucketIssueQuery query = new BitbucketIssueQuery("jmurty", "jets3t");
 		query.setSort("-utc_last_updated");

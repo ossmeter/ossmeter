@@ -5,8 +5,9 @@ import java.util.Iterator;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.ossmeter.platform.Date;
-import org.ossmeter.platform.bugtrackingsystem.BugTrackerItemCache;
-import org.ossmeter.platform.bugtrackingsystem.BugTrackerItemCaches;
+import org.ossmeter.platform.bugtrackingsystem.cache.Cache;
+import org.ossmeter.platform.bugtrackingsystem.cache.Caches;
+import org.ossmeter.platform.bugtrackingsystem.cache.provider.DateRangeCacheProvider;
 import org.ossmeter.platform.bugtrackingsystem.redmine.api.RedmineComment;
 import org.ossmeter.platform.bugtrackingsystem.redmine.api.RedmineIssue;
 import org.ossmeter.platform.bugtrackingsystem.redmine.api.RedmineRestClient;
@@ -23,11 +24,11 @@ import com.google.common.collect.ImmutableMap;
 public class RedmineManager implements
 		IBugTrackingSystemManager<RedmineBugIssueTracker> {
 
-	private BugTrackerItemCaches<RedmineIssue, String> issueCaches = new BugTrackerItemCaches<RedmineIssue, String>(
+	private Caches<RedmineIssue, String> issueCaches = new Caches<RedmineIssue, String>(
 			new IssueCacheProvider());
 
 	private static class IssueCacheProvider extends
-			BugTrackerItemCache.Provider<RedmineIssue, String> {
+			DateRangeCacheProvider<RedmineIssue, String> {
 
 		@Override
 		public Iterator<RedmineIssue> getItems(java.util.Date after,
@@ -87,7 +88,7 @@ public class RedmineManager implements
 			Date date) throws Exception {
 		java.util.Date day = date.toJavaDate();
 
-		BugTrackerItemCache<RedmineIssue, String> issueCache = issueCaches
+		Cache<RedmineIssue, String> issueCache = issueCaches
 				.getCache(bugTracker, true);
 		Iterable<RedmineIssue> issues = issueCache.getItemsAfterDate(day);
 

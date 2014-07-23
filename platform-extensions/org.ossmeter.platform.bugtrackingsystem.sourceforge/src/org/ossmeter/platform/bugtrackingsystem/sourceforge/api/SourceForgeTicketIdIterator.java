@@ -2,6 +2,7 @@ package org.ossmeter.platform.bugtrackingsystem.sourceforge.api;
 
 import java.util.Iterator;
 
+//TODO convert to PagedIterator
 public class SourceForgeTicketIdIterator implements Iterator<Integer> {
 
 	private final SourceForgeTrackerRestClient sourceforge;

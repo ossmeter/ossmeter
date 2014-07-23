@@ -5,8 +5,9 @@ import java.util.Iterator;
 import org.apache.commons.lang.time.DateUtils;
 import org.joda.time.DateTime;
 import org.ossmeter.platform.Date;
-import org.ossmeter.platform.bugtrackingsystem.BugTrackerItemCache;
-import org.ossmeter.platform.bugtrackingsystem.BugTrackerItemCaches;
+import org.ossmeter.platform.bugtrackingsystem.cache.Cache;
+import org.ossmeter.platform.bugtrackingsystem.cache.Caches;
+import org.ossmeter.platform.bugtrackingsystem.cache.provider.DateRangeCacheProvider;
 import org.ossmeter.platform.bugtrackingsystem.jira.api.JiraComment;
 import org.ossmeter.platform.bugtrackingsystem.jira.api.JiraIssue;
 import org.ossmeter.platform.bugtrackingsystem.jira.api.JiraRestClient;
@@ -21,11 +22,11 @@ import org.ossmeter.repository.model.jira.JiraBugTrackingSystem;
 public class JiraManager implements
 		IBugTrackingSystemManager<JiraBugTrackingSystem> {
 
-	private BugTrackerItemCaches<JiraIssue, String> issueCaches = new BugTrackerItemCaches<JiraIssue, String>(
+	private Caches<JiraIssue, String> issueCaches = new Caches<JiraIssue, String>(
 			new IssueCacheProvider());
 
 	private static class IssueCacheProvider extends
-			BugTrackerItemCache.Provider<JiraIssue, String> {
+			DateRangeCacheProvider<JiraIssue, String> {
 
 		@Override
 		public Iterator<JiraIssue> getItems(java.util.Date after,
@@ -79,7 +80,7 @@ public class JiraManager implements
 
 		java.util.Date day = date.toJavaDate();
 
-		BugTrackerItemCache<JiraIssue, String> issueCache = issueCaches
+		Cache<JiraIssue, String> issueCache = issueCaches
 				.getCache(bugTracker, true);
 		Iterable<JiraIssue> issues = issueCache.getItemsAfterDate(day);
 

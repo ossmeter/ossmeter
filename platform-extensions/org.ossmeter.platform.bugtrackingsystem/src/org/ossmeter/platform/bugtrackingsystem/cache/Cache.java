@@ -1,4 +1,4 @@
-package org.ossmeter.platform.bugtrackingsystem;
+package org.ossmeter.platform.bugtrackingsystem.cache;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -6,63 +6,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.commons.lang.time.DateUtils;
 import org.joda.time.Interval;
+import org.ossmeter.platform.bugtrackingsystem.cache.provider.BasicCacheProvider;
+import org.ossmeter.platform.bugtrackingsystem.cache.provider.DateRangeCacheProvider;
 import org.ossmeter.repository.model.BugTrackingSystem;
 
-public class BugTrackerItemCache<T, K> {
+public class Cache<T, K> {
 
-	public static abstract class Provider<T, K> {
-		public abstract Iterator<T> getItems(Date after, Date before,
-				BugTrackingSystem bugTracker) throws Exception;
-
-		public abstract boolean changedOnDate(T item, Date date,
-				BugTrackingSystem bugTracker);
-
-		public abstract boolean changedSinceDate(T item, Date date,
-				BugTrackingSystem bugTracker);
-
-		public abstract K getKey(T item);
-
-		public abstract void process(T item, BugTrackingSystem bugTracker);
-
-		/**
-		 * returns true if one of dates matches date.
-		 * 
-		 * @param date
-		 * @param dates
-		 * @return
-		 */
-		public static boolean findMatchOnDate(Date date, Date... dates) {
-			for (Date d : dates) {
-				if (null != d && DateUtils.isSameDay(date, d)) {
-					return true;
-				}
-			}
-
-			return false;
-		}
-
-		/**
-		 * returns true if one of dates occurred after date.
-		 * 
-		 * @param date
-		 * @param dates
-		 * @return
-		 */
-		public static boolean findMatchSinceDate(Date date, Date... dates) {
-			for (Date d : dates) {
-				if (null != d && d.after(date)) {
-					return true;
-				}
-			}
-
-			return false;
-		}
-
-	}
-
-	protected Provider<T, K> provider;
+	protected CacheProvider<T, K> provider;
 
 	// TODO Could move to Google Guava Caches, if we want a smarter strategy to
 	// conserve memory. For example, maybe purge cache after 24 hours?
@@ -72,14 +23,13 @@ public class BugTrackerItemCache<T, K> {
 	private BugTrackingSystem bugTracker;
 	private Map<K, T> cache = new HashMap<K, T>();
 
-	public BugTrackerItemCache(BugTrackingSystem bugTracker,
-			Provider<T, K> provider) {
+	public Cache(BugTrackingSystem bugTracker, CacheProvider<T, K> provider) {
 		this.bugTracker = bugTracker;
 		this.provider = provider;
 	}
 
-	public BugTrackerItemCache(BugTrackingSystem bugTracker,
-			Provider<T, K> provider, int minUpdateIntervalSecs) {
+	public Cache(BugTrackingSystem bugTracker, CacheProvider<T, K> provider,
+			int minUpdateIntervalSecs) {
 		this.bugTracker = bugTracker;
 		this.provider = provider;
 		this.minUpdateIntervalMillis = minUpdateIntervalSecs * 1000;
@@ -98,33 +48,54 @@ public class BugTrackerItemCache<T, K> {
 	private void update(Date date) throws Exception {
 		Date now = Calendar.getInstance().getTime();
 
-		// By passing in 'null' as the value to 'after' in provider.getItems(),
-		// we will possibly reduce the number of web service calls (this is
-		// certainly the case for the GitHub implementation).
-		if (null == latestDate) {
-			Iterator<T> items = provider.getItems(date, null, bugTracker);
-			cacheItems(items);
-			earliestDate = date;
-			latestDate = now;
-		} else if (new Interval(latestDate.getTime(), now.getTime())
-				.toDurationMillis() > minUpdateIntervalMillis) {
-			Iterator<T> items = provider.getItems(latestDate, null, bugTracker);
-			cacheItems(items);
-			latestDate = now;
-		}
+		if (provider instanceof DateRangeCacheProvider<?, ?>) {
 
-		if (date.before(earliestDate)) {
-			Iterator<T> items = provider.getItems(date, earliestDate,
-					bugTracker);
-			cacheItems(items);
-			earliestDate = date;
+			DateRangeCacheProvider<T, K> provider = (DateRangeCacheProvider<T, K>) this.provider;
+
+			// By passing in 'null' as the value to 'after' in
+			// provider.getItems() we will possibly reduce the number of web
+			// service calls required.
+			if (null == latestDate) {
+				Iterator<T> items = provider.getItems(date, null, bugTracker);
+				cacheItems(items);
+				earliestDate = date;
+				latestDate = now;
+			} else if (new Interval(latestDate.getTime(), now.getTime())
+					.toDurationMillis() > minUpdateIntervalMillis) {
+				Iterator<T> items = provider.getItems(latestDate, null,
+						bugTracker);
+				cacheItems(items);
+				latestDate = now;
+			}
+
+			if (date.before(earliestDate)) {
+				Iterator<T> items = provider.getItems(date, earliestDate,
+						bugTracker);
+				cacheItems(items);
+				earliestDate = date;
+			}
+		} else {
+			BasicCacheProvider<T, K> provider = (BasicCacheProvider<T, K>) this.provider;
+
+			if (null == latestDate) {
+				Iterator<T> items = provider.getItems(bugTracker);
+				cacheItems(items);
+				earliestDate = date;
+				latestDate = now;
+			} else if (new Interval(latestDate.getTime(), now.getTime())
+					.toDurationMillis() > minUpdateIntervalMillis) {
+				Iterator<T> items = provider.getItems(bugTracker);
+				cacheItems(items);
+				latestDate = now;
+			}
+
 		}
 	}
 
 	private void cacheItems(Iterator<T> itemsIterator) {
 		while (itemsIterator.hasNext()) {
 			// Will automatically overwrite any existing representation of the
-			// item
+			// item, so we'll always have the latest version
 			T item = itemsIterator.next();
 			provider.process(item, bugTracker);
 			cache.put(provider.getKey(item), item);

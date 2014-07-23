@@ -6,14 +6,14 @@ import java.util.Iterator;
 
 import org.eclipse.egit.github.core.Issue;
 import org.joda.time.DateTime;
-import org.ossmeter.platform.bugtrackingsystem.BugTrackerItemCache;
+import org.ossmeter.platform.bugtrackingsystem.cache.provider.DateRangeCacheProvider;
 import org.ossmeter.platform.bugtrackingsystem.github.api.GitHubIssueQuery;
 import org.ossmeter.platform.bugtrackingsystem.github.api.GitHubSession;
 import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.github.GitHubBugTracker;
 
 class IssueCacheProvider extends
-		BugTrackerItemCache.Provider<GitHubIssue, String> {
+		DateRangeCacheProvider<GitHubIssue, String> {
 
 	private class ItemIterator implements Iterator<GitHubIssue> {
 

@@ -7,8 +7,9 @@ import java.util.List;
 import org.apache.commons.lang.time.DateUtils;
 import org.joda.time.DateTime;
 import org.ossmeter.platform.Date;
-import org.ossmeter.platform.bugtrackingsystem.BugTrackerItemCache;
-import org.ossmeter.platform.bugtrackingsystem.BugTrackerItemCaches;
+import org.ossmeter.platform.bugtrackingsystem.cache.Cache;
+import org.ossmeter.platform.bugtrackingsystem.cache.Caches;
+import org.ossmeter.platform.bugtrackingsystem.cache.provider.DateRangeCacheProvider;
 import org.ossmeter.platform.bugtrackingsystem.sourceforge.api.SourceForgeComment;
 import org.ossmeter.platform.bugtrackingsystem.sourceforge.api.SourceForgeSearchResult;
 import org.ossmeter.platform.bugtrackingsystem.sourceforge.api.SourceForgeTicket;
@@ -23,11 +24,11 @@ import org.ossmeter.repository.model.sourceforge.SourceForgeBugTrackingSystem;
 public class SourceForgeManager implements
 		IBugTrackingSystemManager<SourceForgeBugTrackingSystem> {
 
-	private BugTrackerItemCaches<SourceForgeTicket, String> ticketCaches = new BugTrackerItemCaches<SourceForgeTicket, String>(
+	private Caches<SourceForgeTicket, String> ticketCaches = new Caches<SourceForgeTicket, String>(
 			new TicketCacheProvider());
 
 	private static class TicketCacheProvider extends
-			BugTrackerItemCache.Provider<SourceForgeTicket, String> {
+			DateRangeCacheProvider<SourceForgeTicket, String> {
 
 		@Override
 		public Iterator<SourceForgeTicket> getItems(java.util.Date after,
@@ -80,7 +81,7 @@ public class SourceForgeManager implements
 
 		java.util.Date day = date.toJavaDate();
 
-		BugTrackerItemCache<SourceForgeTicket, String> ticketCache = ticketCaches
+		Cache<SourceForgeTicket, String> ticketCache = ticketCaches
 				.getCache(bugTracker, true);
 		Iterable<SourceForgeTicket> tickets = ticketCache
 				.getItemsAfterDate(day);

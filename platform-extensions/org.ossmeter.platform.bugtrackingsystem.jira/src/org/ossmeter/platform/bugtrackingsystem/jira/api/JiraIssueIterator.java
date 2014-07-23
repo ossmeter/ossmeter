@@ -1,8 +1,8 @@
 package org.ossmeter.platform.bugtrackingsystem.jira.api;
 
 import java.util.Iterator;
-import java.util.Map;
 
+// TODO convert to PagedIterator
 public class JiraIssueIterator implements Iterator<JiraIssue> {
 	private int total;
 	private int retrieved = 0;

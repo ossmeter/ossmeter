@@ -2,13 +2,14 @@ package org.ossmeter.platform.bugtrackingsystem.bitbucket;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.ossmeter.platform.Date;
-import org.ossmeter.platform.bugtrackingsystem.BugTrackerItemCache;
-import org.ossmeter.platform.bugtrackingsystem.BugTrackerItemCaches;
 import org.ossmeter.platform.bugtrackingsystem.bitbucket.api.BitbucketIssue;
 import org.ossmeter.platform.bugtrackingsystem.bitbucket.api.BitbucketIssueComment;
 import org.ossmeter.platform.bugtrackingsystem.bitbucket.api.BitbucketIssueQuery;
+import org.ossmeter.platform.bugtrackingsystem.bitbucket.api.BitbucketPullRequest;
 import org.ossmeter.platform.bugtrackingsystem.bitbucket.api.BitbucketRestClient;
 import org.ossmeter.platform.bugtrackingsystem.bitbucket.api.BitbucketSearchResult;
+import org.ossmeter.platform.bugtrackingsystem.cache.Cache;
+import org.ossmeter.platform.bugtrackingsystem.cache.Caches;
 import org.ossmeter.platform.delta.bugtrackingsystem.BugTrackingSystemBug;
 import org.ossmeter.platform.delta.bugtrackingsystem.BugTrackingSystemComment;
 import org.ossmeter.platform.delta.bugtrackingsystem.BugTrackingSystemDelta;
@@ -19,8 +20,11 @@ import org.ossmeter.repository.model.bitbucket.BitbucketBugTrackingSystem;
 public class BitbucketManager implements
 		IBugTrackingSystemManager<BitbucketBugTrackingSystem> {
 
-	private BugTrackerItemCaches<BitbucketIssue, String> issueCaches = new BugTrackerItemCaches<BitbucketIssue, String>(
+	private Caches<BitbucketIssue, String> issueCaches = new Caches<BitbucketIssue, String>(
 			new IssueCacheProvider());
+
+	private Caches<BitbucketPullRequest, Long> pullRequestCaches = new Caches<BitbucketPullRequest, Long>(
+			new PullRequestCacheProvider());
 
 	@Override
 	public boolean appliesTo(BugTrackingSystem bugTracker) {
@@ -33,12 +37,13 @@ public class BitbucketManager implements
 
 		java.util.Date day = date.toJavaDate();
 
-		BugTrackerItemCache<BitbucketIssue, String> issuesCache = issueCaches
-				.getCache(bugTracker, true);
+		Cache<BitbucketIssue, String> issuesCache = issueCaches.getCache(
+				bugTracker, true);
 		Iterable<BitbucketIssue> issues = issuesCache.getItemsAfterDate(day);
 
 		BitbucketBugTrackingSystemDelta delta = new BitbucketBugTrackingSystemDelta();
 
+		// Process issues and comments
 		for (BitbucketIssue issue : issues) {
 
 			if (DateUtils.isSameDay(issue.getUpdateDate(), day)) {
@@ -60,6 +65,13 @@ public class BitbucketManager implements
 					delta.getComments().add(comment);
 				}
 			}
+		}
+		
+		// Process pull requests
+		Cache<BitbucketPullRequest, Long> pullRequestsCache = pullRequestCaches.getCache(bugTracker, true);
+		Iterable<BitbucketPullRequest> pullRequests = pullRequestsCache.getItemsOnDate(day);
+		for (BitbucketPullRequest pullRequest: pullRequests) {
+			delta.getPullRequests().add(pullRequest);
 		}
 
 		return delta;
@@ -108,7 +120,7 @@ public class BitbucketManager implements
 			BitbucketBugTrackingSystem bugTracker) {
 		BitbucketRestClient client = new BitbucketRestClient();
 		String login = bugTracker.getLogin();
-		if ( login != null && login.trim().length() > 0 && !"null".equals(login)) {
+		if (login != null && login.trim().length() > 0 && !"null".equals(login)) {
 			client.setCredentials(login, bugTracker.getPassword());
 		}
 		return client;
@@ -133,7 +145,7 @@ public class BitbucketManager implements
 		System.out.println(manager.getContents(bts, comment));
 
 		BugTrackingSystemDelta delta = manager.getDelta(bts, new Date(
-				"20140707"));
+				"20140626"));
 		System.out.println(delta.getUpdatedBugs().size());
 	}
 

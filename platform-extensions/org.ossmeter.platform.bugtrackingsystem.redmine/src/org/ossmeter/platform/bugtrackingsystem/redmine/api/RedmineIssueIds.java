@@ -3,7 +3,7 @@ package org.ossmeter.platform.bugtrackingsystem.redmine.api;
 import java.util.Iterator;
 import java.util.Map;
 
-
+//TODO convert to PagedIterator
 public class RedmineIssueIds implements Iterable<Integer>{
 	private final RedmineRestClient redmine;
 	private Map<String, String> filter;

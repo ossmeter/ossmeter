@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 import org.eclipse.egit.github.core.client.PageIterator;
 import org.joda.time.DateTime;
-import org.ossmeter.platform.bugtrackingsystem.BugTrackerItemCache;
+import org.ossmeter.platform.bugtrackingsystem.cache.provider.DateRangeCacheProvider;
 import org.ossmeter.platform.bugtrackingsystem.github.api.ExtendedComment;
 import org.ossmeter.platform.bugtrackingsystem.github.api.GitHubIssueQuery;
 import org.ossmeter.platform.bugtrackingsystem.github.api.GitHubSession;
@@ -14,7 +14,7 @@ import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.github.GitHubBugTracker;
 
 public class CommentCacheProvider extends
-		BugTrackerItemCache.Provider<GitHubComment, String> {
+		DateRangeCacheProvider<GitHubComment, String> {
 
 	private class ItemIterator implements Iterator<GitHubComment> {
 

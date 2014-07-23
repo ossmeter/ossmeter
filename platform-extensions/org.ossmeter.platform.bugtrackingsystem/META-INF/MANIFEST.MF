@@ -12,4 +12,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Import-Package: org.apache.commons.lang.time,
  org.joda.time
-Export-Package: org.ossmeter.platform.bugtrackingsystem
+Export-Package: org.ossmeter.platform.bugtrackingsystem,
+ org.ossmeter.platform.bugtrackingsystem.cache,
+ org.ossmeter.platform.bugtrackingsystem.cache.provider

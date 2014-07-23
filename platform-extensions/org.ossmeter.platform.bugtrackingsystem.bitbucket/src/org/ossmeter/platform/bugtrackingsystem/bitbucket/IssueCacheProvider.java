@@ -3,16 +3,16 @@ package org.ossmeter.platform.bugtrackingsystem.bitbucket;
 import java.util.Date;
 import java.util.Iterator;
 
-import org.ossmeter.platform.bugtrackingsystem.BugTrackerItemCache;
 import org.ossmeter.platform.bugtrackingsystem.bitbucket.api.BitbucketIssue;
 import org.ossmeter.platform.bugtrackingsystem.bitbucket.api.BitbucketIssueQuery;
 import org.ossmeter.platform.bugtrackingsystem.bitbucket.api.BitbucketRestClient;
+import org.ossmeter.platform.bugtrackingsystem.cache.provider.DateRangeCacheProvider;
 import org.ossmeter.platform.delta.bugtrackingsystem.BugTrackingSystemComment;
 import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.bitbucket.BitbucketBugTrackingSystem;
 
 class IssueCacheProvider extends
-		BugTrackerItemCache.Provider<BitbucketIssue, String> {
+		DateRangeCacheProvider<BitbucketIssue, String> {
 
 	private static class ItemIterator implements Iterator<BitbucketIssue> {
 

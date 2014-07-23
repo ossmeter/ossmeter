@@ -20,20 +20,20 @@ class GitHubEntityManager {
 	public GitHubEntityManager() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public GitHubMilestone getMilestone(int id) {
 		return milestones.get(id);
 	}
-	
+
 	public GitHubUser getUser(String id) {
 		return users.get(id);
 	}
-	
+
 	public GitHubRepository getRepository(long id) {
 		return repositories.get(id);
 	}
 
-	public GitHubComment process(ExtendedComment comment) {
+	GitHubComment process(ExtendedComment comment) {
 		GitHubComment ghComment = new GitHubComment();
 
 		ghComment.setCommentId(Long.toString(comment.getId()));
@@ -46,7 +46,7 @@ class GitHubEntityManager {
 		return ghComment;
 	}
 
-	protected GitHubIssue process(Issue issue) {
+	GitHubIssue process(Issue issue) {
 		GitHubIssue ghIssue = new GitHubIssue();
 
 		ghIssue.setAssignee(processUser(issue.getAssignee()));
@@ -73,7 +73,7 @@ class GitHubEntityManager {
 		return ghIssue;
 	}
 
-	public GitHubPullRequest process(PullRequest pr) {
+	GitHubPullRequest process(PullRequest pr) {
 		GitHubPullRequest pullRequest = new GitHubPullRequest();
 
 		pullRequest.setAdditions(pr.getAdditions());

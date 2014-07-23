@@ -48,6 +48,11 @@ public abstract class ExtendedJsonDeserialiser<T> extends JsonDeserializer<T> {
         JsonNode n = node.path(field);
         return processInteger(n, null);
     }
+    
+    protected static Long getLong(JsonNode node, String field) {
+        JsonNode n = node.path(field);
+        return processLong(n, null);
+    }
 
     protected static Integer getInteger(JsonNode node, String field,
             Integer defaultValue) {
@@ -87,6 +92,13 @@ public abstract class ExtendedJsonDeserialiser<T> extends JsonDeserializer<T> {
     private static Integer processInteger(JsonNode n, Integer defaultValue) {
         if (!n.isMissingNode()) {
             return n.asInt();
+        }
+        return defaultValue;
+    }
+    
+    private static Long processLong(JsonNode n, Long defaultValue) {
+        if (!n.isMissingNode()) {
+            return n.asLong();
         }
         return defaultValue;
     }

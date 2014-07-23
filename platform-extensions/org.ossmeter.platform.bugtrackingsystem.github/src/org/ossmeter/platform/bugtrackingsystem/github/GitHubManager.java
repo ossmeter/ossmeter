@@ -10,8 +10,8 @@ import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.client.PageIterator;
 import org.joda.time.DateTime;
 import org.ossmeter.platform.Date;
-import org.ossmeter.platform.bugtrackingsystem.BugTrackerItemCache;
-import org.ossmeter.platform.bugtrackingsystem.BugTrackerItemCaches;
+import org.ossmeter.platform.bugtrackingsystem.cache.Cache;
+import org.ossmeter.platform.bugtrackingsystem.cache.Caches;
 import org.ossmeter.platform.bugtrackingsystem.github.api.GitHubIssueQuery;
 import org.ossmeter.platform.bugtrackingsystem.github.api.GitHubSession;
 import org.ossmeter.platform.delta.bugtrackingsystem.BugTrackingSystemBug;
@@ -26,13 +26,13 @@ public class GitHubManager implements
 
 	private final GitHubEntityManager entityManager = new GitHubEntityManager();
 
-	private final BugTrackerItemCaches<GitHubIssue, String> issueCaches = new BugTrackerItemCaches<GitHubIssue, String>(
+	private final Caches<GitHubIssue, String> issueCaches = new Caches<GitHubIssue, String>(
 			new IssueCacheProvider(entityManager));
 
-	private final BugTrackerItemCaches<GitHubComment, String> commentCaches = new BugTrackerItemCaches<GitHubComment, String>(
+	private final Caches<GitHubComment, String> commentCaches = new Caches<GitHubComment, String>(
 			new CommentCacheProvider(entityManager));
 
-	private final BugTrackerItemCaches<GitHubPullRequest, Integer> pullRequestCaches = new BugTrackerItemCaches<GitHubPullRequest, Integer>(
+	private final Caches<GitHubPullRequest, Integer> pullRequestCaches = new Caches<GitHubPullRequest, Integer>(
 			new PullRequestCacheProvider(entityManager));
 
 	@Override
@@ -147,7 +147,7 @@ public class GitHubManager implements
 
 		java.util.Date day = on.toJavaDate();
 
-		BugTrackerItemCache<GitHubIssue, String> issuesCache = issueCaches
+		Cache<GitHubIssue, String> issuesCache = issueCaches
 				.getCache(bugTracker, true);
 		Iterable<GitHubIssue> issues = issuesCache.getItemsOnDate(day);
 
@@ -177,7 +177,7 @@ public class GitHubManager implements
 
 		java.util.Date day = on.toJavaDate();
 
-		BugTrackerItemCache<GitHubComment, String> commentsCache = commentCaches
+		Cache<GitHubComment, String> commentsCache = commentCaches
 				.getCache(bugTracker, true);
 		Iterable<GitHubComment> comments = commentsCache.getItemsOnDate(day);
 
@@ -202,7 +202,7 @@ public class GitHubManager implements
 
 		java.util.Date day = on.toJavaDate();
 
-		BugTrackerItemCache<GitHubPullRequest, Integer> pullRequestsCache = pullRequestCaches
+		Cache<GitHubPullRequest, Integer> pullRequestsCache = pullRequestCaches
 				.getCache(bugTracker, true);
 		Iterable<GitHubPullRequest> pullRequests = pullRequestsCache
 				.getItemsOnDate(day);
