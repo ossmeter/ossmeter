@@ -4,7 +4,6 @@ import lang::java::m3::Core;
 import lang::java::php::Core;
 import analysis::graphs::Graph;
 import analysis::m3::AST;
-import org::ossmeter::metricprovider::Manager;
 import org::ossmeter::metricprovider::ProjectDelta;
 
 import analysis::statistics::Frequency;
