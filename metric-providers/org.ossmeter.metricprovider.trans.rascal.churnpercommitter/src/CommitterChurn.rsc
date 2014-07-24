@@ -6,6 +6,7 @@ import org::ossmeter::metricprovider::ProjectDelta;
 @doc{Count churn per committer}
 @friendlyName{Counts number of lines added and deleted per committer}
 @appliesTo{generic()}
+@historic{}
 map[loc author, int churn] churnPerCommitter(ProjectDelta delta = \empty())
   = (|author:///| + co.author : churn(co) | /VcsCommit co := delta)
   ;

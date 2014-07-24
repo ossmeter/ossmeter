@@ -9,7 +9,7 @@ and a number of (optional) keyword parameters which provide information from the
 
 @friendlyName{A user-interface friendly label for the metric}
 
-@uses{("idOfMetricYouWishToUse":"nameOfKeywordParameter","idOfMetricYouWishToUse2":"nameOfKeywordParameter2")}
+@uses = ("idOfMetricYouWishToUse":"nameOfKeywordParameter","idOfMetricYouWishToUse2":"nameOfKeywordParameter2")
 
 // languages you wish the metric to apply on, could be java(), php(), generic():
 @appliesTo{generic()} 

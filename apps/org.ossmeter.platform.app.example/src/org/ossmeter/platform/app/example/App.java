@@ -7,6 +7,7 @@ import org.ossmeter.platform.app.example.util.ProjectCreationUtil;
 import org.ossmeter.platform.osgi.OssmeterApplication;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectCollection;
+import org.ossmeter.repository.model.ProjectExecutionInformation;
 import org.ossmeter.repository.model.ProjectRepository;
 
 import com.googlecode.pongo.runtime.PongoFactory;
@@ -28,10 +29,14 @@ public class App implements IApplication {
 			coll.remove(p);
 		}
 		
-//		Project pdb = ProjectCreationUtil.createGitProject("pdb_values", "file:///Users/shahi/Documents/CWI/l1_workspace/pdb.values");
-//		coll.add(pdb);
+		Project pdb = ProjectCreationUtil.createGitProject("pdb_values", "file:///Users/shahi/Documents/CWI/l1_workspace/pdb.values");
+		pdb.setMonitor(true);
+		pdb.setExecutionInformation(new ProjectExecutionInformation());
+		coll.add(pdb);
 		
 		Project pongo = ProjectCreationUtil.createSvnProject("pongo", "file:///Users/shahi/svn/pongo");
+		pongo.setMonitor(true);
+		pongo.setExecutionInformation(new ProjectExecutionInformation());
 		coll.add(pongo);
 		
 		// Synchronise the changes and close the connection

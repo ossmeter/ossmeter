@@ -19,17 +19,18 @@ import org::ossmeter::metricprovider::ProjectDelta;
 @doc{Compute your WMC}
 @friendlyName{Weighted Method Count}
 @appliesTo{java()}
+@uses = ("CC" : "methodCC")
 map[loc class, num wmcCount] getWMC(
 	ProjectDelta delta = ProjectDelta::\empty(),
-	map[loc, loc] workingCopyFolders = (),
+	map[loc, loc] workingCopies = (),
 	rel[Language, loc, M3] m3s = {},
-	rel[Language, loc, AST] asts = {})
+	map[loc, int] methodCC = ())
 {
 	map[loc class, num wmcCount] result = ();
-	changed = getChangedFilesInWorkingCopyFolders(delta, workingCopyFolders);
+	changed = getChangedFilesInWorkingCopyFolders(delta, workingCopies);
 	
-	for (file <- changed, m3 <- m3s[java(), file], ast <- asts[java(), file]) {
-		result += (cl : sum([getCC(m, ast) | m <- m3@containment[cl], isMethod(m)]) | <cl, _> <- m3@containment, isClass(cl));
+	for (file <- changed, m3 <- m3s[java(), file]) {
+		result += (cl : sum([methodCC[m] | m <- m3@containment[cl], isMethod(m)]) | <cl, _> <- m3@containment, isClass(cl));
 	}
 	 
 	return result;
@@ -39,38 +40,28 @@ map[loc class, num wmcCount] getWMC(
 @doc{Compute your McCabe}
 @friendlyName{McCabe's Cyclomatic Complexity Metric}
 @appliesTo{java()}
-map[loc method, int cc] getCC(
-	ProjectDelta delta = ProjectDelta::\empty(),
-	map[loc, loc] workingCopyFolders = (),
-	rel[Language, loc, M3] m3s = {},
-	rel[Language, loc, AST] asts = {})
+map[loc, int] getCC(ProjectDelta delta = ProjectDelta::\empty(),
+  map[loc, loc] workingCopies = (),
+  rel[Language, loc, AST] asts = {}) 
 {
-	map[loc method, int cc] result = ();
-	changed = getChangedFilesInWorkingCopyFolders(delta, workingCopyFolders);
-
-	for (file <- changed, m3 <- m3s[java(), file], ast <- asts[java(), file]) {
-		result += (m : getCC(m, ast) | <cl, m> <- m3@containment, isClass(cl), isMethod(m));
-	}
-
-	return result;
-}
-
-Declaration getASTOfMethod(loc methodLoc, Declaration fileAST) {
-  visit(fileAST) {
-    case Declaration d: {
-      if ("decl" in getAnnotations(d) && d@decl == methodLoc) {
-        return d;
-      }
+  map[loc method, int cc] result = ();
+  changed = getChangedFilesInWorkingCopyFolders(delta, workingCopies);
+  
+  for (file <- changed, ast <- asts[java(), file]) {
+    visit (ast) {
+      case Declaration d: \method(_, _, _, _, _) :  result += (d@decl : countCC(d));
+      case Declaration d: \method(_, _, _, _) : result += (d@decl : countCC(d));
+      case Declaration d: \constructor(_, _, _, _) : result += (d@decl : countCC(d));
     }
   }
-  throw "ast not found for method: <methodLoc>";
+  
+  return result;
 }
 
-int getCC(loc m, Declaration ast) {
+int countCC(Declaration ast) {
   int count = 1;
-  Declaration methodAST = getASTOfMethod(m, ast);
   
-  visit(methodAST) {
+  visit(ast) {
     case \foreach(Declaration parameter, Expression collection, Statement body): count += 1;
     case \for(list[Expression] initializers, Expression condition, list[Expression] updaters, Statement body): count += 1;
     case \if(Expression condition, Statement thenBranch, Statement elseBranch): count += 1;
@@ -86,19 +77,17 @@ int getCC(loc m, Declaration ast) {
   return count;
 }
 
-//@metric{ccovermethods}
+@metric{ccovermethods}
 @doc{Calculates the gini coefficient of cc over methods}
 @friendlyName{ccovermethods}
 @appliesTo{java()}
-real giniCCOverMethods(
-	ProjectDelta delta = ProjectDelta::\empty(),
-	map[loc, loc] workingCopyFolders = (),
-	rel[Language, loc, M3] m3s = {},
-	rel[Language, loc, AST] asts = {})
-{
-  map[loc, int] ccMap = getCC(delta=delta, workingCopyFolders=workingCopyFolders, m3s=m3s, asts=asts);
+@uses = ("CC" : "methodCC")
+real giniCCOverMethods(map[loc, int] methodCC = ()) {
+  if (isEmpty(methodCC)) {
+    return -1.0;
+  }
   
-  distCCOverMethods = distribution(ccMap);
+  distCCOverMethods = distribution(methodCC);
   
   if (size(distCCOverMethods) < 2) {
     return -1.0;
