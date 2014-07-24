@@ -11,6 +11,10 @@ import org.ossmeter.platform.osgi.OssmeterApplication;
 import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.Project;
+<<<<<<< HEAD
+=======
+import org.ossmeter.repository.model.ProjectCollection;
+>>>>>>> 8de24eeff48ce662e2b303665753738469239196
 import org.ossmeter.repository.model.ProjectExecutionInformation;
 import org.ossmeter.repository.model.ProjectRepository;
 import org.ossmeter.repository.model.VcsRepository;
@@ -38,6 +42,7 @@ public class App implements IApplication {
 			
 			p.getExecutionInformation().setMonitor(false);
 		}
+		platform.getProjectRepositoryManager().getProjectRepository().sync();
 		
 		mongo.close();
 		

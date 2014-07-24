@@ -7,7 +7,7 @@ import IO;
 @doc{Count churn}
 @friendlyName{Counts number of lines added and deleted per commit}
 @appliesTo{generic()}
-@historic
+@historic{}
 map[loc, int] churnPerCommit(ProjectDelta delta = \empty()) {
    println(delta);
    map[loc, int] result = ();

@@ -19,6 +19,8 @@ public class ResetApp {
 		mongo.dropDatabase("fedora");
 		mongo.dropDatabase("saf");
 		mongo.dropDatabase("mojambo-grit");
+		mongo.dropDatabase("pdb_values");
+		mongo.dropDatabase("pongo");
 	}
 	
 }

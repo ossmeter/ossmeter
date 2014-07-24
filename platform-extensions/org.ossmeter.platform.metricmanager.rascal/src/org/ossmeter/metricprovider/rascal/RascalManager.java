@@ -294,19 +294,27 @@ public class RascalManager {
 	}
 	
 	private Map<String,String> getUses(AbstractFunction f) {
-		try {
-			Map<String,String> map = new HashMap<>();
-			
+		try {			
 			if (f.hasTag("uses")) {
-				IMap m = (IMap) f.getTag("uses");
-
-				for (IValue key : m) {
-					map.put(((IString) key).getValue(), ((IString) m.get(key)).getValue());
+				IValue tag = f.getTag("uses");
+				IMap m = null;
+				if (tag instanceof IMap) {
+					m = (IMap) tag;
+				} else if (tag instanceof IString) {
+					m = (IMap) new StandardTextReader().read(VF, new StringReader(((IString) tag).getValue()));
 				}
 				
-				return map;
+				if (m != null) {
+					Map<String,String> map = new HashMap<>();
+	
+					for (IValue key : m) {
+						map.put(((IString) key).getValue(), ((IString) m.get(key)).getValue());
+					}
+					
+					return map;
+				}
 			}
-		} catch (FactTypeUseException e) {
+		} catch (FactTypeUseException | IOException e) {
 			Rasctivator.logException("could not parse uses tag", e);
 		}
 		
