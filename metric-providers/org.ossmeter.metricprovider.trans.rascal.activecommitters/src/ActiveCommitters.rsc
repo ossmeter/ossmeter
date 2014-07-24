@@ -23,7 +23,7 @@ set[str] committersToday(ProjectDelta delta = \empty()) {
 @metric{activeCommitters}
 @doc{Committers who have been active the last two weeks}
 @friendlyName{committersLastTwoWeeks}
-@uses{("committersToday":"committersToday")}
+@uses = ("committersToday":"committersToday")
 @appliesTo{generic()}
 rel[datetime, set[str]] activeCommitters(ProjectDelta delta = \empty(), rel[datetime,set[str]] prev = {}, set[str] committersToday = {}) {
   today    = delta.date;
@@ -34,7 +34,7 @@ rel[datetime, set[str]] activeCommitters(ProjectDelta delta = \empty(), rel[date
 @metric{longerTermActiveCommitters}
 @doc{Committers who have been active the last 6 months}
 @friendlyName{committersLastTwoWeeks}
-@uses{("committersToday":"committersToday")}
+@uses = ("committersToday":"committersToday")
 @appliesTo{generic()}
 rel[datetime, set[str]] longerTermActiveCommitters(ProjectDelta delta = \empty(), rel[datetime,set[str]] prev = {}, set[str] committersToday = {}) {
   today    = delta.date;
@@ -46,7 +46,7 @@ rel[datetime, set[str]] longerTermActiveCommitters(ProjectDelta delta = \empty()
 @metric{numberOfActiveCommitters}
 @doc{Number of active committers over time}
 @friendlyName{numberOfActiveCommitters}
-@uses{("activeCommitters" :"activeCommitters")}
+@uses = ("activeCommitters" :"activeCommitters")
 @appliesTo{generic()}
 @historic{}
 int numberOfActiveCommitters(rel[datetime, set[str]] activeCommitters = {}) 
@@ -55,7 +55,7 @@ int numberOfActiveCommitters(rel[datetime, set[str]] activeCommitters = {})
 @metric{numberOfActiveCommittersLongTerm}
 @doc{Number of active committers over time}
 @friendlyName{numberOfActiveCommittersLongTerm}
-@uses{("longerTermActiveCommitters" :"activeCommitters")}
+@uses = ("longerTermActiveCommitters" :"activeCommitters")
 @appliesTo{generic()}
 int numberOfActiveCommittersLongTerm(rel[datetime, set[str]] activeCommitters = {}) 
   = size({c | /str c := activeCommitters});
@@ -63,7 +63,7 @@ int numberOfActiveCommittersLongTerm(rel[datetime, set[str]] activeCommitters = 
 @metric{maximumActiveCommittersEver}
 @doc{What is the maximum number of committers who have been active together in any two week period?}
 @friendlyName{maximumActiveCommittersEver}
-@uses{("numberOfActiveCommitters.historic" :"history")}
+@uses = ("numberOfActiveCommitters.historic" :"history")
 @appliesTo{generic()}
 int maximumActiveCommittersEver(rel[datetime d, int n] history = {}) {
   return max(history<n>);
@@ -72,10 +72,10 @@ int maximumActiveCommittersEver(rel[datetime d, int n] history = {}) {
 @metric{developmentTeamStability}
 @doc{based on committer activity, what is the health of the community?}
 @friendlyName{Development team stability}
-@uses{("numberOfActiveCommitters.historic" :"history"
+@uses = ("numberOfActiveCommitters.historic" :"history"
       ,"maximumActiveCommittersEver":"maxDevs"
       ,"numberOfActiveCommitters":"activeDevs"
-      ,"numberOfActiveCommittersLongTerm":"longTermActive")}
+      ,"numberOfActiveCommittersLongTerm":"longTermActive")
 @appliesTo{generic()}
 Factoid developmentTeamStability(rel[datetime day, int active] history = {}, int maxDevs = 0, int activeDevs = 0, int longTermActive = 0) {
   sorted = sort(history, bool(tuple[datetime,int] a, tuple[datetime,int] b) { return a[0] < b[0]; });
