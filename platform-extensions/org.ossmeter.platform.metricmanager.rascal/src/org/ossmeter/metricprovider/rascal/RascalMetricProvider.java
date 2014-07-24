@@ -126,13 +126,8 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 	}
 
 	private boolean hasParameter(String param) {
-		List<KeywordParameter> defs = function.getKeywordParameterDefaults();
-		if (defs != null) {
-			for (KeywordParameter p : defs) {
-				if (p.getName().equals(param)) {
-					return true;
-				}
-			}
+		if (function.getFunctionType().hasKeywordParameter(param)) {
+			return true;
 		}
 		
 		return false;
@@ -207,7 +202,13 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		try {
 			List<VcsRepositoryDelta> repoDeltas = delta.getVcsDelta().getRepoDeltas();
 			Map<String, IValue> params = new HashMap<>();
-
+			
+			// don't continue if there isn't anything to do
+			if (repoDeltas.isEmpty()) {
+				System.err.println("Didn't find any delta. Skipping metric calculations!");
+				return null;
+			}
+			
 			synchronized (RascalMetricProvider.class) {
 				if (lastRevision == null) {
 					// the very first time, this will still be null, so we need to check for null below as well
