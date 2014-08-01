@@ -12,11 +12,16 @@ Require-Bundle: org.ossmeter.repository.model.bts.bugzilla,
  org.ossmeter.repository.model.sourceforge,
  org.ossmeter.platform;bundle-version="1.0.0",
  org.ossmeter.platform.vcs.svn;bundle-version="1.0.0",
- org.ossmeter.repository.model.importerdependencies,
- org.jsoup
+ org.ossmeter.repository.model.importerdependencies
 Export-Package: org.ossmeter.repository.model.sourceforge.importer
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: javax.ws.rs,
  org.json.simple,
- org.jsoup;version="1.6.1"
+ org.jsoup;version="1.7.2",
+ org.jsoup.examples;version="1.7.2",
+ org.jsoup.helper;version="1.7.2",
+ org.jsoup.nodes;version="1.7.2",
+ org.jsoup.parser;version="1.7.2",
+ org.jsoup.safety;version="1.7.2",
+ org.jsoup.select;version="1.7.2"

@@ -11,13 +11,17 @@ Require-Bundle: org.ossmeter.repository.model.eclipse,
  org.ossmeter.repository.model.vcs.cvs,
  org.ossmeter.platform.communicationchannel.nntp;bundle-version="1.0.0",
  org.ossmeter.repository.model.cc.nntp,
- org.ossmeter.repository.model.importerdependencies
+ org.ossmeter.repository.model.importerdependencies;bundle-version="1.0.0"
 Export-Package: org.ossmeter.repository.model.eclipse.importer
 Import-Package: org.apache.commons.net,
  org.json.simple,
- org.jsoup;version="1.6.1",
- org.jsoup.nodes;version="1.6.1",
- org.jsoup.select;version="1.6.1",
+ org.jsoup;version="1.7.2",
+ org.jsoup.examples;version="1.7.2",
+ org.jsoup.helper;version="1.7.2",
+ org.jsoup.nodes;version="1.7.2",
+ org.jsoup.parser;version="1.7.2",
+ org.jsoup.safety;version="1.7.2",
+ org.jsoup.select;version="1.7.2",
  org.ossmeter.platform,
  org.ossmeter.repository.model.vcs.cvs
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
