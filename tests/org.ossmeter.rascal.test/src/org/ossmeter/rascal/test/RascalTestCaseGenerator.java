@@ -23,11 +23,13 @@ import org.eclipse.imp.pdb.facts.io.BinaryValueWriter;
 import org.eclipse.imp.pdb.facts.io.StandardTextReader;
 import org.eclipse.imp.pdb.facts.type.Type;
 import org.eclipse.imp.pdb.facts.type.TypeStore;
+import org.ossmeter.metricprovider.rascal.RascalFactoidProvider;
 import org.ossmeter.metricprovider.rascal.RascalManager;
 import org.ossmeter.metricprovider.rascal.RascalMetricProvider;
 import org.ossmeter.metricprovider.rascal.RascalProjectDeltas;
 import org.ossmeter.platform.Date;
 import org.ossmeter.platform.IMetricProvider;
+import org.ossmeter.platform.ITransientMetricProvider;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.app.example.util.ProjectCreationUtil;
 import org.ossmeter.platform.delta.ProjectDelta;
@@ -112,10 +114,19 @@ public class RascalTestCaseGenerator implements IApplication  {
 						ex.run();
 						
 						for (IMetricProvider mp : metricProviders) {
+							IValue result = null;
+							
 							if (mp instanceof RascalMetricProvider) {
-								IValue result = ((RascalMetricProvider) mp).getMetricResult(project, mp, manager);
-								handleNewValue(new File(dir, mp.getIdentifier()), result, null, eval, logger);
+								result = ((RascalMetricProvider) mp).getMetricResult(project, mp, manager);
+							} else if (mp instanceof RascalFactoidProvider) {
+								RascalFactoidProvider rfp = (RascalFactoidProvider) mp;
+								result = rfp.getMeasuredFactoid(rfp.adapt(platform.getMetricsRepository(project).getDb()), eval.getValueFactory());								
+							} else {
+								logger.warn("Unknown metric provider: " + mp.getIdentifier());
+								continue;
 							}
+							
+							handleNewValue(new File(dir, mp.getIdentifier()), result, null, eval, logger);
 						}
 					}
 				}

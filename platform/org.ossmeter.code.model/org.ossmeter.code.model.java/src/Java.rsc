@@ -13,8 +13,8 @@ rel[Language, loc, M3] javaM3(loc project, ProjectDelta delta, map[loc repos,loc
   rel[Language, loc, M3] result = {};
   
   // TODO: we will add caching on disk again and use the deltas to predict what to re-analyze and what not
-  for (/VcsRepository repo := delta) {
-    folders = { *checkouts[repo.url] };
+  for (/VcsRepository repo := delta, repo.url in checkouts) {
+    folders = { checkouts[repo.url] };
     sources = findSourceRoots(folders);
     jars = findJars(folders);
     setEnvironmentOptions(jars + sources, sources);
@@ -33,8 +33,8 @@ rel[Language, loc, AST] javaAST(loc project, ProjectDelta delta, map[loc repos,l
   rel[Language, loc, AST] result = {};
   
   // TODO: we will add caching on disk again and use the deltas to predict what to re-analyze and what not
-  for (/VcsRepository repo := delta) {
-    folders = { *checkouts[repo.url] };
+  for (/VcsRepository repo := delta, repo.url in checkouts) {
+    folders = { checkouts[repo.url] };
     sources = findSourceRoots(folders);
     jars = findJars(folders);
     setEnvironmentOptions(jars + sources, sources);
