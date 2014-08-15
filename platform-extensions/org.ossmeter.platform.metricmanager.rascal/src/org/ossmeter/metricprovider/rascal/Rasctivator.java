@@ -1,6 +1,7 @@
 package org.ossmeter.metricprovider.rascal;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.Priority;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.ossmeter.platform.logging.OssmeterLoggerFactory;
@@ -19,7 +20,9 @@ public class Rasctivator implements BundleActivator {
 	}
 
 	public static void logException(Object message, Throwable cause) {
-		LOGGER.error(message, cause);
+//		LOGGER.log(Priority.ERROR, message, cause);
+		System.err.println(message);
+		cause.printStackTrace();
 	}
 
 	@Override
