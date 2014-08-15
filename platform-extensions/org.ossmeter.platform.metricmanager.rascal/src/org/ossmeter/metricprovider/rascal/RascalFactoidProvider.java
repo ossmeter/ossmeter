@@ -104,7 +104,8 @@ public class RascalFactoidProvider extends AbstractFactoidMetricProvider {
 	}
 	
 	public IValue getMeasuredFactoid(Factoids db, IValueFactory vf) {
-		return factoidToValue(db.getFactoids().findOneByMetricId(getIdentifier()), vf);
+		Factoid factoid = db.getFactoids().findOneByMetricId(getIdentifier());
+		return factoid != null ? factoidToValue(factoid, vf) : null;
 	}
 	
 }

@@ -29,7 +29,6 @@ import org.ossmeter.metricprovider.rascal.RascalMetricProvider;
 import org.ossmeter.metricprovider.rascal.RascalProjectDeltas;
 import org.ossmeter.platform.Date;
 import org.ossmeter.platform.IMetricProvider;
-import org.ossmeter.platform.ITransientMetricProvider;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.app.example.util.ProjectCreationUtil;
 import org.ossmeter.platform.delta.ProjectDelta;
