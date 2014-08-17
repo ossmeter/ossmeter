@@ -24,7 +24,7 @@ rel[Language, loc, M3] genericM3(loc project, ProjectDelta delta, map[loc repos,
       content = readFile(file);
       chs = size(content);
       numLines = chs == 0 ? 1 : (1 | it + 1 | /\n/ := content);
-      lastline = size(readFileLines(file)[-1]);
+      lastline = chs == 0 ? 1 : size(readFileLines(file)[-1]);
       m@declarations = { <file[scheme="m3+unit"], file(0,chs,<1,0>,<numLines, lastline>)> }; // TODO remove
     }
     catch IO(str msg) : {
