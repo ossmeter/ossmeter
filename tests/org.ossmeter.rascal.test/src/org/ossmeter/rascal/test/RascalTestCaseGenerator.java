@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -34,6 +35,7 @@ import org.ossmeter.platform.app.example.util.ProjectCreationUtil;
 import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.platform.osgi.executors.MetricListExecutor;
+import org.ossmeter.platform.vcs.workingcopy.manager.WorkingCopyFactory;
 import org.ossmeter.repository.model.LocalStorage;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectExecutionInformation;
@@ -88,8 +90,11 @@ public class RascalTestCaseGenerator implements IApplication  {
 
 		// generate test data
 		for (Project project : projects) {
+			// get initial checkout
+			
 			for (VcsRepository repo : project.getVcsRepositories()) {
-				Date startDate = platform.getVcsManager().getDateForRevision(repo, platform.getVcsManager().getFirstRevision(repo)).addDays(-1);
+				String firstRevision = platform.getVcsManager().getFirstRevision(repo);
+				Date startDate = platform.getVcsManager().getDateForRevision(repo, firstRevision).addDays(-1);
 				Date today = new Date();
 				
 				Date[] dates = Date.range(startDate.addDays(1), today.addDays(-1));
@@ -100,6 +105,10 @@ public class RascalTestCaseGenerator implements IApplication  {
 						File dir = new File(testDataDir, project.getName() + "/" + encode(repo.getUrl()) + "/" + date.toString());
 						dir.mkdirs();
 						
+						MetricListExecutor ex = new MetricListExecutor(platform, project, delta, date);
+						ex.setMetricList(metricProviders);
+						ex.run();
+						
 						IValue rascalDelta = RascalMetricProvider.computeDelta(project, delta, manager, logger);
 						IValue rascalASTs = RascalMetricProvider.computeAsts(project, delta, manager, logger);
 						IValue rascalM3s = RascalMetricProvider.computeM3(project, delta, manager, logger);
@@ -107,10 +116,6 @@ public class RascalTestCaseGenerator implements IApplication  {
 						handleNewValue(new File(dir, "delta.bin"), rascalDelta, deltaTypes, eval, logger);
 						handleNewValue(new File(dir, "asts.bin"), rascalASTs, extractedTypes, eval, logger);
 						handleNewValue(new File(dir, "m3s.bin"), rascalM3s, extractedTypes, eval, logger);
-						
-						MetricListExecutor ex = new MetricListExecutor(platform, project, delta, date);
-						ex.setMetricList(metricProviders);
-						ex.run();
 						
 						for (IMetricProvider mp : metricProviders) {
 							IValue result = null;
