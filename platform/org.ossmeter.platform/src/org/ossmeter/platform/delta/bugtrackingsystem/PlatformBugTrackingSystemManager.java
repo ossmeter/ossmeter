@@ -10,6 +10,8 @@ import org.ossmeter.platform.cache.bugtrackingsystem.IBugTrackingSystemDeltaCach
 import org.ossmeter.platform.delta.NoManagerFoundException;
 import org.ossmeter.repository.model.BugTrackingSystem;
 
+import com.mongodb.DB;
+
 public abstract class PlatformBugTrackingSystemManager implements IBugTrackingSystemManager<BugTrackingSystem> {
 	
 	protected List<IBugTrackingSystemManager> bugTrackingSystemManagers;
@@ -38,18 +40,18 @@ public abstract class PlatformBugTrackingSystemManager implements IBugTrackingSy
 	}
 	
 	@Override
-	public Date getFirstDate(BugTrackingSystem bugTrackingSystem)
+	public Date getFirstDate(DB db, BugTrackingSystem bugTrackingSystem)
 			throws Exception {
 		IBugTrackingSystemManager bugTrackingSystemManager = getBugTrackingSystemManager(bugTrackingSystem);
 		if (bugTrackingSystemManager != null) {
-			return bugTrackingSystemManager.getFirstDate(bugTrackingSystem);
+			return bugTrackingSystemManager.getFirstDate(db, bugTrackingSystem);
 		}
 		
 		return null;
 	}
 	
 	@Override
-	public BugTrackingSystemDelta getDelta(BugTrackingSystem bugTrackingSystem, Date date)  throws Exception {
+	public BugTrackingSystemDelta getDelta(DB db, BugTrackingSystem bugTrackingSystem, Date date)  throws Exception {
 		BugTrackingSystemDelta cache = getDeltaCache().getCachedDelta(bugTrackingSystem.getUrl(), date);
 		if (cache != null) {
 			System.err.println("BugTrackingSystemBug CACHE HIT!");
@@ -58,7 +60,7 @@ public abstract class PlatformBugTrackingSystemManager implements IBugTrackingSy
 		
 		IBugTrackingSystemManager bugTrackingSystemManager = getBugTrackingSystemManager(bugTrackingSystem);
 		if (bugTrackingSystemManager != null) {
-			BugTrackingSystemDelta delta = bugTrackingSystemManager.getDelta(bugTrackingSystem, date);
+			BugTrackingSystemDelta delta = bugTrackingSystemManager.getDelta(db, bugTrackingSystem, date);
 			getDeltaCache().putDelta(bugTrackingSystem.getUrl(), date, delta);
 			return delta;
 		}
@@ -66,7 +68,7 @@ public abstract class PlatformBugTrackingSystemManager implements IBugTrackingSy
 	}
 
 	@Override
-	public String getContents(BugTrackingSystem bugTrackingSystem, BugTrackingSystemBug bug) throws Exception {
+	public String getContents(DB db, BugTrackingSystem bugTrackingSystem, BugTrackingSystemBug bug) throws Exception {
 		String cache = getContentsCache().getCachedContents(bug);
 		if (cache != null) {
 			System.err.println("BugTrackingSystemBug CACHE HIT!");
@@ -77,7 +79,7 @@ public abstract class PlatformBugTrackingSystemManager implements IBugTrackingSy
 		getBugTrackingSystemManager((bug.getBugTrackingSystem()));
 		
 		if (bugTrackingSystemManager != null) {
-			String contents = bugTrackingSystemManager.getContents(bugTrackingSystem, bug);
+			String contents = bugTrackingSystemManager.getContents(db, bugTrackingSystem, bug);
 			getContentsCache().putContents(bug, contents);
 			return contents;
 		}
@@ -85,7 +87,7 @@ public abstract class PlatformBugTrackingSystemManager implements IBugTrackingSy
 	}
 	
 	@Override
-	public String getContents(BugTrackingSystem bugTrackingSystem, BugTrackingSystemComment comment) throws Exception {
+	public String getContents(DB db, BugTrackingSystem bugTrackingSystem, BugTrackingSystemComment comment) throws Exception {
 		String cache = getContentsCache().getCachedContents(comment);
 		if (cache != null) {
 			System.err.println("BugTrackingSystemBug CACHE HIT!");
@@ -96,7 +98,7 @@ public abstract class PlatformBugTrackingSystemManager implements IBugTrackingSy
 									getBugTrackingSystemManager((comment.getBugTrackingSystem()));
 		
 		if (bugTrackingSystemManager != null) {
-			String contents = bugTrackingSystemManager.getContents(bugTrackingSystem, comment);
+			String contents = bugTrackingSystemManager.getContents(db, bugTrackingSystem, comment);
 			getContentsCache().putContents(comment, contents);
 			return contents;
 		}
