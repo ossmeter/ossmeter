@@ -87,9 +87,19 @@ Factoid mainLanguage(map[str, int] locPerLanguage = ()) {
   if (size(sorted) > 1) {
     otherTxt = intercalate(", ", ["<l[0]> (<l[1]>)" | l <- sorted[1..]]);
   
-    txt += " Other used languages are <otherTxt>.";
+    txt += " <size(sorted) - 1> other languages were recognized: <otherTxt>.";
   } 
 
   return factoid(txt, \four()); // star rating by language level? weighted by LOC? // http://www.cs.bsu.edu/homepages/dmz/cs697/langtbl.htm	
 }
+
+
+
+
+
+
+
+
+
+
 
