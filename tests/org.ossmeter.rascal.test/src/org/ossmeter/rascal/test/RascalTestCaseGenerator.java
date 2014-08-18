@@ -25,6 +25,7 @@ import org.eclipse.imp.pdb.facts.type.Type;
 import org.eclipse.imp.pdb.facts.type.TypeStore;
 import org.ossmeter.metricprovider.rascal.RascalFactoidProvider;
 import org.ossmeter.metricprovider.rascal.RascalManager;
+import org.ossmeter.metricprovider.rascal.RascalMetricHistoryWrapper;
 import org.ossmeter.metricprovider.rascal.RascalMetricProvider;
 import org.ossmeter.metricprovider.rascal.RascalProjectDeltas;
 import org.ossmeter.platform.Date;
@@ -39,6 +40,8 @@ import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectExecutionInformation;
 import org.ossmeter.repository.model.VcsRepository;
 import org.rascalmpl.interpreter.Evaluator;
+
+import sun.nio.cs.HistoricallyNamedCharset;
 
 import com.googlecode.pongo.runtime.PongoFactory;
 import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
@@ -99,7 +102,7 @@ public class RascalTestCaseGenerator implements IApplication  {
 				
 				for (Date date : dates) {			
 					ProjectDelta delta = new ProjectDelta(project, date, platform);
-					if (delta.create()) {
+					if (delta.create() && !delta.getVcsDelta().getRepoDeltas().isEmpty()) {
 						File dir = new File(testDataDir, project.getName() + "/" + encode(repo.getUrl()) + "/" + date.toString());
 						dir.mkdirs();
 						
@@ -120,10 +123,15 @@ public class RascalTestCaseGenerator implements IApplication  {
 							
 							if (mp instanceof RascalMetricProvider) {
 								result = ((RascalMetricProvider) mp).getMetricResult(project, mp, manager);
-							} else if (mp instanceof RascalFactoidProvider) {
+							}
+							else if (mp instanceof RascalMetricHistoryWrapper) {
+								// ignore because its automatically derived
+							}
+							else if (mp instanceof RascalFactoidProvider) {
 								RascalFactoidProvider rfp = (RascalFactoidProvider) mp;
 								result = rfp.getMeasuredFactoid(rfp.adapt(platform.getMetricsRepository(project).getDb()), eval.getValueFactory());								
-							} else {
+							} 
+							else {
 								logger.warn("Unknown metric provider: " + mp.getIdentifier());
 								continue;
 							}
