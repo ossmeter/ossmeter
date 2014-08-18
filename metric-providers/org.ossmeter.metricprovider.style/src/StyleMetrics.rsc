@@ -24,8 +24,9 @@ alias Table = rel[str group, str kind, loc file, int line];
 @friendlyName{Style Violations}
 @appliesTo{java()}
 Table styleViolations(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-  messages = [*styleChecker(m3, {ast}) | <\java(), file, ast> <- asts, <\java(), file, m3> <- m3s, bprintln("processing <file>")];
-  return { <group,kind,file.top, file.begin.line> | str kind(str group, loc file) <- messages};
+  messages = [*checkAll(ast, m3) | <\java(), file, ast> <- asts, <\java(), file, m3> <- m3s, bprintln("processing <file>")];
+  println("messages are: <messages>");
+  return { <group,kind,file.top, file.begin.line?1> | str kind(str group, loc file) <- messages};
 }
 
 @metric{filesWithBlockCheckViolations}
