@@ -5,6 +5,7 @@ import org.apache.log4j.Priority;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.ossmeter.platform.logging.OssmeterLoggerFactory;
+import org.rascalmpl.interpreter.StackTrace;
 
 public class Rasctivator implements BundleActivator {
 	private static final Logger LOGGER = new OssmeterLoggerFactory().makeNewLoggerInstance("rascalLogger");
@@ -24,9 +25,15 @@ public class Rasctivator implements BundleActivator {
 		System.err.println(message);
 		cause.printStackTrace();
 	}
+	
+	public static void printRascalTrace(StackTrace trace) {
+		System.err.println(trace);
+	}
 
 	@Override
 	public void stop(BundleContext bundleContext) throws Exception {
 		Rasctivator.context = null;
 	}
+
+	
 }

@@ -460,7 +460,13 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		for (RascalManager.Extractor e : extractors) {
 			// generally extractors are assumed to use @memo
 			ISet result = (ISet) e.call(projectLoc, rascalDelta, wcf, scratch);
-			allResults.insertAll(result);
+			
+			if (result != null) {
+				allResults.insertAll(result);
+			}
+			else {
+				logger.error("ignoring all models for extractor " + e);
+			}
 		}
 		
 		return allResults.done(); // TODO what if null?

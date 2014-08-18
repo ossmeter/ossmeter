@@ -37,12 +37,14 @@ import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.logging.OssmeterLogger;
 import org.rascalmpl.interpreter.Evaluator;
 import org.rascalmpl.interpreter.NullRascalMonitor;
+import org.rascalmpl.interpreter.control_exceptions.Throw;
 import org.rascalmpl.interpreter.env.GlobalEnvironment;
 import org.rascalmpl.interpreter.env.ModuleEnvironment;
 import org.rascalmpl.interpreter.env.Pair;
 import org.rascalmpl.interpreter.load.StandardLibraryContributor;
 import org.rascalmpl.interpreter.result.AbstractFunction;
 import org.rascalmpl.interpreter.result.Result;
+import org.rascalmpl.interpreter.staticErrors.StaticError;
 import org.rascalmpl.values.ValueFactoryFactory;
 
 public class RascalManager {
@@ -80,11 +82,29 @@ public class RascalManager {
 		}
 		
 		public IValue call(ISourceLocation projectLocation, IConstructor delta, IMap workingCopyFolders, IMap scratchFolders) {
-			Result<IValue> result = function.call(new NullRascalMonitor(),
-					new Type[]{projectLocation.getType(), delta.getType(), workingCopyFolders.getType(), scratchFolders.getType()},
-					new IValue[]{projectLocation, delta, workingCopyFolders, scratchFolders}, null);
-			// TODO error handling
-			return result.getValue();
+			try {
+				Result<IValue> result = function.call(new NullRascalMonitor(),
+						new Type[]{projectLocation.getType(), delta.getType(), workingCopyFolders.getType(), scratchFolders.getType()},
+						new IValue[]{projectLocation, delta, workingCopyFolders, scratchFolders}, null);
+				return result.getValue();
+			}
+			catch (Throw e) {
+				Rasctivator.logException("Runtime error in model extractor", e);
+				Rasctivator.printRascalTrace(e.getTrace());
+			}
+			catch (StaticError e) {
+				Rasctivator.logException("Static error in model extractor", e);
+			}
+			catch (Throwable e) {
+				Rasctivator.logException("Unexpected implementation error while extracting model", e);
+			}
+			
+			return null;
+		}
+		
+		@Override
+		public String toString() {
+			return function.getName();
 		}
 	}
 	
