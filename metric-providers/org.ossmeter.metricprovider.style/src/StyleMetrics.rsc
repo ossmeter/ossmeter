@@ -37,7 +37,7 @@ Table styleViolations(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] 
 @historic{}
 int filesWithBlockCheckViolations(rel[Language, loc, M3] m3s = {}, Table styleViolations = {}) {
    javaFiles = {l | <\java(), l, _> <- m3s};
-   blockViolationFiles = { l | <"blockCheck", _, l, _> <- styleViolations};
+   blockViolationFiles = { l | <_, "blockCheck", l, _> <- styleViolations};
    return percent(size(blockViolationFiles), size(javaFiles));  
 }
 
