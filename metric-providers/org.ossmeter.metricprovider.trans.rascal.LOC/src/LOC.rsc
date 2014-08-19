@@ -19,7 +19,7 @@ import Generic;
 @appliesTo{generic()}
 map[loc, int] countLoc(rel[Language, loc, AST] asts = {}) {
   return (f:size(ls) | <generic(), f, lines(ls)> <- asts);
-}
+}   
 
 real giniLOC(map[loc, int] locs) {
   dist = distribution(locs);
