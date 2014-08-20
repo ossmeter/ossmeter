@@ -42,10 +42,38 @@ module org::ossmeter::metricprovider::MetricProvider
 extend org::ossmeter::metricprovider::ProjectDelta;
 extend org::ossmeter::metricprovider::Factoid;
 
+import analysis::statistics::SimpleRegression;
+import analysis::statistics::Inference;
+import analysis::statistics::Frequency;
+import DateTime;
+import String;
+import util::Math;
+import Set;
+import List;
+
 data MetricException
  = 
  // The metric is undefined for the given input and no sensible default value can be given: 
  undefined(str reason, loc subject)
  ;
 
+  
+real historicalSlope(rel[datetime day, num amount] history, int monthsAgo) {
+  if (history == {}) {
+    throw undefined("No history available for slope computation.", |unknown:///|);
+  }
+    
+  sorted = sort(history, bool(tuple[datetime,int] a, tuple[datetime,int] b) { return a[0] < b[0]; });
+  lastYear = [<d,m> | <d,m> <- sorted, d > decrementMonths(sorted[-1].day, monthsAgo)];
+  return size(lastYear) > 2 ? slope([<i,lastYear[i][1]> | i <- index(lastYear)]) : 0.0;
+}
+
+real spreadOverItems(map[value item, int amount] d) {
+  if (sum(d<amount>) == 0) {
+    return 1.0; // completely honest distribution of nothing over everything.
+  }
+  
+  dist = distribution(d);
+  return gini([<0,0>] + [<x, dist[x]> | x <- dist]);
+}
   

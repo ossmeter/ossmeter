@@ -81,15 +81,7 @@ int maximumActiveCommittersEver(rel[datetime d, int n] history = {}) {
       ,"numberOfActiveCommittersLongTerm":"longTermActive")
 @appliesTo{generic()}
 Factoid developmentTeamStability(rel[datetime day, int active] history = {}, int maxDevs = 0, int activeDevs = 0, int longTermActive = 0) {
-  if (history == {}) {
-    throw undefined("No commit history available", |unknown:///|);
-  }
-
-  sorted = sort(history, bool(tuple[datetime,int] a, tuple[datetime,int] b) { return a[0] < b[0]; });
-  
-  halfYearAgo = decrementMonths(sorted[-1].day, 6);  
-  lastYear = [<d,m> | <d,m> <- sorted, d > halfYearAgo];
-  sl = size(lastYear) > 2 ? slope([<i,lastYear[i][1]> | i <- index(lastYear)]) : 0;
+  sl = historicalSlope(history, 6);
 
   stability = \one();
   team = "";
