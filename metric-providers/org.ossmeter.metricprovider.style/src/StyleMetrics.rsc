@@ -144,7 +144,7 @@ Table understandability(rel[Language, loc, M3] m3s = {}, Table styleViolations =
 @appliesTo{java()}
 @uses=("understandability":"styleViolations")
 @historic{}
-int filesWithInefficiencies(rel[Language, loc, M3] m3s = {}, Table styleViolations = {})
+int filesWithUnderstandabilityIssues(rel[Language, loc, M3] m3s = {}, Table styleViolations = {})
   = percentageOfFilesWithViolations(m3s=m3s, violations=styleViolations);
 
 @metric{spreadOfUnderstandabilityIssues}
@@ -156,6 +156,7 @@ int filesWithInefficiencies(rel[Language, loc, M3] m3s = {}, Table styleViolatio
 real spreadOfUnderstandabilityIssues(rel[Language, loc, M3] m3s = {}, Table styleViolations = {}) 
   = spreadOverFiles(m3s=m3s, violations=styleViolations);
 
+@metric{errorProneFactoid}
 @uses=("spreadOfErrorProneness":"spreadOfErrorProneness"
       ,"filesWithErrorProneness":"filesWithErrorProneness"
       ,"filesWithErrorProneness.historic":"filesWithErrorPronenessHistory"
@@ -163,23 +164,61 @@ real spreadOfUnderstandabilityIssues(rel[Language, loc, M3] m3s = {}, Table styl
 @doc{Explains what the impact of style violations is for the project.}
 @friendlyName{Spread of style violations over files}
 @appliesTo{java()}      
-@metric{errorProneFactoid}      
 Factoid errorProneFactoid( real spreadOfErrorProneness  = 0.0
                          , int filesWithErrorProneness  = 0
                          , rel[datetime, int] fileWithErrorPronenessHistory = {}
-                         ) {
-   sl = historicalSlope(fileWithErrorPronenessHistory, 6);
+                         ) 
+  = genericFactoid("error prone", spread=spreadOfErrorProneness, files=filesWithErrorProneness, history=fileWithErrorPronenessHistory);
+
+@metric{errorProneFactoid}
+@uses=("spreadOfInefficiencies":"spreadOfInefficiencies" 
+      ,"filesWithInefficiencies":"filesWithInefficiencies"
+      ,"filesWithInefficiencies.historic":"filesWithInefficienciesHistory"
+      )
+@doc{Explains what the impact of style violations is for the project.}
+@friendlyName{Spread of style violations over files}
+@appliesTo{java()}      
+Factoid ineffientStringsFactoid( real spreadOfInefficiencies  = 0.0
+                               , int filesWithInefficiencies  = 0
+                               , rel[datetime, int] filesWithInefficienciesHistory = {}
+                         ) 
+  = genericFactoid("inefficient string usage", spread=spreadOfInefficiencies, files=filesWithInefficiencies, history=filesWithInefficienciesHistory);
+
+@metric{errorProneFactoid}
+@uses=("spreadOfUnderstandabilityIssues":"spreadOfUnderstandabilityIssues"
+      ,"filesWithUnderstandabilityIssues":"filesWithUnderstandabilityIssues"
+      ,"filesWithUnderstandabilityIssues.historic":"filesWithUnderstandabilityIssuesHistory"
+      )
+@doc{Explains what the impact of style violations is for the project.}
+@friendlyName{Spread of style violations over files}
+@appliesTo{java()}      
+Factoid understandabilityFactoid( real spreadOfUnderstandabilityIssues  = 0.0
+                               , int filesWithUnderstandabilityIssues  = 0
+                               , rel[datetime, int] filesWithUnderstandabilityIssuesHistory = {}
+                         ) 
+  = genericFactoid("hard to read", spread=spreadOfUnderstandabilityIssues, files=filesWithUnderstandabilityIssues, history=filesWithUnderstandabilityIssuesHistory);
+
+
+private Factoid genericFactoid(str category
+                      , real spread  = 0.0
+                      , int files  = 0
+                      , rel[datetime, int] history = {}
+                      ) {
+   sl = historicalSlope(history, 6);
                          
-   switch (<sl < 0, sl == 0, sl > 0>) {
-     case <true   , _      , _     > : { expect1 = "and its getting worse in the last six months"; expect2 = "but style violations have been spreading in the last six months"; }
+   expect1 = "";
+   expect2 = "";
+                            
+   switch (<sl < 0.1, -0.1 >= sl && sl <= 0.1, sl > 0.1>) {
+     case <true   , _      , _     > : { expect1 = "and its getting worse in the last six months"; expect2 = "but issues have been spreading in the last six months"; }
      case <_      , true   , _     > : { expect1 = "and this situation is stable"; expect2 = "but the situation is stable"; }
      case <_      , _      , true  > : { expect1 = "but the situation is improving over the last six months"; expect2 = "and the situaton has been improving in the last six months"; }
    }
                            
-   switch (<spreadOfErrorProneness > 0.5, spreadOfErrorProneness < 0.2,  spreadOfErrorProneness == 0.0>) {
-     case <_,_,true> : return factoid("Currently, there is no error prone code in this project <expect1>.", \four());
-     case <_,true,_> : return factoid("Currently, error prone code is localized to a minor part of the project <expect2>.", \three());
-     case <true,_,_> : return factoid("Currently, error prone code practices are wide spread throughout the project <expect1>.", \one());
-     default         : return factoid("Currently, there is a some small amount of error prone code spread through a small part of the project <expect2>.", \two());
+   switch (<spread > 0.5, spread < 0.2,  spread == 0.0>) {
+     case <_,_,true> : return factoid("Currently, there is no <category> code in this project <expect1>.", \four());
+     case <_,true,_> : return factoid("Currently, <category> code is localized to a minor part of the project <expect2>.", \three());
+     case <true,_,_> : return factoid("Currently, <category> code practices are wide spread throughout the project <expect1>.", \one());
+     default         : return factoid("Currently, there is a some small amount of <category> code spread through a small part of the project <expect2>.", \two());
    }
 }
