@@ -4,6 +4,7 @@ import lang::php::m3::Core;
 import lang::php::m3::AST;
 import lang::php::m3::FillM3;
 import lang::php::ast::AbstractSyntax;
+import lang::php::ast::System;
 import lang::php::util::Utils;
 import org::ossmeter::metricprovider::ProjectDelta; 
 

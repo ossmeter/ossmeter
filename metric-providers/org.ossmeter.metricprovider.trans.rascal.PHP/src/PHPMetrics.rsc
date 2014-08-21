@@ -12,12 +12,12 @@ import util::Math;
 @appliesTo{php()}
 map[int, int] getNameResolutionHistogram(rel[Language, loc, M3] m3s = {})
 {
-	if (m3s == {})
+	models = { m | <php(), _, m> <- m3s };
+
+	if (models == {})
 	{
 		return ();
 	}
-
-	models = { m | <php(), _, m> <- m3s };
 
 	M3 m3 = composeM3(|project:///|, models);
 

@@ -41,8 +41,6 @@ import org.ossmeter.repository.model.ProjectExecutionInformation;
 import org.ossmeter.repository.model.VcsRepository;
 import org.rascalmpl.interpreter.Evaluator;
 
-import sun.nio.cs.HistoricallyNamedCharset;
-
 import com.googlecode.pongo.runtime.PongoFactory;
 import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
 import com.mongodb.Mongo;
