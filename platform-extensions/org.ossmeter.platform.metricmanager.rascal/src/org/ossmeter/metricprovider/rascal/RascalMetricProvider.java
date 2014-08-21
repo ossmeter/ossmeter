@@ -296,6 +296,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		} catch (Throw e) {
 		    if (!(e.getException() instanceof IConstructor && ((IConstructor) e.getException()).getName().equals("undefined"))) {
 		    	logger.error("metric threw an exception: " + e.getMessage() + " at " + e.getLocation(), e);
+		    	logger.error(e.getTrace());
 		    	throw e;
 		    }
 		    else {
