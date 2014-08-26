@@ -20,6 +20,51 @@ set[str] committersToday(ProjectDelta delta = \empty()) {
   return {co.author | /VcsCommit co := delta};
 }
 
+@metric{firstLastCommitDatesPerDeveloper}
+@doc{firstLastCommitDatesPerDeveloper}
+@friendlyName{First and last commit dates per developer}
+@uses = ("committersToday":"committersToday")
+@appliesTo{generic()}
+map[str, tuple[datetime, datetime]] firstLastCommitDates(ProjectDelta delta = \empty(), map[str, tuple[datetime first, datetime last]] prev = (), 
+  set[str] committersToday = {}) {
+  map[str, tuple[datetime, datetime]] developerCommitDates = ();
+  for (author <- committersToday) {
+    if (author in prev) {
+      developerCommitDates[author] = <prev[author].first, delta.date>;
+    } else {
+      developerCommitDates[author] = <delta.date, delta.date>;
+    }
+  }
+  return developerCommitDates;
+}
+
+@metric{committersAge}
+@doc{Age of committers}
+@friendlyName{Age of committers}
+@uses = ("firstLastCommitDatesPerDeveloper" : "commitDates")
+@appliesTo{generic()}
+rel[str, int] ageOfCommitters(map[str, tuple[datetime first, datetime last]] commitDates = ()) {
+  return { <author, daysDiff(commitDates[author].first, commitDates[author].last)> | author <- commitDates };
+}
+
+@metric{developmentTeam}
+@doc{Development team}
+@friendlyName{Development team}
+@uses = ("committersToday" : "committersToday")
+@appliesTo(generic())
+set[str] developmentTeam(set[str] prev = {}, set[str] committersToday = {}) {
+  return prev + committersToday;
+}
+
+@metric{sizeOfDevelopmentTeam}
+@doc{Size of development team}
+@friendlyName{Size of development team}
+@uses = ("developmentTeam" : "team")
+@appliesTo(generic())
+int sizeOfDevelopmentTeam(set[str] team = {}) {
+  return size(team);
+}
+
 @metric{activeCommitters}
 @doc{Committers who have been active the last two weeks}
 @friendlyName{committersLastTwoWeeks}
