@@ -51,7 +51,7 @@ rel[str, int] ageOfCommitters(map[str, tuple[datetime first, datetime last]] com
 @doc{Development team}
 @friendlyName{Development team}
 @uses = ("committersToday" : "committersToday")
-@appliesTo(generic())
+@appliesTo{generic()}
 set[str] developmentTeam(set[str] prev = {}, set[str] committersToday = {}) {
   return prev + committersToday;
 }
@@ -60,7 +60,7 @@ set[str] developmentTeam(set[str] prev = {}, set[str] committersToday = {}) {
 @doc{Size of development team}
 @friendlyName{Size of development team}
 @uses = ("developmentTeam" : "team")
-@appliesTo(generic())
+@appliesTo{generic()}
 int sizeOfDevelopmentTeam(set[str] team = {}) {
   return size(team);
 }
