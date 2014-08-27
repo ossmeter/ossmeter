@@ -187,7 +187,8 @@ public class RascalManager {
 			List<String> requiredLibs = mf.getRequiredLibraries(bundle);
 			if (requiredLibs != null) {
 				for (String lib : requiredLibs) {
-					JarInputStreamURIResolver resolver = new JarInputStreamURIResolver(bundle.getResource(lib).toURI(), evaluator.getResolverRegistry());
+					URL libURL = bundle.getResource(lib);
+					JarInputStreamURIResolver resolver = new JarInputStreamURIResolver(libURL.toURI(), evaluator.getResolverRegistry());
 					evaluator.getResolverRegistry().registerInput(resolver);
 	
 					try {
@@ -263,6 +264,14 @@ public class RascalManager {
 				collectClassPathForBundle(dep.getProviderWiring().getBundle(),
 						classPath, compilerClassPath);
 			}
+
+			List<String> requiredLibs = new RascalBundleManifest().getRequiredLibraries(bundle);
+			if (requiredLibs != null) {
+				for (String lib : requiredLibs) {
+					classPath.add(bundle.getResource(lib));
+				}
+			}
+
 		} catch (IOException e) {
 			Rasctivator.logException("error while tracing dependencies", e);
 		}
