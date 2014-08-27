@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.jar.JarInputStream;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IExtension;
@@ -45,6 +46,9 @@ import org.rascalmpl.interpreter.load.StandardLibraryContributor;
 import org.rascalmpl.interpreter.result.AbstractFunction;
 import org.rascalmpl.interpreter.result.Result;
 import org.rascalmpl.interpreter.staticErrors.StaticError;
+import org.rascalmpl.interpreter.utils.RascalManifest;
+import org.rascalmpl.uri.JarInputStreamURIResolver;
+import org.rascalmpl.uri.URIUtil;
 import org.rascalmpl.values.ValueFactoryFactory;
 
 public class RascalManager {
@@ -180,6 +184,17 @@ public class RascalManager {
 				evaluator.addRascalSearchPath(bundle.getResource(root).toURI());
 			}
 
+			for (String lib : mf.getRequiredLibraries(bundle)) {
+				JarInputStreamURIResolver resolver = new JarInputStreamURIResolver(bundle.getEntry(lib).toURI(), evaluator.getResolverRegistry());
+				evaluator.getResolverRegistry().registerInput(resolver);
+
+				try {
+					addJarToSearchPath(resolver, evaluator);
+				} catch (IOException e) {
+					Rasctivator.logException("ignoring lib " + lib, e);
+				}
+			}
+			
 			evaluator.addClassLoader(new BundleClassLoader(bundle));
 			configureClassPath(bundle, evaluator);
 		} catch (Throwable e) {
@@ -187,6 +202,18 @@ public class RascalManager {
 					+ bundle, e);
 		}
 	}
+	
+	  public static void addJarToSearchPath(JarInputStreamURIResolver resolver, Evaluator eval) throws URISyntaxException, IOException {
+		  try (JarInputStream jarStream = new JarInputStream(resolver.getJarStream())) {
+			  List<String> roots = new RascalManifest().getSourceRoots(jarStream);
+
+			  if (roots != null) {
+				  for (String root : roots) {
+					  eval.addRascalSearchPath(URIUtil.create(resolver.scheme(), "", "/" + root));
+				  }
+			  }
+		  }
+	  }
 
 	private void configureClassPath(Bundle bundle, Evaluator evaluator) {
 		List<URL> classPath = new LinkedList<URL>();

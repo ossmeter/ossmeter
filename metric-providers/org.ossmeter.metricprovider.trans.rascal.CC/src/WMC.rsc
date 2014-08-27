@@ -20,14 +20,19 @@ import org::ossmeter::metricprovider::ProjectDelta;
 @friendlyName{Weighted Method Count}
 @appliesTo{java()}
 @uses = ("CC" : "methodCC")
-map[loc class, num wmcCount] getWMC(
+map[loc class, int wmcCount] getWMC(
 	ProjectDelta delta = ProjectDelta::\empty(),
 	map[loc, loc] workingCopies = (),
 	rel[Language, loc, M3] m3s = {},
-	map[loc, int] methodCC = ())
+	map[loc, int] methodCC = (),
+	map[loc, num] prev = ()
+	)
 {
-	map[loc class, num wmcCount] result = ();
+	result = prev;
 	changed = getChangedFilesInWorkingCopyFolders(delta, workingCopies);
+	
+	// remove results for changed files
+	result -= (file : 0 | file <- changed); 
 	
 	for (file <- changed, m3 <- m3s[java(), file]) {
 		result += (cl : sum([methodCC[m] | m <- m3@containment[cl], isMethod(m)]) | <cl, _> <- m3@containment, isClass(cl));
@@ -41,8 +46,10 @@ map[loc class, num wmcCount] getWMC(
 @friendlyName{McCabe's Cyclomatic Complexity Metric}
 @appliesTo{java()}
 map[loc, int] getCC(ProjectDelta delta = ProjectDelta::\empty(),
-  map[loc, loc] workingCopies = (),
-  rel[Language, loc, AST] asts = {}) 
+    map[loc, loc] workingCopies = (),
+    rel[Language, loc, AST] asts = {},
+    map[loc, int] prev = ()
+  ) 
 {
   map[loc method, int cc] result = ();
   changed = getChangedFilesInWorkingCopyFolders(delta, workingCopies);
@@ -73,7 +80,15 @@ int countCC(Declaration ast) {
     case \catch(Declaration exception, Statement body): count += 1;
     case \infix(Expression lhs, "||", Expression rhs, list[Expression] extendedOperands): count += 1 + size(extendedOperands);
     case \infix(Expression lhs, "&&", Expression rhs, list[Expression] extendedOperands): count += 1 + size(extendedOperands);
+    
+    // for embedded declarations we have already counted the nested methods (visit is bottom-up), 
+    // so lets remove them again.
+    // this should not happen too often, so its not much of a performance penalty.
+    case \newObject(_, _, _, Declaration nested)    : count -= countCC(nested);
+    case \newObject(_, _, Declaration nested)       : count -= countCC(nested);
+    case \declarationExpression(Declaration nested) : count -= countCC(nested);
   }
+  
   return count;
 }
 
