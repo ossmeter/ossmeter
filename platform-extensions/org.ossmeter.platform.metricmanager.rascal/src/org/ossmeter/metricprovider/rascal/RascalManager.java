@@ -184,14 +184,17 @@ public class RascalManager {
 				evaluator.addRascalSearchPath(bundle.getResource(root).toURI());
 			}
 
-			for (String lib : mf.getRequiredLibraries(bundle)) {
-				JarInputStreamURIResolver resolver = new JarInputStreamURIResolver(bundle.getEntry(lib).toURI(), evaluator.getResolverRegistry());
-				evaluator.getResolverRegistry().registerInput(resolver);
-
-				try {
-					addJarToSearchPath(resolver, evaluator);
-				} catch (IOException e) {
-					Rasctivator.logException("ignoring lib " + lib, e);
+			List<String> requiredLibs = mf.getRequiredLibraries(bundle);
+			if (requiredLibs != null) {
+				for (String lib : requiredLibs) {
+					JarInputStreamURIResolver resolver = new JarInputStreamURIResolver(bundle.getResource(lib).toURI(), evaluator.getResolverRegistry());
+					evaluator.getResolverRegistry().registerInput(resolver);
+	
+					try {
+						addJarToSearchPath(resolver, evaluator);
+					} catch (IOException e) {
+						Rasctivator.logException("ignoring lib " + lib, e);
+					}
 				}
 			}
 			
