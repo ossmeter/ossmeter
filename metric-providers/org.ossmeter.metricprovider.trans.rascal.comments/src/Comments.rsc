@@ -7,25 +7,32 @@ import org::ossmeter::metricprovider::ProjectDelta;
 import org::ossmeter::metricprovider::MetricProvider;
 
 import Prelude;
+import util::Math;
+
+import analysis::graphs::Graph;
 
 data CommentStats
-  = stats(int linesWithComment, int linesInHeader, int commentedOutCodeLines)
+  = stats(int linesWithComment, int headerStart, int headerSize, int commentedOutCodeLines)
   | unknown()
   ;
 
 
 @memo
 CommentStats commentStats(list[str] lines, Language lang) {
+  CommentStats result;
+
   switch(lang) {
-    case java(): return commentStats(a, {<"/*", "*/">}, {"//"}, {";", "{", "}"});
-    case php(): return commentStats(a, {<"/*", "*/">}, {"//", "#"}, {";", "{", "}", "$"});
-    default: return unknown();
+    case java(): result = commentStats(lines, {<"/*", "*/">}, {"//"}, {";", "{", "}"}, {"package", "import"});
+    case php(): result = commentStats(lines, {<"/*", "*/">}, {"//", "#"}, {";", "{", "}", "$"}, {"\<?php", "\<?"});
+    default: result = unknown();
   }
+  
+  return result;
 }
 
-CommentStats commentStats(list[str] lines, rel[str, str] blockDelimiters, set[str] lineDelimiters, set[str] codePatterns) {
+CommentStats commentStats(list[str] lines, rel[str, str] blockDelimiters, set[str] lineDelimiters, set[str] codePatterns, set[str] ignorePrefixesForHeader) {
 
-  int cloc = 0, hloc = 0, coloc = 0;
+  int cloc = 0, hskip = 0, hloc = 0, coloc = 0;
   
   containsCode = bool(str s) {
     return any(p <- codePatterns, findFirst(s, p) > -1);
@@ -34,17 +41,15 @@ CommentStats commentStats(list[str] lines, rel[str, str] blockDelimiters, set[st
   inBlock = false;
   currentDelimiter = "";  
 
-  bool firstLine = true;
   bool inHeader = true;
+  bool headerHasComments = false;
   for (l <- lines) {
+    originalLine = l;
     hasCode = false;
     hasComment = false;
     
     if (inBlock) {
       hasComment = true;
-      if (inHeader) {
-        hloc += 1;
-      }
     
       if (/<pre:.*><currentDelimiter><rest:.*>/ := l) {      
         hasCode = containsCode(pre);
@@ -56,10 +61,6 @@ CommentStats commentStats(list[str] lines, rel[str, str] blockDelimiters, set[st
     }
 
     if (!inBlock) {
-      if (!firstLine) {
-        inHeader = false;
-      }
-    
       while (size(l) > 0) {
         matches =
           [ <size(pre), post, ""> | ld <- lineDelimiters, /<pre:.*><ld><post:.*>/ := l ] +
@@ -74,9 +75,6 @@ CommentStats commentStats(list[str] lines, rel[str, str] blockDelimiters, set[st
             hasCode = hasCode || containsCode(m[1]);
             l = "";
           } else { // start of block comment
-            if (firstLine) {
-              hloc += 1;
-            }            
             currentDelimiter = m[2];
             if (/<c:.*><currentDelimiter><rest:.*>/ := m[1]) { // block closed on same line
               l = rest;
@@ -95,15 +93,31 @@ CommentStats commentStats(list[str] lines, rel[str, str] blockDelimiters, set[st
 
     if (hasComment) {
       cloc += 1;
-    }
-    if (hasCode) {
-      coloc += 1;
+      if (inHeader) {
+        hloc += 1;
+        headerHasComments = true;
+      }
+    } else if (inHeader) {
+      if (headerHasComments) {
+        inHeader = false;
+      } else {
+        // skip trailing empty lines or lines with prefixes to ignore  
+        trimmed = trim(originalLine);
+        if (size(trimmed) == 0 || 
+           (size(ignorePrefixesForHeader) > 0 && any(p <- ignorePrefixesForHeader, startsWith(trimmed, p)))) {
+          hskip += 1;
+        } else {
+          inHeader = false;
+        }
+      }
     }
     
-    firstLine = false;
+    if (hasCode) {
+      coloc += 1;
+    }    
   }
 
-  return stats(cloc, hloc, coloc);
+  return stats(cloc, hskip, hloc, coloc);
 }
 
 @metric{commentLOC}
@@ -113,12 +127,12 @@ CommentStats commentStats(list[str] lines, rel[str, str] blockDelimiters, set[st
 map[loc, int] commentLOC(rel[Language, loc, AST] asts = {}) {
   map[loc, int] result = ();
 
-  for (<l, f, _> <- asts, l != generic()) {
-    if ({a} := asts[generic(), f])
+  for (<lang, f, _> <- asts, lang != generic()) {
+    if ({lines(l)} := asts[generic(), f])
     {
-      stats = commentStats(a, l);
-      if (stats != unknown()) {
-        result[f] = stats.linesWithComment;
+      s = commentStats(l, lang);
+      if (s != unknown()) {
+        result[f] = s.linesWithComment;
       }
     }
   }
@@ -133,12 +147,12 @@ map[loc, int] commentLOC(rel[Language, loc, AST] asts = {}) {
 map[loc, int] headerLOC(rel[Language, loc, AST] asts = {}) {
   map[loc, int] result = ();
 
-  for (<l, f, _> <- asts, l != generic()) {
-    if ({a} := asts[generic(), f])
+  for (<lang, f, _> <- asts, lang != generic()) {
+    if ({lines(l)} := asts[generic(), f])
     {
-      stats = commentStats(a, l);
-      if (stats != unknown()) {
-        result[f] = stats.linesInHeader;
+      s = commentStats(l, lang);
+      if (s != unknown()) {
+        result[f] = s.headerSize;
       }
     }
   }
@@ -153,12 +167,12 @@ map[loc, int] headerLOC(rel[Language, loc, AST] asts = {}) {
 map[loc, int] commentedOutCode(rel[Language, loc, AST] asts = {}) {
   map[loc, int] result = ();
 
-  for (<l, f, _> <- asts, l != generic()) {
-    if ({a} := asts[generic(), f])
+  for (<lang, f, _> <- asts, lang != generic()) {
+    if ({lines(l)} := asts[generic(), f])
     {
-      stats = commentStats(a, l);
-      if (stats != unknown()) {
-        result[f] = stats.commentedOutCodeLines;
+      s = commentStats(l, lang);
+      if (s != unknown()) {
+        result[f] = s.commentedOutCodeLines;
       }
     }
   }
@@ -227,7 +241,7 @@ Factoid percentageCommentedOutCode(map[str, int] locPerLanguage = (), map[str, i
 @appliesTo{generic()}
 @uses{("commentLOC": "commentLOC")}
 @uses{("headerLOC": "headerLOC")}
-map[str, int] commentLOCPerLanguage(rel[Language, loc, AST] asts = {}, map[loc, int] commentLOC = (), map[loc, int] headerLOC = ()) {
+map[str, int] commentLinesPerLanguage(rel[Language, loc, AST] asts = {}, map[loc, int] commentLOC = (), map[loc, int] headerLOC = ()) {
   map[str, int] result = ();
   for (<l, f, a> <- asts, l != generic(), f in commentLOC) {
     result["<l>"]?0 += commentLOC[f] - (headerLOC[f]?0);
@@ -275,5 +289,91 @@ Factoid commentPercentage(map[str, int] locPerLanguage = (), map[str, int] comme
   txt += " The percentages per language are <otherTxt>.";
 
   return factoid(txt, stars);	
+}
+
+
+@metric{headerUse}
+@doc{Percentage of files with headers}
+@friendlyName{Percentage of files with headers}
+@appliesTo{generic()}
+@uses{("headerLOC": "headerLOC")}
+real headerUse(map[loc, int] headerLOC = ()) {
+	int measuredFiles = size(headerLOC);
+	if (measuredFiles == 0) {
+		throw undefined("No headers found", |unknown:///|); 
+	}	
+	return (100.0 * ( 0 | it + 1 | f <- headerLOC, headerLOC[f] > 0 ) ) / measuredFiles;
+}
+
+private alias Header = set[str];
+
+private Header extractHeader(list[str] lines, int headerSize, int headerStart) {
+	return { trim(l) | l <- lines[headerStart..(headerStart + headerSize)], /.*[a-zA-Z].*/ := l, !contains(l, "@")};
+}
+
+public set[set[&T]] connectedComponents(Graph[&T] graph) { // TODO move to rascal graph library
+       set[set[&T]] components = {};
+
+       Graph[&T] undirected = graph + invert(graph);
+
+       set[&T] todo = domain(undirected);
+
+       while (size(todo) > 0) {
+	     component = reach(undirected, {getOneFrom(todo)});
+	     components += {component};
+	     todo -= component;
+       };
+
+       return components;
+}
+
+@metric{uniqueHeaders}
+@doc{Number of estimated unique headers}
+@friendlyName{Number of estimated unique headers}
+@appliesTo{generic()}
+int uniqueHeaders(rel[Language, loc, AST] asts = {}) {
+
+	// extract headers
+	set[Header] headers = {};
+	
+	for (<lang, f, _> <- asts, lang != generic()) {
+		if ({lines(l)} := asts[generic(), f])
+		{
+			s = commentStats(l, lang);
+			if (s != unknown() && s.headerSize > 0) {
+				headers += {extractHeader(l, s.headerSize, s.headerStart, f)};
+			}
+		}
+	}
+	
+	// group headers
+	
+	Graph[Header] bestMatches = {};
+	
+	int unmatched = 0;
+	
+	for (h1 <- headers) {
+		int score = 0;
+		Header bestMatch = {};
+		
+		for (h2 <- headers) {
+			int s = size(h1 & h2);
+			
+			if (s > score) {
+				score = s;
+				bestMatch = h2;
+			}
+		}
+		
+		if (score > 0) {
+			bestMatches += {<h1, bestMatch>};
+		} else {
+			unmatched += 1;
+		}
+	}
+		
+	components = connectedComponents(bestMatches);
+
+	return unmatched + size(components);
 }
 
