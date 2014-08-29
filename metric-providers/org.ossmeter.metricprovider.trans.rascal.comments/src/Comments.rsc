@@ -22,65 +22,71 @@ CommentStats commentStats(list[str] lines, Language lang) {
   CommentStats result;
 
   switch(lang) {
-    case java(): result = commentStats(lines, {<"/*", "*/">}, {"//"}, {";", "{", "}"}, {"package", "import"});
-    case php(): result = commentStats(lines, {<"/*", "*/">}, {"//", "#"}, {";", "{", "}", "$"}, {"\<?php", "\<?"});
+    case java(): result = genericCommentStats(lines, {<"/*", "*/">}, {"//"}, {";", "{", "}"}, {"package", "import"});
+    case php(): result = genericCommentStats(lines, {<"/*", "*/">}, {"//", "#"}, {";", "{", "}", "$"}, {"\<?php", "\<?"});
     default: result = unknown();
   }
   
   return result;
 }
 
-CommentStats commentStats(list[str] lines, rel[str, str] blockDelimiters, set[str] lineDelimiters, set[str] codePatterns, set[str] ignorePrefixesForHeader) {
+
+CommentStats genericCommentStats(list[str] lines, rel[str, str] blockDelimiters, set[str] lineDelimiters, set[str] codePatterns, set[str] ignorePrefixesForHeader) {
 
   int cloc = 0, hskip = 0, hloc = 0, coloc = 0;
   
-  containsCode = bool(str s) {
-    return any(p <- codePatterns, findFirst(s, p) > -1);
+  containsCode = bool(str s) { // s is not a comment
+    return /.*[a-zA-Z].*/ := s;
   };
   
+  commentContainsCode = bool(str comment) {
+    return size(codePatterns) > 0 && any(p <- codePatterns, findFirst(comment, p) > -1);
+  };
+    
   inBlock = false;
   currentDelimiter = "";  
 
   bool inHeader = true;
-  bool headerHasComments = false;
   for (l <- lines) {
     originalLine = l;
     hasCode = false;
+    hasCodeInComment = false;
     hasComment = false;
     
     if (inBlock) {
       hasComment = true;
     
       if (/<pre:.*><currentDelimiter><rest:.*>/ := l) {      
-        hasCode = containsCode(pre);
+        hasCodeInComment = commentContainsCode(pre);
         inBlock = false;
         l = rest;
       } else {
-        hasCode = containsCode(l);
+        hasCodeInComment = commentContainsCode(l);
       }
     }
 
     if (!inBlock) {
       while (size(l) > 0) {
         matches =
-          [ <size(pre), post, ""> | ld <- lineDelimiters, /<pre:.*><ld><post:.*>/ := l ] +
-          [ <size(pre), post, cd> | <od, cd> <- blockDelimiters, /<pre:.*><od><post:.*>/ := l ];
+          [ <pre, post, ""> | ld <- lineDelimiters, /<pre:.*><ld><post:.*>/ := l ] +
+          [ <pre, post, cd> | <od, cd> <- blockDelimiters, /<pre:.*><od><post:.*>/ := l ];
         
-        matches = sort(matches, bool(tuple[int, str, str] a, tuple[int, str, str] b) { return a[0] < b[0]; });
+        matches = sort(matches, bool(tuple[str, str, str] a, tuple[str, str, str] b) { return size(a[0]) < size(b[0]); });
                   
         if (size(matches) > 0) {
           hasComment = true;
           m = matches[0];
+          hasCode = hasCode || containsCode(m[0]);
           if (m[2] == "") { // line comment
-            hasCode = hasCode || containsCode(m[1]);
+            hasCodeInComment = hasCodeInComment || commentContainsCode(m[1]);
             l = "";
           } else { // start of block comment
             currentDelimiter = m[2];
             if (/<c:.*><currentDelimiter><rest:.*>/ := m[1]) { // block closed on same line
               l = rest;
-              hasCode = hasCode || containsCode(c);
+              hasCodeInComment = hasCodeInComment || commentContainsCode(c);
             } else { // block open at end of line
-              hasCode = hasCode || containsCode(m[1]);
+              hasCodeInComment = hasCodeInComment || commentContainsCode(m[1]);
               inBlock = true;
               l = "";
             }
@@ -93,28 +99,24 @@ CommentStats commentStats(list[str] lines, rel[str, str] blockDelimiters, set[st
 
     if (hasComment) {
       cloc += 1;
-      if (inHeader) {
-        hloc += 1;
-        headerHasComments = true;
-      }
-    } else if (inHeader) {
-      if (headerHasComments) {
-        inHeader = false;
-      } else {
-        // skip trailing empty lines or lines with prefixes to ignore  
-        trimmed = trim(originalLine);
-        if (size(trimmed) == 0 || 
-           (size(ignorePrefixesForHeader) > 0 && any(p <- ignorePrefixesForHeader, startsWith(trimmed, p)))) {
-          hskip += 1;
-        } else {
-          inHeader = false;
-        }
-      }
+    }
+
+    if (hasCodeInComment) {
+      coloc += 1;
     }
     
-    if (hasCode) {
-      coloc += 1;
-    }    
+    if (inHeader) {
+      trimmed = trim(originalLine);
+      if ((hloc == 0) && (size(trimmed) == 0 || 
+          (size(ignorePrefixesForHeader) > 0 && any(p <- ignorePrefixesForHeader, startsWith(trimmed, p))))) {
+        // skip trailing empty lines or lines with prefixes to ignore
+        hskip += 1;
+      } else if (hasComment && !hasCode) {
+        hloc += 1;
+      } else {
+        inHeader = false;
+      }
+    }
   }
 
   return stats(cloc, hskip, hloc, coloc);
@@ -281,6 +283,8 @@ Factoid commentPercentage(map[str, int] locPerLanguage = (), map[str, int] comme
     stars = two();
   }
   
+  // TODO exclude commented out code as well
+  
   txt = "The percentage of lines containing comments (excluding headers) over all measured languages is <totalPercentage>%.";
 
   languagePercentage = ( l : 100 * commentLinesPerLanguage[l] / toReal(locPerLanguage[l]) | l <- languages ); 
@@ -327,26 +331,33 @@ public set[set[&T]] connectedComponents(Graph[&T] graph) { // TODO move to rasca
        return components;
 }
 
-@metric{uniqueHeaders}
-@doc{Number of estimated unique headers}
-@friendlyName{Number of estimated unique headers}
-@appliesTo{generic()}
-int uniqueHeaders(rel[Language, loc, AST] asts = {}) {
-
-	// extract headers
-	set[Header] headers = {};
+@memo
+private map[loc, Header] extractHeaders(rel[Language, loc, AST] asts = {}) {
+	map[loc, Header] headers = ();
 	
 	for (<lang, f, _> <- asts, lang != generic()) {
 		if ({lines(l)} := asts[generic(), f])
 		{
 			s = commentStats(l, lang);
 			if (s != unknown() && s.headerSize > 0) {
-				headers += {extractHeader(l, s.headerSize, s.headerStart)};
+				headers[f] = extractHeader(l, s.headerSize, s.headerStart);
 			}
 		}
 	}
 	
-	// group headers
+	return headers;
+}
+
+
+@metric{headerCounts}
+@doc{Number of appearances of estimated unique headers}
+@friendlyName{Number of appearances of estimated unique headers}
+@appliesTo{generic()}
+list[int] headerCounts(rel[Language, loc, AST] asts = {}) {
+
+	headersPerFile = extractHeaders(asts=asts);
+	
+	headers = range(headersPerFile);
 	
 	Graph[Header] bestMatches = {};
 	
@@ -373,7 +384,22 @@ int uniqueHeaders(rel[Language, loc, AST] asts = {}) {
 	}
 		
 	components = connectedComponents(bestMatches);
-
-	return unmatched + size(components);
+	
+	map[set[Header], int] headerCount = ();
+	
+	for (f <- headersPerFile) {
+		h = headersPerFile[f];
+		for (c <- components) {
+			if (h in c) {
+				headerCount[c]?0 += 1;
+			}
+		}
+	}
+	
+	list[int] headerHistogram = [ headerCount[c] | c <- headerCount ] + [ 1 | i <- [0..unmatched] ]; 
+	
+	return headerHistogram;
 }
+
+// TODO add factoid which looks at gini of header counts
 
