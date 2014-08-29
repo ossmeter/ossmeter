@@ -2,6 +2,7 @@ module PHPMetrics
 
 extend lang::php::m3::Core;
 import lang::php::m3::Uses;
+import lang::php::m3::Declarations;
 import lang::php::stats::Stats;
 
 import util::Math;
@@ -27,7 +28,7 @@ map[int, int] getNameResolutionHistogram(rel[Language, loc, M3] m3s = {})
 
 	useDecl = resolveUsesToPossibleDeclarations(propagateAliasesInUses(m3));
 	
-	return countNumPossibleDeclarations(useDecl);
+	return calculateResolutionHistogram(countNumPossibleDeclarations(useDecl));
 }
 
 
