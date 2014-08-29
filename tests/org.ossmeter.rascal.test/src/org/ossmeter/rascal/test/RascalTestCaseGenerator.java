@@ -9,7 +9,9 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -39,6 +41,7 @@ import org.ossmeter.platform.app.example.util.ProjectCreationUtil;
 import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.platform.osgi.executors.MetricListExecutor;
+import org.ossmeter.platform.osgi.executors.ProjectExecutor;
 import org.ossmeter.repository.model.LocalStorage;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectExecutionInformation;
@@ -65,6 +68,19 @@ public class RascalTestCaseGenerator implements IApplication  {
 		Evaluator eval = manager.getEvaluator();
 		
 		List<IMetricProvider> metricProviders = manager.getMetricProviders();
+		
+		// sort metric providers topologically
+		metricProviders = new ProjectExecutor(platform, new Project()) {
+			public List<IMetricProvider> order(List<IMetricProvider> metrics) {
+				List<IMetricProvider> result = new ArrayList<>(metrics.size());
+				for (List<IMetricProvider> branch : splitIntoBranches(metrics)) {
+					branch.removeAll(result);
+					//Collections.reverse(branch);
+					result.addAll(branch);
+				}
+				return result;
+			}
+		}.order(metricProviders);
 
 		System.out.println("Available metric providers:");
 		for (IMetricProvider mp : metricProviders) {
