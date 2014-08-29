@@ -199,8 +199,8 @@ map[str, int] commentedOutCodePerLanguage(rel[Language, loc, AST] asts = {}, map
 @doc{Percentage of commented out code}
 @friendlyName{Percentage of commented out code}
 @appliesTo{generic()}
-@uses{("locPerLanguage": "locPerLanguage")}
-@uses{("commentedOutCodePerLanguage": "commentedOutCodePerLanguage")}
+@uses{("org.ossmeter.metricprovider.trans.rascal.LOC.locPerLanguage": "locPerLanguage",
+       "commentedOutCodePerLanguage": "commentedOutCodePerLanguage")}
 Factoid percentageCommentedOutCode(map[str, int] locPerLanguage = (), map[str, int] commentedOutCodePerLanguage = ()) {
   // only report figures for measured languages
   languages = domain(locPerLanguage) & domain(commentedOutCodePerLanguage);
@@ -224,7 +224,7 @@ Factoid percentageCommentedOutCode(map[str, int] locPerLanguage = (), map[str, i
     stars = three();
   }
   
-  txt = "The percentage of commented out code over all measured languages is <totalPercentage>%";
+  txt = "The percentage of commented out code over all measured languages is <totalPercentage>%.";
 
   languagePercentage = ( l : 100 * commentedOutCodePerLanguage[l] / toReal(locPerLanguage[l]) | l <- languages ); 
 
@@ -239,8 +239,8 @@ Factoid percentageCommentedOutCode(map[str, int] locPerLanguage = (), map[str, i
 @doc{Number of lines containing comments per language (excluding headers)}
 @friendlyName{Number of lines containing comments per language (excluding headers)}
 @appliesTo{generic()}
-@uses{("commentLOC": "commentLOC")}
-@uses{("headerLOC": "headerLOC")}
+@uses{("commentLOC": "commentLOC",
+       "headerLOC": "headerLOC")}
 map[str, int] commentLinesPerLanguage(rel[Language, loc, AST] asts = {}, map[loc, int] commentLOC = (), map[loc, int] headerLOC = ()) {
   map[str, int] result = ();
   for (<l, f, a> <- asts, l != generic(), f in commentLOC) {
@@ -254,8 +254,8 @@ map[str, int] commentLinesPerLanguage(rel[Language, loc, AST] asts = {}, map[loc
 @doc{Percentage of lines with comments (excluding headers)}
 @friendlyName{Percentage of lines with comments (excluding headers)}
 @appliesTo{generic()}
-@uses{("locPerLanguage": "locPerLanguage")}
-@uses{("commentLinesPerLanguage": "commentLinesPerLanguage")}
+@uses{("org.ossmeter.metricprovider.trans.rascal.LOC.locPerLanguage": "locPerLanguage",
+       "commentLinesPerLanguage": "commentLinesPerLanguage")}
 Factoid commentPercentage(map[str, int] locPerLanguage = (), map[str, int] commentLinesPerLanguage = ()) {
   // only report figures for measured languages
   languages = domain(locPerLanguage) & domain(commentLinesPerLanguage);
@@ -281,7 +281,7 @@ Factoid commentPercentage(map[str, int] locPerLanguage = (), map[str, int] comme
     stars = two();
   }
   
-  txt = "The percentage of comments (excluding headers) over all measured languages is <totalPercentage>%";
+  txt = "The percentage of lines containing comments (excluding headers) over all measured languages is <totalPercentage>%.";
 
   languagePercentage = ( l : 100 * commentLinesPerLanguage[l] / toReal(locPerLanguage[l]) | l <- languages ); 
 
@@ -341,7 +341,7 @@ int uniqueHeaders(rel[Language, loc, AST] asts = {}) {
 		{
 			s = commentStats(l, lang);
 			if (s != unknown() && s.headerSize > 0) {
-				headers += {extractHeader(l, s.headerSize, s.headerStart, f)};
+				headers += {extractHeader(l, s.headerSize, s.headerStart)};
 			}
 		}
 	}
