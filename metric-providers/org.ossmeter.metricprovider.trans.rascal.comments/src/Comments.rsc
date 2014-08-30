@@ -8,7 +8,7 @@ import org::ossmeter::metricprovider::MetricProvider;
 
 import Prelude;
 import util::Math;
-
+import analysis::statistics::Inference;
 import analysis::graphs::Graph;
 
 data CommentStats
@@ -242,11 +242,15 @@ Factoid percentageCommentedOutCode(map[str, int] locPerLanguage = (), map[str, i
 @friendlyName{Number of lines containing comments per language (excluding headers)}
 @appliesTo{generic()}
 @uses{("commentLOC": "commentLOC",
-       "headerLOC": "headerLOC")}
-map[str, int] commentLinesPerLanguage(rel[Language, loc, AST] asts = {}, map[loc, int] commentLOC = (), map[loc, int] headerLOC = ()) {
+       "headerLOC": "headerLOC",
+       "commentedOutCode": "commentedOutCode")}
+map[str, int] commentLinesPerLanguage(rel[Language, loc, AST] asts = {},
+                                      map[loc, int] commentLOC = (),
+                                      map[loc, int] headerLOC = (),
+                                      map[loc, int] commentedOutCode = ()) {
   map[str, int] result = ();
   for (<l, f, a> <- asts, l != generic(), f in commentLOC) {
-    result["<l>"]?0 += commentLOC[f] - (headerLOC[f]?0);
+    result["<l>"]?0 += commentLOC[f] - (headerLOC[f]?0) - (commentedOutCode[f]?0);
   }
   return result;
 }
@@ -283,9 +287,7 @@ Factoid commentPercentage(map[str, int] locPerLanguage = (), map[str, int] comme
     stars = two();
   }
   
-  // TODO exclude commented out code as well
-  
-  txt = "The percentage of lines containing comments (excluding headers) over all measured languages is <totalPercentage>%.";
+  txt = "The percentage of lines containing comments over all measured languages is <totalPercentage>%. Headers and commented out code are not included in this measure.";
 
   languagePercentage = ( l : 100 * commentLinesPerLanguage[l] / toReal(locPerLanguage[l]) | l <- languages ); 
 
@@ -296,12 +298,12 @@ Factoid commentPercentage(map[str, int] locPerLanguage = (), map[str, int] comme
 }
 
 
-@metric{headerUse}
+@metric{headerPercentage}
 @doc{Percentage of files with headers}
 @friendlyName{Percentage of files with headers}
 @appliesTo{generic()}
 @uses{("headerLOC": "headerLOC")}
-real headerUse(map[loc, int] headerLOC = ()) {
+real headerPercentage(map[loc, int] headerLOC = ()) {
 	int measuredFiles = size(headerLOC);
 	if (measuredFiles == 0) {
 		throw undefined("No headers found", |unknown:///|); 
@@ -313,22 +315,6 @@ private alias Header = set[str];
 
 private Header extractHeader(list[str] lines, int headerSize, int headerStart) {
 	return { trim(l) | l <- lines[headerStart..(headerStart + headerSize)], /.*[a-zA-Z].*/ := l, !contains(l, "@")};
-}
-
-public set[set[&T]] connectedComponents(Graph[&T] graph) { // TODO move to rascal graph library
-       set[set[&T]] components = {};
-
-       Graph[&T] undirected = graph + invert(graph);
-
-       set[&T] todo = domain(undirected);
-
-       while (size(todo) > 0) {
-	     component = reach(undirected, {getOneFrom(todo)});
-	     components += {component};
-	     todo -= component;
-       };
-
-       return components;
 }
 
 @memo
@@ -401,5 +387,37 @@ list[int] headerCounts(rel[Language, loc, AST] asts = {}) {
 	return headerHistogram;
 }
 
-// TODO add factoid which looks at gini of header counts
 
+@metric{headerUse}
+@doc{Consistency of header use}
+@friendlyName{Consistency of header use}
+@appliesTo{generic()}
+@uses{("headerCounts": "headerCounts", "headerPercentage": "headerPercentage")}
+Factoid headerUse(rel[Language, loc, AST] asts = {}, list[int] headerCounts = [], real headerPercentage = -1.0) {
+
+	starLookup = [\one(), two(), three(), four()];
+	
+	stars = 0;
+	message = "";
+
+	if (headerPercentage > 50.0) {
+		stars += 1;
+		
+		if (headerPercentage > 95.0) {
+			stars += 1;
+		}
+		
+		headerGini = gini([<0,0>] + [<1, i> | i <- headerCounts]);
+		
+		if (headerGini > 0.8) {
+			stars += 1;
+		}
+		
+		message = "The percentage of files with a header is <headerPercentage>%." +
+		  " The Gini coefficient of the distribution of unique headers is <headerGini>."; 
+	} else {
+		message = "Only <headerPercentage>% of the files contain a header.";
+	}
+	
+	return factoid(message, starLookup[stars]);	
+}
