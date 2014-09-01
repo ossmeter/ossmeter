@@ -8,7 +8,6 @@ import org::ossmeter::metricprovider::MetricProvider;
 
 import Prelude;
 import util::Math;
-import analysis::statistics::Inference;
 import analysis::graphs::Graph;
 
 data CommentStats
@@ -407,14 +406,14 @@ Factoid headerUse(rel[Language, loc, AST] asts = {}, list[int] headerCounts = []
 			stars += 1;
 		}
 		
-		headerGini = gini([<0,0>] + [<1, i> | i <- headerCounts]);
+		highestSimilarity = max(headerCounts) / sum(headerCounts);
 		
-		if (headerGini > 0.8) {
+		if (highestSimilarity > 0.8) {
 			stars += 1;
 		}
 		
 		message = "The percentage of files with a header is <headerPercentage>%." +
-		  " The Gini coefficient of the distribution of unique headers is <headerGini>."; 
+			"The largest group of similar headers spans <highestSimilarity>% of the files.";
 	} else {
 		message = "Only <headerPercentage>% of the files contain a header.";
 	}
