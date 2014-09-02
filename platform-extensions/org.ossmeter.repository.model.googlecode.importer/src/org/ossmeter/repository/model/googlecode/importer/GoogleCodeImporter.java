@@ -25,15 +25,20 @@ import org.ossmeter.repository.model.googlecode.*;
 import org.ossmeter.repository.model.vcs.git.GitRepository;
 import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 import org.ossmeter.platform.Platform;
+import org.ossmeter.platform.logging.OssmeterLogger;
 
 public class GoogleCodeImporter {
 	
 	
+	protected OssmeterLogger logger;
 	private Map<String, Role> rolePending = new HashMap<String, Role>();
 	private Map<String, License> licensePending = new HashMap<String, License>();
 	private Map<String, Person> userPending = new HashMap<String, Person>();
-	
-	
+	public GoogleCodeImporter()
+	{
+		logger = (OssmeterLogger) OssmeterLogger.getLogger("importer.GoogleCode");
+		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
+	}
 	public GoogleCodeProject importProject(String projectUrl, Platform platform) 
 			throws MalformedURLException, IOException 
 	{
@@ -60,7 +65,7 @@ public class GoogleCodeImporter {
 				if (projectTemp instanceof GoogleCodeProject) {
 					p = (GoogleCodeProject)projectTemp;
 					projectToBeUpdated = true;
-					System.out.println("-----> project " + e.text() + " already in the repository. Its metadata will be updated.");
+					logger.info("-----> project " + e.text() + " already in the repository. Its metadata will be updated.");
 					break;
 						
 				}
@@ -78,6 +83,7 @@ public class GoogleCodeImporter {
 			
 			//SET NAME
 			project.setName(e.text());
+			project.setShortName(e.text());
 			//project.setName(Jsoup.parse(e.getElementsByTag("span").toString()).text());
 			e = doc.getElementById("wikicontent");
 			project.setDescription(Jsoup.parse(e.toString()).text());
@@ -211,15 +217,19 @@ public class GoogleCodeImporter {
 			}
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
-			
-			e1.printStackTrace();
+			logger.error("Eclipse project " + projectUrl + "Importer exception:" + e1.getMessage());
 		}
 		
 		if ((project != null) & (!projectToBeUpdated)) {	
 			platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
-			platform.getProjectRepositoryManager().getProjectRepository().getProjects().sync();
+			logger.info("Project " + project.getShortName() + " has bern added");
+			
 		}
-		
+		else
+		{
+			logger.info("Project " + project.getShortName() + " has bern updated");
+		}
+		platform.getProjectRepositoryManager().getProjectRepository().getProjects().sync();
 		return project;
 	}
 	
@@ -247,7 +257,8 @@ public class GoogleCodeImporter {
 				else if (vcs.startsWith("svn"))
 				{
 					vcsRepository = new SvnRepository();
-					vcsRepository.setUrl(vcsUrl);
+					String tmp = vcsUrl.substring(0, vcsUrl.lastIndexOf("/")+1);
+					vcsRepository.setUrl(tmp);
 					result.add(vcsRepository);
 				}
 				else if (vcs.startsWith("hg"))
@@ -260,7 +271,7 @@ public class GoogleCodeImporter {
 			}
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			logger.error("Google code importer VcsRepository error");
 		}
 		return result;
 	}
@@ -288,7 +299,7 @@ public class GoogleCodeImporter {
 				String urlIssue = url.substring(0,url.length()-4) +
 						"detail?id="+ iterable_element.getElementsByTag("td").get(1).getElementsByTag("a").first().text();
 				GoogleIssue gi = getGoogleIssue(platform, urlIssue);
-				result.add(gi);//System.out.println(iterable_element.getElementsByTag("td").get(1).toString());
+				result.add(gi);
 				
 				break;
 			}
@@ -296,7 +307,7 @@ public class GoogleCodeImporter {
 			
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			logger.error("Google code importer error for retirve Issue list" + e1.getMessage());
 		}
 		return result;
 	}
@@ -409,7 +420,7 @@ public class GoogleCodeImporter {
 
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			logger.error("Google code importer error for retirve Issue" + e1.getMessage());
 		}
 		return result;
 	}
@@ -495,7 +506,7 @@ public class GoogleCodeImporter {
 			}
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			logger.error("Google code importer error for retirve Person list" + e1.getMessage());
 		}
 		return result;
 	}
@@ -531,7 +542,7 @@ public class GoogleCodeImporter {
 							}
 							catch(NumberFormatException exc)
 							{
-								
+								logger.error("GoogleCode importer unable to load download from " + downloadPage + " " + exc.getMessage());
 							}
 							result.add(gd);
 						}
@@ -543,11 +554,11 @@ public class GoogleCodeImporter {
 			}
 			catch (SocketTimeoutException e2)
 			{
-				e2.printStackTrace();
+				logger.error("Google code importer error for retirve downaload list" + e2.getMessage());
 			}
 			catch (IOException e1) {
 				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				logger.error("Google code importer error for retirve downaload list" + e1.getMessage());
 			}
 			
 		
@@ -580,20 +591,20 @@ public class GoogleCodeImporter {
 			if(end <= totalItem)
 			{
 				int i = 0;
+				
 				while (i <= totalItem )
 				{					
 					String url = "https://code.google.com/hosting/search?q=&filter=0&mode=&start=" + i;
-					System.out.println("Processing the content of the page " + url + " from project " + i);
+					logger.info("Processing the content of the page " + url + " from project " + i);
 					result.addAll(importPage(url, platform));
-					//System.err.println("FINE PAGINA!");
-					//Attention to last mod 10 elements
+					
 					i= i + 10;
 				}
 			}
 			
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			logger.error("Google code importer error for retirve project list" + e1.getMessage());
 		}
 	}
 	
@@ -603,7 +614,7 @@ public class GoogleCodeImporter {
 		org.jsoup.nodes.Document doc;
 		org.jsoup.nodes.Element content;
 		
-		String URL_PROJECT = "https://code.google.com/hosting/search?q=&sa=Search";
+		//String URL_PROJECT = "https://code.google.com/hosting/search?q=&sa=Search";
 				
 		try {
 			doc = Jsoup.connect(url).timeout(10000).get();
@@ -614,10 +625,9 @@ public class GoogleCodeImporter {
 			{
 				result.add(importProject("https://code.google.com" + element.getElementsByTag("td").get(1).getElementsByTag("a").first().attr("href"),platform));			
 			}
-			//result.add(e.toString());
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			logger.error("Google code importer error for retirve single project page list " + e1.getMessage());
 		}
 		return result;
 	}

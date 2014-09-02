@@ -33,6 +33,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.ossmeter.platform.Platform;
+import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.License;
@@ -64,7 +65,8 @@ public class EclipseProjectImporter {
 	private Map<EclipseProject,String> pendingParentReferences = new HashMap<EclipseProject,String>();
 	private Collection<EclipseProject> importedProjects = new ArrayList<EclipseProject>();
 	private ArrayList<String> NNTPUrllist;
-	
+
+	protected OssmeterLogger logger;
 	private Map<String, Role> rolePending = new HashMap<String, Role>();
 	private Map<String, License> licensePending = new HashMap<String, License>();
 	private Map<String, Person> userPending = new HashMap<String, Person>();
@@ -76,7 +78,10 @@ public class EclipseProjectImporter {
 	    }
 		return null;	
 	}
-	
+	public EclipseProjectImporter(){
+		logger = (OssmeterLogger) OssmeterLogger.getLogger("importer.eclipse ");
+		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
+	}
 	private Collection<EclipseProject> fixPendingParentReferences(){
 
 		EclipseProject child = null;
@@ -186,7 +191,7 @@ public class EclipseProjectImporter {
 			NTTPManager man = new NTTPManager();
 			NNTPUrllist = man.GetListNNTPGroups();
 			
-			System.out.println("Retrieving the list of Eclipse projects...");
+			logger.info("Retrieving the list of Eclipse projects...");
 
 			//InputStream is = new FileInputStream(new File("C:\\eclipse.json"));
 			InputStream is = new URL("http://projects.eclipse.org/json/projects/all").openStream();
@@ -201,23 +206,26 @@ public class EclipseProjectImporter {
 			
 			Object o =jsonAr.getValue();
 			Iterator iter2 = ((JSONObject)jsonAr.getValue()).entrySet().iterator();
-			
-			while (iter2.hasNext()) {
+			//Max iteration 0
+			//
+			int MAX_ITERATION = 0;
+			while (iter2.hasNext() 
+					//&& MAX_ITERATION <= 0
+					
+					) {
 				Map.Entry entry = (Map.Entry) iter2.next();
 				EclipseProject pi = (EclipseProject)platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByShortName((String) entry.getKey());
 				EclipseProject project = importProject((String) entry.getKey(), platform);
 				importedProjects.add(project);
-				
+				MAX_ITERATION++;
 			}			
 			fixPendingParentReferences();
 			cleanParent();
 			
-		} catch (FileNotFoundException e1) {
+		} 
+		catch (IOException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			logger.error("EclipseProject error: Unable to retrive eclipse project's list");
 		} 
 	}
 	
@@ -239,7 +247,7 @@ public class EclipseProjectImporter {
 			if (projectTemp instanceof EclipseProject) {
 				p = (EclipseProject)projectTemp;
 				projectToBeUpdated = true;
-				System.out.println("-----> project " + projectId + " already in the repository. Its metadata will be updated.");
+				logger.info("-----> project " + projectId + " already in the repository. Its metadata will be updated.");
 				break;
 					
 			}
@@ -253,7 +261,7 @@ public class EclipseProjectImporter {
 			Document xmlDoc = xml.getDOM();
 			String platformName;
 			
-			List<String> eclipsePlatformNames = getPlatforms(xmlDoc);
+			List<String> eclipsePlatformNames = getPlatforms(xmlDoc, projectId);
 			Iterator it  = (Iterator) eclipsePlatformNames.iterator();
 			
 			if (projectToBeUpdated) {
@@ -269,14 +277,6 @@ public class EclipseProjectImporter {
 				platform.getProjectRepositoryManager().getProjectRepository().sync();	
 			}
 			
-		} catch (ParserConfigurationException | SAXException | IOException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		// Retrieving data from the JSON file
-		try {
 			InputStream is = new URL("http://projects.eclipse.org/json/project/" + projectId).openStream();
 			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
 			String jsonText = readAll(rd);
@@ -287,7 +287,7 @@ public class EclipseProjectImporter {
 			project.setShortName(projectId);
 			if ((isNotNullObj(currentProg,"title")))
 				project.setName(currentProg.get("title").toString());
-			System.out.println("---> Retrieving metadata of " + project.getShortName());
+			logger.info("---> Retrieving metadata of " + project.getShortName());
 						
 			project.setParagraphUrl(getParagraphUrl(projectId));
 
@@ -299,7 +299,7 @@ public class EclipseProjectImporter {
 				EclipseProject parentProject = (EclipseProject)platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByShortName(parentProjectName);				
 				if (parentProject != null) {
 					project.setParent(parentProject);
-				    System.out.println("The project " + parentProject.getShortName() + " is parent of " + project.getShortName());
+				    logger.info("The project " + parentProject.getShortName() + " is parent of " + project.getShortName());
 				} else {
 					pendingParentReferences.put(project,parentProjectName);
 				}				    
@@ -437,10 +437,10 @@ public class EclipseProjectImporter {
 					platform.getProjectRepositoryManager().getProjectRepository().sync();	
 				}
 			}
-		// END Management of Licenses
+			// END Management of Licenses
 
 			
-		// BEGIN Management of VcsRepositories
+			// BEGIN Management of VcsRepositories
 			if (projectToBeUpdated) {
 				project.getVcsRepositories().clear();
 				platform.getProjectRepositoryManager().getProjectRepository().sync();	
@@ -471,27 +471,27 @@ public class EclipseProjectImporter {
 				project.getVcsRepositories().add(repository);
 				}
 			}
-		// END Management of VcsRepositories
-
+			// END Management of VcsRepositories
 			
-		List<Person> ps = getProjectPersons(platform, projectId);
-		for (Person person : ps) {
-			project.getPersons().add(person);
+			List<Person> ps = getProjectPersons(platform, projectId);
+			for (Person person : ps) {
+				project.getPersons().add(person);
+			}
+		} catch (ParserConfigurationException | SAXException | IOException e) {
+			logger.error("Unable to import " + projectId + "project.");
+			return null;
+		} catch (Exception e) {
+			logger.error("Unable to import " + projectId + "project.");
+			return null;
 		}
-
 			
-			
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();			
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-	
 		if (!projectToBeUpdated) {
 			platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
 		}
 		
 		platform.getProjectRepositoryManager().getProjectRepository().sync();	
+		logger.info("Project " + projectId + " has been correctly parsed");
+		//logger.info(projectId + " project are imported. ");
 		return project;
 		
 	}
@@ -523,7 +523,7 @@ public class EclipseProjectImporter {
 			}
 			return result;
 		} catch (IOException e1) {
-			e1.printStackTrace();
+			logger.error(projectShortName + " importer failed to load NNTP news group url");
 			return new ArrayList<NntpNewsGroup>();
 		}	
 	}
@@ -562,7 +562,7 @@ public class EclipseProjectImporter {
 				
 				Elements usersInRole = iterable_element.getElementsByTag("li");
 				for (Element element : usersInRole) {
-					//System.out.println(element.text());
+					//logger.println(element.text());
 					String username = element.text();
 					String url = "http://projects.eclipse.org/" + element.getElementsByAttribute("href").attr("href");
 					Person gu = userPending.get(username);
@@ -586,15 +586,15 @@ public class EclipseProjectImporter {
 				}
 			}
 		} catch (NullPointerException e){
-			System.err.println("Problems occurred during the collection of the persons in volved in the project " + projectId);			
+						
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			logger.error("Problems occurred during the collection of the persons involved in the project " + projectId);
 		}
 		return result;
 	}
 
-	private List<String> getPlatforms(Node xml) {
+	private List<String> getPlatforms(Node xml, String projectId) {
 		List<String> result = new ArrayList<>();
 		
 		String xPathPattern = "//*[@id=\"block-summary-block-summary-block\"]/div/div/div[1]/a";
@@ -613,85 +613,17 @@ public class EclipseProjectImporter {
 			}
 
 		} catch (XPathExpressionException e) {
-			e.printStackTrace();
+			logger.error("Unable to import Eclipse project's platform for " + projectId);
 		}
 		return result;
 	}
-	
-	private String getCompleteName(Node xml) {
-		String result = "";
-		
-		String xPathPattern = "[@id=\"page-title\"]";
-		XPathFactory xFactory = XPathFactory.newInstance();
-		XPath xpath = xFactory.newXPath();
-		try {
-			XPathExpression expr = xpath.compile(xPathPattern);
-			Object evaluated = expr.evaluate(xml, XPathConstants.NODESET);
-			result = evaluated.toString();
-		} catch (XPathExpressionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return result;
-	}
-	
-	private List<String> getPlatforms(JSONObject xml) {
-		List<String> result = new ArrayList<>();
-		
-		String xPathPattern = "//*[@id=\"block-summary-block-summary-block\"]/div/div/div[1]/a";
-		XPathFactory xFactory = XPathFactory.newInstance();
-		XPath xpath = xFactory.newXPath();
-		try {
-			XPathExpression expr = xpath.compile(xPathPattern);
-			Object evaluated = expr.evaluate(xml, XPathConstants.NODESET);
-			NodeList nodes = (NodeList) evaluated;
-			ArrayList<Element> elements = new ArrayList<Element>();
-			for (int i = 0; i < nodes.getLength(); i++) {
-				Node node = nodes.item(i);
-				if (node.getNodeType() != Node.ELEMENT_NODE)
-					continue;
-				result.add(node.getFirstChild().getNodeValue());
-			}
-		} catch (XPathExpressionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return result;
-	}
+
 
 
 	private String getParagraphUrl(String name) {
 		return "http://www.eclipse.org/"+name+"/project-info/project-page-paragraph.html";
 	}
 
-	private String getFirstColumnSecondDivHrefInfo(Node xml, String attribute) {
-		String result = "";
-		String xPathPattern = "//*[@id=\"block-summary-block-summary-block\"]/div/div/div[2]/div/ul/li/a";
-		XPathFactory xFactory = XPathFactory.newInstance();
-		XPath xpath = xFactory.newXPath();
-		try {
-			XPathExpression expr = xpath.compile(xPathPattern);
-			Object evaluated = expr.evaluate(xml, XPathConstants.NODESET);
-			NodeList nodes = (NodeList) evaluated;
-			ArrayList<Element> elements = new ArrayList<Element>();
-			for (int i = 0; i < nodes.getLength(); i++) {
-				Node node = nodes.item(i);
-				if (node.getNodeType() != Node.ELEMENT_NODE)
-					continue;
-				// Home page is the first link
-				if (node.getTextContent().equals(attribute)) {
-					result = node.getAttributes().getNamedItem("href")
-							.getNodeValue();
-					break; // No need of finding more
-				}
-			}
-
-		} catch (XPathExpressionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return result;
-	}
 
 	/**
 	 * Get the html part relative to projects (because the list-of-projects url
@@ -715,5 +647,74 @@ public class EclipseProjectImporter {
 		return text;
 	}
 
+	
+//#######OLD METHODS#####################
+//	private String getCompleteName(Node xml) {
+//		String result = "";
+//		
+//		String xPathPattern = "[@id=\"page-title\"]";
+//		XPathFactory xFactory = XPathFactory.newInstance();
+//		XPath xpath = xFactory.newXPath();
+//		try {
+//			XPathExpression expr = xpath.compile(xPathPattern);
+//			Object evaluated = expr.evaluate(xml, XPathConstants.NODESET);
+//			result = evaluated.toString();
+//		} catch (XPathExpressionException e) {
+//			logger.error("Unable to import eclilpse project's  complete name for ");
+//		}
+//		return result;
+//	}
+//	
+//	private List<String> getPlatforms(JSONObject xml) {
+//		List<String> result = new ArrayList<>();
+//		
+//		String xPathPattern = "//*[@id=\"block-summary-block-summary-block\"]/div/div/div[1]/a";
+//		XPathFactory xFactory = XPathFactory.newInstance();
+//		XPath xpath = xFactory.newXPath();
+//		try {
+//			XPathExpression expr = xpath.compile(xPathPattern);
+//			Object evaluated = expr.evaluate(xml, XPathConstants.NODESET);
+//			NodeList nodes = (NodeList) evaluated;
+//			ArrayList<Element> elements = new ArrayList<Element>();
+//			for (int i = 0; i < nodes.getLength(); i++) {
+//				Node node = nodes.item(i);
+//				if (node.getNodeType() != Node.ELEMENT_NODE)
+//					continue;
+//				result.add(node.getFirstChild().getNodeValue());
+//			}
+//		} catch (XPathExpressionException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return result;
+//	}
+//	private String getFirstColumnSecondDivHrefInfo(Node xml, String attribute) {
+//		String result = "";
+//		String xPathPattern = "//*[@id=\"block-summary-block-summary-block\"]/div/div/div[2]/div/ul/li/a";
+//		XPathFactory xFactory = XPathFactory.newInstance();
+//		XPath xpath = xFactory.newXPath();
+//		try {
+//			XPathExpression expr = xpath.compile(xPathPattern);
+//			Object evaluated = expr.evaluate(xml, XPathConstants.NODESET);
+//			NodeList nodes = (NodeList) evaluated;
+//			ArrayList<Element> elements = new ArrayList<Element>();
+//			for (int i = 0; i < nodes.getLength(); i++) {
+//				Node node = nodes.item(i);
+//				if (node.getNodeType() != Node.ELEMENT_NODE)
+//					continue;
+//				// Home page is the first link
+//				if (node.getTextContent().equals(attribute)) {
+//					result = node.getAttributes().getNamedItem("href")
+//							.getNodeValue();
+//					break; // No need of finding more
+//				}
+//			}
+//
+//		} catch (XPathExpressionException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return result;
+//	}
 	
 }

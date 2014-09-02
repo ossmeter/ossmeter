@@ -25,16 +25,16 @@ import java.net.URL;
 import java.nio.charset.Charset;
 
 
+
 import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 import org.ossmeter.repository.model.vcs.cvs.CvsRepository;
-
 import org.jsoup.select.*;
 import org.jsoup.*;
-
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONValue;
 import org.ossmeter.platform.Platform;
+import org.ossmeter.platform.logging.OssmeterLogger;
 
 import com.googlecode.pongo.runtime.IteratorIterable;
 import com.googlecode.pongo.runtime.PongoCursorIterator;
@@ -44,8 +44,12 @@ import com.mongodb.DBCursor;
 
 
 public class SourceforgeProjectImporter {
-	
-	
+	protected OssmeterLogger logger;
+	public SourceforgeProjectImporter()
+	{
+		logger = (OssmeterLogger) OssmeterLogger.getLogger("importer.sourceforge");
+		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
+	}
 	private boolean isNotNull(JSONObject currentProg, String attribute ) 
 	{
 		if (currentProg.get(attribute)==null)
@@ -98,7 +102,7 @@ public class SourceforgeProjectImporter {
 			
 			for (int j = startingPage; j < (numPagesToBeScanned); j++)
 			{
-				System.out.println("Scanning the projects directory page " + j + " of " + numPagesToBeScanned);
+				logger.info("Scanning the projects directory page " + j + " of " + numPagesToBeScanned);
 				try {
 					String URL_PROJECT = "http://sourceforge.net/directory/?page="+j;
 					url = URL_PROJECT;
@@ -109,48 +113,48 @@ public class SourceforgeProjectImporter {
 						try {
 							url = e.get(i).getElementsByAttributeValue("itemprop", "url").first().attr("href");
 							count++;
-							System.out.println("--> (" + count + ") " + url);
+							logger.info("--> (" + count + ") " + url);
 							SourceForgeProject project = importProject(url.split("/")[2], platform);
 							lastImportedProject = new String(j + "/" + i);
 							platform.getProjectRepositoryManager().getProjectRepository().getSfImportData().first().setLastImportedProject(lastImportedProject);
 							platform.getProjectRepositoryManager().getProjectRepository().sync();
 						}
 						catch(SocketTimeoutException  st) {
-							System.err.println("Single project: Read timed out during the connection to " + url + ". I'll retry later with it.");
+							logger.error("Single project: Read timed out during the connection to " + url + ". I'll retry later with it.");
 							toRetry.add(url);
 							continue;
 						}
 						catch(IOException er) {
-							System.err.println("Single project: No further details available for the project " + url );
+							logger.error("Single project: No further details available for the project " + url );
 							continue;
 						}
 					}
 					startingProject=0;
 				}
 				catch(SocketTimeoutException  st) {
-					System.err.println("Page summary: Read timed out during the connection to " + url + ". I'll retry later with it.");
+					logger.error("Page summary: Read timed out during the connection to " + url + ". I'll retry later with it.");
 					toRetry.add(url);
 //					continue;
 				}
 				catch(IOException e) {
-					System.err.println("Page summary: No further details available for the project " + url );
+					logger.error("Page summary: No further details available for the project " + url );
 //					continue;
 				}
 			}		
 		} 
 		catch(SocketTimeoutException st) {
-			System.err.println("Read timed out during the connection to the projects directory, please try again.");
+			logger.error("Read timed out during the connection to the projects directory, please try again.");
 		}
 		catch(Exception e){
-				e.printStackTrace();
+				logger.error(e.getMessage());
 		}
 		if (! toRetry.isEmpty()) {
-			System.out.println("Trying again with...");
+			logger.info("Trying again with...");
 			Iterator<String> it = toRetry.iterator();
 			String el;
 			while (it.hasNext()) {
 				el = (String) it.next();
-				System.out.println(el);
+				logger.info(el);
 				SourceForgeProject project = null;
 				try {
 					if ((platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByName(el.split("/")[2])) != null) {
@@ -160,7 +164,7 @@ public class SourceforgeProjectImporter {
 					e.printStackTrace();
 					continue;
 				} catch (IOException e) {
-					System.err.println("No further details available for the project " + url );
+					logger.error("No further details available for the project " + url );
 	//				continue;
 				}
 			}
@@ -201,7 +205,7 @@ public class SourceforgeProjectImporter {
 				project = (SourceForgeProject)projectTemp;
 				if (project.getShortName().equals(projectId)) {
 					projectToBeUpdated = true;
-					System.out.println("-----> project " + projectId + " already in the repository. Its metadata will be updated.");
+					logger.info("-----> project " + projectId + " already in the repository. Its metadata will be updated.");
 					break;
 				}	
 			}
