@@ -30,8 +30,12 @@ public abstract class PlatformBugTrackingSystemManager implements IBugTrackingSy
 
 	protected IBugTrackingSystemManager getBugTrackingSystemManager(BugTrackingSystem bugTrackingSystem) throws Exception {
 		for (IBugTrackingSystemManager bugTrackingSystemManager : getBugTrackingSystemManagers()) {
-			if (bugTrackingSystemManager.appliesTo(bugTrackingSystem)) {
-				return bugTrackingSystemManager;
+			//JURI inserimento if//
+			if (bugTrackingSystemManager.getClass().toString().equals("Bugzilla"))
+			{
+				if (bugTrackingSystemManager.appliesTo(bugTrackingSystem)) {
+					return bugTrackingSystemManager;
+				}
 			}
 		}
 		throw new NoManagerFoundException("No bug tracking system manager found for " + bugTrackingSystem);

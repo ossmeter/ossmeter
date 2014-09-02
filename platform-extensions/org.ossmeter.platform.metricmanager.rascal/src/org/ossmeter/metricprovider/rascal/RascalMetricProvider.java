@@ -205,7 +205,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 			
 			// don't continue if there isn't anything to do
 			if (repoDeltas.isEmpty()) {
-				System.err.println("Didn't find any delta. Skipping metric calculations!");
+			    logger.error("Didn't find any delta. Skipping metric calculations for " + metricId);
 				return null;
 			}
 			
@@ -263,7 +263,12 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 					if (provider != null) {
 						String label = uses.get(use);
 						IValue val = getMetricResult(project, provider, manager);
-						params.put(label, val);
+						if (val == null) {
+							logger.error("Trying to use results from " + use + " but no result was found. Ignoring parameter " + label);
+						}
+						else {
+							params.put(label, val);
+						}
 					} else {
 						logger.error("Used metric provider " + use + " was not found! " + use);
 							// name mismatch!
@@ -291,6 +296,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		} catch (Throw e) {
 		    if (!(e.getException() instanceof IConstructor && ((IConstructor) e.getException()).getName().equals("undefined"))) {
 		    	logger.error("metric threw an exception: " + e.getMessage() + " at " + e.getLocation(), e);
+		    	logger.error(e.getTrace());
 		    	throw e;
 		    }
 		    else {
@@ -365,7 +371,9 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 	}
 
 	public static IValue computeAsts(Project project, ProjectDelta delta, RascalManager _instance, OssmeterLogger logger) {
-		assert !workingCopyFolders.isEmpty() && delta != null;
+		if (delta == null || workingCopyFolders.isEmpty()) {
+			return _instance.getEvaluator().getValueFactory().setWriter().done();
+		}
 		return callExtractors(project, delta, _instance, _instance.getASTExtractors(), logger);
 	}
 
@@ -386,7 +394,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		RascalProjectDeltas rpd = new RascalProjectDeltas(_instance.getEvaluator());
 		List<VcsRepositoryDelta> repoDeltas = delta.getVcsDelta().getRepoDeltas();
 
-		if (repoDeltas.isEmpty()) { 
+		if (repoDeltas.isEmpty() || workingCopyFolders.isEmpty() /* this may happen for the first version */) { 
 			return rpd.emptyDelta(delta);
 		}
 
@@ -436,7 +444,9 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 
 
 	public static IValue computeM3(Project project, ProjectDelta delta, RascalManager man, OssmeterLogger logger) {
-		assert !workingCopyFolders.isEmpty() && delta != null;
+		if (delta == null || workingCopyFolders.isEmpty()) {
+			return man.getEvaluator().getValueFactory().setWriter().done();
+		}
 		return callExtractors(project, delta, man, man.getM3Extractors(), logger);
 	}
 	
@@ -451,7 +461,13 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		for (RascalManager.Extractor e : extractors) {
 			// generally extractors are assumed to use @memo
 			ISet result = (ISet) e.call(projectLoc, rascalDelta, wcf, scratch);
-			allResults.insertAll(result);
+			
+			if (result != null) {
+				allResults.insertAll(result);
+			}
+			else {
+				logger.error("ignoring all models for extractor " + e);
+			}
 		}
 		
 		return allResults.done(); // TODO what if null?

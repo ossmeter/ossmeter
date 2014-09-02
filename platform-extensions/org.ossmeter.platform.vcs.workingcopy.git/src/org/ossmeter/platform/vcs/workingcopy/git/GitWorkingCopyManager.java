@@ -71,32 +71,23 @@ public class GitWorkingCopyManager implements WorkingCopyManager {
 		  pb.directory(workingDirectory);
 		  final Process p = pb.start();
 		  
-		  
-		  //Process p = Runtime.getRuntime().exec(commandArgs.toArray(new String[0]), null, workingDirectory);
-//		  Thread reader = new Thread() {
-//			  public void run() {
-				  try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
-					  String line;
-					  while ((line = reader.readLine()) != null) {
-						String[] lineParts = line.split("\\s+");
-						if (lineParts.length == 3 && lineParts[0].matches("\\d+") && lineParts[1].matches("\\d+")) {
-						  int addedLines = Integer.parseInt(lineParts[0]);
-						  int deletedLines = Integer.parseInt(lineParts[1]);
-						  result.add(new Churn(lineParts[2], addedLines, deletedLines));
-						} else {
-						  System.err.println("Line is not a valid num stat from git or the file is a binary");
-						}
-					  }
-				  } catch (IOException e) {
-					  throw new RuntimeException(e);
-				  }
-				  
-//			  }
-//		  };
-//		  reader.start();
+		  try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
+			  String line;
+			  while ((line = reader.readLine()) != null) {
+				  String[] lineParts = line.split("\\s+");
+				  if (lineParts.length == 3 && lineParts[0].matches("\\d+") && lineParts[1].matches("\\d+")) {
+					  int addedLines = Integer.parseInt(lineParts[0]);
+					  int deletedLines = Integer.parseInt(lineParts[1]);
+					  result.add(new Churn(lineParts[2], addedLines, deletedLines));
+				  } 
+			  }
+		  } 
+		  catch (IOException e) {
+			  throw new RuntimeException(e);
+		  }
 		  p.waitFor();
-//		  reader.join();
-		} catch (IOException | InterruptedException e) {
+		} 
+		catch (IOException | InterruptedException e) {
 		  throw new RuntimeException(e);
 		}
 		return result;

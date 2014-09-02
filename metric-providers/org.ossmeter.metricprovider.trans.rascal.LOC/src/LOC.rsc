@@ -11,14 +11,15 @@ import analysis::statistics::Inference;
 
 import Prelude;
 
-
+import Generic;
+ 
 @metric{genericLOC}
 @doc{loc}
 @friendlyName{Language independent physical lines of code}
 @appliesTo{generic()}
 map[loc, int] countLoc(rel[Language, loc, AST] asts = {}) {
   return (f:size(ls) | <generic(), f, lines(ls)> <- asts);
-}
+}   
 
 real giniLOC(map[loc, int] locs) {
   dist = distribution(locs);
@@ -44,9 +45,22 @@ real giniLOCOverFiles(rel[Language, loc, AST] asts = {}) {
 @uses{("genericLOC" :"genericLoc")}
 map[str, int] locPerLanguage(rel[Language, loc, AST] asts = {}, map[loc, int] genericLoc = ()) {
   map[str, int] result = ();
+  set[loc] filesWithLanguageDetected = {};
+  
+  // first count LOC of files with extracted ASTs
   for (<l, f, a> <- asts, l != generic()) {
     result["<l>"]?0 += genericLoc[f];
+    filesWithLanguageDetected += {f};
   }
+  
+  // then guess languages of other files by their extension
+  for (<l, f, a> <- asts, f notin filesWithLanguageDetected) {
+  	lang = estimateLanguageByFileExtension(f);
+  	if (lang != "") {
+  	  result[lang]?0 += genericLoc[f];
+  	}
+  }
+  
   return result;
 }
 
@@ -64,7 +78,7 @@ Factoid mainLanguage(map[str, int] locPerLanguage = ()) {
   // generic() is already removed in locPerLanguage
   lrel[str, int] sorted = sort(toRel(locPerLanguage),
     bool (tuple[str, int] a, tuple[str, int] b) {
-    	return a[1] < b[1];
+    	return a[1] > b[1]; // sort from high to low
     });
 
   mainLang = sorted[0];
@@ -73,9 +87,19 @@ Factoid mainLanguage(map[str, int] locPerLanguage = ()) {
   if (size(sorted) > 1) {
     otherTxt = intercalate(", ", ["<l[0]> (<l[1]>)" | l <- sorted[1..]]);
   
-    txt += " Other used languages are <otherTxt>.";
+    txt += " <size(sorted) - 1> other languages were recognized: <otherTxt>.";
   } 
 
   return factoid(txt, \four()); // star rating by language level? weighted by LOC? // http://www.cs.bsu.edu/homepages/dmz/cs697/langtbl.htm	
 }
+
+
+
+
+
+
+
+
+
+
 

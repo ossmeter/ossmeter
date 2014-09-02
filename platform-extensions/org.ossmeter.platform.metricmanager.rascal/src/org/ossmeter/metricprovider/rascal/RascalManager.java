@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.jar.JarInputStream;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IExtension;
@@ -37,12 +38,17 @@ import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.logging.OssmeterLogger;
 import org.rascalmpl.interpreter.Evaluator;
 import org.rascalmpl.interpreter.NullRascalMonitor;
+import org.rascalmpl.interpreter.control_exceptions.Throw;
 import org.rascalmpl.interpreter.env.GlobalEnvironment;
 import org.rascalmpl.interpreter.env.ModuleEnvironment;
 import org.rascalmpl.interpreter.env.Pair;
 import org.rascalmpl.interpreter.load.StandardLibraryContributor;
 import org.rascalmpl.interpreter.result.AbstractFunction;
 import org.rascalmpl.interpreter.result.Result;
+import org.rascalmpl.interpreter.staticErrors.StaticError;
+import org.rascalmpl.interpreter.utils.RascalManifest;
+import org.rascalmpl.uri.JarInputStreamURIResolver;
+import org.rascalmpl.uri.URIUtil;
 import org.rascalmpl.values.ValueFactoryFactory;
 
 public class RascalManager {
@@ -80,11 +86,29 @@ public class RascalManager {
 		}
 		
 		public IValue call(ISourceLocation projectLocation, IConstructor delta, IMap workingCopyFolders, IMap scratchFolders) {
-			Result<IValue> result = function.call(new NullRascalMonitor(),
-					new Type[]{projectLocation.getType(), delta.getType(), workingCopyFolders.getType(), scratchFolders.getType()},
-					new IValue[]{projectLocation, delta, workingCopyFolders, scratchFolders}, null);
-			// TODO error handling
-			return result.getValue();
+			try {
+				Result<IValue> result = function.call(new NullRascalMonitor(),
+						new Type[]{projectLocation.getType(), delta.getType(), workingCopyFolders.getType(), scratchFolders.getType()},
+						new IValue[]{projectLocation, delta, workingCopyFolders, scratchFolders}, null);
+				return result.getValue();
+			}
+			catch (Throw e) {
+				Rasctivator.logException("Runtime error in model extractor", e);
+				Rasctivator.printRascalTrace(e.getTrace());
+			}
+			catch (StaticError e) {
+				Rasctivator.logException("Static error in model extractor", e);
+			}
+			catch (Throwable e) {
+				Rasctivator.logException("Unexpected implementation error while extracting model", e);
+			}
+			
+			return null;
+		}
+		
+		@Override
+		public String toString() {
+			return function.getName();
 		}
 	}
 	
@@ -160,6 +184,21 @@ public class RascalManager {
 				evaluator.addRascalSearchPath(bundle.getResource(root).toURI());
 			}
 
+			List<String> requiredLibs = mf.getRequiredLibraries(bundle);
+			if (requiredLibs != null) {
+				for (String lib : requiredLibs) {
+					URL libURL = bundle.getResource(lib);
+					JarInputStreamURIResolver resolver = new JarInputStreamURIResolver(libURL.toURI(), evaluator.getResolverRegistry());
+					evaluator.getResolverRegistry().registerInput(resolver);
+	
+					try {
+						addJarToSearchPath(resolver, evaluator);
+					} catch (IOException e) {
+						Rasctivator.logException("ignoring lib " + lib, e);
+					}
+				}
+			}
+			
 			evaluator.addClassLoader(new BundleClassLoader(bundle));
 			configureClassPath(bundle, evaluator);
 		} catch (Throwable e) {
@@ -167,6 +206,18 @@ public class RascalManager {
 					+ bundle, e);
 		}
 	}
+	
+	  public static void addJarToSearchPath(JarInputStreamURIResolver resolver, Evaluator eval) throws URISyntaxException, IOException {
+		  try (JarInputStream jarStream = new JarInputStream(resolver.getJarStream())) {
+			  List<String> roots = new RascalManifest().getSourceRoots(jarStream);
+
+			  if (roots != null) {
+				  for (String root : roots) {
+					  eval.addRascalSearchPath(URIUtil.create(resolver.scheme(), "", "/" + root));
+				  }
+			  }
+		  }
+	  }
 
 	private void configureClassPath(Bundle bundle, Evaluator evaluator) {
 		List<URL> classPath = new LinkedList<URL>();
@@ -213,6 +264,14 @@ public class RascalManager {
 				collectClassPathForBundle(dep.getProviderWiring().getBundle(),
 						classPath, compilerClassPath);
 			}
+
+			List<String> requiredLibs = new RascalBundleManifest().getRequiredLibraries(bundle);
+			if (requiredLibs != null) {
+				for (String lib : requiredLibs) {
+					classPath.add(bundle.getResource(lib));
+				}
+			}
+
 		} catch (IOException e) {
 			Rasctivator.logException("error while tracing dependencies", e);
 		}

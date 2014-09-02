@@ -4,10 +4,12 @@ import lang::php::m3::Core;
 import lang::php::m3::AST;
 import lang::php::m3::FillM3;
 import lang::php::ast::AbstractSyntax;
+import lang::php::ast::System;
 import lang::php::util::Utils;
 import org::ossmeter::metricprovider::ProjectDelta; 
 
 import IO;
+import Message;
 
 @M3Extractor{php()}
 @memo
@@ -25,7 +27,7 @@ public rel[Language, loc, AST] extractASTsPHP(loc project, ProjectDelta delta, m
 	for (root <- checkouts<folders>)
 	{
 		System sys = loadPHPFiles(root);
-		result += { <php(), file, (errscript(m) := sys[file]) ? noAST(m) : phpAST(sys[file])> | file <- sys };
+		result += { <php(), file, (errscript(m) := sys[file]) ? noAST(error(m, file)) : phpAST(sys[file])> | file <- sys };
 	}
 	
 	return result;

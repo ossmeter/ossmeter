@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
+import org.apache.log4j.lf5.util.DateFormatManager;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
@@ -263,7 +264,8 @@ public class GitManager extends AbstractVcsManager {
 			RevCommit commit = iterator.next();
 			
 //			System.out.println(Long.valueOf(commit.getCommitTime())*1000 + " == " + epoch); 
-			if (new Date(Long.valueOf(commit.getCommitTime())*1000).toString().equals(date.toString())) {
+//			System.err.println("comparing " +new Date(Long.valueOf(commit.getCommitTime())*1000) + " with date " + date + " and epoch " + epoch);
+			if (new Date(Long.valueOf(commit.getCommitTime())*1000).compareTo(date) == 0) {
 				foundDate = true;
 				revisions.add(0, commit.getId().getName());
 				//FIXME: Added the zero index to in an attempt to bugfix

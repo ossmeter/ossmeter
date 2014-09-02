@@ -92,7 +92,9 @@ public class MetricListExecutor implements Runnable {
 					((ITransientMetricProvider) m).measure(project, delta, ((ITransientMetricProvider) m).adapt(platform.getMetricsRepository(project).getDb()));
 				} else if (m instanceof IHistoricalMetricProvider) {
 					MetricHistoryManager historyManager = new MetricHistoryManager(platform);
-					historyManager.store(project, date, (IHistoricalMetricProvider) m);
+					//JURI aggiunto if
+					if(m.appliesTo(project))
+						historyManager.store(project, date, (IHistoricalMetricProvider) m);
 				}
 				
 				// Update the meta data
