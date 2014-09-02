@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>org.ossmeter.platform.visualisation.test</name>
+	<name>org.ossmeter.metricprovider.trans.rascal.clones</name>
 	<comment></comment>
 	<projects>
+		<project>org.ossmeter.code.model.generic</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
