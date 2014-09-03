@@ -15,12 +15,12 @@ import analysis::statistics::Inference;
 import org::ossmeter::metricprovider::ProjectDelta;
 
 
-@metric{WMC}
+@metric{WMCJava}
 @doc{Compute your WMC}
 @friendlyName{Weighted Method Count}
 @appliesTo{java()}
-@uses = ("CC" : "methodCC")
-map[loc class, int wmcCount] getWMC(
+@uses = ("CCJava" : "methodCC")
+map[loc class, num wmcCount] getWMC(
 	ProjectDelta delta = ProjectDelta::\empty(),
 	map[loc, loc] workingCopies = (),
 	rel[Language, loc, M3] m3s = {},
@@ -41,7 +41,7 @@ map[loc class, int wmcCount] getWMC(
 	return result;
 }
 
-@metric{CC}
+@metric{CCJava}
 @doc{Compute your McCabe}
 @friendlyName{McCabe's Cyclomatic Complexity Metric}
 @appliesTo{java()}
@@ -92,11 +92,11 @@ int countCC(Declaration ast) {
   return count;
 }
 
-@metric{ccovermethods}
+@metric{CCOverJavaMethods}
 @doc{Calculates the gini coefficient of cc over methods}
 @friendlyName{ccovermethods}
 @appliesTo{java()}
-@uses = ("CC" : "methodCC")
+@uses = ("CCJava" : "methodCC")
 real giniCCOverMethods(map[loc, int] methodCC = ()) {
   if (isEmpty(methodCC)) {
     return -1.0;
