@@ -7,6 +7,7 @@ import lang::java::m3::Core;
 @friendlyName{Abstractness (Java)}
 @appliesTo{java()}
 num A_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{RR-Java}
@@ -14,6 +15,7 @@ num A_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
 @friendlyName{Reuse ratio (Java)}
 @appliesTo{java()}
 num RR_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{SR-Java}
@@ -21,6 +23,7 @@ num RR_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) 
 @friendlyName{Specialization ratio (Java)}
 @appliesTo{java()}
 num SR_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{DIT-Java}
@@ -28,6 +31,7 @@ num SR_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) 
 @friendlyName{Depth of inheritance tree (Java)}
 @appliesTo{java()}
 num DIT_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{NOC-Java}
@@ -35,6 +39,7 @@ num DIT_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {})
 @friendlyName{Number of children (Java)}
 @appliesTo{java()}
 num NOC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{CBO-Java}
@@ -42,6 +47,7 @@ num NOC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {})
 @friendlyName{Coupling between objects (Java)}
 @appliesTo{java()}
 num CBO_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{DAC-Java}
@@ -49,6 +55,7 @@ num CBO_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {})
 @friendlyName{Data abstraction coupling (Java)}
 @appliesTo{java()}
 num DAC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{MPC-Java}
@@ -56,6 +63,7 @@ num DAC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {})
 @friendlyName{Message passing coupling (Java)}
 @appliesTo{java()}
 num MPC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{CF-Java}
@@ -63,6 +71,7 @@ num MPC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {})
 @friendlyName{Coupling factor (Java)}
 @appliesTo{java()}
 num CF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{Ca-Java}
@@ -70,6 +79,7 @@ num CF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) 
 @friendlyName{Afferent coupling (Java)}
 @appliesTo{java()}
 num Ca_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{Ce-Java}
@@ -77,6 +87,7 @@ num Ca_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) 
 @friendlyName{Efferent coupling (Java)}
 @appliesTo{java()}
 num Ce_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{I-Java}
@@ -84,6 +95,7 @@ num Ce_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) 
 @friendlyName{Instability (Java)}
 @appliesTo{java()}
 num I_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{RFC-Java}
@@ -91,6 +103,7 @@ num I_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
 @friendlyName{Response for class (Java)}
 @appliesTo{java()}
 num RFC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{MIF-Java}
@@ -98,6 +111,7 @@ num RFC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {})
 @friendlyName{Method inheritance factor (Java)}
 @appliesTo{java()}
 num MIF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{AIF-Java}
@@ -105,6 +119,7 @@ num MIF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {})
 @friendlyName{Attribute inheritance factor (Java)}
 @appliesTo{java()}
 num AIF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{MHF-Java}
@@ -112,6 +127,7 @@ num AIF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {})
 @friendlyName{Method hiding factor (Java)}
 @appliesTo{java()}
 num MHF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{AHF-Java}
@@ -119,6 +135,7 @@ num MHF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {})
 @friendlyName{Attribute hiding factor (Java)}
 @appliesTo{java()}
 num AHF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{PF-Java}
@@ -126,6 +143,7 @@ num AHF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {})
 @friendlyName{Polymorphism factor (Java)}
 @appliesTo{java()}
 num PF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{LCOM-Java}
@@ -133,6 +151,7 @@ num PF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) 
 @friendlyName{Lack of cohesion in methods (Java)}
 @appliesTo{java()}
 num LCOM_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{TCC-Java}
@@ -140,6 +159,7 @@ num LCOM_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}
 @friendlyName{Tight class cohesion (Java)}
 @appliesTo{java()}
 num TCC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{LCC-Java}
@@ -147,4 +167,5 @@ num TCC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {})
 @friendlyName{Loose class cohesion (Java)}
 @appliesTo{java()}
 num LCC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }

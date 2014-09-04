@@ -1,6 +1,7 @@
 module OOPHP
 
 import lang::php::m3::Core;
+import analysis::m3::AST;
 import lang::php::ast::System;
 
 @metric{A-PHP}
@@ -8,6 +9,7 @@ import lang::php::ast::System;
 @friendlyName{Abstractness (PHP)}
 @appliesTo{php()}
 num A_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{RR-PHP}
@@ -15,6 +17,7 @@ num A_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
 @friendlyName{Reuse ratio (PHP)}
 @appliesTo{php()}
 num RR_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{SR-PHP}
@@ -22,6 +25,7 @@ num RR_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
 @friendlyName{Specialization ratio (PHP)}
 @appliesTo{php()}
 num SR_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{DIT-PHP}
@@ -29,6 +33,7 @@ num SR_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
 @friendlyName{Depth of inheritance tree (PHP)}
 @appliesTo{php()}
 num DIT_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{NOC-PHP}
@@ -36,6 +41,7 @@ num DIT_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) 
 @friendlyName{Number of children (PHP)}
 @appliesTo{php()}
 num NOC_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{CBO-PHP}
@@ -43,6 +49,7 @@ num NOC_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) 
 @friendlyName{Coupling between objects (PHP)}
 @appliesTo{php()}
 num CBO_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{DAC-PHP}
@@ -50,6 +57,7 @@ num CBO_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) 
 @friendlyName{Data abstraction coupling (PHP)}
 @appliesTo{php()}
 num DAC_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{MPC-PHP}
@@ -57,6 +65,7 @@ num DAC_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) 
 @friendlyName{Message passing coupling (PHP)}
 @appliesTo{php()}
 num MPC_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{CF-PHP}
@@ -64,6 +73,7 @@ num MPC_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) 
 @friendlyName{Coupling factor (PHP)}
 @appliesTo{php()}
 num CF_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{Ca-PHP}
@@ -71,6 +81,7 @@ num CF_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
 @friendlyName{Afferent coupling (PHP)}
 @appliesTo{php()}
 num Ca_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{Ce-PHP}
@@ -78,6 +89,7 @@ num Ca_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
 @friendlyName{Efferent coupling (PHP)}
 @appliesTo{php()}
 num Ce_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{I-PHP}
@@ -85,6 +97,7 @@ num Ce_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
 @friendlyName{Instability (PHP)}
 @appliesTo{php()}
 num I_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{RFC-PHP}
@@ -92,6 +105,7 @@ num I_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
 @friendlyName{Response for class (PHP)}
 @appliesTo{php()}
 num RFC_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{MIF-PHP}
@@ -99,6 +113,7 @@ num RFC_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) 
 @friendlyName{Method inheritance factor (PHP)}
 @appliesTo{php()}
 num MIF_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{AIF-PHP}
@@ -106,6 +121,7 @@ num MIF_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) 
 @friendlyName{Attribute inheritance factor (PHP)}
 @appliesTo{php()}
 num AIF_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{MHF-PHP}
@@ -113,6 +129,7 @@ num AIF_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) 
 @friendlyName{Method hiding factor (PHP)}
 @appliesTo{php()}
 num MHF_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{AHF-PHP}
@@ -120,6 +137,7 @@ num MHF_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) 
 @friendlyName{Attribute hiding factor (PHP)}
 @appliesTo{php()}
 num AHF_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{PF-PHP}
@@ -127,6 +145,7 @@ num AHF_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) 
 @friendlyName{Polymorphism factor (PHP)}
 @appliesTo{php()}
 num PF_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{LCOM-PHP}
@@ -134,6 +153,7 @@ num PF_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
 @friendlyName{Lack of cohesion in methods (PHP)}
 @appliesTo{php()}
 num LCOM_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{TCC-PHP}
@@ -141,6 +161,7 @@ num LCOM_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {})
 @friendlyName{Tight class cohesion (PHP)}
 @appliesTo{php()}
 num TCC_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
 
 @metric{LCC-PHP}
@@ -148,4 +169,5 @@ num TCC_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) 
 @friendlyName{Loose class cohesion (PHP)}
 @appliesTo{php()}
 num LCC_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	return 0;
 }
