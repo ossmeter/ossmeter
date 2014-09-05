@@ -20,7 +20,7 @@ import org::ossmeter::metricprovider::ProjectDelta;
 @friendlyName{Weighted Method Count}
 @appliesTo{java()}
 @uses = ("CCJava" : "methodCC")
-map[loc class, num wmcCount] getWMC(
+map[loc class, int wmcCount] getWMC(
 	ProjectDelta delta = ProjectDelta::\empty(),
 	map[loc, loc] workingCopies = (),
 	rel[Language, loc, M3] m3s = {},
