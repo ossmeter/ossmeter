@@ -20,11 +20,7 @@ import org::ossmeter::metricprovider::ProjectDelta;
 @friendlyName{Weighted Method Count}
 @appliesTo{java()}
 @uses = ("CCJava" : "methodCC")
-<<<<<<< HEAD:metric-providers/org.ossmeter.metricprovider.trans.rascal.CC.java/src/WMC.rsc
 map[loc class, int wmcCount] getWMC(
-=======
-map[loc class, num wmcCount] getWMC(
->>>>>>> 4e781cc... renamed rascal.CC metrics to rascal.CC.java:metric-providers/org.ossmeter.metricprovider.trans.rascal.CC/src/WMC.rsc
 	ProjectDelta delta = ProjectDelta::\empty(),
 	map[loc, loc] workingCopies = (),
 	rel[Language, loc, M3] m3s = {},
