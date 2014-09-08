@@ -9,7 +9,17 @@ import analysis::graphs::Graph;
 	Depth in Inheritance Tree per type
 }
 public map[loc, int] DIT (rel[loc, loc] superTypes, set[loc] allTypes) {
-	return ( c : getDepth(c, invert(superTypes)) | c <- allTypes ); // TODO check
+	return ( c : getDepth(c, superTypes) | c <- allTypes );
+}
+
+private int getDepth(loc \type, rel[loc, loc] superTypes) {
+	parents = superTypes[\type];
+	depth = 0;
+	while (parents != {}) {
+		depth += 1;
+		parents = superTypes[parents];
+	}
+	return depth;
 }
 
 
@@ -21,9 +31,9 @@ public map[loc, int] DIT(M3 m) {
   return (class : getDepth(class, inheritances) | class <- carrier(inheritances));
 }*/
 
-int getDepth(loc curClass, rel[loc, loc] inheritances) {
+/*int getDepth(loc curClass, rel[loc, loc] inheritances) {
   set[loc] parents = predecessors(inheritances, curClass);
   if (isEmpty(parents))
     return 0;
   return 1 + max({getDepth(parent, inheritances) | loc parent <- parents});
-}
+}*/

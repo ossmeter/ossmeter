@@ -1,11 +1,22 @@
 module mood::MHF
 
 import Set;
+import util::Math;
 
 /*
- *  Method Hiding Factor
+ *  Method Hiding Factor (can also be used for Attribute Hiding Factor)
  */
  
+real MHF(rel[loc class, loc method] containment, rel[loc class, loc method] visible, set[loc] allClasses) {
+  numClasses = size(allClasses);
+  numMethods = size(containment);
+
+  MVF = size(visible - containment) / toReal(numMethods * (numClasses - 1)); // num visibility edges / max visibility edges
+
+  return 1 - MVF;
+} 
+
+/*
 num MHF(M3 model) {
   set[loc] classes = { c | c <- model@declarations<0>, isClass(c) };
   rel[loc, loc] packageContainment = { <p, c> | <p, c> <- model@containment, isPackage(p), isClass(c) };
@@ -28,4 +39,4 @@ num MHF(M3 model) {
   }
   
   return numerator/denominator;
-}
+}*/

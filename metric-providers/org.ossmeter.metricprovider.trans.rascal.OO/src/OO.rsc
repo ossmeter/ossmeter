@@ -35,6 +35,38 @@ real SR(rel[loc, loc] superTypes) {
 	return 0.0;
 }
 
+@doc{
+	Abstractness (nr of abstract types / nr of concrete types)
+}
+real A(set[loc] abstractTypes, set[loc] allTypes) {
+	return size(abstractTypes) / toReal(size(allTypes - abstractTypes));
+}
+
+
+@doc{
+	Efferent Coupling
+}
+real Ce() {
+	return 0.0;
+}
+
+@doc{
+	Afferent Coupling
+}
+real Ca() {
+	return 0.0;
+}
+
+@doc{
+	Instability
+}
+real I(real Ca, real Ce) {
+	divisor = Ca + Ce;
+	if (divisor > 0) {
+		return Ce / divisor;
+	}
+	return -1.0;
+}
 
 
 

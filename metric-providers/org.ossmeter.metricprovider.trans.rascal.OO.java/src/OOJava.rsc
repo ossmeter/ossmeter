@@ -106,6 +106,8 @@ real RFC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}
 	return 0.0;
 }
 
+// Same as PF
+/*
 @metric{MIF-Java}
 @doc{Method inheritance factor (Java)}
 @friendlyName{Method inheritance factor (Java)}
@@ -113,7 +115,10 @@ real RFC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}
 real MIF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
 	return 0.0;
 }
+*/
 
+// TODO does Java even have attribute inheritance?
+/*
 @metric{AIF-Java}
 @doc{Attribute inheritance factor (Java)}
 @friendlyName{Attribute inheritance factor (Java)}
@@ -121,6 +126,7 @@ real MIF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}
 real AIF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
 	return 0.0;
 }
+*/
 
 @metric{MHF-Java}
 @doc{Method hiding factor (Java)}
