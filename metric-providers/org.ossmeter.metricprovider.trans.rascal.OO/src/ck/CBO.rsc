@@ -1,5 +1,21 @@
 module ck::CBO
 
+import Set;
+import Relation;
+
+
+@doc{
+	Coupling between objects
+}
+public map[loc, int] CBO(rel[loc type1, loc type2] typeDependencies, set[loc] allTypes) {
+  coupledTypes = typeDependencies + invert(typeDependencies);
+  
+  return ( t : size(coupledTypes[t]) | t <- allTypes );
+}
+  
+
+
+/*
 public map[loc, int] CBO(M3 m) {
   set[loc] declaredClasses = classes(m@containment);
   int count = 0;
@@ -15,4 +31,4 @@ public map[loc, int] CBO(M3 m) {
   }
   
   return classCoupling;
-}
+}*/

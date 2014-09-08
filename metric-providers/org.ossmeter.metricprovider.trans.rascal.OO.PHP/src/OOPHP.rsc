@@ -10,6 +10,8 @@ import lang::php::ast::AbstractSyntax;
 import OO;
 import ck::NOC;
 import ck::DIT;
+import ck::RFC;
+import ck::CBO;
 import mood::PF;
 import mood::MHF;
 
@@ -42,6 +44,9 @@ private rel[loc, loc] methodOverrides(M3 m3) {
 	ovr = overridableMethods(m3);
 	return { <sm, m> | <p, m> <- allMethods(m3), a <- anc[p], sm <- ovr[a], sm.file == m.file };
 }
+
+@memo
+private rel[loc, loc] typeDependencies(M3 m3) = typeDependencies(superTypes(m3), m3@calls, m3@accesses, {}, allMethods(m3) + allFields(m3), allTypes(m3));
 
 
 @metric{A-PHP}
@@ -100,8 +105,10 @@ map[loc, int] NOC_PHP(rel[Language, loc, M3] m3s = {}) {
 @doc{Coupling between objects (PHP)}
 @friendlyName{Coupling between objects (PHP)}
 @appliesTo{php()}
-real CBO_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+map[loc, int] CBO_PHP(rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s);
+	
+	return CBO(typeDependencies(m3), allTypes(m3));
 }
 
 @metric{DAC-PHP}
@@ -125,7 +132,8 @@ real MPC_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {})
 @friendlyName{Coupling factor (PHP)}
 @appliesTo{php()}
 real CF_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+	M3 m3 = systemM3(m3s);
+	return CF(typeDependencies(m3), superTypes(m3), allTypes(m3));
 }
 
 @metric{Ca-PHP}
@@ -158,8 +166,9 @@ real I_PHP(rel[Language, loc, M3] m3s = {}) {
 @doc{Response for class (PHP)}
 @friendlyName{Response for class (PHP)}
 @appliesTo{php()}
-real RFC_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+map[loc, int] RFC_PHP(rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s);
+	return RFC(m3@calls, allMethods(m3), allTypes(m3));
 }
 
 // same as PF

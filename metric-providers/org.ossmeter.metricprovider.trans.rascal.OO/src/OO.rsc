@@ -69,5 +69,37 @@ real I(real Ca, real Ce) {
 }
 
 
+@doc{
+	Calculate type dependencies (can be used for CBO and CF)
+}
+public rel[loc, loc] typeDependencies( 
+  rel[loc subtype, loc supertype] superTypes,
+  rel[loc caller, loc callee] methodCalls,
+  rel[loc method, loc attribute] attributeAccesses,
+  rel[loc object, loc \type] objectTypes, // variables, fields, parameters, etc.
+  rel[loc \type, loc object] typeMembers, // variables, fields, parameters, methods
+  set[loc] allTypes) {
+  
+  dependencies = typeMembers o (methodCalls + attributeAccesses) o invert(typeMembers); // uses of members of other types
+  dependencies += typeMembers o objectTypes;     // include types of variables, fields, parameters, etc
+  dependencies += rangeR(typeMembers, allTypes); // include inner classes etc.
+  dependencies += superTypes+; // include ancestor types
+  
+  return dependencies;
+}
+
+
+@doc{
+	Coupling Factor
+}
+public real CF(rel[loc, loc] typeDependencies, rel[loc, loc] superTypes, set[loc] allTypes) {
+	numTypes = size(allTypes);
+	
+	numDependencies = size(typeDependencies + invert(typeDependencies));
+	
+	numPossibleDependencies = (numTypes * (numTypes - 1) - 2 * size(superTypes+)); // excluding inheritance
+	
+	return numDependencies / toReal(numPossibleDependencies);
+}
 
 
