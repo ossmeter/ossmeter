@@ -175,3 +175,20 @@ real TCC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}
 real LCC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
 	return 0.0;
 }
+
+
+@metric{NOM-Java}
+@doc{Number of methods (Java)}
+@friendlyName{Number of methods (Java)}
+@appliesTo{java()}
+map[loc, int] NOM_Java(rel[Language, loc, M3] m3s = {}) {
+	return ();
+}
+
+@metric{NOA-Java}
+@doc{Number of attributes (Java)}
+@friendlyName{Number of attributes (Java)}
+@appliesTo{java()}
+map[loc, int] NOA_Java(rel[Language, loc, M3] m3s = {}) {
+	return ();
+}

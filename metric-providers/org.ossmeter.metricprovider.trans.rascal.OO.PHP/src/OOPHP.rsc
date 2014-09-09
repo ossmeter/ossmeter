@@ -13,6 +13,8 @@ import ck::DIT;
 import ck::RFC;
 import ck::CBO;
 import ck::LCOM;
+import ck::NOM;
+import ck::NOA;
 import mood::PF;
 import mood::MHF;
 
@@ -136,7 +138,7 @@ real MPC_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {})
 @doc{Coupling factor (PHP)}
 @friendlyName{Coupling factor (PHP)}
 @appliesTo{php()}
-real CF_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+real CF_PHP(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
 	return CF(typeDependencies(m3), superTypes(m3), allTypes(m3));
 }
@@ -145,7 +147,6 @@ real CF_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) 
 @doc{Afferent coupling (PHP)}
 @friendlyName{Afferent coupling (PHP)}
 @appliesTo{php()}
-@memo
 map[loc, int] Ca_PHP(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
 	return Ca(packageTypes(m3), typeDependencies(m3));
@@ -155,7 +156,6 @@ map[loc, int] Ca_PHP(rel[Language, loc, M3] m3s = {}) {
 @doc{Efferent coupling (PHP)}
 @friendlyName{Efferent coupling (PHP)}
 @appliesTo{php()}
-@memo
 map[loc, int] Ce_PHP(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
 	return Ce(packageTypes(m3), typeDependencies(m3));
@@ -165,13 +165,11 @@ map[loc, int] Ce_PHP(rel[Language, loc, M3] m3s = {}) {
 @doc{Instability (PHP)}
 @friendlyName{Instability (PHP)}
 @appliesTo{php()}
-map[loc, real] I_PHP(rel[Language, loc, M3] m3s = {}) {
-	ac = Ca_PHP(m3s = m3s);
-	ec = Ce_PHP(m3s = m3s);
-	
-	packages = domain(ac) + domain(ec);
+@uses{("Ce-PHP": "ce", "Ca-PHP": "ca")}
+map[loc, real] I_PHP(rel[Language, loc, M3] m3s = {}, map[loc, int] ce = (), map[loc, int] ca = ()) {
+	packages = domain(ca) + domain(ce);
 
-	return ( p : I(ac[p]?0, ec[p]?0) | p <- packages );
+	return ( p : I(ca[p]?0, ce[p]?0) | p <- packages );
 }
 
 @metric{RFC-PHP}
@@ -271,7 +269,7 @@ map[loc, int] LCOM_PHP(rel[Language, loc, M3] m3s = {}) {
 @doc{Tight class cohesion (PHP)}
 @friendlyName{Tight class cohesion (PHP)}
 @appliesTo{php()}
-map[loc, real] TCC_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+map[loc, real] TCC_PHP(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
 	return TCC(allMethods(m3), allFields(m3), m3@calls, m3@accesses, allTypes(m3));
 }
@@ -280,7 +278,25 @@ map[loc, real] TCC_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3]
 @doc{Loose class cohesion (PHP)}
 @friendlyName{Loose class cohesion (PHP)}
 @appliesTo{php()}
-map[loc, real] LCC_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+map[loc, real] LCC_PHP(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
 	return LCC(allMethods(m3), allFields(m3), m3@calls, m3@accesses, allTypes(m3));
+}
+
+@metric{NOM-PHP}
+@doc{Number of methods (PHP)}
+@friendlyName{Number of methods (PHP)}
+@appliesTo{php()}
+map[loc, int] NOM_PHP(rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s);
+	return NOM(allMethods(m3), allTypes(m3));
+}
+
+@metric{NOA-PHP}
+@doc{Number of attributes (PHP)}
+@friendlyName{Number of attributes (PHP)}
+@appliesTo{php()}
+map[loc, int] NOA_PHP(rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s);
+	return NOA(allFields(m3), allTypes(m3));
 }

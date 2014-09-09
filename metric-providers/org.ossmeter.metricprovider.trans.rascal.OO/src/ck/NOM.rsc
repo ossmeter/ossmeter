@@ -1,5 +1,16 @@
 module ck::NOM
 
+import Set;
+
+@doc{
+	Number of methods per class
+}
+public map[loc, int] NOM(rel[loc \type, loc att] typeMethods, set[loc] allTypes) {
+	return ( t : size(typeMethods[t]) | t <- allTypes );
+}
+
+
+/*
 int NOM(M3 model) = (0 | it + 1 | entity <- model@declarations<0>, isMethod(entity));
                                   
 map[loc class, int methodCount] NOMperClass(M3 model) {
@@ -16,3 +27,4 @@ public map[loc, int] NOM(M3 m, set[Modifier] modifiers = {}) {
   classMethodsMap = toMap(classMethods);
   return (class : size(classMethodsMap[class]) | class <- classMethodsMap);
 }
+*/

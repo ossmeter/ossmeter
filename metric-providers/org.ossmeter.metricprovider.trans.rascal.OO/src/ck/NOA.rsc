@@ -1,5 +1,15 @@
 module ck::NOA
 
+import Set;
+
+@doc{
+	Number of attributes per class
+}
+public map[loc, int] NOA(rel[loc \type, loc att] typeAttributes, set[loc] allTypes) {
+	return ( t : size(typeAttributes[t]) | t <- allTypes );
+}
+
+/*
 int NOA(M3 model) = (0 | it + 1 | entity <- model@declarations<0>, isField(entity));
                                   
 map[loc class, int methodCount] NOAperClass(M3 model) {
@@ -16,3 +26,4 @@ public map[loc, int] NOA(M3 m, set[Modifier] modifiers = {}) {
   classFieldsMap = toMap(classFields);
   return (class : size(classFieldsMap[class]) | class <- classFieldsMap);
 }
+*/
