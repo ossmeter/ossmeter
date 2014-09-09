@@ -46,24 +46,32 @@ real A(set[loc] abstractTypes, set[loc] allTypes) {
 @doc{
 	Efferent Coupling
 }
-real Ce() {
-	return 0.0;
+map[loc, int] Ce(rel[loc package, loc \type] packageTypes, rel[loc depender, loc dependee] typeDependencies) {
+	packages = domain(packageTypes);
+	
+	otherPackageDependencies = typeDependencies o invert(packageTypes) - invert(packageTypes);
+	
+	return ( p : ( 0 | it + 1 | t <- packageTypes[p], otherPackageDependencies[t] != {} ) | p <- packages ); 
 }
 
 @doc{
 	Afferent Coupling
 }
-real Ca() {
-	return 0.0;
+map[loc, int] Ca(rel[loc package, loc \type] packageTypes, rel[loc depender, loc dependee] typeDependencies) {
+	otherPackageDependencies = typeDependencies o invert(packageTypes) - invert(packageTypes);
+
+	typesDependingOnPackage = packageTypes o invert(typeDependencies);	
+
+	return ( p : size(typesDependingOnPackage[p]) | p <- domain(packageTypes) );
 }
 
 @doc{
 	Instability
 }
-real I(real Ca, real Ce) {
+real I(int Ca, int Ce) {
 	divisor = Ca + Ce;
 	if (divisor > 0) {
-		return Ce / divisor;
+		return Ce / toReal(divisor);
 	}
 	return -1.0;
 }
@@ -76,8 +84,8 @@ public rel[loc, loc] typeDependencies(
   rel[loc subtype, loc supertype] superTypes,
   rel[loc caller, loc callee] methodCalls,
   rel[loc method, loc attribute] attributeAccesses,
-  rel[loc object, loc \type] objectTypes, // variables, fields, parameters, etc.
-  rel[loc \type, loc object] typeMembers, // variables, fields, parameters, methods
+  rel[loc object, loc \type] objectTypes, // variables, fields, parameters, exceptions, etc.
+  rel[loc \type, loc object] typeMembers, // variables, fields, parameters, exceptions, methods, inner classes
   set[loc] allTypes) {
   
   dependencies = typeMembers o (methodCalls + attributeAccesses) o invert(typeMembers); // uses of members of other types
@@ -103,3 +111,67 @@ public real CF(rel[loc, loc] typeDependencies, rel[loc, loc] superTypes, set[loc
 }
 
 
+@doc{
+	Tight Class Cohesion per type
+}
+map[loc, real] TCC(
+	rel[loc \type, loc method] typeMethods,
+ 	rel[loc \type, loc field] typeFields,
+ 	rel[loc method1, loc method2] calls,
+ 	rel[loc method, loc field] fieldAccesses,
+ 	set[loc] allTypes) {
+
+	map[loc, real] tcc = ();
+
+	for (t <- allTypes) {
+		methodsOfT = typeMethods[t];
+		numMethods = size(methodsOfT);
+		maxConnections = numMethods * (numMethods - 1);
+		
+		fieldConnections = rangeR(calls, methodsOfT)+ o rangeR(fieldAccesses, typeFields[t]); 
+		methodConnections = fieldConnections o invert(fieldConnections);
+		
+		directConnections = methodConnections - ident(methodsOfT);
+
+		if (maxConnections > 0) {
+			tcc[t] = size(directConnections) / toReal(maxConnections);
+		} else {
+			tcc[t] = -1.0;
+		}
+	}
+	
+	return tcc;
+}
+
+
+@doc{
+	Loose Class Cohesion per type
+}
+map[loc, real] LCC(
+	rel[loc \type, loc method] typeMethods,
+ 	rel[loc \type, loc field] typeFields,
+ 	rel[loc method1, loc method2] calls,
+ 	rel[loc method, loc field] fieldAccesses,
+ 	set[loc] allTypes) {
+
+	map[loc, real] lcc = ();
+
+	for (t <- allTypes) {
+		methodsOfT = typeMethods[t];
+		numMethods = size(methodsOfT);
+		maxConnections = numMethods * (numMethods - 1);
+		
+		fieldConnections = rangeR(calls, methodsOfT)+ o rangeR(fieldAccesses, typeFields[t]); 
+		methodConnections = fieldConnections o invert(fieldConnections);
+		
+		indirectConnections = (methodConnections+) - ident(methodsOfT);
+		
+		if (maxConnections > 0) {
+			lcc[t] = size(indirectConnections) / toReal(maxConnections);
+		} else {
+			lcc[t] = -1.0;
+		}
+	}
+	
+	return lcc;
+}

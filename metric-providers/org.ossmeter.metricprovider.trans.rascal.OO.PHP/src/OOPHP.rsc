@@ -12,6 +12,7 @@ import ck::NOC;
 import ck::DIT;
 import ck::RFC;
 import ck::CBO;
+import ck::LCOM;
 import mood::PF;
 import mood::MHF;
 
@@ -47,6 +48,10 @@ private rel[loc, loc] methodOverrides(M3 m3) {
 
 @memo
 private rel[loc, loc] typeDependencies(M3 m3) = typeDependencies(superTypes(m3), m3@calls, m3@accesses, {}, allMethods(m3) + allFields(m3), allTypes(m3));
+
+@memo
+private rel[loc, loc] packageTypes(M3 m3) = { <p, t> | <p, t> <- m3@containment, isNamespace(p), isClass(t) || isInterface(t) };
+
 
 
 @metric{A-PHP}
@@ -141,8 +146,9 @@ real CF_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) 
 @friendlyName{Afferent coupling (PHP)}
 @appliesTo{php()}
 @memo
-real Ca_PHP(rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+map[loc, int] Ca_PHP(rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s);
+	return Ca(packageTypes(m3), typeDependencies(m3));
 }
 
 @metric{Ce-PHP}
@@ -150,16 +156,22 @@ real Ca_PHP(rel[Language, loc, M3] m3s = {}) {
 @friendlyName{Efferent coupling (PHP)}
 @appliesTo{php()}
 @memo
-real Ce_PHP(rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+map[loc, int] Ce_PHP(rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s);
+	return Ce(packageTypes(m3), typeDependencies(m3));
 }
 
 @metric{I-PHP}
 @doc{Instability (PHP)}
 @friendlyName{Instability (PHP)}
 @appliesTo{php()}
-real I_PHP(rel[Language, loc, M3] m3s = {}) {
-	return I(Ca_PHP(m3s = m3s), Ce_PHP(m3s = m3s));
+map[loc, real] I_PHP(rel[Language, loc, M3] m3s = {}) {
+	ac = Ca_PHP(m3s = m3s);
+	ec = Ce_PHP(m3s = m3s);
+	
+	packages = domain(ac) + domain(ec);
+
+	return ( p : I(ac[p]?0, ec[p]?0) | p <- packages );
 }
 
 @metric{RFC-PHP}
@@ -250,22 +262,25 @@ real PF_PHP(rel[Language, loc, M3] m3s = {}) {
 @doc{Lack of cohesion in methods (PHP)}
 @friendlyName{Lack of cohesion in methods (PHP)}
 @appliesTo{php()}
-real LCOM_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+map[loc, int] LCOM_PHP(rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s);
+	return LCOM(m3@accesses, allMethods(m3), allFields(m3), allTypes(m3));
 }
 
 @metric{TCC-PHP}
 @doc{Tight class cohesion (PHP)}
 @friendlyName{Tight class cohesion (PHP)}
 @appliesTo{php()}
-real TCC_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+map[loc, real] TCC_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s);
+	return TCC(allMethods(m3), allFields(m3), m3@calls, m3@accesses, allTypes(m3));
 }
 
 @metric{LCC-PHP}
 @doc{Loose class cohesion (PHP)}
 @friendlyName{Loose class cohesion (PHP)}
 @appliesTo{php()}
-real LCC_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+map[loc, real] LCC_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s);
+	return LCC(allMethods(m3), allFields(m3), m3@calls, m3@accesses, allTypes(m3));
 }
