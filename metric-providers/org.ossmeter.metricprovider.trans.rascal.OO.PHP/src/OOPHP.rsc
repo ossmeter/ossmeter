@@ -121,16 +121,28 @@ map[loc, int] CBO_PHP(rel[Language, loc, M3] m3s = {}) {
 @doc{Data abstraction coupling (PHP)}
 @friendlyName{Data abstraction coupling (PHP)}
 @appliesTo{php()}
-real DAC_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+map[loc, int] DAC_PHP(rel[Language, loc, AST] asts = {}) {
+	map[loc, int] dac = ();
+	
+	for ( /c:class(_, _, _, _, _) <- asts ) {
+		dac[c@decl] = ( 0 | it + 1 | /new(_, _) <- c );
+	}
+	
+	return dac;
 }
 
 @metric{MPC-PHP}
 @doc{Message passing coupling (PHP)}
 @friendlyName{Message passing coupling (PHP)}
 @appliesTo{php()}
-real MPC_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+map[loc, int] MPC_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	map[loc, int] mpc = ();
+	
+	for ( /c:class(_, _, _, _, _) <- asts ) {
+		mpc[c@decl] = ( 0 | it + 1 | /methodCall(_, _, _) <- c ) + ( 0 | it + 1 | /staticCall(_, _, _) <- c );
+	}
+	
+	return mpc;
 }
 
 @metric{CF-PHP}
@@ -302,3 +314,6 @@ map[loc, int] NOA_PHP(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
 	return NOA(allFields(m3), allTypes(m3));
 }
+
+
+

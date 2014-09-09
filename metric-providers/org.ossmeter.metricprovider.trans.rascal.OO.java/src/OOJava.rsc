@@ -50,6 +50,8 @@ real CBO_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}
 	return 0.0;
 }
 
+// DAC for java is measured in lang::java::style::Metrics
+/*
 @metric{DAC-Java}
 @doc{Data abstraction coupling (Java)}
 @friendlyName{Data abstraction coupling (Java)}
@@ -57,6 +59,7 @@ real CBO_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}
 real DAC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
 	return 0.0;
 }
+*/
 
 @metric{MPC-Java}
 @doc{Message passing coupling (Java)}
