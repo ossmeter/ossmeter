@@ -66,7 +66,10 @@ private set[str] overloadMetrics = {
 
 private set[str] varLabelMetrics = {
 						"break with non-literal argument",
-						"continue with non-literal argument"};	
+						"continue with non-literal argument"};
+						
+private set[str] allDynamicMetrics = varClassMetrics + varVarMetrics + varFuncMetrics + varArgsMetrics + varIncludeMetrics
+	+ overloadMetrics + varLabelMetrics;
 
 @memo
 private map[str, int] getCounts(rel[Language, loc, AST] asts)
@@ -82,68 +85,16 @@ private int sumMetrics(rel[Language, loc, AST] asts, set[str] metricNames)
 	return toInt(sum([counts[n] | n <- metricNames]));
 }
 
-@metric{numVarVar}
-@doc{number of variable variable references}
-@friendlyName{numVarVar}
+
+@metric{numDynamicFeatureUses-PHP}
+@doc{Number of uses of dynamic PHP language features}
+@friendlyName{Number of uses of dynamic PHP language features}
 @appliesTo{php()}
-public int getNumberOfVarVarUses(rel[Language, loc, AST] asts = {})
+public int getNumberOfDynamicFeatureUses(rel[Language, loc, AST] asts = {})
 {
-	 return sumMetrics(asts, varVarMetrics);
+	 return sumMetrics(asts, allDynamicMetrics);
 }
 
-@metric{numVarClass}
-@doc{number of variable class references}
-@friendlyName{numVarClass}
-@appliesTo{php()}
-public int getNumberOfVarClassUses(rel[Language, loc, AST] asts = {})
-{
-	 return sumMetrics(asts, varClassMetrics);
-}
-
-@metric{numVarFunc}
-@doc{number of variable accesses to functions or methods}
-@friendlyName{numVarFunc}
-@appliesTo{php()}
-public int getNumberOfVarFuncUses(rel[Language, loc, AST] asts = {})
-{
-	 return sumMetrics(asts, varFuncMetrics);
-}
-
-@metric{numVarArgs}
-@doc{number of var args methods}
-@friendlyName{numVarArgs}
-@appliesTo{php()}
-public int getNumberOfVarArgsUses(rel[Language, loc, AST] asts = {})
-{
-	 return sumMetrics(asts, varArgsMetrics);
-}
-
-@metric{numVarIncludes}
-@doc{number of variable includes}
-@friendlyName{numVarIncludes}
-@appliesTo{php()}
-public int getNumberOfVarIncludeUses(rel[Language, loc, AST] asts = {})
-{
-	 return sumMetrics(asts, varIncludeMetrics);
-}
-
-@metric{numOverloads}
-@doc{number of overload uses}
-@friendlyName{numVarOverloads}
-@appliesTo{php()}
-public int getNumberOfOverloadUses(rel[Language, loc, AST] asts = {})
-{
-	 return sumMetrics(asts, overloadMetrics);
-}
-
-@metric{numVarLabels}
-@doc{number of variable label references}
-@friendlyName{numVarLabels}
-@appliesTo{php()}
-public int getNumberOfVarLabelUses(rel[Language, loc, AST] asts = {})
-{
-	 return sumMetrics(asts, varLabelMetrics);
-}
 
 @metric{numEvals}
 @doc{number of calls to eval}

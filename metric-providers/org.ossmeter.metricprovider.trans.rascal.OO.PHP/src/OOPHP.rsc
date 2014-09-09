@@ -49,7 +49,7 @@ private rel[loc, loc] methodOverrides(M3 m3) {
 }
 
 @memo
-private rel[loc, loc] typeDependencies(M3 m3) = typeDependencies(superTypes(m3), m3@calls, m3@accesses, {}, allMethods(m3) + allFields(m3), allTypes(m3));
+private rel[loc, loc] typeDependencies(M3 m3) = typeDependencies(superTypes(m3), m3@calls, m3@accesses, {}, domainR(m3@containment+, allTypes(m3)), allTypes(m3));
 
 @memo
 private rel[loc, loc] packageTypes(M3 m3) = { <p, t> | <p, t> <- m3@containment, isNamespace(p), isClass(t) || isInterface(t) };
