@@ -6,12 +6,12 @@ import util::Math;
 /*
  *  Method Hiding Factor (can also be used for Attribute Hiding Factor)
  */
- 
+
 real MHF(rel[loc class, loc method] containment, rel[loc class, loc method] visible, set[loc] allClasses) {
   numClasses = size(allClasses);
   numMethods = size(containment);
 
-  MVF = size(visible - containment) / toReal(numMethods * (numClasses - 1)); // num visibility edges / max visibility edges
+  MVF = size(visible - containment) / toReal(numMethods * (numClasses - 1)); // MHF = num visibility edges / max visibility edges
 
   return 1 - MVF;
 } 

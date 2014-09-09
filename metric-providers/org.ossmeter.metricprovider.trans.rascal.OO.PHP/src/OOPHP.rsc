@@ -17,6 +17,8 @@ import ck::NOM;
 import ck::NOA;
 import mood::PF;
 import mood::MHF;
+import mood::MIF;
+
 
 @memo
 private M3 systemM3(rel[Language, loc, M3] m3s) {
@@ -25,9 +27,6 @@ private M3 systemM3(rel[Language, loc, M3] m3s) {
 
 @memo
 private rel[loc, loc] superTypes(M3 m3) = m3@extends + m3@implements; // TODO traits?
-
-@memo
-private rel[loc, loc] ancestors(M3 m3) = superTypes(m3)+;
 
 @memo
 private set[loc] allTypes(M3 m3) = classes(m3) + interfaces(m3); // TODO traits?
@@ -43,9 +42,9 @@ private rel[loc, loc] overridableMethods(M3 m3) = { <p, m> | <p, m> <- allMethod
 
 @memo
 private rel[loc, loc] methodOverrides(M3 m3) {
-	anc = ancestors(m3);
-	ovr = overridableMethods(m3);
-	return { <sm, m> | <p, m> <- allMethods(m3), a <- anc[p], sm <- ovr[a], sm.file == m.file };
+	ancestors = superTypes(m3)+;
+	overridables = overridableMethods(m3);
+	return { <sm, m> | <p, m> <- allMethods(m3), a <- ancestors[p], sm <- overridables[a], sm.file == m.file };
 }
 
 @memo
@@ -181,26 +180,29 @@ map[loc, int] RFC_PHP(rel[Language, loc, M3] m3s = {}) {
 	return RFC(m3@calls, allMethods(m3), allTypes(m3));
 }
 
-// same as PF
-/*
 @metric{MIF-PHP}
 @doc{Method inheritance factor (PHP)}
 @friendlyName{Method inheritance factor (PHP)}
 @appliesTo{php()}
-real MIF_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+map[loc, real] MIF_PHP(rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s);
+	
+	inheritableMethods = { <t, m> | <t, m> <- allMethods(m3), {\private(), \abstract()} & m3@modifiers[m] == {} };
+	
+	return MIF(allMethods(m3), inheritableMethods, m3@extends, classes(m3));
 }
-*/
 
-// TODO what is attribute inheritance for PHP??
-/*
 @metric{AIF-PHP}
 @doc{Attribute inheritance factor (PHP)}
 @friendlyName{Attribute inheritance factor (PHP)}
 @appliesTo{php()}
-real AIF_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
-}*/
+map[loc, real] AIF_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s);
+	
+	publicAndProtectedFields = { <t, f> | <t, f> <- allFields(m3), \private() notin m3@modifiers[f] };
+	
+	return MIF(allFields(m3), publicAndProtectedFields, superTypes(m3), allTypes(m3));
+}
 
 @doc{
 	Reuseable method for AHF and MHF
