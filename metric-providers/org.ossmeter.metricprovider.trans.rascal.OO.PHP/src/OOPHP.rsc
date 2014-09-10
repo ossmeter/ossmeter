@@ -7,6 +7,8 @@ import analysis::m3::AST;
 import lang::php::ast::System;
 import lang::php::ast::AbstractSyntax;
 
+import PHP;
+
 import OO;
 import OOFactoids;
 import ck::NOC;
@@ -22,11 +24,6 @@ import mood::MIF;
 
 import org::ossmeter::metricprovider::MetricProvider;
 
-
-@memo
-private M3 systemM3(rel[Language, loc, M3] m3s) {
-	return composeM3(|tmp:///|, range(m3s[php()]));
-}
 
 @memo
 private rel[loc, loc] superTypes(M3 m3) = m3@extends + m3@implements; // TODO traits?
