@@ -1,0 +1,33 @@
+import "../util/ecoreutil.eol";
+
+pre {
+	var dir = "/Users/jimmy/Code/ossmeter-git/client/org.ossmeter.platform.client.java/src/";
+}
+
+rule WADL2Java
+	transform w : WADL!t_application {
+	
+	template : "wadl2java.egl"
+	
+	target : dir + "OssmeterClient.java"
+
+}
+
+
+rule EClass2Java
+	transform c: OSS!EClass {
+
+	guard : not c.isIgnored() and not c.isAnnotatedAs("stub")
+	
+	template : "eclass2java.egl"
+	
+	target : c.name  + ".java"
+}
+
+rule EEnum2Java
+	transform e: OSS!EEnum {
+
+	template : "eenum2java.egl"
+	
+	target : e.name  + ".java"
+}

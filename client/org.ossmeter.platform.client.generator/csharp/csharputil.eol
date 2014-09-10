@@ -1,0 +1,105 @@
+import "../util/ecoreutil.eol";
+
+operation OSS!EClass getAbstractModifier() {
+	if (self.abstract) return " abstract";
+	else return "";
+}
+
+operation OSS!EClass getCSharpExtends() {
+	if (self.eSuperTypes.size() > 0) {
+		return ": " + self.eSuperTypes.get(0).getJavaName();
+	}
+	else {
+		return "Object";
+	}
+}
+
+operation OSS!EClassifier getJavaBoxedName() {
+	if (self.isAnnotatedAs("stub")) {
+		return self.getAnnotationValue("stub", "javaClass");
+	}
+	else {
+		switch (self.name) {
+			case "EString": return "string";
+			case "ELong": return "long";
+			case "EInt": return "int";
+			case "EBoolean": return "bool";
+			case "EFloat": return "float";
+			case "EIntegerObject": return "int";
+			case "EBooleanObject": return "bool";
+			case "EDoubleObject": return "double";
+			default: return self.name;
+		}
+	}
+}
+
+operation OSS!EReference getJavaCollectionType() {
+	var stubClass = self.eType.getAnnotationValue("stub", "javaClass");
+	if (stubClass.isDefined() and self.getAnnotationValue("collection", "fromstub") == "true") {
+		return stubClass + "Collection";
+	}
+	else {
+		return self.eType.name + "Collection";
+	}
+}
+
+operation OSS!EReference getMongoCollectionName() {
+	if (self.eContainer().getAnnotationValue("db", "qualifiedCollectionNames") == "true") {
+		return self.eContainer().name + "." + self.name;
+	} 
+	else {
+		return self.name;
+	}
+}
+
+operation OSS!EClassifier isNumeric() : Boolean {
+	switch (self.name) {
+		case "ELong": return true;
+		case "EInt": return true;
+		case "EIntegerObject": return true;
+		case "EFloat": return true;
+		case "EDouble": return true;
+		default: return false;
+	}
+}
+
+operation OSS!EClassifier getJavaName() {
+	if (self.isAnnotatedAs("stub")) {
+		return self.getAnnotationValue("stub", "javaClass");
+	}
+	else {
+		switch (self.name) {
+			case "EString": return "string";
+			case "ELong": return "long";
+			case "EInt": return "int";
+			case "EBoolean": return "bool";
+			case "EFloat": return "float";
+			case "EIntegerObject": return "int";
+			case "EBooleanObject": return "bool";
+			case "EDouble": return "double";
+			default: return self.name;
+		}
+	}
+}
+
+operation OSS!EAttribute getDefaultJavaValue() {
+	if (self.eType.name == "EString") {
+		return '"' +  self.defaultValue + '"';
+	}
+	else if (self.eType.name == "EFloat") {
+		return self.defaultValue + "f";
+	}
+	else if (self.eType.name == "EDouble") {
+		return self.defaultValue + "d";
+	}
+	else if (self.defaultValue.isUndefined()) {
+		if (self.eType.getJavaName() == "boolean") return false;
+		else if (self.eType.getJavaName() == "int") return 0;
+	}
+	else if (self.eType.isTypeOf(OSS!EEnum)) {
+		return self.eType.name + "." + self.defaultValue;
+	}
+	else {
+		return self.defaultValue;
+	}
+}

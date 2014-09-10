@@ -1,0 +1,11 @@
+[%import "javautil.eol";%]
+//package [%=e.ePackage.name%];
+
+public enum [%=e.name%] {
+	
+	[%for (l in e.eLiterals) { %]
+	[%=l.name%][%if (hasMore){%],[%}%]
+	
+	[%}%]
+	
+}

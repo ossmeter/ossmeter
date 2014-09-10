@@ -1,0 +1,63 @@
+<application xmlns="http://wadl.dev.java.net/2009/02"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:oss="org.ossmeter.repository.model"
+	xmlns:metric="org.ossmeter.repository.model.metric">
+	<grammars>
+		<include href="ossmeter.xsd"/>
+		<include href="metric.xsd"/>
+		
+		<xs:simpleType name="projectList">
+			<xs:list itemType="oss:Project" />
+		</xs:simpleType>
+	</grammars>
+
+	<resources base="http://www.ossmeter.com/api">
+		<resource path="/p">
+			<method name="GET" id="ProjectList">
+				<request>
+					<param name="page" required="false" default="1" style="query" />
+					<param name="size" required="false" default="20" style="query" />
+				</request>
+				<response>
+					<representation mediaType="application/json" element="projectList" />
+				</response>
+			</method>
+		</resource>
+		<resource path="/p/{projectId}">
+			<param required="true" style="template" type="xs:string" name="projectId" />
+			<method name="GET" id="Project">
+				<response>
+					<representation mediaType="application/json" element="oss:Project" />
+				</response>
+			</method>
+		</resource>
+		<resource path="/p/{projectId}/m/{metricId}">
+			<param required="true" style="template" type="xs:string" name="projectId" />
+			<param required="true" style="template" type="xs:string" name="metricId" />
+			<method name="GET" id="Metric">
+				<request>
+					<param name="agg" required="false" default="none" style="query" />
+					<param name="startDate" required="false" default="20010101" style="query" />
+					<param name="endDate" required="false" default="20010101" style="query" />
+				</request>
+				<response status="200">
+					<representation mediaType="application/json" element="metric:Metric" />
+				</response>							
+			</method>
+		</resource>
+		<resource path="/p/{projectId}/v/{metricId}">
+			<param required="true" style="template" type="xs:string" name="projectId" />
+			<param required="true" style="template" type="xs:string" name="metricId" />
+			<method name="GET" id="MetricVisualisation">
+				<request>
+					<param name="agg" required="false" default="none" style="query" />
+					<param name="startDate" required="false" default="20010101" style="query" />
+					<param name="endDate" required="false" default="20010101" style="query" />
+				</request>
+				<response>
+					<representation mediaType="application/json" element="metric:MetricVisualisation" />
+				</response>
+			</method>
+		</resource>
+	</resources>
+</application>

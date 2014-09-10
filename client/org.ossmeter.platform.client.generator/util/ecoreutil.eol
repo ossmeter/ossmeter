@@ -1,0 +1,83 @@
+
+@cached
+operation OSS!EClassifier isIgnored() : Boolean {
+	return Sequence{"ProjectRepository", "ImportData", "MetricProviderExecution", "ProjectExecutionInformation"}.includes(self.name);
+}
+
+@cached
+operation String isIgnored() : Boolean {
+	return Sequence{"ProjectRepository", "ImportData", "MetricProviderExecution", "ProjectExecutionInformation"}.includes(self);
+}
+
+@cached
+operation OSS!EAnnotation getDetail(key : String) : String {
+	var detail := self.details.selectOne(d|d.key = key);
+	if (detail.isDefined()) {return detail.value;}
+	else {return null;}
+}
+
+@cached
+operation OSS!EClass hasSubTypes() : Boolean {
+	return self.getSubTypes().size() > 0;
+}
+
+@cached 
+operation OSS!EClass getSubTypes() : Sequence {
+	return OSS!EClass.all.select(c | c.eSuperTypes.includes(self));
+}
+
+operation OSS!EModelElement getAnnotationValue(name : String, detail : String) : Any {
+	
+	var ann := self.eAnnotations.selectOne(a|a.source = name);
+	
+	var det;
+	
+	if (ann.isDefined()) {
+		det := ann.details.selectOne(d|d.key = detail);
+	}
+	
+	if (det.isDefined()) {
+		return det.value;
+	}
+	else if (self.isTypeOf(OSS!EClass)) {
+		for (s in self.eSuperTypes) {
+			var sann := s.getAnnotationValue(name, detail);
+			if (sann.isDefined()) {
+				return sann;
+			}
+		}
+	}
+	return det;	
+}
+
+@cached
+operation OSS!EModelElement getAnnotation(name : String) : OSS!EAnnotation {
+	var ann := self.eAnnotations.selectOne(a|a.source = name);
+	
+	/*
+	if (self.isTypeOf(EClass) and ann.isUndefined()) {
+		for (s in self.eSuperTypes) {
+			var sann := s.getAnnotation(name);
+			if (sann.isDefined()) return sann;
+		}
+	}*/
+	
+	return ann;
+	
+}
+
+@cached
+operation OSS!EModelElement isAnnotatedAs(name : String) : Boolean {
+	return self.getAnnotation(name).isDefined();
+}
+
+operation OSS!EClass getAllSuperTypes() : Sequence {
+	var supers = new Sequence;
+	
+	for (super in self.eSuperTypes) {
+		supers.add(super);
+		supers.addAll(super.getAllSuperTypes());
+	}
+	
+	return supers;
+}

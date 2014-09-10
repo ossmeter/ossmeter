@@ -1,0 +1,22 @@
+[%import "csharputil.eol";%]
+[%import "../util/ecoreutil.eol";%]
+using System;
+using System.Net;
+using System.IO;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
+
+namespace ossmeterclient
+{
+	public[%=c.getAbstractModifier()%] class [%=c.name%] [%=c.getCSharpExtends()%] 
+	{
+
+	[%for (sf in c.eStructuralFeatures.select(sf|sf.isMany and not sf.eType.isIgnored())) { /**/ %]
+		protected IList<[%=sf.eType.getJavaBoxedName()%]> [%=sf.name%] { get; set; }
+	[%}%]
+	[%c.name.println(); for (r in c.eStructuralFeatures.select(r|not r.isMany and not r.eType.println().isIgnored())) { /**/%]
+		protected [%=r.eType.getJavaName()%] [%=r.name%] { get; set; }
+	[%}%]
+	}
+}
