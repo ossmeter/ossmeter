@@ -38,6 +38,13 @@ private set[loc] allTypes(M3 m) = classes(m) + interfaces(m) + enums(m) + anonym
 private set[loc] superTypes(M3 m) = m@extends + m@implement;
 
 
+@memo
+private rel[loc, loc] allMethods(M3 m) = { <t, f> | t <- allTypes(m), f <- m@contains[t], isMethod(f) };
+
+@memo
+private rel[loc, loc] allFields(M3 m) = { <t, f> | t <- allTypes(m), f <- m@contains[t], isField(f) };
+
+
 @metric{A-Java}
 @doc{Abstractness (Java)}
 @friendlyName{Abstractness (Java)}
@@ -250,7 +257,8 @@ real LCC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}
 @friendlyName{Number of methods (Java)}
 @appliesTo{java()}
 map[loc, int] NOM_Java(rel[Language, loc, M3] m3s = {}) {
-	return ();
+	M3 m3 = systemM3(m3s);
+	return NOA(allMethods(m3), allTypes(m3));
 }
 
 @metric{NOA-Java}
@@ -258,7 +266,8 @@ map[loc, int] NOM_Java(rel[Language, loc, M3] m3s = {}) {
 @friendlyName{Number of attributes (Java)}
 @appliesTo{java()}
 map[loc, int] NOA_Java(rel[Language, loc, M3] m3s = {}) {
-	return ();
+	M3 m3 = systemM3(m3s);
+	return NOA(allFields(m3), allTypes(m3));
 }
 
 
