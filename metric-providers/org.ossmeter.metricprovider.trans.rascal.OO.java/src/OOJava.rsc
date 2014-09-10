@@ -52,6 +52,8 @@ private rel[loc, loc] methodFieldAccesses(M3 m) = domainR(m@fieldAccesses, metho
 @memo
 private rel[loc, loc] methodMethodCalls(M3 m) = domainR(m@methodCalls, method(m));
 
+@memo
+private rel[loc, loc] packageTypes(M3 m3) = { <p, t> | <p, t> <- m3@containment, isPackage(p), isClass(t) || isInterface(t) || t.scheme == "java+enum" };
 
 @metric{A-Java}
 @doc{Abstractness (Java)}
@@ -169,7 +171,7 @@ map[loc, int] MPC_Java(rel[Language, loc, AST] asts = {}) {
 @doc{Coupling factor (Java)}
 @friendlyName{Coupling factor (Java)}
 @appliesTo{java()}
-real CF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+real CF_Java(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
   return CF(typeDependencies(m3), superTypes(m3), allTypes(m3));
 }
@@ -178,32 +180,38 @@ real CF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {})
 @doc{Afferent coupling (Java)}
 @friendlyName{Afferent coupling (Java)}
 @appliesTo{java()}
-real Ca_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+map[loc, int] Ca_Java(rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s);
+  return Ca(packageTypes(m3), typeDependencies(m3));
 }
 
 @metric{Ce-Java}
 @doc{Efferent coupling (Java)}
 @friendlyName{Efferent coupling (Java)}
 @appliesTo{java()}
-real Ce_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+map[loc, int] Ce_Java(rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s);
+  return Ce(packageTypes(m3), typeDependencies(m3));
 }
 
 @metric{I-Java}
 @doc{Instability (Java)}
 @friendlyName{Instability (Java)}
 @appliesTo{java()}
-real I_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+@uses = ("Ce-Java" : "ce", "Ca-Java" : "ca")
+map[loc, real] I_Java(map[loc, int] ce = (), map[loc, int] ca = ()) {
+  packages = domain(ca) + domain(ce);
+
+  return ( p : I(ca[p]?0, ce[p]?0) | p <- packages );
 }
 
 @metric{RFC-Java}
 @doc{Response for class (Java)}
 @friendlyName{Response for class (Java)}
 @appliesTo{java()}
-real RFC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+map[loc, int] RFC_Java(rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s);
+  return RFC(m3@methodInvocation, allMethods(m3), allTypes(m3));
 }
 
 @metric{MIF-Java}
