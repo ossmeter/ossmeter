@@ -1,0 +1,16 @@
+package metrics;
+
+class Metric {
+	attr String _id;
+	attr String name;
+	attr String description;
+	val Datatable datatable;
+}
+
+class MetricVisualisation {
+	
+}
+
+class Datatable {
+	// TODO???
+}
