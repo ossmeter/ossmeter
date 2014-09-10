@@ -230,12 +230,46 @@ map[loc, real] AIF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3
 	return 0.0;
 }
 
+@doc{
+	Reuseable method for AHF and MHF
+}
+private real hidingFactor(M3 m3, rel[loc, loc] members) {
+	set[loc] publicMembers = {};
+	rel[loc, loc] protectedMembers = {};
+	rel[loc, loc] packageVisibleMembers = {};
+	
+	for (<t, m> <- members) {
+		mods = m3@modifiers[m];
+		if (\private() in mods) {
+			; // ignored
+		} else if (\protected() in mods) {
+			protectedMembers += {<t, m>};
+		} else if (\public() in mods) {
+			publicMembers += {m};
+		} else {
+			packageVisibleMembers += {<t, m>};
+		}
+	}
+	
+	subTypes = invert(superTypes(m3))+;
+
+	packageTypes = rangeR(domainR(m3@containment, packages(m3)), allTypes(m3));
+	packageFriends = invert(packageTypes) o packageTypes;
+	
+	visible = allTypes(m3) * publicMembers
+			+ { <s, m> | <t, m> <- protectedMembers, s <- subTypes[t] }
+			+ { <f, m> | <t, m> <- packageVisibleMembers, f <- packageFriends[t] };
+
+	return MHF(members, visible, allTypes(m3));
+}
+
 @metric{MHF-Java}
 @doc{Method hiding factor (Java)}
 @friendlyName{Method hiding factor (Java)}
 @appliesTo{java()}
 real MHF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+	M3 m3 = systemM3(m3s);
+	return hidingFactor(m3, allMethods(m3));
 }
 
 @metric{AHF-Java}
@@ -243,7 +277,8 @@ real MHF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}
 @friendlyName{Attribute hiding factor (Java)}
 @appliesTo{java()}
 real AHF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+	M3 m3 = systemM3(m3s);
+	return hidingFactor(m3, allFields(m3));
 }
 
 @metric{PF-Java}
@@ -251,8 +286,9 @@ real AHF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}
 @friendlyName{Polymorphism factor (Java)}
 @appliesTo{java()}
 real PF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s);
 
-	return 0.0;
+	return PF(superTypes(m3), m3@methodOverrides, overridableMethods(m3), allTypes(m3));
 }
 
 @metric{LCOM-Java}
