@@ -1,53 +1,123 @@
 module OOJava
 
 import lang::java::m3::Core;
+import lang::java::m3::AST;
+import lang::java::m3::TypeSymbol;
+
+import OO;
+import OOFactoids;
+import ck::NOC;
+import ck::DIT;
+import ck::RFC;
+import ck::CBO;
+import ck::LCOM;
+import ck::NOM;
+import ck::NOA;
+import mood::PF;
+import mood::MHF;
+import mood::MIF;
+import analysis::graphs::Graph;
+import org::ossmeter::metricprovider::MetricProvider;
+
+@memo
+private M3 systemM3(rel[Language, loc, M3] m3s) {
+  return composeM3(|java+tmp:///|, range(m3s[php()]));
+}
+
+@memo
+set[loc] enums(M3 m) = { e | e <- m@declarations<name>, e.scheme == "java+enum" };
+
+@memo
+set[loc] anonymousClasses(M3 m) = { e | e <- m@declarations<name>, e.scheme == "java+anonymousClass" };
+
+@memo
+private set[loc] allTypes(M3 m) = classes(m) + interfaces(m) + enums(m) + anonymousClasses(m);
+
+@memo
+private set[loc] superTypes(M3 m) = m@extends + m@implement;
 
 @metric{A-Java}
 @doc{Abstractness (Java)}
 @friendlyName{Abstractness (Java)}
 @appliesTo{java()}
-real A_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+real A_Java(rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s);
+  
+  types = allTypes(m3s);
+  
+  abstractTypes = { t | t <- types, \abstract() in m3@modifiers[t] };
+  
+  return A(abstractTypes, types);
 }
 
 @metric{RR-Java}
 @doc{Reuse ratio (Java)}
 @friendlyName{Reuse ratio (Java)}
 @appliesTo{java()}
-real RR_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+real RR_Java(rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s);
+
+  return RR(superTypes(m3), allTypes(m3));
 }
 
 @metric{SR-Java}
 @doc{Specialization ratio (Java)}
 @friendlyName{Specialization ratio (Java)}
 @appliesTo{java()}
-real SR_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+real SR_Java(rel[Language, loc, M3] m3s = {}) {
+	return SR(superTypes(systemM3(m3s)));
 }
 
 @metric{DIT-Java}
 @doc{Depth of inheritance tree (Java)}
 @friendlyName{Depth of inheritance tree (Java)}
 @appliesTo{java()}
-real DIT_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+map[loc, int] DIT_Java(rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s);
+  
+  return DIT(superTypes(m3), allTypes(m3));
 }
 
 @metric{NOC-Java}
 @doc{Number of children (Java)}
 @friendlyName{Number of children (Java)}
 @appliesTo{java()}
-real NOC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+map[loc, int] NOC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s);
+  
+  return NOC(superTypes(m3), allTypes(m3));
+}
+
+private rel[loc, loc] typeSymbolsToTypes(rel[loc, TypeSymbol] typs) {
+  rel[loc, loc] result = {};
+  visit (typs) {
+    case <loc entity, \class(loc decl, _)>: {
+      result += { entity, decl };
+    }
+    case <loc entity, \interface(loc decl, _)> : {
+      result += { entity, decl };
+    }
+    case <loc entity, \enum(loc decl)> : {
+      result += { entity, decl };
+    }
+    case <loc entity, \method(_, _, TypeSymbol returnType, _)> : {
+      result += typeSymbolToTypes({<entity, returnType>});
+    }
+    case <loc entity, \object()> : {
+      result +=  {<entity,  |java+class:///java/lang/Object|>};
+    }
+  }
+  return result;
 }
 
 @metric{CBO-Java}
 @doc{Coupling between objects (Java)}
 @friendlyName{Coupling between objects (Java)}
 @appliesTo{java()}
-real CBO_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+real CBO_Java(rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s);
+	
+	return CBO(typeDependencies(superTypes(m3), m3@methodInvocation, m3@fieldAccess, typeSymbolsToTypes(m3@types), domainR(m3@containment+, allTypes(m3)), allTypes(m3)), allTypes(m3));
 }
 
 // DAC for java is measured in lang::java::style::Metrics
