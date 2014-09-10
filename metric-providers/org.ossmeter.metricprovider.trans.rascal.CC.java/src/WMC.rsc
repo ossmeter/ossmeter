@@ -25,7 +25,7 @@ map[loc class, int wmcCount] getWMC(
 	map[loc, loc] workingCopies = (),
 	rel[Language, loc, M3] m3s = {},
 	map[loc, int] methodCC = (),
-	map[loc, num] prev = ()
+	map[loc, int] prev = ()
 	)
 {
 	result = prev;
@@ -35,7 +35,7 @@ map[loc class, int wmcCount] getWMC(
 	result -= (file : 0 | file <- changed); 
 	
 	for (file <- changed, m3 <- m3s[java(), file]) {
-		result += (cl : sum([methodCC[m] | m <- m3@containment[cl], isMethod(m)]) | <cl, _> <- m3@containment, isClass(cl));
+		result += (cl : (0 | it + methodCC[m] | m <- m3@containment[cl], isMethod(m)) | <cl, _> <- m3@containment, isClass(cl));
 	}
 	 
 	return result;
