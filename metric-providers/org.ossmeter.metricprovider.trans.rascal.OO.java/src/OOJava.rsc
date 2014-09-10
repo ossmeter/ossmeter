@@ -155,11 +155,11 @@ map[loc, int] CBO_Java(rel[Language, loc, M3] m3s = {}) {
 @doc{Data abstraction coupling (Java)}
 @friendlyName{Data abstraction coupling (Java)}
 @appliesTo{java()}
-real DAC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+map[loc, int] DAC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
   map[loc, int] dac = ();
   
   for ( /c:class(_, _, _, _, _) <- asts ) { // TODO newObject() ??
-    dac[c@decl] = ( 0 | it + 1 | /constructorCall(_, _) <- c) +   // TODO rewrite to visit?
+    dac[c@decl] = ( 0 | it + 1 | /constructorCall(_, _) <- c) +   // TODO rewrite to visit
                   ( 0 | it + 1 | /constructorCall(_, _, _) <- c);           
   }
   
@@ -173,7 +173,7 @@ real DAC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}
 map[loc, int] MPC_Java(rel[Language, loc, AST] asts = {}) {
   map[loc, int] mpc = ();
   
-  for ( /c:class(_, _, _, _, _) <- asts ) {
+  for ( /c:class(_, _, _, _, _) <- asts ) { // TODO rewrite to visit
     mpc[c@decl] = ( 0 | it + 1 | /methodCall(_, _, _) <- c ) +
                   ( 0 | it + 1 | /methodCall(_, _, _, _) <- c ) +
                   ( 0 | it + 1 | /constructorCall(_, _) <- c) + // TODO do we need to include constructorCall?
