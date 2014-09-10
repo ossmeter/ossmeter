@@ -50,10 +50,10 @@ private rel[loc, loc] allMethods(M3 m3) = { <t, m> | t <- allTypes(m3), m <- m3@
 private rel[loc, loc] allFields(M3 m3) = { <t, f> | t <- allTypes(m3), f <- m3@containment[t], isField(f) };
 
 @memo
-private rel[loc, loc] methodFieldAccesses(M3 m) = domainR(m@fieldAccesses, methods(m));
+private rel[loc, loc] methodFieldAccesses(M3 m) = domainR(m@fieldAccess, methods(m));
 
 @memo
-private rel[loc, loc] methodMethodCalls(M3 m) = domainR(m@methodCalls, methods(m));
+private rel[loc, loc] methodMethodCalls(M3 m) = domainR(m@methodInvocation, methods(m));
 
 @memo
 private rel[loc, loc] packageTypes(M3 m3) = { <p, t> | <p, t> <- m3@containment, isPackage(p), isClass(t) || isInterface(t) || t.scheme == "java+enum" };
@@ -148,11 +148,11 @@ map[loc, int] CBO_Java(rel[Language, loc, M3] m3s = {}) {
 @doc{Data abstraction coupling (Java)}
 @friendlyName{Data abstraction coupling (Java)}
 @appliesTo{java()}
-real DAC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+map[loc, int] DAC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
   map[loc, int] dac = ();
   
   for ( /c:class(_, _, _, _, _) <- asts ) { // TODO newObject() ??
-    dac[c@decl] = ( 0 | it + 1 | /constructorCall(_, _) <- c) +   // TODO rewrite to visit?
+    dac[c@decl] = ( 0 | it + 1 | /constructorCall(_, _) <- c) +   // TODO rewrite to visit
                   ( 0 | it + 1 | /constructorCall(_, _, _) <- c);           
   }
   
@@ -166,7 +166,7 @@ real DAC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}
 map[loc, int] MPC_Java(rel[Language, loc, AST] asts = {}) {
   map[loc, int] mpc = ();
   
-  for ( /c:class(_, _, _, _, _) <- asts ) {
+  for ( /c:class(_, _, _, _, _) <- asts ) { // TODO rewrite to visit
     mpc[c@decl] = ( 0 | it + 1 | /methodCall(_, _, _) <- c ) +
                   ( 0 | it + 1 | /methodCall(_, _, _, _) <- c ) +
                   ( 0 | it + 1 | /constructorCall(_, _) <- c) + // TODO do we need to include constructorCall?
