@@ -47,6 +47,7 @@ import org.rascalmpl.interpreter.result.Result;
 import org.rascalmpl.interpreter.staticErrors.StaticError;
 import org.rascalmpl.interpreter.utils.LimitedResultWriter;
 import org.rascalmpl.interpreter.utils.LimitedResultWriter.IOLimitReachedException;
+import org.rascalmpl.library.lang.java.m3.internal.BuildManager;
 
 import com.mongodb.DB;
 
@@ -107,6 +108,8 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		this.logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 		
 		assert function instanceof RascalFunction;
+		
+		BuildManager.MAVENEXECUTABLE = "/Users/shahi/Documents/apache/apache-maven-3.2.2/bin/mvn";
 	}
 
 	private Map<String, String> qualifyNames(String qualifier, Map<String, String> uses) {
