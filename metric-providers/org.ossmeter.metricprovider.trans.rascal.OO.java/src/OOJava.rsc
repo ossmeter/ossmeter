@@ -19,6 +19,7 @@ import mood::MIF;
 import analysis::graphs::Graph;
 import org::ossmeter::metricprovider::MetricProvider;
 
+
 @memo
 private M3 systemM3(rel[Language, loc, M3] m3s) {
   return composeM3(|java+tmp:///|, range(m3s[php()]));
@@ -35,6 +36,7 @@ private set[loc] allTypes(M3 m) = classes(m) + interfaces(m) + enums(m) + anonym
 
 @memo
 private set[loc] superTypes(M3 m) = m@extends + m@implement;
+
 
 @metric{A-Java}
 @doc{Abstractness (Java)}
@@ -120,8 +122,8 @@ real CBO_Java(rel[Language, loc, M3] m3s = {}) {
 	return CBO(typeDependencies(superTypes(m3), m3@methodInvocation, m3@fieldAccess, typeSymbolsToTypes(m3@types), domainR(m3@containment+, allTypes(m3)), allTypes(m3)), allTypes(m3));
 }
 
-// DAC for java is measured in lang::java::style::Metrics
-/*
+// DAC for java is also measured in lang::java::style::Metrics
+
 @metric{DAC-Java}
 @doc{Data abstraction coupling (Java)}
 @friendlyName{Data abstraction coupling (Java)}
@@ -129,7 +131,6 @@ real CBO_Java(rel[Language, loc, M3] m3s = {}) {
 real DAC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
 	return 0.0;
 }
-*/
 
 @metric{MPC-Java}
 @doc{Message passing coupling (Java)}
