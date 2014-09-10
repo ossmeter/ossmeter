@@ -19,6 +19,7 @@ import mood::MIF;
 import analysis::graphs::Graph;
 import org::ossmeter::metricprovider::MetricProvider;
 
+
 @memo
 private M3 systemM3(rel[Language, loc, M3] m3s) {
   return composeM3(|java+tmp:///|, range(m3s[php()]));
@@ -35,6 +36,14 @@ private set[loc] allTypes(M3 m) = classes(m) + interfaces(m) + enums(m) + anonym
 
 @memo
 private set[loc] superTypes(M3 m) = m@extends + m@implement;
+
+
+@memo
+private rel[loc, loc] allMethods(M3 m) = { <t, f> | t <- allTypes(m), f <- m@contains[t], isMethod(f) };
+
+@memo
+private rel[loc, loc] allFields(M3 m) = { <t, f> | t <- allTypes(m), f <- m@contains[t], isField(f) };
+
 
 @metric{A-Java}
 @doc{Abstractness (Java)}
@@ -120,8 +129,8 @@ map[loc, int] CBO_Java(rel[Language, loc, M3] m3s = {}) {
 	return CBO(typeDependencies(superTypes(m3), m3@methodInvocation, m3@fieldAccess, typeSymbolsToTypes(m3@types), domainR(m3@containment+, allTypes(m3)), allTypes(m3)), allTypes(m3));
 }
 
-// DAC for java is measured in lang::java::style::Metrics
-/*
+// DAC for java is also measured in lang::java::style::Metrics
+
 @metric{DAC-Java}
 @doc{Data abstraction coupling (Java)}
 @friendlyName{Data abstraction coupling (Java)}
@@ -129,7 +138,6 @@ map[loc, int] CBO_Java(rel[Language, loc, M3] m3s = {}) {
 real DAC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
 	return 0.0;
 }
-*/
 
 @metric{MPC-Java}
 @doc{Message passing coupling (Java)}
@@ -250,7 +258,8 @@ real LCC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}
 @friendlyName{Number of methods (Java)}
 @appliesTo{java()}
 map[loc, int] NOM_Java(rel[Language, loc, M3] m3s = {}) {
-	return ();
+	M3 m3 = systemM3(m3s);
+	return NOA(allMethods(m3), allTypes(m3));
 }
 
 @metric{NOA-Java}
@@ -258,7 +267,8 @@ map[loc, int] NOM_Java(rel[Language, loc, M3] m3s = {}) {
 @friendlyName{Number of attributes (Java)}
 @appliesTo{java()}
 map[loc, int] NOA_Java(rel[Language, loc, M3] m3s = {}) {
-	return ();
+	M3 m3 = systemM3(m3s);
+	return NOA(allFields(m3), allTypes(m3));
 }
 
 
