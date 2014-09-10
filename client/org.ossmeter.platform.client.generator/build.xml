@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<project basedir="." default="main">
+	
+	<taskdef resource="net/sf/antcontrib/antlib.xml">
+	    <classpath>
+	    	<pathelement location="lib/ant-contrib-0.6.jar"/>
+		</classpath>
+	</taskdef>
+	
+	<target name="loadModels">
+		<epsilon.emf.loadModel name="Project" aliases="OSS"
+	    	modelFile="models/ossmeter.ecore"
+	        metamodelUri="http://www.eclipse.org/emf/2002/Ecore"
+	        read="true" store="false" />
+	
+		<epsilon.emf.loadModel name="Metric" aliases="OSS"
+	    	modelFile="models/metric.ecore"
+	        metamodelUri="http://www.eclipse.org/emf/2002/Ecore"
+	        read="true" store="false" />
+
+		<epsilon.emf.loadModel name="Eclipse" aliases="OSS"
+	    	modelFile="models/eclipse.ecore"
+	        metamodelUri="http://www.eclipse.org/emf/2002/Ecore"
+	        read="true" store="false" />
+	
+		<epsilon.xml.loadModel name="WADL"
+			file="models/ossmeter.wadl"
+			read="true" store="false" />
+	</target>
+
+	<target name="main" depends="loadModels">
+		<for list="java,csharp" param="lang">
+			<sequential>
+				<epsilon.egl src="@{lang}/ossgen.egx" taskname="@{lang}">
+				    <model ref="Project"/>
+		    		<model ref="Metric"/>
+			    	<model ref="Eclipse"/>
+		    		<model ref="WADL"/>
+				</epsilon.egl>
+			</sequential>
+		</for>
+	</target>
+	
+</project>
