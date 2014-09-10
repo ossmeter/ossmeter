@@ -8,6 +8,7 @@ import lang::php::ast::System;
 import lang::php::ast::AbstractSyntax;
 
 import OO;
+import OOFactoids;
 import ck::NOC;
 import ck::DIT;
 import ck::RFC;
@@ -18,6 +19,8 @@ import ck::NOA;
 import mood::PF;
 import mood::MHF;
 import mood::MIF;
+
+import org::ossmeter::metricprovider::MetricProvider;
 
 
 @memo
@@ -316,4 +319,118 @@ map[loc, int] NOA_PHP(rel[Language, loc, M3] m3s = {}) {
 }
 
 
+private tuple[int, str] metricsWithinRange(lrel[num result, str label, real min, real max] tests) {
+	ok = 0;
+	txt = "";
+	
+	for (<r, l, mn, mx> <- tests) {
+		txt += "<label>: <r>";
+		if (r >= mn && r <= mx) {
+			ok += 1;
+		} else {
+			txt += " (!)";
+		}
+		txt += "\n";	
+	}
 
+	return <ok, txt>;
+}
+
+private tuple[int, str] mapMetricsWithinRange(lrel[map[loc, num] result, str label, real min, real max] tests) {
+	ok = 0;
+	txt = "";
+	
+	for (<r, l, mn, mx> <- tests) {
+		txt += "<label>: <r>";
+		
+		a = 0;  // TODO gini? or specific per metric?
+		
+		if (a >= mn && a <= mx) {
+			ok += 1;
+		} else {
+			txt += " (!)";
+		}
+		txt += "\n";	
+	}
+
+	return <ok, txt>;
+}
+
+
+@metric{Complexity-PHP}
+@doc{PHP code complexity}
+@friendlyName{PHP code complexity}
+@appliesTo{php()}
+@uses{(
+	"A-PHP": "a",
+	"RR-PHP": "rr",
+	"SR-PHP": "sr",
+	"DIT-PHP": "dit",
+	"NOC-PHP": "noc",
+	"NOA-PHP": "noa",
+	"NOM-PHP": "nom",
+	"MIF-PHP": "mif",
+	"AIF-PHP": "aif",
+	"MHF-PHP": "mhf",
+	"AHF-PHP": "ahf",
+	"PF-PHP": "pf")}
+Factoid Complexity_PHP(
+	real a = 0.0,
+	real rr = 0.0,
+	real sr = 0.0,
+	map[loc, int] dit = (),
+	map[loc, int] noc = (),
+	map[loc, int] noa = (),
+	map[loc, int] nom = (),
+	map[loc, real] mif = (),
+	map[loc, real] aif = (),
+	real mhf = 0.0,
+	real ahf = 0.0,
+	real pf = 0.0
+) {
+	return Complexity("PHP", a, rr, sr, dit, noc, noa, nom, mif, aif, mhf, ahf, pf);
+}
+
+
+@metric{Coupling-PHP}
+@doc{PHP coupling}
+@friendlyName{PHP coupling}
+@appliesTo{php()}
+@uses{(
+	"CBO-PHP": "cbo",
+	"DAC-PHP": "dac",
+	"MPC-PHP": "mpc",
+	"CF-PHP": "cf",
+	"Ce-PHP": "ce",
+	"Ca-PHP": "ca",
+	"I-PHP": "i",
+	"RFC-PHP": "rfc")}
+Factoid Coupling_PHP(
+	map[loc, int] cbo = (),
+	map[loc, int] dac = (),
+	map[loc, int] mpc = (),
+	real cf = 0.0,
+	map[loc, int] ce = (),
+	map[loc, int] ca = (),
+	map[loc, real] i = (),
+	map[loc, int] rfc = ()
+) {
+	return Coupling("PHP", cbo, dac, mpc, cf, ce, ca, i, rfc);
+}
+
+
+@metric{Cohesion-PHP}
+@doc{PHP cohesion}
+@friendlyName{PHP cohesion}
+@appliesTo{php()}
+@uses{(
+	"LCOM-PHP": "lcom",
+	"TCC-PHP": "tcc",
+	"LCC-PHP": "lcc")}
+Factoid Cohesion_PHP(
+	map[loc, int] lcom = (),
+	map[loc, real] tcc = (),
+	map[loc, real] lcc = ()
+) {
+	return Cohesion("PHP", lcom, tcc, lcc);
+}
