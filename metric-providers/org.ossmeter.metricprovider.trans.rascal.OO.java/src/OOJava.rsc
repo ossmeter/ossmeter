@@ -37,6 +37,8 @@ private set[loc] allTypes(M3 m) = classes(m) + interfaces(m) + enums(m) + anonym
 @memo
 private set[loc] superTypes(M3 m) = m@extends + m@implement;
 
+@memo
+private rel[loc, loc] typeDependencies(M3 m) = typeDependencies(superTypes(m3), m3@methodInvocation, m3@fieldAccess, typeSymbolsToTypes(m3@types), domainR(m3@containment+, allTypes(m3)), allTypes(m3));
 
 @memo
 private rel[loc, loc] allMethods(M3 m) = { <t, f> | t <- allTypes(m), f <- m@contains[t], isMethod(f) };
@@ -135,7 +137,7 @@ private rel[loc, loc] typeSymbolsToTypes(rel[loc, TypeSymbol] typs) {
 map[loc, int] CBO_Java(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
 	
-	return CBO(typeDependencies(superTypes(m3), m3@methodInvocation, m3@fieldAccess, typeSymbolsToTypes(m3@types), domainR(m3@containment+, allTypes(m3)), allTypes(m3)), allTypes(m3));
+	return CBO(typeDependencies(m3), allTypes(m3));
 }
 
 // DAC for java is also measured in lang::java::style::Metrics
@@ -152,9 +154,18 @@ real DAC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}
 @doc{Message passing coupling (Java)}
 @friendlyName{Message passing coupling (Java)}
 @appliesTo{java()}
-map[loc, int] MPC_Java(rel[Language, loc, M3] m3s = {}) {
-  M3 m3 = systemM3(m3s);
-	return (t : size({ method | method <- range(domainR(m@methodInvocation, range((m3@containment+)[t]))) }) | t <- allTypes(m3));
+map[loc, int] MPC_Java(rel[Language, loc, AST] asts = {}) {
+  map[loc, int] mpc = ();
+  
+  for ( /c:class(_, _, _, _, _) <- asts ) {
+    mpc[c@decl] = ( 0 | it + 1 | /methodCall(_, _, _) <- c ) +
+                  ( 0 | it + 1 | /methodCall(_, _, _, _) <- c ) +
+                  ( 0 | it + 1 | /constructorCall(_, _) <- c) + 
+                  ( 0 | it + 1 | /constructorCall(_, _, _) <- c);
+                  
+  }
+  
+  return mpc;
 }
 
 @metric{CF-Java}
@@ -162,7 +173,8 @@ map[loc, int] MPC_Java(rel[Language, loc, M3] m3s = {}) {
 @friendlyName{Coupling factor (Java)}
 @appliesTo{java()}
 real CF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+	M3 m3 = systemM3(m3s);
+  return CF(typeDependencies(m3), superTypes(m3), allTypes(m3));
 }
 
 @metric{Ca-Java}
