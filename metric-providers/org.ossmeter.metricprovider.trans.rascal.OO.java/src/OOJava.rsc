@@ -123,7 +123,7 @@ private rel[loc, loc] typeSymbolsToTypes(rel[loc, TypeSymbol] typs) {
 @doc{Coupling between objects (Java)}
 @friendlyName{Coupling between objects (Java)}
 @appliesTo{java()}
-real CBO_Java(rel[Language, loc, M3] m3s = {}) {
+map[loc, int] CBO_Java(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
 	
 	return CBO(typeDependencies(superTypes(m3), m3@methodInvocation, m3@fieldAccess, typeSymbolsToTypes(m3@types), domainR(m3@containment+, allTypes(m3)), allTypes(m3)), allTypes(m3));
