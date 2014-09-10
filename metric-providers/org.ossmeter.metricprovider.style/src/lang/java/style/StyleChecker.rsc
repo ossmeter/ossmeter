@@ -463,10 +463,6 @@ list[Message] styleChecker(M3 model, set[node] asts){
     return msgs;
  }
    
-@doc{For integration into OSSMETER, we get the models and the ASTs per file}   
-list[Message] styleChecker(map[loc, M3] models, map[loc, node] asts) 
-  = [*checker(asts[f], models[f]) | f <- models, checker <- checkers];  
-
 real tosec(int t1, int t2) = round((t2 - t1)/1000.0, 0.1); 
 
 list[Message] main(loc dir = |project://java-checkstyle-tests|){
