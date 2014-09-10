@@ -1,6 +1,6 @@
 module JUnit3
 
-import lang::java::jdt::m3::Core;
+import lang::java::m3::Core;
 
 loc jUnit3BaseClass = |java+class:///junit/framework/TestCase|;
 

@@ -5,15 +5,21 @@ import Relation;
 import IO;
 import util::ValueUI;
 import analysis::graphs::Graph;
-extend lang::java::jdt::m3::Core;
+extend lang::java::m3::Core;
 import JUnit4;
+
+@memo
+private M3 systemM3(rel[Language, loc, M3] m3s) {
+  return composeM3(|java+tmp:///|, range(m3s[java()]));
+}
 
 @metric{TestCoverage}
 @doc{Static Estimation of test coverage}
 @friendlyName{Static Estimation of test coverage}
 @appliesTo{java()}
 @memo
-real estimateTestCoverage(M3 m) {
+real estimateTestCoverage(rel[Language, loc, M3] m3s = {}) {
+  m = systemM3(m3s);
   implicitContainment = getImplicitContainment(m);
   implicitCalls = getImplicitCalls(m, implicitContainment);
   
@@ -90,7 +96,8 @@ private rel[loc, loc] getImplicitContainment(M3 m) {
 @doc{Number of JUnit tests averaged over the total number of public methods}
 @friendlyName{Number of JUnit tests averaged over the total number of public methods}
 @appliesTo{java()}
-real percentageOfTestedPublicMethods(M3 m) {
+real percentageOfTestedPublicMethods(rel[Language, loc, M3] m3s = {}) {
+  m = systemM3(m3s);
   onlyTestMethods = getJUnit4TestMethods(m);
   supportTestMethods = getJUnit4SetupMethods(m);
   interfaceMethods = { method | <entity, method> <- m@containment, isMethod(method), isInterface(entity) };

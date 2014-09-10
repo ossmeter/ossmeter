@@ -1,7 +1,7 @@
 module JUnit4
 
 extend JUnit3;
-import lang::java::jdt::m3::Core;
+import lang::java::m3::Core;
 
 set[loc] jUnit4TestSetupAnnotations = {
     |java+interface:///org/junit/After|,
