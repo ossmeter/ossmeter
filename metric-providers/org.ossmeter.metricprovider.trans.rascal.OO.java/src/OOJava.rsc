@@ -259,3 +259,82 @@ map[loc, int] NOM_Java(rel[Language, loc, M3] m3s = {}) {
 map[loc, int] NOA_Java(rel[Language, loc, M3] m3s = {}) {
 	return ();
 }
+
+
+@metric{Complexity-Java}
+@doc{Java code complexity}
+@friendlyName{Java code complexity}
+@appliesTo{java()}
+@uses{(
+	"A-Java": "a",
+	"RR-Java": "rr",
+	"SR-Java": "sr",
+	"DIT-Java": "dit",
+	"NOC-Java": "noc",
+	"NOA-Java": "noa",
+	"NOM-Java": "nom",
+	"MIF-Java": "mif",
+	"AIF-Java": "aif",
+	"MHF-Java": "mhf",
+	"AHF-Java": "ahf",
+	"PF-Java": "pf")}
+Factoid Complexity_Java(
+	real a = 0.0,
+	real rr = 0.0,
+	real sr = 0.0,
+	map[loc, int] dit = (),
+	map[loc, int] noc = (),
+	map[loc, int] noa = (),
+	map[loc, int] nom = (),
+	map[loc, real] mif = (),
+	map[loc, real] aif = (),
+	real mhf = 0.0,
+	real ahf = 0.0,
+	real pf = 0.0
+) {
+	return Complexity("Java", a, rr, sr, dit, noc, noa, nom, mif, aif, mhf, ahf, pf);
+}
+
+
+@metric{Coupling-Java}
+@doc{Java coupling}
+@friendlyName{Java coupling}
+@appliesTo{java()}
+@uses{(
+	"CBO-Java": "cbo",
+	"DAC-Java": "dac",
+	"MPC-Java": "mpc",
+	"CF-Java": "cf",
+	"Ce-Java": "ce",
+	"Ca-Java": "ca",
+	"I-Java": "i",
+	"RFC-Java": "rfc")}
+Factoid Coupling_Java(
+	map[loc, int] cbo = (),
+	map[loc, int] dac = (),
+	map[loc, int] mpc = (),
+	real cf = 0.0,
+	map[loc, int] ce = (),
+	map[loc, int] ca = (),
+	map[loc, real] i = (),
+	map[loc, int] rfc = ()
+) {
+	return Coupling("Java", cbo, dac, mpc, cf, ce, ca, i, rfc);
+}
+
+
+@metric{Cohesion-Java}
+@doc{Java cohesion}
+@friendlyName{Java cohesion}
+@appliesTo{java()}
+@uses{(
+	"LCOM-Java": "lcom",
+	"TCC-Java": "tcc",
+	"LCC-Java": "lcc")}
+Factoid Cohesion_Java(
+	map[loc, int] lcom = (),
+	map[loc, real] tcc = (),
+	map[loc, real] lcc = ()
+) {
+	return Cohesion("Java", lcom, tcc, lcc);
+}

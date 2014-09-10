@@ -3,32 +3,61 @@ module PHPMetrics
 extend lang::php::m3::Core;
 import lang::php::m3::Uses;
 import lang::php::m3::Declarations;
+import lang::php::m3::Calls;
 import lang::php::stats::Stats;
 
 import util::Math;
 
-@metric{StaticNameResolutionHistogram}
+import PHP;
+
+
+@memo
+private M3 systemM3WithStdLib(rel[Language, loc, M3] m3s) {
+	return addPredefinedDeclarations(systemM3(m3s));
+}
+
+
+@metric{StaticTypeNameResolutionHistogram}
 @doc{Histogram counting type names that could be resolved to a certain number of declarations}
-@friendlyName{StaticNameResolutionHistogram}
+@friendlyName{StaticTypeNameResolutionHistogram}
 @appliesTo{php()}
-map[int, int] getNameResolutionHistogram(rel[Language, loc, M3] m3s = {})
+map[int, int] getTypeNameResolutionHistogram(rel[Language, loc, M3] m3s = {})
 {
-	models = { m | <php(), _, m> <- m3s };
-
-	if (models == {})
-	{
-		return ();
-	}
-
-	M3 m3 = composeM3(|project:///|, models);
+	M3 m3 = systemM3WithStdLib(m3s);
 
 	m3@uses = { <l, n> | <l, n> <- m3@uses, n.scheme in ["php+class", "php+interface", "php+trait"] };
 
-	m3 = addPredefinedDeclarations(m3);
-
-	useDecl = resolveUsesToPossibleDeclarations(propagateAliasesInUses(m3));
+	useDecl = resolveUsesToPossibleDeclarations(m3);
 	
 	return calculateResolutionHistogram(countNumPossibleDeclarations(useDecl));
+}
+
+
+@metric{StaticMethodNameResolutionHistogram}
+@doc{Histogram counting called method names that could be resolved to a certain number of declarations}
+@friendlyName{StaticMethodNameResolutionHistogram}
+@appliesTo{php()}
+map[int, int] getMethodNameResolutionHistogram(rel[Language, loc, M3] m3s = {})
+{
+	M3 m3 = composeM3s(m3s); // m3 before resolution
+
+	calls = resolveMethodCallsAndFieldAccesses(m3)[1];
+
+	return memberResolutionHistogram(calls, m3);
+}
+
+
+@metric{StaticFieldNameResolutionHistogram}
+@doc{Histogram counting accessed field names that could be resolved to a certain number of declarations}
+@friendlyName{StaticFieldNameResolutionHistogram}
+@appliesTo{php()}
+map[int, int] getFieldNameResolutionHistogram(rel[Language, loc, M3] m3s = {})
+{
+	M3 m3 = composeM3s(m3s); // m3 before resolution
+
+	accesses = resolveMethodCallsAndFieldAccesses(m3)[2];
+
+	return memberResolutionHistogram(accesses, m3);
 }
 
 
@@ -104,3 +133,13 @@ public int getNumberOfEvalCalls(rel[Language, loc, AST] asts = {})
 {
 	return (0 | it + 1 | <php(), _, ast> <- asts, /call(name(name(/eval/i)), _) <- ast);
 }
+
+/*
+TODO add the following metrics:
+
+- number of methods/functions that use at least one dynamic feature
+- number of missing include files
+- estimate external libraries
+ 
+*/
+
