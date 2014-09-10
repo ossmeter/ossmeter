@@ -46,6 +46,12 @@ private rel[loc, loc] allMethods(M3 m) = { <t, f> | t <- allTypes(m), f <- m@con
 @memo
 private rel[loc, loc] allFields(M3 m) = { <t, f> | t <- allTypes(m), f <- m@contains[t], isField(f) };
 
+@memo
+private rel[loc, loc] methodFieldAccesses(M3 m) = domainR(m@fieldAccesses, methods(m));
+
+@memo
+private rel[loc, loc] methodMethodCalls(M3 m) = domainR(m@methodCalls, method(m));
+
 
 @metric{A-Java}
 @doc{Abstractness (Java)}
@@ -237,6 +243,7 @@ real AHF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}
 @friendlyName{Polymorphism factor (Java)}
 @appliesTo{java()}
 real PF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+
 	return 0.0;
 }
 
@@ -244,24 +251,27 @@ real PF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {})
 @doc{Lack of cohesion in methods (Java)}
 @friendlyName{Lack of cohesion in methods (Java)}
 @appliesTo{java()}
-real LCOM_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+map[loc, int] LCOM_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s);
+	return LCOM(methodFieldAccesses(m3), allMethods(m3), allFields(m3), allTypes(m3));
 }
 
 @metric{TCC-Java}
 @doc{Tight class cohesion (Java)}
 @friendlyName{Tight class cohesion (Java)}
 @appliesTo{java()}
-real TCC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+map[loc, real] TCC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s);
+	return TCC(allMethods(m3), allFields(m3), methodMethodCalls(m3), methodFieldAccesses(m3), allTypes(m3));
 }
 
 @metric{LCC-Java}
 @doc{Loose class cohesion (Java)}
 @friendlyName{Loose class cohesion (Java)}
 @appliesTo{java()}
-real LCC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+map[loc, real] LCC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s);
+	return LCC(allMethods(m3), allFields(m3), methodMethodCalls(m3), methodFieldAccesses(m3), allTypes(m3));
 }
 
 
