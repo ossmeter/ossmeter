@@ -316,44 +316,6 @@ map[loc, int] NOA_PHP(rel[Language, loc, M3] m3s = {}) {
 }
 
 
-private tuple[int, str] metricsWithinRange(lrel[num result, str label, real min, real max] tests) {
-	ok = 0;
-	txt = "";
-	
-	for (<r, l, mn, mx> <- tests) {
-		txt += "<label>: <r>";
-		if (r >= mn && r <= mx) {
-			ok += 1;
-		} else {
-			txt += " (!)";
-		}
-		txt += "\n";	
-	}
-
-	return <ok, txt>;
-}
-
-private tuple[int, str] mapMetricsWithinRange(lrel[map[loc, num] result, str label, real min, real max] tests) {
-	ok = 0;
-	txt = "";
-	
-	for (<r, l, mn, mx> <- tests) {
-		txt += "<label>: <r>";
-		
-		a = 0;  // TODO gini? or specific per metric?
-		
-		if (a >= mn && a <= mx) {
-			ok += 1;
-		} else {
-			txt += " (!)";
-		}
-		txt += "\n";	
-	}
-
-	return <ok, txt>;
-}
-
-
 @metric{Complexity-PHP}
 @doc{PHP code complexity}
 @friendlyName{PHP code complexity}
