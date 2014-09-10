@@ -35,10 +35,10 @@ set[loc] anonymousClasses(M3 m) = { e | e <- m@declarations<name>, e.scheme == "
 private set[loc] allTypes(M3 m) = classes(m) + interfaces(m) + enums(m) + anonymousClasses(m);
 
 @memo
-private set[loc] superTypes(M3 m) = m@extends + m@implements;
+private rel[loc, loc] superTypes(M3 m) = m@extends + m@implements;
 
 @memo
-private rel[loc, loc] typeDependencies(M3 m) = typeDependencies(superTypes(m3), m3@methodInvocation, m3@fieldAccess, typeSymbolsToTypes(m3@types), domainR(m3@containment+, allTypes(m3)), allTypes(m3));
+private rel[loc, loc] typeDependencies(M3 m3) = typeDependencies(superTypes(m3), m3@methodInvocation, m3@fieldAccess, typeSymbolsToTypes(m3@types), domainR(m3@containment+, allTypes(m3)), allTypes(m3));
 
 @memo
 private rel[loc, loc] allMethods(M3 m) = { <t, f> | t <- allTypes(m), f <- m@containment[t], isMethod(f) };
@@ -47,13 +47,16 @@ private rel[loc, loc] allMethods(M3 m) = { <t, f> | t <- allTypes(m), f <- m@con
 private rel[loc, loc] allFields(M3 m) = { <t, f> | t <- allTypes(m), f <- m@containment[t], isField(f) };
 
 @memo
-private rel[loc, loc] methodFieldAccesses(M3 m) = domainR(m@fieldAccesses, methods(m));
+private rel[loc, loc] methodFieldAccesses(M3 m) = domainR(m@fieldAccess, methods(m));
 
 @memo
-private rel[loc, loc] methodMethodCalls(M3 m) = domainR(m@methodCalls, method(m));
+private rel[loc, loc] methodMethodCalls(M3 m) = domainR(m@methodInvocation, methods(m));
 
 @memo
 private rel[loc, loc] packageTypes(M3 m3) = { <p, t> | <p, t> <- m3@containment, isPackage(p), isClass(t) || isInterface(t) || t.scheme == "java+enum" };
+
+@memo
+private rel[loc, loc] overridableMethods(M3 m3) = { <p, m> | <p, m> <- allMethods(m3), \private() notin m3@modifiers[m] };
 
 @metric{A-Java}
 @doc{Abstractness (Java)}
@@ -62,7 +65,7 @@ private rel[loc, loc] packageTypes(M3 m3) = { <p, t> | <p, t> <- m3@containment,
 real A_Java(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
   
-  types = allTypes(m3s);
+  types = allTypes(m3);
   
   abstractTypes = { t | t <- types, \abstract() in m3@modifiers[t] };
   
@@ -111,16 +114,16 @@ private rel[loc, loc] typeSymbolsToTypes(rel[loc, TypeSymbol] typs) {
   rel[loc, loc] result = {};
   visit (typs) {
     case <loc entity, \class(loc decl, _)>: {
-      result += { entity, decl };
+      result += { <entity, decl> };
     }
     case <loc entity, \interface(loc decl, _)> : {
-      result += { entity, decl };
+      result += { <entity, decl> };
     }
     case <loc entity, \enum(loc decl)> : {
-      result += { entity, decl };
+      result += { <entity, decl> };
     }
     case <loc entity, \method(_, _, TypeSymbol returnType, _)> : {
-      result += typeSymbolToTypes({<entity, returnType>});
+      result += typeSymbolsToTypes({<entity, returnType>});
     }
     case <loc entity, \object()> : {
       result +=  {<entity,  |java+class:///java/lang/Object|>};
@@ -140,7 +143,7 @@ map[loc, int] CBO_Java(rel[Language, loc, M3] m3s = {}) {
 }
 
 // DAC for java is also measured in lang::java::style::Metrics
-
+/*
 @metric{DAC-Java}
 @doc{Data abstraction coupling (Java)}
 @friendlyName{Data abstraction coupling (Java)}
@@ -148,7 +151,7 @@ map[loc, int] CBO_Java(rel[Language, loc, M3] m3s = {}) {
 real DAC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
 	return 0.0;
 }
-
+*/
 @metric{MPC-Java}
 @doc{Message passing coupling (Java)}
 @friendlyName{Message passing coupling (Java)}
@@ -263,8 +266,8 @@ private real hidingFactor(M3 m3, rel[loc, loc] members) {
 	
 	subTypes = invert(superTypes(m3))+;
 
-	packageTypes = rangeR(domainR(m3@containment, packages(m3)), allTypes(m3));
-	packageFriends = invert(packageTypes) o packageTypes;
+	packageType = rangeR(domainR(m3@containment, packages(m3)), allTypes(m3));
+	packageFriends = invert(packageType) o packageType;
 	
 	visible = allTypes(m3) * publicMembers
 			+ { <s, m> | <t, m> <- protectedMembers, s <- subTypes[t] }
@@ -396,6 +399,7 @@ Factoid Complexity_Java(
 	"Ca-Java": "ca",
 	"I-Java": "i",
 	"RFC-Java": "rfc")}
+	//TODO: link dac to sytles module
 Factoid Coupling_Java(
 	map[loc, int] cbo = (),
 	map[loc, int] dac = (),
