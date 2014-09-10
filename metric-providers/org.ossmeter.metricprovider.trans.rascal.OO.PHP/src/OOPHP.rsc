@@ -177,7 +177,7 @@ map[loc, int] Ce_PHP(rel[Language, loc, M3] m3s = {}) {
 @friendlyName{Instability (PHP)}
 @appliesTo{php()}
 @uses{("Ce-PHP": "ce", "Ca-PHP": "ca")}
-map[loc, real] I_PHP(rel[Language, loc, M3] m3s = {}, map[loc, int] ce = (), map[loc, int] ca = ()) {
+map[loc, real] I_PHP(map[loc, int] ce = (), map[loc, int] ca = ()) {
 	packages = domain(ca) + domain(ce);
 
 	return ( p : I(ca[p]?0, ce[p]?0) | p <- packages );
