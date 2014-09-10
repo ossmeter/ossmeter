@@ -135,8 +135,9 @@ real DAC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}
 @doc{Message passing coupling (Java)}
 @friendlyName{Message passing coupling (Java)}
 @appliesTo{java()}
-real MPC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+map[loc, int] MPC_Java(rel[Language, loc, M3] m3s = {}) {
+  M3 m3 = systemM3(m3s);
+	return (t : size({ method | method <- range(domainR(m@methodInvocation, range((m3@containment+)[t]))) }) | t <- allTypes(m3));
 }
 
 @metric{CF-Java}
