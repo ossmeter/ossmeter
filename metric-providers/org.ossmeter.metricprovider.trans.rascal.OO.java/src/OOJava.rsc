@@ -18,11 +18,11 @@ import mood::MHF;
 import mood::MIF;
 import analysis::graphs::Graph;
 import org::ossmeter::metricprovider::MetricProvider;
-
+import Prelude;
 
 @memo
 private M3 systemM3(rel[Language, loc, M3] m3s) {
-  return composeM3(|java+tmp:///|, range(m3s[php()]));
+  return composeM3(|java+tmp:///|, range(m3s[java()]));
 }
 
 @memo
@@ -35,16 +35,16 @@ set[loc] anonymousClasses(M3 m) = { e | e <- m@declarations<name>, e.scheme == "
 private set[loc] allTypes(M3 m) = classes(m) + interfaces(m) + enums(m) + anonymousClasses(m);
 
 @memo
-private set[loc] superTypes(M3 m) = m@extends + m@implement;
+private set[loc] superTypes(M3 m) = m@extends + m@implements;
 
 @memo
 private rel[loc, loc] typeDependencies(M3 m) = typeDependencies(superTypes(m3), m3@methodInvocation, m3@fieldAccess, typeSymbolsToTypes(m3@types), domainR(m3@containment+, allTypes(m3)), allTypes(m3));
 
 @memo
-private rel[loc, loc] allMethods(M3 m) = { <t, f> | t <- allTypes(m), f <- m@contains[t], isMethod(f) };
+private rel[loc, loc] allMethods(M3 m) = { <t, f> | t <- allTypes(m), f <- m@containment[t], isMethod(f) };
 
 @memo
-private rel[loc, loc] allFields(M3 m) = { <t, f> | t <- allTypes(m), f <- m@contains[t], isField(f) };
+private rel[loc, loc] allFields(M3 m) = { <t, f> | t <- allTypes(m), f <- m@containment[t], isField(f) };
 
 @memo
 private rel[loc, loc] methodFieldAccesses(M3 m) = domainR(m@fieldAccesses, methods(m));
