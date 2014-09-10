@@ -219,7 +219,12 @@ map[loc, int] RFC_Java(rel[Language, loc, M3] m3s = {}) {
 @friendlyName{Method inheritance factor (Java)}
 @appliesTo{java()}
 map[loc, real] MIF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+	M3 m3 = systemM3(m3s);
+
+	// TODO package visibility?	
+	inheritableMethods = { <t, m> | <t, m> <- allMethods(m3), {\private(), \abstract()} & m3@modifiers[m] == {} };
+	
+	return MIF(allMethods(m3), inheritableMethods, m3@extends, classes(m3));
 }
 
 @metric{AIF-Java}
@@ -227,7 +232,12 @@ map[loc, real] MIF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3
 @friendlyName{Attribute inheritance factor (Java)}
 @appliesTo{java()}
 map[loc, real] AIF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+	M3 m3 = systemM3(m3s);
+
+	// TODO package visibility?	
+	publicAndProtectedFields = { <t, f> | <t, f> <- allFields(m3), \private() notin m3@modifiers[f] };
+	
+	return MIF(allFields(m3), publicAndProtectedFields, superTypes(m3), allTypes(m3));
 }
 
 @doc{
