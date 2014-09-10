@@ -1,8 +1,13 @@
 module OOJava
 
+import Relation;
+import Map;
+
 import lang::java::m3::Core;
 import lang::java::m3::AST;
 import lang::java::m3::TypeSymbol;
+import analysis::graphs::Graph;
+import org::ossmeter::metricprovider::MetricProvider;
 
 import OO;
 import OOFactoids;
@@ -16,13 +21,11 @@ import ck::NOA;
 import mood::PF;
 import mood::MHF;
 import mood::MIF;
-import analysis::graphs::Graph;
-import org::ossmeter::metricprovider::MetricProvider;
 
 
 @memo
 private M3 systemM3(rel[Language, loc, M3] m3s) {
-  return composeM3(|java+tmp:///|, range(m3s[php()]));
+  return composeM3(|java+tmp:///|, range(m3s[java()]));
 }
 
 @memo
@@ -35,22 +38,22 @@ set[loc] anonymousClasses(M3 m) = { e | e <- m@declarations<name>, e.scheme == "
 private set[loc] allTypes(M3 m) = classes(m) + interfaces(m) + enums(m) + anonymousClasses(m);
 
 @memo
-private set[loc] superTypes(M3 m) = m@extends + m@implement;
+private rel[loc, loc] superTypes(M3 m) = m@extends + m@implements;
 
 @memo
-private rel[loc, loc] typeDependencies(M3 m) = typeDependencies(superTypes(m3), m3@methodInvocation, m3@fieldAccess, typeSymbolsToTypes(m3@types), domainR(m3@containment+, allTypes(m3)), allTypes(m3));
+private rel[loc, loc] typeDependencies(M3 m3) = typeDependencies(superTypes(m3), m3@methodInvocation, m3@fieldAccess, typeSymbolsToTypes(m3@types), domainR(m3@containment+, allTypes(m3)), allTypes(m3));
 
 @memo
-private rel[loc, loc] allMethods(M3 m) = { <t, f> | t <- allTypes(m), f <- m@contains[t], isMethod(f) };
+private rel[loc, loc] allMethods(M3 m3) = { <t, m> | t <- allTypes(m3), m <- m3@containment[t], isMethod(m) };
 
 @memo
-private rel[loc, loc] allFields(M3 m) = { <t, f> | t <- allTypes(m), f <- m@contains[t], isField(f) };
+private rel[loc, loc] allFields(M3 m3) = { <t, f> | t <- allTypes(m3), f <- m3@containment[t], isField(f) };
 
 @memo
 private rel[loc, loc] methodFieldAccesses(M3 m) = domainR(m@fieldAccesses, methods(m));
 
 @memo
-private rel[loc, loc] methodMethodCalls(M3 m) = domainR(m@methodCalls, method(m));
+private rel[loc, loc] methodMethodCalls(M3 m) = domainR(m@methodCalls, methods(m));
 
 @memo
 private rel[loc, loc] packageTypes(M3 m3) = { <p, t> | <p, t> <- m3@containment, isPackage(p), isClass(t) || isInterface(t) || t.scheme == "java+enum" };
@@ -111,16 +114,16 @@ private rel[loc, loc] typeSymbolsToTypes(rel[loc, TypeSymbol] typs) {
   rel[loc, loc] result = {};
   visit (typs) {
     case <loc entity, \class(loc decl, _)>: {
-      result += { entity, decl };
+      result += { <entity, decl> };
     }
     case <loc entity, \interface(loc decl, _)> : {
-      result += { entity, decl };
+      result += { <entity, decl> };
     }
     case <loc entity, \enum(loc decl)> : {
-      result += { entity, decl };
+      result += { <entity, decl> };
     }
     case <loc entity, \method(_, _, TypeSymbol returnType, _)> : {
-      result += typeSymbolToTypes({<entity, returnType>});
+      result += typeSymbolsToTypes({<entity, returnType>});
     }
     case <loc entity, \object()> : {
       result +=  {<entity,  |java+class:///java/lang/Object|>};
@@ -146,7 +149,14 @@ map[loc, int] CBO_Java(rel[Language, loc, M3] m3s = {}) {
 @friendlyName{Data abstraction coupling (Java)}
 @appliesTo{java()}
 real DAC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	return 0.0;
+  map[loc, int] dac = ();
+  
+  for ( /c:class(_, _, _, _, _) <- asts ) { // TODO newObject() ??
+    dac[c@decl] = ( 0 | it + 1 | /constructorCall(_, _) <- c) +   // TODO rewrite to visit?
+                  ( 0 | it + 1 | /constructorCall(_, _, _) <- c);           
+  }
+  
+  return dac;
 }
 
 @metric{MPC-Java}
@@ -159,9 +169,8 @@ map[loc, int] MPC_Java(rel[Language, loc, AST] asts = {}) {
   for ( /c:class(_, _, _, _, _) <- asts ) {
     mpc[c@decl] = ( 0 | it + 1 | /methodCall(_, _, _) <- c ) +
                   ( 0 | it + 1 | /methodCall(_, _, _, _) <- c ) +
-                  ( 0 | it + 1 | /constructorCall(_, _) <- c) + 
+                  ( 0 | it + 1 | /constructorCall(_, _) <- c) + // TODO do we need to include constructorCall?
                   ( 0 | it + 1 | /constructorCall(_, _, _) <- c);
-                  
   }
   
   return mpc;
@@ -200,7 +209,7 @@ map[loc, int] Ce_Java(rel[Language, loc, M3] m3s = {}) {
 @appliesTo{java()}
 @uses = ("Ce-Java" : "ce", "Ca-Java" : "ca")
 map[loc, real] I_Java(map[loc, int] ce = (), map[loc, int] ca = ()) {
-  packages = domain(ca) + domain(ce);
+  set[loc] packages = domain(ca) + domain(ce);
 
   return ( p : I(ca[p]?0, ce[p]?0) | p <- packages );
 }
