@@ -11,11 +11,11 @@ Require-Bundle: org.ossmeter.repository.model.redmine;bundle-version="1.0.0",
  org.ossmeter.platform
 Export-Package: org.ossmeter.repository.model.redmine.importer
 Import-Package: org.json.simple,
- org.jsoup;version="1.7.2",
- org.jsoup.examples;version="1.7.2",
- org.jsoup.helper;version="1.7.2",
- org.jsoup.nodes;version="1.7.2",
- org.jsoup.parser;version="1.7.2",
- org.jsoup.safety;version="1.7.2",
- org.jsoup.select;version="1.7.2",
+ org.jsoup,
+ org.jsoup.examples,
+ org.jsoup.helper,
+ org.jsoup.nodes,
+ org.jsoup.parser,
+ org.jsoup.safety,
+ org.jsoup.select,
  org.ossmeter.platform
