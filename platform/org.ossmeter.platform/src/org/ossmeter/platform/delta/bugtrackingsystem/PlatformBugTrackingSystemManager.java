@@ -32,7 +32,7 @@ public abstract class PlatformBugTrackingSystemManager implements IBugTrackingSy
 
 	protected IBugTrackingSystemManager getBugTrackingSystemManager(BugTrackingSystem bugTrackingSystem) throws Exception {
 		for (IBugTrackingSystemManager bugTrackingSystemManager : getBugTrackingSystemManagers()) {
-			//JURI added if statement //
+			//JURI inserimento if//
 			if (bugTrackingSystemManager.getClass().toString().equals("Bugzilla"))
 			{
 				if (bugTrackingSystemManager.appliesTo(bugTrackingSystem)) {
