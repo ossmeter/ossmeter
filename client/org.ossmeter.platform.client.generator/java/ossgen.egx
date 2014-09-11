@@ -21,7 +21,7 @@ rule EClass2Java
 	
 	template : "eclass2java.egl"
 	
-	target : c.name  + ".java"
+	target : dir + c.name  + ".java"
 }
 
 rule EEnum2Java
@@ -29,5 +29,5 @@ rule EEnum2Java
 
 	template : "eenum2java.egl"
 	
-	target : e.name  + ".java"
+	target : dir + e.name  + ".java"
 }
