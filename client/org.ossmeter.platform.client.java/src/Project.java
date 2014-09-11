@@ -1,6 +1,7 @@
 //package model;
 
 import java.util.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
@@ -9,7 +10,9 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 	include=JsonTypeInfo.As.PROPERTY,
 	property = "_type")
 @JsonSubTypes({
+	@Type(value = Project.class, name="org.ossmeter.repository.model.Project"),
 })
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Project extends NamedElement {
 
 	protected List<VcsRepository> vcsRepositories;

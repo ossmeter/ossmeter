@@ -7,7 +7,7 @@ using Newtonsoft.Json.Linq;
 
 namespace ossmeterclient
 {
-	public abstract class BugTrackingSystem Object 
+	abstract class BugTrackingSystem  
 	{
 
 		protected IList<Person> persons { get; set; }

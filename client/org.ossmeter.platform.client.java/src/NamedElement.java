@@ -1,6 +1,7 @@
 //package model;
 
 import java.util.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
@@ -9,13 +10,15 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 	include=JsonTypeInfo.As.PROPERTY,
 	property = "_type")
 @JsonSubTypes({
-		@Type(value = Project.class, name="Project"),
-		@Type(value = MetricProvider.class, name="MetricProvider"),
-		@Type(value = VcsRepository.class, name="VcsRepository"),
-		@Type(value = Person.class, name="Person"),
-		@Type(value = Role.class, name="Role"),
-		@Type(value = License.class, name="License"),
+	@Type(value = NamedElement.class, name="org.ossmeter.repository.model.NamedElement"),
+	@Type(value = Project.class, name="Project"),
+	@Type(value = MetricProvider.class, name="MetricProvider"),
+	@Type(value = VcsRepository.class, name="VcsRepository"),
+	@Type(value = Person.class, name="Person"),
+	@Type(value = Role.class, name="Role"),
+	@Type(value = License.class, name="License"),
 })
+@JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class NamedElement extends Object {
 
 	protected String name;

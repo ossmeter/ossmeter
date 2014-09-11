@@ -1,101 +1,95 @@
 <?xml version="1.0" encoding="ASCII"?>
-<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="org.ossmeter.repository.model" nsURI="org.ossmeter.repository.model" nsPrefix="org.ossmeter.repository.model">
-  <eClassifiers xsi:type="ecore:EClass" name="ProjectRepository" eSuperTypes="//NamedElement">
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="model" nsURI="org.ossmeter.repository.model" nsPrefix="org.ossmeter.repository.model">
+  <eClassifiers xsi:type="ecore:EClass" name="ProjectRepository" eSuperTypes="#//NamedElement">
     <eAnnotations source="db"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="projects" upperBound="-1" eType="//Project" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="roles" upperBound="-1" eType="//Role" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="gitHubImportData" upperBound="-1" eType="//ImportData" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="sfImportData" upperBound="-1" eType="//ImportData" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="persons" upperBound="-1" eType="//Person" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="licenses" upperBound="-1" eType="//License" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="metricProviders" upperBound="-1" eType="//MetricProvider" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="schedulingInformation" upperBound="-1" eType="//SchedulingInformation" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="projects" upperBound="-1"
+        eType="#//Project" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="roles" upperBound="-1"
+        eType="#//Role" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="gitHubImportData" upperBound="-1"
+        eType="#//ImportData" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sfImportData" upperBound="-1"
+        eType="#//ImportData" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="persons" upperBound="-1"
+        eType="#//Person" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="licenses" upperBound="-1"
+        eType="#//License" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="metricProviders" upperBound="-1"
+        eType="#//MetricProvider" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="schedulingInformation"
+        upperBound="-1" eType="#//SchedulingInformation" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SchedulingInformation">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="workerIdentifier">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="workerIdentifier" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
       <eAnnotations source="searchable"/>
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isMaster">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="currentLoad" upperBound="-1">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isMaster" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBooleanObject"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="currentLoad" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ImportData">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="forge">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="forge" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
       <eAnnotations source="searchable"/>
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastImportedProject">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastImportedProject" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NamedElement" abstract="true">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
       <eAnnotations source="searchable"/>
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Project" eSuperTypes="//NamedElement">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="shortName">
+  <eClassifiers xsi:type="ecore:EClass" name="Project" eSuperTypes="#//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="shortName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
       <eAnnotations source="searchable"/>
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="year">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="active" defaultValueLiteral="true">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastExecuted">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="//Project"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="vcsRepositories" upperBound="-1" eType="//VcsRepository" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="communicationChannels" upperBound="-1" eType="//CommunicationChannel" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="bugTrackingSystems" upperBound="-1" eType="//BugTrackingSystem" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="persons" upperBound="-1" eType="//Person"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="licenses" upperBound="-1" eType="//License"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="metricProviderData" upperBound="-1" eType="//MetricProvider" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="executionInformation" eType="//ProjectExecutionInformation" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="year" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="active" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastExecuted" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//Project"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="vcsRepositories" upperBound="-1"
+        eType="#//VcsRepository" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="communicationChannels"
+        upperBound="-1" eType="#//CommunicationChannel" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bugTrackingSystems" upperBound="-1"
+        eType="#//BugTrackingSystem" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="persons" upperBound="-1"
+        eType="#//Person"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="licenses" upperBound="-1"
+        eType="#//License"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="metricProviderData" upperBound="-1"
+        eType="#//MetricProvider" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="executionInformation" eType="#//ProjectExecutionInformation"
+        containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MetricProviderExecution">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="metricProvider" eType="//MetricProvider"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="metricProviderId">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="//MetricProviderType"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastExecuted" defaultValueLiteral="-1">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="metricProvider" eType="#//MetricProvider"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="metricProviderId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//MetricProviderType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastExecuted" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+        defaultValueLiteral="-1"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ProjectExecutionInformation">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastExecuted">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="monitor" defaultValueLiteral="true">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="inErrorState" defaultValueLiteral="false">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="storage" eType="//LocalStorage" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="metricProviderData" upperBound="-1" eType="//MetricProviderExecution" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastExecuted" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="monitor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="inErrorState" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
+        defaultValueLiteral="false"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="storage" eType="#//LocalStorage"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="metricProviderData" upperBound="-1"
+        eType="#//MetricProviderExecution" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="MetricProvider" eSuperTypes="//NamedElement">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="metricProviderId">
-      <eAnnotations source="searchable"/>
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="//MetricProviderType">
+  <eClassifiers xsi:type="ecore:EClass" name="MetricProvider" eSuperTypes="#//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="metricProviderId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
       <eAnnotations source="searchable"/>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="category" eType="//MetricProviderCategory">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//MetricProviderType">
+      <eAnnotations source="searchable"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="category" eType="#//MetricProviderCategory">
       <eAnnotations source="searchable"/>
     </eStructuralFeatures>
   </eClassifiers>
@@ -110,47 +104,33 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="LocalStorage">
     <eAnnotations source="customize"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="path">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="path" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CommunicationChannel" abstract="true">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="persons" upperBound="-1" eType="//Person"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nonProcessable">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="persons" upperBound="-1"
+        eType="#//Person"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nonProcessable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="VcsRepository" abstract="true" eSuperTypes="//NamedElement">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="created_at">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="updated_at">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="persons" upperBound="-1" eType="//Person"/>
+  <eClassifiers xsi:type="ecore:EClass" name="VcsRepository" abstract="true" eSuperTypes="#//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="created_at" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="updated_at" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="persons" upperBound="-1"
+        eType="#//Person"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BugTrackingSystem" abstract="true">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="persons" upperBound="-1" eType="//Person"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="persons" upperBound="-1"
+        eType="#//Person"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Person" eSuperTypes="//NamedElement">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="homePage">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="roles" upperBound="-1" eType="//Role"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Person" eSuperTypes="#//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="homePage" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="roles" upperBound="-1"
+        eType="#//Role"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Role" eSuperTypes="//NamedElement"/>
-  <eClassifiers xsi:type="ecore:EClass" name="License" eSuperTypes="//NamedElement">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
+  <eClassifiers xsi:type="ecore:EClass" name="Role" eSuperTypes="#//NamedElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="License" eSuperTypes="#//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
 </ecore:EPackage>
