@@ -108,8 +108,6 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		this.logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 		
 		assert function instanceof RascalFunction;
-		
-		BuildManager.MAVENEXECUTABLE = "/Users/shahi/Documents/apache/apache-maven-3.2.2/bin/mvn";
 	}
 
 	private Map<String, String> qualifyNames(String qualifier, Map<String, String> uses) {
