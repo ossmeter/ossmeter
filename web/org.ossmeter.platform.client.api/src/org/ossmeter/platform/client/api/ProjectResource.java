@@ -1,7 +1,6 @@
 package org.ossmeter.platform.client.api;
 
 import org.ossmeter.platform.Platform;
-import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectRepository;
 import org.restlet.data.Status;
 import org.restlet.engine.header.Header;
@@ -12,6 +11,8 @@ import org.restlet.util.Series;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 
 public class ProjectResource extends ServerResource {
 	@Get
@@ -24,15 +25,22 @@ public class ProjectResource extends ServerResource {
 		responseHeaders.add(new Header("Access-Control-Allow-Origin", "*"));
 		responseHeaders.add(new Header("Access-Control-Allow-Methods", "GET"));
 		
-		String projectName = (String) getRequest().getAttributes().get("name");
+		String projectName = (String) getRequest().getAttributes().get("id");
 		
 		Platform platform = Platform.getInstance();
 		ProjectRepository projectRepo = platform.getProjectRepositoryManager().getProjectRepository();
 		
-		// TODO: Do we need an Ossmeter mapper?
 		ObjectMapper mapper = new ObjectMapper();
 		
-		Project p = projectRepo.getProjects().findOneByShortName(projectName);
+		// FIXME: This exclusion list needs to be somewhere... 
+		BasicDBObject ex = new BasicDBObject("executionInformation", 0);
+		ex.put("storage", 0);
+		ex.put("metricProviderData", 0);
+		ex.put("_id", 0);
+		
+		BasicDBObject query = new BasicDBObject("shortName", projectName);
+		
+		DBObject p = projectRepo.getProjects().getDbCollection().findOne(query, ex);
 		
 		if (p == null) {
 			getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
@@ -40,8 +48,7 @@ public class ProjectResource extends ServerResource {
 		}
 		
 		try {
-			// TODO:
-			return p.getDbObject().toString();//mapper.writeValueAsString(p);//
+			return p.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Util.generateErrorMessage(generateRequestJson(mapper, projectName), "An error occurred when converting the project to JSON: " + e.getMessage()).toString();

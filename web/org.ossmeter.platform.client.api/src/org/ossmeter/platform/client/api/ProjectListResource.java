@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
 import com.mongodb.util.JSON;
 
@@ -52,11 +53,16 @@ public class ProjectListResource extends ServerResource {
 		Platform platform = Platform.getInstance();
 		ProjectRepository projectRepo = platform.getProjectRepositoryManager().getProjectRepository();
 		
-		DBCursor cursor = projectRepo.getProjects().getDbCollection().find().skip(page*pageSize).limit(pageSize);
+		// FIXME: This exclusion list needs to be somewhere...
+		BasicDBObject ex = new BasicDBObject("executionInformation", 0);
+		ex.put("storage", 0);
+		ex.put("metricProviderData", 0);
+		ex.put("_id", 0);
+		
+		DBCursor cursor = projectRepo.getProjects().getDbCollection().find(new BasicDBObject(), ex).skip(page*pageSize).limit(pageSize);
 		
 		ObjectMapper mapper = new ObjectMapper();
 		ArrayNode projects = mapper.createArrayNode();
-		
 		
 		while (cursor.hasNext()) {
 			try {
