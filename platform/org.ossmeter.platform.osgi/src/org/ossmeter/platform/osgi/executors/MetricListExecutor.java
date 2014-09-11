@@ -89,10 +89,12 @@ public class MetricListExecutor implements Runnable {
 			// Now execute
 			try {
 				if (m instanceof ITransientMetricProvider) {
-					((ITransientMetricProvider) m).measure(project, delta, ((ITransientMetricProvider) m).adapt(platform.getMetricsRepository(project).getDb()));
+					//JURI added if statement
+					if(m.appliesTo(project))
+						((ITransientMetricProvider) m).measure(project, delta, ((ITransientMetricProvider) m).adapt(platform.getMetricsRepository(project).getDb()));
 				} else if (m instanceof IHistoricalMetricProvider) {
 					MetricHistoryManager historyManager = new MetricHistoryManager(platform);
-					//JURI aggiunto if
+					//JURI added if statement
 					if(m.appliesTo(project))
 						historyManager.store(project, date, (IHistoricalMetricProvider) m);
 				}

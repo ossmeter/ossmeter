@@ -6,6 +6,7 @@ Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.ossmeter.repository.model.eclipse,
  org.ossmeter.repository.model.bts.bugzilla,
  org.ossmeter.repository.model.cc.forum,
+ org.ossmeter.repository.model.cc.wiki,
  org.ossmeter.repository.model.vcs.svn,
  org.ossmeter.repository.model.vcs.git,
  org.ossmeter.repository.model.vcs.cvs,

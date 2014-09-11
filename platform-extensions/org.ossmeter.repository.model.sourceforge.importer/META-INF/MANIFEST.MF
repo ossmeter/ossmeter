@@ -5,18 +5,17 @@ Bundle-SymbolicName: org.ossmeter.repository.model.sourceforge.importer; singlet
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.ossmeter.repository.model.bts.bugzilla,
  org.ossmeter.repository.model.cc.forum,
+ org.ossmeter.repository.model.cc.wiki,
  org.ossmeter.repository.model.vcs.svn,
- org.ossmeter.repository.model.vcs.git;bundle-version="1.0.0",
+ org.ossmeter.repository.model.vcs.git,
  org.ossmeter.repository.model.vcs.cvs,
  org.ossmeter.repository.model.sourceforge,
- org.ossmeter.platform;bundle-version="1.0.0",
- org.ossmeter.platform.vcs.svn;bundle-version="1.0.0",
+ org.ossmeter.platform,
  org.ossmeter.repository.model.importerdependencies
 Export-Package: org.ossmeter.repository.model.sourceforge.importer
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Import-Package: javax.ws.rs,
- org.json.simple,
+Import-Package: org.json.simple,
  org.jsoup;version="1.7.2",
  org.jsoup.examples;version="1.7.2",
  org.jsoup.helper;version="1.7.2",

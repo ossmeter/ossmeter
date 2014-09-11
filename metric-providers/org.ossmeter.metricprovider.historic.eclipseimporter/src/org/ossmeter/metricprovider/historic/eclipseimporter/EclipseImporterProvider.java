@@ -94,6 +94,8 @@ public class EclipseImporterProvider implements IHistoricalMetricProvider {
 
 			Platform platform = new Platform(mongo);
 			ep = epi.importProject(project.getShortName(), platform);
+			if (ep.getExecutionInformation().getInErrorState() )
+				project.getExecutionInformation().setInErrorState(true);
 			mongo.close();
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block

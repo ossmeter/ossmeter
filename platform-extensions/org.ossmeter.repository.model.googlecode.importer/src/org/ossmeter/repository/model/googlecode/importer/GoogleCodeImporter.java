@@ -39,12 +39,11 @@ public class GoogleCodeImporter {
 		logger = (OssmeterLogger) OssmeterLogger.getLogger("importer.GoogleCode");
 		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 	}
-	public GoogleCodeProject importProject(String projectUrl, Platform platform) 
-			throws MalformedURLException, IOException 
+	public GoogleCodeProject importProject(String projectId, Platform platform) 
 	{
 		org.jsoup.nodes.Document doc;
 		org.jsoup.nodes.Element content;
-		
+		String projectUrl = "https://code.google.com/p/" + projectId + "/";
 		String URL_PROJECT = projectUrl;
 		GoogleCodeProject project = new GoogleCodeProject();;
 		Boolean projectToBeUpdated = false;
@@ -58,12 +57,12 @@ public class GoogleCodeImporter {
 			
 			Iterable<Project> pl = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(e.text());
 			Iterator<Project> iprojects = pl.iterator();
-			GoogleCodeProject p = null;
+			
 			
 			while (iprojects.hasNext()) {
 				projectTemp = iprojects.next();
 				if (projectTemp instanceof GoogleCodeProject) {
-					p = (GoogleCodeProject)projectTemp;
+					project = (GoogleCodeProject)projectTemp;
 					projectToBeUpdated = true;
 					logger.info("-----> project " + e.text() + " already in the repository. Its metadata will be updated.");
 					break;
@@ -83,8 +82,8 @@ public class GoogleCodeImporter {
 			
 			//SET NAME
 			project.setName(e.text());
-			project.setShortName(e.text());
-			//project.setName(Jsoup.parse(e.getElementsByTag("span").toString()).text());
+			project.setHomePage(URL_PROJECT);
+			project.setShortName(projectId);
 			e = doc.getElementById("wikicontent");
 			project.setDescription(Jsoup.parse(e.toString()).text());
 			e = doc.getElementById("mt");
@@ -217,7 +216,9 @@ public class GoogleCodeImporter {
 			}
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
+			project.getExecutionInformation().setInErrorState(true);
 			logger.error("Eclipse project " + projectUrl + "Importer exception:" + e1.getMessage());
+			return project;
 		}
 		
 		if ((project != null) & (!projectToBeUpdated)) {	
@@ -608,6 +609,50 @@ public class GoogleCodeImporter {
 		}
 	}
 	
+	public void importProjects(Platform platform, int numberOfProjects) 
+	{	
+		List<GoogleCodeProject> result = new ArrayList<GoogleCodeProject>();
+		org.jsoup.nodes.Document doc;
+		org.jsoup.nodes.Element content;
+		
+		String URL_PROJECT = "https://code.google.com/hosting/search?q=&sa=Search";
+		
+		try {
+			doc = Jsoup.connect(URL_PROJECT).timeout(10000).get();
+			Element e =  doc.getElementsByClass("mainhdr").first();
+			String pagination = e.text();
+			String endS = "";
+			String startS = "";
+			String totalItemS = "";
+			String [] array = pagination.split(" ");				
+			endS = array[3];
+			startS = array[1];
+			totalItemS = array[5];
+			Integer start = Integer.parseInt(startS);
+			Integer end = Integer.parseInt(endS);
+			Integer totalItem = Integer.parseInt(totalItemS);
+			if(end <= totalItem)
+			{
+				int i = 0;
+				
+				while (i <= totalItem )
+				{					
+					String url = "https://code.google.com/hosting/search?q=&filter=0&mode=&start=" + i;
+					logger.info("Processing the content of the page " + url + " from project " + i);
+					result.addAll(importPage(url, platform, numberOfProjects));
+					i= i + 10;
+					if (result.size() > numberOfProjects)
+						break;
+				}
+			}
+			
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			logger.error("Google code importer error for retirve project list" + e1.getMessage());
+		}
+	}
+	
+	
 	private List<GoogleCodeProject> importPage(String url, Platform platform)
 	{
 		List<GoogleCodeProject> result = new ArrayList<GoogleCodeProject>();
@@ -623,7 +668,38 @@ public class GoogleCodeImporter {
 			
 			for (Element element : projectList) 
 			{
-				result.add(importProject("https://code.google.com" + element.getElementsByTag("td").get(1).getElementsByTag("a").first().attr("href"),platform));			
+				String string = element.getElementsByTag("td").get(1).getElementsByTag("a").first().attr("href");
+				string = string.substring(3);
+				string = string.substring(0, string.length()-1);
+				result.add(importProject(string,platform));			
+			}
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			logger.error("Google code importer error for retirve single project page list " + e1.getMessage());
+		}
+		return result;
+	}
+	
+	private List<GoogleCodeProject> importPage(String url, Platform platform, int numberOfProjects)
+	{
+		List<GoogleCodeProject> result = new ArrayList<GoogleCodeProject>();
+		org.jsoup.nodes.Document doc;
+		org.jsoup.nodes.Element content;
+		
+		//String URL_PROJECT = "https://code.google.com/hosting/search?q=&sa=Search";
+				
+		try {
+			doc = Jsoup.connect(url).timeout(10000).get();
+			Element e =  doc.getElementById("serp");
+			Elements projectList = e.getElementsByTag("table");
+			for (Element element : projectList) 
+			{
+				String string = element.getElementsByTag("td").get(1).getElementsByTag("a").first().attr("href");
+				string = string.substring(3);
+				string = string.substring(0, string.length()-1);
+				result.add(importProject(string,platform));	
+				if(result.size() > numberOfProjects)
+					break;
 			}
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block

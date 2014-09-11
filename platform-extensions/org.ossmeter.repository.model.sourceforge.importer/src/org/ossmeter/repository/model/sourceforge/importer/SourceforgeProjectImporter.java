@@ -1,9 +1,11 @@
 package org.ossmeter.repository.model.sourceforge.importer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.ImportData;
 import org.ossmeter.repository.model.License;
 import org.ossmeter.repository.model.Person;
@@ -11,9 +13,11 @@ import org.ossmeter.repository.model.PersonCollection;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectCollection;
 import org.ossmeter.repository.model.Role;
+import org.ossmeter.repository.model.cc.wiki.Wiki;
 import org.ossmeter.repository.model.sourceforge.*;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,12 +26,28 @@ import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
 
 
 
+
+
+
+
+
+
+
+
+
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPathFactory;
+
 import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 import org.ossmeter.repository.model.vcs.cvs.CvsRepository;
+import org.ossmeter.repository.model.vcs.git.GitRepository;
 import org.jsoup.select.*;
 import org.jsoup.*;
 import org.json.simple.JSONObject;
@@ -35,6 +55,9 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONValue;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.logging.OssmeterLogger;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.googlecode.pongo.runtime.IteratorIterable;
 import com.googlecode.pongo.runtime.PongoCursorIterator;
@@ -45,6 +68,7 @@ import com.mongodb.DBCursor;
 
 public class SourceforgeProjectImporter {
 	protected OssmeterLogger logger;
+	private HashMap<String,String> am = new HashMap<String,String>();;
 	public SourceforgeProjectImporter()
 	{
 		logger = (OssmeterLogger) OssmeterLogger.getLogger("importer.sourceforge");
@@ -90,8 +114,16 @@ public class SourceforgeProjectImporter {
 			
 			if (platform.getProjectRepositoryManager().getProjectRepository().getSfImportData().size() != 0) {
 				lastImportedProject = new String(platform.getProjectRepositoryManager().getProjectRepository().getSfImportData().first().getLastImportedProject());
-				startingPage = new Integer((lastImportedProject.split("/"))[0]);
-				startingProject = new Integer((lastImportedProject.split("/"))[1]);
+				if(lastImportedProject.equals(""))
+				{
+					startingPage = 1;
+					startingProject = 0;
+				}
+				else
+				{
+					startingPage = new Integer((lastImportedProject.split("/"))[0]);
+					startingProject = new Integer((lastImportedProject.split("/"))[1]);
+				}
 			} else {
 				ImportData id = new ImportData();
 				id.setLastImportedProject(new String());
@@ -110,7 +142,7 @@ public class SourceforgeProjectImporter {
 					content = doc.getElementsByClass("projects").first();
 					Elements e = content.getElementsByClass("project_info");
 					for (int i = startingProject; i < e.size(); i++){
-						try {
+						
 							url = e.get(i).getElementsByAttributeValue("itemprop", "url").first().attr("href");
 							count++;
 							logger.info("--> (" + count + ") " + url);
@@ -118,16 +150,7 @@ public class SourceforgeProjectImporter {
 							lastImportedProject = new String(j + "/" + i);
 							platform.getProjectRepositoryManager().getProjectRepository().getSfImportData().first().setLastImportedProject(lastImportedProject);
 							platform.getProjectRepositoryManager().getProjectRepository().sync();
-						}
-						catch(SocketTimeoutException  st) {
-							logger.error("Single project: Read timed out during the connection to " + url + ". I'll retry later with it.");
-							toRetry.add(url);
-							continue;
-						}
-						catch(IOException er) {
-							logger.error("Single project: No further details available for the project " + url );
-							continue;
-						}
+						
 					}
 					startingProject=0;
 				}
@@ -156,42 +179,133 @@ public class SourceforgeProjectImporter {
 				el = (String) it.next();
 				logger.info(el);
 				SourceForgeProject project = null;
-				try {
-					if ((platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByName(el.split("/")[2])) != null) {
-						project = importProject(el.split("/")[2], platform);
-					}
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
-					continue;
-				} catch (IOException e) {
-					logger.error("No further details available for the project " + url );
-	//				continue;
+				if ((platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByName(el.split("/")[2])) != null) {
+					project = importProject(el.split("/")[2], platform);
 				}
+				
+			}
+		}
+	}
+	
+public void importProjects(Platform platform, int numberOfProjects) {
+		
+		org.jsoup.nodes.Document doc;
+		org.jsoup.nodes.Element content;
+		Integer numPagesToBeScanned;
+		String url = null;	
+		List<String> toRetry = new ArrayList<String>();
+		
+		try {
+			doc = Jsoup.connect("http://sourceforge.net/directory/").get();
+			content = doc.getElementById("result_count");
+			numPagesToBeScanned = new Integer(content.toString().substring(("<p id=\"result_count\"> Showing page 1 of ".length()), content.toString().length()-6));
+			int count = 0;
+
+			String lastImportedProject = null;
+			int startingPage = 1;
+			int startingProject = 0;
+			
+			if (platform.getProjectRepositoryManager().getProjectRepository().getSfImportData().size() != 0) {
+				lastImportedProject = new String(platform.getProjectRepositoryManager().getProjectRepository().getSfImportData().first().getLastImportedProject());
+				if(lastImportedProject.equals(""))
+				{
+					startingPage = 1;
+					startingProject = 0;
+				}
+				else
+				{
+					startingPage = new Integer((lastImportedProject.split("/"))[0]);
+					startingProject = new Integer((lastImportedProject.split("/"))[1]);
+				}
+			} else {
+				ImportData id = new ImportData();
+				id.setLastImportedProject(new String());
+				platform.getProjectRepositoryManager().getProjectRepository().getSfImportData().add(id);	
+				platform.getProjectRepositoryManager().getProjectRepository().sync();
+			}
+		
+			int iteration = 0;
+			for (int j = startingPage; j < (numPagesToBeScanned); j++)
+			{
+				logger.info("Scanning the projects directory page " + j + " of " + numPagesToBeScanned);
+				try {
+					String URL_PROJECT = "http://sourceforge.net/directory/?page="+j;
+					url = URL_PROJECT;
+					doc = Jsoup.connect(URL_PROJECT).timeout(10000).get();
+					content = doc.getElementsByClass("projects").first();
+					Elements e = content.getElementsByClass("project_info");
+					for (int i = startingProject; i < e.size(); i++){
+						
+							url = e.get(i).getElementsByAttributeValue("itemprop", "url").first().attr("href");
+							count++;
+							logger.info("--> (" + count + ") " + url);
+							SourceForgeProject project = importProject(url.split("/")[2], platform);
+							lastImportedProject = new String(j + "/" + i);
+							platform.getProjectRepositoryManager().getProjectRepository().getSfImportData().first().setLastImportedProject(lastImportedProject);
+							platform.getProjectRepositoryManager().getProjectRepository().sync();
+							iteration ++;
+							if (iteration > numberOfProjects)
+								break;
+						
+					}
+					startingProject=0;
+					if (iteration > numberOfProjects)
+						break;
+					
+				}
+				catch(SocketTimeoutException  st) {
+					logger.error("Page summary: Read timed out during the connection to " + url + ". I'll retry later with it.");
+					toRetry.add(url);
+//					continue;
+				}
+				catch(IOException e) {
+					logger.error("Page summary: No further details available for the project " + url );
+//					continue;
+				}
+			}		
+		} 
+		catch(SocketTimeoutException st) {
+			logger.error("Read timed out during the connection to the projects directory, please try again.");
+		}
+		catch(Exception e){
+				logger.error(e.getMessage());
+		}
+		if (! toRetry.isEmpty()) {
+			logger.info("Trying again with...");
+			Iterator<String> it = toRetry.iterator();
+			String el;
+			while (it.hasNext()) {
+				el = (String) it.next();
+				logger.info(el);
+				SourceForgeProject project = null;
+				if ((platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByName(el.split("/")[2])) != null) {
+					project = importProject(el.split("/")[2], platform);
+				}
+				
 			}
 		}
 	}
 	
 	
+	private String getXml(String projectURL) throws Exception {
+		URL url = new URL(projectURL);
+		URLConnection con = url.openConnection();
+		BufferedReader rd = new BufferedReader(new InputStreamReader(
+				con.getInputStream()));
+		String line;
+		StringBuilder sb = new StringBuilder();
+		while ((line = rd.readLine()) != null) {
+			sb.append(line + "\n");
+		}
+		rd.close();
+		String text = sb.toString();
+		return text;
+	}
 	
-	public SourceForgeProject importProject(String projectId, Platform platform) throws MalformedURLException, IOException {
-
+	public SourceForgeProject importProject(String projectId, Platform platform)  {
+		
 		Boolean projectToBeUpdated = false;
 		
-		Role rc = platform.getProjectRepositoryManager().getProjectRepository().getRoles().findOneByName("sf_developers");
-		if(rc==null)
-		{
-			rc = new Role();
-			rc.setName("sf_developers");
-			platform.getProjectRepositoryManager().getProjectRepository().getRoles().add(rc);
-		}
-		
-		Role rc2 = platform.getProjectRepositoryManager().getProjectRepository().getRoles().findOneByName("sf_maintaners");
-		if(rc2==null)
-		{
-			rc2 = new Role();
-			rc2.setName("sf_maintaners");
-			platform.getProjectRepositoryManager().getProjectRepository().getRoles().add(rc2);
-		}
 		
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 		
@@ -214,280 +328,490 @@ public class SourceforgeProjectImporter {
 		if (!projectToBeUpdated)  {
 			project = new SourceForgeProject();
 		}
-		
-		InputStream is = new URL("http://sourceforge.net/api/project/name/" + projectId + "/json").openStream();
-		BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));	
-		String jsonText = readAll(rd);
-		
-		JSONObject obj=(JSONObject)JSONValue.parse(jsonText);
-		JSONObject currentProg = (JSONObject)((JSONObject)obj.get("Project"));
+		try
+		{
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+	         
+			DocumentBuilder db = dbf.newDocumentBuilder(); 
 			
-		project.setShortName(projectId); 
-		project.setName((String)currentProg.get("name"));
+			org.w3c.dom.Document doc = db.parse("https://sourceforge.net/rest/p/" + projectId + "?doap");
+			doc.getDocumentElement().normalize();
+			doc.getElementById("creation_date");
+			Element nList = (Element)doc.getElementsByTagName("Project").item(0);
+
+				
+			project.setShortName(projectId); 
+			String app = getXMLNodeValue(nList,"name");
+			project.setName(app);
+			app = getXMLNodeValue(nList,"created");
+			project.setCreated(app);
+			app = getXMLNodeValue(nList,"sf:id");
+			project.setProjectId(Integer.parseInt(app));
+			app = getXMLNodeValue(nList,"sf:private");
+			project.set_private(Integer.parseInt(app));
+			project.setShortDesc(getXMLNodeValue(nList,"shortdesc"));
+//	###########################################################
+//			//percentile & ranking not present in xml format	#
+//																#
+//			app = currentProg.get("percentile").toString();		#
+//			project.setPercentile(Float.parseFloat(app));		#
+//			app = currentProg.get("ranking").toString();		#
+//			project.setRanking(Integer.parseInt(app));			#
+//##############################################################			
+			try
+			{
+				app = nList.getElementsByTagName("download-page").item(0).getAttributes().item(0).getNodeValue();
+				project.setDownloadPage(app);
+				InputStream isJSON = new URL("https://sourceforge.net/rest/p/" + projectId).openStream();
+				BufferedReader rdJSON = new BufferedReader(new InputStreamReader(isJSON, Charset.forName("UTF-8")));	
+				String jsonText = readAll(rdJSON);
+				JSONObject currentProg=(JSONObject)JSONValue.parse(jsonText);
+				project.setSupportPage((String)currentProg.get("preferred_support_url"));
+				project.setSummary((String)currentProg.get("summary"));
+				project.setHomePage((String)currentProg.get("external_homepage"));
+			}
+			catch (Exception e)
+			{
+				project.getExecutionInformation().setInErrorState(true);
+				logger.info("Retrive value for key: download-page trhows an exception.");
+			}
 		
-		project.setCreated((String)currentProg.get("created"));
-		String app = currentProg.get("id").toString();
-		
-		project.setProjectId(Integer.parseInt(app));
-		app = currentProg.get("private").toString();
-		project.set_private(Integer.parseInt(app));
-		project.setShortDesc((String)currentProg.get("shortdesc"));
-		app = currentProg.get("percentile").toString();
-		project.setPercentile(Float.parseFloat(app));
-		app = currentProg.get("ranking").toString();
-		project.setRanking(Integer.parseInt(app));
-		project.setDownloadPage((String)currentProg.get("download-page"));
-		project.setSupportPage((String)currentProg.get("support-page"));
-		project.setSummaryPage((String)currentProg.get("summary-page"));
-		project.setHomePage((String)currentProg.get("homepage"));
-		
+			// Clear containments to be updated
+			project.getOs().clear();
+			project.getTopics().clear();
+			project.getProgramminLanguages().clear();
+			project.getAudiences().clear();
+			project.getEnvironments().clear();
+			project.getCategories().clear();
+			project.getFeatureRequests().clear();
+			project.getPatches().clear();
+			project.getFeatureRequests().clear();
+			project.getBugs().clear();		
+			project.getCommunicationChannels().clear();
+			project.getVcsRepositories().clear();	
 	
-
-		
-		// Clear containments to be updated
-		project.getOs().clear();
-		project.getTopics().clear();
-		project.getProgramminLanguages();
-		project.getAudiences().clear();
-		project.getEnvironments().clear();
-		project.getCategories().clear();
-		project.getFeatureRequests().clear();
-		project.getPatches().clear();
-		project.getFeatureRequests().clear();
-		project.getBugs().clear();		
-		project.getCommunicationChannels().clear();
-		project.getVcsRepositories().clear();	
-
-		platform.getProjectRepositoryManager().getProjectRepository().sync();	
-		// 
-		
-		
-		// BEGIN Management of Operating Systems
-		if ((isNotNull(currentProg,"os"))){			
-			JSONArray oss = (JSONArray)currentProg.get("os");
-		    OS os = null;
-		    for (int i=0; i < oss.size(); i++){					
+			platform.getProjectRepositoryManager().getProjectRepository().sync();	
+			
+			
+//			// BEGIN Management of Operating Systems
+			NodeList nl = nList.getElementsByTagName("os");			
+			
+			for (int i=0; i < nl.getLength(); i++){					
+				OS os = null;
 				os = new OS();
-				os.setName(oss.get(i).toString());
-				project.getOs().add(os);
+				try
+				{
+					os.setName(nl.item(i).getFirstChild().getNodeValue());
+					project.getOs().add(os);
+				}
+				catch(Exception e)
+				{
+					logger.info("Project " + projectId + " unable to import os");
+				}
+			} 
+			// END Management of Operating Systems 
+
+			
+//#########################################################################			
+//			// BEGIN Management of Topics
+//			if ((isNotNull(currentProg,"topics"))){			
+//				JSONArray topics = (JSONArray)currentProg.get("topics");
+//				Topic topic = null;
+//				for (int i=0; i < topics.size(); i++){					
+//					topic = new Topic();
+//					topic.setName(topics.get(i).toString());
+//					project.getTopics().add(topic);
+//				}
+//			}
+//			// END Management of Topics
+//##########################################################################
+			
+//			BEGIN Management of Programming Languages
+			nl = nList.getElementsByTagName("programming-language");
+			for (int i=0; i < nl.getLength(); i++){					
+				try
+				{
+			    	ProgrammingLanguage pl = new ProgrammingLanguage();
+					pl.setName(nl.item(i).getFirstChild().getNodeValue());
+					project.getProgramminLanguages().add(pl);
+				}
+				catch ( Exception e)
+				{
+					project.getExecutionInformation().setInErrorState(true);
+					logger.info("Project " + projectId + " unable to import programmin languages");
+				}
 			}
-	    }
-		// END Management of Operating Systems 
-		
-		// BEGIN Management of Topics
-		if ((isNotNull(currentProg,"topics"))){			
-			JSONArray topics = (JSONArray)currentProg.get("topics");
-			Topic topic = null;
-			for (int i=0; i < topics.size(); i++){					
-				topic = new Topic();
-				topic.setName(topics.get(i).toString());
-				project.getTopics().add(topic);
+		    
+			// END Management of Programming Languages 
+			
+			// BEGIN Management of Audiences
+		    nl = nList.getElementsByTagName("audience");
+			for (int i=0; i < nl.getLength(); i++){					
+				Audience audience = null;
+				try
+				{
+					audience = new Audience();
+					audience.setName(nl.item(i).getFirstChild().getNodeValue());
+					project.getAudiences().add(audience);
+				}
+				catch (Exception e)
+				{
+					project.getExecutionInformation().setInErrorState(true);
+					logger.info("Project " + projectId + " unable to import Audiences");
+				}
+				
 			}
-		}
-		// END Management of Topics
-		
-		
-		// BEGIN Management of Programming Languages
-		if ((isNotNull(currentProg,"programming-languages"))){			
-			JSONArray pls = (JSONArray)currentProg.get("programming-languages");
-		    ProgrammingLanguage pl = null;
-		    for (int i=0; i < pls.size(); i++){					
-				pl = new ProgrammingLanguage();
-				pl.setName(pls.get(i).toString());
-				project.getProgramminLanguages().add(pl);
+			// END Management of Audiences
+			
+			// BEGIN Management of Environments
+			nl = nList.getElementsByTagName("sf:environment");
+			for (int i=0; i < nl.getLength(); i++){					
+		    	Environment environment = null;
+		    	try
+		    	{
+			    	environment = new Environment();
+			    	environment.setName(nl.item(i).getFirstChild().getNodeValue());
+					project.getEnvironments().add(environment);
+		    	}
+		    	catch (Exception e)
+				{
+		    		project.getExecutionInformation().setInErrorState(true);
+					logger.info("Project " + projectId + " unable to import environment");
+				}
+				
 			}
-	    }
-		// END Management of Operating Systems 
-		
-		// BEGIN Management of Audiences
-		if ((isNotNull(currentProg,"audiences"))){			
-			JSONArray audiences = (JSONArray)currentProg.get("audiences");
-		    Audience audience = null;
-		    for (int i=0; i < audiences.size(); i++){					
-				audience = new Audience();
-				audience.setName(audiences.get(i).toString());
-				project.getAudiences().add(audience);
-			}
-		}
-		// END Management of Audiences
-		
-		// BEGIN Management of Environments
-		if ((isNotNull(currentProg,"environments"))){			
-			JSONArray environments = (JSONArray)currentProg.get("environments");
-		    Environment environment = null;
-		    for (int i=0; i < environments.size(); i++){					
-		    	environment = new Environment();
-		    	environment.setName(environments.get(i).toString());
-				project.getEnvironments().add(environment);
-			}
-		}
-		// END Management of Environments
-		
-		// BEGIN Management of Categories	
-		if ((isNotNull(currentProg,"categories"))){			
-			JSONArray categories = (JSONArray)currentProg.get("categories");
-		    Category category = null;
-		    for (int i=0; i < categories.size(); i++){					
-				category = new Category();
-				category.setName(categories.get(i).toString());
-				project.getCategories().add(category);
-			}
-	    }
-		// END Management of Categories	
-		
-		// BEGIN Management of Trackers
-				if ((isNotNull(currentProg,"trackers"))){			
-					JSONArray trackers = (JSONArray)currentProg.get("trackers");
-					Iterator<JSONObject> iter  = trackers.iterator();
-				    
-					while(iter.hasNext()){					
-						JSONObject entry = (JSONObject)iter.next();
-						String type = (String)entry.get("name");
-						if (type == "Feature Requests")
+			// END Management of Environments			
+		    
+//			// BEGIN Management of Categories
+//		    nl = nList.getElementsByTagName("category");
+//			if ((isNotNull(currentProg,"categories"))){			
+//				JSONArray categories = (JSONArray)currentProg.get("categories");
+//			    Category category = null;
+//			    for (int i=0; i < categories.size(); i++){					
+//					category = new Category();
+//					category.setName(categories.get(i).toString());
+//					project.getCategories().add(category);
+//				}
+//		    }
+//			// END Management of Categories	
+			
+			String type = null;
+			nl = nList.getElementsByTagName("sf:feature");
+			for (int i=0; i < nl.getLength(); i++){					
+		    	try
+		    	{
+		    		type = nl.item(i).getFirstChild().getFirstChild().getFirstChild().getNodeValue();
+		    		if (type != null)
+		    		{
+			    		if (type.equals("Feature Requests"))
 						{
-							FeatureRequest tracker = new FeatureRequest() ;
-							tracker.setName((String)entry.get("name"));
-							tracker.setLocation((String)entry.get("location"));
+							FeatureRequest tracker = new FeatureRequest();
+							String s = nl.item(i).getFirstChild().getLastChild().getAttributes().item(0).getNodeValue();
+							tracker.setName(type);
+							tracker.setLocation(s);
 							project.getFeatureRequests().add(tracker);
 						}
-						if (type == "Patches")
+			    		else if (type.equals("Patches"))
 						{
-							Patch tracker = new Patch() ;
-							tracker.setName((String)entry.get("name"));
-							tracker.setLocation((String)entry.get("location"));
+							Patch tracker = new Patch();
+							String s = nl.item(i).getFirstChild().getLastChild().getAttributes().item(0).getNodeValue();
+							tracker.setName(type);
+							tracker.setLocation(s);
 							project.getPatches().add(tracker);
 						}
-						if (type == "Support Requests")
+			    		else if (type.equals("Support Requests"))
 						{
-							FeatureRequest tracker = new FeatureRequest() ;
-							tracker.setName((String)entry.get("name"));
-							tracker.setLocation((String)entry.get("location"));
+							FeatureRequest tracker = new FeatureRequest();
+							tracker.setName(type);
+							String s = nl.item(i).getFirstChild().getLastChild().getAttributes().item(0).getNodeValue();
+							tracker.setLocation(s);
 							project.getFeatureRequests().add(tracker);
 						}
-						if (type == "Bugs")
+			    		else if (type.equals("Bugs"))
 						{
-							Bug tracker = new Bug() ;
-							tracker.setName((String)entry.get("name"));
-							tracker.setLocation((String)entry.get("location"));
+							Bug tracker = new Bug();
+							tracker.setName(type);
+							String s = nl.item(i).getFirstChild().getLastChild().getAttributes().item(0).getNodeValue();
+							tracker.setLocation(s);
 							project.getBugs().add(tracker);
 						}
-					}
-				}
-				// END Management of Trackers
-				
-		
-		// BEGIN Management of CommunicationsChannels
-		MailingList ml = new MailingList();
-		ml.setUrl((String)currentProg.get("mailing-list"));
-		if(ml.getUrl().startsWith("news://")
-				|| ml.getUrl().startsWith("git://")
-				|| ml.getUrl().startsWith("svn://"))
-			ml.setNonProcessable(false);
-		else ml.setNonProcessable(true);
-		project.getCommunicationChannels().add(ml);
-		// END Management of CommunicationsChannels		
-		
-		// BEGIN Management of VCS
-		if (isNotNull(currentProg,"SVNRepository"))
-		{
-			SvnRepository repository = new SvnRepository();
-			repository.setBrowse(((String)((JSONObject)currentProg.get("SVNRepository")).get("browse")));
-			repository.setUrl(((String)((JSONObject)currentProg.get("SVNRepository")).get("location")));
-			project.getVcsRepositories().add(repository);
-		}
-		if (isNotNull(currentProg,"CVSRepository"))
-		{
-			CvsRepository repository = new CvsRepository();
-			repository.setBrowse(((String)((JSONObject)currentProg.get("CVSRepository")).get("browse")));
-			repository.setUrl(((String)((JSONObject)currentProg.get("CVSRepository")).get("anon-root")));
-			project.getVcsRepositories().add(repository);
-		}
-		// END Management of VCS
-		
-		
-		// BEGIN Management of Licenses
-		if ((isNotNull(currentProg,"licenses"))){			
-			JSONArray licenses = (JSONArray)currentProg.get("licenses");
-			Iterator<JSONObject> iter  = licenses.iterator();
-		    License license = null;
-			
-			while(iter.hasNext()){					
-				JSONObject entry = (JSONObject)iter.next();			
-				license = platform.getProjectRepositoryManager().getProjectRepository().getLicenses().findOneByName((String)entry.get("name"));
-				if (license == null) {
-					license = new License();
-					license.setName((String)entry.get("name"));
-					license.setUrl((String)entry.get("url"));
-					platform.getProjectRepositoryManager().getProjectRepository().getLicenses().add(license);
-					project.getLicenses().add(license);
-				}
-			}
-		}
-		// END Management of Licenses 
+			    		
+			    		else if (type.equals("Discussion"))
+						{
+							Discussion discussion = new Discussion();
+							
+							String s = nl.item(i).getFirstChild().getLastChild().getAttributes().item(0).getNodeValue();
+							discussion.setUrl(s);
+							discussion.setNonProcessable(true);
+							project.getDiscussion().add(discussion);
+						}
+			    		else if (type.equals("Donations"))
+						{
+							Donation donation = new Donation();
+							
+							String s = nl.item(i).getFirstChild().getLastChild().getAttributes().item(0).getNodeValue();
+							donation.setComment(s);
+							project.setDonation(donation);
+						}
+			    		else if (type.toLowerCase().equals("wiki"))
+			    		{
+			    			Wiki wiki = new Wiki();
+							String s = nl.item(i).getFirstChild().getLastChild().getAttributes().item(0).getNodeValue();
+							wiki.setUrl(s);
+							wiki.setNonProcessable(true);
+							project.getCommunicationChannels().add(wiki);
+			    		}
+			    		
+			    		else if (type.toLowerCase().equals("svn"))
+						{
+							org.jsoup.nodes.Document doc2;
+							
+							String URL_PROJECT = nl.item(i).getFirstChild().getLastChild().getAttributes().item(0).getNodeValue();
+							doc2 = Jsoup.connect(URL_PROJECT).timeout(10000).get();
+							org.jsoup.nodes.Element content = doc2.getElementById("access_urls");
+							Elements els = content.getElementsByTag("a");
+							for (org.jsoup.nodes.Element element : els) {
+								SvnRepository repository = new SvnRepository();
+								repository.setName(type + "_" +projectId);
+								String urlSVN = element.attr("data-url");
+								if (urlSVN != null)
+									if(urlSVN.startsWith("svn checkout "))
+										urlSVN = urlSVN.substring(13);
+								repository.setUrl(urlSVN);
+								project.getVcsRepositories().add(repository);
+							}
+						
+						}
+			    		else if (type.toLowerCase().equals("git"))
+						{
+							org.jsoup.nodes.Document doc2;
+							
+							String URL_PROJECT = nl.item(i).getFirstChild().getLastChild().getAttributes().item(0).getNodeValue();
+							doc2 = Jsoup.connect(URL_PROJECT).timeout(10000).get();
+							org.jsoup.nodes.Element content = doc2.getElementById("access_urls");
+							Elements els = content.getElementsByTag("a");
+							for (org.jsoup.nodes.Element element : els) {
+								GitRepository repository = new GitRepository();
+								repository.setName(type + "_" +projectId);
+								String urlSVN = element.attr("data-url");
+								if (urlSVN != null)
+									if(urlSVN.startsWith("git clone "))
+										urlSVN = urlSVN.substring(9);
+								repository.setUrl(urlSVN);
+								project.getVcsRepositories().add(repository);
+							}
+						
+						}
+						
+					}	
+					
+		    	}
+		    	catch (Exception e)
+				{
+		    		project.getExecutionInformation().setInErrorState(true);
+					logger.info("Project " + projectId + " unable to import feature " + type);
 
-		
-		// BEGIN Management of Persons
-		if ((isNotNull(currentProg,"maintainers"))){			
-			JSONArray maintainers = (JSONArray)currentProg.get("maintainers");
-			Iterator<JSONObject> iter  = maintainers.iterator();
-		    Person maintainer = null;
-			Role role = platform.getProjectRepositoryManager().getProjectRepository().getRoles().findOneByName("sf_maintaners");
+				}
+				
+			}		
+			// BEGIN Management of CommunicationsChannels
+			nl = nList.getElementsByTagName("mailing-list");
+			for (int i=0; i < nl.getLength(); i++){					
+		    	MailingList mailingList = null;
+		    	try
+		    	{
+			    	mailingList = new MailingList();
+			    	mailingList.setUrl(nl.item(i).getFirstChild().getLastChild().getAttributes().item(0).getNodeValue());
+			    	if(mailingList.getUrl().startsWith("news://")
+							|| mailingList.getUrl().startsWith("git://")
+							|| mailingList.getUrl().startsWith("svn://"))
+			    		mailingList.setNonProcessable(false);
+			    	else mailingList.setNonProcessable(true);
+					project.getCommunicationChannels().add(mailingList);
+		    	}
+		    	catch (Exception e)
+				{
+		    		project.getExecutionInformation().setInErrorState(true);
+					logger.info("Project " + projectId + " unable to import mailing list");
+
+				}
+				
+			}
+			// END Management of CommunicationsChannels		
+//			
+//			// BEGIN Management of VCS
+//			if (isNotNull(currentProg,"SVNRepository"))
+//			{
+//				SvnRepository repository = new SvnRepository();
+//				repository.setBrowse(((String)((JSONObject)currentProg.get("SVNRepository")).get("browse")));
+//				repository.setUrl(((String)((JSONObject)currentProg.get("SVNRepository")).get("location")));
+//				project.getVcsRepositories().add(repository);
+//			}
+//			if (isNotNull(currentProg,"CVSRepository"))
+//			{
+//				CvsRepository repository = new CvsRepository();
+//				repository.setBrowse(((String)((JSONObject)currentProg.get("CVSRepository")).get("browse")));
+//				repository.setUrl(((String)((JSONObject)currentProg.get("CVSRepository")).get("anon-root")));
+//				project.getVcsRepositories().add(repository);
+//			}
+//			// END Management of VCS
 			
-			while(iter.hasNext()){					
-				JSONObject entry = (JSONObject)iter.next();
-				maintainer = platform.getProjectRepositoryManager().getProjectRepository().getPersons().findOneByName((String)entry.get("name"));
+			// BEGIN Management of Licenses
+		    nl = nList.getElementsByTagName("license");
+			for (int i=0; i < nl.getLength(); i++){					
+		    	
+		    	try
+		    	{
+		    		License license = platform.getProjectRepositoryManager().getProjectRepository().getLicenses().findOneByName("");
+			    	if(license == null)
+			    	{
+						license = new License();
+			    		license.setName(nl.item(i).getFirstChild().getNodeValue());
+			    		platform.getProjectRepositoryManager().getProjectRepository().getLicenses().add(license);
+			    	}
+			    	project.getLicenses().add(license);
+					
+		    	}
+		    	catch (Exception e)
+				{
+		    		project.getExecutionInformation().setInErrorState(true);
+		    		logger.info("Project " + projectId + " unable to import license");
+
+				}
 				
-				if ((maintainer != null) & checkRole(maintainer, role) )
-					break;
-				
-				if (maintainer == null) {
-						maintainer = new Person();
-						maintainer.setName((String)entry.get("name"));
-						maintainer.setHomePage((String)entry.get("homepage"));
+			}
+		    // END Management of Licenses 
+			
+			// BEGIN Management of Persons
+			Role role = platform.getProjectRepositoryManager().getProjectRepository().
+					getRoles().findOneByName("maintainer");
+			if (role==null)
+			{
+				role = new Role();
+				role.setName("maintainer");
+				platform.getProjectRepositoryManager().getProjectRepository().getRoles().add(role);
+				platform.getProjectRepositoryManager().getProjectRepository().sync();
+			}
+
+			nl = nList.getElementsByTagName("maintainer");
+			for (int i=0; i < nl.getLength(); i++){					
+		    	
+		    	try
+		    	{
+		    		String name = "";
+		    		name = nl.item(i).getFirstChild().getNodeValue();
+		    		Person maintainer = platform.getProjectRepositoryManager().
+		    				getProjectRepository().getPersons().findOneByName(
+		    						nl.item(i).getFirstChild().getFirstChild().getFirstChild().getNodeValue());
+		    		if ((maintainer != null) & !checkRole(maintainer, role) )
+		    		{
 						maintainer.getRoles().add(role);
-						platform.getProjectRepositoryManager().getProjectRepository().getPersons().add(maintainer);
-						project.getPersons().add(maintainer);
-						break;
+		    		}
+					if(maintainer == null)
+			    	{
+						maintainer = new Person();
+			    		
+						maintainer.setName(nl.item(i).getFirstChild().getFirstChild().getFirstChild().getNodeValue());
+						maintainer.setHomePage(nl.item(i).getFirstChild().getLastChild().getAttributes().item(0).getNodeValue());
+			    		maintainer.getRoles().add(role);
+			    		platform.getProjectRepositoryManager().getProjectRepository().getPersons().add(maintainer);
+			    	}
+			    	project.getPersons().add(maintainer);
+		    	}
+		    	catch (Exception e)
+				{
+		    		project.getExecutionInformation().setInErrorState(true);
+					logger.info("Project " + projectId + " unable to import person (mainteners)");
 				}
 			}
-		}
-		
-		if ((isNotNull(currentProg,"developers"))){			
-			JSONArray developers = (JSONArray)currentProg.get("developers");
-			Iterator<JSONObject> iter  = developers.iterator();
-		    Person developer = null;
-			Role role = platform.getProjectRepositoryManager().getProjectRepository().getRoles().findOneByName("sf_developers");
-
-		    while(iter.hasNext()){					
-				JSONObject entry = (JSONObject)iter.next();
-				developer = platform.getProjectRepositoryManager().getProjectRepository().getPersons().findOneByName((String)entry.get("name"));
-				
-				if ((developer != null) & checkRole(developer, role) )
-					break;
-
-				if (developer == null) {	
-					developer = new Person();
-					developer.setName((String)entry.get("name"));
-					developer.setHomePage((String)entry.get("homepage"));					
-					developer.getRoles().add(role);
-					platform.getProjectRepositoryManager().getProjectRepository().getPersons().add(developer);
-					project.getPersons().add(developer);
-					break;
-				}				
+			role = null;
+			role = platform.getProjectRepositoryManager().getProjectRepository().getRoles().findOneByName("developer");
+			if (role==null)
+			{
+				role = new Role();
+				role.setName("developer");
+				platform.getProjectRepositoryManager().getProjectRepository().getRoles().add(role);
+				platform.getProjectRepositoryManager().getProjectRepository().sync();
 			}
+
+			nl = nList.getElementsByTagName("developer");
+			for (int i=0; i < nl.getLength(); i++){					
+		    	
+		    	try
+		    	{
+		    		String name = "";
+		    		name = nl.item(i).getFirstChild().getNodeValue();
+		    		Person developer = platform.getProjectRepositoryManager().getProjectRepository().getPersons().findOneByName(nl.item(i).getFirstChild().getFirstChild().getFirstChild().getNodeValue());
+		    		if ((developer != null) & !checkRole(developer, role) )
+		    		{
+						developer.getRoles().add(role);
+		    		}
+					if(developer == null)
+			    	{
+						developer = new Person();
+			    		
+						developer.setName(nl.item(i).getFirstChild().getFirstChild().getFirstChild().getNodeValue());
+						developer.setHomePage(nl.item(i).getFirstChild().getLastChild().getAttributes().item(0).getNodeValue());
+			    		developer.getRoles().add(role);
+			    		platform.getProjectRepositoryManager().getProjectRepository().getPersons().add(developer);
+			    	}
+			    	project.getPersons().add(developer);
+		    	}
+		    	catch (Exception e)
+				{
+		    		project.getExecutionInformation().setInErrorState(true);
+					logger.info("Project " + projectId + " unable to import person (mainteners)");
+				}
+			}
+			
+			if (!projectToBeUpdated) {
+				platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
+			}
+			
+			platform.getProjectRepositoryManager().getProjectRepository().sync();
+			logger.info("Project " + projectId + " is imported");
 		}
-		// END Management of Persons
-		
-		if (!projectToBeUpdated) {
-			platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
+		catch(MalformedURLException e)
+		{
+			if (project.getExecutionInformation()!=null)
+				project.getExecutionInformation().setInErrorState(true);
+			logger.error("Project " + projectId + " is NOT imported");
 		}
-		
-		platform.getProjectRepositoryManager().getProjectRepository().sync();	
+		catch(IOException e)
+		{
+			if (project.getExecutionInformation()!=null)
+				project.getExecutionInformation().setInErrorState(true);
+			logger.error("Project " + projectId + " is NOT imported");
+		}
+		catch(Exception e)
+		{
+			if (project.getExecutionInformation()!=null)
+				project.getExecutionInformation().setInErrorState(true);
+			logger.error("Project " + projectId + " is NOT imported");
+		}
 		return project;		
 		
 	}
 	
 	
+	private String getXMLNodeValue(Element nList, String key) {
+		
+		NodeList nl = nList.getElementsByTagName(key);
+		String result = null;
+		try
+		{
+		if (nl != null)
+			if (nl.getLength()>0)
+				if (nl.item(0).getFirstChild() != null)
+					result = nl.item(0).getFirstChild().getNodeValue();
+		}
+		catch(Exception e)
+		{
+			logger.error("Retrive value for key:" + key +" trhows an exception.");
+		}
+		return result;
+		
+	}
 	private boolean checkRole(Person p, Role r) {
 		boolean hasRole = false;
 		Iterator<Role> iroles = null;

@@ -62,7 +62,7 @@ public class MetricExecutorTest {
 		ProjectExecutor pe = new ProjectExecutor(platform, project);
 		pe.run();
 		
-		//juri Commenti
+		//JURI Commented this statement generate an Exception
 		//assertTrue(project.getInErrorState());
 		assertEquals(startDate, project.getLastExecuted());
 		

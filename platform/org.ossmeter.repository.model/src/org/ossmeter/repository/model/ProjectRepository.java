@@ -19,6 +19,7 @@ public class ProjectRepository extends PongoDB {
 	protected LicenseCollection licenses = null;
 	protected MetricProviderCollection metricProviders = null;
 	protected SchedulingInformationCollection schedulingInformation = null;
+	protected CompanyCollection companies = null;
 	
 	
 	
@@ -54,6 +55,10 @@ public class ProjectRepository extends PongoDB {
 		return schedulingInformation;
 	}
 	
+	public CompanyCollection getCompanies() {
+		return companies;
+	}
+	
 	
 	@Override
 	public void setDb(DB db) {
@@ -74,5 +79,7 @@ public class ProjectRepository extends PongoDB {
 		pongoCollections.add(metricProviders);
 		schedulingInformation = new SchedulingInformationCollection(db.getCollection("schedulingInformation"));
 		pongoCollections.add(schedulingInformation);
+		companies = new CompanyCollection(db.getCollection("companies"));
+		pongoCollections.add(companies);
 	}
 }

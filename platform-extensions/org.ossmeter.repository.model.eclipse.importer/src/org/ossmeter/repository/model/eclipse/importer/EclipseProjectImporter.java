@@ -36,6 +36,7 @@ import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.CommunicationChannel;
+import org.ossmeter.repository.model.Company;
 import org.ossmeter.repository.model.License;
 import org.ossmeter.repository.model.Person;
 import org.ossmeter.repository.model.Project;
@@ -44,11 +45,11 @@ import org.ossmeter.repository.model.VcsRepository;
 import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
 import org.ossmeter.repository.model.cc.forum.Forum;
 import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
+import org.ossmeter.repository.model.cc.wiki.Wiki;
 import org.ossmeter.repository.model.eclipse.Documentation;
 import org.ossmeter.repository.model.eclipse.EclipsePlatform;
 import org.ossmeter.repository.model.eclipse.EclipseProject;
 import org.ossmeter.repository.model.eclipse.MailingList;
-import org.ossmeter.repository.model.eclipse.Wiki;
 import org.ossmeter.repository.model.eclipse.importer.util.XML;
 import org.ossmeter.repository.model.eclipse.importer.util.NNTP.NTTPManager;
 import org.ossmeter.repository.model.vcs.cvs.CvsRepository;
@@ -184,7 +185,11 @@ public class EclipseProjectImporter {
 		}
 		return sb.toString();
 	}
-	
+	/**
+	 * Import all eclipse project present in the on-line repository.
+	 *
+	 * @param  platform Ossmeter Platform object
+	 */
 	public void importAll(Platform platform) 
 	{		
 		try {
@@ -227,6 +232,51 @@ public class EclipseProjectImporter {
 			// TODO Auto-generated catch block
 			logger.error("EclipseProject error: Unable to retrive eclipse project's list");
 		} 
+		logger.info("Importer has finished!");
+	}
+	
+	public void importProjects(Platform platform, int numberfOfProjects) 
+	{		
+		try {
+			NTTPManager man = new NTTPManager();
+			NNTPUrllist = man.GetListNNTPGroups();
+			
+			logger.info("Retrieving the list of Eclipse projects...");
+
+			//InputStream is = new FileInputStream(new File("C:\\eclipse.json"));
+			InputStream is = new URL("http://projects.eclipse.org/json/projects/all").openStream();
+			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+			String jsonText = readAll(rd);		
+	
+			JSONObject obj=(JSONObject)JSONValue.parse(jsonText);
+			Iterator iter = obj.entrySet().iterator();
+			Map.Entry jsonAr =  null;
+			if (iter.hasNext())
+				jsonAr = (Map.Entry) iter.next(); 
+			
+			Object o =jsonAr.getValue();
+			Iterator iter2 = ((JSONObject)jsonAr.getValue()).entrySet().iterator();
+			//Max iteration 0
+			//
+			int MAX_ITERATION = 0;
+			while (iter2.hasNext() &&
+					 MAX_ITERATION <= numberfOfProjects) 
+			{
+				Map.Entry entry = (Map.Entry) iter2.next();
+				EclipseProject pi = (EclipseProject)platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByShortName((String) entry.getKey());
+				EclipseProject project = importProject((String) entry.getKey(), platform);
+				importedProjects.add(project);
+				MAX_ITERATION++;
+			}			
+			fixPendingParentReferences();
+			cleanParent();
+			
+		} 
+		catch (IOException e1) {
+			// TODO Auto-generated catch block
+			logger.error("EclipseProject error: Unable to retrive eclipse project's list");
+		} 
+		logger.info("Importer has finished!");
 	}
 	
 
@@ -238,14 +288,14 @@ public class EclipseProjectImporter {
 		
 		Iterable<Project> pl = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(projectId);
 		Iterator<Project> iprojects = pl.iterator();
-		EclipseProject p = null;
+		
 		Project projectTemp = null;
 		EclipseProject project = new EclipseProject();
 		Boolean projectToBeUpdated = false;
 		while (iprojects.hasNext()) {
 			projectTemp = iprojects.next();
 			if (projectTemp instanceof EclipseProject) {
-				p = (EclipseProject)projectTemp;
+				project = (EclipseProject)projectTemp;
 				projectToBeUpdated = true;
 				logger.info("-----> project " + projectId + " already in the repository. Its metadata will be updated.");
 				break;
@@ -377,7 +427,7 @@ public class EclipseProjectImporter {
 					forum.setName((String)entry.get("name"));
 					forum.setUrl((String)entry.get("url"));
 					if(forum.getUrl().startsWith("news://")
-							|| forum.getUrl().startsWith("git://")
+							|| forum.getUrl().startsWith("git:	//")
 							|| forum.getUrl().startsWith("svn://"))
 						forum.setNonProcessable(false);
 					else forum.setNonProcessable(true);
@@ -388,6 +438,10 @@ public class EclipseProjectImporter {
 			
 			for (NntpNewsGroup cc : getNntpNewsGroup(projectId)) {
 				project.getCommunicationChannels().add(cc);
+			}
+			
+			for (Company cc : getCompany(projectId, platform)) {
+				project.getCompanies().add(cc);
 			}
 		// END Management of Communication Channels
 						
@@ -405,7 +459,6 @@ public class EclipseProjectImporter {
 					bugzilla.setComponent((String)((JSONObject)object).get("component"));
 					bugzilla.setCgiQueryProgram((String)((JSONObject)object).get("query_url"));
 					bugzilla.setUrl((String)((JSONObject)object).get("create_url"));
-					bugzilla.setComponent((String)((JSONObject)object).get("component"));
 					bugzilla.setProduct((String)((JSONObject)object).get("product"));
 					project.getBugTrackingSystems().add(bugzilla);
 				}				
@@ -478,11 +531,13 @@ public class EclipseProjectImporter {
 				project.getPersons().add(person);
 			}
 		} catch (ParserConfigurationException | SAXException | IOException e) {
+			project.getExecutionInformation().setInErrorState(true);
 			logger.error("Unable to import " + projectId + "project.");
-			return null;
+			return project;
 		} catch (Exception e) {
+			project.getExecutionInformation().setInErrorState(true);
 			logger.error("Unable to import " + projectId + "project.");
-			return null;
+			return project;
 		}
 			
 		if (!projectToBeUpdated) {
@@ -495,7 +550,51 @@ public class EclipseProjectImporter {
 		return project;
 		
 	}
-
+	///////
+	private ArrayList<Company> getCompany(String projectShortName, Platform platform)
+	{
+		ArrayList<Company> result = new ArrayList<Company>(); 
+		org.jsoup.nodes.Document doc;
+		org.jsoup.nodes.Element content;
+		Integer numPagesToBeScanned;
+		String url = null;	
+		List<String> toRetry = new ArrayList<String>();
+		String URL_PROJECT = "https://projects.eclipse.org/projects/"+ projectShortName +"/who";
+		url = URL_PROJECT;
+		try {
+			doc = Jsoup.connect(URL_PROJECT).timeout(10000).get();
+			Element first = doc.getElementById("block-system-main").
+						getElementsByClass("field-name-field-active-member-companies").
+							first().getElementsByClass("project-active-members").first();
+			if(first != null)
+			{
+				Elements e = first.getElementsByTag("li");
+				for (int i = 0; i < e.size(); i++){
+					String companyUrl = e.get(i).getElementsByTag("a").attr("href");
+					Company company = platform.getProjectRepositoryManager().getProjectRepository().getCompanies().findOneByName(companyUrl);
+					if (company == null)
+					{
+						company = new Company();
+						company.setName(companyUrl);
+						company.setUrl(companyUrl);
+						platform.getProjectRepositoryManager().getProjectRepository().getCompanies().add(company);
+						platform.getProjectRepositoryManager().getProjectRepository().sync();
+					}
+					
+					result.add(company);				
+				}
+			}
+			return result;
+		} catch (IOException e1) {
+			logger.error(projectShortName + " importer failed to load NNTP news group url");
+			return new ArrayList<Company>();
+		} catch (Exception e) {
+			logger.info("The project " + projectShortName +" does not have a company");
+			// TODO: handle exception
+		}
+		return result;
+	}
+	///////
 	
 	private ArrayList<NntpNewsGroup> getNntpNewsGroup(String projectShortName)
 	{
@@ -514,10 +613,40 @@ public class EclipseProjectImporter {
 				NntpNewsGroup NNTPuRL = null;
 				NNTPuRL = new NntpNewsGroup();
 				NNTPuRL.setName(projectShortName);
-				NNTPuRL.setUrl(e.get(i).attr("href"));
-				if (NNTPuRL.getUrl().startsWith("news://"))
+				//NNTPuRL.setUrl(e.get(i).attr("href"));
+				String tempUrl = e.get(i).attr("href");
+				if (tempUrl.startsWith("news://"))
+				{
+					if(tempUrl.startsWith("news://news.eclipse.org"))
+					{
+						NNTPuRL.setUsername("exquisitus");
+						NNTPuRL.setPassword("flinder1f7");
+						NNTPuRL.setPort(119);
+						
+						NNTPuRL.setNewsGroupName(tempUrl.substring(24));
+						NNTPuRL.setUrl("news.eclipse.org/");
+						NNTPuRL.setAuthenticationRequired(true);
+					}
+					else
+					{
+						
+						if (tempUrl.contains("/"))
+						{
+							NNTPuRL.setUrl(tempUrl.substring(0, tempUrl.lastIndexOf("/")+1));
+							NNTPuRL.setNewsGroupName(tempUrl.substring(tempUrl.lastIndexOf("/")+1));
+						}
+						else
+							NNTPuRL.setUrl(tempUrl);
+					}
+					
+					
 					NNTPuRL.setNonProcessable(false);
-				else NNTPuRL.setNonProcessable(true);
+				}	
+				else 
+				{
+					NNTPuRL.setUrl(tempUrl);
+					NNTPuRL.setNonProcessable(true);
+				}
 					
 				result.add(NNTPuRL);				
 			}

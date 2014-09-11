@@ -24,7 +24,6 @@ class EclipseProject extends Project {
 	attr String paragraphUrl;
 	attr String descriptionUrl;
 	attr String downloadsUrl;
-	attr String homePage;
 	attr String projectplanUrl;
 	attr String updatesiteUrl;
 	attr String state;
@@ -66,10 +65,6 @@ class MailingList extends CommunicationChannel{
    attr String description;
    attr String type;
    attr String archiveUrl;
-}
-
-class Wiki extends CommunicationChannel{
-
 }
 
 class Documentation extends CommunicationChannel{

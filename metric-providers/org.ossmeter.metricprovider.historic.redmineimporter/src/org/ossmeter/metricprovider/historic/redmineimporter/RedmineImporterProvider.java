@@ -85,7 +85,6 @@ public class RedmineImporterProvider implements IHistoricalMetricProvider {
 			RedmineImporter epi = new RedmineImporter("http://mancoosi.di.univaq.it/redmine/","369fb37d8ca43f186505f588a14809a294aea732","juri","juri");
 			mongo = new Mongo();
 			PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
-			//Lo posso prendere da qualche altra parte
 			Platform platform = new Platform(mongo);
 			ep = epi.importProject(project.getShortName(), platform);
 			mongo.close();
