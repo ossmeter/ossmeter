@@ -12,7 +12,7 @@
 	</grammars>
 
 	<resources base="http://www.ossmeter.com/api">
-		<resource path="/p">
+		<resource path="/projects">
 			<method name="GET" id="ProjectList">
 				<request>
 					<param name="page" required="false" default="1" style="query" />
@@ -23,7 +23,7 @@
 				</response>
 			</method>
 		</resource>
-		<resource path="/p/{projectId}">
+		<resource path="/projects/p/{projectId}">
 			<param required="true" style="template" type="xs:string" name="projectId" />
 			<method name="GET" id="Project">
 				<response>
@@ -31,7 +31,7 @@
 				</response>
 			</method>
 		</resource>
-		<resource path="/p/{projectId}/m/{metricId}">
+		<resource path="/projects/p/{projectId}/m/{metricId}">
 			<param required="true" style="template" type="xs:string" name="projectId" />
 			<param required="true" style="template" type="xs:string" name="metricId" />
 			<method name="GET" id="Metric">
@@ -45,7 +45,7 @@
 				</response>							
 			</method>
 		</resource>
-		<resource path="/p/{projectId}/v/{metricId}">
+		<resource path="/projects/p/{projectId}/v/{metricId}">
 			<param required="true" style="template" type="xs:string" name="projectId" />
 			<param required="true" style="template" type="xs:string" name="metricId" />
 			<method name="GET" id="MetricVisualisation">

@@ -30,7 +30,10 @@ public class MetricVisualisationResource extends ServerResource {
 		
 		String projectName = (String) getRequest().getAttributes().get("name");
 		String metricName = (String) getRequest().getAttributes().get("metricId");
-		String queryString = null;// FIXME: need to implement this
+		
+		String add = getQueryValue("agg");
+		String start = getQueryValue("startDate");
+		String end = getQueryValue("endDate");
 		
 		Platform platform = Platform.getInstance();
 		ProjectRepository projectRepo = platform.getProjectRepositoryManager().getProjectRepository();
