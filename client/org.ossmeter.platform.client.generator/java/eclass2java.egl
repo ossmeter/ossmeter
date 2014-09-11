@@ -1,5 +1,5 @@
 [%import "javautil.eol";%]
-[%import "ecoreutil.eol";%]
+[%import "../util/ecoreutil.eol";%]
 //package [%=c.ePackage.name%];
 
 import java.util.*;

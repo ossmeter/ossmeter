@@ -1,4 +1,4 @@
-import "ecoreutil.eol";
+import "../util/ecoreutil.eol";
 
 operation OSS!EClass getAbstractModifier() {
 	if (self.abstract) return " abstract";
