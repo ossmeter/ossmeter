@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 
@@ -38,13 +39,17 @@ public class MetricVisualisation {
 	public JsonNode getVis() {
 		return vis;
 	}
-	
 	public JsonNode visualise(DB db) {
+		return visualise(db, new BasicDBObject());
+		
+	}
+	
+	public JsonNode visualise(DB db, BasicDBObject query) {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode visualisation = mapper.createObjectNode();
 		
 		DBCollection collection = db.getCollection(metricId); // TODO metric ID won't always be the correct identififer
-		ArrayNode datatable = chart.createDatatable(vis.get("datatable"), collection);
+		ArrayNode datatable = chart.createDatatable(vis.get("datatable"), collection, query);
 		
 		visualisation.put("name", vis.path("name").textValue());
 		visualisation.put("type", vis.path("type").textValue());

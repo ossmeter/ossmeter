@@ -24,7 +24,7 @@ public class RawProjectResource extends ServerResource {
 		responseHeaders.add(new Header("Access-Control-Allow-Origin", "*"));
 		responseHeaders.add(new Header("Access-Control-Allow-Methods", "GET"));
 		
-		String projectName = (String) getRequest().getAttributes().get("name");
+		String projectName = (String) getRequest().getAttributes().get("projectid");
 		
 		Platform platform = Platform.getInstance();
 		ProjectRepository projectRepo = platform.getProjectRepositoryManager().getProjectRepository();

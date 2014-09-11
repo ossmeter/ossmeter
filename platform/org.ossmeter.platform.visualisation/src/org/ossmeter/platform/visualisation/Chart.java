@@ -53,7 +53,7 @@ public class Chart {
 }
 	 */
 
-	protected ArrayNode createDatatable(JsonNode datatableSpec, DBCollection collection) {
+	protected ArrayNode createDatatable(JsonNode datatableSpec, DBCollection collection, DBObject query) {
 		String rowName = null;
 		if (datatableSpec.has("rows")) {
 			// TODO: May need more checking here if rows can be more complex
@@ -66,7 +66,8 @@ public class Chart {
 		ArrayNode results = mapper.createArrayNode();
 		
 		if (rowName != null){
-			Iterator<DBObject> it = collection.find().iterator();
+			Iterator<DBObject> it = collection.find(query).iterator();
+			System.out.println(query);
 			while(it.hasNext()) {
 				DBObject dbobj = it.next();
 				BasicDBList rows = (BasicDBList)dbobj.get(rowName);
@@ -95,7 +96,7 @@ public class Chart {
 				}
 			}
 		} else {
-			Iterator<DBObject> it = collection.find().iterator();
+			Iterator<DBObject> it = collection.find(query).iterator();
 			while(it.hasNext()) {
 				DBObject dbobj = it.next();
 				ObjectNode r = mapper.createObjectNode();

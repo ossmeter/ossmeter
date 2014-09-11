@@ -1,5 +1,8 @@
 package org.ossmeter.platform.client.api;
 
+import java.text.ParseException;
+
+import org.ossmeter.platform.Date;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.visualisation.MetricVisualisation;
 import org.ossmeter.platform.visualisation.MetricVisualisationExtensionPointManager;
@@ -14,7 +17,9 @@ import org.restlet.util.Series;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
+import com.mongodb.QueryBuilder;
 
 public class MetricVisualisationResource extends ServerResource {
 
@@ -28,32 +33,52 @@ public class MetricVisualisationResource extends ServerResource {
 		responseHeaders.add(new Header("Access-Control-Allow-Origin", "*"));
 		responseHeaders.add(new Header("Access-Control-Allow-Methods", "GET"));
 		
-		String projectName = (String) getRequest().getAttributes().get("name");
-		String metricName = (String) getRequest().getAttributes().get("metricId");
+		String projectName = (String) getRequest().getAttributes().get("projectid");
+		String metricId = (String) getRequest().getAttributes().get("metricId");
 		
-		String add = getQueryValue("agg");
+		String agg = getQueryValue("agg");
 		String start = getQueryValue("startDate");
 		String end = getQueryValue("endDate");
+		
+		QueryBuilder builder = QueryBuilder.start();
+		if (agg != null && agg != "") {
+//			builder.... // TODO
+		}
+		try {
+			if (start != null && start != "") {
+				builder.and("__datetime").greaterThanEquals(new Date(start).toJavaDate());
+			}
+			if (end != null && end != "") {
+				builder.and("__datetime").lessThanEquals(new Date(end).toJavaDate());
+			}
+		} catch (ParseException e) {
+			return Util.generateErrorMessage(generateRequestJson(projectName, metricId), "Invalid date. Format must be YYYYMMDD.").toString();
+		}
+		
+		BasicDBObject query = (BasicDBObject) builder.get(); 
+		
+//		System.out.println("Query: " + query);
 		
 		Platform platform = Platform.getInstance();
 		ProjectRepository projectRepo = platform.getProjectRepositoryManager().getProjectRepository();
 		
+		System.out.println("Looking for project: " + projectName);
 		Project project = projectRepo.getProjects().findOneByShortName(projectName);
 		if (project == null) {
 			getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			return Util.generateErrorMessage(generateRequestJson(projectName, metricName), "No project was found with the requested name.").toString();
+			return Util.generateErrorMessage(generateRequestJson(projectName, metricId), "No project was found with the requested name.").toString();
 		}
 		
 		MetricVisualisationExtensionPointManager manager = MetricVisualisationExtensionPointManager.getInstance();
 		manager.getRegisteredVisualisations();
-		MetricVisualisation vis = manager.findVisualisationById(metricName);
+		MetricVisualisation vis = manager.findVisualisationById(metricId);
 		
 		if (vis == null) {
-			return Util.generateErrorMessage(generateRequestJson(projectName, metricName), "No visualiser found with specified ID.").toString();
+			return Util.generateErrorMessage(generateRequestJson(projectName, metricId), "No visualiser found with specified ID.").toString();
 		}
 		
 		DB db = platform.getMetricsRepository(project).getDb();
-		JsonNode visualisation = vis.visualise(db);
+		JsonNode visualisation = vis.visualise(db, query);
 		return visualisation.toString();
 	}
 	
