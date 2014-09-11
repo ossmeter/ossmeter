@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 
 namespace ossmeterclient
 {
-	public[%=c.getAbstractModifier()%] class [%=c.name%] [%=c.getCSharpExtends()%] 
+	[%=c.getAbstractModifier()%] class [%=c.name%] [%=c.getCSharpExtends()%] 
 	{
 
 	[%for (sf in c.eStructuralFeatures.select(sf|sf.isMany and not sf.eType.isIgnored())) { /**/ %]

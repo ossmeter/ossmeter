@@ -9,9 +9,7 @@ operation OSS!EClass getCSharpExtends() {
 	if (self.eSuperTypes.size() > 0) {
 		return ": " + self.eSuperTypes.get(0).getJavaName();
 	}
-	else {
-		return "Object";
-	}
+	return "";
 }
 
 operation OSS!EClassifier getJavaBoxedName() {
