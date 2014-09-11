@@ -1,5 +1,9 @@
 package org.ossmeter.platform.client.api;
 
+import java.io.IOException;
+import java.text.ParseException;
+
+import org.ossmeter.platform.Date;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.repository.model.MetricProviderExecution;
@@ -11,11 +15,16 @@ import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 import org.restlet.util.Series;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.QueryBuilder;
 
 public class RawMetricResource extends ServerResource {
 
@@ -33,36 +42,65 @@ public class RawMetricResource extends ServerResource {
 		responseHeaders.add(new Header("Access-Control-Allow-Origin", "*"));
 		responseHeaders.add(new Header("Access-Control-Allow-Methods", "GET"));
 		
-//		responseHeaders.add("Access-Control-Allow-Origin", "*");
-//	    responseHeaders.add("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");
-//	    responseHeaders.add("Access-Control-Allow-Headers", "Content-Type");
-//	    responseHeaders.add("Access-Control-Allow-Headers", "authCode");
-//	    responseHeaders.add("Access-Control-Allow-Headers", "origin, x-requested-with, content-type");
-	    
+		String projectId = (String) getRequest().getAttributes().get("projectid");
+		String metricId = (String) getRequest().getAttributes().get("metricid");
 		
+		// FIXME: This and MetricVisualisationResource.java are EXACTLY the same.
+		String agg = getQueryValue("agg");
+		String start = getQueryValue("startDate");
+		String end = getQueryValue("endDate");
 		
-		String projectName = (String) getRequest().getAttributes().get("name");
-		String metricName = (String) getRequest().getAttributes().get("metricId");
+		QueryBuilder builder = QueryBuilder.start();
+		if (agg != null && agg != "") {
+//			builder.... // TODO
+		}
+		try {
+			if (start != null && start != "") {
+				builder.and("__datetime").greaterThanEquals(new Date(start).toJavaDate());
+			}
+			if (end != null && end != "") {
+				builder.and("__datetime").lessThanEquals(new Date(end).toJavaDate());
+			}
+		} catch (ParseException e) {
+			return Util.generateErrorMessage(generateRequestJson(projectId, metricId), "Invalid date. Format must be YYYYMMDD.").toString();
+		}
+		
+		BasicDBObject query = (BasicDBObject) builder.get(); 
 		
 		Platform platform = Platform.getInstance();
 		ProjectRepository projectRepo = platform.getProjectRepositoryManager().getProjectRepository();
 		
-		Project project = projectRepo.getProjects().findOneByShortName(projectName);
+		Project project = projectRepo.getProjects().findOneByShortName(projectId);
 		if (project == null) {
 			getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			return Util.generateErrorMessage(generateRequestJson(projectName, metricName), "No project was found with the requested name.").toString();
+			return Util.generateErrorMessage(generateRequestJson(projectId, metricId), "No project was found with the requested name.").toString();
 		}
 
 		// Get collection from DB
 		DB projectDB = platform.getMetricsRepository(project).getDb();
 		
-		// TODO: essentially we want a mongoexport of the collection. Can we stream it?
-		// However this may also want to be filtered and aggregated? 
+		// TODO: essentially we want a mongoexport of the collection. 
+		// Can we stream it? Page it?
+		// However this may also want to be filtered and aggregated?
+		// TODO: Need to lookup the collection name from the ID.
 		
+		DBCursor cursor = projectDB.getCollection("TODO").find();
 		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode n = mapper.createObjectNode();
-		n.put("status", "unimplemented - sorry :(");
-		return n.toString();
+		ArrayNode results = mapper.createArrayNode();
+		
+		while (cursor.hasNext()) {
+			try {
+				results.add(mapper.readTree(cursor.next().toString()));
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		cursor.close();
+		
+		return results.toString();
 	}
 	
 	

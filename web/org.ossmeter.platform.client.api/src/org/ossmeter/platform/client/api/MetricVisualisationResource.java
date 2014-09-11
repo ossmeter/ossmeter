@@ -34,7 +34,7 @@ public class MetricVisualisationResource extends ServerResource {
 		responseHeaders.add(new Header("Access-Control-Allow-Methods", "GET"));
 		
 		String projectName = (String) getRequest().getAttributes().get("projectid");
-		String metricId = (String) getRequest().getAttributes().get("metricId");
+		String metricId = (String) getRequest().getAttributes().get("metricid");
 		
 		String agg = getQueryValue("agg");
 		String start = getQueryValue("startDate");
@@ -57,12 +57,9 @@ public class MetricVisualisationResource extends ServerResource {
 		
 		BasicDBObject query = (BasicDBObject) builder.get(); 
 		
-//		System.out.println("Query: " + query);
-		
 		Platform platform = Platform.getInstance();
 		ProjectRepository projectRepo = platform.getProjectRepositoryManager().getProjectRepository();
 		
-		System.out.println("Looking for project: " + projectName);
 		Project project = projectRepo.getProjects().findOneByShortName(projectName);
 		if (project == null) {
 			getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);

@@ -17,8 +17,8 @@ public class ApiApplication extends Application {
 		router.attach("/projects/", ProjectListResource.class);
 		router.attach("/projects/p/{projectid}", ProjectResource.class);
 		router.attach("/projects/p/{projectid}/", ProjectResource.class);
-		router.attach("/projects/p/{projectid}/m/{metricId}", MetricVisualisationResource.class);
-		router.attach("/projects/p/{projectid}/m/{metricId}/", MetricVisualisationResource.class);
+		router.attach("/projects/p/{projectid}/m/{metricid}", MetricVisualisationResource.class);
+		router.attach("/projects/p/{projectid}/m/{metricid}/", MetricVisualisationResource.class);
 		
 		router.attach("/raw/metrics", RawMetricListResource.class);
 		router.attach("/raw/metrics/", RawMetricListResource.class);
@@ -28,8 +28,8 @@ public class ApiApplication extends Application {
 		router.attach("/raw/projects/{page}/", ProjectListResource.class);
 		router.attach("/raw/projects/p/{projectid}", ProjectResource.class);
 		router.attach("/raw/projects/p/{projectid}/", ProjectResource.class);
-		router.attach("/raw/projects/p/{projectid}/m/{metricId}", RawMetricResource.class);
-		router.attach("/raw/projects/p/{projectid}/m/{metricId}/", RawMetricResource.class);
+		router.attach("/raw/projects/p/{projectid}/m/{metricid}", RawMetricResource.class);
+		router.attach("/raw/projects/p/{projectid}/m/{metricid}/", RawMetricResource.class);
 		
 		return router;
 	}
