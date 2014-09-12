@@ -81,11 +81,6 @@ public class RawMetricResource extends ServerResource {
 		// Get collection from DB
 		DB projectDB = platform.getMetricsRepository(project).getDb();
 		
-		// TODO: essentially we want a mongoexport of the collection. 
-		// Can we stream it? Page it?
-		// However this may also want to be filtered and aggregated?
-		// TODO: Need to lookup the collection name from the ID.
-		
 		MetricVisualisationExtensionPointManager manager = MetricVisualisationExtensionPointManager.getInstance();
 		manager.getRegisteredVisualisations();
 		MetricVisualisation vis = manager.findVisualisationById(metricId);
@@ -95,7 +90,8 @@ public class RawMetricResource extends ServerResource {
 		}
 		
 		// TODO: okay, so we only allow people to get raw HISTORIC metrics? How would we
-		// return multiple collections???
+		// 		 return multiple collections???
+		// TODO: Can we stream it? Page it? Filter and agg?
 		
 		DBCursor cursor = projectDB.getCollection(vis.getMetricId()).find(query);
 		ObjectMapper mapper = new ObjectMapper();
