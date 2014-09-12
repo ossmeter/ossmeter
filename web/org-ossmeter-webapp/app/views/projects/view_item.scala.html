@@ -1,0 +1,17 @@
+@(project: models.Project)
+
+@main(Messages("ossmeter.index.title")) {
+<div class="container">
+	<div class="project-detail" data-project="@project.name">
+	    <h1 class="name">@project.name</h1>
+	    <div class="fields">
+	    	Description: <label class="description">@project.desc</label>
+	    </div>
+@*  	    
+	    <a class="btn btn-success" href="@routes.Projects.edit(project.id)">Edit</a>
+		<a class="btn btn-danger" href="@routes.Projects.delete(project.id)">Delete</a>
+*@	    
+
+	</div>
+</div>
+}

@@ -1,0 +1,28 @@
+@(projects: List[Project])
+
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+
+@main(Messages("ossmeter.index.title")) {
+<h1>Projects</h1>
+@if(!projects.isEmpty()){
+<div class="control-group">  
+@subjectPresentOr() {
+          	@defining(Application.getLocalUser(session())) { user =>
+  	<a class="btn btn-success" href="@routes.Projects.create()">New project</a>
+}}{<!--  Print nothing -->}
+    <div class="container show-top-margin separate-rows tall-rows">      
+      @for(project <- projects) {
+      	<div class="project row">
+      		@* TODO: We should use the id instead the shortName
+      		<div class="col-md-9"><a href="@routes.Projects.view(project.id)">@project.name</a></div> *@
+      		<div class="col-md-9"><a href="@routes.Projects.view(project.shortName)">@project.name</a></div>	        	        	        
+        </div>
+      }
+    </div>
+</div>
+}else{
+	<div class="">No projects found</div>
+}
+}

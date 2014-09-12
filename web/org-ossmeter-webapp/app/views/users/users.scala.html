@@ -1,0 +1,26 @@
+@(users: List[User])
+
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+
+@main(Messages("ossmeter.index.title")) {
+<h1>Users</h1>
+@if(!users.isEmpty()){
+<div class="control-group">  
+@subjectPresentOr() {
+          	@defining(Application.getLocalUser(session())) { user =>
+  	<a class="btn btn-success" href="@routes.Application.signup()">Signup new user</a>
+}}{<!--  Print nothing -->}
+    <div class="container show-top-margin separate-rows tall-rows">  
+      @for(user <- users) {
+      	<div class="user row show-grid">      		
+      		<div class="col-md-9"><a href="@routes.Users.view(user.id)">@user.name</a> <span class="mail">@user.email</span></div>      		
+        </div>
+      }
+    </div>
+</div>
+}else{
+	<div class="">No users found</div>
+}
+}
