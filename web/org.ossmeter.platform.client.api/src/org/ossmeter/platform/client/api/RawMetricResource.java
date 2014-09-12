@@ -6,6 +6,8 @@ import java.text.ParseException;
 import org.ossmeter.platform.Date;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.Platform;
+import org.ossmeter.platform.visualisation.MetricVisualisation;
+import org.ossmeter.platform.visualisation.MetricVisualisationExtensionPointManager;
 import org.ossmeter.repository.model.MetricProviderExecution;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectRepository;
@@ -84,7 +86,18 @@ public class RawMetricResource extends ServerResource {
 		// However this may also want to be filtered and aggregated?
 		// TODO: Need to lookup the collection name from the ID.
 		
-		DBCursor cursor = projectDB.getCollection("TODO").find();
+		MetricVisualisationExtensionPointManager manager = MetricVisualisationExtensionPointManager.getInstance();
+		manager.getRegisteredVisualisations();
+		MetricVisualisation vis = manager.findVisualisationById(metricId);
+		
+		if (vis == null) {
+			return Util.generateErrorMessage(generateRequestJson(projectId, metricId), "No visualiser found with specified ID.").toString();
+		}
+		
+		// TODO: okay, so we only allow people to get raw HISTORIC metrics? How would we
+		// return multiple collections???
+		
+		DBCursor cursor = projectDB.getCollection(vis.getMetricId()).find(query);
 		ObjectMapper mapper = new ObjectMapper();
 		ArrayNode results = mapper.createArrayNode();
 		
