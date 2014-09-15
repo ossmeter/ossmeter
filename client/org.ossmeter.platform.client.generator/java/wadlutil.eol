@@ -48,13 +48,51 @@ operation WADL!t_method getArguments() : String {
 	return res;
 }
 
-operation WADL!t_method getRequiredParams() : String {
+operation WADL!t_method hasArguments() : Boolean {
+	var params = self.parentNode.c_param.flatten();
+	return params.size() > 0;
+}
+
+operation WADL!t_method getRequiredRequestParams() : String {
 	var request = self.c_request.flatten();
-	var params = request.c_param;
+	var params = request.c_param.flatten().select(p | p.hasProperty("b_required") and p.b_required);
+	if (params.size() == 0) return "";
 	var res = "";
-	for (param in params.flatten()) {
-		if (param.b_required) {
-			res = res + ", " + param.getParamType() + " " + param.a_name;
+	
+	// Determine whether to add the preceeding comma
+	if (self.hasArguments()) res = res + ", ";
+	
+	res = res + params.at(0).getParamType() + " " + params.at(0).a_name;
+	
+	if (params.size() > 1) {
+		for (p in 1.to(params.size()-1)) {
+			res = res + ", " + params.at(p).getParamType() + " " + params.at(p).a_name;
+		}
+	}
+	return res;
+}
+
+operation WADL!t_method hasOptionalParams() : Boolean {
+	var request = self.c_request.flatten();
+	var params = request.c_param.flatten();
+	
+	return params.println().select(p | not p.hasProperty("b_required") or not p.b_required).size().println() > 0;
+}
+
+operation WADL!t_method getAllRequestParams() : String {
+	var request = self.c_request.flatten();
+	var params = request.c_param.flatten();
+	if (params.size() == 0) return "";
+	var res = "";
+	
+	// Determine whether to add the preceeding comma
+	if (self.hasArguments()) res = res + ", ";
+	
+	res = res + params.at(0).getParamType() + " " + params.at(0).a_name;
+	
+	if (params.size() > 1) {
+		for (p in 1.to(params.size()-1)) {
+			res = res + ", " + params.at(p).getParamType() + " " + params.at(p).a_name;
 		}
 	}
 	return res;

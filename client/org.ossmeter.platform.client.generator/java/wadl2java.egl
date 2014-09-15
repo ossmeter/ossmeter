@@ -84,14 +84,16 @@ public class OssmeterClient {
 }
 [%operation generateResource(resource : Any) {
 	for (method in resource.c_method.select(m | m.s_name.at(0)=="GET").flatten()) { %]
-	public [%=method.getResultType()%] get[%=method.getName()%]([%=method.getArguments()%][%=method.getRequiredParams()%]) throws Exception {
+	public [%=method.getResultType()%] get[%=method.getName()%]([%=method.getArguments()%][%=method.getRequiredRequestParams()%]) throws Exception {
 		String result = makeRequest(connectionUrl + "[%=method.getUrl()%]");
 		return mapper.readValue(result, [%=method.getMapperResultType()%]);
 	}
-	public [%=method.getResultType()%] get[%=method.getName()%]([%=method.getArguments()%]) throws Exception {
+	[%if (method.hasOptionalParams()){%]
+	public [%=method.getResultType()%] get[%=method.getName()%]([%=method.getArguments()%][%=method.getAllRequestParams()%]) throws Exception {
 		String result = makeRequest(connectionUrl + "[%=method.getUrl()%]");
 		return mapper.readValue(result, [%=method.getMapperResultType()%]);
 	}
+	[%}%]
 	[%for (res in resource.c_resource) {
 		// In the case of nested resources
 		generateResource(res);
