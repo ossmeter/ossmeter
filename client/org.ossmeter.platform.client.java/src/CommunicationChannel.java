@@ -10,8 +10,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 	include=JsonTypeInfo.As.PROPERTY,
 	property = "_type")
 @JsonSubTypes({
-	@Type(value = CommunicationChannel.class, name="org.ossmeter.repository.model.CommunicationChannel"),
-})
+	@Type(value = CommunicationChannel.class, name="CommunicationChannel"), })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class CommunicationChannel extends Object {
 

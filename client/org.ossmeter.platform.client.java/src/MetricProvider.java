@@ -10,8 +10,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 	include=JsonTypeInfo.As.PROPERTY,
 	property = "_type")
 @JsonSubTypes({
-	@Type(value = MetricProvider.class, name="org.ossmeter.repository.model.MetricProvider"),
-})
+	@Type(value = MetricProvider.class, name="MetricProvider"), })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MetricProvider extends NamedElement {
 

@@ -33,6 +33,26 @@ operation OSS!EClassifier getJavaBoxedName() {
 	}
 }
 
+/* This is a workaround for this _bug_: https://www.eclipse.org/forums/index.php/t/809707/ */
+operation String getJavaBoxedName(parent : Any) {
+	if (parent.isTypeOf(OSS!EClassifier) and parent.isAnnotatedAs("stub")) {
+		return parent.getAnnotationValue("stub", "javaClass");
+	}
+	else {
+		switch (self) {
+			case "EString": return "String";
+			case "ELong": return "Long";
+			case "EInt": return "Integer";
+			case "EBoolean": return "Boolean";
+			case "EFloat": return "Float";
+			case "EIntegerObject": return "Integer";
+			case "EBooleanObject": return "Boolean";
+			case "EDoubleObject": return "Double";
+			default: return self;
+		}
+	}
+}
+
 operation OSS!EReference getJavaCollectionType() {
 	var stubClass = self.eType.getAnnotationValue("stub", "javaClass");
 	if (stubClass.isDefined() and self.getAnnotationValue("collection", "fromstub") == "true") {
@@ -65,7 +85,7 @@ operation OSS!EClassifier isNumeric() : Boolean {
 
 operation OSS!EClassifier getJavaName() {
 	if (self.isAnnotatedAs("stub")) {
-		return self.getAnnotationValue("stub", "javaClass");
+		return self.getAnnotationValue("stub", "javaClass").split("\\.").last();
 	}
 	else {
 		switch (self.name) {
@@ -78,6 +98,26 @@ operation OSS!EClassifier getJavaName() {
 			case "EBooleanObject": return "boolean";
 			case "EDouble": return "double";
 			default: return self.name;
+		}
+	}
+}
+
+/* This is a workaround for this _bug_: https://www.eclipse.org/forums/index.php/t/809707/ */
+operation String getJavaName(parent : Any) {
+	if (parent.isTypeOf(OSS!EClassifier) and parent.isAnnotatedAs("stub")) {
+		return parent.getAnnotationValue("stub", "javaClass");
+	}
+	else {
+		switch (self) {
+			case "EString": return "String";
+			case "ELong": return "long";
+			case "EInt": return "int";
+			case "EBoolean": return "boolean";
+			case "EFloat": return "float";
+			case "EIntegerObject": return "int";
+			case "EBooleanObject": return "boolean";
+			case "EDouble": return "double";
+			default: return self;
 		}
 	}
 }

@@ -13,28 +13,114 @@
 	        metamodelUri="http://www.eclipse.org/emf/2002/Ecore"
 	        read="true" store="false" />
 	
-		<epsilon.emf.loadModel name="Metric" aliases="OSS"
-	    	modelFile="models/metric.ecore"
-	        metamodelUri="http://www.eclipse.org/emf/2002/Ecore"
-	        read="true" store="false" />
-
 		<epsilon.emf.loadModel name="Eclipse" aliases="OSS"
 	    	modelFile="models/eclipse.ecore"
 	        metamodelUri="http://www.eclipse.org/emf/2002/Ecore"
 	        read="true" store="false" />
+
+		<epsilon.emf.loadModel name="Bugzilla" aliases="OSS"
+	    	modelFile="models/bugzilla.ecore"
+	        metamodelUri="http://www.eclipse.org/emf/2002/Ecore"
+	        read="true" store="false" />
+		
+		<epsilon.emf.loadModel name="CVS" aliases="OSS"
+	    	modelFile="models/cvs.ecore"
+	        metamodelUri="http://www.eclipse.org/emf/2002/Ecore"
+	        read="true" store="false" />
 	
+		<epsilon.emf.loadModel name="Forum" aliases="OSS"
+	    	modelFile="models/forum.ecore"
+	        metamodelUri="http://www.eclipse.org/emf/2002/Ecore"
+	        read="true" store="false" />
+	
+		<epsilon.emf.loadModel name="Git" aliases="OSS"
+	    	modelFile="models/git.ecore"
+	        metamodelUri="http://www.eclipse.org/emf/2002/Ecore"
+	        read="true" store="false" />
+	
+		<epsilon.emf.loadModel name="GitHub" aliases="OSS"
+	    	modelFile="models/github.ecore"
+	        metamodelUri="http://www.eclipse.org/emf/2002/Ecore"
+	        read="true" store="false" />
+	
+		<epsilon.emf.loadModel name="GCode" aliases="OSS"
+	    	modelFile="models/googlecode.ecore"
+	        metamodelUri="http://www.eclipse.org/emf/2002/Ecore"
+	        read="true" store="false" />
+
+		<epsilon.emf.loadModel name="NNTP" aliases="OSS"
+	    	modelFile="models/nntp.ecore"
+	        metamodelUri="http://www.eclipse.org/emf/2002/Ecore"
+	        read="true" store="false" />
+				
+		<epsilon.emf.loadModel name="Redmine" aliases="OSS"
+	    	modelFile="models/redmine.ecore"
+	        metamodelUri="http://www.eclipse.org/emf/2002/Ecore"
+	        read="true" store="false" />
+	
+		<epsilon.emf.loadModel name="Sourceforge" aliases="OSS"
+	    	modelFile="models/sourceforge.ecore"
+	        metamodelUri="http://www.eclipse.org/emf/2002/Ecore"
+	        read="true" store="false" />
+	
+		<epsilon.emf.loadModel name="SVN" aliases="OSS"
+	    	modelFile="models/svn.ecore"
+	        metamodelUri="http://www.eclipse.org/emf/2002/Ecore"
+	        read="true" store="false" />
+	
+		<epsilon.emf.loadModel name="Eclipse" aliases="OSS"
+	    	modelFile="models/eclipse.ecore"
+	        metamodelUri="http://www.eclipse.org/emf/2002/Ecore"
+	        read="true" store="false" />
+
+		<epsilon.emf.loadModel name="Metric" aliases="OSS"
+	    	modelFile="models/metric.ecore"
+	        metamodelUri="http://www.eclipse.org/emf/2002/Ecore"
+	        read="true" store="false" />
+		
 		<epsilon.xml.loadModel name="WADL"
 			file="models/ossmeter.wadl"
 			read="true" store="false" />
 	</target>
 
+	<target name="loadModel">
+		<epsilon.emf.loadModel name="${ecore}" aliases="OSS"
+	    	modelFile="${ecore}"
+	        metamodelUri="http://www.eclipse.org/emf/2002/Ecore"
+	        read="true" store="false" />
+	</target>
+	
 	<target name="main" depends="loadModels">
-		<for list="java,csharp" param="lang">
+		<!--This is what I want to do :)
+		<for param="ecore">
+			<path>
+		    	<fileset dir="models" includes="**/*.ecore"/>
+		    </path>	
+			<sequential>
+				<epsilon.emf.loadModel name="@{ecore}" aliases="OSS"
+					    	modelFile="@{ecore}"
+					        metamodelUri="http://www.eclipse.org/emf/2002/Ecore"
+					        read="true" store="false" />
+			</sequential>
+		</for>
+		-->
+		
+		<for list="java" param="lang">
 			<sequential>
 				<epsilon.egl src="@{lang}/ossgen.egx" taskname="@{lang}">
 				    <model ref="Project"/>
+					<model ref="Eclipse"/>
+			    	<model ref="Bugzilla"/>
+			    	<model ref="CVS"/>
+					<model ref="Forum"/>
+					<model ref="Git"/>
+					<model ref="GitHub"/>
+					<model ref="GCode"/>
+					<model ref="NNTP"/>
+					<model ref="Redmine"/>
+					<model ref="Sourceforge"/>
+					<model ref="SVN"/>
 		    		<model ref="Metric"/>
-			    	<model ref="Eclipse"/>
 		    		<model ref="WADL"/>
 				</epsilon.egl>
 			</sequential>

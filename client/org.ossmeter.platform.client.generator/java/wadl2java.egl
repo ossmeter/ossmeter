@@ -1,5 +1,5 @@
 [%import "javautil.eol";%]
-[%import "ecoreutil.eol";%]
+[%import "../util/ecoreutil.eol";%]
 [%import "wadlutil.eol";%]
 [%
 	// TODO: Package
@@ -73,22 +73,27 @@ public class OssmeterClient {
 	 *	This is a test method to ensure that the generated client works ok.
 	 */
 	public static void main(String[] args) throws Exception{
-		OssmeterClient c = new OssmeterClient("http://localhost:1234");
+		OssmeterClient c = new OssmeterClient("http://localhost:8182");
 		
 		System.out.println(c.getProjectList());
 		
-		Project p = c.getProject("epsilon");
-		Metric m2 = c.getMetric(p.getShortName(), "activeusersperday");
+		Project p = c.getProject("ant");
+		Metric m2 = c.getMetric("ant", "avgnumberofreplies");
 		
 	}
 }
 [%operation generateResource(resource : Any) {
 	for (method in resource.c_method.select(m | m.s_name.at(0)=="GET").flatten()) { %]
+	public [%=method.getResultType()%] get[%=method.getName()%]([%=method.getArguments()%][%=method.getRequiredParams()%]) throws Exception {
+		String result = makeRequest(connectionUrl + "[%=method.getUrl()%]");
+		return mapper.readValue(result, [%=method.getMapperResultType()%]);
+	}
 	public [%=method.getResultType()%] get[%=method.getName()%]([%=method.getArguments()%]) throws Exception {
 		String result = makeRequest(connectionUrl + "[%=method.getUrl()%]");
 		return mapper.readValue(result, [%=method.getMapperResultType()%]);
 	}
 	[%for (res in resource.c_resource) {
+		// In the case of nested resources
 		generateResource(res);
 	}%]
 	[%}%]

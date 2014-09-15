@@ -1,4 +1,16 @@
 
+/* Need to ensure that there aren't any ill-named structural features */
+operation initialise() {
+	var keywords = List{"abstract", "volatile", "transient", 
+		"interface", "container", "private", "public"};
+	
+	for (e in OSS!EStructuralFeature.all.includingAll(OSS!EEnumLiteral.all)) {
+		if (keywords.includes(e.name)) {
+			e.name = "_" + e.name;
+		}
+	}
+}
+
 @cached
 operation OSS!EClassifier isIgnored() : Boolean {
 	return Sequence{"LocalStorage", "ProjectRepository", "ImportData", "MetricProviderExecution", "ProjectExecutionInformation"}.includes(self.name);

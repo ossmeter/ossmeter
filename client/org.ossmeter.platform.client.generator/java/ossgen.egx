@@ -2,6 +2,8 @@ import "../util/ecoreutil.eol";
 
 pre {
 	var dir = "/Users/jimmy/Code/ossmeter-git/client/org.ossmeter.platform.client.java/src/";
+	
+	initialise();
 }
 
 rule WADL2Java

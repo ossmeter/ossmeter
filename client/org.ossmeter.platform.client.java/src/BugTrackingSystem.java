@@ -10,8 +10,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 	include=JsonTypeInfo.As.PROPERTY,
 	property = "_type")
 @JsonSubTypes({
-	@Type(value = BugTrackingSystem.class, name="org.ossmeter.repository.model.BugTrackingSystem"),
-})
+	@Type(value = BugTrackingSystem.class, name="BugTrackingSystem"), })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class BugTrackingSystem extends Object {
 

@@ -26,9 +26,17 @@ public class OssmeterClient {
 		}
 		conn.disconnect();
 	}
+	public List<Project> getProjectList(, String page, String size) throws Exception {
+		String result = makeRequest(connectionUrl + "/projects");
+		return mapper.readValue(result, TypeFactory.defaultInstance().constructCollectionType(List.class, Project.class));
+	}
 	public List<Project> getProjectList() throws Exception {
 		String result = makeRequest(connectionUrl + "/projects");
 		return mapper.readValue(result, TypeFactory.defaultInstance().constructCollectionType(List.class, Project.class));
+	}
+	public Project getProject(String projectId) throws Exception {
+		String result = makeRequest(connectionUrl + "/projects/p/" + projectId + "");
+		return mapper.readValue(result, Project.class);
 	}
 	public Project getProject(String projectId) throws Exception {
 		String result = makeRequest(connectionUrl + "/projects/p/" + projectId + "");
@@ -38,13 +46,20 @@ public class OssmeterClient {
 		String result = makeRequest(connectionUrl + "/projects/p/" + projectId + "/m/" + metricId + "");
 		return mapper.readValue(result, Metric.class);
 	}
+	public Metric getMetric(String projectId, String metricId) throws Exception {
+		String result = makeRequest(connectionUrl + "/projects/p/" + projectId + "/m/" + metricId + "");
+		return mapper.readValue(result, Metric.class);
+	}
+	public MetricVisualisation getMetricVisualisation(String projectId, String metricId) throws Exception {
+		String result = makeRequest(connectionUrl + "/projects/p/" + projectId + "/v/" + metricId + "");
+		return mapper.readValue(result, MetricVisualisation.class);
+	}
 	public MetricVisualisation getMetricVisualisation(String projectId, String metricId) throws Exception {
 		String result = makeRequest(connectionUrl + "/projects/p/" + projectId + "/v/" + metricId + "");
 		return mapper.readValue(result, MetricVisualisation.class);
 	}
 	
 	public String makeRequest(String urlString) throws Exception {
-		System.out.println(urlString);
 		URL url = new URL(urlString);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("GET");
@@ -75,11 +90,10 @@ public class OssmeterClient {
 	public static void main(String[] args) throws Exception{
 		OssmeterClient c = new OssmeterClient("http://localhost:8182");
 		
-//		System.out.println(c.getProjectList());
+		System.out.println(c.getProjectList());
 		
-		Project p = c.getProject("nikos2");
-//		Metric m2 = c.getMetric(p.getShortName(), "activeusersperday");
+		Project p = c.getProject("ant");
+		Metric m2 = c.getMetric("ant", "avgnumberofreplies");
+		
 	}
-	class Metric{}
-	class MetricVisualisation{}
 }

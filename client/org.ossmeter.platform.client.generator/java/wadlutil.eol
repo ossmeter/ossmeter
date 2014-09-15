@@ -7,8 +7,6 @@ operation WADL!t_method getName() : String {
 
 // Any = t_method
 operation WADL!t_method getResultType() : String {
-	self.c_response.first().println();
-
 	var representation = self.c_response.first().c_representation.first().a_element;
 
 	if (representation.startsWith("oss:")) {
@@ -22,7 +20,6 @@ operation WADL!t_method getResultType() : String {
 
 // Any = t_method
 operation WADL!t_method getMapperResultType() : String {
-	self.c_response.first().println();
 
 	var representation = self.c_response.first().c_representation.first().a_element;
 
@@ -48,7 +45,19 @@ operation WADL!t_method getArguments() : String {
 		}
 	}
 	
-	return res.println();
+	return res;
+}
+
+operation WADL!t_method getRequiredParams() : String {
+	var request = self.c_request.flatten();
+	var params = request.c_param;
+	var res = "";
+	for (param in params.flatten()) {
+		if (param.b_required) {
+			res = res + ", " + param.getParamType() + " " + param.a_name;
+		}
+	}
+	return res;
 }
 
 operation String cleanParamString() : String {
@@ -69,7 +78,6 @@ operation WADL!t_param getParamType() : String {
 // Any = t_method
 operation WADL!t_method getUrl() : String {
 	var path = self.parentNode.a_path;
-	path.println();
 	path = path.replace("\\{", "\" + ");
 	path = path.replace("}", " + \"");
 	return path;

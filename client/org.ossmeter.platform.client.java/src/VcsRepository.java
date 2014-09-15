@@ -10,8 +10,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 	include=JsonTypeInfo.As.PROPERTY,
 	property = "_type")
 @JsonSubTypes({
-	@Type(value = VcsRepository.class, name="org.ossmeter.repository.model.VcsRepository"),
-})
+	@Type(value = VcsRepository.class, name="VcsRepository"), })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class VcsRepository extends NamedElement {
 

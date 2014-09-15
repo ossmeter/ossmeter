@@ -10,8 +10,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 	include=JsonTypeInfo.As.PROPERTY,
 	property = "_type")
 @JsonSubTypes({
-	@Type(value = SchedulingInformation.class, name="org.ossmeter.repository.model.SchedulingInformation"),
-})
+	@Type(value = SchedulingInformation.class, name="SchedulingInformation"), })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SchedulingInformation extends Object {
 

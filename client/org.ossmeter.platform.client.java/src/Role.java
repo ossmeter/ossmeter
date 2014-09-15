@@ -10,8 +10,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 	include=JsonTypeInfo.As.PROPERTY,
 	property = "_type")
 @JsonSubTypes({
-	@Type(value = Role.class, name="org.ossmeter.repository.model.Role"),
-})
+	@Type(value = Role.class, name="Role"), })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Role extends NamedElement {
 

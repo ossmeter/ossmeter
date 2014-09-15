@@ -12,29 +12,29 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 	include=JsonTypeInfo.As.PROPERTY,
 	property = "_type")
 @JsonSubTypes({
-	@Type(value = [%=c.name%].class, name="[%=c.ePackage.nsURI%].[%=c.name%]"),
-	[%for (sub in OSS!EClass.all.select(s | s.eSuperTypes.includes(c) and not s.isIgnored())) {%]
+	@Type(value = [%=c.name%].class, name="[%=c.name%]"), [%/*=c.ePackage.nsURI --  may need including?*/%]
+	[%for (sub in OSS!EClass.all.select(s | s.eSuperTypes.includes(c) and not s.name.isIgnored())) {%]
 	@Type(value = [%=sub.name%].class, name="[%=sub.name%]"),
 	[%}%]
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public[%=c.getAbstractModifier()%] class [%=c.name%] extends [%=c.getJavaExtends()%] {
 
-	[%for (sf in c.eStructuralFeatures.select(sf|sf.isMany and not sf.eType.isIgnored())) { /**/ %]
-	protected List<[%=sf.eType.getJavaBoxedName()%]> [%=sf.name%];
+	[%for (sf in c.eStructuralFeatures.select(sf|sf.isMany and not sf.eType.name.isIgnored())) { /**/ %]
+	protected List<[%=sf.eType.name.getJavaBoxedName(sf.eType)%]> [%=sf.name%];
 	[%}%]
-	[%c.name.println(); for (r in c.eStructuralFeatures.select(r|not r.isMany and not r.eType.println().isIgnored())) { /**/%]
-	protected [%=r.eType.getJavaName()%] [%=r.name%];
+	[%c.name.println(); for (r in c.eStructuralFeatures.select(r|not r.isMany and not r.eType.name.isIgnored())) { /**/%]
+	protected [%=r.eType.name.getJavaName(r.eType)%] [%=r.name%];
 	[%}%]
 	
 	[%for (a in c.eAttributes.select(a|not a.isMany)) { %]
-	public [%=a.eType.getJavaName()%] get[%=a.name.ftuc()%]() {
+	public [%=a.eType.name.getJavaName(a.eType)%] get[%=a.name.ftuc()%]() {
 		return [%=a.name%];
 	}
 	[%}	%]
 	
 	[%for (a in c.eStructuralFeatures.select(a|a.isMany)) { %]
-	public List<[%=a.eType.getJavaBoxedName()%]> get[%=a.name.ftuc()%]() {
+	public List<[%=a.eType.name.getJavaBoxedName(a.eType)%]> get[%=a.name.ftuc()%]() {
 		return [%=a.name%];
 	}
 	[%}%]
