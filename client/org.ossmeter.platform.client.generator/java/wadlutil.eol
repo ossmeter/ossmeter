@@ -104,7 +104,6 @@ operation String cleanParamString() : String {
 	return s;
 }
 
-// Any = t_param
 operation WADL!t_param getParamType() : String {
 	switch (self.a_type) {
 		case "xs:string": return "String";
@@ -113,11 +112,35 @@ operation WADL!t_param getParamType() : String {
 	}
 }
  
-// Any = t_method
-operation WADL!t_method getUrl() : String {
+operation WADL!t_method getBaseUrl() : String {
 	var path = self.parentNode.a_path;
 	path = path.replace("\\{", "\" + ");
 	path = path.replace("}", " + \"");
 	return path;
+}
 
+operation WADL!t_method getRequiredUrlParams() : String {
+	var request = self.c_request.flatten();
+	var params = request.c_param.flatten().select(p | p.hasProperty("b_required") and p.b_required);
+	
+	if (params.size() == 0) return;
+	var path = "";
+	for (p in params) {
+		path = path + p.a_name + "=\"+" + p.a_name + "+\"&";
+	}
+
+	return path;
+}
+
+operation WADL!t_method getAllUrlParams() : String {
+	var request = self.c_request.flatten();
+	var params = request.c_param.flatten();
+	
+	if (params.size() == 0) return;
+	var path = "";
+	for (p in params) {
+		path = path + p.a_name + "=\"+" + p.a_name + "+\"&";
+	}
+
+	return path;
 }

@@ -16,7 +16,7 @@
 			<method name="GET" id="ProjectList">
 				<request>
 					<param name="page" required="false" default="1" style="query" />
-					<param name="size" required="false" default="20" style="query" />
+					<param name="size" required="true" default="20" style="query" />
 				</request>
 				<response>
 					<representation mediaType="application/json" element="projectList" />

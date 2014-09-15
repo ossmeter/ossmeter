@@ -27,31 +27,31 @@ public class OssmeterClient {
 		conn.disconnect();
 	}
 	public List<Project> getProjectList(String size) throws Exception {
-		String result = makeRequest(connectionUrl + "/projects");
+		String result = makeRequest(connectionUrl + "/projects?size="+size+"&");
 		return mapper.readValue(result, TypeFactory.defaultInstance().constructCollectionType(List.class, Project.class));
 	}
 	public List<Project> getProjectList(String page, String size) throws Exception {
-		String result = makeRequest(connectionUrl + "/projects");
+		String result = makeRequest(connectionUrl + "/projects?page="+page+"&size="+size+"&");
 		return mapper.readValue(result, TypeFactory.defaultInstance().constructCollectionType(List.class, Project.class));
 	}
 	public Project getProject(String projectId) throws Exception {
-		String result = makeRequest(connectionUrl + "/projects/p/" + projectId + "");
+		String result = makeRequest(connectionUrl + "/projects/p/" + projectId + "?");
 		return mapper.readValue(result, Project.class);
 	}
 	public Metric getMetric(String projectId, String metricId) throws Exception {
-		String result = makeRequest(connectionUrl + "/projects/p/" + projectId + "/m/" + metricId + "");
+		String result = makeRequest(connectionUrl + "/projects/p/" + projectId + "/m/" + metricId + "?");
 		return mapper.readValue(result, Metric.class);
 	}
 	public Metric getMetric(String projectId, String metricId, String agg, String startDate, String endDate) throws Exception {
-		String result = makeRequest(connectionUrl + "/projects/p/" + projectId + "/m/" + metricId + "");
+		String result = makeRequest(connectionUrl + "/projects/p/" + projectId + "/m/" + metricId + "?agg="+agg+"&startDate="+startDate+"&endDate="+endDate+"&");
 		return mapper.readValue(result, Metric.class);
 	}
 	public MetricVisualisation getMetricVisualisation(String projectId, String metricId) throws Exception {
-		String result = makeRequest(connectionUrl + "/projects/p/" + projectId + "/v/" + metricId + "");
+		String result = makeRequest(connectionUrl + "/projects/p/" + projectId + "/v/" + metricId + "?");
 		return mapper.readValue(result, MetricVisualisation.class);
 	}
 	public MetricVisualisation getMetricVisualisation(String projectId, String metricId, String agg, String startDate, String endDate) throws Exception {
-		String result = makeRequest(connectionUrl + "/projects/p/" + projectId + "/v/" + metricId + "");
+		String result = makeRequest(connectionUrl + "/projects/p/" + projectId + "/v/" + metricId + "?agg="+agg+"&startDate="+startDate+"&endDate="+endDate+"&");
 		return mapper.readValue(result, MetricVisualisation.class);
 	}
 	
