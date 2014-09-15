@@ -1,0 +1,130 @@
+/*
+	Aims to provide a set of general purpose functions that language-specific 
+	transformations can re-used to make their lives easier.
+*/
+
+/* 
+	Returns a Sequence of Sequences. Each sub sequence contains two elements:
+	seq.first() : param type
+	seq.last()  : param name
+
+ */
+@cached
+operation WADL!t_resource getResourceArguments() : Sequence {
+	var result = new Sequence;
+	var params = self.c_param.flatten();
+	
+	for (p in params) {
+		var pseq = new Sequence;
+		pseq.add(p.getParamType());
+		pseq.add(p.a_name.cleanParamString());
+		result.add(pseq);
+	}
+	return result.println("params: ");
+}
+
+/* Overloaded to enable operation to be called from t_method (makes it slightly easier to code)*/
+operation WADL!t_method getResourceArguments() : Sequence {
+	return self.parentNode.getResourceArguments();
+}
+
+operation WADL!t_method hasResourceArguments() : Boolean {
+	var params = self.parentNode.c_param.flatten();
+	return params.size() > 0;
+}
+
+/* 
+	Returns a Sequence of Sequences. Each sub sequence contains two elements:
+	seq.first() : param type
+	seq.last()  : param name
+
+ */
+operation WADL!t_method getRequiredRequestParams() : Sequence {
+	var result = new Sequence;
+	var request = self.c_request.flatten();
+	var params = request.c_param.flatten().select(p | p.hasProperty("b_required") and p.b_required);
+	if (params.size() == 0) return result;
+	
+	for (p in params) {
+		var pseq = new Sequence;
+		pseq.add(p.getParamType());
+		pseq.add(p.a_name.cleanParamString());
+		result.add(pseq);
+	}
+	
+	return result;
+}
+
+operation WADL!t_method getAllRequestParams() : Sequence {
+	var result = new Sequence;
+	var request = self.c_request.flatten();
+	var params = request.c_param.flatten();
+	if (params.size() == 0) return result;
+	
+	for (p in params) {
+		var pseq = new Sequence;
+		pseq.add(p.getParamType());
+		pseq.add(p.a_name.cleanParamString());
+		result.add(pseq);
+	}
+	
+	return result;
+}
+
+operation WADL!t_method hasOptionalRequestParams() : Boolean {
+	var request = self.c_request.flatten();
+	var params = request.c_param.flatten();
+	
+	return params.println().select(p | not p.hasProperty("b_required") or not p.b_required).size().println() > 0;
+}
+ 
+operation WADL!t_method getBaseUrl() : String {
+	var path = self.parentNode.a_path;
+	path = path.replace("\\{", "\" + ");
+	path = path.replace("}", " + \"");
+	return path;
+}
+
+operation WADL!t_method getRequiredUrlParams() : String {
+	var request = self.c_request.flatten();
+	var params = request.c_param.flatten().select(p | p.hasProperty("b_required") and p.b_required);
+	
+	if (params.size() == 0) return;
+	var path = "";
+	for (p in params) {
+		path = path + p.a_name + "=\"+" + p.a_name + "+\"&";
+	}
+
+	return path;
+}
+
+operation WADL!t_method getAllUrlParams() : String {
+	var request = self.c_request.flatten();
+	var params = request.c_param.flatten();
+	
+	if (params.size() == 0) return;
+	var path = "";
+	for (p in params) {
+		path = path + p.a_name + "=\"+" + p.a_name + "+\"&";
+	}
+
+	return path;
+}
+
+
+
+ 
+
+operation String cleanParamString() : String {
+	var s = self.replace("\\{", "");
+	s = s.replace("}", "");
+	return s;
+}
+
+operation WADL!t_param getParamType() : String {
+	switch (self.a_type) {
+		case "xs:string": return "string";
+		case "xs:int": return "integer";
+		default: return "string";
+	}
+}

@@ -1,5 +1,6 @@
 [%import "javautil.eol";%]
 [%import "../util/ecoreutil.eol";%]
+[%import "../util/wadlutil.eol";%]
 [%import "wadlutil.eol";%]
 [%
 	// TODO: Package
@@ -84,12 +85,12 @@ public class OssmeterClient {
 }
 [%operation generateResource(resource : Any) {
 	for (method in resource.c_method.select(m | m.s_name.at(0)=="GET").flatten()) { %]
-	public [%=method.getResultType()%] get[%=method.getName()%]([%=method.getArguments()%][%=method.getRequiredRequestParams()%]) throws Exception {
+	public [%=method.getResultType()%] get[%=method.getName()%]([%=method.getJavaResourceArguments()%][%=method.getJavaRequiredRequestParams()%]) throws Exception {
 		String result = makeRequest(connectionUrl + "[%=method.getBaseUrl()%]?[%=method.getRequiredUrlParams()%]");
 		return mapper.readValue(result, [%=method.getMapperResultType()%]);
 	}
-	[%if (method.hasOptionalParams()){%]
-	public [%=method.getResultType()%] get[%=method.getName()%]([%=method.getArguments()%][%=method.getAllRequestParams()%]) throws Exception {
+	[%if (method.hasOptionalRequestParams()){%]
+	public [%=method.getResultType()%] get[%=method.getName()%]([%=method.getJavaResourceArguments()%][%=method.getJavaAllRequestParams()%]) throws Exception {
 		String result = makeRequest(connectionUrl + "[%=method.getBaseUrl()%]?[%=method.getAllUrlParams()%]");
 		return mapper.readValue(result, [%=method.getMapperResultType()%]);
 	}

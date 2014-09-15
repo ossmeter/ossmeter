@@ -1,11 +1,10 @@
 import "javautil.eol";
+import "../util/wadlutil.eol";
 
-// Any = t_method
 operation WADL!t_method getName() : String {
 	return self.a_id.ftuc();
 }
 
-// Any = t_method
 operation WADL!t_method getResultType() : String {
 	var representation = self.c_response.first().c_representation.first().a_element;
 
@@ -18,9 +17,7 @@ operation WADL!t_method getResultType() : String {
 	}	
 }
 
-// Any = t_method
 operation WADL!t_method getMapperResultType() : String {
-
 	var representation = self.c_response.first().c_representation.first().a_element;
 
 	if (representation.startsWith("oss:")) {
@@ -32,115 +29,60 @@ operation WADL!t_method getMapperResultType() : String {
 	}	
 }
 
-// Any = t_method
-operation WADL!t_method getArguments() : String {
-	var params = self.parentNode.c_param.flatten();
+operation WADL!t_method getJavaResourceArguments() : String {
+	var params = self.getResourceArguments();
 	if (params.size() == 0) return "";
 	
-	var res = params.at(0).getParamType() + " " + params.at(0).a_name.cleanParamString();
+	var res = params.at(0).first().wadlTypeToJavaType() + " " + params.at(0).last();
 	
 	if (params.size() > 1) {
 		for (p in 1.to(params.size()-1)) {
-			res = res + ", " + params.at(p).getParamType() + " " + params.at(p).a_name.cleanParamString();
+			res = res + ", " + params.at(p).first().wadlTypeToJavaType() + " " + params.at(p).last();
 		}
 	}
-	
 	return res;
 }
 
-operation WADL!t_method hasArguments() : Boolean {
-	var params = self.parentNode.c_param.flatten();
-	return params.size() > 0;
-}
-
-operation WADL!t_method getRequiredRequestParams() : String {
-	var request = self.c_request.flatten();
-	var params = request.c_param.flatten().select(p | p.hasProperty("b_required") and p.b_required);
+operation WADL!t_method getJavaRequiredRequestParams() : String {
+	var params = self.getRequiredRequestParams();
 	if (params.size() == 0) return "";
 	var res = "";
 	
 	// Determine whether to add the preceeding comma
-	if (self.hasArguments()) res = res + ", ";
+	if (self.hasResourceArguments()) res = res + ", ";
 	
-	res = res + params.at(0).getParamType() + " " + params.at(0).a_name;
+	res = res + params.at(0).first().wadlTypeToJavaType() + " " + params.at(0).last();
 	
 	if (params.size() > 1) {
 		for (p in 1.to(params.size()-1)) {
-			res = res + ", " + params.at(p).getParamType() + " " + params.at(p).a_name;
+			res = res + ", " + params.at(p).first().wadlTypeToJavaType() + " " + params.at(p).last();
 		}
 	}
 	return res;
 }
 
-operation WADL!t_method hasOptionalParams() : Boolean {
-	var request = self.c_request.flatten();
-	var params = request.c_param.flatten();
-	
-	return params.println().select(p | not p.hasProperty("b_required") or not p.b_required).size().println() > 0;
-}
-
-operation WADL!t_method getAllRequestParams() : String {
-	var request = self.c_request.flatten();
-	var params = request.c_param.flatten();
+operation WADL!t_method getJavaAllRequestParams() : String {
+	var params = self.getAllRequestParams();
 	if (params.size() == 0) return "";
 	var res = "";
 	
 	// Determine whether to add the preceeding comma
-	if (self.hasArguments()) res = res + ", ";
+	if (self.hasResourceArguments()) res = res + ", ";
 	
-	res = res + params.at(0).getParamType() + " " + params.at(0).a_name;
+	res = res + params.at(0).first().wadlTypeToJavaType() + " " + params.at(0).last();
 	
 	if (params.size() > 1) {
 		for (p in 1.to(params.size()-1)) {
-			res = res + ", " + params.at(p).getParamType() + " " + params.at(p).a_name;
+			res = res + ", " + params.at(p).first().wadlTypeToJavaType() + " " + params.at(p).last();
 		}
 	}
 	return res;
 }
 
-operation String cleanParamString() : String {
-	var s = self.replace("\\{", "");
-	s = s.replace("}", "");
-	return s;
-}
-
-operation WADL!t_param getParamType() : String {
-	switch (self.a_type) {
-		case "xs:string": return "String";
-		case "xs:int": return "int";
+operation String wadlTypeToJavaType() : String {
+	switch (self) {
+		case "string": return "String";
+		case "integer": return "int";
 		default: return "String";
 	}
-}
- 
-operation WADL!t_method getBaseUrl() : String {
-	var path = self.parentNode.a_path;
-	path = path.replace("\\{", "\" + ");
-	path = path.replace("}", " + \"");
-	return path;
-}
-
-operation WADL!t_method getRequiredUrlParams() : String {
-	var request = self.c_request.flatten();
-	var params = request.c_param.flatten().select(p | p.hasProperty("b_required") and p.b_required);
-	
-	if (params.size() == 0) return;
-	var path = "";
-	for (p in params) {
-		path = path + p.a_name + "=\"+" + p.a_name + "+\"&";
-	}
-
-	return path;
-}
-
-operation WADL!t_method getAllUrlParams() : String {
-	var request = self.c_request.flatten();
-	var params = request.c_param.flatten();
-	
-	if (params.size() == 0) return;
-	var path = "";
-	for (p in params) {
-		path = path + p.a_name + "=\"+" + p.a_name + "+\"&";
-	}
-
-	return path;
 }
