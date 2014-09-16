@@ -3,8 +3,10 @@
 <head>
 	<title>Performance Analysis</title>
         <link href="stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet"/>
+        <link href="stylesheets/theme.bootstrap.css" type="text/css" rel="stylesheet"/>
 
         <script src="javascripts/jquery-1.9.1.js"></script>
+        <script src="javascripts/jquery.tablesorter.js"></script>
         <script src="javascripts/simple_statistics.js"></script>
 </head>
 <body class="container">
@@ -19,7 +21,7 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<table id="metrics" class="table">
+			<table id="metrics" class="table tablesorter">
 			    <thead>
 			        <tr>
 			        	<th>Metric Id</th>
@@ -56,11 +58,13 @@
 				}
 
 			});
+			$("#metrics").tablesorter({theme : "bootstrap", headerTemplate : '{content} {icon}'}); 
 
 			// Enable select to change and update daata
 			$("#projects_select").on("change", function(){
 				$("#metrics > tbody:last").empty();
 				getMetricsFor(this.value);
+				$(".tablesorter").trigger('update');
 			}); 
 		});	
 
@@ -83,9 +87,9 @@
 					"</td><td>" + ss.median(data) + 
 					"</td><td>" + ss.iqr(data) + 
 					"</td><td>" + ss.max(data) + "</td></tr>");
+					$(".tablesorter").trigger('update');
 				});
 		}
-
 	</script>
 
 </body>
