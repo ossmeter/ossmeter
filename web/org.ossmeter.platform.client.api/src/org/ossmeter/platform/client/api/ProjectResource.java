@@ -25,7 +25,7 @@ public class ProjectResource extends ServerResource {
 		responseHeaders.add(new Header("Access-Control-Allow-Origin", "*"));
 		responseHeaders.add(new Header("Access-Control-Allow-Methods", "GET"));
 		
-		String projectName = (String) getRequest().getAttributes().get("id");
+		String projectId = (String) getRequest().getAttributes().get("projectid");
 		
 		Platform platform = Platform.getInstance();
 		ProjectRepository projectRepo = platform.getProjectRepositoryManager().getProjectRepository();
@@ -38,20 +38,21 @@ public class ProjectResource extends ServerResource {
 		ex.put("metricProviderData", 0);
 		ex.put("_id", 0);
 		
-		BasicDBObject query = new BasicDBObject("shortName", projectName);
+		BasicDBObject query = new BasicDBObject("shortName", projectId);
 		
+		System.out.println(query);
 		DBObject p = projectRepo.getProjects().getDbCollection().findOne(query, ex);
 		
 		if (p == null) {
 			getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			return Util.generateErrorMessage(generateRequestJson(mapper, projectName), "No project was found with the requested name.").toString();
+			return Util.generateErrorMessage(generateRequestJson(mapper, projectId), "No project was found with the requested name.").toString();
 		}
 		
 		try {
 			return p.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
-			return Util.generateErrorMessage(generateRequestJson(mapper, projectName), "An error occurred when converting the project to JSON: " + e.getMessage()).toString();
+			return Util.generateErrorMessage(generateRequestJson(mapper, projectId), "An error occurred when converting the project to JSON: " + e.getMessage()).toString();
 		}
 	}
 	
