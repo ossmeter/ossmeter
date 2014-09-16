@@ -20,7 +20,7 @@ operation WADL!t_resource getResourceArguments() : Sequence {
 		pseq.add(p.a_name.cleanParamString());
 		result.add(pseq);
 	}
-	return result.println("params: ");
+	return result;
 }
 
 /* Overloaded to enable operation to be called from t_method (makes it slightly easier to code)*/
@@ -75,7 +75,7 @@ operation WADL!t_method hasOptionalRequestParams() : Boolean {
 	var request = self.c_request.flatten();
 	var params = request.c_param.flatten();
 	
-	return params.println().select(p | not p.hasProperty("b_required") or not p.b_required).size().println() > 0;
+	return params.select(p | not p.hasProperty("b_required") or not p.b_required).size() > 0;
 }
  
 operation WADL!t_method getBaseUrl() : String {

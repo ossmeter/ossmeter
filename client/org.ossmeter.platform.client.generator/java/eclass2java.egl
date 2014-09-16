@@ -23,7 +23,7 @@ public[%=c.getAbstractModifier()%] class [%=c.name%] extends [%=c.getJavaExtends
 	[%for (sf in c.eStructuralFeatures.select(sf|sf.isMany and not sf.eType.name.isIgnored())) { /**/ %]
 	protected List<[%=sf.eType.name.getJavaBoxedName(sf.eType)%]> [%=sf.name%];
 	[%}%]
-	[%c.name.println(); for (r in c.eStructuralFeatures.select(r|not r.isMany and not r.eType.name.isIgnored())) { /**/%]
+	[%for (r in c.eStructuralFeatures.select(r|not r.isMany and not r.eType.name.isIgnored())) { /**/%]
 	protected [%=r.eType.name.getJavaName(r.eType)%] [%=r.name%];
 	[%}%]
 	

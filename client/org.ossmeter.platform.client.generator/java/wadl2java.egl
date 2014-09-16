@@ -33,13 +33,6 @@ public class OssmeterClient {
 		}
 		conn.disconnect();
 	}
-	[%
-	w.children.println();
-	w.children.select(c | c.tagName == "resources").at(0).println();
-	/*
-	Issues: methods: m.s_name.at(0) -- thinks everything is a sequence?????
-	*/
-	%]
 	[%for (resource in w.c_resources.c_resource) {
 		generateResource(resource);
 	}
