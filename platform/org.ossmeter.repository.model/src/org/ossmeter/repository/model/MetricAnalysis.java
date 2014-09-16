@@ -15,17 +15,28 @@ public class MetricAnalysis extends Pongo {
 	
 	public MetricAnalysis() { 
 		super();
+		PROJECTID.setOwningType("org.ossmeter.platform.performance.MetricAnalysis");
 		METRICID.setOwningType("org.ossmeter.platform.performance.MetricAnalysis");
 		ANALYSISDATE.setOwningType("org.ossmeter.platform.performance.MetricAnalysis");
 		EXECUTIONDATE.setOwningType("org.ossmeter.platform.performance.MetricAnalysis");
 		MILLISTAKEN.setOwningType("org.ossmeter.platform.performance.MetricAnalysis");
 	}
 	
+	public static StringQueryProducer PROJECTID = new StringQueryProducer("projectId");
 	public static StringQueryProducer METRICID = new StringQueryProducer("metricId"); 
 	public static StringQueryProducer ANALYSISDATE = new StringQueryProducer("analysisDate"); 
 	public static StringQueryProducer EXECUTIONDATE = new StringQueryProducer("executionDate"); 
 	public static NumericalQueryProducer MILLISTAKEN = new NumericalQueryProducer("millisTaken");
+
+	public String getProjectId() {
+		return parseString(dbObject.get("metricId")+"", "");
+	}
 	
+	public MetricAnalysis setProjectId(String projectId) {
+		dbObject.put("projectId", projectId);
+		notifyChanged();
+		return this;
+	}
 	
 	public String getMetricId() {
 		return parseString(dbObject.get("metricId")+"", "");
@@ -36,6 +47,7 @@ public class MetricAnalysis extends Pongo {
 		notifyChanged();
 		return this;
 	}
+	
 	public Date getDate() {
 		String date = dbObject.get("analysisDate")+"";
 		

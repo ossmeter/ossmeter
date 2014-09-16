@@ -16,6 +16,7 @@ import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.platform.logging.OssmeterLoggerFactory;
+import org.ossmeter.repository.model.MetricAnalysis;
 import org.ossmeter.repository.model.MetricProviderExecution;
 import org.ossmeter.repository.model.MetricProviderType;
 import org.ossmeter.repository.model.Project;
@@ -86,6 +87,16 @@ public class MetricListExecutor implements Runnable {
 				// we can ignore this
 			} 
 			
+			// Performance analysis
+			MetricAnalysis mAnal = new MetricAnalysis();
+			mAnal.setMetricId(m.getIdentifier());
+			mAnal.setProjectId(project.getShortName()); // FIXME
+			mAnal.setAnalysisDate(date.toJavaDate());
+			mAnal.setExecutionDate(new java.util.Date());
+			platform.getProjectRepositoryManager().getProjectRepository().getMetricAnalysis().add(mAnal);
+			long start = System.currentTimeMillis(); // TODO: Could edit the generated code to encapsulate this.
+			
+			
 			// Now execute
 			try {
 				if (m instanceof ITransientMetricProvider) {
@@ -104,6 +115,10 @@ public class MetricListExecutor implements Runnable {
 				platform.getProjectRepositoryManager().getProjectRepository().sync();
 				break;
 			}
+			
+			long duration = System.currentTimeMillis() - start;
+			mAnal.setMillisTaken(duration);
+			platform.getProjectRepositoryManager().getProjectRepository().sync(); // Will sync-ing here mess things up?
 		}
 	}
 

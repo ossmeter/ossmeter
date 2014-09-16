@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Performance Analysis</title>
+        <link href="stylesheets/bootstrap.min.css" type="text/css" rel="stylesheet"/>
+
+        <script src="javascripts/jquery-1.9.1.js"></script>
+        <script src="javascripts/simple_statistics.js"></script>
+</head>
+<body class="container">
+	<h1>Performance Analysis</h1>
+
+	<div class="row">
+		<div class="col-md-12">
+			<select id="projects_select" class="form-control">
+				<option value="All">All</option>
+			</select>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<table id="metrics" class="table">
+			    <thead>
+			        <tr>
+			        	<th>Metric Id</th>
+			        	<th>Mean Time (ms)</th>
+			        	<th>Median Time (ms)</th>
+			        	<th>IQR Time (ms)</th>
+			        	<th>Max Time (ms)</th>
+			        </tr>
+			    </thead>
+			    <tbody>
+			    </tbody>
+			</table>
+		</div>	
+	</div>	
+
+	<script type="text/javascript">
+		$(function() {
+			// Load project list
+			$.getJSON("http://localhost:8183/performance/projects", function(data) {
+				$.each(data, function(key, value) {
+				    $("#projects_select").append('<option value=' + value + '>' + value + '</option>');
+				});
+
+			});
+
+			// Load metric list and populate for 'All' projects
+			$.getJSON("http://localhost:8183/performance/metrics", function(data) {
+				
+				metrics = data;
+
+				for (m in data) {
+					getMetricData("http://localhost:8183/performance/metrics/", data[m]);
+				}
+
+			});
+
+			// Enable select to change and update daata
+			$("#projects_select").on("change", function(){
+				$("#metrics > tbody:last").empty();
+				getMetricsFor(this.value);
+			}); 
+		});	
+
+		function getMetricsFor(project) {
+			var url = "http://localhost:8183/performance/metrics/";
+			if (project != "All") {
+				url = "http://localhost:8183/performance/projects/" + project + "/m/";
+			}
+
+			for (m in metrics) {
+				getMetricData(url, metrics[m]);
+			}
+		}
+
+		function getMetricData(url, metricId) {
+			$.getJSON(url + metricId, function(data) {
+				$("#metrics > tbody:last").append("<tr><td>" + metricId + 
+					"</td><td>" + ss.mean(data) + 
+					"</td><td>" + ss.median(data) + 
+					"</td><td>" + ss.iqr(data) + 
+					"</td><td>" + ss.max(data) + "</td></tr>");
+				});
+		}
+
+	</script>
+
+</body>
+</html>
