@@ -14,6 +14,14 @@ import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Datatable extends Object {
 
+	protected List<String> columnNames;
+	protected List<Row> rows;
 	
 	
+	public List<String> getColumnNames() {
+		return columnNames;
+	}
+	public List<Row> getRows() {
+		return rows;
+	}
 }

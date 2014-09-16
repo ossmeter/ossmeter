@@ -8,6 +8,19 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="datatable" eType="#//Datatable"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="MetricVisualisation"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Datatable"/>
+  <eClassifiers xsi:type="ecore:EClass" name="MetricVisualisation">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="_id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="x" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="y" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="datatable" eType="#//Datatable"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Datatable">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="columnNames" upperBound="-1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="rows" upperBound="-1" eType="#//Row"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="Row" instanceClassName="java.util.HashMap"/>
 </ecore:EPackage>

@@ -33,3 +33,12 @@ rule EEnum2Java
 	
 	target : dir + e.name  + ".java"
 }
+
+
+rule EDatatype2Java
+	transform d : OSS!EDataType {
+
+	template : "edatatype2java.egl"
+	
+	target : dir+d.name + ".java"	
+}

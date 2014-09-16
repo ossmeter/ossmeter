@@ -1,0 +1,7 @@
+[%import "javautil.eol";%]
+[%import "../util/ecoreutil.eol";%]
+//package [%=d.ePackage.name%];
+
+public class [%=d.name%] extends [%=d.instanceClassName%] {
+
+}

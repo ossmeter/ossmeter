@@ -8,9 +8,17 @@ class Metric {
 }
 
 class MetricVisualisation {
-	
+	attr String _id;
+	attr String type;
+	attr String description;
+	attr String x;
+	attr String y;
+	val Datatable datatable;
 }
 
 class Datatable {
-	// TODO???
+	attr String[*] columnNames;
+	ordered attr Row[*] rows;
 }
+
+datatype Row : java.util.HashMap;
