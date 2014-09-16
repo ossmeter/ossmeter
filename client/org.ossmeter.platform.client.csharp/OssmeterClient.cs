@@ -20,22 +20,22 @@ namespace ossmeterclient
 		}
 		public IList<Project> getProjectList()
 		{
-			string result = makeRequest(connectionUrl + "/p");
-			return JsonConvert.DeserializeObject<IList<Project>> (result, new JsonEclipseProjectConverter());
+			string result = makeRequest(connectionUrl + "/projects");
+			return JsonConvert.DeserializeObject<IList<Project>> (result);
 		}
 		public Project getProject(string projectId)
 		{
-			string result = makeRequest(connectionUrl + "/p/" + projectId + "");
-			return JsonConvert.DeserializeObject<Project> (result, new JsonEclipseProjectConverter());
+			string result = makeRequest(connectionUrl + "/projects/p/" + projectId + "");
+			return JsonConvert.DeserializeObject<Project> (result);
 		}
 		public Metric getMetric(string projectId, string metricId)
 		{
-			string result = makeRequest(connectionUrl + "/p/" + projectId + "/m/" + metricId + "");
+			string result = makeRequest(connectionUrl + "/projects/p/" + projectId + "/m/" + metricId + "");
 			return JsonConvert.DeserializeObject<Metric> (result);
 		}
 		public MetricVisualisation getMetricVisualisation(string projectId, string metricId)
 		{
-			string result = makeRequest(connectionUrl + "/p/" + projectId + "/v/" + metricId + "");
+			string result = makeRequest(connectionUrl + "/projects/p/" + projectId + "/v/" + metricId + "");
 			return JsonConvert.DeserializeObject<MetricVisualisation> (result);
 		}
 		

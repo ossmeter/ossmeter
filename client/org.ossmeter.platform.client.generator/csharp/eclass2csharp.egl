@@ -12,11 +12,11 @@ namespace ossmeterclient
 	[%=c.getAbstractModifier()%] class [%=c.name%] [%=c.getCSharpExtends()%] 
 	{
 
-	[%for (sf in c.eStructuralFeatures.select(sf|sf.isMany and not sf.eType.isIgnored())) { /**/ %]
-		protected IList<[%=sf.eType.getJavaBoxedName()%]> [%=sf.name%] { get; set; }
+	[%for (sf in c.eStructuralFeatures.select(sf|sf.isMany and not sf.eType.name.isIgnored())) { /**/ %]
+		protected IList<[%=sf.eType.name.getJavaBoxedName(sf.eType)%]> [%=sf.name%] { get; set; }
 	[%}%]
-	[%c.name.println(); for (r in c.eStructuralFeatures.select(r|not r.isMany and not r.eType.println().isIgnored())) { /**/%]
-		protected [%=r.eType.getJavaName()%] [%=r.name%] { get; set; }
+	[%c.name.println(); for (r in c.eStructuralFeatures.select(r|not r.isMany and not r.eType.name.isIgnored())) { /**/%]
+		protected [%=r.eType.name.getJavaName(r.eType)%] [%=r.name%] { get; set; }
 	[%}%]
 	}
 }
