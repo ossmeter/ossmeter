@@ -23,6 +23,7 @@
 			    <thead>
 			        <tr>
 			        	<th>Metric Id</th>
+			        	<th>Sample Size</th>
 			        	<th>Mean Time (ms)</th>
 			        	<th>Median Time (ms)</th>
 			        	<th>IQR Time (ms)</th>
@@ -77,6 +78,7 @@
 		function getMetricData(url, metricId) {
 			$.getJSON(url + metricId, function(data) {
 				$("#metrics > tbody:last").append("<tr><td>" + metricId + 
+					"</td><td>" + data.length + 
 					"</td><td>" + ss.mean(data) + 
 					"</td><td>" + ss.median(data) + 
 					"</td><td>" + ss.iqr(data) + 
