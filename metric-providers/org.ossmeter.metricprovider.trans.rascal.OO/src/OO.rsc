@@ -39,7 +39,11 @@ real SR(rel[loc, loc] superTypes) {
 	Abstractness (nr of abstract types / nr of concrete types)
 }
 real A(set[loc] abstractTypes, set[loc] allTypes) {
-	return size(abstractTypes) / toReal(size(allTypes - abstractTypes));
+	numConcreteTypes = size(allTypes - abstractTypes);
+	if (numConcreteTypes > 0) {
+		return size(abstractTypes) / toReal(numConcreteTypes);
+	}
+	return 0.0;
 }
 
 
@@ -73,7 +77,7 @@ real I(int Ca, int Ce) {
 	if (divisor > 0) {
 		return Ce / toReal(divisor);
 	}
-	return -1.0;
+	return 0.0;
 }
 
 
@@ -106,8 +110,13 @@ public real CF(rel[loc, loc] typeDependencies, rel[loc, loc] superTypes, set[loc
 	numDependencies = size(typeDependencies + invert(typeDependencies));
 	
 	numPossibleDependencies = (numTypes * (numTypes - 1) - 2 * size(superTypes+)); // excluding inheritance
-	
-	return numDependencies / toReal(numPossibleDependencies);
+
+	if (numPossibleDependencies > 0) {
+		return numDependencies / toReal(numPossibleDependencies);
+	}
+	else {
+		return 0.0;
+	}
 }
 
 

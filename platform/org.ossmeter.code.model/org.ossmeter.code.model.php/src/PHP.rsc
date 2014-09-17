@@ -37,7 +37,14 @@ public rel[Language, loc, AST] extractASTsPHP(loc project, ProjectDelta delta, m
 
 @memo
 public M3 composeM3s(rel[Language, loc, M3] m3s) {
-	return composeM3(|project:///|, range(m3s[php()]));
+	phpM3s = range(m3s[php()]);
+	projectLoc = |project:///|;
+	if (phpM3s == {}) {
+		return createEmptyM3(projectLoc);
+	}
+	else {
+		return composeM3(projectLoc, phpM3s);
+	}
 }
 
 @memo

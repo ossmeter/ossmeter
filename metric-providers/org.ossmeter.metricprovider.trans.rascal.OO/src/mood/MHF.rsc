@@ -11,7 +11,13 @@ real MHF(rel[loc class, loc method] containment, rel[loc class, loc method] visi
   numClasses = size(allClasses);
   numMethods = size(containment);
 
-  MVF = size(visible - containment) / toReal(numMethods * (numClasses - 1)); // MHF = num visibility edges / max visibility edges
+  maxNum = numMethods * (numClasses - 1);
+  
+  real MVF = 1.0;
+  
+  if (maxNum > 0) {
+  	MVF = size(visible - containment) / toReal(maxNum); // MHF = num visibility edges / max visibility edges
+  }
 
   return 1 - MVF;
 } 
