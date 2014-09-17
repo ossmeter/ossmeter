@@ -4,11 +4,11 @@ extend lang::php::m3::Core;
 import lang::php::m3::Uses;
 import lang::php::m3::Declarations;
 import lang::php::m3::Calls;
-import lang::php::stats::Stats;
 
 import util::Math;
 
 import PHP;
+import DynamicFeatures;
 
 
 @memo
@@ -61,57 +61,18 @@ map[int, int] getFieldNameResolutionHistogram(rel[Language, loc, M3] m3s = {})
 }
 
 
-private set[str] varClassMetrics = {
-						"class consts with variable class name",
-						"object creation with variable class name",
-						"calls of static methods with variable targets",
-						"fetches of static properties with variable targets"};
-		
-private	set[str] varVarMetrics = {
-						"assignments into variable-variables",
-						"assignments w/ops into variable-variables",
-						"list assignments into variable-variables",
-						"ref assignments into variable-variables",
-						"fetches of properties with variable names"};
-						//"uses of variable-variables (including the above)",
-
-private	set[str] varFuncMetrics = {
-						"calls of variable function names",
-						"calls of variable method names",
-						"calls of static methods with variable names",
-						"fetches of static properties with variable names"};
-
-private set[str] varArgsMetrics = {"var-args support functions"};
-
-private set[str] varIncludeMetrics = {"includes with non-literal paths"};
-
-private set[str] overloadMetrics = {
-						"definitions of overloads: set",
-						"definitions of overloads: get",
-						"definitions of overloads: isset",
-						"definitions of overloads: unset",
-						"definitions of overloads: call",
-						"definitions of overloads: callStatic"};
-
-private set[str] varLabelMetrics = {
-						"break with non-literal argument",
-						"continue with non-literal argument"};
-						
-private set[str] allDynamicMetrics = varClassMetrics + varVarMetrics + varFuncMetrics + varArgsMetrics + varIncludeMetrics
-	+ overloadMetrics + varLabelMetrics;
-
 @memo
-private map[str, int] getCounts(rel[Language, loc, AST] asts)
-{
-	System sys = ( ast.file : ast.script  | <php(), _, ast> <- asts );
-	return featureCounts(sys);
-}
+map[loc, map[DynamicFeature, int]] getDynamicFeatureCountsPerFunction(rel[Language, loc, AST] asts) {
+	map[loc, map[DynamicFeature, int]] result = ();
+	
+	scripts = { s | <php(), _, phpAST(s)> <- asts };
 
-private int sumMetrics(rel[Language, loc, AST] asts, set[str] metricNames)
-{
-	counts = getCounts(asts);
-
-	return toInt(sum([counts[n] | n <- metricNames]));
+	top-down-break visit (scripts) {
+		case m:method(_, _, _, _, _): result[m@decl] = getDynamicFeatureCounts(m);
+		case f:function(_, _, _, _): result[f@decl] = getDynamicFeatureCounts(f);
+	}
+	
+	return result;
 }
 
 
@@ -121,7 +82,9 @@ private int sumMetrics(rel[Language, loc, AST] asts, set[str] metricNames)
 @appliesTo{php()}
 public int getNumberOfDynamicFeatureUses(rel[Language, loc, AST] asts = {})
 {
-	 return sumMetrics(asts, allDynamicMetrics);
+	counts = getDynamicFeatureCountsPerFunction(asts);
+	
+	return ( 0 | it + sumCounts(counts[f]) | f <- counts); // includes eval() calls 
 }
 
 
@@ -131,13 +94,26 @@ public int getNumberOfDynamicFeatureUses(rel[Language, loc, AST] asts = {})
 @appliesTo{php()}
 public int getNumberOfEvalCalls(rel[Language, loc, AST] asts = {})
 {
-	return (0 | it + 1 | <php(), _, ast> <- asts, /call(name(name(/eval/i)), _) <- ast);
+	counts = getDynamicFeatureCountsPerFunction(asts);
+	
+	return ( 0 | it + counts[f][eval()] | f <- counts); 
+}
+
+
+@metric{numFunctionsWithDynamicFeatures}
+@doc{Number of functions using at least one dynamic language feature}
+@friendlyName{numFunctionsWithDynamicFeatures}
+@appliesTo{php()}
+public int getNumberOfFunctionsWithDynamicFeatures(rel[Language, loc, AST] asts = {})
+{
+	counts = getDynamicFeatureCountsPerFunction(asts);
+	
+	return ( 0 | it + 1 | f <- counts, sumCounts(counts[f]) > 0); 
 }
 
 /*
 TODO add the following metrics:
 
-- number of methods/functions that use at least one dynamic feature
 - number of missing include files
 - estimate external libraries
  
