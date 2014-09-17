@@ -3,6 +3,7 @@
 	<name>org.ossmeter.metricprovider.trans.rascal.LOC</name>
 	<comment></comment>
 	<projects>
+		<project>org.ossmeter.code.model.generic</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

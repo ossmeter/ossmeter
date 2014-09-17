@@ -16,19 +16,23 @@ import org.rascalmpl.interpreter.utils.RascalManifest;
 public class RascalBundleManifest extends RascalManifest {
 
   public List<String> getSourceRoots(Bundle project) {
-    return getSourceRoots(manifest(project));
+    return getManifestSourceRoots(manifest(project));
   }
   
   public String getMainModule(Bundle project) {
-    return getMainModule(manifest(project));
+    return getManifestMainModule(manifest(project));
   }
   
   public String getMainFunction(Bundle project) {
-    return getMainFunction(manifest(project));
+    return getManifestMainFunction(manifest(project));
   }
 
   public List<String> getRequiredBundles(Bundle project) {
-    return getRequiredBundles(manifest(project));
+    return getManifestRequiredBundles(manifest(project));
+  }
+  
+  public List<String> getRequiredLibraries(Bundle project) {
+	  return getManifestRequiredLibraries(manifest(project));
   }
   
   private InputStream manifest(Bundle bundle) {
@@ -45,6 +49,8 @@ public class RascalBundleManifest extends RascalManifest {
     
     return null;
   }
+  
+  
   
   public boolean hasManifest(Bundle bundle) {
     return hasManifest(manifest(bundle));

@@ -14,6 +14,7 @@ public class Project extends NamedElement {
 	protected List<Person> persons = null;
 	protected List<License> licenses = null;
 	protected List<MetricProvider> metricProviderData = null;
+	protected List<Company> companies = null;
 	protected Project parent = null;
 	protected ProjectExecutionInformation executionInformation = null;
 	
@@ -21,13 +22,13 @@ public class Project extends NamedElement {
 	public Project() { 
 		super();
 		dbObject.put("parent", new BasicDBObject());
-		dbObject.put("executionInformation", new ProjectExecutionInformation().getDbObject());
 		dbObject.put("vcsRepositories", new BasicDBList());
 		dbObject.put("communicationChannels", new BasicDBList());
 		dbObject.put("bugTrackingSystems", new BasicDBList());
 		dbObject.put("persons", new BasicDBList());
 		dbObject.put("licenses", new BasicDBList());
 		dbObject.put("metricProviderData", new BasicDBList());
+		dbObject.put("companies", new BasicDBList());
 		super.setSuperTypes("org.ossmeter.repository.model.NamedElement");
 		NAME.setOwningType("org.ossmeter.repository.model.Project");
 		SHORTNAME.setOwningType("org.ossmeter.repository.model.Project");
@@ -35,6 +36,7 @@ public class Project extends NamedElement {
 		YEAR.setOwningType("org.ossmeter.repository.model.Project");
 		ACTIVE.setOwningType("org.ossmeter.repository.model.Project");
 		LASTEXECUTED.setOwningType("org.ossmeter.repository.model.Project");
+		HOMEPAGE.setOwningType("org.ossmeter.repository.model.Project");
 	}
 	
 	public static StringQueryProducer NAME = new StringQueryProducer("name"); 
@@ -43,6 +45,7 @@ public class Project extends NamedElement {
 	public static NumericalQueryProducer YEAR = new NumericalQueryProducer("year");
 	public static StringQueryProducer ACTIVE = new StringQueryProducer("active"); 
 	public static StringQueryProducer LASTEXECUTED = new StringQueryProducer("lastExecuted"); 
+	public static StringQueryProducer HOMEPAGE = new StringQueryProducer("homePage"); 
 	
 	
 	public String getShortName() {
@@ -90,6 +93,15 @@ public class Project extends NamedElement {
 		notifyChanged();
 		return this;
 	}
+	public String getHomePage() {
+		return parseString(dbObject.get("homePage")+"", "");
+	}
+	
+	public Project setHomePage(String homePage) {
+		dbObject.put("homePage", homePage);
+		notifyChanged();
+		return this;
+	}
 	
 	
 	public List<VcsRepository> getVcsRepositories() {
@@ -128,6 +140,12 @@ public class Project extends NamedElement {
 		}
 		return metricProviderData;
 	}
+	public List<Company> getCompanies() {
+		if (companies == null) {
+			companies = new PongoList<Company>(this, "companies", true);
+		}
+		return companies;
+	}
 	
 	public Project setParent(Project parent) {
 		if (this.parent != parent) {
@@ -153,7 +171,6 @@ public class Project extends NamedElement {
 	public ProjectExecutionInformation getExecutionInformation() {
 		if (executionInformation == null && dbObject.containsField("executionInformation")) {
 			executionInformation = (ProjectExecutionInformation) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("executionInformation"));
-			executionInformation.setContainer(this);
 		}
 		return executionInformation;
 	}

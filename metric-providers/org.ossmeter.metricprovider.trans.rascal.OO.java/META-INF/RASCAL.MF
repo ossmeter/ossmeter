@@ -1,0 +1,3 @@
+Source: src
+Main-Module: OOJava
+Require-Bundles: org.ossmeter.metricprovider.trans.rascal.OO

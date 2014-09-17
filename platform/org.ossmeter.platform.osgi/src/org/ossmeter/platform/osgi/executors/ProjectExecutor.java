@@ -274,9 +274,11 @@ public class ProjectExecutor implements Runnable {
 					if (lastExec.compareTo(d) > 0) {
 						lastExec = d;
 					}
-				} catch (NoManagerFoundException e) {
+				} 
+				catch (NoManagerFoundException e) {
 					System.err.println(e.getMessage());					
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					e.printStackTrace();
 				}
 			}

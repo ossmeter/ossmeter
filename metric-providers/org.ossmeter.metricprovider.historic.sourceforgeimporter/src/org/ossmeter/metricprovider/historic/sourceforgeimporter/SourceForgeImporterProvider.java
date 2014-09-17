@@ -81,14 +81,11 @@ public class SourceForgeImporterProvider implements IHistoricalMetricProvider {
 			SourceforgeProjectImporter epi = new SourceforgeProjectImporter();
 			mongo = new Mongo();
 			PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
-			//Lo posso prendere da qualche altra parte
+			
 			Platform platform = new Platform(mongo);
 			ep = epi.importProject(project.getShortName(), platform);
 			
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
