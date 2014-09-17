@@ -1,10 +1,19 @@
 package org.ossmeter.platform.client.api;
 
+import java.io.IOException;
+
 import org.ossmeter.platform.Platform;
+import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectRepository;
+import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.restlet.engine.header.Header;
+import org.restlet.ext.jackson.JacksonRepresentation;
+import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
+import org.restlet.resource.Post;
+import org.restlet.resource.Put;
 import org.restlet.resource.ServerResource;
 import org.restlet.util.Series;
 
@@ -15,8 +24,8 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
 public class ProjectResource extends ServerResource {
-	@Get
-	public String represent() {	
+	@Get("json")
+	public Representation represent() {	
 		Series<Header> responseHeaders = (Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers");
 		if (responseHeaders == null) {
 		    responseHeaders = new Series(Header.class);
@@ -45,15 +54,27 @@ public class ProjectResource extends ServerResource {
 		
 		if (p == null) {
 			getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			return Util.generateErrorMessage(generateRequestJson(mapper, projectId), "No project was found with the requested name.").toString();
+			return Util.generateErrorMessageRepresentation(generateRequestJson(mapper, projectId), "No project was found with the requested name.");
 		}
 		
 		try {
-			return p.toString();
+			StringRepresentation resp = new StringRepresentation(p.toString());
+			resp.setMediaType(MediaType.APPLICATION_JSON);
+			return resp;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return Util.generateErrorMessage(generateRequestJson(mapper, projectId), "An error occurred when converting the project to JSON: " + e.getMessage()).toString();
+			getResponse().setStatus(Status.SERVER_ERROR_INTERNAL);
+			return Util.generateErrorMessageRepresentation(generateRequestJson(mapper, projectId), "An error occurred when converting the project to JSON: " + e.getMessage());
 		}
+	}
+	
+	/**
+	 * This is an update to the existing project (identified by projectId field)
+	 * @param entity
+	 */
+	@Put("json")
+	public void updateProject(JacksonRepresentation<ObjectNode> entity) {
+		
 	}
 	
 	private JsonNode generateRequestJson(ObjectMapper mapper, String projectName) {

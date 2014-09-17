@@ -86,7 +86,7 @@ public class OssmeterClient {
 	public static void main(String[] args) throws Exception{
 		OssmeterClient c = new OssmeterClient("http://localhost:8182");
 		
-		System.out.println(c.getProjectList());
+		System.out.println(c.getProjectList("10"));
 		
 		Project p = c.getProject("ant");
 		Metric m2 = c.getMetric("ant", "avgnumberofreplies");
