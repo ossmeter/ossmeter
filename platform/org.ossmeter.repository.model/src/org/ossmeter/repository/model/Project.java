@@ -28,7 +28,8 @@ public class Project extends NamedElement {
 		dbObject.put("persons", new BasicDBList());
 		dbObject.put("licenses", new BasicDBList());
 		dbObject.put("metricProviderData", new BasicDBList());
-		dbObject.put("companies", new BasicDBList());
+		dbObject.put("companies", new BasicDBList());             
+		dbObject.put("executionInformation", new BasicDBObject());
 		super.setSuperTypes("org.ossmeter.repository.model.NamedElement");
 		NAME.setOwningType("org.ossmeter.repository.model.Project");
 		SHORTNAME.setOwningType("org.ossmeter.repository.model.Project");
