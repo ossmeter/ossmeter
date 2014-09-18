@@ -173,6 +173,9 @@ public class RascalTestCaseGenerator implements IApplication  {
 									continue;
 								}
 								
+								System.out.println(mp.getFriendlyName());
+								System.out.println("" + result);
+								
 								handleNewValue(new File(dir, mp.getIdentifier()), result, null, eval, logger);
 							}
 							
@@ -270,15 +273,19 @@ public class RascalTestCaseGenerator implements IApplication  {
 	}
 	
 	private static void writeValue(File path, IValue value, Evaluator eval) throws IOException {
-		OutputStream out = eval.getResolverRegistry().getOutputStream(path.toURI(), false);
-		new BinaryValueWriter().write(value, out);
-		//new StandardTextWriter().write(value, new OutputStreamWriter(out, "UTF8"));
+		try (OutputStream out = eval.getResolverRegistry().getOutputStream(path.toURI(), false)) {
+			new BinaryValueWriter().write(value, out);
+			//new StandardTextWriter().write(value, new OutputStreamWriter(out, "UTF8"));
+		} catch (RuntimeException e) {
+			// ignore
+		}
 	}
 	
 	private static IValue readValue(File path, Type type, TypeStore store, Evaluator eval) throws IOException {
-		InputStream in = new BufferedInputStream(eval.getResolverRegistry().getInputStream(path.toURI()));		
-		return new BinaryValueReader().read(eval.getValueFactory(), store, type, in);		
-		//return new StandardTextReader().read(eval.getValueFactory(), store, type, new InputStreamReader(in, "UTF8"));
+		try (InputStream in = new BufferedInputStream(eval.getResolverRegistry().getInputStream(path.toURI()))) {		
+			return new BinaryValueReader().read(eval.getValueFactory(), store, type, in);		
+			//return new StandardTextReader().read(eval.getValueFactory(), store, type, new InputStreamReader(in, "UTF8"));
+		}
 	}
 
 	private static IValue readTextValue(File path, Evaluator eval) throws IOException {
