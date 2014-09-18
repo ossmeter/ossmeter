@@ -56,7 +56,7 @@ public class MetricListExecutor implements Runnable {
 	public void run() {
 
 		for (IMetricProvider m : metrics) {
-			logger.info("\t" + m.getShortIdentifier() + " executing.");
+//			logger.info("\t" + m.getShortIdentifier() + " executing.");
 			
 			m.setMetricProviderContext(new MetricProviderContext(platform, new OssmeterLoggerFactory().makeNewLoggerInstance(m.getIdentifier())));
 			addDependenciesToMetricProvider(m);
@@ -112,7 +112,7 @@ public class MetricListExecutor implements Runnable {
 				
 				// Update the meta data
 				mpd.setLastExecuted(date.toString()); 
-				platform.getProjectRepositoryManager().getProjectRepository().sync();
+//				platform.getProjectRepositoryManager().getProjectRepository().sync();
 			} catch (Exception e) {
 				logger.error("Exception thrown during metric provider execution ("+m.getShortIdentifier()+").", e);
 				project.getExecutionInformation().setInErrorState(true);

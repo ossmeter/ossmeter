@@ -79,6 +79,8 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 		workerServiceTracker.open();
 		
 		
+		System.setProperty("MAVEN_EXECUTABLE", "/Applications/apache-maven-3.2.3/bin/mvn");
+		
 		// If master, start
 		if (master) {
 			masterService = new MasterService(workers);
@@ -86,7 +88,7 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 		}
 
 		// Start web server
-		ProjectResource pr = new ProjectResource();
+		new ProjectResource();
 		new ProjectListAnalysis();
 		
 		// Now, rest.
@@ -102,6 +104,13 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 			if ("-ossmeterConfig".equals(args[i])) {
 				configuration = new Properties();
 				configuration.load(new FileReader(args[i+1]));
+				
+				// Maven
+				String maven = configuration.getProperty("maven_executable", "");
+				if (!maven.equals("")) {
+					System.setProperty("MAVEN_EXECUTABLE", maven);
+				}
+				
 				i++;
 			} else if ("-master".equals(args[i])) { 
 				master = true;
