@@ -17,6 +17,7 @@ public class ApiApplication extends Application {
 		router.attach("/metrics/", MetricListResource.class);
 		router.attach("/projects", ProjectListResource.class);
 		router.attach("/projects/", ProjectListResource.class);
+		router.attach("/projects/import", ProjectImportResource.class);
 		router.attach("/projects/p/{projectid}", ProjectResource.class);
 		router.attach("/projects/p/{projectid}/", ProjectResource.class);
 		router.attach("/projects/p/{projectid}/m/{metricid}", MetricVisualisationResource.class);

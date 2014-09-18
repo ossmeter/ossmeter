@@ -152,7 +152,7 @@ public class GitHubImporter {
 	
 	public GitHubRepository importRepository(String projectId, Platform platform) {
 
-			int lastImportedId = new Integer(platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().first().getLastImportedProject());
+			int lastImportedId = 0;//new Integer(platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().first().getLastImportedProject());
 
 			GitHubRepository repository = null;
 			
@@ -264,12 +264,13 @@ public class GitHubImporter {
 				user.setFollowers_url((String)ownerObject.get("followers_url"));							
 				
 				lastImportedId = new Integer(currentRepo.get("id").toString()); 
-				platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().first().setLastImportedProject(String.valueOf(lastImportedId));
+//				platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().first().setLastImportedProject(String.valueOf(lastImportedId));
 				platform.getProjectRepositoryManager().getProjectRepository().sync();	
 
 			} catch (FileNotFoundException e1) {
 				e1.printStackTrace();
 			} catch (IOException e1) {
+				e1.printStackTrace();
 				System.err.println("API rate limit exceeded. Waiting to restart the importing...");
 				waitApiRate();
 			} 

@@ -271,8 +271,10 @@ public class EclipseProjectImporter {
 			
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			e.printStackTrace();
+			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}
 		
 		// Retrieving data from the JSON file
@@ -281,6 +283,7 @@ public class EclipseProjectImporter {
 			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
 			String jsonText = readAll(rd);
 						
+			System.out.println(jsonText);
 			JSONObject obj=(JSONObject)JSONValue.parse(jsonText);
 			JSONObject currentProg = (JSONObject)((JSONObject)obj.get("projects")).get(projectId);
 			

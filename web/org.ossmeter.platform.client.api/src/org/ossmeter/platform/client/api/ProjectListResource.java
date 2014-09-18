@@ -66,11 +66,13 @@ public class ProjectListResource extends ServerResource {
 		return resp;
 	}
 
-	@Post
-	public Representation postProject(JacksonRepresentation<ObjectNode> entity) {
+	@Post("json")
+	public Representation postProject(Representation entity) {
 		
 		try {
-			ObjectNode obj = entity.getObject();
+			ObjectMapper mapper = new ObjectMapper();
+			ObjectNode obj = (ObjectNode)mapper.readTree(entity.getText());
+			System.out.println(obj);
 			String name = obj.get("name").toString();
 			ProjectRepository repo = Platform.getInstance().getProjectRepositoryManager().getProjectRepository();
 
@@ -90,6 +92,11 @@ public class ProjectListResource extends ServerResource {
 			repo.getProjects().add(project);
 			repo.sync();
 			
+			StringRepresentation rep = new StringRepresentation(obj.toString());
+			rep.setMediaType(MediaType.APPLICATION_JSON);
+			getResponse().setStatus(Status.SUCCESS_CREATED);
+			return rep;
+
 		} catch (IOException e) {
 			e.printStackTrace(); // TODO
 			StringRepresentation rep = new StringRepresentation("");
@@ -97,11 +104,5 @@ public class ProjectListResource extends ServerResource {
 			getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 			return rep;
 		}
-		
-		StringRepresentation rep = new StringRepresentation("");
-		rep.setMediaType(MediaType.APPLICATION_JSON);
-		getResponse().setStatus(Status.SUCCESS_CREATED);
-		return rep;
 	}
-	
 }

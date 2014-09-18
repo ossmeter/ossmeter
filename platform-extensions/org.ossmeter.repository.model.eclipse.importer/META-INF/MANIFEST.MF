@@ -15,9 +15,9 @@ Require-Bundle: org.ossmeter.repository.model.eclipse,
 Export-Package: org.ossmeter.repository.model.eclipse.importer
 Import-Package: org.apache.commons.net,
  org.json.simple,
- org.jsoup;version="1.6.1",
- org.jsoup.nodes;version="1.6.1",
- org.jsoup.select;version="1.6.1",
+ org.jsoup,
+ org.jsoup.nodes,
+ org.jsoup.select,
  org.ossmeter.platform,
  org.ossmeter.repository.model.vcs.cvs
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

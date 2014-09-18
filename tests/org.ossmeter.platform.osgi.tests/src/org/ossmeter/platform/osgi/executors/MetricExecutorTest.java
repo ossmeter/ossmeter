@@ -62,7 +62,7 @@ public class MetricExecutorTest {
 		ProjectExecutor pe = new ProjectExecutor(platform, project);
 		pe.run();
 		
-		assertTrue(project.getInErrorState());
+		assertTrue(project.getExecutionInformation().getInErrorState());
 		assertEquals(startDate, project.getLastExecuted());
 		
 		// 

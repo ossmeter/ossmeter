@@ -45,6 +45,7 @@ public class ProjectResource extends ServerResource {
 		BasicDBObject ex = new BasicDBObject("executionInformation", 0);
 		ex.put("storage", 0);
 		ex.put("metricProviderData", 0);
+		ex.put("_superTypes", 0);
 		ex.put("_id", 0);
 		
 		BasicDBObject query = new BasicDBObject("shortName", projectId);
