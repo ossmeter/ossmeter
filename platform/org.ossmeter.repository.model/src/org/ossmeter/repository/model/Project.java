@@ -29,6 +29,7 @@ public class Project extends NamedElement {
 		dbObject.put("licenses", new BasicDBList());
 		dbObject.put("metricProviderData", new BasicDBList());
 		dbObject.put("companies", new BasicDBList());
+		dbObject.put("executionInformation", new ProjectExecutionInformation().getDbObject());
 		super.setSuperTypes("org.ossmeter.repository.model.NamedElement");
 		NAME.setOwningType("org.ossmeter.repository.model.Project");
 		SHORTNAME.setOwningType("org.ossmeter.repository.model.Project");
@@ -171,6 +172,7 @@ public class Project extends NamedElement {
 	public ProjectExecutionInformation getExecutionInformation() {
 		if (executionInformation == null && dbObject.containsField("executionInformation")) {
 			executionInformation = (ProjectExecutionInformation) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("executionInformation"));
+			executionInformation.setContainer(this);
 		}
 		return executionInformation;
 	}
