@@ -17,7 +17,7 @@ rel[Language, loc, M3] genericM3(loc project, ProjectDelta delta, map[loc repos,
   //}
   rel[Language, loc, M3] result = {};
   folders = checkouts<folders>;
-  for (folder <- folders, file <- visibleFiles(folder)) { 
+  for (folder <- folders, file <- visibleFiles(folder), estimateLanguageByFileExtension(file) != "") { 
     m = emptyM3(file);
     
     try {
@@ -39,6 +39,67 @@ rel[Language, loc, M3] genericM3(loc project, ProjectDelta delta, map[loc repos,
 
 @ASTExtractor{generic()}
 @memo
-rel[Language, loc, AST] genericAST(loc project, ProjectDelta delta, map[loc repos,loc folders] checkouts, map[loc,loc] scratch) {
-	return {<generic(), file, lines(readFileLines(file))> | folder <- checkouts<folders>, file <- visibleFiles(folder)};
+rel[Language, loc, AST] genericAST(loc project, ProjectDelta delta, map[loc repos,loc folders] checkouts, map[loc,loc] scratch) 
+  = {<generic(), file, lines(readFileLines(file))> | folder <- checkouts<folders>, file <- visibleFiles(folder), estimateLanguageByFileExtension(file) != ""};
+
+@memo
+map[str, str] getLanguageExtensions() {
+languageExtensions = {
+<"ActionScript", ["as"]>,
+<"Ada", ["adb"]>,
+<"ASP", ["asp"]>,
+<"ASP.NET", ["aspx", "axd", "asx", "asmx", "ashx"]>,
+<"Assembler", ["asm"]>,
+<"C", ["c", "h"]>,
+<"C#", ["cs"]>,
+<"C++", ["cpp", "hpp", "cxx", "hxx", "cc", "hh"]>,
+<"Clojure", ["clj"]>,
+<"Cobol", ["cob"]>,
+<"CoffeeScript", ["coffee"]>,
+<"Coldfusion", ["cfm"]>,
+<"CSS", ["css"]>,
+<"CUDA", ["cu"]>,
+<"Erlang", ["erl", "hrl"]>,
+<"F#", ["fs"]>,
+<"Flash", ["swf"]>,
+<"Fortran", ["f"]>,
+<"GLSL", ["glsl", "vert", "frag"]>,
+<"Go", ["go"]>,
+<"Haskell", ["hs", "lhs"]>,
+<"HLSL", ["hlsl"]>,
+<"HTML", ["html", "htm", "xhtml", "jhtml", "dhtml"]>,
+<"J#", ["jsl"]>,
+<"Java", ["java", "jav"]>,
+<"JavaScript", ["js", "jse", "ejs"]>,
+<"JSP", ["jsp", "jspx", "wss", "do", "action"]>,
+<"LISP", ["lisp", "cl"]>,
+<"Lua", ["lua"]>,
+<"Matlab", ["matlab"]>,
+<"ML", ["ml", "mli"]>,
+<"Objective C", ["m", "mm"]>,
+//<"OpenCL", [""]>, // also uses cl
+<"Pascal/Delphi", ["pas"]>,
+<"Perl", ["pl", "prl", "perl"]>,
+<"PHP", ["php", "php4", "php3", "phtml"]>,
+<"PL/I", ["pli"]>,
+<"Python", ["py"]>,
+<"Rascal", ["rsc"]>,
+<"Ruby", ["rb", "rhtml"]>,
+<"Scala", ["scala"]>,
+<"Shell script", ["sh", "bsh", "bash", "ksh", "csh"]>,
+<"Smalltalk", ["st"]>,
+<"SQL", ["sql"]>,
+<"TCL", ["tcl"]>,
+<"(Visual) Basic", ["bas", "frm", "cls", "ctl"]>,
+<"Visual Basic Script", ["vbs", "vbscript"]>,
+<"XML", ["xml", "xst"]>,
+<"XSLT", ["xslt"]>
+};
+
+return (ext:lang | <lang, exts> <- languageExtensions, ext <- exts);
+}
+
+str estimateLanguageByFileExtension(loc filename)
+{
+  return getLanguageExtensions()[toLowerCase(filename.extension)]?"";
 }

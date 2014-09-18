@@ -35,8 +35,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="ranking" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="downloadPage" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="supportPage" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="summaryPage" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="homePage" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="summary" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="mailingList" eType="#//MailingList"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="os" upperBound="-1" eType="#//OS"
@@ -63,7 +62,9 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="discussion" upperBound="-1"
         eType="#//Discussion" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="bugs" upperBound="-1" eType="#//Bug"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bugs" upperBound="-1" eType="#//Bug"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="downloadCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MailingList" eSuperTypes="#//CommunicationChannel"/>
   <eClassifiers xsi:type="ecore:EClass" name="Discussion" eSuperTypes="#//CommunicationChannel"/>

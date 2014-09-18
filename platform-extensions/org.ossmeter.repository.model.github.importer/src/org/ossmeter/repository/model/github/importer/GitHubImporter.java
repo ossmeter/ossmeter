@@ -18,6 +18,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.ossmeter.platform.Platform;
+import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.repository.model.ImportData;
 import org.ossmeter.repository.model.Person;
 import org.ossmeter.repository.model.Project;
@@ -32,9 +33,11 @@ import com.googlecode.pongo.runtime.querying.QueryProducer;
 public class GitHubImporter {
 
 	private String authToken;
-	 
+	protected OssmeterLogger logger;
 	public GitHubImporter(String authToken) {
 		this.authToken = authToken;
+		logger = (OssmeterLogger) OssmeterLogger.getLogger("importer.gitHub");
+		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 /*		GitHubClient gitHubClient = new GitHubClient();
 		gitHubClient.setOAuth2Token("ffab283e2be3265c7b0af244e474b28430351973");
 		repositoryService = new RepositoryService();
@@ -44,11 +47,37 @@ public class GitHubImporter {
 */	
 	}
 	
+	private int getRemainingResource()
+	{
+		try {
+			String url = "https://api.github.com/rate_limit?access_token="+this.authToken;
+			InputStream is;
+			is = new URL(url).openStream();
+			
+			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));		
+			String jsonText = readAll(rd);
+	
+			JSONObject obj=(JSONObject)JSONValue.parse(jsonText);
+			JSONObject rate = (JSONObject)((JSONObject)obj.get("rate"));
+			//logger.debug("attempt to");
+			Integer remaining = new Integer(rate.get("remaining").toString());
+			return remaining;
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			logger.error("Get remaining api exception");
+			return 0;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			logger.error("Get remaining api exception");
+			return 0;
+		}
+	}
+	
 	public void waitApiRate(){
 		
 		String url = "https://api.github.com/rate_limit?access_token="+this.authToken;
 		boolean sleep = true;
-		
+		logger.info("API rate limit exceeded. Waiting to restart the importing...");
 		while (sleep) {
 			try {
 					InputStream is = new URL(url).openStream();
@@ -57,14 +86,13 @@ public class GitHubImporter {
 	
 					JSONObject obj=(JSONObject)JSONValue.parse(jsonText);
 					JSONObject rate = (JSONObject)((JSONObject)obj.get("rate"));
-				
 					Integer remaining = new Integer(rate.get("remaining").toString());
 					if (remaining > 0) {
 						sleep = false;
 					}
 				
 			} catch (IOException e) {
-				System.err.println("Having difficulties to connect, retrying...");
+				logger.error("Having difficulties to connect, retrying...");
 				continue;
 			}		
 		}	
@@ -115,11 +143,13 @@ public class GitHubImporter {
 
 		while (!stop) {
 			try {
+				if (getRemainingResource()==0)
+					waitApiRate();
 				is = new URL("https://api.github.com/repositories?since=" + lastImportedId + "&access_token=" + this.authToken).openStream();		
 				rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
 				jsonText = readAll(rd);			
 			} catch (IOException e) {
-				System.err.println("API rate limit exceeded. Waiting to restart the importing...");
+				logger.error("API rate limit exceeded. Waiting to restart the importing...");
 //				platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportingData().first().setLastImportedProject(String.valueOf(lastImportedId));
 //				platform.getProjectRepositoryManager().getProjectRepository().sync();
 				waitApiRate();
@@ -130,8 +160,8 @@ public class GitHubImporter {
 			if (! obj.isEmpty()) {
 				firstId = new Integer((((JSONObject)(obj.get(0))).get("id")).toString());
 				lastId = new Integer((((JSONObject)(obj.get(obj.size()-1))).get("id")).toString());
-				System.out.println("Scanning page: " + "https://api.github.com/repositories?since=" + lastImportedId);
-				System.out.println("--> Importing repositories from id:" + firstId + " to id:" + lastId);
+				logger.info("Scanning page: " + "https://api.github.com/repositories?since=" + lastImportedId);
+				logger.info("--> Importing repositories from id:" + firstId + " to id:" + lastId);
 				platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().first().setLastImportedProject(String.valueOf(firstId-1));
 				platform.getProjectRepositoryManager().getProjectRepository().sync();	
 				
@@ -143,7 +173,71 @@ public class GitHubImporter {
 				lastImportedId = lastId;
 			} else {
 				stop = true;
-				System.out.println("Importing completed.");
+				logger.info("Importing completed.");
+				break;
+			}
+		}
+	}
+	
+	public void importProjects(Platform platform, int numberOfProjects){
+		
+		int lastImportedId = 0;
+		InputStream is = null;
+		BufferedReader rd = null;
+		String jsonText = null;
+		boolean stop = false;
+		
+		int firstId = 0;
+		int lastId = 0;
+
+
+		if (platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().size() != 0) {
+			lastImportedId = new Integer(platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().first().getLastImportedProject());
+		} else {
+			ImportData id = new ImportData();
+			id.setLastImportedProject(String.valueOf(lastImportedId));
+			platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().add(id);	
+			platform.getProjectRepositoryManager().getProjectRepository().sync();
+		}
+		int iteration  = 0;
+		while (!stop) {
+			try {
+				if (getRemainingResource()==0)
+					waitApiRate();
+				is = new URL("https://api.github.com/repositories?since=" + lastImportedId + "&access_token=" + this.authToken).openStream();		
+				rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+				jsonText = readAll(rd);			
+			} catch (IOException e) {
+				logger.error("API rate limit exceeded. Waiting to restart the importing...");
+//				platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportingData().first().setLastImportedProject(String.valueOf(lastImportedId));
+//				platform.getProjectRepositoryManager().getProjectRepository().sync();
+				waitApiRate();
+				break;				
+			}
+			
+			JSONArray obj=(JSONArray)JSONValue.parse(jsonText);
+			if (! obj.isEmpty()) {
+				firstId = new Integer((((JSONObject)(obj.get(0))).get("id")).toString());
+				lastId = new Integer((((JSONObject)(obj.get(obj.size()-1))).get("id")).toString());
+				logger.info("Scanning page: " + "https://api.github.com/repositories?since=" + lastImportedId);
+				logger.info("--> Importing repositories from id:" + firstId + " to id:" + lastId);
+				platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().first().setLastImportedProject(String.valueOf(firstId-1));
+				platform.getProjectRepositoryManager().getProjectRepository().sync();	
+				
+				Iterator iter = obj.iterator();
+				while (iter.hasNext()) {
+					JSONObject entry = (JSONObject) iter.next();		
+					GitHubRepository repository = importRepository((String) entry.get("full_name"), platform);
+					iteration++;
+					if (iteration > numberOfProjects)
+						break;
+				}
+				lastImportedId = lastId;
+				if (iteration > numberOfProjects)
+					break;
+			} else {
+				stop = true;
+				logger.info("Importing completed.");
 				break;
 			}
 		}
@@ -160,7 +254,7 @@ public class GitHubImporter {
 			Boolean projectToBeUpdated = false;
 			
 			try {
-				System.out.println("---> processing repository " + projectId);
+				logger.info("---> processing repository " + projectId);
 
 				InputStream is = new URL("https://api.github.com/repos/" + projectId + "?access_token=" + this.authToken).openStream();
 				BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
@@ -177,7 +271,7 @@ public class GitHubImporter {
 					if (p instanceof GitHubRepository) {
 						repository = (GitHubRepository)p;
 						if (repository.getFull_name().equals(projectId)) {
-							System.out.println("-----> repository " + repository.getFull_name() + " already in the repository. Its metadata will be updated.");
+							logger.info("-----> repository " + repository.getFull_name() + " already in the repository. Its metadata will be updated.");
 							projectToBeUpdated = true;
 							break;
 						}
@@ -193,7 +287,7 @@ public class GitHubImporter {
 					repository.setDescription(currentRepo.get("description").toString());
 
 				repository.setFull_name(projectId);
-				
+				repository.setShortName(projectId);
 				repository.setName(currentRepo.get("name").toString());
 
 				if ((isNotNull(currentRepo,"private")))					
@@ -212,7 +306,7 @@ public class GitHubImporter {
 					repository.setClone_url(currentRepo.get("clone_url").toString());
 
 				if ((isNotNull(currentRepo,"homepage")))					
-					repository.setHomepage(currentRepo.get("homepage").toString());
+					repository.setHomePage(currentRepo.get("homepage").toString());
 
 				if ((isNotNull(currentRepo,"mirror_url")))					
 					repository.setMirror_url(currentRepo.get("mirror_url").toString());
@@ -266,21 +360,36 @@ public class GitHubImporter {
 				lastImportedId = new Integer(currentRepo.get("id").toString()); 
 				platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().first().setLastImportedProject(String.valueOf(lastImportedId));
 				platform.getProjectRepositoryManager().getProjectRepository().sync();	
-
+				if (!projectToBeUpdated) {
+					platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(repository);
+				}
+				
+				platform.getProjectRepositoryManager().getProjectRepository().sync();	
+	
+				return repository;
 			} catch (FileNotFoundException e1) {
-				e1.printStackTrace();
+				if (repository == null)
+					repository = new GitHubRepository();
+				repository.getExecutionInformation().setInErrorState(true);
+				logger.error("API rate limit exceeded. Waiting to restart the importing..." + e1.getMessage());
 			} catch (IOException e1) {
-				System.err.println("API rate limit exceeded. Waiting to restart the importing...");
-				waitApiRate();
+				if (getRemainingResource()==0)
+				{
+					logger.error("API rate limit exceeded. Waiting to restart the importing..." + e1.getMessage());
+					waitApiRate();
+					importRepository(projectId, platform);
+				}
+				else
+				{
+					if (repository == null)
+						repository = new GitHubRepository();
+					repository.getExecutionInformation().setInErrorState(true);
+					logger.error("Repository access blocked for project " + projectId + " " + e1.getMessage());
+				}
+				//importRepository(projectId, platform);
 			} 
-			
-			if (!projectToBeUpdated) {
-				platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(repository);
-			}
-			
-			platform.getProjectRepositoryManager().getProjectRepository().sync();	
-
-			return repository;	
+			return repository;
+				
 		
 	}
 

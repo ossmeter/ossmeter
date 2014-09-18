@@ -11,6 +11,7 @@ class ProjectRepository extends NamedElement {
   val License[*] licenses;
   val MetricProvider[*] metricProviders;
   val SchedulingInformation[*] schedulingInformation; 
+  val Company[*] companies;
 }
 
 class SchedulingInformation {
@@ -48,6 +49,8 @@ class Project extends NamedElement {
   ref License[*] licenses;
   val MetricProvider[*] metricProviderData;
   val ProjectExecutionInformation executionInformation;
+  attr String homePage;
+  val Company[*] companies;
 }
 
 class MetricProviderExecution {
@@ -118,8 +121,13 @@ class Role extends NamedElement {
 }
 
 class License extends NamedElement {
+  @searchable
   attr String url;
+  attr String content;
 }
 
-
+class Company extends NamedElement {
+  @searchable
+  attr String url;
+}
 

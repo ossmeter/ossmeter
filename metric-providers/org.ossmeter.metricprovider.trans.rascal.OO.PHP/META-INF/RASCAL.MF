@@ -1,0 +1,3 @@
+Source: src
+Main-Module: OOPHP
+Require-Bundles: org.ossmeter.metricprovider.trans.rascal.OO, org.ossmeter.code.model.php

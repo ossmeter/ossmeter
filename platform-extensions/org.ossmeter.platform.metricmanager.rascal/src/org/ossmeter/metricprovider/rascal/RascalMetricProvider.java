@@ -40,7 +40,6 @@ import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.VcsRepository;
 import org.rascalmpl.interpreter.control_exceptions.MatchFailed;
 import org.rascalmpl.interpreter.control_exceptions.Throw;
-import org.rascalmpl.interpreter.env.KeywordParameter;
 import org.rascalmpl.interpreter.result.AbstractFunction;
 import org.rascalmpl.interpreter.result.RascalFunction;
 import org.rascalmpl.interpreter.result.Result;
@@ -296,6 +295,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		} catch (Throw e) {
 		    if (!(e.getException() instanceof IConstructor && ((IConstructor) e.getException()).getName().equals("undefined"))) {
 		    	logger.error("metric threw an exception: " + e.getMessage() + " at " + e.getLocation(), e);
+		    	logger.error(e.getTrace());
 		    	throw e;
 		    }
 		    else {

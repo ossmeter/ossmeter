@@ -269,14 +269,16 @@ public class ProjectExecutor implements Runnable {
 			}
 			for (BugTrackingSystem bugTrackingSystem : project.getBugTrackingSystems()) {
 				try {
-					Date d = platform.getBugTrackingSystemManager().getFirstDate(bugTrackingSystem).addDays(-1);
+					Date d = platform.getBugTrackingSystemManager().getFirstDate(null, bugTrackingSystem).addDays(-1);
 					if (d == null) continue;
 					if (lastExec.compareTo(d) > 0) {
 						lastExec = d;
 					}
-				} catch (NoManagerFoundException e) {
+				} 
+				catch (NoManagerFoundException e) {
 					System.err.println(e.getMessage());					
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					e.printStackTrace();
 				}
 			}

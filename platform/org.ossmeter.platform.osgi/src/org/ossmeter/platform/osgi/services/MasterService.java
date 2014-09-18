@@ -63,9 +63,9 @@ public class MasterService implements IMasterService {
 						
 						while (it.hasNext()) {
 							Project next = it.next();
-							if (next.getExecutionInformation().getMonitor()) {
+						//	if (next.getExecutionInformation().getMonitor()) {
 								projects.add(next.getShortName());
-							}
+						//	}
 							if (projects.size() >= 3) break;
 						}
 						

@@ -1,0 +1,3 @@
+Source: src
+Main-Module: Clones
+Require-Bundles: org.ossmeter.metricprovider.trans.rascal.LOC

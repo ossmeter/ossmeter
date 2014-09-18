@@ -20,6 +20,51 @@ set[str] committersToday(ProjectDelta delta = \empty()) {
   return {co.author | /VcsCommit co := delta};
 }
 
+@metric{firstLastCommitDatesPerDeveloper}
+@doc{firstLastCommitDatesPerDeveloper}
+@friendlyName{First and last commit dates per developer}
+@uses = ("committersToday":"committersToday")
+@appliesTo{generic()}
+map[str, tuple[datetime, datetime]] firstLastCommitDates(ProjectDelta delta = \empty(), map[str, tuple[datetime first, datetime last]] prev = (), 
+  set[str] committersToday = {}) {
+  map[str, tuple[datetime, datetime]] developerCommitDates = ();
+  for (author <- committersToday) {
+    if (author in prev) {
+      developerCommitDates[author] = <prev[author].first, delta.date>;
+    } else {
+      developerCommitDates[author] = <delta.date, delta.date>;
+    }
+  }
+  return developerCommitDates;
+}
+
+@metric{committersAge}
+@doc{Age of committers}
+@friendlyName{Age of committers}
+@uses = ("firstLastCommitDatesPerDeveloper" : "commitDates")
+@appliesTo{generic()}
+rel[str, int] ageOfCommitters(map[str, tuple[datetime first, datetime last]] commitDates = ()) {
+  return { <author, daysDiff(commitDates[author].first, commitDates[author].last)> | author <- commitDates };
+}
+
+@metric{developmentTeam}
+@doc{Development team}
+@friendlyName{Development team}
+@uses = ("committersToday" : "committersToday")
+@appliesTo{generic()}
+set[str] developmentTeam(set[str] prev = {}, set[str] committersToday = {}) {
+  return prev + committersToday;
+}
+
+@metric{sizeOfDevelopmentTeam}
+@doc{Size of development team}
+@friendlyName{Size of development team}
+@uses = ("developmentTeam" : "team")
+@appliesTo{generic()}
+int sizeOfDevelopmentTeam(set[str] team = {}) {
+  return size(team);
+}
+
 @metric{activeCommitters}
 @doc{Committers who have been active the last two weeks}
 @friendlyName{committersLastTwoWeeks}
@@ -38,8 +83,8 @@ rel[datetime, set[str]] activeCommitters(ProjectDelta delta = \empty(), rel[date
 @appliesTo{generic()}
 rel[datetime, set[str]] longerTermActiveCommitters(ProjectDelta delta = \empty(), rel[datetime,set[str]] prev = {}, set[str] committersToday = {}) {
   today    = delta.date;
-  sixmonths = decrementMonths(today, 6);
-  return {<d,t> | <d,t> <- prev, d > sixmonths} + {<today, committersToday>};  
+  twelvemonths = decrementMonths(today, 12);
+  return {<d,t> | <d,t> <- prev, d > twelvemonths} + {<today, committersToday>};  
 }
 
 
@@ -78,18 +123,11 @@ int maximumActiveCommittersEver(rel[datetime d, int n] history = {}) {
 @uses = ("numberOfActiveCommitters.historic" :"history"
       ,"maximumActiveCommittersEver":"maxDevs"
       ,"numberOfActiveCommitters":"activeDevs"
+      ,"sizeOfDevelopmentTeam":"totalDevs"
       ,"numberOfActiveCommittersLongTerm":"longTermActive")
 @appliesTo{generic()}
-Factoid developmentTeamStability(rel[datetime day, int active] history = {}, int maxDevs = 0, int activeDevs = 0, int longTermActive = 0) {
-  if (history == {}) {
-    throw undefined("No commit history available", |unknown:///|);
-  }
-
-  sorted = sort(history, bool(tuple[datetime,int] a, tuple[datetime,int] b) { return a[0] < b[0]; });
-  
-  halfYearAgo = decrementMonths(sorted[-1].day, 6);  
-  lastYear = [<d,m> | <d,m> <- sorted, d > halfYearAgo];
-  sl = size(lastYear) > 2 ? slope([<i,lastYear[i][1]> | i <- index(lastYear)]) : 0;
+Factoid developmentTeamStability(rel[datetime day, int active] history = {}, int maxDevs = 0, int totalDevs = 0, int activeDevs = 0, int longTermActive = 0) {
+  sl = historicalSlope(history, 6);
 
   stability = \one();
   team = "";
@@ -112,9 +150,10 @@ Factoid developmentTeamStability(rel[datetime day, int active] history = {}, int
   }
   
   txt = "<team>
+        'The total number of developers who have worked on this project ever is <totalDevs>.
         'The maximum number of active developers for this project during its lifetime is <maxDevs>,
         'and in the last two weeks there were <activeDevs> people actively developing, as compared to 
-        '<longTermActive> in the last six months.";
+        '<longTermActive> in the last twelve months.";
         
   return factoid(txt, stability);
 }

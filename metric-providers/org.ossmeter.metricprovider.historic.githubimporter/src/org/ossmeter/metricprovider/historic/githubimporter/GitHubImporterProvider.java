@@ -9,6 +9,8 @@ import org.ossmeter.platform.IHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.platform.Platform;
+import org.ossmeter.platform.logging.OssmeterLogger;
+import org.ossmeter.platform.logging.OssmeterLoggerFactory;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.github.GitHubRepository;
 import org.ossmeter.repository.model.github.importer.*;
@@ -21,10 +23,14 @@ import com.mongodb.Mongo;
 public class GitHubImporterProvider implements IHistoricalMetricProvider {
 
 	public final static String IDENTIFIER = 
-			"org.ossmeter.metricprovider.historic.redmineimporter";
-	
+			"org.ossmeter.metricprovider.historic.githubimporter";
+	protected OssmeterLogger logger;
 	protected MetricProviderContext context;
-	
+	public GitHubImporterProvider()
+	{
+		logger = (OssmeterLogger) OssmeterLogger.getLogger("metricprovider.importer.gitHub");
+		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
+	}
 	/**
 	 * List of MPs that are used by this MP. These are MPs who have specified that 
 	 * they 'provide' data for this MP.
@@ -40,19 +46,19 @@ public class GitHubImporterProvider implements IHistoricalMetricProvider {
 	@Override
 	public String getShortIdentifier() {
 		// TODO Auto-generated method stub
-		return "redmineimporter";
+		return "githubimporter";
 	}
 
 	@Override
 	public String getFriendlyName() {
 		// TODO Auto-generated method stub
-		return "Redmine importer";
+		return "GitHub importer";
 	}
 
 	@Override
 	public String getSummaryInformation() {
 		// TODO Auto-generated method stub
-		return "This provider enable to update a projects calling a importProject from google code importer";
+		return "This provider enable to update a projects calling a importProject from github importer";
 	}
 
 	@Override
@@ -82,19 +88,19 @@ public class GitHubImporterProvider implements IHistoricalMetricProvider {
 		GitHubRepository ep = null;
 		Mongo mongo;
 		try {
-			GitHubImporter epi = new GitHubImporter("");
+			GitHubImporter epi = new GitHubImporter("ffab283e2be3265c7b0af244e474b28430351973");
 			mongo = new Mongo();
 			PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
-			//Lo posso prendere da qualche altra parte
 			Platform platform = new Platform(mongo);
+			//logger.info("J "+ project.getId());
 			ep = epi.importRepository( ((GitHubRepository)project).getFull_name(), platform);
-			
+			mongo.close();
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("GitHub metric provider exception:" + e.getMessage());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("GitHub metric provider exception:" + e.getMessage());
 		}
 		return ep;
 	}

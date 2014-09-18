@@ -7,6 +7,7 @@ import org.ossmeter.platform.IHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.platform.Platform;
+import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.Project;
 
@@ -24,7 +25,12 @@ public class EclipseImporterProvider implements IHistoricalMetricProvider {
 			"org.ossmeter.metricprovider.historic.eclipseimporter";
 	
 	protected MetricProviderContext context;
-	
+	OssmeterLogger logger;
+	public EclipseImporterProvider()
+	{
+		logger = (OssmeterLogger) OssmeterLogger.getLogger("GitHub Importer");
+		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
+	}
 	/**
 	 * List of MPs that are used by this MP. These are MPs who have specified that 
 	 * they 'provide' data for this MP.
@@ -88,10 +94,12 @@ public class EclipseImporterProvider implements IHistoricalMetricProvider {
 
 			Platform platform = new Platform(mongo);
 			ep = epi.importProject(project.getShortName(), platform);
-			
+			if (ep.getExecutionInformation().getInErrorState() )
+				project.getExecutionInformation().setInErrorState(true);
+			mongo.close();
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error launch EclipseImporterProvider " + e.getMessage());
 		}
 		return ep;
 	}
