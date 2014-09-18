@@ -19,9 +19,13 @@ alias Table = rel[str group, str kind, loc file, int line];
 
 // some reusable metric utility functions:
 private int percentageOfFilesWithViolations(rel[Language, loc, M3] m3s = {}, Table violations = {}) {
-   println("size violations: <size(violations.file)>");
-   println("total files: <size({ f | <\java(),f,_> <- m3s})>");
-  return percent(size(violations.file),  size({ f | <\java(),f,_> <- m3s}));
+  numJavaFiles = ( 0 | it + 1 | <\java(), f, _> <- m3s );
+  if (numJavaFiles == 0) {
+    throw undefined("No Java files available", |java+project:///|);
+  }
+  println("size violations: <size(violations.file)>");
+  println("total files: <numJavaFiles>");
+  return percent(size(violations.file),  numJavaFiles);
 }
   
 private map[loc,int] violationsPerFile(rel[Language, loc, M3] m3s = {}, Table violations = {})

@@ -8,6 +8,7 @@ import lang::java::m3::AST;
 import lang::java::m3::TypeSymbol;
 import analysis::graphs::Graph;
 import org::ossmeter::metricprovider::MetricProvider;
+import Java;
 
 import OO;
 import OOFactoids;
@@ -26,11 +27,6 @@ import analysis::graphs::Graph;
 import org::ossmeter::metricprovider::MetricProvider;
 import Prelude;
 
-
-@memo
-private M3 systemM3(rel[Language, loc, M3] m3s) {
-  return composeM3(|java+tmp:///|, range(m3s[java()]));
-}
 
 @memo
 set[loc] enums(M3 m) = { e | e <- m@declarations<name>, e.scheme == "java+enum" };
@@ -174,6 +170,7 @@ map[loc, int] MPC_Java(rel[Language, loc, AST] asts = {}) {
   map[loc, int] mpc = ();
   
   for ( /c:class(_, _, _, _, _) <- asts ) { // TODO rewrite to visit
+    
     mpc[c@decl] = ( 0 | it + 1 | /methodCall(_, _, _) <- c ) +
                   ( 0 | it + 1 | /methodCall(_, _, _, _) <- c ) +
                   ( 0 | it + 1 | /constructorCall(_, _) <- c) + // TODO do we need to include constructorCall?
@@ -226,7 +223,7 @@ map[loc, real] I_Java(map[loc, int] ce = (), map[loc, int] ca = ()) {
 @friendlyName{Response for class (Java)}
 @appliesTo{java()}
 map[loc, int] RFC_Java(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+  M3 m3 = systemM3(m3s);
   return RFC(m3@methodInvocation, allMethods(m3), allTypes(m3));
 }
 

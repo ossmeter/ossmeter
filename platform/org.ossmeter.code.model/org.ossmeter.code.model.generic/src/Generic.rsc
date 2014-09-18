@@ -101,5 +101,5 @@ return (ext:lang | <lang, exts> <- languageExtensions, ext <- exts);
 
 str estimateLanguageByFileExtension(loc filename)
 {
-return getLanguageExtensions()[toLowerCase(filename.extension)]?"";
+  return getLanguageExtensions()[toLowerCase(filename.extension)]?"";
 }

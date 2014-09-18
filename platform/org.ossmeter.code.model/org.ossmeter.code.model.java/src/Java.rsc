@@ -86,3 +86,14 @@ set[loc] findJars(set[loc] checkouts) {
 set[loc] findClassFiles(set[loc] checkouts) {
   return {*find(ch, "class") | ch <- checkouts};
 }
+
+
+@memo
+public M3 systemM3(rel[Language, loc, M3] m3s) {
+  javaM3s = range(m3s[java()]);
+  projectLoc = |java+tmp:///|;
+  if (javaM3s == {}) {
+    throw undefined("No Java M3s available", projectLoc);
+  }
+  return composeM3(projectLoc, javaM3s);  
+}

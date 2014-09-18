@@ -7,7 +7,8 @@ import lang::php::m3::Calls;
 import lang::php::ast::AbstractSyntax;
 import lang::php::ast::System;
 import lang::php::util::Utils;
-import org::ossmeter::metricprovider::ProjectDelta; 
+import org::ossmeter::metricprovider::ProjectDelta;
+import org::ossmeter::metricprovider::MetricProvider;
 
 import IO;
 import Message;
@@ -38,9 +39,9 @@ public rel[Language, loc, AST] extractASTsPHP(loc project, ProjectDelta delta, m
 @memo
 public M3 composeM3s(rel[Language, loc, M3] m3s) {
 	phpM3s = range(m3s[php()]);
-	projectLoc = |project:///|;
+	projectLoc = |php+project:///|;
 	if (phpM3s == {}) {
-		return createEmptyM3(projectLoc);
+		throw undefined("No PHP M3 models available", projectLoc);
 	}
 	else {
 		return composeM3(projectLoc, phpM3s);

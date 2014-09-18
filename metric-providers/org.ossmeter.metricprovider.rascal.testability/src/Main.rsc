@@ -7,11 +7,8 @@ import util::ValueUI;
 import analysis::graphs::Graph;
 extend lang::java::m3::Core;
 import JUnit4;
+import Java;
 
-@memo
-private M3 systemM3(rel[Language, loc, M3] m3s) {
-  return composeM3(|java+tmp:///|, range(m3s[java()]));
-}
 
 @metric{TestCoverage}
 @doc{Static Estimation of test coverage}
