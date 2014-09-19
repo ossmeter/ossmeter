@@ -317,7 +317,7 @@ private Header extractHeader(list[str] lines, int headerSize, int headerStart) {
 }
 
 @memo
-private map[loc, Header] extractHeaders(rel[Language, loc, AST] asts = {}) {
+private map[loc, Header] extractHeaders(rel[Language, loc, AST] asts) {
 	map[loc, Header] headers = ();
 	
 	for (<lang, f, _> <- asts, lang != generic()) {
@@ -340,7 +340,7 @@ private map[loc, Header] extractHeaders(rel[Language, loc, AST] asts = {}) {
 @appliesTo{generic()}
 list[int] headerCounts(rel[Language, loc, AST] asts = {}) {
 
-	headersPerFile = extractHeaders(asts=asts);
+	headersPerFile = extractHeaders(asts);
 	
 	headers = range(headersPerFile);
 	
@@ -392,7 +392,11 @@ list[int] headerCounts(rel[Language, loc, AST] asts = {}) {
 @friendlyName{Consistency of header use}
 @appliesTo{generic()}
 @uses{("headerCounts": "headerCounts", "headerPercentage": "headerPercentage")}
-Factoid headerUse(rel[Language, loc, AST] asts = {}, list[int] headerCounts = [], real headerPercentage = -1.0) {
+Factoid headerUse(list[int] headerCounts = [], real headerPercentage = -1.0) {
+
+	if (headerCounts == [] || headerPercentage == -1.0) {
+		throw undefined("Not enough header data available", |tmp:///|);
+	}
 
 	starLookup = [\one(), two(), three(), four()];
 	
@@ -414,8 +418,12 @@ Factoid headerUse(rel[Language, loc, AST] asts = {}, list[int] headerCounts = []
 		
 		message = "The percentage of files with a header is <headerPercentage>%." +
 			"The largest group of similar headers spans <highestSimilarity>% of the files.";
-	} else {
+	}
+	else if (headerPercentage > 0.0) {
 		message = "Only <headerPercentage>% of the files contain a header.";
+	}
+	else {
+		message = "No headers found.";
 	}
 	
 	return factoid(message, starLookup[stars]);	
