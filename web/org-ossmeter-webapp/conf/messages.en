@@ -120,6 +120,7 @@ ossmeter.navigation.login=Log in
 ossmeter.navigation.home=Home
 ossmeter.navigation.admin=Admin
 ossmeter.navigation.signup=Sign up
+ossmeter.navigation.projects=Projects
 
 # ossmeter: Handler
 ossmeter.handler.loginfirst=You need to log in first, to view ''{0}''
@@ -135,10 +136,14 @@ ossmeter.profile.logged=You are currently logged in with:
 ossmeter.profile.session=Your user ID is {0} and your session will expire on {1}
 ossmeter.profile.session_endless=Your user ID is {0} and your session will not expire, as it is endless
 ossmeter.profile.password_change=Change/set a password for your account
+ossmeter.profile.notifications.empty=You currently have no notifications configured.
+ossmeter.profile.notifications.creation.success=Notification successfully created
+ossmeter.profile.notifications.creation.error=Unable to create notification. Check all inputs.
+
 
 # ossmeter - sample: Index page
 ossmeter.index.title=Welcome to OSSMETER
-ossmeter.index.intro=OSSMETER webapp
+ossmeter.index.intro=OSSMETER is an open-source platform for automatically analysing the source code, bug tracking systems, and communication channels of open source software projects.
 ossmeter.index.intro_2=Welcome to OSSMETER!!!
 ossmeter.index.intro_3=Explore and compare projects and metrics
 ossmeter.index.heading=Heading

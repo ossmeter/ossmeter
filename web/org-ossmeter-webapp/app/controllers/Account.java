@@ -1,6 +1,7 @@
 package controllers;
 
 import models.User;
+import models.Notification;
 import be.objectify.deadbolt.java.actions.Restrict;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.SubjectPresent;
@@ -214,6 +215,27 @@ public class Account extends Controller {
 			}
 			return PlayAuthenticate.merge(ctx(), merge);
 		}
+	}
+
+	@SubjectPresent
+	public static Result createNotification() {
+		// this is the currently logged in user
+		final User user = Application.getLocalUser(session());
+
+		final Form<Notification> form = form(Notification.class).bindFromRequest();
+
+		if (form.hasErrors()) {
+			flash("error", Messages.get("ossmeter.profile.notifications.creation.error"));
+			return badRequest(views.html.setupnotification.render(user, form));
+		}
+
+		Notification noti = form.get();
+		noti.user = user;
+		user.notifications.add(noti);
+		user.save();
+
+		flash(Application.FLASH_MESSAGE_KEY, Messages.get("ossmeter.profile.notifications.creation.success"));
+		return redirect(routes.Application.profile());
 	}
 
 }

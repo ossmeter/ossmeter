@@ -8,6 +8,8 @@ GET     /admin                 		controllers.Application.admin
 GET     /assets/javascript/routes.js    controllers.Application.jsRoutes
 
 GET     /profile                    controllers.Application.profile
+GET		/profile/notification		controllers.Application.profileNotification
+POST	/profile/notification		controllers.Account.createNotification
 
 # User accounts login/auth routes
 GET     /login                      controllers.Application.login
@@ -54,6 +56,8 @@ GET     /projects                  	controllers.Projects.projects()
 # Create
 GET     /projects/new               controllers.Projects.create()
 POST    /projects/new               controllers.Projects.save()
+# Import
+POST    /projects/import               controllers.Projects.importProject()
 # Read/View
 # TODO: use the id instead the shortName 
 # GET		/projects/:id				controllers.Projects.view(id:Long)

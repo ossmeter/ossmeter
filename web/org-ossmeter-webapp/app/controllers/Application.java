@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import models.User;
+import models.Notification;
 import play.Routes;
 import play.data.Form;
 import play.mvc.*;
@@ -22,10 +23,12 @@ import com.feth.play.module.pa.PlayAuthenticate;
 import com.feth.play.module.pa.providers.password.UsernamePasswordAuthProvider;
 import com.feth.play.module.pa.user.AuthUser;
 
+import static play.data.Form.*;
+
 public class Application extends Controller {
 
 	public static final String FLASH_MESSAGE_KEY = "message";
-	public static final String FLASH_ERROR_KEY = "error";
+	public static final String FLASH_ERROR_KEY = "danger";
 	public static final String USER_ROLE = "user";
 	
 	public static Result index() {
@@ -48,6 +51,12 @@ public class Application extends Controller {
 	public static Result profile() {
 		final User localUser = getLocalUser(session());
 		return ok(profile.render(localUser));
+	}
+
+	@Restrict(@Group(Application.USER_ROLE))
+	public static Result profileNotification() {
+		final User localUser = getLocalUser(session());
+		return ok(setupnotification.render(localUser, form(Notification.class)));
 	}
 
 	public static Result login() {

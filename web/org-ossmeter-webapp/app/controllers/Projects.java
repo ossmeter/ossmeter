@@ -14,56 +14,71 @@ import play.libs.F.Function;
 import play.libs.F.Promise;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.net.ConnectException;
+
 import static play.data.Form.*;
 
 public class Projects extends Controller {
 	
-	private static final String jsonUrl = "http://localhost:1234/";
+	private static final String jsonUrl = "http://localhost:8182/";
 	
-	public static List<Project> getProjects(){
-		final Promise<List<Project>> resultPromise = WS.url(jsonUrl).get().map(
+	public static List<Project> getProjects() throws Exception{
+		final Promise<List<Project>> resultPromise = WS.url(jsonUrl+"projects").get().map(
 	            new Function<WSResponse, List<Project>>() {
 	                public List<Project> apply(WSResponse response) {
 	                	JsonNode json = response.asJson();
 	                    ArrayNode results = (ArrayNode)json;
+
+	                    System.out.println("result: " + json);
 
 	                    List<Project> projects = new ArrayList<Project>();
 	                    Iterator<JsonNode> it = results.iterator();
 	                    while (it.hasNext()) {
 	                        JsonNode node  = it.next();
 	                        Project project = new Project();
-	                        project.id = node.get("id").asLong();
+	                        // project.id = node.get("shortName").asText();
+	                        System.out.println("node: " + node);
 	                        project.name = node.get("name").asText();
 	                        project.shortName = node.get("shortName").asText();
-	                        project.url = node.get("url").asText();
-	                        project.desc = node.get("desc").asText();
+	                        // project.url = node.get("url").asText();
+	                        // project.desc = node.get("desc").asText();
 
 	                        projects.add(project);
 	                    }
 	                	return projects;
 	                }
 	            }
+	    ).recover(
+		    new Function<Throwable, List<Project>>() {
+		    	@Override
+		    	public List<Project> apply(Throwable throwable) throws Throwable {
+		    		throw throwable;
+		    	}
+		    }
 	    );
 		return resultPromise.get(120000);
 	}
 	
 	public static Project getProject(String shortName){
-		final Promise<Project> resultPromise = WS.url(jsonUrl+"p/"+shortName).get().map(
+		System.out.println("requesting: " + jsonUrl+"projects/p/"+shortName);
+		final Promise<Project> resultPromise = WS.url(jsonUrl+"projects/p/"+shortName).get().map(
 	            new Function<WSResponse, Project>() {
 	                public Project apply(WSResponse response) {
 	                	JsonNode json = response.asJson();
-	                    ArrayNode results = (ArrayNode)json;
 
-	                    Iterator<JsonNode> it = results.iterator();
-	                    Project project = new Project();
-	                    if (it.hasNext()) {
-	                        JsonNode node  = it.next();
-	                        project.id = node.get("id").asLong();
-	                        project.name = node.get("name").asText();
-	                        project.shortName = node.get("shortName").asText();
-	                        project.url = node.get("url").asText();
-	                        project.desc = node.get("desc").asText();
-	                    }
+	                	// Check the result
+	                	// TODO
+
+	                	// We're good! Let's show them the project.
+	                    Project project = new SubProject();
+                        // project.id = node.get("shortName").asText();
+                        project.name = json.get("name").asText();
+                        project.shortName = json.get("shortName").asText();
+                        // project.url = node.get("url").asText();
+                        project.desc = json.get("description").asText();
                         return project;
 	                }
 	            }
@@ -72,8 +87,18 @@ public class Projects extends Controller {
 	}
 	
 	public static Result projects() {
-	    List<Project> projectList = getProjects();
-	    return ok(views.html.projects.projects.render(projectList));
+		try {
+		    List<Project> projectList = getProjects();
+		    return ok(views.html.projects.projects.render(projectList));
+		} catch (ConnectException e) {
+			e.printStackTrace();
+			flash(Application.FLASH_ERROR_KEY, "Unable to connect to the OSSMETER API."); //TODO move to Messages.
+			return ok(views.html.index.render());
+		} catch (Exception e) {
+			e.printStackTrace();
+			flash(Application.FLASH_ERROR_KEY, "An unexpected error has occurred. We are looking into it.");//TODO move to Messages.
+			return ok(views.html.index.render());
+		}
 	}
 	
 	public static Result view(String shortName) {
@@ -82,14 +107,65 @@ public class Projects extends Controller {
 	}
 	
 	public static Result create() {
-		return ok(views.html.projects.form.render(form(Project.class)));
+		return ok(views.html.projects.form.render(form(Project.class), form(ProjectImport.class)));
 		
+	}
+
+	public static Result importProject() {
+	    final Form<ProjectImport> form = form(ProjectImport.class).bindFromRequest();
+	    
+	    if (form.hasErrors()) {
+	    	flash(Application.FLASH_ERROR_KEY, "Invalid URL.");
+	    	return badRequest(views.html.projects.form.render(form(Project.class), form));
+	    }
+
+		ProjectImport imp = form.get();
+	    System.out.println(imp.url);
+
+		ObjectMapper mapper = new ObjectMapper();
+		ObjectNode node = mapper.createObjectNode();
+		node.put("url", imp.url);
+
+
+		final Promise<Result> resultPromise = WS.url("http://localhost:8182/projects/import").post(node)
+				.map(new Function<WSResponse, Result>() {
+					public Result apply(WSResponse response) {
+						
+						System.err.println("response body: " + response.getBody());
+
+						JsonNode node = response.asJson();
+
+						if (node.has("status") && "error".equals(node.get("status").asText())) {
+							flash(Application.FLASH_ERROR_KEY, "Invalid URL.");
+							return badRequest(views.html.projects.form.render(form(Project.class), form));
+						}
+
+						// TODO check for errors, etc.
+						
+						try {
+							Project project = new Project();
+	                        // project.id = node.get("shortName").asLong();
+	                        project.name = node.get("name").asText();
+	                        project.shortName = node.get("shortName").asText();
+	                        // project.url = node.get("url").asText();
+	                        // project.desc = node.get("desc").asText();
+
+							return ok(views.html.projects.view_item.render(project));
+							// return view(project.shortName);
+						} catch (Exception e) {
+							e.printStackTrace(); //FIXME: handle better
+							return internalServerError(e.getMessage());
+						}
+					}
+				});
+		return resultPromise.get(120000);	
 	}
 	
 	public static Result save() {
 		Form<Project> form = form(Project.class).bindFromRequest();
 		if (form.hasErrors()) {
-	        return badRequest(views.html.projects.form.render(form));
+			flash("error", "Invalid details.");
+	        return badRequest(views.html.projects.form.render(form, form(ProjectImport.class)));
 	    } else {
 			Project project = form.get();
 			project.save();
@@ -106,7 +182,7 @@ public class Projects extends Controller {
 	public static Result update(Long id) {
 		Form<Project> form = form(Project.class).bindFromRequest();
 		if (form.hasErrors()) {
-	        return badRequest(views.html.projects.form.render(form));
+	        return badRequest(views.html.projects.form.render(form, form(ProjectImport.class)));
 	    } else {
 			Project project = form.get();
 			project.id = id;
