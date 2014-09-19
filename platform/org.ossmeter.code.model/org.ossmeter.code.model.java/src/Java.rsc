@@ -4,6 +4,7 @@ extend lang::java::m3::Core;
 import lang::java::m3::AST;
 import util::FileSystem;
 import org::ossmeter::metricprovider::ProjectDelta;
+import org::ossmeter::metricprovider::MetricProvider;
 import IO;
 
 @memo
