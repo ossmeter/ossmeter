@@ -1,0 +1,21 @@
+.navbar {
+	padding:5px;
+}
+
+.navbar-static-top .navbar-inner {
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none; 
+
+}
+
+.navbar .nav>.active>a,  .navbar .nav>.active>a:hover{
+	background: none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none; 
+}
+
+.nav>li>a {
+	text-transform: uppercase;
+}

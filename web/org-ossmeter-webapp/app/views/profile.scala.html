@@ -22,16 +22,52 @@
         }
     @defining(localUser.getProviders()) { providers =>
         @if(providers.size() > 0) {
-        @if(providers.size() ==1) {
-            @Messages("ossmeter.profile.providers_one")
-        } else {
-            @Messages("ossmeter.profile.providers_many",providers.size().toString())
-        }
-        @for(p <- providers) {
-            @_providerIcon(p)
-        }
+            @if(providers.size() ==1) {
+                @Messages("ossmeter.profile.providers_one")
+            } else {
+                @Messages("ossmeter.profile.providers_many",providers.size().toString())
+            }
+            @for(p <- providers) {
+                @_providerIcon(p)
+            }
         <br/>
         }
+    }
+
+    <h2>Configure Notifications</h2>
+    @if(localUser.notifications.size() > 0) {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Project</th>
+                    <th>Metric</th>
+                    <th>Threshold</th>
+                    <th>Trigger</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+        @for(n <- localUser.notifications) {
+            <tr> <!-- TODO: Will want to present the project and metric name, not ID. -->
+                <td>@n.projectId</td>
+                <td>@n.metricId</td>
+                <td>@n.thresholdValue</td>
+                <td>
+                @if(n.aboveThreshold) {
+                    ABOVE
+                } else {
+                    BELOW
+                }
+                </td>
+                <td>
+                    Edit &nbsp; Delete
+                </td>
+            </tr>
+        }
+            </tbody>
+        </table>
+    } else {
+        @Messages("ossmeter.profile.notifications.empty") <a href="@routes.Application.profileNotification">Click here to add one</a>
     }
 
     <br/>

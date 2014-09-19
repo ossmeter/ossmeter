@@ -1,5 +1,22 @@
+
+/* TODO: Edit the image size, don't use CSS */
+.logo{
+    width:50%
+}
+
+
+
 body {
-    padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+    font: 14px/1.8em 'Open Sans', Helvetica, Arial, Helvetica, sans-serif;
+    /*padding-top: 60px;  60px to make the container go all the way to the bottom of the topbar */
+    margin: auto;
+}
+
+h1,h2,h3,h4 {
+    font-weight: normal; 
+    font-family:'Bree Serif', Georgia, serif;
+    color:#023E73;
+    margin:0;
 }
 
 form .error input {
@@ -28,7 +45,9 @@ form .error .help-inline {
 }
 
 h1 {
-    margin-bottom: 20px !important;
+    /*margin-bottom: 20px !important;*/
+    margin:0;
+    margin-bottom:5px;
 }
 
 .row {
@@ -38,3 +57,49 @@ h1 {
 .span4 {
 	width: 360px;
 }
+
+.center {
+    text-align: center;
+}
+
+
+.projectbreadcrumb {
+    font-size:8pt;
+    background-color:#fff;
+    margin:0;
+}
+
+.projectbreadcrumb li + li::before {
+    content : "|";
+}
+
+ol.projectbreadcrumb {
+    padding:0;
+}
+
+section{
+    margin-top:20px;
+}
+
+.section-heading h2 {
+    margin: 0;
+}
+.section-heading {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 2px;
+    margin-bottom: 10px;
+}
+
+.quote {
+    font-size:2em;
+}
+
+footer {
+    background: #023E73;
+    padding: 10px;
+    margin-top: 80px;
+    color: #C0C0C0;
+    font-size:0.9em;
+}
+footer a { color: #ddd; }
+footer a:hover { color: #fff; }

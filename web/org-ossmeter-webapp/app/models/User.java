@@ -53,6 +53,9 @@ public class User extends Model implements Subject {
 
 	public boolean emailValidated;
 
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="user")
+	public List<Notification> notifications;
+
 	@ManyToMany(cascade = CascadeType.ALL)
 	public List<SecurityRole> roles;
 
