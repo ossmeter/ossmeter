@@ -6,7 +6,7 @@ import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.app.example.util.ProjectCreationUtil;
 import org.ossmeter.platform.osgi.OssmeterApplication;
 import org.ossmeter.repository.model.Project;
-import org.ossmeter.repository.model.ProjectCollection;
+import org.ossmeter.repository.model.ProjectExecutionInformation;
 import org.ossmeter.repository.model.ProjectRepository;
 
 import com.googlecode.pongo.runtime.PongoFactory;
@@ -23,18 +23,30 @@ public class App implements IApplication {
 		Platform platform = new Platform(mongo);
 		ProjectRepository repo = platform.getProjectRepositoryManager().getProjectRepository();
 		
-		ProjectCollection coll = repo.getProjects();
-		for (Project p : coll) {
-			coll.remove(p);
-		}
+//		ProjectCollection coll = repo.getProjects();
+//		for (Project p : coll) {
+//			coll.remove(p);
+//		}
 		
-		Project pongo = ProjectCreationUtil.createSvnProject("pongo", "http://pongo.googlecode.com/svn/trunk");
-		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(pongo);
+//		Project pongo = ProjectCreationUtil.createSvnProject("pongo", "http://pongo.googlecode.com/svn/trunk");
+//		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(pongo);
 		
+//		Project pdb = ProjectCreationUtil.createProjectWithNewsGroup("xText", "news.eclipse.org", "eclipse.modeling.tmf", true, "exquisitus", "flinder1f7", 80, 10000);
+		Project pdb = ProjectCreationUtil.createProjectWithBugTrackingSystem("epsilon", "https://bugs.eclipse.org/bugs/xmlrpc.cgi", "epsilon", null);
 //		Project pdb = ProjectCreationUtil.createGitProject("rascal", "file:///Users/jurgenv/Workspaces/Rascal/rascal");
-//		coll.add(pdb);
+		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(pdb);
 
 		
+		for (Project p : platform.getProjectRepositoryManager().getProjectRepository().getProjects()) {
+			try {
+				if (p.getExecutionInformation() == null) p.setExecutionInformation(new ProjectExecutionInformation());
+			} catch (RuntimeException e) {
+				p.setExecutionInformation(new ProjectExecutionInformation());
+			}
+			p.getExecutionInformation().setMonitor(true);
+		}
+		platform.getProjectRepositoryManager().getProjectRepository().sync();
+			
 		// Synchronise the changes and close the connection
 		
 //		EclipseProjectImporter importer = new EclipseProjectImporter();

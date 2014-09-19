@@ -1,4 +1,4 @@
-package org.ossmeter.metricprovider.generic.avgbugcreationclosedtime.model;
+package org.ossmeter.metricprovider.historic.avgbugcreationclosedtime.model;
 
 @viz(target="gcharts", chart="line")
 class DailyAvgBugOpenTime {

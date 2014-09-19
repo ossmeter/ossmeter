@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<plugin>
+  
+
+
+
+
+
+
+
+
+
+
+
+<extension point="org.ossmeter.platform.metricprovider">
+   <metricProvider provider="org.ossmeter.metricprovider.trans.overallemotionsbugzilla.OverallEmotionsMetricProvider">
+   </metricProvider>
+</extension>
+
+<extension point="com.googlecode.pongo.runtime.osgi">
+    <class name="org.ossmeter.metricprovider.trans.overallemotionsbugzilla.model.OverallEmotionBugs"/>
+    <class name="org.ossmeter.metricprovider.trans.overallemotionsbugzilla.model.BugzillaData"/>
+    <class name="org.ossmeter.metricprovider.trans.overallemotionsbugzilla.model.Emotion"/>
+  </extension>
+</plugin>

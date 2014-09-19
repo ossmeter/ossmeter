@@ -1,4 +1,4 @@
-package org.ossmeter.metricprovider.generic.numberofduplicatebugzillabugs.model;
+package org.ossmeter.metricprovider.historic.numberofduplicatebugzillabugs.model;
 
 @viz(target="gcharts", chart="line")
 class DailyNodb {

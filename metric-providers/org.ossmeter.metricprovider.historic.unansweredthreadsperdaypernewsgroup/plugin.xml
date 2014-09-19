@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <plugin>
   
-<extension point="com.googlecode.pongo.runtime.osgi">
-    <class name="org.ossmeter.metricprovider.generic.unansweredthreadsperdaypernewsgroup.model.DailyUnansweredThreads"/>
-    <class name="org.ossmeter.metricprovider.generic.unansweredthreadsperdaypernewsgroup.model.DailyNewsgroupData"/>
-  </extension>
-<extension
-      point="org.ossmeter.platform.metricprovider">
-   <metricProvider
-         provider="org.ossmeter.metricprovider.historic.unansweredthreadsperdaypernewsgroup.UnsweredThreadsPerDayPerNewsgroupProvider">
+
+<extension point="org.ossmeter.platform.metricprovider">
+   <metricProvider provider="org.ossmeter.metricprovider.historic.unansweredthreadsperdaypernewsgroup.UnsweredThreadsPerDayPerNewsgroupProvider">
    </metricProvider>
 </extension>
-<extension
-      point="org.ossmeter.platform.client.api.pongoviz">
-   <visualiser
-         metricProviderId="org.ossmeter.metricprovider.generic.unansweredthreadsperdaypernewsgroup"
-         pongoVisualiser="org.ossmeter.metricprovider.historic.unansweredthreadsperdaypernewsgroup.model.DailyUnansweredThreadsViz">
+<extension point="org.ossmeter.platform.client.api.pongoviz">
+   <visualiser metricProviderId="org.ossmeter.metricprovider.generic.unansweredthreadsperdaypernewsgroup" pongoVisualiser="org.ossmeter.metricprovider.historic.unansweredthreadsperdaypernewsgroup.model.DailyUnansweredThreadsViz">
    </visualiser>
 </extension>
+<extension point="com.googlecode.pongo.runtime.osgi">
+    <class name="org.ossmeter.metricprovider.historic.unansweredthreadsperdaypernewsgroup.model.DailyUnansweredThreads"/>
+    <class name="org.ossmeter.metricprovider.historic.unansweredthreadsperdaypernewsgroup.model.DailyNewsgroupData"/>
+  </extension>
 </plugin>

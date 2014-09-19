@@ -1,9 +1,10 @@
-package org.ossmeter.metricprovider.bugheadermetadata.model;
+package org.ossmeter.metricprovider.trans.bugheadermetadata.model;
 
 @db(qualifiedCollectionNames="true")
 @customize
 class BugHeaderMetadata {
 	val BugData[*] bugs;
+	val CommentData[*] comments;
 }
 
 class BugData {
@@ -18,4 +19,20 @@ class BugData {
 	attr String priority;
 	attr String creationTime;
 	attr String lastClosedTime;
+	attr float averageSentiment;
+	attr String startSentiment; 
+	attr String endSentiment; 
+}
+
+class CommentData {
+	@searchable
+	attr String url;
+	attr String product;
+	attr String component;
+	attr String bugId;
+	attr String commentId;
+	attr String creationTime;
+	attr String creator;
+	attr String contentClass;
+	
 }

@@ -1,4 +1,4 @@
-package org.ossmeter.metricprovider.generic.numberofworksformebugzillabugs.model;
+package org.ossmeter.metricprovider.historic.numberofworksformebugzillabugs.model;
 
 @viz(target="gcharts", chart="line")
 class DailyNowfmb {

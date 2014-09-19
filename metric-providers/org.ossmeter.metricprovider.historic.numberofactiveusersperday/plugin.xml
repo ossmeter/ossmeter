@@ -9,15 +9,13 @@
 
 
 
-<extension point="com.googlecode.pongo.runtime.osgi">
-    <class name="org.ossmeter.metricprovider.generic.numberofactiveusersperday.model.DailyActiveUsers"/>
-    <class name="org.ossmeter.metricprovider.generic.numberofactiveusersperday.model.DailyNewsgroupData"/>
-  </extension>
-<extension
-      point="org.ossmeter.platform.client.api.pongoviz">
-   <visualiser
-         metricProviderId="org.ossmeter.metricprovider.generic.numberofactiveusersperday"
-         pongoVisualiser="org.ossmeter.metricprovider.historic.numberofactiveusersperday.model.DailyActiveUsersViz">
+
+<extension point="org.ossmeter.platform.client.api.pongoviz">
+   <visualiser metricProviderId="org.ossmeter.metricprovider.generic.numberofactiveusersperday" pongoVisualiser="org.ossmeter.metricprovider.historic.numberofactiveusersperday.model.DailyActiveUsersViz">
    </visualiser>
 </extension>
+<extension point="com.googlecode.pongo.runtime.osgi">
+    <class name="org.ossmeter.metricprovider.historic.numberofactiveusersperday.model.DailyActiveUsers"/>
+    <class name="org.ossmeter.metricprovider.historic.numberofactiveusersperday.model.DailyNewsgroupData"/>
+  </extension>
 </plugin>

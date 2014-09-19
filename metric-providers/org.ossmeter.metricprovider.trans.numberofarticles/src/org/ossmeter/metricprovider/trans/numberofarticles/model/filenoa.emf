@@ -1,4 +1,4 @@
-package org.ossmeter.metricprovider.numberofarticles.model;
+package org.ossmeter.metricprovider.trans.numberofarticles.model;
 
 @db(qualifiedCollectionNames="true")
 @customize

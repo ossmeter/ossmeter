@@ -7,15 +7,13 @@
    </extension>
 
 
-<extension point="com.googlecode.pongo.runtime.osgi">
-    <class name="org.ossmeter.metricprovider.generic.overalldailynumberofbugzillacomments.model.DailyNobc"/>
-    <class name="org.ossmeter.metricprovider.generic.overalldailynumberofbugzillacomments.model.DailyBugzillaData"/>
-  </extension>
-<extension
-      point="org.ossmeter.platform.client.api.pongoviz">
-   <visualiser
-         metricProviderId="org.ossmeter.metricprovider.generic.overalldailynumberofbugzillacomments"
-         pongoVisualiser="org.ossmeter.metricprovider.historic.overalldailynumberofbugzillacomments.model.DailyNobcViz">
+
+<extension point="org.ossmeter.platform.client.api.pongoviz">
+   <visualiser metricProviderId="org.ossmeter.metricprovider.generic.overalldailynumberofbugzillacomments" pongoVisualiser="org.ossmeter.metricprovider.historic.overalldailynumberofbugzillacomments.model.DailyNobcViz">
    </visualiser>
 </extension>
+<extension point="com.googlecode.pongo.runtime.osgi">
+    <class name="org.ossmeter.metricprovider.historic.overalldailynumberofbugzillacomments.model.DailyNobc"/>
+    <class name="org.ossmeter.metricprovider.historic.overalldailynumberofbugzillacomments.model.DailyBugzillaData"/>
+  </extension>
 </plugin>

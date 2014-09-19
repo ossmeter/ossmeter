@@ -6,8 +6,9 @@
       </metricProvider>
    </extension>
 
+
 <extension point="com.googlecode.pongo.runtime.osgi">
-    <class name="org.ossmeter.metricprovider.numberofnewbugzillabugs.model.Nonbb"/>
-    <class name="org.ossmeter.metricprovider.numberofnewbugzillabugs.model.BugzillaData"/>
+    <class name="org.ossmeter.metricprovider.trans.numberofnewbugzillabugs.model.Nonbb"/>
+    <class name="org.ossmeter.metricprovider.trans.numberofnewbugzillabugs.model.BugzillaData"/>
   </extension>
 </plugin>

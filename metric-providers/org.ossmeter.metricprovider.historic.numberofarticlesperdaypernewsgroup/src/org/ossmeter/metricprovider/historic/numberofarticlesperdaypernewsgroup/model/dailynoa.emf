@@ -1,4 +1,4 @@
-package org.ossmeter.metricprovider.generic.numberofarticlesperdaypernewsgroup.model;
+package org.ossmeter.metricprovider.historic.numberofarticlesperdaypernewsgroup.model;
 
 @viz(target="gcharts", chart="line")
 class DailyNoa {

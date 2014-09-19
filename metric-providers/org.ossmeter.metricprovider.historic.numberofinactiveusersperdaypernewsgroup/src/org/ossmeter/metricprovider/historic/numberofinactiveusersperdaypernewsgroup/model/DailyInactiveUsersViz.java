@@ -2,7 +2,7 @@
 package org.ossmeter.metricprovider.historic.numberofinactiveusersperdaypernewsgroup.model;
 
 import com.googlecode.pongo.runtime.viz.PongoViz;
-import com.mongodb.DB;
+import com.mongodb.DBCollection;
 
 public class DailyInactiveUsersViz extends PongoViz {
 
@@ -10,8 +10,8 @@ public class DailyInactiveUsersViz extends PongoViz {
 		super();
 	}
 	
-	public void setProjectDB(DB projectDB) {
-		this.collection = projectDB.getCollection("org.ossmeter.metricprovider.historic.numberofinactiveusersperdaypernewsgroup");
+	public DailyInactiveUsersViz(DBCollection collection) {
+		super(collection);
 	}
 
 	@Override

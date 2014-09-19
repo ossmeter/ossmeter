@@ -9,10 +9,11 @@
      <metricProvider provider="org.ossmeter.metricprovider.trans.hourlyrequestsreplies.HourlyRequestsRepliesProvider">
      </metricProvider>
   </extension>
+
 <extension point="com.googlecode.pongo.runtime.osgi">
-    <class name="org.ossmeter.metricprovider.hourlyrequestsreplies.model.HourlyRequestsReplies"/>
-    <class name="org.ossmeter.metricprovider.hourlyrequestsreplies.model.HourArticles"/>
-    <class name="org.ossmeter.metricprovider.hourlyrequestsreplies.model.HourRequests"/>
-    <class name="org.ossmeter.metricprovider.hourlyrequestsreplies.model.HourReplies"/>
+    <class name="org.ossmeter.metricprovider.trans.hourlyrequestsreplies.model.HourlyRequestsReplies"/>
+    <class name="org.ossmeter.metricprovider.trans.hourlyrequestsreplies.model.HourArticles"/>
+    <class name="org.ossmeter.metricprovider.trans.hourlyrequestsreplies.model.HourRequests"/>
+    <class name="org.ossmeter.metricprovider.trans.hourlyrequestsreplies.model.HourReplies"/>
   </extension>
 </plugin>

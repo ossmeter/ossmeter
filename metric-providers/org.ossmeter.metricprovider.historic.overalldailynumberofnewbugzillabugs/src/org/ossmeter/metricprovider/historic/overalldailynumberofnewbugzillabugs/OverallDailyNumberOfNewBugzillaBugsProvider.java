@@ -20,7 +20,7 @@ import com.googlecode.pongo.runtime.Pongo;
 public class OverallDailyNumberOfNewBugzillaBugsProvider implements IHistoricalMetricProvider{
 
 	public final static String IDENTIFIER = 
-			"org.ossmeter.metricprovider.historic.overalldailynumberofnewbugzillabugs";
+			"org.ossmeter.metricprovider.generic.overalldailynumberofnewbugzillabugs";
 
 	protected MetricProviderContext context;
 	
@@ -67,6 +67,7 @@ public class OverallDailyNumberOfNewBugzillaBugsProvider implements IHistoricalM
 			 Nonbb usedNonbb = ((NonbbMetricProvider)used).adapt(context.getProjectDB(project));
 			 int numberOfNewBugzillaBugs = 0;
 			 for (BugzillaData bugzilla: usedNonbb.getBugzillas()) {
+//				 System.err.println("NONBB: " + bugzilla.getNumberOfBugs());
 				 numberOfNewBugzillaBugs += bugzilla.getNumberOfBugs();
 			 }
 			 if (numberOfNewBugzillaBugs > 0) {

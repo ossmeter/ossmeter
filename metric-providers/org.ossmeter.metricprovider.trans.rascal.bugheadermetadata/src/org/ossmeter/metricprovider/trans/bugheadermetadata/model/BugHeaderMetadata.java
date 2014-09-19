@@ -14,6 +14,7 @@ public class BugHeaderMetadata extends PongoDB {
 	}
 	
 	protected BugDataCollection bugs = null;
+	protected CommentDataCollection comments = null;
 	
 	// protected region custom-fields-and-methods on begin
 	// protected region custom-fields-and-methods end
@@ -23,11 +24,17 @@ public class BugHeaderMetadata extends PongoDB {
 		return bugs;
 	}
 	
+	public CommentDataCollection getComments() {
+		return comments;
+	}
+	
 	
 	@Override
 	public void setDb(DB db) {
 		super.setDb(db);
 		bugs = new BugDataCollection(db.getCollection("BugHeaderMetadata.bugs"));
 		pongoCollections.add(bugs);
+		comments = new CommentDataCollection(db.getCollection("BugHeaderMetadata.comments"));
+		pongoCollections.add(comments);
 	}
 }

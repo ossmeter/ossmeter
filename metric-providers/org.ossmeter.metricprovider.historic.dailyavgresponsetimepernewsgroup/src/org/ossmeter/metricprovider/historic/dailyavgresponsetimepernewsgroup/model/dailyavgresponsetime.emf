@@ -1,4 +1,4 @@
-package org.ossmeter.metricprovider.generic.dailyavgresponsetimepernewsgroup.model;
+package org.ossmeter.metricprovider.historic.dailyavgresponsetimepernewsgroup.model;
 
 @viz(target="gcharts", chart="line")
 class DailyAverageThreadResponseTime {

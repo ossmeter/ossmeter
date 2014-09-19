@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?eclipse version="3.4"?><plugin>
+	<extension point="org.ossmeter.platform.metricprovider">
+   		<metricProvider provider="org.ossmeter.metricprovider.trans.sentimentclassification.SentimentClassificationMetricProvider">
+   		</metricProvider>
+	</extension>
+	
+
+
+
+<extension point="com.googlecode.pongo.runtime.osgi">
+    <class name="org.ossmeter.metricprovider.trans.sentimentclassification.model.Sc"/>
+    <class name="org.ossmeter.metricprovider.trans.sentimentclassification.model.BugzillaCommentsData"/>
+    <class name="org.ossmeter.metricprovider.trans.sentimentclassification.model.NewsgroupArticlesData"/>
+  </extension>
+</plugin>

@@ -1,4 +1,4 @@
-package org.ossmeter.metricprovider.generic.overalldailynumberofbugzillacomments.model;
+package org.ossmeter.metricprovider.historic.overalldailynumberofbugzillacomments.model;
 
 @viz(target="gcharts", chart="line")
 class DailyNobc {

@@ -26,6 +26,7 @@ public class NewsgroupDataCollection extends PongoCollection<NewsgroupData> {
 		}
 		return newsgroupData;
 	}
+	
 
 	public long countByUrl_name(String q) {
 		return dbCollection.count(new BasicDBObject("url_name", q + ""));

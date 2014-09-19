@@ -6,8 +6,6 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.ossmeter.requestreplyclassifier.opennlptartarus.Features;
-
 public class DocumentFeatures {
 	private Map<String, HashMap<Integer, Integer>> documentFeatures;
 	private Set<String> keptPoSes;

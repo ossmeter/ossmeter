@@ -17,6 +17,9 @@ public class ThreadStatistics extends Pongo {
 		ANSWERED.setOwningType("org.ossmeter.metricprovider.trans.threadsrequestsreplies.model.ThreadStatistics");
 		RESPONSEDURATIONSEC.setOwningType("org.ossmeter.metricprovider.trans.threadsrequestsreplies.model.ThreadStatistics");
 		RESPONSEDATE.setOwningType("org.ossmeter.metricprovider.trans.threadsrequestsreplies.model.ThreadStatistics");
+		AVERAGESENTIMENT.setOwningType("org.ossmeter.metricprovider.trans.threadsrequestsreplies.model.ThreadStatistics");
+		STARTSENTIMENT.setOwningType("org.ossmeter.metricprovider.trans.threadsrequestsreplies.model.ThreadStatistics");
+		ENDSENTIMENT.setOwningType("org.ossmeter.metricprovider.trans.threadsrequestsreplies.model.ThreadStatistics");
 	}
 	
 	public static StringQueryProducer URL_NAME = new StringQueryProducer("url_name"); 
@@ -25,6 +28,9 @@ public class ThreadStatistics extends Pongo {
 	public static StringQueryProducer ANSWERED = new StringQueryProducer("answered"); 
 	public static NumericalQueryProducer RESPONSEDURATIONSEC = new NumericalQueryProducer("responseDurationSec");
 	public static StringQueryProducer RESPONSEDATE = new StringQueryProducer("responseDate"); 
+	public static NumericalQueryProducer AVERAGESENTIMENT = new NumericalQueryProducer("averageSentiment");
+	public static StringQueryProducer STARTSENTIMENT = new StringQueryProducer("startSentiment"); 
+	public static StringQueryProducer ENDSENTIMENT = new StringQueryProducer("endSentiment"); 
 	
 	
 	public String getUrl_name() {
@@ -78,6 +84,33 @@ public class ThreadStatistics extends Pongo {
 	
 	public ThreadStatistics setResponseDate(String responseDate) {
 		dbObject.put("responseDate", responseDate);
+		notifyChanged();
+		return this;
+	}
+	public float getAverageSentiment() {
+		return parseFloat(dbObject.get("averageSentiment")+"", 0.0f);
+	}
+	
+	public ThreadStatistics setAverageSentiment(float averageSentiment) {
+		dbObject.put("averageSentiment", averageSentiment);
+		notifyChanged();
+		return this;
+	}
+	public String getStartSentiment() {
+		return parseString(dbObject.get("startSentiment")+"", "");
+	}
+	
+	public ThreadStatistics setStartSentiment(String startSentiment) {
+		dbObject.put("startSentiment", startSentiment);
+		notifyChanged();
+		return this;
+	}
+	public String getEndSentiment() {
+		return parseString(dbObject.get("endSentiment")+"", "");
+	}
+	
+	public ThreadStatistics setEndSentiment(String endSentiment) {
+		dbObject.put("endSentiment", endSentiment);
 		notifyChanged();
 		return this;
 	}

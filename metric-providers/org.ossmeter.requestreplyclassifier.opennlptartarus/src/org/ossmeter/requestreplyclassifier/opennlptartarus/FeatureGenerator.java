@@ -8,9 +8,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 
-import org.ossmeter.requestreplyclassifier.opennlptartarus.ClassificationInstance;
-import org.ossmeter.requestreplyclassifier.opennlptartarus.DocumentFeatures;
-import org.ossmeter.requestreplyclassifier.opennlptartarus.Features;
 import org.ossmeter.requestreplyclassifier.opennlptartarus.featuremethods.EmpiricalPredictor;
 
 import uk.ac.nactem.posstemmer.Token;

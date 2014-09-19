@@ -11,6 +11,8 @@ import java.util.TreeSet;
 import org.ossmeter.metricprovider.trans.requestreplyclassification.RequestReplyClassificationMetricProvider;
 import org.ossmeter.metricprovider.trans.requestreplyclassification.model.NewsgroupArticlesData;
 import org.ossmeter.metricprovider.trans.requestreplyclassification.model.Rrc;
+import org.ossmeter.metricprovider.trans.sentimentclassification.SentimentClassificationMetricProvider;
+import org.ossmeter.metricprovider.trans.sentimentclassification.model.Sc;
 import org.ossmeter.metricprovider.trans.threads.ThreadsMetricProvider;
 import org.ossmeter.metricprovider.trans.threads.model.ArticleData;
 import org.ossmeter.metricprovider.trans.threads.model.ArticleDataComparator;
@@ -61,7 +63,8 @@ public class ThreadsRequestsRepliesProvider  implements ITransientMetricProvider
 	@Override
 	public List<String> getIdentifiersOfUses() {
 		return Arrays.asList(ThreadsMetricProvider.class.getCanonicalName(),
-				RequestReplyClassificationMetricProvider.class.getCanonicalName());
+				RequestReplyClassificationMetricProvider.class.getCanonicalName(),
+				SentimentClassificationMetricProvider.class.getCanonicalName());
 
 	}
 
@@ -83,9 +86,9 @@ public class ThreadsRequestsRepliesProvider  implements ITransientMetricProvider
 		db.getThreads().getDbCollection().drop();
 		db.sync();
 
-		if (uses.size()!=2) {
+		if (uses.size()!=3) {
 			System.err.println("Metric: " + getIdentifier() + " failed to retrieve " + 
-								"the two transient metrics it needs!");
+								"the three transient metrics it needs!");
 			System.exit(-1);
 		}
 
@@ -95,6 +98,9 @@ public class ThreadsRequestsRepliesProvider  implements ITransientMetricProvider
 		Rrc usedClassifier = 
 				((RequestReplyClassificationMetricProvider)uses.get(1)).adapt(context.getProjectDB(project));
 
+		Sc sentimentClassifier = 
+				((SentimentClassificationMetricProvider)uses.get(2)).adapt(context.getProjectDB(project));
+		
 		org.ossmeter.metricprovider.trans.threads.model.CurrentDate threadDate = usedThreads.getDate().first();
 		
 		Iterable<CurrentDate> currentDateIt = db.getDate();
@@ -110,10 +116,21 @@ public class ThreadsRequestsRepliesProvider  implements ITransientMetricProvider
 		}
 		
 		Map<String, String> articleReplyRequest = new HashMap<String, String>();
-		for (NewsgroupArticlesData article: usedClassifier.getNewsgroupArticles()) {
+		for (NewsgroupArticlesData article: usedClassifier.getNewsgroupArticles())
 			articleReplyRequest.put(article.getUrl()+article.getArticleNumber(), 
 										article.getClassificationResult());
-		}
+
+		Map<String, String> articleSentiment = new HashMap<String, String>();
+		for (org.ossmeter.metricprovider.trans.sentimentclassification.model.NewsgroupArticlesData 
+				article: sentimentClassifier.getNewsgroupArticles())
+			articleSentiment.put(article.getUrl()+article.getArticleNumber(), 
+										article.getClassificationResult());
+
+		Map<String, String> articleEmotionalDimensions = new HashMap<String, String>();
+		for (org.ossmeter.metricprovider.trans.sentimentclassification.model.NewsgroupArticlesData 
+				article: sentimentClassifier.getNewsgroupArticles())
+			articleEmotionalDimensions.put(article.getUrl()+article.getArticleNumber(), 
+										article.getEmotionalDimensions());
 
 		for (ThreadData thread: usedThreads.getThreads()) {
 
@@ -123,20 +140,30 @@ public class ThreadsRequestsRepliesProvider  implements ITransientMetricProvider
 			String firstMessageTime = null;
 	        Iterator<ArticleData> iterator = sortedArticleSet.iterator();
 			boolean first=true,
-					cont=true,
+					noReplyFound=true,
 					isFirstRequest=true;
 
 			String lastUrl_name = "";
-			while ((cont)&&(iterator.hasNext())) {
+			int totalSentiment = 0;
+			ThreadStatistics threadStats = new ThreadStatistics();
+			while (iterator.hasNext()) {
 				ArticleData article = iterator.next();
 				lastUrl_name = article.getUrl_name();
+				String sentiment = articleSentiment.get(article.getUrl_name()+article.getArticleNumber());
+				if (sentiment.equals("Positive")) 
+					totalSentiment += 1;
+				else if(sentiment.equals("Negative")) 
+					totalSentiment -= 1;
+//				String emotionalDimensions = articleEmotionalDimensions.get(article.getUrl_name()+article.getArticleNumber());
 				String responseReply = articleReplyRequest.get(article.getUrl_name()+article.getArticleNumber());
-				if (first) firstMessageTime = article.getDate();
-				if (responseReply.equals("Reply")) cont=false;
+				if (first) {
+					threadStats.setStartSentiment(sentiment);
+					firstMessageTime = article.getDate();
+				}
+				threadStats.setEndSentiment(sentiment);
 				if ((first)&&(responseReply.equals("Reply"))) isFirstRequest=false;
-				if ((!first)&&(responseReply.equals("Reply"))) {
+				if ((!first)&&(noReplyFound)&&(responseReply.equals("Reply"))) {
 					
-					ThreadStatistics threadStats = new ThreadStatistics();
 					threadStats.setUrl_name(lastUrl_name);
 					threadStats.setFirstRequest(isFirstRequest);
 					threadStats.setThreadId(thread.getThreadId());
@@ -151,10 +178,12 @@ public class ThreadsRequestsRepliesProvider  implements ITransientMetricProvider
 //							"firstResponseTime: " + article.getDate() + "\t" + 
 //							"duration: " + duration);
 				}
+				if (responseReply.equals("Reply")) noReplyFound=false;
 				first=false;
 			}
-			if (cont&&(!first)) {
-				ThreadStatistics threadStats = new ThreadStatistics();
+			threadStats.setAverageSentiment(((float)totalSentiment)/sortedArticleSet.size());
+			if (noReplyFound&&(!first)) {
+				threadStats = new ThreadStatistics();
 				threadStats.setUrl_name(lastUrl_name);
 				threadStats.setFirstRequest(isFirstRequest);
 				threadStats.setThreadId(thread.getThreadId());

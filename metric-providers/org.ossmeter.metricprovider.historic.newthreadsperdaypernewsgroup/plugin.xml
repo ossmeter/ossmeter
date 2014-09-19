@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <plugin>
-  <extension point="com.googlecode.pongo.runtime.osgi">
-    <class name="org.ossmeter.metricprovider.generic.newthreadsperdaypernewsgroup.model.DailyNewThreads"/>
-    <class name="org.ossmeter.metricprovider.generic.newthreadsperdaypernewsgroup.model.DailyNewsgroupData"/>
-  </extension>
-  <extension
-        point="org.ossmeter.platform.client.api.pongoviz">
-     <visualiser
-           metricProviderId="org.ossmeter.metricprovider.generic.newthreadsperdaypernewsgroup"
-           pongoVisualiser="org.ossmeter.metricprovider.historic.newthreadsperdaypernewsgroup.model.DailyNewThreadsViz">
+  
+  <extension point="org.ossmeter.platform.client.api.pongoviz">
+     <visualiser metricProviderId="org.ossmeter.metricprovider.generic.newthreadsperdaypernewsgroup" pongoVisualiser="org.ossmeter.metricprovider.historic.newthreadsperdaypernewsgroup.model.DailyNewThreadsViz">
      </visualiser>
   </extension>
-  <extension
-        point="org.ossmeter.platform.metricprovider">
-     <metricProvider
-           provider="org.ossmeter.metricprovider.historic.newthreadsperdaypernewsgroup.NewThreadsPerDayPerNewsgroupProvider">
+  <extension point="org.ossmeter.platform.metricprovider">
+     <metricProvider provider="org.ossmeter.metricprovider.historic.newthreadsperdaypernewsgroup.NewThreadsPerDayPerNewsgroupProvider">
      </metricProvider>
+  </extension>
+<extension point="com.googlecode.pongo.runtime.osgi">
+    <class name="org.ossmeter.metricprovider.historic.newthreadsperdaypernewsgroup.model.DailyNewThreads"/>
+    <class name="org.ossmeter.metricprovider.historic.newthreadsperdaypernewsgroup.model.DailyNewsgroupData"/>
   </extension>
 </plugin>

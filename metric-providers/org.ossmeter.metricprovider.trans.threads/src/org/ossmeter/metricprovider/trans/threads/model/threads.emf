@@ -1,4 +1,4 @@
-package org.ossmeter.metricprovider.threads.model;
+package org.ossmeter.metricprovider.trans.threads.model;
 
 @db(qualifiedCollectionNames="true")
 @customize
@@ -27,6 +27,7 @@ class ArticleData {
    attr String date;
    attr String from;
    attr String subject;
+   attr String contentClass;
    attr String references;   
 }
 

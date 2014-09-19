@@ -1,0 +1,29 @@
+package org.ossmeter.metricprovider.trans.contentclassesbugzilla.model;
+
+@db(qualifiedCollectionNames="true")
+@customize
+class ContentClassesBugs {
+	@series
+	val BugzillaData[*] bugzillas;
+	val ContentClass[*] contentClasses;
+}
+
+class BugzillaData {
+	@searchable
+   	attr String url;
+   	attr String product;
+   	attr String component;
+	attr int numberOfComments;
+}
+
+
+class ContentClass {
+	@searchable
+   	attr String url;
+   	attr String product;
+   	attr String component;
+	attr String classLabel;
+	attr int numberOfComments;
+	attr float percentage;
+}
+

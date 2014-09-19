@@ -10,8 +10,9 @@
    <visualiser metricProviderId="org.ossmeter.metricprovider.generic.numberofinactiveusersperday" pongoVisualiser="org.ossmeter.metricprovider.historic.numberofinactiveusersperday.model.DailyInactiveUsersViz">
    </visualiser>
 </extension>
+
 <extension point="com.googlecode.pongo.runtime.osgi">
-    <class name="org.ossmeter.metricprovider.generic.numberofinactiveusersperday.model.DailyInactiveUsers"/>
-    <class name="org.ossmeter.metricprovider.generic.numberofinactiveusersperday.model.DailyNewsgroupData"/>
+    <class name="org.ossmeter.metricprovider.historic.numberofinactiveusersperday.model.DailyInactiveUsers"/>
+    <class name="org.ossmeter.metricprovider.historic.numberofinactiveusersperday.model.DailyNewsgroupData"/>
   </extension>
 </plugin>

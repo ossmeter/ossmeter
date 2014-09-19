@@ -26,6 +26,7 @@ public class BugTrackerDataCollection extends PongoCollection<BugTrackerData> {
 		}
 		return bugTrackerData;
 	}
+	
 
 	public long countByBugTrackerId(String q) {
 		return dbCollection.count(new BasicDBObject("bugTrackerId", q + ""));

@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.Set;
 
 //import org.apache.commons.lang.time.DurationFormatUtils;
-import org.ossmeter.requestreplyclassifier.opennlptartarus.ClassificationInstance;
-import org.ossmeter.requestreplyclassifier.opennlptartarus.FeatureGenerator;
 
 import weka.classifiers.meta.FilteredClassifier;
 import weka.core.Instances;

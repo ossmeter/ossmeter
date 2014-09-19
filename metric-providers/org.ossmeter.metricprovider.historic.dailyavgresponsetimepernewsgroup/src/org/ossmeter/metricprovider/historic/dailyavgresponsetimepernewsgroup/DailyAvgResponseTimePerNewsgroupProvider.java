@@ -25,7 +25,7 @@ import com.googlecode.pongo.runtime.Pongo;
 public class DailyAvgResponseTimePerNewsgroupProvider implements IHistoricalMetricProvider{
 
 	public final static String IDENTIFIER = 
-			"org.ossmeter.metricprovider.historic.dailyavgresponsetimepernewsgroup";
+			"org.ossmeter.metricprovider.generic.dailyavgresponsetimepernewsgroup";
 
 	protected MetricProviderContext context;
 	
@@ -55,7 +55,7 @@ public class DailyAvgResponseTimePerNewsgroupProvider implements IHistoricalMetr
 		if (uses.size()!=1) {
 			System.err.println("Metric: dailyavgresponsetimepernewsgroup failed to retrieve " + 
 								"the transient metric it needs!");
-			throw new RuntimeException();
+			System.exit(-1);
 		}
 
 		ThreadsRR usedThreads = 
@@ -97,15 +97,13 @@ public class DailyAvgResponseTimePerNewsgroupProvider implements IHistoricalMetr
 		String formatted = null;
 		if (threads>0) {
 			long avgDuration = sumOfDurations/threads;
-//			int days = (int) (avgDuration / SECONDS_DAY);
-//			long lessThanDay = (avgDuration % SECONDS_DAY);
-//			formatted = days + ":" + 
-//					DurationFormatUtils.formatDuration(lessThanDay*1000, "HH:mm:ss:SS");
-			formatted = String.valueOf(avgDuration);
+			int days = (int) (avgDuration / SECONDS_DAY);
+			long lessThanDay = (avgDuration % SECONDS_DAY);
+			formatted = days + ":" + 
+					DurationFormatUtils.formatDuration(lessThanDay*1000, "HH:mm:ss:SS");
 		} else {
-//			formatted = 0 + ":" + 
-//					DurationFormatUtils.formatDuration(0, "HH:mm:ss:SS");
-			formatted = String.valueOf(0);
+			formatted = 0 + ":" + 
+					DurationFormatUtils.formatDuration(0, "HH:mm:ss:SS");
 		}
 		return formatted;
 	}

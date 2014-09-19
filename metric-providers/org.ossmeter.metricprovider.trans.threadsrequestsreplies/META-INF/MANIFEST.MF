@@ -12,7 +12,8 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.platform.client.api,
  org.ossmeter.platform.communicationchannel.nntp,
  org.ossmeter.metricprovider.trans.requestreplyclassification,
- org.ossmeter.metricprovider.trans.threads
+ org.ossmeter.metricprovider.trans.threads,
+ org.ossmeter.metricprovider.trans.sentimentclassification
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.metricprovider.trans.threadsrequestsreplies,

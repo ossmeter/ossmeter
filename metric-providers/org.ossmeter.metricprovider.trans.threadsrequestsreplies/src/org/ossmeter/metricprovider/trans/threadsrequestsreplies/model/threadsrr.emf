@@ -1,4 +1,4 @@
-package org.ossmeter.metricprovider.threadsrequestsreplies.model;
+package org.ossmeter.metricprovider.trans.threadsrequestsreplies.model;
 
 @db(qualifiedCollectionNames="true")
 class ThreadsRR {
@@ -19,4 +19,8 @@ class ThreadStatistics {
    attr boolean answered;
    attr long responseDurationSec;
    attr String responseDate;
+   
+   attr float averageSentiment;
+   attr String startSentiment; 
+   attr String endSentiment; 
 }

@@ -5,15 +5,13 @@
      <metricProvider provider="org.ossmeter.metricprovider.historic.numberofduplicatebugzillabugs.NumberOfDuplicateBugzillaBugsProvider">
      </metricProvider>
   </extension>
-<extension point="com.googlecode.pongo.runtime.osgi">
-    <class name="org.ossmeter.metricprovider.generic.numberofduplicatebugzillabugs.model.DailyNodb"/>
-    <class name="org.ossmeter.metricprovider.generic.numberofduplicatebugzillabugs.model.DailyBugzillaData"/>
-  </extension>
-<extension
-      point="org.ossmeter.platform.client.api.pongoviz">
-   <visualiser
-         metricProviderId="org.ossmeter.metricprovider.generic.numberofduplicatebugzillabugs"
-         pongoVisualiser="org.ossmeter.metricprovider.historic.numberofduplicatebugzillabugs.model.DailyNodbViz">
+
+<extension point="org.ossmeter.platform.client.api.pongoviz">
+   <visualiser metricProviderId="org.ossmeter.metricprovider.generic.numberofduplicatebugzillabugs" pongoVisualiser="org.ossmeter.metricprovider.historic.numberofduplicatebugzillabugs.model.DailyNodbViz">
    </visualiser>
 </extension>
+<extension point="com.googlecode.pongo.runtime.osgi">
+    <class name="org.ossmeter.metricprovider.historic.numberofduplicatebugzillabugs.model.DailyNodb"/>
+    <class name="org.ossmeter.metricprovider.historic.numberofduplicatebugzillabugs.model.DailyBugzillaData"/>
+  </extension>
 </plugin>

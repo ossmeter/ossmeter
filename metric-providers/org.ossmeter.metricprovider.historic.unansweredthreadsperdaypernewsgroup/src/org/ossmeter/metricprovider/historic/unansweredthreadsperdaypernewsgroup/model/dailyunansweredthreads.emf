@@ -1,4 +1,4 @@
-package org.ossmeter.metricprovider.generic.unansweredthreadsperdaypernewsgroup.model;
+package org.ossmeter.metricprovider.historic.unansweredthreadsperdaypernewsgroup.model;
 
 @viz(target="gcharts", chart="line")
 class DailyUnansweredThreads {

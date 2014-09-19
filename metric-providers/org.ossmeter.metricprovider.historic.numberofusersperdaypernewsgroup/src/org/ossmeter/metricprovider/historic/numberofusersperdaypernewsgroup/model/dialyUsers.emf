@@ -1,4 +1,4 @@
-package org.ossmeter.metricprovider.generic.numberofusersperdaypernewsgroup.model;
+package org.ossmeter.metricprovider.historic.numberofusersperdaypernewsgroup.model;
 
 @viz(target="gcharts", chart="line")
 class DailyUsers {

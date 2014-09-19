@@ -1,4 +1,4 @@
-package org.ossmeter.metricprovider.activeusers.model;
+package org.ossmeter.metricprovider.trans.activeusers.model;
 
 @db(qualifiedCollectionNames="true")
 @customize

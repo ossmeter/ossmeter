@@ -1,0 +1,12 @@
+package org.ossmeter.metricprovider.historic.numberofnewusersperday.model;
+
+@viz(target="gcharts", chart="line")
+class DailyNewUsers {
+	@series
+	val DailyNewsgroupData[*] newsgroups;
+}
+
+class DailyNewsgroupData {
+	@yaxis(title="Number of new users")
+	attr int numberOfNewUsers;
+}

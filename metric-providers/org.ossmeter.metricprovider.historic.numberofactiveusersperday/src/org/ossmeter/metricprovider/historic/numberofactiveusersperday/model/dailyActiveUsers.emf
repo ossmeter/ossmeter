@@ -1,4 +1,4 @@
-package org.ossmeter.metricprovider.generic.numberofactiveusersperday.model;
+package org.ossmeter.metricprovider.historic.numberofactiveusersperday.model;
 
 @viz(target="gcharts", chart="line")
 class DailyActiveUsers {

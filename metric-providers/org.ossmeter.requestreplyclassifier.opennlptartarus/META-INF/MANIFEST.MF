@@ -7,7 +7,8 @@ Bundle-Activator: org.ossmeter.requestreplyclassifier.opennlptartarus.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.ossmeter.weka,
- org.ossmeter.opennlp
+ org.ossmeter.opennlp,
+ org.ossmeter.tartarus.parser.posstemmer
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.requestreplyclassifier.opennlptartarus

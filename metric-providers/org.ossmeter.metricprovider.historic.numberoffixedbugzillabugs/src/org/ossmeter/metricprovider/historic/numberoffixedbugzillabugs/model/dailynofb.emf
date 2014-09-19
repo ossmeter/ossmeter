@@ -1,4 +1,4 @@
-package org.ossmeter.metricprovider.generic.numberoffixedbugzillabugs.model;
+package org.ossmeter.metricprovider.historic.numberoffixedbugzillabugs.model;
 
 @viz(target="gcharts", chart="line")
 class DailyNofb {

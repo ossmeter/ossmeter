@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.ossmeter.contentclassifier.opennlptartarus.libsvm.ClassificationInstance;
+import org.ossmeter.contentclassifier.opennlptartarus.libsvm.Classifier;
 import org.ossmeter.metricprovider.trans.threads.model.ArticleData;
 import org.ossmeter.metricprovider.trans.threads.model.CurrentDate;
 import org.ossmeter.metricprovider.trans.threads.model.NewsgroupData;
@@ -68,8 +70,8 @@ public class ThreadsMetricProvider implements ITransientMetricProvider<Threads>{
 	@Override
 	public void measure(Project project, ProjectDelta projectDelta, Threads db) {
 
-		 Iterable<CurrentDate> currentDateIt = db.getDate();
-		 CurrentDate currentDate = null;
+		Iterable<CurrentDate> currentDateIt = db.getDate();
+		CurrentDate currentDate = null;
 		for (CurrentDate cd:  currentDateIt)
 			currentDate = cd;
 		if (currentDate != null)
@@ -92,10 +94,12 @@ public class ThreadsMetricProvider implements ITransientMetricProvider<Threads>{
 			CommunicationChannel communicationChannel = communicationChannelDelta.getCommunicationChannel();
 			
 			if (communicationChannelDelta.getArticles().size() > 0) {
+				Map<Integer, String> previousClassAssignments = new HashMap<Integer, String>();
 				
 				List<Article> articles = new ArrayList<Article>();
 				for (ThreadData threadData: db.getThreads()) {
 					for (ArticleData articleData: threadData.getArticles()) {
+						previousClassAssignments.put(articleData.getArticleNumber(), articleData.getContentClass());
 						articles.add(prepareArticle(articleData));
 						Set<Integer> articleIds = null;
 						if (articleIdsPerNewsgroup.containsKey(articleData.getUrl_name()))
@@ -110,16 +114,20 @@ public class ThreadsMetricProvider implements ITransientMetricProvider<Threads>{
 				
 				if (!(communicationChannel instanceof NntpNewsGroup)) continue;
 				NntpNewsGroup newsgroup = (NntpNewsGroup) communicationChannel;
+				
+				Map<Integer, ClassificationInstance> instanceIndex = new HashMap<Integer, ClassificationInstance>();
 				for (CommunicationChannelArticle deltaArticle :communicationChannelDelta.getArticles()) {
 
 					Boolean articleExists = false;
-					
 					if (articleIdsPerNewsgroup.containsKey(newsgroup.getUrl())
 						&& articleIdsPerNewsgroup.get(newsgroup.getUrl()).contains(deltaArticle.getArticleNumber()))
 						articleExists = true;
 					
-					if (!articleExists)
+					if (!articleExists) {
 						articles.add(prepareArticle(deltaArticle));
+						ClassificationInstance instance = prepareClassificationInstance(newsgroup, deltaArticle);
+						instanceIndex.put(instance.getArticleNumber(), instance);
+					}
 				}
 				
 				System.out.println("Building message thread tree... (" + articles.size() + ")");
@@ -130,6 +138,20 @@ public class ThreadsMetricProvider implements ITransientMetricProvider<Threads>{
 				db.getThreads().getDbCollection().drop();
 				db.sync();
 				
+				Classifier classifier = new Classifier();
+				for (List<Article> list: articleList) {
+					int positionInThread = 0;
+					for (Article article: list) {
+						positionInThread++;
+						if (instanceIndex.containsKey(article.getArticleNumber())) {
+							ClassificationInstance instance = instanceIndex.get(article.getArticleNumber());
+							instance.setPositionFromThreadBeginning(positionInThread);
+//							instance.setPositionFromThreadEnd(list.size()+1-positionInThread);
+							classifier.add(instance);
+						}
+					}
+				}
+				classifier.classify();
 				int index = 0;
 				for (List<Article> list: articleList) {
 					index++;
@@ -137,8 +159,10 @@ public class ThreadsMetricProvider implements ITransientMetricProvider<Threads>{
 					ThreadData threadData = new ThreadData();
 					threadData.setThreadId(index);
 					for (Article article: list) {
-						threadData.getArticles().add(prepareArticleData(article, newsgroup));
-
+						threadData.getArticles().add(
+								prepareArticleData(article, newsgroup, classifier, 
+												   previousClassAssignments, instanceIndex));
+						
 						if (threadsPerNewsgroup.containsKey(newsgroup.getUrl()))
 							threadsPerNewsgroup.get(newsgroup.getUrl()).add(index);
 						else {
@@ -171,6 +195,16 @@ public class ThreadsMetricProvider implements ITransientMetricProvider<Threads>{
 		db.sync();
 	}
 
+	private ClassificationInstance prepareClassificationInstance(
+			NntpNewsGroup newsgroup, CommunicationChannelArticle deltaArticle) {
+		ClassificationInstance instance = new ClassificationInstance(); 
+		instance.setArticleNumber(deltaArticle.getArticleNumber());
+		instance.setUrl(newsgroup.getUrl());
+		instance.setSubject(deltaArticle.getSubject());
+		instance.setText(deltaArticle.getText());
+		return instance;
+	}
+
 	private Article prepareArticle(CommunicationChannelArticle deltaArticle) {
 		Article article = new Article();
 		article.setArticleId(deltaArticle.getArticleId());
@@ -184,7 +218,8 @@ public class ThreadsMetricProvider implements ITransientMetricProvider<Threads>{
 		return article;
 	}
 
-	private ArticleData prepareArticleData(Article article, NntpNewsGroup newsgroup) {
+	private ArticleData prepareArticleData(Article article, NntpNewsGroup newsgroup, Classifier classifier, 
+					Map<Integer, String> previousClassAssignments, Map<Integer, ClassificationInstance> instanceIndex) {
 		ArticleData articleData = new ArticleData();
 		articleData.setUrl_name(newsgroup.getUrl());
 		articleData.setArticleId(article.getArticleId());
@@ -196,6 +231,13 @@ public class ThreadsMetricProvider implements ITransientMetricProvider<Threads>{
 		for (String reference: article.getReferences())
 			references += " " + reference;
 		articleData.setReferences(references.trim());
+		if (previousClassAssignments.containsKey(article.getArticleNumber())) {
+			articleData.setContentClass(previousClassAssignments.get(article.getArticleNumber()));
+		}
+		else {
+			articleData.setContentClass(
+					classifier.getClassificationResult(instanceIndex.get(article.getArticleNumber())));
+		}
 //		printArticle(article, "|3| ");
 		return articleData;
 	}
@@ -213,15 +255,15 @@ public class ThreadsMetricProvider implements ITransientMetricProvider<Threads>{
 		return article;
 	}
 
-	private void printArticle(Article article, String message) {
-		System.out.println(message + 
-				article.getArticleId() + "\t" +
-				article.getArticleNumber() + "\t" +
-				article.getDate() + "\t" +
-				article.getFrom() + "\t" +
-				article.getSubject() + "\t|" +
-				article.getReferences() + "|");
-	}
+//	private void printArticle(Article article, String message) {
+//		System.out.println(message + 
+//				article.getArticleId() + "\t" +
+//				article.getArticleNumber() + "\t" +
+//				article.getDate() + "\t" +
+//				article.getFrom() + "\t" +
+//				article.getSubject() + "\t|" +
+//				article.getReferences() + "|");
+//	}
 
 	@Override
 	public String getShortIdentifier() {
@@ -266,18 +308,18 @@ public class ThreadsMetricProvider implements ITransientMetricProvider<Threads>{
 		return threadList;
 	}
 
-	private static void printThreadList(Article root, List<List<Article>> threadList) {
-		for (List<Article>list: threadList) {
-			System.out.print(" [ ");
-			for (Article art: list)
-				System.out.print(art.getArticleNumber() + " ");
-			System.out.print("] ");
-		}
-		System.out.println();
-		System.out.println("-=-=-=-=-=-=-=-");
-		Article.printThread(root, 0);
-		System.out.println("-=-=-=-=-=-=-=-");
-	}
+//	private static void printThreadList(Article root, List<List<Article>> threadList) {
+//		for (List<Article>list: threadList) {
+//			System.out.print(" [ ");
+//			for (Article art: list)
+//				System.out.print(art.getArticleNumber() + " ");
+//			System.out.print("] ");
+//		}
+//		System.out.println();
+//		System.out.println("-=-=-=-=-=-=-=-");
+//		Article.printThread(root, 0);
+//		System.out.println("-=-=-=-=-=-=-=-");
+//	}
 
 	public static List<Article> higherLevelCall(Article article) {
 		List<Article> articleNumbers = new ArrayList<Article>();

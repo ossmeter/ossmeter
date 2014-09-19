@@ -1,4 +1,4 @@
-package org.ossmeter.metricprovider.requestreplyclassification.model;
+package org.ossmeter.metricprovider.trans.requestreplyclassification.model;
 
 @db(qualifiedCollectionNames="true")
 @customize

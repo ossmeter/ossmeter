@@ -1,4 +1,4 @@
-package org.ossmeter.metricprovider.generic.numberofrequestsrepliesperday.model;
+package org.ossmeter.metricprovider.historic.numberofrequestsrepliesperday.model;
 
 // The visualisation doesn't work!
 @viz(target="gcharts", chart="line")

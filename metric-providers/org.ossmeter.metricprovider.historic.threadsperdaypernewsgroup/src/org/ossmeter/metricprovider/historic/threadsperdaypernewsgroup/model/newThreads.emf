@@ -1,4 +1,4 @@
-package org.ossmeter.metricprovider.generic.threadsperdaypernewsgroup.model;
+package org.ossmeter.metricprovider.historic.threadsperdaypernewsgroup.model;
 
 @viz(target="gcharts", chart="line")
 class DailyThreads {

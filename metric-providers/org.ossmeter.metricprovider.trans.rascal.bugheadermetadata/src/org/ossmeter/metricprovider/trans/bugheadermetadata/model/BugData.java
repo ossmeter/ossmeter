@@ -1,6 +1,7 @@
 package org.ossmeter.metricprovider.trans.bugheadermetadata.model;
 
 import com.googlecode.pongo.runtime.Pongo;
+import com.googlecode.pongo.runtime.querying.NumericalQueryProducer;
 import com.googlecode.pongo.runtime.querying.StringQueryProducer;
 
 
@@ -20,6 +21,9 @@ public class BugData extends Pongo {
 		PRIORITY.setOwningType("org.ossmeter.metricprovider.trans.bugheadermetadata.model.BugData");
 		CREATIONTIME.setOwningType("org.ossmeter.metricprovider.trans.bugheadermetadata.model.BugData");
 		LASTCLOSEDTIME.setOwningType("org.ossmeter.metricprovider.trans.bugheadermetadata.model.BugData");
+		AVERAGESENTIMENT.setOwningType("org.ossmeter.metricprovider.trans.bugheadermetadata.model.BugData");
+		STARTSENTIMENT.setOwningType("org.ossmeter.metricprovider.trans.bugheadermetadata.model.BugData");
+		ENDSENTIMENT.setOwningType("org.ossmeter.metricprovider.trans.bugheadermetadata.model.BugData");
 	}
 	
 	public static StringQueryProducer URL = new StringQueryProducer("url"); 
@@ -32,6 +36,9 @@ public class BugData extends Pongo {
 	public static StringQueryProducer PRIORITY = new StringQueryProducer("priority"); 
 	public static StringQueryProducer CREATIONTIME = new StringQueryProducer("creationTime"); 
 	public static StringQueryProducer LASTCLOSEDTIME = new StringQueryProducer("lastClosedTime"); 
+	public static NumericalQueryProducer AVERAGESENTIMENT = new NumericalQueryProducer("averageSentiment");
+	public static StringQueryProducer STARTSENTIMENT = new StringQueryProducer("startSentiment"); 
+	public static StringQueryProducer ENDSENTIMENT = new StringQueryProducer("endSentiment"); 
 	
 	
 	public String getUrl() {
@@ -121,6 +128,33 @@ public class BugData extends Pongo {
 	
 	public BugData setLastClosedTime(String lastClosedTime) {
 		dbObject.put("lastClosedTime", lastClosedTime);
+		notifyChanged();
+		return this;
+	}
+	public float getAverageSentiment() {
+		return parseFloat(dbObject.get("averageSentiment")+"", 0.0f);
+	}
+	
+	public BugData setAverageSentiment(float averageSentiment) {
+		dbObject.put("averageSentiment", averageSentiment);
+		notifyChanged();
+		return this;
+	}
+	public String getStartSentiment() {
+		return parseString(dbObject.get("startSentiment")+"", "");
+	}
+	
+	public BugData setStartSentiment(String startSentiment) {
+		dbObject.put("startSentiment", startSentiment);
+		notifyChanged();
+		return this;
+	}
+	public String getEndSentiment() {
+		return parseString(dbObject.get("endSentiment")+"", "");
+	}
+	
+	public BugData setEndSentiment(String endSentiment) {
+		dbObject.put("endSentiment", endSentiment);
 		notifyChanged();
 		return this;
 	}

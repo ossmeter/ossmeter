@@ -13,7 +13,8 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.repository.model,
  org.ossmeter.repository.model.bts.bugzilla,
  org.ossmeter.platform,
- org.apache.commons.lang
+ org.apache.commons.lang,
+ org.ossmeter.platform.communicationchannel.nntp;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.metricprovider.historic.avgbugcreationclosedtime

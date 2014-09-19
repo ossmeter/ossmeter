@@ -1,4 +1,4 @@
-package org.ossmeter.metricprovider.numberofnewbugs.model;
+package org.ossmeter.metricprovider.trans.numberofnewbugs.model;
 
 @db(qualifiedCollectionNames="true")
 class NumberOfNewBugsMetric {

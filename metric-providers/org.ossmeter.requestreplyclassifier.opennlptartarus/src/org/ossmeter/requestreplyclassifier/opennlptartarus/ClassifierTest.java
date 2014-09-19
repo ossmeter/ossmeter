@@ -1,8 +1,5 @@
 package org.ossmeter.requestreplyclassifier.opennlptartarus;
 
-import org.ossmeter.requestreplyclassifier.opennlptartarus.ClassificationInstance;
-import org.ossmeter.requestreplyclassifier.opennlptartarus.Classifier;
-
 public class ClassifierTest {
 
     public static void main(String[] args) throws Exception {

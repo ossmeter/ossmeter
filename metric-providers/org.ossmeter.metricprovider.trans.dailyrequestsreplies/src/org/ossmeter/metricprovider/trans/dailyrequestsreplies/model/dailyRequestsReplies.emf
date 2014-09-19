@@ -1,4 +1,4 @@
-package org.ossmeter.metricprovider.dailyrequestsreplies.model;
+package org.ossmeter.metricprovider.trans.dailyrequestsreplies.model;
 
 @viz(target="gcharts", chart="bar")
 @db(qualifiedCollectionNames="true")

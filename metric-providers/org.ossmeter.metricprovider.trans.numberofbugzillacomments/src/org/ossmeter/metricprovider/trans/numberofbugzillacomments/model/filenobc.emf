@@ -1,4 +1,4 @@
-package org.ossmeter.metricprovider.numberofbugzillacomments.model;
+package org.ossmeter.metricprovider.trans.numberofbugzillacomments.model;
 
 @db(qualifiedCollectionNames="true")
 @customize

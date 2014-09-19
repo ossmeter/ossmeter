@@ -17,6 +17,7 @@ public class ArticleData extends Pongo {
 		DATE.setOwningType("org.ossmeter.metricprovider.trans.threads.model.ArticleData");
 		FROM.setOwningType("org.ossmeter.metricprovider.trans.threads.model.ArticleData");
 		SUBJECT.setOwningType("org.ossmeter.metricprovider.trans.threads.model.ArticleData");
+		CONTENTCLASS.setOwningType("org.ossmeter.metricprovider.trans.threads.model.ArticleData");
 		REFERENCES.setOwningType("org.ossmeter.metricprovider.trans.threads.model.ArticleData");
 	}
 	
@@ -26,6 +27,7 @@ public class ArticleData extends Pongo {
 	public static StringQueryProducer DATE = new StringQueryProducer("date"); 
 	public static StringQueryProducer FROM = new StringQueryProducer("from"); 
 	public static StringQueryProducer SUBJECT = new StringQueryProducer("subject"); 
+	public static StringQueryProducer CONTENTCLASS = new StringQueryProducer("contentClass"); 
 	public static StringQueryProducer REFERENCES = new StringQueryProducer("references"); 
 	
 	
@@ -80,6 +82,15 @@ public class ArticleData extends Pongo {
 	
 	public ArticleData setSubject(String subject) {
 		dbObject.put("subject", subject);
+		notifyChanged();
+		return this;
+	}
+	public String getContentClass() {
+		return parseString(dbObject.get("contentClass")+"", "");
+	}
+	
+	public ArticleData setContentClass(String contentClass) {
+		dbObject.put("contentClass", contentClass);
 		notifyChanged();
 		return this;
 	}

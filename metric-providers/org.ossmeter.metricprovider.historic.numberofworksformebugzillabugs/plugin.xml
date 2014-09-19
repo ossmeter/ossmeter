@@ -11,8 +11,9 @@
    </visualiser>
 </extension>
 
+
 <extension point="com.googlecode.pongo.runtime.osgi">
-    <class name="org.ossmeter.metricprovider.generic.numberofworksformebugzillabugs.model.DailyNowfmb"/>
-    <class name="org.ossmeter.metricprovider.generic.numberofworksformebugzillabugs.model.DailyBugzillaData"/>
+    <class name="org.ossmeter.metricprovider.historic.numberofworksformebugzillabugs.model.DailyNowfmb"/>
+    <class name="org.ossmeter.metricprovider.historic.numberofworksformebugzillabugs.model.DailyBugzillaData"/>
   </extension>
 </plugin>

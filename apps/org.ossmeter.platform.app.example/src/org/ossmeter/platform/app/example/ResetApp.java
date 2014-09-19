@@ -19,6 +19,10 @@ public class ResetApp {
 		mongo.dropDatabase("fedora");
 		mongo.dropDatabase("saf");
 		mongo.dropDatabase("mojambo-grit");
+		mongo.dropDatabase("emf");
+		mongo.dropDatabase("xText");
+		mongo.dropDatabase("toolsEmf");
+		mongo.dropDatabase("eclipsePlatform");
 	}
 	
 }

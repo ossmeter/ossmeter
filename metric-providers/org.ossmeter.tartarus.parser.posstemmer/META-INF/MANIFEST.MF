@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Posstemmer
+Bundle-SymbolicName: org.ossmeter.tartarus.parser.posstemmer
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.ossmeter.tartarus.parser.posstemmer.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.ossmeter.opennlp,
+ org.apache.commons.lang3
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: org.tartarus.snowball,
+ org.tartarus.snowball.ext,
+ uk.ac.nactem.posstemmer

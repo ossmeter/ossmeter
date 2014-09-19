@@ -1,0 +1,15 @@
+package org.ossmeter.metricprovider.historic.overallsentimentbugzilla.model;
+
+@viz(target="gcharts", chart="line")
+class OverallSentimentBugs {
+	@series
+	val DailyBugzillaData[*] bugzillas;
+}
+
+class DailyBugzillaData {
+	@yaxis(title="Overall Sentiment of Bugs")
+	attr float overallAverageSentiment;
+	attr float overallSentimentAtThreadBeggining;
+	attr float overallSentimentAtThreadEnd;
+}
+

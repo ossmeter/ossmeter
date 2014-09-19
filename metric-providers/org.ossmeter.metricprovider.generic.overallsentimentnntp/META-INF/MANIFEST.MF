@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Overallsentimentnntp
+Bundle-SymbolicName: org.ossmeter.metricprovider.historic.overallsentimentnntp;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.ossmeter.metricprovider.historic.overallsentimentnntp.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.ossmeter.repository.model.cc.nntp,
+ org.ossmeter.platform,
+ org.ossmeter.platform.client.api,
+ com.googlecode.pongo.runtime.osgi,
+ org.ossmeter.metricprovider.trans.threadsrequestsreplies
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: org.ossmeter.metricprovider.historic.overallsentimentnntp,
+ org.ossmeter.metricprovider.historic.overallsentimentnntp.model
