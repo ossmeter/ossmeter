@@ -129,8 +129,7 @@ map[loc, int] commentLOC(rel[Language, loc, AST] asts = {}) {
   map[loc, int] result = ();
 
   for (<lang, f, _> <- asts, lang != generic()) {
-    if ({lines(l)} := asts[generic(), f])
-    {
+    if ({lines(l)} := asts[generic(), f]) {
       s = commentStats(l, lang);
       if (s != unknown()) {
         result[f] = s.linesWithComment;
@@ -149,8 +148,7 @@ map[loc, int] headerLOC(rel[Language, loc, AST] asts = {}) {
   map[loc, int] result = ();
 
   for (<lang, f, _> <- asts, lang != generic()) {
-    if ({lines(l)} := asts[generic(), f])
-    {
+    if ({lines(l)} := asts[generic(), f]) {
       s = commentStats(l, lang);
       if (s != unknown()) {
         result[f] = s.headerSize;
@@ -169,8 +167,7 @@ map[loc, int] commentedOutCode(rel[Language, loc, AST] asts = {}) {
   map[loc, int] result = ();
 
   for (<lang, f, _> <- asts, lang != generic()) {
-    if ({lines(l)} := asts[generic(), f])
-    {
+    if ({lines(l)} := asts[generic(), f]) {
       s = commentStats(l, lang);
       if (s != unknown()) {
         result[f] = s.commentedOutCodeLines;
