@@ -7,6 +7,8 @@
    <extension-point id="org.ossmeter.platform.managers.communicationchannel" name="communcationChannel" schema="schema/org.ossmeter.platform.managers.communicationchannel.exsd"/>
 
 
+
+
 <extension point="com.googlecode.pongo.runtime.osgi">
     <class name="org.ossmeter.platform.factoids.Factoids"/>
     <class name="org.ossmeter.platform.factoids.Factoid"/>

@@ -2,6 +2,7 @@ package org.ossmeter.platform.client.api;
 
 import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.factoids.Factoid;
+import org.ossmeter.platform.factoids.FactoidCategory;
 import org.ossmeter.platform.factoids.Factoids;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectRepository;
@@ -51,13 +52,30 @@ public class FactoidResource extends ServerResource {
 		if (id == null || id.equals("")) {
 			String filter = getQueryValue("cat"); // filter by category --unimplemented
 			
+			Iterable<Factoid> fs = factoids.getFactoids();
+			
+			if (filter != null && !"".equals(filter)) {
+				try {
+					FactoidCategory cat = FactoidCategory.valueOf(filter);
+					fs = factoids.getFactoids().findByCategory(cat);
+				} catch (IllegalArgumentException e) {
+					getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+					ObjectNode node = mapper.createObjectNode();
+					node.put("status", "error");
+					node.put("msg", "No category matched that requested.");
+					node.put("request", generateRequestJson(projectName, id));
+					return Util.createJsonRepresentation(node);
+				}
+			}
+			
 			ArrayNode arr = mapper.createArrayNode();
 			
-			for (Factoid f : factoids.getFactoids()) {
+			for (Factoid f : fs) {
 				ObjectNode factoid = mapper.createObjectNode();
 				factoid.put("id", f.getMetricId());
 				factoid.put("factoid", f.getFactoid());
 				factoid.put("stars", f.getStars().toString());
+				factoid.put("category", f.getCategory().toString());
 				arr.add(factoid);
 			}
 			getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
@@ -79,6 +97,7 @@ public class FactoidResource extends ServerResource {
 				factoid.put("id", f.getMetricId());
 				factoid.put("factoid", f.getFactoid());
 				factoid.put("stars", f.getStars().toString());
+				factoid.put("category", f.getCategory().toString());
 				
 				getResponse().setStatus(Status.SUCCESS_OK);
 				return Util.createJsonRepresentation(factoid);

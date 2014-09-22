@@ -6,6 +6,7 @@ import java.util.Random;
 import org.ossmeter.platform.AbstractFactoidMetricProvider;
 import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.platform.factoids.Factoid;
+import org.ossmeter.platform.factoids.FactoidCategory;
 import org.ossmeter.platform.factoids.Factoids;
 import org.ossmeter.platform.factoids.StarRating;
 import org.ossmeter.repository.model.Project;
@@ -63,6 +64,7 @@ public class CocomoFactoid extends AbstractFactoidMetricProvider{
 		int years = (int)effortApplied / 12;
 		
 		factoid.setFactoid("Took an estimated " + years + " years (COCOMO model).");
+		factoid.setCategory(FactoidCategory.CODE);
 		
 		if (years < 5) {
 			factoid.setStars(StarRating.ONE);
@@ -74,4 +76,16 @@ public class CocomoFactoid extends AbstractFactoidMetricProvider{
 			factoid.setStars(StarRating.FOUR);
 		}
 	}
+
+	public static void main(String[] args)  throws Exception {
+		Mongo mongo = new Mongo();
+		DB db = mongo.getDB("Xtext");
+		
+		CocomoFactoid f = new CocomoFactoid();
+		f.adapt(db);
+		f.measure(null, null, new Factoids(db));
+		
+		System.out.println(FactoidCategory.valueOf("asdasdasdd"));
+	}
+
 }
