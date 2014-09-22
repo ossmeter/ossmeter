@@ -140,6 +140,8 @@ public class RascalTestCaseGenerator implements IApplication  {
 						
 						ProjectDelta delta = new ProjectDelta(project, date, platform);
 						if (delta.create() && !delta.getVcsDelta().getRepoDeltas().isEmpty()) {
+							System.out.println("\nProject: " + project.getShortName() + ", date: " + date);
+							
 							File dir = new File(testDataDir, project.getName() + "/" + encode(repoURL) + "/" + date.toString());
 							dir.mkdirs();
 							
