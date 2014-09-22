@@ -117,32 +117,38 @@ map[loc, int] CBO_PHP(rel[Language, loc, M3] m3s = {}) {
 	return CBO(typeDependencies(m3), allTypes(m3));
 }
 
+
+@memo
+private tuple[map[loc, int], map[loc, int]] dac_mpc(rel[Language, loc, AST] asts) {
+	map[loc, int] dac = ();
+	map[loc, int] mpc = ();
+	
+	for ( <php(), _, phpAST(a)> <- asts, /c:class(_, _, _, _, _) <- a ) {
+		top-down-break visit (c) {
+			case new(_, _): dac[c@decl]?0 += 1;
+			case methodCall(_, _, _): mpc[c@decl]?0 += 1;
+			case staticCall(_, _, _): mpc[c@decl]?0 += 1;
+		}
+	}
+	
+	return <dac, mpc>;
+}
+
+
 @metric{DAC-PHP}
 @doc{Data abstraction coupling (PHP)}
 @friendlyName{Data abstraction coupling (PHP)}
 @appliesTo{php()}
 map[loc, int] DAC_PHP(rel[Language, loc, AST] asts = {}) {
-	map[loc, int] dac = ();
-	
-	for ( /c:class(_, _, _, _, _) <- asts ) {
-		dac[c@decl] = ( 0 | it + 1 | /new(_, _) <- c );
-	}
-	
-	return dac;
+	return dac_mpc(asts)[0];
 }
 
 @metric{MPC-PHP}
 @doc{Message passing coupling (PHP)}
 @friendlyName{Message passing coupling (PHP)}
 @appliesTo{php()}
-map[loc, int] MPC_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-	map[loc, int] mpc = ();
-	
-	for ( /c:class(_, _, _, _, _) <- asts ) {
-		mpc[c@decl] = ( 0 | it + 1 | /methodCall(_, _, _) <- c ) + ( 0 | it + 1 | /staticCall(_, _, _) <- c );
-	}
-	
-	return mpc;
+map[loc, int] MPC_PHP(rel[Language, loc, AST] asts = {}) {
+	return dac_mpc(asts)[1];
 }
 
 @metric{CF-PHP}
@@ -208,7 +214,7 @@ map[loc, real] MIF_PHP(rel[Language, loc, M3] m3s = {}) {
 @doc{Attribute inheritance factor (PHP)}
 @friendlyName{Attribute inheritance factor (PHP)}
 @appliesTo{php()}
-map[loc, real] AIF_PHP(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+map[loc, real] AIF_PHP(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
 	
 	publicAndProtectedFields = { <t, f> | <t, f> <- allFields(m3), \private() notin m3@modifiers[f] };
