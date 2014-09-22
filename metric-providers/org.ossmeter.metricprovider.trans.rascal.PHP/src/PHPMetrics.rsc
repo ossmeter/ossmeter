@@ -6,6 +6,7 @@ import lang::php::m3::Declarations;
 import lang::php::m3::Calls;
 
 import util::Math;
+import Set;
 
 import PHP;
 import DynamicFeatures;
@@ -136,10 +137,20 @@ public map[int, int] getIncludesResolutionHistogram(rel[Language, loc, AST] asts
 }
 
 
-/*
-TODO add the following metrics:
+@metric{MissingLibrariesPHP}
+@doc{Estimation of missing PHP libraries of the project}
+@friendlyName{MissingLibrariesPHP}
+@appliesTo{php()}
+public list[str] estimateMissingLibraries(rel[Language, loc, AST] asts = {})
+{
+	systems = { <root, sys> | <php(), root, phpSystem(sys)> <- asts };
+	roots = domain(systems);
 
-- estimate external libraries
- 
-*/
-
+	set[str] result = {};
+	
+	for (<root, sys> <- systems) {
+		result += estimateMissingLibraries(sys, root, libs = { *domain(s) | <r, s> <- systems, r != root } );
+	}
+	
+	return toList(result);
+}

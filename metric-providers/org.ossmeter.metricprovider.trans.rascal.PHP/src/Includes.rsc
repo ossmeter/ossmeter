@@ -12,6 +12,8 @@ import lang::php::util::LocUtils;
 import Prelude;
 import util::Math;
 
+import IO;
+
 private IncludesInfo buildIncludesInfo(System sys, loc baseloc) {
 	map[loc,set[ConstItemExp]] loc2consts = ( l : { cdef[e=normalizeExpr(cdef.e, baseloc)]  | cdef <- getScriptConstDefs(sys[l]) } | l <- sys);
 	rel[ConstItem,loc,Expr] constrel = { < (classConst(cln,cn,ce) := ci) ? classConst(cln,cn) : normalConst(ci.constName), l, ci.e > | l <- loc2consts, ci <- loc2consts[l] };
@@ -34,9 +36,18 @@ private IncludesInfo buildIncludesInfo(System sys, loc baseloc) {
 	return includesInfo(loc2consts, constrel, constMap, classConstMap);
 }
 
+private str cleanPath(str p) {
+	parts = split("/", replaceAll(p, "\\", "/"));
+	
+	while([a*,b,"..",c*] := parts, b != "..") parts = [*a,*c];
+	while([a*,".",c*] := parts) parts = [*a,*c];
+		
+	return intercalate("/", parts);
+}
+
 private set[loc] matchIncludes(System sys, Expr includeExpr, loc baseLoc, set[loc] libs = { }) {
 
-	scalars = [ s | /scalar(string(s)) := includeExpr ];
+	scalars = [ cleanPath(s) | /scalar(string(s)) := includeExpr ];
 	
 	if (scalars == []) {
 		return {};
@@ -53,11 +64,8 @@ private set[loc] matchIncludes(System sys, Expr includeExpr, loc baseLoc, set[lo
 	return filteredIncludes;	
 }
 
-private tuple[rel[loc,loc] resolved, rel[loc, str] notFound, set[loc] unresolved] resolveIncludes(System sys, IncludesInfo iinfo, loc toResolve, loc baseLoc, set[loc] libs = { }, bool checkFS=false) {
+private tuple[rel[loc,loc] resolved, set[loc] unresolved, set[str] unresolvedRelativePaths] resolveIncludes(System sys, IncludesInfo iinfo, loc toResolve, loc baseLoc, set[loc] libs = { }, bool checkFS=false) {
 	rel[loc, loc] resolved = {};
-	rel[loc, str] notFound = {};
-
-	//iprintln("toResolve: <toResolve>");
 
 	Script scr = sys[toResolve];
 	includes = { < i@at, i > | /i:include(_,_) := scr };
@@ -68,23 +76,23 @@ private tuple[rel[loc,loc] resolved, rel[loc, str] notFound, set[loc] unresolved
 	// performing string concatenations
 	includes = { < l, normalizeExpr(replaceConstants(i,iinfo), baseLoc) > | < l, i > <- includes };
 	
-	//iprintln("includes: <includes>");
+	rel[loc, str] relativePaths = {};
 	
-	// Step 2: if we have a scalar expression then see if we can match it to a file, it should
+	// Step 2: if we have a scalar expression that is an absolute path, meaning
+	// it starts with \ or /, then see if we can match it to a file, it should
 	// be something in the set of files that make up the system; in this case we
 	// should be able to match it to a unique file
-	
 	for (iitem:< _, i > <- includes, scalar(string(s)) := i.expr) {
-		try {
-			//println("Resolving <s>");
-			
-			iloc = calculateLoc(sys<0>,toResolve,baseLoc,s,checkFS=checkFS,pathMayBeChanged=false);
-			
-			//iprintln("Result: <iloc>");
-			
-			resolved += {<i@at, iloc >};
-		} catch UnavailableLoc(_) : {
-			notFound += {<i@at, s>};
+		if (size(s) > 0, s[0] in { "\\", "/"}) {
+			try {
+				iloc = calculateLoc(sys<0>,toResolve,baseLoc,s,checkFS=checkFS,pathMayBeChanged=false);				
+				resolved += {<i@at, iloc >};
+			} catch UnavailableLoc(_) : {
+				;
+			}
+		}
+		else {
+			relativePaths += {<i@at, s>};
 		}
 	}
 
@@ -92,44 +100,62 @@ private tuple[rel[loc,loc] resolved, rel[loc, str] notFound, set[loc] unresolved
 	// match the include to one or more potential files; if this matches multiple
 	// possible files, that's fine, this is a conservative estimation so we may
 	// find files that will never actually be included in practice
-	for (iitem:< _, i > <- includes, scalar(string(_)) !:= i.expr) {
-		possibleMatches = matchIncludes(sys, i, baseLoc, libs=libs);	
+	for (iitem:< _, i > <- domainX(includes, domain(resolved))) {
+		possibleMatches = matchIncludes(sys, i, baseLoc, libs=libs);		
 		resolved = resolved + { < i@at, l > | l <- possibleMatches };
 	}
+	
+	iprintln(relativePaths);
 
-	unresolved = domain(includes) - (domain(resolved) + domain(notFound));
+	unresolved = domain(includes) - domain(resolved);
+ 	unresolvedRelativePaths = relativePaths[unresolved]; 
 
-	return <resolved, notFound, unresolved>;
+	return <resolved, unresolved, unresolvedRelativePaths>;
 }
 
 @memo
-private tuple[rel[loc,loc] resolved, rel[loc, str] notFound, set[loc] unresolved] resolveIncludes(System sys, loc baseLoc, set[loc] libs = {}) {
+private tuple[rel[loc,loc] resolved, set[loc] unresolved, set[str] unresolvedRelativePaths] resolveIncludes(System sys, loc baseLoc, set[loc] libs = {}) {
 	ii = buildIncludesInfo(sys, baseLoc);
 	
 	rel[loc, loc] resolved = {};
-	rel[loc, str] notFound = {};
 	set[loc] unresolved = {};
+	set[str] unresolvedRelativePaths = {};
 	
 	for (f <- sys) {
-		<r, nf, u> = resolveIncludes(sys, ii, f, baseLoc, libs=libs);
+		<r, u, ur> = resolveIncludes(sys, ii, f, baseLoc, libs=libs);
 		resolved += r;
-		notFound += nf;
 		unresolved += u;
+		unresolvedRelativePaths += ur;
 	}
 	
-	return <resolved, notFound, unresolved>;
+	return <resolved, unresolved, unresolvedRelativePaths>;
 }
 
 public map[int, int] includeResolutionHistogram(System sys, loc baseLoc, set[loc] libs = {}) {
 
 	map[int, int] result = ();
 
-	<r, nf, u> = resolveIncludes(sys, baseLoc, libs=libs);
+	<r, u, ur> = resolveIncludes(sys, baseLoc, libs=libs);
 
-	result[0] = size(u) + size(nf);
+	result[0] = size(u);
 	
 	for (i <- domain(r)) {
 		result[size(r[i])]?0 += 1;
+	}
+	
+	return result;
+}
+
+public set[str] estimateMissingLibraries(System sys, loc baseLoc, set[loc] libs = {}) {
+	set[str] result = {};
+
+	<r, u, ur> = resolveIncludes(sys, baseLoc, libs=libs);
+		
+	for (s <- ur) {
+		parts = split("/", cleanPath(s));
+		if (size(parts) > 1) {
+			result += { intercalate(parts[..-1], "/") };
+		}
 	}
 	
 	return result;
