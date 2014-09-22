@@ -6,14 +6,23 @@ import java.util.Random;
 import org.ossmeter.platform.AbstractFactoidMetricProvider;
 import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.platform.factoids.Factoid;
+import org.ossmeter.platform.factoids.Factoids;
 import org.ossmeter.platform.factoids.StarRating;
 import org.ossmeter.repository.model.Project;
+
+import com.mongodb.DB;
+import com.mongodb.Mongo;
 
 public class CocomoFactoid extends AbstractFactoidMetricProvider{
 
 	@Override
 	public String getShortIdentifier() {
 		return "cocomo";
+	}
+	
+	@Override
+	public String getIdentifier() {
+		return getShortIdentifier();
 	}
 
 	@Override
@@ -65,5 +74,4 @@ public class CocomoFactoid extends AbstractFactoidMetricProvider{
 			factoid.setStars(StarRating.FOUR);
 		}
 	}
-
 }
