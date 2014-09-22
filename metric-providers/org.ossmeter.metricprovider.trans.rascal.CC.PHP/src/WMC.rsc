@@ -35,8 +35,7 @@ map[loc, int] getCC(rel[Language, loc, AST] asts = {})
 {
   map[loc method, int cc] result = ();
 
-  println(size(asts[php()]));
-  for (<php(), _, a> <- asts) {
+  for (<php(), _, phpAST(a)> <- asts) {
     result += ( m@decl : 1 + countCC(body) | /m:method(_, _, _, _, body) <- a );
   }
   
