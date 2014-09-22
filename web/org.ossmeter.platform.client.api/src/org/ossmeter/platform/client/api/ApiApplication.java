@@ -24,6 +24,8 @@ public class ApiApplication extends Application {
 		router.attach("/projects/p/{projectid}/", ProjectResource.class);
 		router.attach("/projects/p/{projectid}/m/{metricid}", MetricVisualisationResource.class);
 		router.attach("/projects/p/{projectid}/m/{metricid}/", MetricVisualisationResource.class);
+		router.attach("/projects/p/{projectid}/f", FactoidResource.class);
+		router.attach("/projects/p/{projectid}/f/", FactoidResource.class);
 		router.attach("/projects/p/{projectid}/f/{factoidid}", FactoidResource.class);
 		router.attach("/projects/p/{projectid}/f/{factoidid}/", FactoidResource.class);
 		

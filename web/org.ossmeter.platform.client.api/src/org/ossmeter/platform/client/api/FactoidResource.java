@@ -14,6 +14,7 @@ import org.restlet.util.Series;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class FactoidResource extends ServerResource {
@@ -45,25 +46,43 @@ public class FactoidResource extends ServerResource {
 			node.put("request", generateRequestJson(projectName, id));
 			return Util.createJsonRepresentation(node);
 		}
-		
+	
 		Factoids factoids = new Factoids(platform.getMetricsRepository(project).getDb());
-		Factoid f = factoids.getFactoids().findOneByMetricId(id);
-		
-		if (f == null) {
-			getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			ObjectNode node = mapper.createObjectNode();
-			node.put("status", "error");
-			node.put("msg", "No factoid was found with the requested identifier.");
-			node.put("request", generateRequestJson(projectName, id));
-			return Util.createJsonRepresentation(node);
-		} else {
-			ObjectNode factoid = mapper.createObjectNode();
-			factoid.put("id", f.getMetricId());
-			factoid.put("factoid", f.getFactoid());
-			factoid.put("stars", f.getStars().toString());
+		if (id == null || id.equals("")) {
+			String filter = getQueryValue("cat"); // filter by category --unimplemented
 			
-			getResponse().setStatus(Status.SUCCESS_OK);
-			return Util.createJsonRepresentation(factoid);
+			ArrayNode arr = mapper.createArrayNode();
+			
+			for (Factoid f : factoids.getFactoids()) {
+				ObjectNode factoid = mapper.createObjectNode();
+				factoid.put("id", f.getMetricId());
+				factoid.put("factoid", f.getFactoid());
+				factoid.put("stars", f.getStars().toString());
+				arr.add(factoid);
+			}
+			getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+			return Util.createJsonRepresentation(arr);
+			
+			
+		} else {		
+			Factoid f = factoids.getFactoids().findOneByMetricId(id);
+			
+			if (f == null) {
+				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+				ObjectNode node = mapper.createObjectNode();
+				node.put("status", "error");
+				node.put("msg", "No factoid was found with the requested identifier.");
+				node.put("request", generateRequestJson(projectName, id));
+				return Util.createJsonRepresentation(node);
+			} else {
+				ObjectNode factoid = mapper.createObjectNode();
+				factoid.put("id", f.getMetricId());
+				factoid.put("factoid", f.getFactoid());
+				factoid.put("stars", f.getStars().toString());
+				
+				getResponse().setStatus(Status.SUCCESS_OK);
+				return Util.createJsonRepresentation(factoid);
+			}
 		}
 	}
 	
