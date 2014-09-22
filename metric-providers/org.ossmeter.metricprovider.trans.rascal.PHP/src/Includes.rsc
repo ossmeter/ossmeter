@@ -104,8 +104,6 @@ private tuple[rel[loc,loc] resolved, set[loc] unresolved, set[str] unresolvedRel
 		possibleMatches = matchIncludes(sys, i, baseLoc, libs=libs);		
 		resolved = resolved + { < i@at, l > | l <- possibleMatches };
 	}
-	
-	iprintln(relativePaths);
 
 	unresolved = domain(includes) - domain(resolved);
  	unresolvedRelativePaths = relativePaths[unresolved]; 
@@ -114,30 +112,36 @@ private tuple[rel[loc,loc] resolved, set[loc] unresolved, set[str] unresolvedRel
 }
 
 @memo
-private tuple[rel[loc,loc] resolved, set[loc] unresolved, set[str] unresolvedRelativePaths] resolveIncludes(System sys, loc baseLoc, set[loc] libs = {}) {
-	ii = buildIncludesInfo(sys, baseLoc);
-	
+private tuple[rel[loc,loc] resolved, set[loc] unresolved, set[str] unresolvedRelativePaths] resolveIncludes(rel[loc, System] systems) {
 	rel[loc, loc] resolved = {};
 	set[loc] unresolved = {};
 	set[str] unresolvedRelativePaths = {};
-	
-	for (f <- sys) {
-		<r, u, ur> = resolveIncludes(sys, ii, f, baseLoc, libs=libs);
-		resolved += r;
-		unresolved += u;
-		unresolvedRelativePaths += ur;
+
+	for (<baseLoc, sys> <- systems) {
+		ii = buildIncludesInfo(sys, baseLoc);
+		
+		otherSystemFiles = { *domain(s) | <r, s> <- systems, r != baseLoc };
+		
+		for (f <- sys) {
+			<r, u, ur> = resolveIncludes(sys, ii, f, baseLoc, libs=otherSystemFiles );
+			resolved += r;
+			unresolved += u;
+			unresolvedRelativePaths += ur;
+		}
 	}
 	
 	return <resolved, unresolved, unresolvedRelativePaths>;
 }
 
-public map[int, int] includeResolutionHistogram(System sys, loc baseLoc, set[loc] libs = {}) {
+public map[int, int] includeResolutionHistogram(rel[loc, System] systems) {
 
 	map[int, int] result = ();
 
-	<r, u, ur> = resolveIncludes(sys, baseLoc, libs=libs);
+	<r, u, ur> = resolveIncludes(systems);
 
-	result[0] = size(u);
+	if (u != {}) {
+		result[0] = size(u);
+	}
 	
 	for (i <- domain(r)) {
 		result[size(r[i])]?0 += 1;
@@ -146,15 +150,15 @@ public map[int, int] includeResolutionHistogram(System sys, loc baseLoc, set[loc
 	return result;
 }
 
-public set[str] estimateMissingLibraries(System sys, loc baseLoc, set[loc] libs = {}) {
+public set[str] estimateMissingLibraries(rel[loc, System] systems) {
 	set[str] result = {};
 
-	<r, u, ur> = resolveIncludes(sys, baseLoc, libs=libs);
+	<r, u, ur> = resolveIncludes(systems);
 		
 	for (s <- ur) {
 		parts = split("/", cleanPath(s));
 		if (size(parts) > 1) {
-			result += { intercalate(parts[..-1], "/") };
+			result += { intercalate("/", parts[..-1]) };
 		}
 	}
 	

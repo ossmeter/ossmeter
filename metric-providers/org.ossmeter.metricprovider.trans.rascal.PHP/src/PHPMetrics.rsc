@@ -6,7 +6,6 @@ import lang::php::m3::Declarations;
 import lang::php::m3::Calls;
 
 import util::Math;
-import Set;
 
 import PHP;
 import DynamicFeatures;
@@ -115,25 +114,14 @@ public int getNumberOfFunctionsWithDynamicFeatures(rel[Language, loc, AST] asts 
 
 
 @metric{IncludesResolutionHistogram}
-@doc{Histogram counting number of times an include could be resolved to a certain number of files}
+@doc{Histogram counting number of times a PHP include could be resolved to a certain number of files}
 @friendlyName{IncludesResolutionHistogram}
 @appliesTo{php()}
 public map[int, int] getIncludesResolutionHistogram(rel[Language, loc, AST] asts = {})
 {
 	systems = { <root, sys> | <php(), root, phpSystem(sys)> <- asts };
-	roots = domain(systems); 
 
-	map[int, int] result = ();
-	
-	for (<root, sys> <- systems) {
-		h = includeResolutionHistogram(sys, root, libs = { *domain(s) | <r, s> <- systems, r != root } );
-
-		for (c <- h) {
-			result[c]?0 += h[c];
-		}
-	}
-	
-	return result;
+	return includeResolutionHistogram(systems);
 }
 
 
@@ -141,16 +129,9 @@ public map[int, int] getIncludesResolutionHistogram(rel[Language, loc, AST] asts
 @doc{Estimation of missing PHP libraries of the project}
 @friendlyName{MissingLibrariesPHP}
 @appliesTo{php()}
-public list[str] estimateMissingLibraries(rel[Language, loc, AST] asts = {})
+public set[str] estimateMissingLibraries(rel[Language, loc, AST] asts = {})
 {
 	systems = { <root, sys> | <php(), root, phpSystem(sys)> <- asts };
-	roots = domain(systems);
 
-	set[str] result = {};
-	
-	for (<root, sys> <- systems) {
-		result += estimateMissingLibraries(sys, root, libs = { *domain(s) | <r, s> <- systems, r != root } );
-	}
-	
-	return toList(result);
+	return estimateMissingLibraries(systems);
 }
