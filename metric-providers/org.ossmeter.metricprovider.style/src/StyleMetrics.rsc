@@ -23,8 +23,8 @@ private int percentageOfFilesWithViolations(rel[Language, loc, M3] m3s = {}, Tab
   if (numJavaFiles == 0) {
     throw undefined("No Java files available", |java+project:///|);
   }
-  println("size violations: <size(violations.file)>");
-  println("total files: <numJavaFiles>");
+  //println("size violations: <size(violations.file)>");
+  //println("total files: <numJavaFiles>");
   return percent(size(violations.file),  numJavaFiles);
 }
   
