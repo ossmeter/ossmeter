@@ -13,17 +13,17 @@ public class CocomoFactoid extends AbstractFactoidMetricProvider{
 
 	@Override
 	public String getShortIdentifier() {
-		return "";
+		return "cocomo";
 	}
 
 	@Override
 	public String getFriendlyName() {
-		return ""; // This method will be removed in a later version.
+		return "Cocomo"; // This method will be removed in a later version.
 	}
 
 	@Override
 	public String getSummaryInformation() {
-		return ""; // This method will be removed in a later version.
+		return "COCOMO is crazy."; // This method will be removed in a later version.
 	}
 
 	@Override

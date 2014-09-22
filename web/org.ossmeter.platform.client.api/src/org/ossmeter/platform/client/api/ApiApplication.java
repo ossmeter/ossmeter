@@ -10,11 +10,13 @@ public class ApiApplication extends Application {
 	public Restlet createInboundRoot() {
 		Router router = new Router(getContext());
 
-		router.attach("/", PingResource.class);
+		 	
 		router.attach("/search", SearchProjectResource.class);
 		router.attach("/search/", SearchProjectResource.class);
 		router.attach("/metrics", MetricListResource.class);
 		router.attach("/metrics/", MetricListResource.class);
+		router.attach("/factoids", FactoidListResource.class);
+		router.attach("/factoids/", FactoidListResource.class);
 		router.attach("/projects", ProjectListResource.class);
 		router.attach("/projects/", ProjectListResource.class);
 		router.attach("/projects/import", ProjectImportResource.class);
@@ -22,6 +24,8 @@ public class ApiApplication extends Application {
 		router.attach("/projects/p/{projectid}/", ProjectResource.class);
 		router.attach("/projects/p/{projectid}/m/{metricid}", MetricVisualisationResource.class);
 		router.attach("/projects/p/{projectid}/m/{metricid}/", MetricVisualisationResource.class);
+		router.attach("/projects/p/{projectid}/f/{factoidid}", FactoidResource.class);
+		router.attach("/projects/p/{projectid}/f/{factoidid}/", FactoidResource.class);
 		
 		router.attach("/raw/metrics", RawMetricListResource.class);
 		router.attach("/raw/metrics/", RawMetricListResource.class);

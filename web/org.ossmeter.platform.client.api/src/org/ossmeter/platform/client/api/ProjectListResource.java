@@ -50,6 +50,7 @@ public class ProjectListResource extends ServerResource {
 				
 				ObjectNode p = mapper.createObjectNode();
 				p.put("name", project.getName());
+				p.put("shortName", project.getShortName());
 				p.put("description", project.getDescription());
 				
 				projects.add(p);
