@@ -2,13 +2,13 @@ module Comments
 
 import analysis::m3::Core;
 import analysis::m3::AST;
-import org::ossmeter::metricprovider::Manager;
 import org::ossmeter::metricprovider::ProjectDelta;
 import org::ossmeter::metricprovider::MetricProvider;
 
 import Prelude;
 import util::Math;
 import analysis::graphs::Graph;
+import Split;
 
 data CommentStats
   = stats(int linesWithComment, int headerStart, int headerSize, int commentedOutCodeLines)
@@ -29,8 +29,9 @@ CommentStats commentStats(list[str] lines, Language lang) {
   return result;
 }
 
-
 CommentStats genericCommentStats(list[str] lines, rel[str, str] blockDelimiters, set[str] lineDelimiters, set[str] codePatterns, set[str] ignorePrefixesForHeader) {
+
+  allDelimiters = lineDelimiters + domain(blockDelimiters);
 
   int cloc = 0, hskip = 0, hloc = 0, coloc = 0;
   
@@ -55,7 +56,7 @@ CommentStats genericCommentStats(list[str] lines, rel[str, str] blockDelimiters,
     if (inBlock) {
       hasComment = true;
     
-      if (/<pre:.*><currentDelimiter><rest:.*>/ := l) {      
+      if (<true, pre, rest> := firstSplit(l, currentDelimiter)) {      
         hasCodeInComment = commentContainsCode(pre);
         inBlock = false;
         l = rest;
@@ -65,27 +66,20 @@ CommentStats genericCommentStats(list[str] lines, rel[str, str] blockDelimiters,
     }
 
     if (!inBlock) {
-      while (size(l) > 0) {
-        matches =
-          [ <pre, post, ""> | ld <- lineDelimiters, /<pre:.*><ld><post:.*>/ := l ] +
-          [ <pre, post, cd> | <od, cd> <- blockDelimiters, /<pre:.*><od><post:.*>/ := l ];
-        
-        matches = sort(matches, bool(tuple[str, str, str] a, tuple[str, str, str] b) { return size(a[0]) < size(b[0]); });
-                  
-        if (size(matches) > 0) {
+      while (l != "") {
+        if (<true, pre, post, d> := firstSplit(l, allDelimiters)) {
           hasComment = true;
-          m = matches[0];
-          hasCode = hasCode || containsCode(m[0]);
-          if (m[2] == "") { // line comment
-            hasCodeInComment = hasCodeInComment || commentContainsCode(m[1]);
+          hasCode = hasCode || containsCode(pre);
+          if (d in lineDelimiters) { // line comment
+            hasCodeInComment = hasCodeInComment || commentContainsCode(post);
             l = "";
           } else { // start of block comment
-            currentDelimiter = m[2];
-            if (/<c:.*><currentDelimiter><rest:.*>/ := m[1]) { // block closed on same line
+            currentDelimiter = getOneFrom(blockDelimiters[d]);
+            if (<true, c, rest> := firstSplit(post, currentDelimiter)) { // block closed on same line
               l = rest;
               hasCodeInComment = hasCodeInComment || commentContainsCode(c);
             } else { // block open at end of line
-              hasCodeInComment = hasCodeInComment || commentContainsCode(m[1]);
+              hasCodeInComment = hasCodeInComment || commentContainsCode(post);
               inBlock = true;
               l = "";
             }
