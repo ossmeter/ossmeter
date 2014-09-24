@@ -88,7 +88,7 @@ public class GitHubImporterProvider implements IHistoricalMetricProvider {
 		GitHubRepository ep = null;
 		Mongo mongo;
 		try {
-			GitHubImporter epi = new GitHubImporter("ffab283e2be3265c7b0af244e474b28430351973");
+			GitHubImporter epi = new GitHubImporter();
 			mongo = new Mongo();
 			PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
 			Platform platform = new Platform(mongo);
@@ -96,10 +96,8 @@ public class GitHubImporterProvider implements IHistoricalMetricProvider {
 			ep = epi.importRepository( ((GitHubRepository)project).getFull_name(), platform);
 			mongo.close();
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			logger.error("GitHub metric provider exception:" + e.getMessage());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			logger.error("GitHub metric provider exception:" + e.getMessage());
 		}
 		return ep;

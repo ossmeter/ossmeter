@@ -27,6 +27,8 @@ import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.logging.OssmeterLogger;
 
+import com.mongodb.Mongo;
+
 public class GoogleCodeImporter {
 	
 	
@@ -70,8 +72,6 @@ public class GoogleCodeImporter {
 				}
 			}
 			
-						
-			
 			project.getCommunicationChannels().clear();
 			project.getVcsRepositories().clear();	
 			project.getPersons().clear();
@@ -79,8 +79,6 @@ public class GoogleCodeImporter {
 			project.getLicenses().clear();
 			platform.getProjectRepositoryManager().getProjectRepository().sync();
 			
-			
-			//SET NAME
 			project.setName(e.text());
 			project.setHomePage(URL_PROJECT);
 			project.setShortName(projectId);
@@ -214,24 +212,25 @@ public class GoogleCodeImporter {
 					}
 				}
 			}
+			if ((project != null) & (!projectToBeUpdated)) {	
+				platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
+				logger.info("Project " + project.getShortName() + " has bern added");
+				
+			}
+			else
+			{
+				logger.info("Project " + project.getShortName() + " has bern updated");
+			}
+			platform.getProjectRepositoryManager().getProjectRepository().getProjects().sync();
+			return project;
+			
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
-			project.getExecutionInformation().setInErrorState(true);
 			logger.error("Eclipse project " + projectUrl + "Importer exception:" + e1.getMessage());
-			return project;
+			return null;
 		}
 		
-		if ((project != null) & (!projectToBeUpdated)) {	
-			platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
-			logger.info("Project " + project.getShortName() + " has bern added");
-			
-		}
-		else
-		{
-			logger.info("Project " + project.getShortName() + " has bern updated");
-		}
-		platform.getProjectRepositoryManager().getProjectRepository().getProjects().sync();
-		return project;
+		
 	}
 	
 	
@@ -707,5 +706,61 @@ public class GoogleCodeImporter {
 		}
 		return result;
 	}
+	
+	public boolean isProjectInDB(String projectId)
+	{
+		try 
+		{
+			Mongo mongo;
+			mongo = new Mongo();
+			Platform platform = new Platform(mongo);
+			Iterable<Project> projects = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(projectId);
+			Iterator<Project> iprojects = projects.iterator();
+			GoogleCodeProject project = null;
+			Project projectTemp = null;
+			while (iprojects.hasNext()) {
+				projectTemp = iprojects.next();
+				if (projectTemp instanceof GoogleCodeProject) {
+					project = (GoogleCodeProject)projectTemp;
+					if (project.getShortName().equals(projectId)) {
+						return true;
+					}	
+				}
+			}
+			return false;
+		}
+		catch (Exception e)
+		{
+			return false;
+		}
+	}
+	
+	public boolean isProjectInDBByUrl(String url)
+	{
+		return isProjectInDB(getProjectIdFromUrl(url));
+	}
+	
+	public GoogleCodeProject importProjectByUrl(String url, Platform platform)
+	{
+		return importProject(getProjectIdFromUrl(url), platform);
+	}
+	
+	private String getProjectIdFromUrl(String url)
+	{
+		//https://code.google.com/p/firetray/
+		url = url.replace("http://", "");
+		url = url.replace("https://", "");
+		url = url.replace("www.", "");
+		if (url.startsWith("code.google.com/p/")) {
+			url= url.replace("code.google.com/p/", "");
+			if(url.contains("?"))
+				url = url.substring(0, url.indexOf("?"));
+			if(url.endsWith("/"))
+				url = url.substring(0, url.length()-1);
+			return url;
+		}
+		else return null;
+	}
+
 	
 }
