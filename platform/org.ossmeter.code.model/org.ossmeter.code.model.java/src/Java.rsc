@@ -4,6 +4,25 @@ extend lang::java::m3::Core;
 import lang::java::m3::AST;
 import util::FileSystem;
 import org::ossmeter::metricprovider::ProjectDelta;
+import IO;
+
+@memo
+private set[loc] build(set[loc] folders, map[str, str] extraRepos) {
+  set[loc] result = {};
+  println("resolving dependencies");
+  for (folder <- folders) {
+    set[loc] jars = {};
+    int buildResult = buildProject(folder, ());
+    if (buildResult != 0) {
+      println("failed, M3 model may not be complete");
+      result += findJars({folder});
+    } else {
+      println("succeeded");
+      result += { |file:///| + cp | cp <- readFileLines(folder + "cp.txt") };
+    }
+  }
+  return result;
+}
 
 @M3Extractor{java()}
 @memo
@@ -16,8 +35,10 @@ rel[Language, loc, M3] javaM3(loc project, ProjectDelta delta, map[loc repos,loc
   for (/VcsRepository repo := delta, repo.url in checkouts) {
     folders = { checkouts[repo.url] };
     sources = findSourceRoots(folders);
-    jars = findJars(folders);
-    setEnvironmentOptions(jars + sources, sources);
+    // TODO: need to find a way to get external dependencies (if we want to support them)
+    jars = build(folders, ());
+    
+    setEnvironmentOptions(jars, sources);
   
     result += {<java(), f, createM3FromFile(f)> | source <- sources, f <- find(source, "java")};
   }
@@ -36,9 +57,10 @@ rel[Language, loc, AST] javaAST(loc project, ProjectDelta delta, map[loc repos,l
   for (/VcsRepository repo := delta, repo.url in checkouts) {
     folders = { checkouts[repo.url] };
     sources = findSourceRoots(folders);
-    jars = findJars(folders);
-    setEnvironmentOptions(jars + sources, sources);
-  
+    // TODO: need to find a way to get external dependencies (if we want to support them)
+    jars = build(folders, ());
+    setEnvironmentOptions(jars, sources);
+      
     result += {<java(), f, declaration(createAstFromFile(f, true))> | source <- sources, f <- find(source, "java")};
   }
   
@@ -57,4 +79,21 @@ set[loc] findSourceRoots(set[loc] checkouts) {
 // for now we do a simple file search
 set[loc] findJars(set[loc] checkouts) {
   return {*find(ch, "jar") | ch <- checkouts};
+}
+
+// this may become more interesting if we try to recover dependency information from meta-data
+// for now we do a simple file search
+set[loc] findClassFiles(set[loc] checkouts) {
+  return {*find(ch, "class") | ch <- checkouts};
+}
+
+
+@memo
+public M3 systemM3(rel[Language, loc, M3] m3s) {
+  javaM3s = range(m3s[java()]);
+  projectLoc = |java+tmp:///|;
+  if (javaM3s == {}) {
+    throw undefined("No Java M3s available", projectLoc);
+  }
+  return composeM3(projectLoc, javaM3s);  
 }

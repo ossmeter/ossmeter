@@ -6,18 +6,24 @@ Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.ossmeter.repository.model.eclipse,
  org.ossmeter.repository.model.bts.bugzilla,
  org.ossmeter.repository.model.cc.forum,
+ org.ossmeter.repository.model.cc.wiki,
  org.ossmeter.repository.model.vcs.svn,
  org.ossmeter.repository.model.vcs.git,
  org.ossmeter.repository.model.vcs.cvs,
  org.ossmeter.platform.communicationchannel.nntp;bundle-version="1.0.0",
  org.ossmeter.repository.model.cc.nntp,
- org.ossmeter.repository.model.importerdependencies
+ org.ossmeter.repository.model.importerdependencies;bundle-version="1.0.0",
+ org.ossmeter.platform
 Export-Package: org.ossmeter.repository.model.eclipse.importer
 Import-Package: org.apache.commons.net,
  org.json.simple,
- org.jsoup;version="1.6.1",
- org.jsoup.nodes;version="1.6.1",
- org.jsoup.select;version="1.6.1",
+ org.jsoup,
+ org.jsoup.examples,
+ org.jsoup.helper,
+ org.jsoup.nodes,
+ org.jsoup.parser,
+ org.jsoup.safety,
+ org.jsoup.select,
  org.ossmeter.platform,
  org.ossmeter.repository.model.vcs.cvs
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

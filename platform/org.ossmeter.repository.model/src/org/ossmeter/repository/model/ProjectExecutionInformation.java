@@ -14,8 +14,8 @@ public class ProjectExecutionInformation extends Pongo {
 	
 	public ProjectExecutionInformation() { 
 		super();
-		dbObject.put("storage", new LocalStorage().getDbObject());
 		dbObject.put("metricProviderData", new BasicDBList());
+		dbObject.put("storage", new LocalStorage().getDbObject());
 		LASTEXECUTED.setOwningType("org.ossmeter.repository.model.ProjectExecutionInformation");
 		MONITOR.setOwningType("org.ossmeter.repository.model.ProjectExecutionInformation");
 		INERRORSTATE.setOwningType("org.ossmeter.repository.model.ProjectExecutionInformation");

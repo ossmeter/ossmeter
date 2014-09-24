@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Churnpercommitter
-Bundle-SymbolicName: org.ossmeter.metricprovider.trans.rascal.churnpercommitter;singleton:=true
-Bundle-Version: 1.0.0.qualifier
-Require-Bundle: org.ossmeter.metricprovider.rascal;bundle-version="0.0.0"

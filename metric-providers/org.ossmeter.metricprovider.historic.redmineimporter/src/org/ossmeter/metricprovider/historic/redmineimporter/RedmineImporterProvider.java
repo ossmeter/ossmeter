@@ -52,7 +52,7 @@ public class RedmineImporterProvider implements IHistoricalMetricProvider {
 	@Override
 	public String getSummaryInformation() {
 		// TODO Auto-generated method stub
-		return "This provider enable to update a projects calling a importProject from google code importer";
+		return "This provider enable to update a projects calling a importProject from redmine importer";
 	}
 
 	@Override
@@ -79,27 +79,22 @@ public class RedmineImporterProvider implements IHistoricalMetricProvider {
 
 	@Override
 	public Pongo measure(Project project) {
-//		RedmineProject ep = null;
-//		Mongo mongo;
-//		try {
-//			RedmineImporter epi = new RedmineImporter();
-//			mongo = new Mongo();
-//			PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
-//			//Lo posso prendere da qualche altra parte
-//			Platform platform = new Platform(mongo);
-//			ep = epi.importProject("https://code.google.com/p/" + project.getName() + "/", platform);
-//			
-//		} catch (UnknownHostException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (MalformedURLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		return ep;
-		return null;
+		RedmineProject ep = null;
+		Mongo mongo;
+		try {
+			RedmineImporter epi = new RedmineImporter("http://mancoosi.di.univaq.it/redmine/","369fb37d8ca43f186505f588a14809a294aea732","juri","juri");
+			mongo = new Mongo();
+			PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
+			Platform platform = new Platform(mongo);
+			ep = epi.importProject(project.getShortName(), platform);
+			mongo.close();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ep;
 	}
 }

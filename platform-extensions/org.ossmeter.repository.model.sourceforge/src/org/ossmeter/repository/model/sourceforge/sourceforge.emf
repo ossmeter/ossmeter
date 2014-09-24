@@ -30,8 +30,7 @@ class SourceForgeProject extends Project {
   attr int ranking;
   attr String downloadPage;
   attr String supportPage;
-  attr String summaryPage;
-  attr String homePage;
+  attr String summary;
   val MailingList mailingList;
   val OS[*] os;
   val Topic[*] topics;
@@ -45,7 +44,8 @@ class SourceForgeProject extends Project {
   val SourceForgeBugTrackingSystem[*] bts;
   val Donation donation;
   val Discussion[*] discussion;
-  ref Bug[*] bugs;
+  val Bug[*] bugs;
+  attr String downloadCount;
 }
 
 class MailingList extends CommunicationChannel{
