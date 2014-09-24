@@ -222,7 +222,7 @@ private Factoid genericFactoid(str category
    switch (<spread > 0.5, spread < 0.2,  spread == 0.0>) {
      case <_,_,true> : return factoid("Currently, there is no <category> code in this project <expect1>.", \four());
      case <_,true,_> : return factoid("Currently, <category> code is localized to a minor part of the project <expect2>.", \three());
-     case <true,_,_> : return factoid("Currently, <category> code practices are wide spread throughout the project <expect1>.", \one());
+     case <true,_,_> : return factoid("Currently, <category> code practices are widely spread throughout the project <expect1>.", \one());
      default         : return factoid("Currently, there is a some small amount of <category> code spread through a small part of the project <expect2>.", \two());
    }
 }

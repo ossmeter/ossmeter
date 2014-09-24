@@ -93,7 +93,7 @@ public class GitHubImporterProvider implements ITransientMetricProvider{
 		GitHubRepository ep = null;
 		Mongo mongo;
 		try {
-			GitHubImporter epi = new GitHubImporter("ffab283e2be3265c7b0af244e474b28430351973");
+			GitHubImporter epi = new GitHubImporter();
 			mongo = new Mongo();
 			PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
 			Platform platform = new Platform(mongo);

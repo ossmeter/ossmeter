@@ -27,6 +27,7 @@ public class MetricHistoryManager {
 		DBObject dbObject = metric.getDbObject();
 		
 		dbObject.put("__date", date.toString());
+		dbObject.put("__datetime", date.toJavaDate());
 		collection.save(dbObject);
 	}
 }

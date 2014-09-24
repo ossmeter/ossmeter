@@ -1,6 +1,8 @@
 package org.ossmeter.repository.model.redmine.importer;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -14,6 +16,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -39,6 +42,8 @@ import org.ossmeter.repository.model.redmine.RedmineProjectVersionStatus;
 import org.ossmeter.repository.model.redmine.RedmineUser;
 import org.ossmeter.repository.model.redmine.RedmineWiki;
 
+import com.mongodb.Mongo;
+
 public class RedmineImporter {
 	private String key;
 	private String baseRepo;
@@ -47,17 +52,42 @@ public class RedmineImporter {
 	private String essentialRepo;
 	protected OssmeterLogger logger;
 	
+	private static String getProperty(String property) throws FileNotFoundException, IOException{
+		
+    		Properties forgeProperties = new Properties();
+			forgeProperties.load(new FileReader("redmine.properties"));
+			return forgeProperties.getProperty(property);	
+			
+	}
+	
+	private String getEssentialUrl(String url)
+	{
+		url = url.replace("http://", "");
+		url = url.replace("https://", "");
+		url = url.replace("www.", "");
+		return url;
+	}
+	
 	public RedmineImporter(String baseRepo, String key, String user, String password)
 	{
 		logger = (OssmeterLogger) OssmeterLogger.getLogger("importer.redmine");
 		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 		this.baseRepo = baseRepo;
-		this.essentialRepo = baseRepo.substring(7);
+		this.essentialRepo = getEssentialUrl(baseRepo);
 		this.key = key;
 		this.user = user;
 		this.password = password;
 	}
-
+	public RedmineImporter() throws FileNotFoundException, IOException 
+	{
+		logger = (OssmeterLogger) OssmeterLogger.getLogger("importer.redmine");
+		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
+		this.baseRepo = getProperty("baseRepo");;
+		this.essentialRepo = getEssentialUrl(this.baseRepo);
+		this.key = getProperty("key");
+		this.user = getProperty("user");;
+		this.password = getProperty("password");
+	}
 	public RedmineProject importProjectFromHTML(String projectUrl, Platform platform) 
 	{
 		
@@ -189,7 +219,6 @@ public class RedmineImporter {
 				}
 				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				logger.error("Error import redmine version from the url" + url + " " + e.getMessage());
 			}
 		
@@ -198,7 +227,6 @@ public class RedmineImporter {
 	}
 
 	private boolean exisistWiki(String url) {
-		// TODO Auto-generated method stub
 		org.jsoup.nodes.Document doc;
 		
 		try {
@@ -256,7 +284,6 @@ public class RedmineImporter {
 			}
 			
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			logger.error("Error import redmine issue list from the url" + url + " " + e1.getMessage());
 		}
 		return result;
@@ -446,7 +473,30 @@ public class RedmineImporter {
 		}
 		return result;
 	}
-	
+	private void loadIssues()
+	{
+		issueArray.clear();
+		int offset = 0;
+		int total = 0;
+		while (offset <= total)
+		{ 
+			String issuesUrlString = baseRepo + "issues.json?key=" + key + "&offset=" + offset;
+			InputStream is2;
+			try {
+				is2 = new URL(issuesUrlString).openStream();
+				BufferedReader rd2 = new BufferedReader(new InputStreamReader(is2, Charset.forName("UTF-8")));
+				String jsonText2 = readAll(rd2);
+				JSONObject obj2 = (JSONObject)JSONValue.parse(jsonText2);
+				total = Integer.parseInt(obj2.get("total_count").toString());
+				issueArray.addAll((JSONArray)obj2.get("issues"));
+				offset += 25;
+			} catch (MalformedURLException e) {
+				logger.error("Error during import all redmine project " + e.getMessage());
+			} catch (IOException e) {
+				logger.error("Error during import all redmine project " + e.getMessage());
+			}
+		}
+	}
 	public void importAll(Platform platform ) 
 	{
 		int offset = 0;
@@ -464,10 +514,8 @@ public class RedmineImporter {
 				issueArray.addAll((JSONArray)obj2.get("issues"));
 				offset += 25;
 			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
 				logger.error("Error during import all redmine project " + e.getMessage());
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				logger.error("Error during import all redmine project " + e.getMessage());
 			}
 		}
@@ -579,7 +627,7 @@ public class RedmineImporter {
 	public RedmineProject importProject(String projectId, Platform platform) 
 	{	
 		RedmineProject project = null;
-	
+		
 		Boolean projectToBeUpdated = false;
 		Project projectTemp = null;
 		Iterable<Project> pl = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(projectId);
@@ -650,7 +698,6 @@ public class RedmineImporter {
 			logger.error("Error during import " + projectId + " redmine project ");
 			return project;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			if(project!=null)
 				if(project.getExecutionInformation()!=null)
 					project.getExecutionInformation().setInErrorState(true);
@@ -695,7 +742,6 @@ public class RedmineImporter {
 			logger.error("Error during import person in " + id +" project " + e.getMessage());
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			logger.error("Error during import person in " + id +" project " + e.getMessage());
 		}
 		return result;
@@ -718,10 +764,8 @@ public class RedmineImporter {
 				result.add(role);
 			}
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			logger.error("Error during import role " + e.getMessage());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			logger.error("Error during import role " + e.getMessage());
 		}
 		return result;
@@ -761,10 +805,8 @@ public class RedmineImporter {
 				result.add(rpv);
 			}
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			logger.error("Error during import project version for " + projectID +" " + e.getMessage());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			logger.error("Error during import project version for " + projectID +" " + e.getMessage());
 		}
 		
@@ -784,6 +826,7 @@ public class RedmineImporter {
 	private List<RedmineIssue> getIssue(String id, Platform platform)
 	{
 		ArrayList<RedmineIssue> result = new ArrayList<RedmineIssue>();
+		loadIssues();
 		for (Object issue : issueArray) 
 		{
 			String issueProgId = ((JSONObject)((JSONObject)issue).get("project")).get("id").toString();
@@ -908,13 +951,65 @@ public class RedmineImporter {
 				offset += 25;
 			}
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			logger.error("Error during import users" + e.getMessage());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			logger.error("Error during import users" + e.getMessage());
 		}
-		
+	}
+	
+	public boolean isProjectInDB(String projectId)
+	{
+		try 
+		{
+			Mongo mongo;
+			mongo = new Mongo();
+			Platform platform = new Platform(mongo);
+			Iterable<Project> projects = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(projectId);
+			Iterator<Project> iprojects = projects.iterator();
+			RedmineProject project = null;
+			Project projectTemp = null;
+			while (iprojects.hasNext()) {
+				projectTemp = iprojects.next();
+				if (projectTemp instanceof RedmineProject) {
+					project = (RedmineProject)projectTemp;
+					if (project.getShortName().equals(projectId)) {
+						return true;
+					}	
+				}
+			}
+			return false;
+		}
+		catch (Exception e)
+		{
+			return false;
+		}
+	}
+	
+	public boolean isProjectInDBByUrl(String url)
+	{
+		return isProjectInDB(getProjectIdFromUrl(url));
+	}
+	
+	public RedmineProject importProjectByUrl(String url, Platform platform)
+	{
+		return importProject(getProjectIdFromUrl(url), platform);
+	}
+	
+	private String getProjectIdFromUrl(String url)
+	{
+//		url = url.replace("http://", "");
+//		url = url.replace("https://", "");
+//		url = url.replace("www.", "");
+//		if (url.startsWith("sourceforge.net/projects/")) {
+//			url= url.replace("sourceforge.net/projects/", "");
+//			if(url.contains("?"))
+//				url = url.substring(0, url.indexOf("?"));
+//			if(url.endsWith("/"))
+//				url = url.substring(0, url.length()-1);
+//			return url;
+//		}
+//		else 
+			return null;
 	}
 	
 }

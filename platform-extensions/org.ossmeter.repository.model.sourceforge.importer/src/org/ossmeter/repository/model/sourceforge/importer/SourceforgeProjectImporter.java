@@ -41,6 +41,8 @@ import java.nio.charset.Charset;
 
 
 
+
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPathFactory;
@@ -63,6 +65,7 @@ import com.googlecode.pongo.runtime.IteratorIterable;
 import com.googlecode.pongo.runtime.PongoCursorIterator;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCursor;
+import com.mongodb.Mongo;
 
 
 
@@ -187,7 +190,7 @@ public class SourceforgeProjectImporter {
 		}
 	}
 	
-public void importProjects(Platform platform, int numberOfProjects) {
+	public void importProjects(Platform platform, int numberOfProjects) {
 		
 		org.jsoup.nodes.Document doc;
 		org.jsoup.nodes.Element content;
@@ -832,6 +835,59 @@ public void importProjects(Platform platform, int numberOfProjects) {
 		}
 		
 		return hasRole;
+	}
+	public boolean isProjectInDB(String projectId)
+	{
+		try 
+		{
+			Mongo mongo;
+			mongo = new Mongo();
+			Platform platform = new Platform(mongo);
+			Iterable<Project> projects = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(projectId);
+			Iterator<Project> iprojects = projects.iterator();
+			SourceForgeProject project = null;
+			Project projectTemp = null;
+			while (iprojects.hasNext()) {
+				projectTemp = iprojects.next();
+				if (projectTemp instanceof SourceForgeProject) {
+					project = (SourceForgeProject)projectTemp;
+					if (project.getShortName().equals(projectId)) {
+						return true;
+					}	
+				}
+			}
+			return false;
+		}
+		catch (Exception e)
+		{
+			return false;
+		}
+	}
+	
+	public boolean isProjectInDBByUrl(String url)
+	{
+		return isProjectInDB(getProjectIdFromUrl(url));
+	}
+	
+	public SourceForgeProject importProjectByUrl(String url, Platform platform)
+	{
+		return importProject(getProjectIdFromUrl(url), platform);
+	}
+	
+	private String getProjectIdFromUrl(String url)
+	{
+		url = url.replace("http://", "");
+		url = url.replace("https://", "");
+		url = url.replace("www.", "");
+		if (url.startsWith("sourceforge.net/projects/")) {
+			url= url.replace("sourceforge.net/projects/", "");
+			if(url.contains("?"))
+				url = url.substring(0, url.indexOf("?"));
+			if(url.endsWith("/"))
+				url = url.substring(0, url.length()-1);
+			return url;
+		}
+		else return null;
 	}
 
 }

@@ -1,5 +1,6 @@
     package org.ossmeter.repository.app;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collection;
@@ -17,7 +18,6 @@ import org.ossmeter.repository.model.redmine.importer.RedmineImporter;
 //import org.ossmeter.repository.model.github.GitHubUser;
 import org.ossmeter.repository.model.sourceforge.SourceForgeProject;
 import org.ossmeter.repository.model.sourceforge.importer.SourceforgeProjectImporter;
-
 import org.ossmeter.repository.model.eclipse.importer.*;
 import org.ossmeter.repository.model.eclipse.*;
 import org.ossmeter.repository.model.github.GitHubRepository;
@@ -40,12 +40,12 @@ public class App implements IApplication {
 		Platform platform = new Platform(mongo);
 		platform.setMetricProviderManager(metricProviderManager);
 		platform.setPlatformVcsManager(platformVcsManager);
-		//TESTATI OK
+		//TESTED
 		addEclipseProjects(platform);
-		addSourceForgeProjects(platform);
-		addGitHubRepositories(platform);
-		addGoogleCodeRepositories(platform);
-		addRedmineProjects(platform);
+		//addSourceForgeProjects(platform);
+		//addGitHubRepositories(platform);
+		//addGoogleCodeRepositories(platform);
+		//addRedmineProjects(platform);
 		
 		//DA TESTARE
 		
@@ -59,39 +59,46 @@ public class App implements IApplication {
 	private void addSourceForgeProjects(Platform platform) {
 		
 		SourceforgeProjectImporter importer = new SourceforgeProjectImporter();
-		importer.importProjects(platform, 5);	
+		importer.importProjectByUrl("http://sourceforge.net/projects/tortoisesvn/?source=directory-featured",platform);	
 		
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 	}
 	private void addRedmineProjects(Platform platform) {
 		
-		RedmineImporter importer = new RedmineImporter("http://mancoosi.di.univaq.it/redmine/","369fb37d8ca43f186505f588a14809a294aea732","juri","juri");
-		importer.importProjects(platform, 5);	
+		RedmineImporter importer;
+		try {
+			importer = new RedmineImporter();
+			importer.importProjects(platform, 5);	
+			platform.getProjectRepositoryManager().getProjectRepository().sync();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		platform.getProjectRepositoryManager().getProjectRepository().sync();
 	}
 	
 	private void addEclipseProjects(Platform platform) {
-		EclipseProjectImporter importer = new EclipseProjectImporter();	
+		EclipseProjectImporter importer = new EclipseProjectImporter();
+		importer.importProjectByUrl("asdasa", platform);
 		importer.importProjects(platform, 5);
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 	}
 	
 	private void addGitHubRepositories(Platform platform) {
-		GitHubImporter importer = new GitHubImporter("ffab283e2be3265c7b0af244e474b28430351973");	
+		GitHubImporter importer = new GitHubImporter();	
 		importer.importProjects(platform, 5);
-	//	platform.getProjectRepositoryManager().getProjectRepository().sync();
+		//importer.importProjectByUrl("https://github.com/canadaduane/house", platform);
+		platform.getProjectRepositoryManager().getProjectRepository().sync();
 	}
 	private void addGoogleCodeRepositories(Platform platform) {
 		GoogleCodeImporter importer = new GoogleCodeImporter();	
-		importer.importProjects(platform, 5);
+		importer.importProjectByUrl("https://code.google.com/p/firetray/", platform);
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 	}
-
-
-
-
-		
+	
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
 		run(new ExtensionPointMetricProviderManager(), new ExtensionPointVcsManager());

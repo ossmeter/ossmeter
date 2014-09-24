@@ -11,6 +11,7 @@ import java.io.Reader;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -60,6 +61,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import com.mongodb.Mongo;
 
 public class EclipseProjectImporter {
 	
@@ -229,7 +232,6 @@ public class EclipseProjectImporter {
 			
 		} 
 		catch (IOException e1) {
-			// TODO Auto-generated catch block
 			logger.error("EclipseProject error: Unable to retrive eclipse project's list");
 		} 
 		logger.info("Importer has finished!");
@@ -273,7 +275,6 @@ public class EclipseProjectImporter {
 			
 		} 
 		catch (IOException e1) {
-			// TODO Auto-generated catch block
 			logger.error("EclipseProject error: Unable to retrive eclipse project's list");
 		} 
 		logger.info("Importer has finished!");
@@ -530,27 +531,25 @@ public class EclipseProjectImporter {
 			for (Person person : ps) {
 				project.getPersons().add(person);
 			}
+			if (!projectToBeUpdated) {
+			platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
+			}
 		} catch (ParserConfigurationException | SAXException | IOException e) {
-			project.getExecutionInformation().setInErrorState(true);
 			logger.error("Unable to import " + projectId + "project.");
-			return project;
+			return null;
 		} catch (Exception e) {
-			project.getExecutionInformation().setInErrorState(true);
 			logger.error("Unable to import " + projectId + "project.");
-			return project;
+			return null;
 		}
 			
-		if (!projectToBeUpdated) {
-			platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
-		}
+		
 		
 		platform.getProjectRepositoryManager().getProjectRepository().sync();	
 		logger.info("Project " + projectId + " has been correctly parsed");
-		//logger.info(projectId + " project are imported. ");
 		return project;
 		
 	}
-	///////
+	
 	private ArrayList<Company> getCompany(String projectShortName, Platform platform)
 	{
 		ArrayList<Company> result = new ArrayList<Company>(); 
@@ -594,7 +593,7 @@ public class EclipseProjectImporter {
 		}
 		return result;
 	}
-	///////
+	
 	
 	private ArrayList<NntpNewsGroup> getNntpNewsGroup(String projectShortName)
 	{
@@ -717,7 +716,6 @@ public class EclipseProjectImporter {
 		} catch (NullPointerException e){
 						
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			logger.error("Problems occurred during the collection of the persons involved in the project " + projectId);
 		}
 		return result;
@@ -776,6 +774,63 @@ public class EclipseProjectImporter {
 		return text;
 	}
 
+	private String getProjectIdFromUrl(String url)
+	{
+		
+		url = url.replace("http://", "");
+		url = url.replace("https://", "");
+		url = url.replace("www.", "");
+		
+		if (url.startsWith("projects.eclipse.org") ){//|| url.startsWith("eclipse.org")) {
+			
+			url = url.replace("projects/", "");
+			url = url.replace("projects.", "");
+			url = url.replace("eclipse.org/", "");
+			if (url.contains("?")) {
+				url = url.substring(0, url.indexOf("?"));
+			}
+			if (url.contains("/")) {
+				url = url.substring(0, url.indexOf("/"));
+			}
+			return url;
+		} 
+		else 
+			return null;
+	}
+	
+	public EclipseProject importProjectByUrl(String url, Platform platform)
+	{
+		return importProject(getProjectIdFromUrl(url), platform);
+	}
+	
+	public boolean isProjectInDBByUrl(String url)
+	{
+		return isProjectInDB(getProjectIdFromUrl(url+"asda"));
+	}
+	
+	public boolean isProjectInDB(String projectId) 
+	{
+		
+		try {
+			Mongo mongo;
+			mongo = new Mongo();
+			Platform platform = new Platform(mongo);
+			Iterable<Project> pl = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(projectId);
+			Iterator<Project> iprojects = pl.iterator();
+			Project projectTemp = null;
+			EclipseProject project = new EclipseProject();
+			Boolean projectToBeUpdated = false;
+			while (iprojects.hasNext()) {
+				projectTemp = iprojects.next();
+				if (projectTemp instanceof EclipseProject) {
+					return true;
+				}
+			}
+			return false;
+		} catch (UnknownHostException e) {
+			return false;
+		}
+	}
 	
 //#######OLD METHODS#####################
 //	private String getCompleteName(Node xml) {
