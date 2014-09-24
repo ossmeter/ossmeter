@@ -35,7 +35,7 @@ map[loc class, int wmcCount] getWMC(
 	result -= (file : 0 | file <- changed); 
 	
 	for (file <- changed, m3 <- m3s[java(), file]) {
-		result += (cl : (0 | it + methodCC[m] | m <- m3@containment[cl], isMethod(m)) | <cl, _> <- m3@containment, isClass(cl));
+		result += (cl : (0 | it + methodCC[m]?0 | m <- m3@containment[cl], isMethod(m)) | <cl, _> <- m3@containment, isClass(cl));
 	}
 	 
 	return result;
