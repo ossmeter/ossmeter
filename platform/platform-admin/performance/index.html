@@ -89,6 +89,12 @@
 					classs = " class=\"warning\"";
 				} 
 
+				// Filter outliers 
+				data = data.filter(function(index, element) {
+					if (element == 0) return false;
+					return true;
+				});
+
 				$("#metrics > tbody:last").append("<tr"+classs+"><td>" + metricId + 
 					"</td><td>" + data.length + 
 					"</td><td>" + mean + 
