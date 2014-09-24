@@ -1,0 +1,773 @@
+DEBUG [importer.sourceforge] (19:54:50): ###SVELATI for project tortoisesvn Type Wiki
+DEBUG [importer.sourceforge] (19:54:50): ###SVELATI for project tortoisesvn Type News
+DEBUG [importer.sourceforge] (19:54:50): ###SVELATI for project tortoisesvn Type Reviews
+DEBUG [importer.sourceforge] (19:54:50): ###SVELATI for project tortoisesvn Type Support
+DEBUG [importer.sourceforge] (19:54:50): ###SVELATI for project tortoisesvn Type Activity
+DEBUG [importer.sourceforge] (19:54:56): ###SVELATI for project eclipse-cs Type Feature Requests
+DEBUG [importer.sourceforge] (19:54:56): ###SVELATI for project eclipse-cs Type Patches
+DEBUG [importer.sourceforge] (19:54:56): ###SVELATI for project eclipse-cs Type CVS (Retired)
+DEBUG [importer.sourceforge] (19:54:56): ###SVELATI for project eclipse-cs Type Discussion
+DEBUG [importer.sourceforge] (19:54:56): ###SVELATI for project eclipse-cs Type Bugs
+DEBUG [importer.sourceforge] (19:54:56): ###SVELATI for project eclipse-cs Type Support Requests
+DEBUG [importer.sourceforge] (19:54:56): ###SVELATI for project eclipse-cs Type Git
+DEBUG [importer.sourceforge] (19:54:58): ###SVELATI for project clonezilla Type Donate
+DEBUG [importer.sourceforge] (19:55:17): ###SVELATI for project nagios Type NDOUtils
+DEBUG [importer.sourceforge] (19:55:17): ###SVELATI for project nagios Type NSTI
+DEBUG [importer.sourceforge] (19:55:17): ###SVELATI for project nagios Type SVN
+DEBUG [importer.sourceforge] (19:55:17): ###SVELATI for project nagios Type CVS
+DEBUG [importer.sourceforge] (19:55:17): ###SVELATI for project nagios Type Nagios V-Shell
+DEBUG [importer.sourceforge] (19:55:17): ###SVELATI for project nagios Type Nagios Core
+DEBUG [importer.sourceforge] (19:55:17): ###SVELATI for project nagios Type NSCA
+DEBUG [importer.sourceforge] (19:55:17): ###SVELATI for project nagios Type NRPE
+DEBUG [importer.sourceforge] (19:55:17): ###SVELATI for project nagios Type NRDP
+DEBUG [importer.sourceforge] (19:55:17): ###SVELATI for project nagios Type Nagios BPI
+DEBUG [importer.sourceforge] (19:55:17): ###SVELATI for project nagios Type Nagios Core Docs
+DEBUG [importer.sourceforge] (19:55:19): ###SVELATI for project hibernate Type GitHub
+DEBUG [importer.sourceforge] (19:55:19): ###SVELATI for project hibernate Type Issue Tracker
+DEBUG [importer.sourceforge] (19:55:19): ###SVELATI for project hibernate Type Old CVS
+DEBUG [importer.sourceforge] (19:55:19): ###SVELATI for project hibernate Type Discussion (test)
+DEBUG [importer.sourceforge] (19:55:19): ###SVELATI for project hibernate Type Hibernate.org
+DEBUG [importer.sourceforge] (19:55:20): ###SVELATI for project openproj Type Code
+DEBUG [importer.sourceforge] (19:55:29): ###SVELATI for project exo Type Community
+DEBUG [importer.sourceforge] (19:55:33): ###SVELATI for project convertigo Type Home
+DEBUG [importer.sourceforge] (19:55:33): ###SVELATI for project convertigo Type PiwikConfig
+DEBUG [importer.sourceforge] (19:55:36): ###SVELATI for project hpccsystems Type Downloads
+DEBUG [importer.sourceforge] (19:55:36): ###SVELATI for project hpccsystems Type Source Code
+DEBUG [importer.sourceforge] (19:55:36): ###SVELATI for project hpccsystems Type Project News
+DEBUG [importer.sourceforge] (19:55:36): ###SVELATI for project hpccsystems Type Blogs
+DEBUG [importer.sourceforge] (19:55:49): ###SVELATI for project opensourcebirtreportdesigner Type Tickets
+DEBUG [importer.sourceforge] (19:56:02): ###SVELATI for project mingw Type build-aux
+DEBUG [importer.sourceforge] (19:56:02): ###SVELATI for project mingw Type catgets
+DEBUG [importer.sourceforge] (19:56:02): ###SVELATI for project mingw Type lpr-enhanced
+DEBUG [importer.sourceforge] (19:56:02): ###SVELATI for project mingw Type man
+DEBUG [importer.sourceforge] (19:56:02): ###SVELATI for project mingw Type mingw-dist
+DEBUG [importer.sourceforge] (19:56:02): ###SVELATI for project mingw Type mingw-get
+DEBUG [importer.sourceforge] (19:56:02): ###SVELATI for project mingw Type mingw-get-inst
+DEBUG [importer.sourceforge] (19:56:02): ###SVELATI for project mingw Type mingw-org-tools
+DEBUG [importer.sourceforge] (19:56:02): ###SVELATI for project mingw Type mingw-org-wsl
+DEBUG [importer.sourceforge] (19:56:02): ###SVELATI for project mingw Type msys-dvlpr
+DEBUG [importer.sourceforge] (19:56:02): ###SVELATI for project mingw Type msys-runtime
+DEBUG [importer.sourceforge] (19:56:02): ###SVELATI for project mingw Type msys2-runtime
+DEBUG [importer.sourceforge] (19:56:02): ###SVELATI for project mingw Type pexports
+DEBUG [importer.sourceforge] (19:56:02): ###SVELATI for project mingw Type portmaker
+DEBUG [importer.sourceforge] (19:56:02): ###SVELATI for project mingw Type ports
+DEBUG [importer.sourceforge] (19:56:02): ###SVELATI for project mingw Type regex
+DEBUG [importer.sourceforge] (19:56:02): ###SVELATI for project mingw Type utils
+DEBUG [importer.sourceforge] (19:56:02): ###SVELATI for project mingw Type wtk
+DEBUG [importer.sourceforge] (19:56:02): ###SVELATI for project mingw Type xscripts
+DEBUG [importer.sourceforge] (19:56:02): ###SVELATI for project mingw Type Issues
+DEBUG [importer.sourceforge] (19:56:02): ###SVELATI for project mingw Type mingw-org-wsl-extras
+DEBUG [importer.sourceforge] (19:56:02): ###SVELATI for project mingw Type msys2-tools
+DEBUG [importer.sourceforge] (19:56:02): ###SVELATI for project mingw Type MinGW Package Maker
+DEBUG [importer.sourceforge] (19:56:02): ###SVELATI for project mingw Type mingw-get-setup
+DEBUG [importer.sourceforge] (19:56:04): ###SVELATI for project portableapps Type Bugs (No Longer Used)
+DEBUG [importer.sourceforge] (19:56:04): ###SVELATI for project portableapps Type Feature Requests (No Longer Used)
+DEBUG [importer.sourceforge] (19:56:04): ###SVELATI for project portableapps Type Installer
+DEBUG [importer.sourceforge] (19:56:04): ###SVELATI for project portableapps Type Toucan
+DEBUG [importer.sourceforge] (19:56:04): ###SVELATI for project portableapps Type Development Toolkit
+DEBUG [importer.sourceforge] (19:56:04): ###SVELATI for project portableapps Type Launcher
+DEBUG [importer.sourceforge] (19:56:19): ###SVELATI for project ubuntuzilla Type mozillapackager
+DEBUG [importer.sourceforge] (19:56:19): ###SVELATI for project ubuntuzilla Type ubuntuzilla
+DEBUG [importer.sourceforge] (19:56:23): ###SVELATI for project assp Type old Discussion
+DEBUG [importer.sourceforge] (19:56:23): ###SVELATI for project assp Type Forum
+DEBUG [importer.sourceforge] (19:56:24): ###SVELATI for project scrollout Type Donations
+DEBUG [importer.sourceforge] (19:56:24): ###SVELATI for project scrollout Type Changes
+DEBUG [importer.sourceforge] (19:56:24): ###SVELATI for project scrollout Type Official website
+DEBUG [importer.sourceforge] (19:56:24): ###SVELATI for project scrollout Type Commercial Service
+DEBUG [importer.sourceforge] (19:56:24): ###SVELATI for project scrollout Type Tutorial
+DEBUG [importer.sourceforge] (19:56:27): ###SVELATI for project mpc-hc Type Source Code (GitHub)
+DEBUG [importer.sourceforge] (19:56:50): ###SVELATI for project keepass Type Support Requests (Archive)
+DEBUG [importer.sourceforge] (19:57:01): ###SVELATI for project sweethome3d Type Plug-ins
+DEBUG [importer.sourceforge] (19:57:01): ###SVELATI for project sweethome3d Type 3D Models
+DEBUG [importer.sourceforge] (19:57:01): ###SVELATI for project sweethome3d Type Web Site
+DEBUG [importer.sourceforge] (19:57:07): ###SVELATI for project ganglia Type Blog
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_abi_cpp
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_bootable_bootloader_legacy
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_bootable_diskinstaller
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_bootable_recovery
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_dalvik
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_development
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_device_google_accessory_arduino
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_device_google_accessory_demokit
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_device_sample
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_aes
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_alsa-lib
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_alsa-utils
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_android-mock
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_antlr
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_apache-harmony
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_apache-http
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_apache-xml
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_astl
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_bison
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_blktrace
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_bluetooth_bluez
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_bluetooth_glib
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_bluetooth_hcidump
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_bouncycastle
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_bsdiff
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_bzip2
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_chromium
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_clang
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_clearsilver
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_collada
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_dbus
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_dhcpcd
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_dnsmasq
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_doclava
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_dosfstools
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_dropbear
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_e2fsprogs
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_easymock
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_eglib
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_elfcopy
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_elfutils
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_embunit
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_emma
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_esd
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_expat
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_eyes-free
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_fdlibm
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_flac
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_freetype
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_fsck_msdos
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_gdata
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_genext2fs
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_giflib
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_google-diff-match-patch
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_googleclient
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_grub
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_gtest
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_guava
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_harfbuzz
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_hcidump
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_hsqldb
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_hyphenation
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_icu4c
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_iproute2
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_ipsec-tools
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_iptables
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_javasqlite
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_javassist
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_jdiff
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_jhead
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_jpeg
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_jsilver
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_jsr305
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_junit
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_lcc
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_libffi
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_libgsm
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_liblzf
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_libnfc-nxp
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_libnl-headers
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_libpcap
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_libphonenumber
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_libpng
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_libvpx
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_libxml2
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_libxslt
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_libyuv
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_llvm
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_lohit-fonts
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_markdown
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_mesa3d
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_mksh
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_mockwebserver
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_mtpd
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_netcat
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_netperf
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_neven
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_nist-sip
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_oauth
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_opencore
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_opencv
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_openssl
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_openvpn
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_oprofile
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_pcre
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_ping
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_ping6
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_ppp
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_proguard
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_protobuf
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_quake
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_safe-iop
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_skia
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_sonivox
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_speex
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_sqlite
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_srec
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_srtp
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_stlport
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_strace
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_svox
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_tagsoup
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_tcpdump
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_tesseract
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_tinyalsa
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_tinyxml
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_tremolo
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_tremor
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_v8
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_valgrind
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_webkit
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_webp
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_webrtc
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_wpa_supplicant
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_wpa_supplicant_6
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_wpa_supplicant_8
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_xdelta3
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_xmlwriter
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_external_zlib
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_frameworks_compile_libbcc
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_frameworks_compile_linkloader
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_frameworks_compile_pixelflinger2
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_frameworks_compile_slang
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_frameworks_ex
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_frameworks_media_libvideoeditor
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_frameworks_opt_calendar
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_frameworks_opt_com.google.android
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_frameworks_opt_com.google.android.googlelogin
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_frameworks_opt_emoji
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_frameworks_opt_inputmethodcommon
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_frameworks_opt_mailcommon
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_frameworks_opt_vcard
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_frameworks_support
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_hardware_alsa_sound
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_hardware_invensense
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_hardware_libhardware
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_hardware_libhardware_legacy
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_hardware_ril
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_libcore
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_ndk
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_AccountsAndSyncSettings
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_AlarmClock
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_BasicSmsReceiver
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_Bluetooth
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_Browser
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_Calculator
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_Calendar
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_Camera
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_CellBroadcastReceiver
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_CertInstaller
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_Contacts
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_DeskClock
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_Email
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_Exchange
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_Gallery
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_Gallery2
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_Gallery3D
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_GlobalSearch
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_GoogleSearch
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_HTMLViewer
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_IM
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_KeyChain
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_Launcher
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_Launcher2
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_Mms
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_Music
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_MusicFX
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_Nfc
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_PackageInstaller
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_Phone
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_Protips
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_Provision
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_QuickSearchBox
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_SmartCardService
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_SoundRecorder
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_SpareParts
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_SpeechRecorder
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_Stk
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_Sync
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_Tag
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_Updater
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_VideoEditor
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_apps_VoiceDialer
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_experimental
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_inputmethods_LatinIME
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_inputmethods_OpenWnn
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_inputmethods_PinyinIME
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_providers_ApplicationsProvider
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_providers_CalendarProvider
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_providers_ContactsProvider
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_providers_DownloadProvider
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_providers_DrmProvider
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_providers_GoogleContactsProvider
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_providers_GoogleSubscribedFeedsProvider
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_providers_ImProvider
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_providers_ManagementProvider
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_providers_MediaProvider
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_providers_TelephonyProvider
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_providers_UserDictionaryProvider
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_providers_WebSearchProvider
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_services_EasService
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_services_LockAndWipe
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_wallpapers_Basic
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_wallpapers_Galaxy4
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_wallpapers_HoloSpiral
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_wallpapers_LivePicker
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_wallpapers_MagicSmoke
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_wallpapers_MusicVisualization
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_wallpapers_NoiseField
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_packages_wallpapers_PhaseBeam
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_prebuilt
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_system_media
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type korg_system_netd
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type manifest
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type push
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type test
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_bionic
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_bootable_newinstaller
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_build
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_dalvik
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_development
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_device_amd
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_device_amd_persimmon
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_device_asus
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_device_asus_eeepc
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_device_asus_laptop
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_device_common
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_device_dell_sparta
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_device_hp_tx2500
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_device_ibm_thinkpad
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_device_lenovo_s103t
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_device_motion_m1400
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_device_tegatech_tegav2
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_device_viewsonic_viewpad10
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_device_viliv_s5
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_device_vm_vm
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_external_alsa-lib
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_external_alsa-utils
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_external_bluetooth_bluez
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_external_bluez
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_external_busybox
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_external_dhcpcd
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_external_drm
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_external_eject
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_external_llvm
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_external_mesa
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_external_mksh
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_external_mmx
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_external_mplayer
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_external_opencore
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_external_ppp
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_external_stlport
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_external_tremolo
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_external_tslib
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_external_v86d
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_external_webkit
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_external_webrtc
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_external_wpa_supplicant
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_external_wpa_supplicant_6
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_external_wpa_supplicant_8
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_frameworks_base
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_frameworks_policies_base
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_hardware_alsa_sound
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_hardware_drm_gralloc
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_hardware_gps
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_hardware_intel_i915
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_hardware_libaudio
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_hardware_libcamera
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_hardware_libhardware
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_hardware_libhardware_legacy
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_hardware_liblights
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_hardware_libsensors
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_hardware_menlow_ioport
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_hardware_menlow_psb
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_hardware_ril
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_hardware_wacom_input
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_kernel
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_libcore
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_ndk
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_packages_apps_AlarmClock
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_packages_apps_AndroidTerm
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_packages_apps_Browser
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_packages_apps_Calendar
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_packages_apps_Camera
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_packages_apps_ConnectBot
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_packages_apps_Contacts
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_packages_apps_DeskClock
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_packages_apps_FileManager
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_packages_apps_Gallery3D
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_packages_apps_IM
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_packages_apps_LIME
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_packages_apps_Launcher
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_packages_apps_Music
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_packages_apps_Settings
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_packages_apps_SoundRecorder
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_packages_apps_Superuser
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_packages_inputmethods_PinyinIME
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_packages_providers_DownloadProvider
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_packages_providers_ImProvider
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_packages_wallpapers_Basic
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_packages_wallpapers_MagicSmoke
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_packages_wallpapers_MusicVisualization
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_prebuilt
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_sdk
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_system_bluetooth
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_system_core
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_system_extras
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_system_vold
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_vendor_asus_eeepc
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_vendor_samsung_q1u
+DEBUG [importer.sourceforge] (19:57:23): ###SVELATI for project android-x86 Type x86_vendor_viliv_s5
+DEBUG [importer.sourceforge] (19:57:26): ###SVELATI for project lportal Type Browse Git
+DEBUG [importer.sourceforge] (19:57:28): ###SVELATI for project ultrastardx Type Svn
+DEBUG [importer.sourceforge] (19:57:28): ###SVELATI for project ultrastardx Type Developer Blog
+DEBUG [importer.sourceforge] (19:57:29): ###SVELATI for project libsdl-android Type Git repository
+DEBUG [importer.sourceforge] (19:57:29): ###SVELATI for project libsdl-android Type Bug tracker
+DEBUG [importer.sourceforge] (19:57:41): ###SVELATI for project phpmyadmin Type Themes
+DEBUG [importer.sourceforge] (19:57:41): ###SVELATI for project phpmyadmin Type Demo
+DEBUG [importer.sourceforge] (19:58:12): ###SVELATI for project webadmin Type Usermin Bugs
+DEBUG [importer.sourceforge] (19:58:21): ###SVELATI for project dosbox Type cvs
+DEBUG [importer.sourceforge] (19:58:35): ###SVELATI for project squirrel-sql Type Cvs
+DEBUG [importer.sourceforge] (19:58:35): ###SVELATI for project squirrel-sql Type git
+DEBUG [importer.sourceforge] (19:58:43): ###SVELATI for project orwelldevcpp Type Tracker
+DEBUG [importer.sourceforge] (19:58:43): ###SVELATI for project orwelldevcpp Type Forums
+DEBUG [importer.sourceforge] (19:58:43): ###SVELATI for project orwelldevcpp Type Reddit
+DEBUG [importer.sourceforge] (19:58:56): ###SVELATI for project desmume Type Rubbish Bin
+DEBUG [importer.sourceforge] (19:59:04): ###SVELATI for project winmerge Type Todo
+DEBUG [importer.sourceforge] (19:59:17): ###SVELATI for project linuxonandroid Type Code GIT
+DEBUG [importer.sourceforge] (19:59:17): ###SVELATI for project linuxonandroid Type Bug reports
+DEBUG [importer.sourceforge] (19:59:20): ###SVELATI for project soapui Type Browse SVN
+DEBUG [importer.sourceforge] (19:59:22): ###SVELATI for project greenshot Type Translations
+DEBUG [importer.sourceforge] (19:59:41): ###SVELATI for project winscp Type Download
+DEBUG [importer.sourceforge] (20:00:16): ###SVELATI for project freemind Type Conversions
+DEBUG [importer.sourceforge] (20:00:30): ###SVELATI for project s3tools Type S3Cmd
+DEBUG [importer.sourceforge] (20:00:34): ###SVELATI for project tuxpaint Type Tasks
+DEBUG [importer.sourceforge] (20:00:37): ###SVELATI for project handbrake Type Contribute
+DEBUG [importer.sourceforge] (20:00:50): ###SVELATI for project mingw-w64 Type External Testsuite Failures
+DEBUG [importer.sourceforge] (20:00:50): ###SVELATI for project mingw-w64 Type web
+DEBUG [importer.sourceforge] (20:00:50): ###SVELATI for project mingw-w64 Type ironcrate
+DEBUG [importer.sourceforge] (20:00:50): ###SVELATI for project mingw-w64 Type mingw-w64
+DEBUG [importer.sourceforge] (20:00:50): ###SVELATI for project mingw-w64 Type Wiki2
+DEBUG [importer.sourceforge] (20:00:55): ###SVELATI for project wine Type Wine Gecko
+DEBUG [importer.sourceforge] (20:00:55): ###SVELATI for project wine Type Winetestbot
+DEBUG [importer.sourceforge] (20:01:00): ###SVELATI for project unimediaserver Type FAQ
+DEBUG [importer.sourceforge] (20:01:03): ###SVELATI for project caelinux Type Official Website
+DEBUG [importer.sourceforge] (20:01:05): ###SVELATI for project dia-installer Type Diashapes
+DEBUG [importer.sourceforge] (20:01:05): ###SVELATI for project dia-installer Type Dia-additional-shapes
+DEBUG [importer.sourceforge] (20:01:08): ###SVELATI for project scribus Type Gsoc11scripter
+DEBUG [importer.sourceforge] (20:01:08): ###SVELATI for project scribus Type Gsoc11tables
+DEBUG [importer.sourceforge] (20:01:08): ###SVELATI for project scribus Type Nogui
+DEBUG [importer.sourceforge] (20:01:08): ###SVELATI for project scribus Type Nogui14
+DEBUG [importer.sourceforge] (20:01:08): ###SVELATI for project scribus Type Trunk
+DEBUG [importer.sourceforge] (20:01:11): ###SVELATI for project jasperstudio Type Q&A
+DEBUG [importer.sourceforge] (20:01:11): ###SVELATI for project jasperstudio Type Project Home
+DEBUG [importer.sourceforge] (20:01:15): ###SVELATI for project sakura-editor Type PatchUnicode
+DEBUG [importer.sourceforge] (20:01:18): ###SVELATI for project camstudio Type Mercurial
+DEBUG [importer.sourceforge] (20:01:18): ###SVELATI for project camstudio Type URL shortener
+DEBUG [importer.sourceforge] (20:01:31): ###SVELATI for project catacombae Type catacombae
+DEBUG [importer.sourceforge] (20:01:31): ###SVELATI for project catacombae Type catacombaeframework
+DEBUG [importer.sourceforge] (20:01:34): ###SVELATI for project gnuarmeclipse Type Second Edition
+DEBUG [importer.sourceforge] (20:01:34): ###SVELATI for project gnuarmeclipse Type Experiments
+DEBUG [importer.sourceforge] (20:01:34): ###SVELATI for project gnuarmeclipse Type Files ReadMe
+DEBUG [importer.sourceforge] (20:01:34): ###SVELATI for project gnuarmeclipse Type Support requests
+DEBUG [importer.sourceforge] (20:01:34): ###SVELATI for project gnuarmeclipse Type Feature requests
+DEBUG [importer.sourceforge] (20:01:34): ###SVELATI for project gnuarmeclipse Type Beta versions
+DEBUG [importer.sourceforge] (20:01:36): ###SVELATI for project free-cad Type Homepage
+DEBUG [importer.sourceforge] (20:01:36): ###SVELATI for project free-cad Type Issues Tracker
+DEBUG [importer.sourceforge] (20:01:36): ###SVELATI for project free-cad Type Wiki Documentation
+DEBUG [importer.sourceforge] (20:01:39): ###SVELATI for project crengine Type crengine
+DEBUG [importer.sourceforge] (20:01:39): ###SVELATI for project crengine Type libdjvu
+DEBUG [importer.sourceforge] (20:01:45): ###SVELATI for project lazarus Type Browse official SVN repository
+DEBUG [importer.sourceforge] (20:01:53): ###SVELATI for project wineskin Type Task List
+DEBUG [importer.sourceforge] (20:01:54): ###SVELATI for project flex Type flex
+DEBUG [importer.sourceforge] (20:01:54): ###SVELATI for project flex Type flex-maintainer
+DEBUG [importer.sourceforge] (20:01:54): ###SVELATI for project flex Type flex-www
+DEBUG [importer.sourceforge] (20:01:59): ###SVELATI for project xcat Type xcat-dep
+DEBUG [importer.sourceforge] (20:01:59): ###SVELATI for project xcat Type confluent
+DEBUG [importer.sourceforge] (20:01:59): ###SVELATI for project xcat Type xcat-core
+DEBUG [importer.sourceforge] (20:01:59): ###SVELATI for project xcat Type Requests
+DEBUG [importer.sourceforge] (20:01:59): ###SVELATI for project xcat Type Documentation
+DEBUG [importer.sourceforge] (20:01:59): ###SVELATI for project xcat Type xNBA
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type octclip
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type multi-precision
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type odepkg
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type symbolic
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type data-smoothing
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type communications
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type mapping
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type graph
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type dataframe
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type fl-core
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type video
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type image
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type galois
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type strings
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type octproj
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type optiminterp
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type struct
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type simp
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type fenv
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type mechanics
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type signal
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type sockets
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type wavelet
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type ltfat
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type splines
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type vrml
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type linear-algebra
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type package releases
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type info-theory
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type fits
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type control
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type financial
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type econometrics
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type zenity
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type quaternion
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type ga
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type outliers
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type parallel
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type geometry
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type instrument-control
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type benchmark
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type actuarial
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type gsl
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type fixed
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type bioinfo
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type fem-fenics
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type miscellaneous
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type specfun
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type mvn
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type optim
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type image-acquisition
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type mpi
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type fuzzy-logic-toolkit
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type integration
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type optics
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type prony
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type divand
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type level-set
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type lssa
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type statistics
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type special-matrix
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type io
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type general
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type audio
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type project-web
+DEBUG [importer.sourceforge] (20:02:06): ###SVELATI for project octave Type generate_html
+DEBUG [importer.sourceforge] (20:02:41): ###SVELATI for project shareaza Type Support Wiki
+DEBUG [importer.sourceforge] (20:02:41): ###SVELATI for project shareaza Type Devs Wiki
+DEBUG [importer.sourceforge] (20:03:34): ###SVELATI for project rigsofrods Type Overview
+DEBUG [importer.sourceforge] (20:03:34): ###SVELATI for project rigsofrods Type Code (SVN, deprecated)
+DEBUG [importer.sourceforge] (20:03:40): ###SVELATI for project alt-f Type Home Page
+DEBUG [importer.sourceforge] (20:03:40): ###SVELATI for project alt-f Type Package Request
+DEBUG [importer.sourceforge] (20:03:40): ###SVELATI for project alt-f Type Bug Reports
+DEBUG [importer.sourceforge] (20:03:40): ###SVELATI for project alt-f Type Old Issues
+DEBUG [importer.sourceforge] (20:03:50): ###SVELATI for project projectlibre Type Donation Please!
+DEBUG [importer.sourceforge] (20:04:02): ###SVELATI for project tcl Type Read-Only Bugs
+DEBUG [importer.sourceforge] (20:04:02): ###SVELATI for project tcl Type Read-Only Patches
+DEBUG [importer.sourceforge] (20:04:02): ###SVELATI for project tcl Type Read-Only Feature Requests
+DEBUG [importer.sourceforge] (20:04:09): ###SVELATI for project whonixdevelopermetafiles Type Impressum
+DEBUG [importer.sourceforge] (20:05:24): ###SVELATI for project passwordsafe Type git-repo
+DEBUG [importer.sourceforge] (20:05:24): ###SVELATI for project passwordsafe Type svn-repo-deprecated
+DEBUG [importer.sourceforge] (20:05:30): ###SVELATI for project djvu Type Djview-git
+DEBUG [importer.sourceforge] (20:05:30): ###SVELATI for project djvu Type Djvulibre-git
+DEBUG [importer.sourceforge] (20:05:30): ###SVELATI for project djvu Type Gsdjvu-git
+DEBUG [importer.sourceforge] (20:05:30): ###SVELATI for project djvu Type Old-djvu22-git
+DEBUG [importer.sourceforge] (20:05:30): ###SVELATI for project djvu Type Old-djvu3-git
+DEBUG [importer.sourceforge] (20:05:30): ###SVELATI for project djvu Type Www-git
+DEBUG [importer.sourceforge] (20:05:34): ###SVELATI for project eclipsefp Type Backlog
+DEBUG [importer.sourceforge] (20:05:45): ###SVELATI for project mediaportal Type MPTagThat
+DEBUG [importer.sourceforge] (20:05:45): ###SVELATI for project mediaportal Type IRSS
+DEBUG [importer.sourceforge] (20:05:45): ###SVELATI for project mediaportal Type MediaPortal 2
+DEBUG [importer.sourceforge] (20:05:45): ###SVELATI for project mediaportal Type MediaPortal 1
+DEBUG [importer.sourceforge] (20:05:50): ###SVELATI for project hugin Type Hugin
+DEBUG [importer.sourceforge] (20:05:50): ###SVELATI for project hugin Type Old Code
+DEBUG [importer.sourceforge] (20:05:50): ###SVELATI for project hugin Type panoglview
+DEBUG [importer.sourceforge] (20:05:50): ###SVELATI for project hugin Type autopano-sift-C
+DEBUG [importer.sourceforge] (20:05:50): ###SVELATI for project hugin Type Windows Setup
+DEBUG [importer.sourceforge] (20:05:50): ###SVELATI for project hugin Type Hugin website
+DEBUG [importer.sourceforge] (20:05:50): ###SVELATI for project hugin Type libpanorama
+DEBUG [importer.sourceforge] (20:05:50): ###SVELATI for project hugin Type Lens DB
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type Merge Requests
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type jEditLauncher Bugs
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type Plugin Central Submission
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type Plugin Bugs
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type Plugin Feature Requests
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type Plugin Patches
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type Accents
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type AndroidRemoteControl
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type ClassBrowser
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type CodeHelper
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type Completion
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type CppCheck
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type ConsoleAutomation
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type CtagsInterface
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type CtagsSideKick
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type DirtyGutter
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type GitPlugin
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type HaXeSideKick
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type LazyImporter
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type MarkerSets
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type MenuEditor
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type MyDoggyPlugin
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type P4Plugin
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type PMDPlugin
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type ProjectViewer
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type QuickNotepad
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type SpellCheck
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type SyntaxHelper
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type Updater
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type jEdit.bak
+DEBUG [importer.sourceforge] (20:06:02): ###SVELATI for project jedit Type BufferSelector
+DEBUG [importer.sourceforge] (20:06:08): ###SVELATI for project ultradefrag Type Code (SVN)
+DEBUG [importer.sourceforge] (20:06:18): ###SVELATI for project avisynth2 Type CVS 2.6
+DEBUG [importer.sourceforge] (20:06:18): ###SVELATI for project avisynth2 Type SVN 3.0
+DEBUG [importer.sourceforge] (20:06:21): ###SVELATI for project texniccenter Type Manual
+DEBUG [importer.sourceforge] (20:06:21): ###SVELATI for project texniccenter Type Tutorials
+DEBUG [importer.sourceforge] (20:06:21): ###SVELATI for project texniccenter Type User Reports
+DEBUG [importer.sourceforge] (20:06:21): ###SVELATI for project texniccenter Type Online Manual
+DEBUG [importer.sourceforge] (20:06:38): ###SVELATI for project net-snmp Type Official Patches
+DEBUG [importer.sourceforge] (20:06:38): ###SVELATI for project net-snmp Type Htdocs
+DEBUG [importer.sourceforge] (20:06:44): ###SVELATI for project maxima Type Site Xml
+DEBUG [importer.sourceforge] (20:06:47): ###SVELATI for project tdm-gcc Type Tdminstall
+DEBUG [importer.sourceforge] (20:06:50): ###SVELATI for project jboss Type Change Notes
+DEBUG [importer.sourceforge] (20:06:59): ###SVELATI for project scarangel Type installer
+DEBUG [importer.sourceforge] (20:06:59): ###SVELATI for project scarangel Type scarangel
+DEBUG [importer.sourceforge] (20:07:08): ###SVELATI for project zdfmediathk Type todo
+DEBUG [importer.sourceforge] (20:07:21): ###SVELATI for project mysql-python Type MySQLdb1
+DEBUG [importer.sourceforge] (20:07:21): ###SVELATI for project mysql-python Type MySQLdb2
+DEBUG [importer.sourceforge] (20:07:21): ###SVELATI for project mysql-python Type MySQLdb-SVN
+DEBUG [importer.sourceforge] (20:07:32): ###SVELATI for project jvi Type jvi
+DEBUG [importer.sourceforge] (20:07:32): ###SVELATI for project jvi Type nbvi
+DEBUG [importer.sourceforge] (20:07:35): ###SVELATI for project fourchan-dl Type Experimental
+DEBUG [importer.sourceforge] (20:07:35): ###SVELATI for project fourchan-dl Type Testing
+DEBUG [importer.sourceforge] (20:07:42): ###SVELATI for project crawl-ref Type crawl-ref
+DEBUG [importer.sourceforge] (20:07:42): ###SVELATI for project crawl-ref Type freetype
+DEBUG [importer.sourceforge] (20:07:42): ###SVELATI for project crawl-ref Type libpng
+DEBUG [importer.sourceforge] (20:07:42): ###SVELATI for project crawl-ref Type lua
+DEBUG [importer.sourceforge] (20:07:42): ###SVELATI for project crawl-ref Type luajit
+DEBUG [importer.sourceforge] (20:07:42): ###SVELATI for project crawl-ref Type pcre
+DEBUG [importer.sourceforge] (20:07:42): ###SVELATI for project crawl-ref Type sdl
+DEBUG [importer.sourceforge] (20:07:42): ###SVELATI for project crawl-ref Type sdl-image
+DEBUG [importer.sourceforge] (20:07:42): ###SVELATI for project crawl-ref Type sqlite
+DEBUG [importer.sourceforge] (20:07:42): ###SVELATI for project crawl-ref Type zlib
+DEBUG [importer.sourceforge] (20:08:02): ###SVELATI for project adminer Type Bugs and Features
+DEBUG [importer.sourceforge] (20:08:05): ###SVELATI for project devkitpro Type buildscripts
+DEBUG [importer.sourceforge] (20:08:05): ###SVELATI for project devkitpro Type default-arm7
+DEBUG [importer.sourceforge] (20:08:05): ###SVELATI for project devkitpro Type dlditool
+DEBUG [importer.sourceforge] (20:08:05): ###SVELATI for project devkitpro Type dswifi
+DEBUG [importer.sourceforge] (20:08:05): ###SVELATI for project devkitpro Type elf2dol
+DEBUG [importer.sourceforge] (20:08:05): ###SVELATI for project devkitpro Type filesystem
+DEBUG [importer.sourceforge] (20:08:05): ###SVELATI for project devkitpro Type gamecube-examples
+DEBUG [importer.sourceforge] (20:08:05): ###SVELATI for project devkitpro Type gba-examples
+DEBUG [importer.sourceforge] (20:08:05): ###SVELATI for project devkitpro Type Gbatools
+DEBUG [importer.sourceforge] (20:08:05): ###SVELATI for project devkitpro Type Gcdspsuite
+DEBUG [importer.sourceforge] (20:08:05): ###SVELATI for project devkitpro Type General-tools
+DEBUG [importer.sourceforge] (20:08:05): ###SVELATI for project devkitpro Type Gp32-examples
+DEBUG [importer.sourceforge] (20:08:05): ###SVELATI for project devkitpro Type Grit
+DEBUG [importer.sourceforge] (20:08:05): ###SVELATI for project devkitpro Type Gxtexconv
+DEBUG [importer.sourceforge] (20:08:05): ###SVELATI for project devkitpro Type Hbmenu
+DEBUG [importer.sourceforge] (20:08:05): ###SVELATI for project devkitpro Type Libfat
+DEBUG [importer.sourceforge] (20:08:05): ###SVELATI for project devkitpro Type Libgba
+DEBUG [importer.sourceforge] (20:08:05): ###SVELATI for project devkitpro Type Libnds
+DEBUG [importer.sourceforge] (20:08:05): ###SVELATI for project devkitpro Type Libnds-master
+DEBUG [importer.sourceforge] (20:08:05): ###SVELATI for project devkitpro Type Libogc
+DEBUG [importer.sourceforge] (20:08:05): ###SVELATI for project devkitpro Type Maxmod
+DEBUG [importer.sourceforge] (20:08:05): ###SVELATI for project devkitpro Type Mmutil
+DEBUG [importer.sourceforge] (20:08:05): ###SVELATI for project devkitpro Type Nds-examples
+DEBUG [importer.sourceforge] (20:08:05): ###SVELATI for project devkitpro Type Ndstool
+DEBUG [importer.sourceforge] (20:08:05): ###SVELATI for project devkitpro Type Perlupdaters
+DEBUG [importer.sourceforge] (20:08:05): ###SVELATI for project devkitpro Type Wii-examples
+DEBUG [importer.sourceforge] (20:08:05): ###SVELATI for project devkitpro Type Wiiload
+DEBUG [importer.sourceforge] (20:08:05): ###SVELATI for project devkitpro Type dstools
+DEBUG [importer.sourceforge] (20:08:14): ###SVELATI for project emulextreme Type emulextreme
+DEBUG [importer.sourceforge] (20:08:14): ###SVELATI for project emulextreme Type stulle
+DEBUG [importer.sourceforge] (20:08:23): ###SVELATI for project freeplane Type Bazaar
+DEBUG [importer.sourceforge] (20:08:23): ###SVELATI for project freeplane Type Old forum
+DEBUG [importer.sourceforge] (20:08:23): ###SVELATI for project freeplane Type Home page (wiki)
+DEBUG [importer.sourceforge] (20:08:23): ###SVELATI for project freeplane Type Github
+DEBUG [importer.sourceforge] (20:08:23): ###SVELATI for project freeplane Type Developer List
+DEBUG [importer.sourceforge] (20:08:28): ###SVELATI for project mpcbe Type Browse Code
+DEBUG [importer.sourceforge] (20:08:38): ###SVELATI for project scintilla Type Scintilla
+DEBUG [importer.sourceforge] (20:08:38): ###SVELATI for project scintilla Type Scite
+DEBUG [importer.sourceforge] (20:08:44): ###SVELATI for project niftools Type Blender Nif Scripts
+DEBUG [importer.sourceforge] (20:08:44): ###SVELATI for project niftools Type Kfmxml
+DEBUG [importer.sourceforge] (20:08:44): ###SVELATI for project niftools Type Max Nif Plugin
+DEBUG [importer.sourceforge] (20:08:44): ###SVELATI for project niftools Type Maya Nif Plugin
+DEBUG [importer.sourceforge] (20:08:44): ###SVELATI for project niftools Type Nifclib
+DEBUG [importer.sourceforge] (20:08:44): ###SVELATI for project niftools Type Nifdocsys
+DEBUG [importer.sourceforge] (20:08:44): ###SVELATI for project niftools Type Niflib
+DEBUG [importer.sourceforge] (20:08:44): ###SVELATI for project niftools Type Niflyze
+DEBUG [importer.sourceforge] (20:08:44): ###SVELATI for project niftools Type Nifskope
+DEBUG [importer.sourceforge] (20:08:44): ###SVELATI for project niftools Type Nifxml
+DEBUG [importer.sourceforge] (20:08:52): ###SVELATI for project xviservicethief Type Service Video Error Reports
+DEBUG [importer.sourceforge] (20:08:54): ###SVELATI for project vassalengine Type Listbridge
+DEBUG [importer.sourceforge] (20:08:54): ###SVELATI for project vassalengine Type Site
+DEBUG [importer.sourceforge] (20:08:54): ###SVELATI for project vassalengine Type Site Src
+DEBUG [importer.sourceforge] (20:08:54): ###SVELATI for project vassalengine Type Vassal4 Demo
+DEBUG [importer.sourceforge] (20:09:01): ###SVELATI for project qucs Type Old_SVN
+DEBUG [importer.sourceforge] (20:09:02): ###SVELATI for project equalizerapo Type Documentation Wiki
+DEBUG [importer.sourceforge] (20:09:37): ###SVELATI for project vmpk Type Shared keymaps and instruments
+DEBUG [importer.sourceforge] (20:11:12): ###SVELATI for project docbook Type DSSSL Bugs
+DEBUG [importer.sourceforge] (20:11:12): ###SVELATI for project docbook Type RFEs
+DEBUG [importer.sourceforge] (20:11:12): ###SVELATI for project docbook Type Publishers RFE
+DEBUG [importer.sourceforge] (20:11:12): ###SVELATI for project docbook Type Doc Requests
+DEBUG [importer.sourceforge] (20:11:20): ###SVELATI for project zsh Type Website-content
+DEBUG [importer.sourceforge] (20:12:40): ###SVELATI for project tvbrowser Type TV-Browser
+DEBUG [importer.sourceforge] (20:12:40): ###SVELATI for project tvbrowser Type TV-Browser Plugins
+DEBUG [importer.sourceforge] (20:12:40): ###SVELATI for project tvbrowser Type Channel Wish List
+DEBUG [importer.sourceforge] (20:12:53): ###SVELATI for project ijbswa Type Developer TODOs
+DEBUG [importer.sourceforge] (20:12:53): ###SVELATI for project ijbswa Type Actionsfile feedback
+DEBUG [importer.sourceforge] (20:12:55): ###SVELATI for project sipp Type Docs source
+DEBUG [importer.sourceforge] (20:12:55): ###SVELATI for project sipp Type SIPp source
+DEBUG [importer.sourceforge] (20:12:55): ###SVELATI for project sipp Type SIPp 4
+DEBUG [importer.sourceforge] (20:13:00): ###SVELATI for project mingwbuilds Type Scripts
+DEBUG [importer.sourceforge] (20:13:23): ###SVELATI for project gmic Type Source
+DEBUG [importer.sourceforge] (20:13:26): ###SVELATI for project pydev Type (deprecated) Please enter bugs at sw-brainwy.rhcloud.com
+DEBUG [importer.sourceforge] (20:13:26): ###SVELATI for project pydev Type (deprecated) Please enter requests at sw-brainwy.rhcloud.com
+DEBUG [importer.sourceforge] (20:13:29): ###SVELATI for project qtpfsgui Type git.extra
+DEBUG [importer.sourceforge] (20:13:29): ###SVELATI for project qtpfsgui Type git.Pfshdrcreate
+DEBUG [importer.sourceforge] (20:13:29): ###SVELATI for project qtpfsgui Type git.LuminanceHDR
+DEBUG [importer.sourceforge] (20:13:33): ###SVELATI for project opengtoolkit Type Requirements Change Requests
+DEBUG [importer.sourceforge] (20:13:46): ###SVELATI for project conemu Type Whats New
+DEBUG [importer.sourceforge] (20:13:47): ###SVELATI for project bonkenc Type Future Plans
+DEBUG [importer.sourceforge] (20:14:00): ###SVELATI for project facetracknoir Type CodeGit
+DEBUG [importer.sourceforge] (20:15:17): ###SVELATI for project fuse Type fuse
+DEBUG [importer.sourceforge] (20:15:17): ###SVELATI for project fuse Type fuse-kernel
+DEBUG [importer.sourceforge] (20:15:17): ###SVELATI for project fuse Type fuse-python
+DEBUG [importer.sourceforge] (20:15:17): ###SVELATI for project fuse Type osspd
+DEBUG [importer.sourceforge] (20:15:17): ###SVELATI for project fuse Type sshfs
+DEBUG [importer.sourceforge] (20:15:24): ###SVELATI for project emmabuntus Type Features
+DEBUG [importer.sourceforge] (20:15:24): ###SVELATI for project emmabuntus Type Facebook
+DEBUG [importer.sourceforge] (20:15:24): ###SVELATI for project emmabuntus Type Twitter
+DEBUG [importer.sourceforge] (20:15:24): ###SVELATI for project emmabuntus Type Gallery
+DEBUG [importer.sourceforge] (20:15:24): ###SVELATI for project emmabuntus Type Discovery
+DEBUG [importer.sourceforge] (20:15:24): ###SVELATI for project emmabuntus Type WUBI
+DEBUG [importer.sourceforge] (20:15:26): ###SVELATI for project ganib Type Installation
+DEBUG [importer.sourceforge] (20:15:27): ###SVELATI for project vba Type GB Bugs
+DEBUG [importer.sourceforge] (20:16:05): ###SVELATI for project pandora Type Code (Old SVN Repo)
+DEBUG [importer.sourceforge] (20:16:24): ###SVELATI for project grandperspectiv Type Localizations
+DEBUG [importer.sourceforge] (20:16:28): ###SVELATI for project odf-converter Type Bugs: Excel Add-in
+DEBUG [importer.sourceforge] (20:16:28): ###SVELATI for project odf-converter Type Bugs: PowerPoint Add-in
+DEBUG [importer.sourceforge] (20:16:28): ###SVELATI for project odf-converter Type Bugs: Word Add-in
+DEBUG [importer.sourceforge] (20:16:28): ###SVELATI for project odf-converter Type Bugs: Common for all
+DEBUG [importer.sourceforge] (20:16:28): ###SVELATI for project odf-converter Type Known Issues
+DEBUG [importer.sourceforge] (20:16:35): ###SVELATI for project album-art Type Bugs - pre XUI
+DEBUG [importer.sourceforge] (20:16:57): ###SVELATI for project bochs Type Documentation Request
+DEBUG [importer.sourceforge] (20:16:57): ###SVELATI for project bochs Type Web Site Requests
+DEBUG [importer.sourceforge] (20:17:15): ###SVELATI for project pure-data Type pd-anywhere
+DEBUG [importer.sourceforge] (20:17:15): ###SVELATI for project pure-data Type pd-extended
+DEBUG [importer.sourceforge] (20:17:15): ###SVELATI for project pure-data Type pure-data
+DEBUG [importer.sourceforge] (20:17:22): ###SVELATI for project opencore-amr Type fdk-aac
+DEBUG [importer.sourceforge] (20:17:22): ###SVELATI for project opencore-amr Type opencore-amr
+DEBUG [importer.sourceforge] (20:17:22): ###SVELATI for project opencore-amr Type vo-aacenc
+DEBUG [importer.sourceforge] (20:17:22): ###SVELATI for project opencore-amr Type vo-amrwbenc
+DEBUG [importer.sourceforge] (20:17:25): ###SVELATI for project pcgen Type code
+DEBUG [importer.sourceforge] (20:17:28): ###SVELATI for project kiwix Type Web
+DEBUG [importer.sourceforge] (20:17:28): ###SVELATI for project kiwix Type Tools
+DEBUG [importer.sourceforge] (20:17:28): ###SVELATI for project kiwix Type Maintenance
+DEBUG [importer.sourceforge] (20:17:28): ###SVELATI for project kiwix Type Other
+DEBUG [importer.sourceforge] (20:17:28): ###SVELATI for project kiwix Type Kiwix
+DEBUG [importer.sourceforge] (20:17:29): ###SVELATI for project zbar Type Iphone
+DEBUG [importer.sourceforge] (20:17:29): ###SVELATI for project zbar Type Www
+DEBUG [importer.sourceforge] (20:17:34): ###SVELATI for project smoothwall Type Developers
+DEBUG [importer.sourceforge] (20:17:34): ###SVELATI for project smoothwall Type Scratch
+DEBUG [importer.sourceforge] (20:18:18): ###SVELATI for project rescatux Type Distrowatch
+DEBUG [importer.sourceforge] (20:18:18): ###SVELATI for project rescatux Type Freecode
+DEBUG [importer.sourceforge] (20:18:18): ###SVELATI for project rescatux Type Website
+DEBUG [importer.sourceforge] (20:18:18): ###SVELATI for project rescatux Type GIT
+DEBUG [importer.sourceforge] (20:18:18): ###SVELATI for project rescatux Type Howtos

@@ -58,7 +58,7 @@ public class ProjectDelta {
 			long endCCDelta = System.currentTimeMillis();
 			
 			long startBTSDelta = System.currentTimeMillis();
-			bugTrackingSystemDelta = new BugTrackingSystemProjectDelta(project, date, bugTrackingSystemManager);
+			bugTrackingSystemDelta = new BugTrackingSystemProjectDelta(db, project, date, bugTrackingSystemManager);
 			long endBTSDelta = System.currentTimeMillis();
 			
 			timings = ""+ (endVcsDelta - startVcsDelta) +"," 

@@ -67,15 +67,10 @@ public class AverageNumberOfRequestsRepliesProvider extends AbstractHistoricalMe
 			if (days < newsgroup.getDays())
 				days = newsgroup.getDays();
 		}
-		
-		float avgArticles = ((float) numberOfArticles) / days;
-		float avgReplies = ((float) numberOrReplies) / days;
-		float avgRequests = ((float) numberOrRequests) / days;
-
 		AverageRR avgRRThread = new AverageRR();
-		avgRRThread.setAverageArticles(avgArticles);
-		avgRRThread.setAverageReplies(avgReplies);
-		avgRRThread.setAverageRequests(avgRequests);
+		avgRRThread.setAverageArticles(((float) numberOfArticles) / days);
+		avgRRThread.setAverageReplies(((float) numberOrReplies) / days);
+		avgRRThread.setAverageRequests(((float) numberOrRequests) / days);
 		
 		return avgRRThread;
 	}

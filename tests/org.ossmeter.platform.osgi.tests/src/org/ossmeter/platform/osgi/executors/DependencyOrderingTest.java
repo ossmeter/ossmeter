@@ -22,7 +22,7 @@ public class DependencyOrderingTest {
 		PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
 		
 		Project project = platform.getProjectRepositoryManager().getProjectRepository().getProjects()
-				.findOneByName("BIRT");
+				.findOneByName("Ponte");
 		
 		ProjectExecutor pe = new ProjectExecutor(platform, project);
 		

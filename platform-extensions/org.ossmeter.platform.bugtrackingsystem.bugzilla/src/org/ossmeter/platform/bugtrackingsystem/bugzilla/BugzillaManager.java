@@ -22,6 +22,7 @@ import utils.Comment;
 import com.j2bugzilla.base.Attachment;
 import com.j2bugzilla.base.Bug;
 import com.j2bugzilla.base.BugzillaException;
+import com.mongodb.DB;
 
 
 public class BugzillaManager implements IBugTrackingSystemManager<Bugzilla> {
@@ -38,7 +39,7 @@ public class BugzillaManager implements IBugTrackingSystemManager<Bugzilla> {
 	}
 
 	@Override
-	public BugTrackingSystemDelta getDelta(Bugzilla bugzilla, Date date) throws Exception {
+	public BugTrackingSystemDelta getDelta(DB db, Bugzilla bugzilla, Date date) throws Exception {
 		
 		System.err.println("Date: " + date.toString());
 		BugzillaSession session = new BugzillaSession(bugzilla.getUrl());
@@ -425,7 +426,7 @@ public class BugzillaManager implements IBugTrackingSystemManager<Bugzilla> {
 	}
 
 	@Override
-	public Date getFirstDate(Bugzilla bugzilla) throws Exception {
+	public Date getFirstDate(DB db, Bugzilla bugzilla) throws Exception {
 
 		SearchQuery[] searchQueries;
 		if (!bugzilla.getComponent().equals("null"))
@@ -453,7 +454,7 @@ public class BugzillaManager implements IBugTrackingSystemManager<Bugzilla> {
 	}
 
 	@Override
-	public String getContents(Bugzilla bugzilla, BugTrackingSystemBug bug) throws Exception {
+	public String getContents(DB db, Bugzilla bugzilla, BugTrackingSystemBug bug) throws Exception {
 		BugzillaSession session = new BugzillaSession(bugzilla.getUrl());
 		Bug retrievedBug = session.getBugById(Integer.parseInt(bug.getBugId()));
 //		System.err.println("getContents:\tbug retrieved");
@@ -461,7 +462,7 @@ public class BugzillaManager implements IBugTrackingSystemManager<Bugzilla> {
 	}
 
 	@Override
-	public String getContents(Bugzilla bugzilla,
+	public String getContents(DB db, Bugzilla bugzilla,
 			BugTrackingSystemComment comment) throws Exception {
 		BugzillaSession session = new BugzillaSession(bugzilla.getUrl());
 		List<Comment> retrievedComments = 

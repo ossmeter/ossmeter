@@ -10,7 +10,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.repository.model,
  org.jackson.all;bundle-version="1.0.0",
  com.googlecode.pongo.runtime,
- org.ossmeter.repository.model.eclipse
+ org.ossmeter.repository.model.eclipse,
+ org.ossmeter.platform.visualisation
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.platform.client.api

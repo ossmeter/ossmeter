@@ -3,20 +3,23 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Importer
 Bundle-SymbolicName: org.ossmeter.repository.model.sourceforge.importer; singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.ossmeter.repository.model.sourceforge.importer.Activator
 Require-Bundle: org.ossmeter.repository.model.bts.bugzilla,
  org.ossmeter.repository.model.cc.forum,
+ org.ossmeter.repository.model.cc.wiki,
  org.ossmeter.repository.model.vcs.svn,
- org.ossmeter.repository.model.vcs.git;bundle-version="1.0.0",
+ org.ossmeter.repository.model.vcs.git,
  org.ossmeter.repository.model.vcs.cvs,
  org.ossmeter.repository.model.sourceforge,
- org.ossmeter.platform;bundle-version="1.0.0",
- org.ossmeter.platform.vcs.svn;bundle-version="1.0.0",
- org.ossmeter.repository.model.importerdependencies,
- org.jsoup
+ org.ossmeter.platform,
+ org.ossmeter.repository.model.importerdependencies
 Export-Package: org.ossmeter.repository.model.sourceforge.importer
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Import-Package: javax.ws.rs,
- org.json.simple,
- org.jsoup;version="1.6.1"
+Import-Package: org.json.simple,
+ org.jsoup,
+ org.jsoup.examples,
+ org.jsoup.helper,
+ org.jsoup.nodes,
+ org.jsoup.parser,
+ org.jsoup.safety,
+ org.jsoup.select

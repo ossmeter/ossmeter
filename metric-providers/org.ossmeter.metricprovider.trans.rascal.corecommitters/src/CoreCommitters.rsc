@@ -10,26 +10,44 @@ import Set;
 import List;
 
 @metric{coreCommitters}
-@doc{Finds the core committers per file based on the churn they produce}
+@doc{Finds the core committers based on the churn they produce}
 @friendlyName{Core committers}
 @appliesTo{generic()}
-list[str] coreCommitters(ProjectDelta delta = \empty()) {
-  map[loc author, int churn] committerChurn = churnPerCommitter(delta=delta);
-  map[loc author, int churn] olderResult = ();
+@uses = ("org.ossmeter.metricprovider.trans.rascal.churnpercommitter.churnPerCommitter.historic" : "history")
+list[loc] coreCommitters(rel[datetime, map[loc, int]] history = {}) {
+  //NOTE: pongo stores items are sets so this metric breaks
+  println(history);
+  map[loc author, int churn] totalChurnPerAuthor = ();
+  for (<_, historyMap> <- history) {
+    for (author <- historyMap) {
+      totalChurnPerAuthor[author] ? 0 += historyMap[author];
+    }
+  }
+  println(totalChurnPerAuthor);
+  list[int] churns = reverse(sort(range(totalChurnPerAuthor)));
+  println(churns);
+  map[int, set[loc]] comparator = invert(totalChurnPerAuthor);
   
-  loc coreCommittersHistory = |home:///ossmeter/<delta.project.name>/corecommitters.am3|; // TODO remove cache, use helper metric instead 
+  return [author | authorChurn <- churns, author <- comparator[authorChurn]];
+}
+
+@metric{coreCommitersChurn}
+@doc{Find the core committers and the churn they have produced}
+@friendlyName{Churn per core committer}
+@appliesTo{generic()}
+@uses = ("org.ossmeter.metricprovider.trans.rascal.churnpercommitter.churnPerCommitter" : "committerChurn")
+map[loc, int] coreCommittersChurn(map[loc, int] prev = (), map[loc, int] committerChurn = ()) {
+  map[loc, int] result = ();
   
-  if (exists(coreCommittersHistory)) {
-    olderResult = readBinaryValueFile(#map[loc, int], coreCommittersHistory);
-    for (loc author <- olderResult) {
-      committerChurn[author]? 0 += olderResult[author];
+  for (/map[loc, int] prevMap := prev) {
+    for (author <- prevMap) {
+      result[author] ? 0 += prevMap[author];
     }
   }
   
-  writeBinaryValueFile(coreCommittersHistory, committerChurn);
-    
-  list[int] churns = reverse(sort(range(committerChurn)));
-  map[int, set[loc]] comparator = invert(committerChurn);
+  for (author <- committerChurn) {
+    result[author] ? 0 += committerChurn[author];
+  }
   
-  return [author.path | authorChurn <- churns, author <- comparator[authorChurn]];
+  return result;
 }

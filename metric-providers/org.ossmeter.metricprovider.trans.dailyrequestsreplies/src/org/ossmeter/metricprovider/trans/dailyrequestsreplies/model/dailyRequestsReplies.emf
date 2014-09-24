@@ -31,3 +31,15 @@ class DayReplies {
 	@yaxis(title="Number of replies")
 	attr int numberOfReplies;
 }
+
+////////
+	class DailyRequestsRepliesFIX {
+		val DayFIX[*] days;	
+	}
+	
+	class DayFIX {
+		attr String name;
+		attr int numberOfArticles;
+		attr int numberOfRequests;
+		attr int numberOfReplies;
+	}

@@ -27,9 +27,9 @@ class StringMeasurement extends Measurement {
     attr String value;
 }
 
-class DatetimeMeasurement extends Measurement {
-    attr String value;
-}
+//class DatetimeMeasurement extends Measurement {
+//    attr String value;
+//}
 
 class DatetimeMeasurement extends Measurement {
     attr long value;

@@ -23,6 +23,8 @@ public class ResetApp {
 		mongo.dropDatabase("xText");
 		mongo.dropDatabase("toolsEmf");
 		mongo.dropDatabase("eclipsePlatform");
+		mongo.dropDatabase("pdb_values");
+		mongo.dropDatabase("pongo");
 	}
 	
 }

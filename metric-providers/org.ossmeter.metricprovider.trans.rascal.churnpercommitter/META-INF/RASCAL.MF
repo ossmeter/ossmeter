@@ -1,2 +1,0 @@
-Source: src
-Main-Module: CommitterChurn
