@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Libsvm
 Bundle-SymbolicName: org.ossmeter.libsvm
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.ossmeter.libsvm.Activator
 Require-Bundle: org.ossmeter.libsvm.dependencies
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

@@ -12,7 +12,7 @@ Export-Package: com.mashape.unirest.http,
  com.mashape.unirest.request,
  com.mashape.unirest.request.body
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Require-Bundle: org.json;bundle-version="2014.1.7",
- org.apache.httpcomponents.httpclient;bundle-version="4.3.4",
- org.apache.httpcomponents.httpmime;bundle-version="4.3.4",
- org.apache.httpcomponents.httpasyncclient;bundle-version="4.0.1"
+Require-Bundle: org.json,
+ org.apache.httpcomponents.httpclient,
+ org.apache.httpcomponents.httpmime,
+ org.apache.httpcomponents.httpasyncclient

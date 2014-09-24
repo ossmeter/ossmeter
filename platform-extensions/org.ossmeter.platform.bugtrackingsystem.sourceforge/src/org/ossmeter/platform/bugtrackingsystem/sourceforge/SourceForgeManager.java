@@ -21,6 +21,8 @@ import org.ossmeter.platform.delta.bugtrackingsystem.IBugTrackingSystemManager;
 import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.sourceforge.SourceForgeBugTrackingSystem;
 
+import com.mongodb.DB;
+
 public class SourceForgeManager implements
 		IBugTrackingSystemManager<SourceForgeBugTrackingSystem> {
 
@@ -75,7 +77,7 @@ public class SourceForgeManager implements
 	}
 
 	@Override
-	public BugTrackingSystemDelta getDelta(
+	public BugTrackingSystemDelta getDelta(DB db, 
 			SourceForgeBugTrackingSystem bugTracker, Date date)
 			throws Exception {
 
@@ -114,7 +116,7 @@ public class SourceForgeManager implements
 	}
 
 	@Override
-	public Date getFirstDate(SourceForgeBugTrackingSystem bugTracker)
+	public Date getFirstDate(DB db, SourceForgeBugTrackingSystem bugTracker)
 			throws Exception {
 		SourceForgeTrackerRestClient sourceforge = getSourceForge(bugTracker);
 		SourceForgeSearchResult result = sourceforge.search("*:*", 0, 1);
@@ -127,7 +129,7 @@ public class SourceForgeManager implements
 	}
 
 	@Override
-	public String getContents(SourceForgeBugTrackingSystem bugTracker,
+	public String getContents(DB db, SourceForgeBugTrackingSystem bugTracker,
 			BugTrackingSystemBug bug) throws Exception {
 		SourceForgeTrackerRestClient sourceforge = getSourceForge(bugTracker);
 		int ticketId = Integer.parseInt(bug.getBugId());
@@ -139,7 +141,7 @@ public class SourceForgeManager implements
 	}
 
 	@Override
-	public String getContents(SourceForgeBugTrackingSystem bugTracker,
+	public String getContents(DB db, SourceForgeBugTrackingSystem bugTracker,
 			BugTrackingSystemComment comment) throws Exception {
 		SourceForgeTrackerRestClient sourceforge = getSourceForge(bugTracker);
 		int ticketId = Integer.parseInt(comment.getBugId());
@@ -175,7 +177,7 @@ public class SourceForgeManager implements
 
 		System.out.println();
 
-		SourceForgeTrackingSystemDelta delta = (SourceForgeTrackingSystemDelta) manager.getDelta(bts,
+		SourceForgeTrackingSystemDelta delta = (SourceForgeTrackingSystemDelta) manager.getDelta(null, bts,
 				new Date(new DateTime(2014, 7, 14, 0, 0).toDate()));
 		System.out.println(delta.getUpdatedBugs().size());
 		for (BugTrackingSystemBug bug : delta.getUpdatedBugs()) {

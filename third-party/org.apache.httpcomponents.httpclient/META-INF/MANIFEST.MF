@@ -29,6 +29,6 @@ Export-Package: org.apache.http.auth,
  org.apache.http.impl.cookie,
  org.apache.http.impl.execchain
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Require-Bundle: org.apache.httpcomponents.httpcore;bundle-version="4.3.2",
- org.apache.commons.codec;bundle-version="1.9.0",
- org.apache.commons.logging;bundle-version="1.1.3"
+Require-Bundle: org.apache.httpcomponents.httpcore,
+ org.apache.commons.codec,
+ org.apache.commons.logging

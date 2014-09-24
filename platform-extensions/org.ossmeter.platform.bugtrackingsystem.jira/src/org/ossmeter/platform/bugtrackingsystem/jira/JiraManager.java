@@ -19,6 +19,8 @@ import org.ossmeter.platform.delta.bugtrackingsystem.IBugTrackingSystemManager;
 import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.jira.JiraBugTrackingSystem;
 
+import com.mongodb.DB;
+
 public class JiraManager implements
 		IBugTrackingSystemManager<JiraBugTrackingSystem> {
 
@@ -75,7 +77,7 @@ public class JiraManager implements
 	}
 
 	@Override
-	public BugTrackingSystemDelta getDelta(JiraBugTrackingSystem bugTracker,
+	public BugTrackingSystemDelta getDelta(DB db, JiraBugTrackingSystem bugTracker,
 			Date date) throws Exception {
 
 		java.util.Date day = date.toJavaDate();
@@ -112,7 +114,7 @@ public class JiraManager implements
 	}
 
 	@Override
-	public Date getFirstDate(JiraBugTrackingSystem bts) throws Exception {
+	public Date getFirstDate(DB db, JiraBugTrackingSystem bts) throws Exception {
 		JiraRestClient jira = getJiraRestClient(bts);
 
 		// Only interested in created field
@@ -128,7 +130,7 @@ public class JiraManager implements
 	}
 
 	@Override
-	public String getContents(JiraBugTrackingSystem bts,
+	public String getContents(DB db, JiraBugTrackingSystem bts,
 			BugTrackingSystemBug bug) throws Exception {
 
 		JiraRestClient jira = getJiraRestClient(bts);
@@ -142,7 +144,7 @@ public class JiraManager implements
 	}
 
 	@Override
-	public String getContents(JiraBugTrackingSystem bts,
+	public String getContents(DB db, JiraBugTrackingSystem bts,
 			BugTrackingSystemComment bugComment) throws Exception {
 
 		JiraRestClient jira = getJiraRestClient(bts);
@@ -172,7 +174,7 @@ public class JiraManager implements
 		bts.setProject("MNG");
 
 		JiraBugTrackingSystemDelta delta = (JiraBugTrackingSystemDelta) jm
-				.getDelta(bts,
+				.getDelta(null, bts,
 						new Date(new DateTime(2014, 6, 15, 0, 0).toDate()));
 
 		System.out.println(delta.getNewBugs().size());
@@ -192,5 +194,4 @@ public class JiraManager implements
 					+ jiraComment.getUpdateDate());
 		}
 	}
-
 }
