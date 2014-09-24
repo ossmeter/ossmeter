@@ -35,7 +35,8 @@ public class OpenNlpTartarus {
 		String path = getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
 		if (path.endsWith("bin/"))
 			path = path.substring(0, path.lastIndexOf("bin/"));
-
+		
+		System.err.println("path: " + path);
 		posTaggerME = loadPoSME(path + "models/en-pos-maxent.bin");
 
 //		InputStream tokenizerModelInput = loadModelInput("models/en-token.bin");
@@ -64,11 +65,13 @@ public class OpenNlpTartarus {
 			}
 		}
 		List<List<Token>> tokenSentences = new ArrayList<List<Token>>();
-		for (String sentence: sentenceDetector.sentDetect(cleanedText)) {
+		synchronized(this) {
+			for (String sentence: sentenceDetector.sentDetect(cleanedText)) {
 //			String[] tokenised = tokenizerME.tokenize(sentence);
-			String[] tokenised = simpleTokenizer.tokenize(sentence);
-			String[] tags = posTaggerME.tag(tokenised);
-			tokenSentences.add(tagToTokens(tokenised, tags));
+				String[] tokenised = simpleTokenizer.tokenize(sentence);
+				String[] tags = posTaggerME.tag(tokenised);
+				tokenSentences.add(tagToTokens(tokenised, tags));
+			}
 		}
 		return tokenSentences;
 	}

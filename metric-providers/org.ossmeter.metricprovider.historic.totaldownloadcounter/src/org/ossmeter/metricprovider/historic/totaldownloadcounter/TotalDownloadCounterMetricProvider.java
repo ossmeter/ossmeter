@@ -7,7 +7,7 @@ import org.ossmeter.metricprovider.downloadcounter.model.Download;
 import org.ossmeter.metricprovider.downloadcounter.model.DownloadCounter;
 import org.ossmeter.metricprovider.downloadcounter.sourceforge.SourceForgeDownloadCounterMetricProvider;
 import org.ossmeter.metricprovider.historic.totaldownloadcounter.model.TotalDownloadCounter;
-import org.ossmeter.platform.IHistoricalMetricProvider;
+import org.ossmeter.platform.AbstractHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.repository.model.Project;
@@ -15,7 +15,7 @@ import org.ossmeter.repository.model.sourceforge.SourceForgeProject;
 
 import com.googlecode.pongo.runtime.Pongo;
 
-public class TotalDownloadCounterMetricProvider implements IHistoricalMetricProvider{
+public class TotalDownloadCounterMetricProvider extends AbstractHistoricalMetricProvider{
 
 	protected MetricProviderContext context;
 	protected SourceForgeDownloadCounterMetricProvider downloadCounterMetricProvider;

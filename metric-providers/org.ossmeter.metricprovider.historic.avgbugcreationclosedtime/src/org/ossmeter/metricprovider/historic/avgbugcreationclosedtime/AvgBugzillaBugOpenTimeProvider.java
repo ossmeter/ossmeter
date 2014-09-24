@@ -4,13 +4,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang.time.DurationFormatUtils;
+import org.ossmeter.metricprovider.historic.avgbugcreationclosedtime.model.DailyAvgBugOpenTime;
+import org.ossmeter.metricprovider.historic.avgbugcreationclosedtime.model.DailyBugzillaData;
 import org.ossmeter.metricprovider.trans.bugheadermetadata.BugHeaderMetadataMetricProvider;
 import org.ossmeter.metricprovider.trans.bugheadermetadata.model.BugData;
 import org.ossmeter.metricprovider.trans.bugheadermetadata.model.BugHeaderMetadata;
-import org.ossmeter.metricprovider.historic.avgbugcreationclosedtime.model.DailyAvgBugOpenTime;
-import org.ossmeter.metricprovider.historic.avgbugcreationclosedtime.model.DailyBugzillaData;
+import org.ossmeter.platform.AbstractHistoricalMetricProvider;
 import org.ossmeter.platform.Date;
-import org.ossmeter.platform.IHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.platform.communicationchannel.nntp.NntpUtil;
@@ -20,7 +20,7 @@ import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
 
 import com.googlecode.pongo.runtime.Pongo;
 
-public class AvgBugzillaBugOpenTimeProvider implements IHistoricalMetricProvider{
+public class AvgBugzillaBugOpenTimeProvider extends AbstractHistoricalMetricProvider {
 
 	public final static String IDENTIFIER = 
 			"org.ossmeter.metricprovider.generic.avgbugcreationclosedtime";

@@ -8,16 +8,16 @@ import org.ossmeter.metricprovider.historic.overalldailynumberofbugzillapatches.
 import org.ossmeter.metricprovider.trans.numberofbugzillapatches.NobpMetricProvider;
 import org.ossmeter.metricprovider.trans.numberofbugzillapatches.model.BugzillaData;
 import org.ossmeter.metricprovider.trans.numberofbugzillapatches.model.Nobp;
-import org.ossmeter.platform.IHistoricalMetricProvider;
+import org.ossmeter.platform.AbstractHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.repository.model.BugTrackingSystem;
-import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
 import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
 
 import com.googlecode.pongo.runtime.Pongo;
 
-public class OverallDailyNumberOfBugzillaPatchesProvider implements IHistoricalMetricProvider{
+public class OverallDailyNumberOfBugzillaPatchesProvider extends AbstractHistoricalMetricProvider{
 
 	public final static String IDENTIFIER = 
 			"org.ossmeter.metricprovider.historic.overalldailynumberofbugzillapatches";

@@ -3,12 +3,12 @@ package org.ossmeter.metricprovider.historic.overallsentimentbugzilla;
 import java.util.Arrays;
 import java.util.List;
 
+import org.ossmeter.metricprovider.historic.overallsentimentbugzilla.model.DailyBugzillaData;
+import org.ossmeter.metricprovider.historic.overallsentimentbugzilla.model.OverallSentimentBugs;
 import org.ossmeter.metricprovider.trans.bugheadermetadata.BugHeaderMetadataMetricProvider;
 import org.ossmeter.metricprovider.trans.bugheadermetadata.model.BugData;
 import org.ossmeter.metricprovider.trans.bugheadermetadata.model.BugHeaderMetadata;
-import org.ossmeter.metricprovider.historic.overallsentimentbugzilla.model.DailyBugzillaData;
-import org.ossmeter.metricprovider.historic.overallsentimentbugzilla.model.OverallSentimentBugs;
-import org.ossmeter.platform.IHistoricalMetricProvider;
+import org.ossmeter.platform.AbstractHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.repository.model.BugTrackingSystem;
@@ -17,7 +17,7 @@ import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
 
 import com.googlecode.pongo.runtime.Pongo;
 
-public class OverallSentimentBugzillaMetricProvider implements IHistoricalMetricProvider{
+public class OverallSentimentBugzillaMetricProvider extends AbstractHistoricalMetricProvider{
 
 	public final static String IDENTIFIER = 
 			"org.ossmeter.metricprovider.generic.overallsentimentbugzilla";

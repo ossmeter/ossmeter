@@ -13,7 +13,7 @@ import org.ossmeter.metricprovider.historic.numberofrequestsrepliesperdaypernews
 import org.ossmeter.metricprovider.trans.requestreplyclassification.RequestReplyClassificationMetricProvider;
 import org.ossmeter.metricprovider.trans.requestreplyclassification.model.NewsgroupArticlesData;
 import org.ossmeter.metricprovider.trans.requestreplyclassification.model.Rrc;
-import org.ossmeter.platform.IHistoricalMetricProvider;
+import org.ossmeter.platform.AbstractHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.repository.model.CommunicationChannel;
@@ -22,7 +22,7 @@ import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 
 import com.googlecode.pongo.runtime.Pongo;
 
-public class NumberOfRequestsRepliesPerDayPerNewsgroupProvider implements IHistoricalMetricProvider{
+public class NumberOfRequestsRepliesPerDayPerNewsgroupProvider extends AbstractHistoricalMetricProvider{
 	public final static String IDENTIFIER = 
 			"org.ossmeter.metricprovider.historic.numberofrequestsrepliesperdaypernewsgroup";
 

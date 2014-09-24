@@ -8,7 +8,7 @@ import org.ossmeter.metricprovider.historic.numberofworksformebugzillabugs.model
 import org.ossmeter.metricprovider.trans.bugheadermetadata.BugHeaderMetadataMetricProvider;
 import org.ossmeter.metricprovider.trans.bugheadermetadata.model.BugData;
 import org.ossmeter.metricprovider.trans.bugheadermetadata.model.BugHeaderMetadata;
-import org.ossmeter.platform.IHistoricalMetricProvider;
+import org.ossmeter.platform.AbstractHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.repository.model.BugTrackingSystem;
@@ -17,7 +17,7 @@ import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
 
 import com.googlecode.pongo.runtime.Pongo;
 
-public class NumberOfWorksForMeBugzillaBugsProvider implements IHistoricalMetricProvider{
+public class NumberOfWorksForMeBugzillaBugsProvider extends AbstractHistoricalMetricProvider{
 
 	public final static String IDENTIFIER = 
 			"org.ossmeter.metricprovider.historic.numberofworksformebugzillabugs";

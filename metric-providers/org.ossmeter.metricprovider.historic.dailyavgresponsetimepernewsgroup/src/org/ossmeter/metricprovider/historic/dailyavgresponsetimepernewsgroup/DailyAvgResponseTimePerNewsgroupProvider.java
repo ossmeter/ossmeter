@@ -11,8 +11,8 @@ import org.ossmeter.metricprovider.trans.threadsrequestsreplies.ThreadsRequestsR
 import org.ossmeter.metricprovider.trans.threadsrequestsreplies.model.CurrentDate;
 import org.ossmeter.metricprovider.trans.threadsrequestsreplies.model.ThreadStatistics;
 import org.ossmeter.metricprovider.trans.threadsrequestsreplies.model.ThreadsRR;
+import org.ossmeter.platform.AbstractHistoricalMetricProvider;
 import org.ossmeter.platform.Date;
-import org.ossmeter.platform.IHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.platform.communicationchannel.nntp.NntpUtil;
@@ -22,7 +22,7 @@ import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 
 import com.googlecode.pongo.runtime.Pongo;
 
-public class DailyAvgResponseTimePerNewsgroupProvider implements IHistoricalMetricProvider{
+public class DailyAvgResponseTimePerNewsgroupProvider extends AbstractHistoricalMetricProvider{
 
 	public final static String IDENTIFIER = 
 			"org.ossmeter.metricprovider.generic.dailyavgresponsetimepernewsgroup";

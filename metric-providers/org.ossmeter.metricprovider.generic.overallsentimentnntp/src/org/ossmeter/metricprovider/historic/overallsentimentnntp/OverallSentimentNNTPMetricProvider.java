@@ -8,7 +8,7 @@ import org.ossmeter.metricprovider.historic.overallsentimentnntp.model.OverallSe
 import org.ossmeter.metricprovider.trans.threadsrequestsreplies.ThreadsRequestsRepliesProvider;
 import org.ossmeter.metricprovider.trans.threadsrequestsreplies.model.ThreadStatistics;
 import org.ossmeter.metricprovider.trans.threadsrequestsreplies.model.ThreadsRR;
-import org.ossmeter.platform.IHistoricalMetricProvider;
+import org.ossmeter.platform.AbstractHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.repository.model.CommunicationChannel;
@@ -17,7 +17,7 @@ import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 
 import com.googlecode.pongo.runtime.Pongo;
 
-public class OverallSentimentNNTPMetricProvider implements IHistoricalMetricProvider{
+public class OverallSentimentNNTPMetricProvider extends AbstractHistoricalMetricProvider{
 
 	public final static String IDENTIFIER = 
 			"org.ossmeter.metricprovider.generic.overallsentimentnntp";

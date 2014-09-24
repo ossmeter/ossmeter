@@ -11,7 +11,7 @@ public class ResetApp {
 		mongo.dropDatabase("pdb_values");
 		mongo.dropDatabase("pongo");
 		mongo.dropDatabase("fedora");
-//		mongo.dropDatabase("epsilon");
+		mongo.dropDatabase("epsilon");
 		mongo.dropDatabase("Epsilon");
 		mongo.dropDatabase("hamcrest");
 		mongo.dropDatabase("jMonkeyEngine");

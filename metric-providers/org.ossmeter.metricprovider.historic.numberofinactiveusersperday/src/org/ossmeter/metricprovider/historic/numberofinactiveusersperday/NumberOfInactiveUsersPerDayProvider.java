@@ -8,7 +8,7 @@ import org.ossmeter.metricprovider.historic.numberofinactiveusersperday.model.Da
 import org.ossmeter.metricprovider.trans.activeusers.ActiveUsersMetricProvider;
 import org.ossmeter.metricprovider.trans.activeusers.model.ActiveUsers;
 import org.ossmeter.metricprovider.trans.activeusers.model.NewsgroupData;
-import org.ossmeter.platform.IHistoricalMetricProvider;
+import org.ossmeter.platform.AbstractHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.repository.model.CommunicationChannel;
@@ -17,7 +17,7 @@ import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 
 import com.googlecode.pongo.runtime.Pongo;
 
-public class NumberOfInactiveUsersPerDayProvider implements IHistoricalMetricProvider{
+public class NumberOfInactiveUsersPerDayProvider extends AbstractHistoricalMetricProvider{
 
 	public final static String IDENTIFIER = 
 			"org.ossmeter.metricprovider.historic.numberofinactiveusersperday";

@@ -8,7 +8,7 @@ import org.ossmeter.metricprovider.historic.numberofarticlesperdaypernewsgroup.m
 import org.ossmeter.metricprovider.trans.numberofarticles.NoaMetricProvider;
 import org.ossmeter.metricprovider.trans.numberofarticles.model.NewsgroupData;
 import org.ossmeter.metricprovider.trans.numberofarticles.model.Noa;
-import org.ossmeter.platform.IHistoricalMetricProvider;
+import org.ossmeter.platform.AbstractHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.repository.model.CommunicationChannel;
@@ -17,7 +17,7 @@ import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 
 import com.googlecode.pongo.runtime.Pongo;
 
-public class NumberOfArticlesPerDayPerNewsgroupProvider implements IHistoricalMetricProvider{
+public class NumberOfArticlesPerDayPerNewsgroupProvider extends AbstractHistoricalMetricProvider{
 
 	public final static String IDENTIFIER = 
 			"org.ossmeter.metricprovider.historic.numberofarticlesperdaypernewsgroup";
