@@ -12,6 +12,8 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
+import org.ossmeter.platform.admin.AdminApplication;
+import org.ossmeter.platform.admin.ProjectListAnalysis;
 import org.ossmeter.platform.client.api.ProjectResource;
 import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.platform.osgi.services.IWorkerService;
@@ -76,6 +78,9 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 		workerServiceTracker = new ServiceTracker<IWorkerService, IWorkerService>(Activator.getContext(), IWorkerService.class, this);	
 		workerServiceTracker.open();
 		
+		
+		System.setProperty("MAVEN_EXECUTABLE", "/Applications/apache-maven-3.2.3/bin/mvn");
+		
 		// If master, start
 		if (master) {
 			masterService = new MasterService(workers);
@@ -83,7 +88,8 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 		}
 
 		// Start web server
-		ProjectResource pr = new ProjectResource();
+		new ProjectResource();
+		new ProjectListAnalysis();
 		
 		// Now, rest.
   		waitForDone();
@@ -98,6 +104,13 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 			if ("-ossmeterConfig".equals(args[i])) {
 				configuration = new Properties();
 				configuration.load(new FileReader(args[i+1]));
+				
+				// Maven
+				String maven = configuration.getProperty("maven_executable", "");
+				if (!maven.equals("")) {
+					System.setProperty("MAVEN_EXECUTABLE", maven);
+				}
+				
 				i++;
 			} else if ("-master".equals(args[i])) { 
 				master = true;
