@@ -11,10 +11,9 @@
    </visualiser>
 </extension>
 
+
+
 <extension point="com.googlecode.pongo.runtime.osgi">
     <class name="org.ossmeter.metricprovider.historic.avgnumberofrequestsreplies.model.AverageRR"/>
-    <class name="org.ossmeter.metricprovider.historic.avgnumberofrequestsreplies.model.ArticleData"/>
-    <class name="org.ossmeter.metricprovider.historic.avgnumberofrequestsreplies.model.RequestData"/>
-    <class name="org.ossmeter.metricprovider.historic.avgnumberofrequestsreplies.model.ReplyData"/>
   </extension>
 </plugin>

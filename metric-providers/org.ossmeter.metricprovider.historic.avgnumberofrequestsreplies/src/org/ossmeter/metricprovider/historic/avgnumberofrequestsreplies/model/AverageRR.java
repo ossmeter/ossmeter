@@ -1,48 +1,54 @@
 package org.ossmeter.metricprovider.historic.avgnumberofrequestsreplies.model;
 
-import java.util.List;
-
 import com.googlecode.pongo.runtime.Pongo;
-import com.googlecode.pongo.runtime.PongoList;
-import com.mongodb.BasicDBList;
+import com.googlecode.pongo.runtime.querying.NumericalQueryProducer;
 
 
 public class AverageRR extends Pongo {
 	
-	protected List<ArticleData> articles = null;
-	protected List<RequestData> requests = null;
-	protected List<ReplyData> replies = null;
 	
 	
 	public AverageRR() { 
 		super();
-		dbObject.put("articles", new BasicDBList());
-		dbObject.put("requests", new BasicDBList());
-		dbObject.put("replies", new BasicDBList());
+		AVERAGEARTICLES.setOwningType("org.ossmeter.metricprovider.historic.avgnumberofrequestsreplies.model.AverageRR");
+		AVERAGEREQUESTS.setOwningType("org.ossmeter.metricprovider.historic.avgnumberofrequestsreplies.model.AverageRR");
+		AVERAGEREPLIES.setOwningType("org.ossmeter.metricprovider.historic.avgnumberofrequestsreplies.model.AverageRR");
+	}
+	
+	public static NumericalQueryProducer AVERAGEARTICLES = new NumericalQueryProducer("averageArticles");
+	public static NumericalQueryProducer AVERAGEREQUESTS = new NumericalQueryProducer("averageRequests");
+	public static NumericalQueryProducer AVERAGEREPLIES = new NumericalQueryProducer("averageReplies");
+	
+	
+	public float getAverageArticles() {
+		return parseFloat(dbObject.get("averageArticles")+"", 0.0f);
+	}
+	
+	public AverageRR setAverageArticles(float averageArticles) {
+		dbObject.put("averageArticles", averageArticles);
+		notifyChanged();
+		return this;
+	}
+	public float getAverageRequests() {
+		return parseFloat(dbObject.get("averageRequests")+"", 0.0f);
+	}
+	
+	public AverageRR setAverageRequests(float averageRequests) {
+		dbObject.put("averageRequests", averageRequests);
+		notifyChanged();
+		return this;
+	}
+	public float getAverageReplies() {
+		return parseFloat(dbObject.get("averageReplies")+"", 0.0f);
+	}
+	
+	public AverageRR setAverageReplies(float averageReplies) {
+		dbObject.put("averageReplies", averageReplies);
+		notifyChanged();
+		return this;
 	}
 	
 	
-	
-	
-	
-	public List<ArticleData> getArticles() {
-		if (articles == null) {
-			articles = new PongoList<ArticleData>(this, "articles", true);
-		}
-		return articles;
-	}
-	public List<RequestData> getRequests() {
-		if (requests == null) {
-			requests = new PongoList<RequestData>(this, "requests", true);
-		}
-		return requests;
-	}
-	public List<ReplyData> getReplies() {
-		if (replies == null) {
-			replies = new PongoList<ReplyData>(this, "replies", true);
-		}
-		return replies;
-	}
 	
 	
 }

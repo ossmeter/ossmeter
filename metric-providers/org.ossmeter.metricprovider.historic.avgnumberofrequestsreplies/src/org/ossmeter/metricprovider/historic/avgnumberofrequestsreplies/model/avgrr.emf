@@ -1,27 +1,7 @@
 package org.ossmeter.metricprovider.historic.avgnumberofrequestsreplies.model;
 
-// The visualisation doesn't work!
-@viz(target="gcharts", chart="line")
 class AverageRR {
- @series(label="articles")
-	val ArticleData[*] articles;
- @series(label="requests")
-	val RequestData[*] requests;
- @series(label="replies")
-	val ReplyData[*] replies;
-}
-
-class ArticleData {
-	@yaxis(title="Average number of articles")
 	attr float averageArticles;
-}
-
-class RequestData {
-	@yaxis(title="Average number of requests")
 	attr float averageRequests;
-}
-
-class ReplyData {
-	@yaxis(title="Average number of replies")
 	attr float averageReplies;
 }
