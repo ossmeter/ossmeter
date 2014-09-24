@@ -3,5 +3,8 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Java
 Bundle-SymbolicName: org.ossmeter.code.model.java;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Require-Bundle: org.ossmeter.metricprovider.rascal
+Require-Bundle: org.ossmeter.metricprovider.rascal,
+ org.eclipse.imp.pdb.values,
+ rascal4ossmeter
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Import-Package: org.eclipse.imp.pdb.facts

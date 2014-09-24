@@ -6,18 +6,17 @@ import util::FileSystem;
 import org::ossmeter::metricprovider::ProjectDelta;
 import org::ossmeter::metricprovider::MetricProvider;
 import IO;
+import ClassPath;
 
 @memo
 private set[loc] build(set[loc] folders, map[str, str] extraRepos) {
   set[loc] result = {};
   for (folder <- folders) {
-    set[loc] jars = {};
-    int buildResult = buildProject(folder, ());
-    if (buildResult != 0) {
-      println("Extraction of M3 model failed, model may not be complete");
-      result += findJars({folder});
-    } else {
-      result += { |file:///| + cp | cp <- readFileLines(folder + "cp.txt") };
+    try {
+      return {*cp[k] | k <- cp};
+    }
+    catch "not-maven": {
+      return findJars({folder});
     }
   }
   return result;
@@ -27,17 +26,28 @@ private set[loc] build(set[loc] folders, map[str, str] extraRepos) {
 @memo
 rel[Language, loc, M3] javaM3(loc project, ProjectDelta delta, map[loc repos,loc folders] checkouts, map[loc,loc] scratch) {  
   rel[Language, loc, M3] result = {};
+  parent = (repo <- repos) ? repo.parent : project;
+  assert all(repo <- repos, repo.parent == parent);
   
   // TODO: we will add caching on disk again and use the deltas to predict what to re-analyze and what not
-  for (/VcsRepository repo := delta, repo.url in checkouts) {
-    folders = { checkouts[repo.url] };
-    sources = findSourceRoots(folders);
-    // TODO: need to find a way to get external dependencies (if we want to support them)
-    jars = build(folders, ());
+  try {
+    map[loc,list[loc]] classpaths = getClassPath(parent, ());
+    for (repo <- checkouts) {
+      sources = findSourceRoots(repo);
+      setEnvironmentOptions(classpaths[repo], sources);
     
-    setEnvironmentOptions(jars, sources);
-  
-    result += {<java(), f, createM3FromFile(f)> | source <- sources, f <- find(source, "java")};
+      result += {<java(), f, createM3FromFile(f)> | f <- find(repo, "java")};
+    }
+  }
+  catch "not-maven": {
+    jars = findJars(checkouts.folders);
+    
+    for (repo <- checkouts) {
+      sources = findSourceRoots(repo);
+      setEnvironmentOptions(jars, sources);
+    
+      result += {<java(), f, createM3FromFile(f)> | f <- find(repo, "java")};
+    }
   }
   
   return result;
@@ -47,19 +57,32 @@ rel[Language, loc, M3] javaM3(loc project, ProjectDelta delta, map[loc repos,loc
 @memo
 rel[Language, loc, AST] javaAST(loc project, ProjectDelta delta, map[loc repos,loc folders] checkouts, map[loc,loc] scratch) {
   rel[Language, loc, AST] result = {};
+  parent = (repo <- repos) ? repo.parent : project;
+  assert all(repo <- repos, repo.parent == parent);
   
   // TODO: we will add caching on disk again and use the deltas to predict what to re-analyze and what not
-  for (/VcsRepository repo := delta, repo.url in checkouts) {
-    folders = { checkouts[repo.url] };
-    sources = findSourceRoots(folders);
-    // TODO: need to find a way to get external dependencies (if we want to support them)
-    jars = build(folders, ());
-    setEnvironmentOptions(jars, sources);
-      
-    result += {<java(), f, declaration(createAstFromFile(f, true))> | source <- sources, f <- find(source, "java")};
+  try {
+    map[loc,list[loc]] classpaths = getClassPath(parent, ());
+    for (repo <- checkouts) {
+      sources = findSourceRoots(repo);
+      setEnvironmentOptions(classpaths[repo], sources);
+    
+      result += {<java(), f, declaration(createAstFromFile(f, true))> | f <- find(repo, "java")};
+    }
+  }
+  catch "not-maven": {
+    jars = findJars(checkouts.folders);
+    
+    for (repo <- checkouts) {
+      sources = findSourceRoots(repo);
+      setEnvironmentOptions(jars, sources);
+    
+      result += {<java(), f, declaration(createAstFromFile(f, true))> | f <- find(repo, "java")};
+    }
   }
   
-  return result;
+  return result; 
+ 
 }
 
 // this will become more interesting if we try to recover build information from meta-data
