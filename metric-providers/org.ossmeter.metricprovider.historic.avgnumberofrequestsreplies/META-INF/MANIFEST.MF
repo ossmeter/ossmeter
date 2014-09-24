@@ -10,7 +10,9 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.repository.model.cc.nntp,
  org.ossmeter.platform.client.api,
  com.googlecode.pongo.runtime.osgi,
- org.ossmeter.metricprovider.trans.activeusers
+ org.ossmeter.metricprovider.trans.activeusers,
+ org.ossmeter.platform.visualisation
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.historic.avgnumberofrequestsreplies
+Export-Package: org.ossmeter.metricprovider.historic.avgnumberofrequestsreplies,
+ org.ossmeter.metricprovider.historic.avgnumberofrequestsreplies.model

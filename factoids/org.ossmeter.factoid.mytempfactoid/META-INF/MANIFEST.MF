@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mytempfactoid
+Bundle-SymbolicName: org.ossmeter.factoid.mytempfactoid
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: org.ossmeter.repository.model,
+ org.ossmeter.platform,
+ org.ossmeter.metricprovider.historic.avgnumberofrequestsreplies,
+ org.ossmeter.repository.model.cc.nntp

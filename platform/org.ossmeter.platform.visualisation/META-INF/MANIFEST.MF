@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Visualisation
+Bundle-SymbolicName: org.ossmeter.platform.visualisation;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: org.ossmeter.repository.model,
+ org.jackson.all,
+ org.ossmeter.platform,
+ org.eclipse.core.runtime
+Export-Package: org.ossmeter.platform.visualisation
