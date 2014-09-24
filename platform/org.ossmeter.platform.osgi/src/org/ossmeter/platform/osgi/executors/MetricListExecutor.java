@@ -1,6 +1,8 @@
 package org.ossmeter.platform.osgi.executors;
 
 import java.io.FileWriter;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,6 +24,13 @@ import org.ossmeter.repository.model.MetricProviderType;
 import org.ossmeter.repository.model.Project;
 
 public class MetricListExecutor implements Runnable {
+	
+	private final ThreadMXBean bean = ManagementFactory.getThreadMXBean();
+
+	private long now() {
+	   return  bean.isCurrentThreadCpuTimeSupported( ) ? bean.getCurrentThreadCpuTime( ) : -1L;
+	}
+	
 	protected FileWriter writer;
 
 	final protected Platform platform;
@@ -94,9 +103,8 @@ public class MetricListExecutor implements Runnable {
 			mAnal.setAnalysisDate(date.toJavaDate());
 			mAnal.setExecutionDate(new java.util.Date());
 			platform.getProjectRepositoryManager().getProjectRepository().getMetricAnalysis().add(mAnal);
-			long start = System.currentTimeMillis(); // TODO: Could edit the generated code to encapsulate this.
-			
-			
+			long start = now(); // TODO: Could edit the generated code to encapsulate this.
+		
 			// Now execute
 			try {
 				if (m instanceof ITransientMetricProvider) {
@@ -116,7 +124,7 @@ public class MetricListExecutor implements Runnable {
 				break;
 			}
 			
-			long duration = System.currentTimeMillis() - start;
+			long duration = now() - start;
 			mAnal.setMillisTaken(duration);
 			platform.getProjectRepositoryManager().getProjectRepository().sync(); // Will sync-ing here mess things up?
 		}
