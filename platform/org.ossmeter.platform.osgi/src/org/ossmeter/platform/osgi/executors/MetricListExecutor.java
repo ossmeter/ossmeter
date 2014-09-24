@@ -1,6 +1,8 @@
 package org.ossmeter.platform.osgi.executors;
 
 import java.io.FileWriter;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -52,6 +54,12 @@ public class MetricListExecutor implements Runnable {
 		this.metrics = metrics;
 	}
 	
+	private final ThreadMXBean bean = ManagementFactory.getThreadMXBean( );
+	
+	private long now() {
+		return  bean.isCurrentThreadCpuTimeSupported( ) ? bean.getCurrentThreadCpuTime( ) / 1000: -1L;
+	}
+	
 	@Override
 	public void run() {
 
@@ -94,7 +102,7 @@ public class MetricListExecutor implements Runnable {
 			mAnal.setAnalysisDate(date.toJavaDate());
 			mAnal.setExecutionDate(new java.util.Date());
 			platform.getProjectRepositoryManager().getProjectRepository().getMetricAnalysis().add(mAnal);
-			long start = System.currentTimeMillis(); // TODO: Could edit the generated code to encapsulate this.
+			long start = now();
 			
 			
 			// Now execute
@@ -120,8 +128,7 @@ public class MetricListExecutor implements Runnable {
 				break;
 			}
 			
-			long duration = System.currentTimeMillis() - start;
-			mAnal.setMillisTaken(duration);
+			mAnal.setMillisTaken(now() - start);
 			platform.getProjectRepositoryManager().getProjectRepository().sync(); // Will sync-ing here mess things up?
 		}
 	}
