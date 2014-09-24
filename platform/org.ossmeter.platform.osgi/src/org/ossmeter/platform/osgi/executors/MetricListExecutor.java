@@ -25,12 +25,6 @@ import org.ossmeter.repository.model.Project;
 
 public class MetricListExecutor implements Runnable {
 	
-	private final ThreadMXBean bean = ManagementFactory.getThreadMXBean();
-
-	private long now() {
-	   return  bean.isCurrentThreadCpuTimeSupported( ) ? bean.getCurrentThreadCpuTime( ) : -1L;
-	}
-	
 	protected FileWriter writer;
 
 	final protected Platform platform;
@@ -53,11 +47,17 @@ public class MetricListExecutor implements Runnable {
 		this.metrics = metrics;
 	}
 	
+	private final ThreadMXBean bean = ManagementFactory.getThreadMXBean( );
+	
+	private long now() {
+		return  bean.isCurrentThreadCpuTimeSupported( ) ? bean.getCurrentThreadCpuTime( ) / 1000: -1L;
+	}
+	
 	@Override
 	public void run() {
 
 		for (IMetricProvider m : metrics) {
-			logger.info("\t" + m.getShortIdentifier() + " executing.");
+//			logger.info("\t" + m.getShortIdentifier() + " executing.");
 			
 			m.setMetricProviderContext(new MetricProviderContext(platform, new OssmeterLoggerFactory().makeNewLoggerInstance(m.getIdentifier())));
 			addDependenciesToMetricProvider(m);
@@ -96,7 +96,7 @@ public class MetricListExecutor implements Runnable {
 			mAnal.setExecutionDate(new java.util.Date());
 			platform.getProjectRepositoryManager().getProjectRepository().getMetricAnalysis().add(mAnal);
 			long start = now(); // TODO: Could edit the generated code to encapsulate this.
-		
+
 			// Now execute
 			try {
 				if (m instanceof ITransientMetricProvider) {
@@ -112,7 +112,7 @@ public class MetricListExecutor implements Runnable {
 				
 				// Update the meta data
 				mpd.setLastExecuted(date.toString()); 
-				platform.getProjectRepositoryManager().getProjectRepository().sync();
+//				platform.getProjectRepositoryManager().getProjectRepository().sync();
 			} catch (Exception e) {
 				logger.error("Exception thrown during metric provider execution ("+m.getShortIdentifier()+").", e);
 				project.getExecutionInformation().setInErrorState(true);
@@ -120,8 +120,7 @@ public class MetricListExecutor implements Runnable {
 				break;
 			}
 			
-			long duration = now() - start;
-			mAnal.setMillisTaken(duration);
+			mAnal.setMillisTaken(now() - start);
 			platform.getProjectRepositoryManager().getProjectRepository().sync(); // Will sync-ing here mess things up?
 		}
 	}
