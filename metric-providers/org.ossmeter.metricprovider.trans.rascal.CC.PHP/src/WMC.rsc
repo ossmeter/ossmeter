@@ -3,6 +3,7 @@ module WMC
 import lang::php::m3::AST;
 import lang::php::m3::Core;
 import Prelude;
+import List;
 
 import analysis::statistics::Frequency;
 import analysis::statistics::Inference;
@@ -35,46 +36,32 @@ map[loc, int] getCC(rel[Language, loc, AST] asts = {})
 {
   map[loc method, int cc] result = ();
 
-  println(size(asts[php()]));
-  for (<php(), _, a> <- asts) {
-    result += ( m@decl : 1 + countCC(body) | /m:method(_, _, _, _, body) <- a );
+  for (<php(), _, phpAST(a)> <- asts) {
+    result += ( m@decl : countCC(body) | /m:method(_, _, _, _, body) <- a );
   }
   
   return result;
 }
 
 int countCC(list[Stmt] stats) {
-  int count = 0;
+  int count = 1;
   
-  for (s <- stats) {
-    switch(s) {
-      case \break(_): count += 1;
-      case \continue(_): count += 1;
-      case declare(_, body): count += countCC(body);
-      case do(_, body): count += 1 + countCC(body);
-      case \for(_, _, _, body): count += 1 + countCC(body);
-      case foreach(_, _, _, _, body): count += 1 + countCC(body);
-      case goto(_): count += 1;
-      case \while(_, body): count += 1 + countCC(body);
-      case block(body): count += countCC(body);
+  visit (stats) {
+      case \do(_, body): count += 1;
+      case \for(_, _, _, body): count += 1;
+      case \foreach(_, _, _, _, body): count += 1;
+      case \while(_, body): count += 1;
       
-      case \if(_, body, elseIfs, elseClause):
-        count += 1 + countCC(body) + 
-          toInt(sum([ 1 + countCC(b) | elseIf(_, b) <- elseIfs ])) + 
-          ((\else(b) := elseClause) ? countCC(b) : 0);
+      case \if(_, _, elseIfs, _):
+        count += 1 + size(elseIfs); 
       
-      case \switch(_, cases):
-         count += toInt(sum([ 1 + countCC(body) | \case(_, body) <- cases]));
-      
-      case tryCatch(body, catches):
-        count += countCC(body) +
-          toInt(sum([1 + countCC(b) | \catch(_, _, b) <- catches])); 
+      case \tryCatch(_, catches):
+        count += size(catches);
         
-      case tryCatchFinally(body, catches, finallyBody):
-        count += countCC(body) + countCC(finallyBody) +
-          toInt(sum([1 + countCC(b) | \catch(_, _, b) <- catches]));
-    }    
+      case \tryCatchFinally(_, catches, _):
+        count += size(catches);
   }
+
   return count;
 }
 

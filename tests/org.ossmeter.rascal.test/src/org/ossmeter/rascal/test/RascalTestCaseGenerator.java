@@ -11,7 +11,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -140,6 +139,8 @@ public class RascalTestCaseGenerator implements IApplication  {
 						
 						ProjectDelta delta = new ProjectDelta(project, date, platform);
 						if (delta.create() && !delta.getVcsDelta().getRepoDeltas().isEmpty()) {
+							System.out.println("\nProject: " + project.getShortName() + ", date: " + date);
+							
 							File dir = new File(testDataDir, project.getName() + "/" + encode(repoURL) + "/" + date.toString());
 							dir.mkdirs();
 							

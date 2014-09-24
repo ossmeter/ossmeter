@@ -145,39 +145,45 @@ map[loc, int] CBO_Java(rel[Language, loc, M3] m3s = {}) {
 	return CBO(typeDependencies(m3), allTypes(m3));
 }
 
-// DAC for java is also measured in lang::java::style::Metrics
-/*
+@memo
+private tuple[map[loc, int], map[loc, int]] dac_mpc(rel[Language, loc, AST] asts) {
+
+	map[loc, int] dac = ();
+	map[loc, int] mpc = ();
+
+	for (/c:class(_, _, _, _, _) <- asts[\java()]) {
+		dac[c@decl] = 0;
+		mpc[c@decl] = 0;
+	
+		top-down-break visit (c) {
+			case newObject(_, _): dac[c@decl] += 1;
+			case newObject(_, _, _): dac[c@decl] += 1;
+			case methodCall(_, _, _): mpc[c@decl] += 1;
+			case methodCall(_, _, _, _): mpc[c@decl] += 1;
+			case constructorCall(_, _): mpc[c@decl] += 1;
+			case constructorCall(_, _, _): mpc[c@decl] += 1;
+		}	
+	}
+
+	return <dac, mpc>;
+}
+
+
 @metric{DAC-Java}
 @doc{Data abstraction coupling (Java)}
 @friendlyName{Data abstraction coupling (Java)}
 @appliesTo{java()}
-map[loc, int] DAC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
-  map[loc, int] dac = ();
-  
-  for ( /c:class(_, _, _, _, _) <- asts ) { // TODO newObject() ??
-    dac[c@decl] = ( 0 | it + 1 | /constructorCall(_, _) <- c) +   // TODO rewrite to visit
-                  ( 0 | it + 1 | /constructorCall(_, _, _) <- c);           
-  }
-  
-  return dac;
+// DAC for java is also measured in lang::java::style::Metrics
+map[loc, int] DAC_Java(rel[Language, loc, AST] asts = {}) {
+  return dac_mpc(asts)[0];
 }
-*/
+
 @metric{MPC-Java}
 @doc{Message passing coupling (Java)}
 @friendlyName{Message passing coupling (Java)}
 @appliesTo{java()}
 map[loc, int] MPC_Java(rel[Language, loc, AST] asts = {}) {
-  map[loc, int] mpc = ();
-  
-  for ( /c:class(_, _, _, _, _) <- asts ) { // TODO rewrite to visit
-    
-    mpc[c@decl] = ( 0 | it + 1 | /methodCall(_, _, _) <- c ) +
-                  ( 0 | it + 1 | /methodCall(_, _, _, _) <- c ) +
-                  ( 0 | it + 1 | /constructorCall(_, _) <- c) + // TODO do we need to include constructorCall?
-                  ( 0 | it + 1 | /constructorCall(_, _, _) <- c);
-  }
-  
-  return mpc;
+  return dac_mpc(asts)[1];
 }
 
 @metric{CF-Java}

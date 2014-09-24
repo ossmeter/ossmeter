@@ -4,20 +4,19 @@ extend lang::java::m3::Core;
 import lang::java::m3::AST;
 import util::FileSystem;
 import org::ossmeter::metricprovider::ProjectDelta;
+import org::ossmeter::metricprovider::MetricProvider;
 import IO;
 
 @memo
 private set[loc] build(set[loc] folders, map[str, str] extraRepos) {
   set[loc] result = {};
-  println("resolving dependencies");
   for (folder <- folders) {
     set[loc] jars = {};
     int buildResult = buildProject(folder, ());
     if (buildResult != 0) {
-      println("failed, M3 model may not be complete");
+      println("Extraction of M3 model failed, model may not be complete");
       result += findJars({folder});
     } else {
-      println("succeeded");
       result += { |file:///| + cp | cp <- readFileLines(folder + "cp.txt") };
     }
   }
@@ -26,9 +25,7 @@ private set[loc] build(set[loc] folders, map[str, str] extraRepos) {
 
 @M3Extractor{java()}
 @memo
-rel[Language, loc, M3] javaM3(loc project, ProjectDelta delta, map[loc repos,loc folders] checkouts, map[loc,loc] scratch) {
-  println("extracting Java M3 for <project>");
-  
+rel[Language, loc, M3] javaM3(loc project, ProjectDelta delta, map[loc repos,loc folders] checkouts, map[loc,loc] scratch) {  
   rel[Language, loc, M3] result = {};
   
   // TODO: we will add caching on disk again and use the deltas to predict what to re-analyze and what not
@@ -49,8 +46,6 @@ rel[Language, loc, M3] javaM3(loc project, ProjectDelta delta, map[loc repos,loc
 @ASTExtractor{java()}
 @memo
 rel[Language, loc, AST] javaAST(loc project, ProjectDelta delta, map[loc repos,loc folders] checkouts, map[loc,loc] scratch) {
-  println("extracting Java ASTs for <project>");
-  
   rel[Language, loc, AST] result = {};
   
   // TODO: we will add caching on disk again and use the deltas to predict what to re-analyze and what not

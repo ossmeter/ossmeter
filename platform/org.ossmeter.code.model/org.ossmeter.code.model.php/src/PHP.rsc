@@ -31,6 +31,7 @@ public rel[Language, loc, AST] extractASTsPHP(loc project, ProjectDelta delta, m
 	{
 		System sys = loadPHPFiles(root);
 		result += { <php(), file, (errscript(m) := sys[file]) ? noAST(error(m, file)) : phpAST(sys[file])> | file <- sys };
+		result += { <php(), root, phpSystem(sys)> };
 	}
 	
 	return result;

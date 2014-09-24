@@ -8,6 +8,7 @@ import org::ossmeter::metricprovider::MetricProvider;
 import Prelude;
 
 import Generic;
+import Split;
 
 /*
 
@@ -30,13 +31,17 @@ list[str] normalizeCode(list[str] lines, Language lang) {
 
 list[str] genericNormalizeCode(list[str] lines, rel[str, str] blockCommentDelimiters, set[str] lineCommentDelimiters, set[str] toRemove, set[str] ignorePrefixes) {
 
+  allDelimiters = lineCommentDelimiters + domain(blockCommentDelimiters);
+
   list[str] result = [];
 
   inBlock = false;
   currentDelimiter = "";
   
+  toStrip = toRemove + {" ", "\n", "\r", "\f", "\t"};
+  
   strip = str (str s) {
-    for (rm <- toRemove + {" ", "\n", "\r", "\f", "\t"}) {
+    for (rm <- toStrip) {
     	s = replaceAll(s, rm, "");
     }
     return s;
@@ -47,7 +52,7 @@ list[str] genericNormalizeCode(list[str] lines, rel[str, str] blockCommentDelimi
   	stripped = "";
   
     if (inBlock) {
-      if (/<pre:.*><currentDelimiter><rest:.*>/ := l) {      
+      if (<true, pre, rest> := firstSplit(l, currentDelimiter)) {      
         l = rest;
         inBlock = false;
       }
@@ -59,20 +64,13 @@ list[str] genericNormalizeCode(list[str] lines, rel[str, str] blockCommentDelimi
       }
 
       while (size(l) > 0) {
-        matches =
-          [ <pre, post, ""> | ld <- lineCommentDelimiters, /<pre:.*><ld><post:.*>/ := l ] +
-          [ <pre, post, cd> | <od, cd> <- blockCommentDelimiters, /<pre:.*><od><post:.*>/ := l ];
-        
-        matches = sort(matches, bool(tuple[str, str, str] a, tuple[str, str, str] b) { return size(a[0]) < size(b[0]); });
-                  
-        if (size(matches) > 0) {
-          m = matches[0];
-          stripped += strip(m[0]);
-          if (m[2] == "") { // line comment
+        if (<true, pre, post, d> := firstSplit(l, allDelimiters)) {
+          stripped += strip(pre);
+          if (d in lineCommentDelimiters) { // line comment
             l = "";
           } else { // start of block comment
-            currentDelimiter = m[2];
-            if (/<c:.*><currentDelimiter><rest:.*>/ := m[1]) { // block closed on same line
+            currentDelimiter = getOneFrom(blockCommentDelimiters[d]);
+            if (<true, c, rest> := firstSplit(post, currentDelimiter)) { // block closed on same line
               l = rest;
             } else { // block open at end of line
               inBlock = true;

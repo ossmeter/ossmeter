@@ -55,7 +55,7 @@ public class MetricListExecutor implements Runnable {
 	public void run() {
 
 		for (IMetricProvider m : metrics) {
-			logger.info("\t" + m.getShortIdentifier() + " executing.");
+			//logger.info("\t" + m.getShortIdentifier() + " executing.");
 			
 			m.setMetricProviderContext(new MetricProviderContext(platform, new OssmeterLoggerFactory().makeNewLoggerInstance(m.getIdentifier())));
 			addDependenciesToMetricProvider(m);

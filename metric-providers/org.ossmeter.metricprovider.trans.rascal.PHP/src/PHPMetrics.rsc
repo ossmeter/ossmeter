@@ -9,6 +9,7 @@ import util::Math;
 
 import PHP;
 import DynamicFeatures;
+import Includes;
 
 
 @memo
@@ -111,11 +112,26 @@ public int getNumberOfFunctionsWithDynamicFeatures(rel[Language, loc, AST] asts 
 	return ( 0 | it + 1 | f <- counts, sumCounts(counts[f]) > 0); 
 }
 
-/*
-TODO add the following metrics:
 
-- number of missing include files
-- estimate external libraries
- 
-*/
+@metric{IncludesResolutionHistogram}
+@doc{Histogram counting number of times a PHP include could be resolved to a certain number of files}
+@friendlyName{IncludesResolutionHistogram}
+@appliesTo{php()}
+public map[int, int] getIncludesResolutionHistogram(rel[Language, loc, AST] asts = {})
+{
+	systems = { <root, sys> | <php(), root, phpSystem(sys)> <- asts };
 
+	return includeResolutionHistogram(systems);
+}
+
+
+@metric{MissingLibrariesPHP}
+@doc{Estimation of missing PHP libraries of the project}
+@friendlyName{MissingLibrariesPHP}
+@appliesTo{php()}
+public set[str] estimateMissingLibraries(rel[Language, loc, AST] asts = {})
+{
+	systems = { <root, sys> | <php(), root, phpSystem(sys)> <- asts };
+
+	return estimateMissingLibraries(systems);
+}
