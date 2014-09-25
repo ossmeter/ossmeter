@@ -33,10 +33,7 @@ public class App implements IApplication {
 	
 	public void run(IMetricProviderManager metricProviderManager, PlatformVcsManager platformVcsManager) throws Exception {
 		Mongo mongo = new Mongo();
-		
 		PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
-		
-		
 		Platform platform = new Platform(mongo);
 		platform.setMetricProviderManager(metricProviderManager);
 		platform.setPlatformVcsManager(platformVcsManager);
@@ -46,20 +43,15 @@ public class App implements IApplication {
 		//addGitHubRepositories(platform);
 		//addGoogleCodeRepositories(platform);
 		//addRedmineProjects(platform);
-		
 		//DA TESTARE
-		
-		
-		
-		
-		
 		//platform.run(); 
 	}
 	
 	private void addSourceForgeProjects(Platform platform) {
 		
 		SourceforgeProjectImporter importer = new SourceforgeProjectImporter();
-		importer.importProjectByUrl("http://sourceforge.net/projects/tortoisesvn/?source=directory-featured",platform);	
+		//importer.importProjectByUrl("http://sourceforge.net/projects/tortoisesvn/?source=directory-featured",platform);	
+		importer.importAll(platform);
 		
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 	}
@@ -82,8 +74,7 @@ public class App implements IApplication {
 	
 	private void addEclipseProjects(Platform platform) {
 		EclipseProjectImporter importer = new EclipseProjectImporter();
-		importer.importProjectByUrl("asdasa", platform);
-		importer.importProjects(platform, 5);
+		importer.importAll(platform);
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 	}
 	
