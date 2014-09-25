@@ -8,26 +8,12 @@ import org::ossmeter::metricprovider::MetricProvider;
 import IO;
 import ClassPath;
 
-@memo
-private set[loc] build(set[loc] folders, map[str, str] extraRepos) {
-  set[loc] result = {};
-  for (folder <- folders) {
-    try {
-      return {*cp[k] | k <- cp};
-    }
-    catch "not-maven": {
-      return findJars({folder});
-    }
-  }
-  return result;
-}
-
 @M3Extractor{java()}
 @memo
 rel[Language, loc, M3] javaM3(loc project, ProjectDelta delta, map[loc repos,loc folders] checkouts, map[loc,loc] scratch) {  
   rel[Language, loc, M3] result = {};
-  parent = (repo <- repos) ? repo.parent : project;
-  assert all(repo <- repos, repo.parent == parent);
+  loc parent = (project | repo.parent | repo <- checkouts);
+  assert all(repo <- checkouts, repo.parent == parent);
   
   // TODO: we will add caching on disk again and use the deltas to predict what to re-analyze and what not
   try {
@@ -57,15 +43,16 @@ rel[Language, loc, M3] javaM3(loc project, ProjectDelta delta, map[loc repos,loc
 @memo
 rel[Language, loc, AST] javaAST(loc project, ProjectDelta delta, map[loc repos,loc folders] checkouts, map[loc,loc] scratch) {
   rel[Language, loc, AST] result = {};
-  parent = (repo <- repos) ? repo.parent : project;
-  assert all(repo <- repos, repo.parent == parent);
+  parent = (project | repo.parent | repo <- checkouts);
+  assert all(repo <- checkouts, repo.parent == parent);
   
   // TODO: we will add caching on disk again and use the deltas to predict what to re-analyze and what not
   try {
     map[loc,list[loc]] classpaths = getClassPath(parent, ());
     for (repo <- checkouts) {
       sources = findSourceRoots(repo);
-      setEnvironmentOptions(classpaths[repo], sources);
+      // TODO: turn classpath into a list
+      setEnvironmentOptions({*classpaths[repo]}, sources);
     
       result += {<java(), f, declaration(createAstFromFile(f, true))> | f <- find(repo, "java")};
     }
