@@ -13,6 +13,7 @@ public class RedmineProject extends org.ossmeter.repository.model.Project {
 	protected List<RedmineProjectVersion> versions = null;
 	protected RedmineWiki wiki = null;
 	protected RedmineQueryManager queryManager = null;
+	protected RedmineRepositoryInfo repositoryInfo = null;
 	
 	
 	public RedmineProject() { 
@@ -127,6 +128,26 @@ public class RedmineProject extends org.ossmeter.repository.model.Project {
 				dbObject.put("queryManager", queryManager.getDbObject());
 			}
 			this.queryManager = queryManager;
+			notifyChanged();
+		}
+		return this;
+	}
+	public RedmineRepositoryInfo getRepositoryInfo() {
+		if (repositoryInfo == null && dbObject.containsField("repositoryInfo")) {
+			repositoryInfo = (RedmineRepositoryInfo) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("repositoryInfo"));
+		}
+		return repositoryInfo;
+	}
+	
+	public RedmineProject setRepositoryInfo(RedmineRepositoryInfo repositoryInfo) {
+		if (this.repositoryInfo != repositoryInfo) {
+			if (repositoryInfo == null) {
+				dbObject.removeField("repositoryInfo");
+			}
+			else {
+				dbObject.put("repositoryInfo", repositoryInfo.getDbObject());
+			}
+			this.repositoryInfo = repositoryInfo;
 			notifyChanged();
 		}
 		return this;
