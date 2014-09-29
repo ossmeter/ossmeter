@@ -45,61 +45,30 @@ private tuple[int, str] mapMetricsWithinRange(lrel[map[loc, num] result, str lab
 
 Factoid Complexity(
 	str language,
-	real a,
-	real rr,
-	real sr,
-	map[loc, int] dit,
-	map[loc, int] noc,
-	map[loc, int] noa,
-	map[loc, int] nom,
-	map[loc, real] mif,
-	map[loc, real] aif,
-	real mhf,
-	real ahf,
-	real pf
+	map[loc, int] dit
 ) {
-	// TODO determine appropriate ranges
-
-	<ok, s> = metricsWithinRange([
-		<a, "Abstractness", 0.0, 1.0>,
-		<rr, "Reuse Ratio", 0.0, 1.0>,
-		<sr, "Specialization Ratio", 0.0, 1.0>,
-		<mhf, "Method Hiding Factor", 0.0, 1.0>,
-		<ahf, "Attribute Hiding Factor", 0.0, 1.0>,
-		<pf, "Polymorphism Factor", 0.0, 1.0>
-	]);
-
-	okResults = ok;
-	txt = s;
-
-	<ok, s> = mapMetricsWithinRange([
-		<dit, "Depth in Inheritance Tree", 0.0, 1.0>,
-		<noc, "Number of Children", 0.0, 1.0>,
-		<noa, "Number of Attributes", 0.0, 1.0>,
-		<nom, "Number of Methods", 0.0, 1.0>,
-		<mif, "Method Inheritance Factor", 0.0, 1.0>,
-		<aif, "Attribute Inheritance Factor", 0.0, 1.0>
-	]);
+	if (dit == ()) {
+		throw undefined("No DIT data", |file:///|);
+	}
 	
-	okResults += ok;
-	txt += s;
-
-	maxOkResults = 12;
-	stars = \one();
+	numClassesWithBadDepth = ( 0 | it + 1 | c <- dit, dit[c] > 5 ); // TODO find source for DIT > 5
 	
-	if (okResults > maxOkResults - 6) {
+	badPercentage = numClassesWithBadDepth * 100.0 / size(dit);
+	
+	stars = four();
+	
+	if (badPercentage > 20) {
+		stars = \one();
+	}
+	else if (badPercentage > 10) {
 		stars = two();
 	}
-	else if (okResults > maxOkResults - 4) {
+	else if (badPercentage > 5) {
 		stars = three();
 	}
-	else if (okResults > maxOkResults - 2) {
-		stars = four();
-	}
-	
-	txt = "The results of <okResults> out of <maxOkResults> complexity metrics for the <language> code are out of range.
-		  `The measured values are:\n" + txt;
-	
+
+	txt = "The percentage of <language> classes with a problematic inheritance depth is <badPercentage>%."; 
+
 	return factoid(txt, stars);
 }
 

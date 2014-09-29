@@ -332,38 +332,13 @@ map[loc, int] NOA_PHP(rel[Language, loc, M3] m3s = {}) {
 }
 
 
-@metric{Complexity-PHP}
-@doc{PHP code complexity}
-@friendlyName{PHP code complexity}
+@metric{OOComplexity-PHP}
+@doc{PHP OO complexity}
+@friendlyName{PHP OO complexity}
 @appliesTo{php()}
-@uses{(
-	"A-PHP": "a",
-	"RR-PHP": "rr",
-	"SR-PHP": "sr",
-	"DIT-PHP": "dit",
-	"NOC-PHP": "noc",
-	"NOA-PHP": "noa",
-	"NOM-PHP": "nom",
-	"MIF-PHP": "mif",
-	"AIF-PHP": "aif",
-	"MHF-PHP": "mhf",
-	"AHF-PHP": "ahf",
-	"PF-PHP": "pf")}
-Factoid Complexity_PHP(
-	real a = 0.0,
-	real rr = 0.0,
-	real sr = 0.0,
-	map[loc, int] dit = (),
-	map[loc, int] noc = (),
-	map[loc, int] noa = (),
-	map[loc, int] nom = (),
-	map[loc, real] mif = (),
-	map[loc, real] aif = (),
-	real mhf = 0.0,
-	real ahf = 0.0,
-	real pf = 0.0
-) {
-	return Complexity("PHP", a, rr, sr, dit, noc, noa, nom, mif, aif, mhf, ahf, pf);
+@uses{("DIT-PHP": "dit")}
+Factoid OOComplexity_PHP(map[loc, int] dit = ()) {
+	return Complexity("PHP", dit);
 }
 
 

@@ -376,38 +376,13 @@ map[loc, int] NOA_Java(rel[Language, loc, M3] m3s = {}) {
 }
 
 
-@metric{Complexity-Java}
-@doc{Java code complexity}
-@friendlyName{Java code complexity}
+@metric{OOComplexity-Java}
+@doc{Java OO complexity}
+@friendlyName{Java OO complexity}
 @appliesTo{java()}
-@uses{(
-	"A-Java": "a",
-	"RR-Java": "rr",
-	"SR-Java": "sr",
-	"DIT-Java": "dit",
-	"NOC-Java": "noc",
-	"NOA-Java": "noa",
-	"NOM-Java": "nom",
-	"MIF-Java": "mif",
-	"AIF-Java": "aif",
-	"MHF-Java": "mhf",
-	"AHF-Java": "ahf",
-	"PF-Java": "pf")}
-Factoid Complexity_Java(
-	real a = 0.0,
-	real rr = 0.0,
-	real sr = 0.0,
-	map[loc, int] dit = (),
-	map[loc, int] noc = (),
-	map[loc, int] noa = (),
-	map[loc, int] nom = (),
-	map[loc, real] mif = (),
-	map[loc, real] aif = (),
-	real mhf = 0.0,
-	real ahf = 0.0,
-	real pf = 0.0
-) {
-	return Complexity("Java", a, rr, sr, dit, noc, noa, nom, mif, aif, mhf, ahf, pf);
+@uses{("DIT-Java": "dit")}
+Factoid OOComplexity_Java(map[loc, int] dit = ()) {
+	return Complexity("Java", dit);
 }
 
 
