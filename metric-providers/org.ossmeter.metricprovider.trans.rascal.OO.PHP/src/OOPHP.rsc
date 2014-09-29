@@ -398,14 +398,7 @@ Factoid Coupling_PHP(
 @doc{PHP cohesion}
 @friendlyName{PHP cohesion}
 @appliesTo{php()}
-@uses{(
-	"LCOM-PHP": "lcom",
-	"TCC-PHP": "tcc",
-	"LCC-PHP": "lcc")}
-Factoid Cohesion_PHP(
-	map[loc, int] lcom = (),
-	map[loc, real] tcc = (),
-	map[loc, real] lcc = ()
-) {
-	return Cohesion("PHP", lcom, tcc, lcc);
+@uses{("LCOM4-PHP": "lcom4")}
+Factoid Cohesion_PHP(map[loc, int] lcom4 = ()) {
+	return Cohesion("PHP", lcom4);
 }

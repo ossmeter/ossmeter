@@ -443,14 +443,7 @@ Factoid Coupling_Java(
 @doc{Java cohesion}
 @friendlyName{Java cohesion}
 @appliesTo{java()}
-@uses{(
-	"LCOM-Java": "lcom",
-	"TCC-Java": "tcc",
-	"LCC-Java": "lcc")}
-Factoid Cohesion_Java(
-	map[loc, int] lcom = (),
-	map[loc, real] tcc = (),
-	map[loc, real] lcc = ()
-) {
-	return Cohesion("Java", lcom, tcc, lcc);
+@uses{("LCOM4-Java": "lcom4")}
+Factoid Cohesion_Java(map[loc, int] lcom4 = ()) {
+	return Cohesion("Java", lcom4);
 }

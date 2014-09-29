@@ -159,33 +159,29 @@ Factoid Coupling(
 
 Factoid Cohesion(
 	str language,
-	map[loc, int] lcom,
-	map[loc, real] tcc,
-	map[loc, real] lcc
+	map[loc, int] lcom4
 ) {
-	// TODO determine appropriate ranges
-
-	<okResults, txt> = mapMetricsWithinRange([
-		<lcom, "Lack of Cohesion in Methods", 0.0, 1.0>,
-		<tcc, "Tight Class Cohesion", 0.0, 1.0>,
-		<lcc, "Loose Class Cohesion", 0.0, 1.0>
-	]);
-
-	maxOkResults = 3;
-	stars = \one();
+	if (lcom4 == ()) {
+		throw undefined("No LCOM4 data", |file:///|);
+	}
 	
-	if (okResults > maxOkResults - 3) {
+	numClassesWithBadCohesion = ( 0 | it + 1 | c <- lcom4, lcom4[c] != 1 );
+	
+	badPercentage = numClassesWithBadCohesion * 100.0 / size(lcom4);
+	
+	stars = four();
+	
+	if (badPercentage > 20) {
+		stars = \one();
+	}
+	else if (badPercentage > 10) {
 		stars = two();
 	}
-	else if (okResults > maxOkResults - 2) {
+	else if (badPercentage > 5) {
 		stars = three();
 	}
-	else if (okResults > maxOkResults - 1) {
-		stars = four();
-	}
-	
-	txt = "The results of <okResults> out of <maxOkResults> cohesion metrics for the <language> code are out of range.
-		  `The measured values are:\n" + txt;
-	
+
+	txt = "The percentage of <language> classes with problematic cohesion is <badPercentage>%."; 
+
 	return factoid(txt, stars);
 }
