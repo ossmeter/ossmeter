@@ -329,6 +329,15 @@ map[loc, int] LCOM_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3
 	return LCOM(methodFieldAccesses(m3), allMethods(m3), allFields(m3), allTypes(m3));
 }
 
+@metric{LCOM4-Java}
+@doc{Lack of cohesion in methods 4 (Java)}
+@friendlyName{Lack of cohesion in methods 4 (Java)}
+@appliesTo{java()}
+map[loc, int] LCOM4_Java(rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s);
+	return LCOM4(methodMethodCalls(m3), methodFieldAccesses(m3), allMethods(m3), allFields(m3), allTypes(m3));
+}
+
 @metric{TCC-Java}
 @doc{Tight class cohesion (Java)}
 @friendlyName{Tight class cohesion (Java)}
