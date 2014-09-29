@@ -106,53 +106,33 @@ Factoid Complexity(
 
 Factoid Coupling(
 	str language,
-	map[loc, int] cbo,
-	map[loc, int] dac,
-	map[loc, int] mpc,
-	real cf,
-	map[loc, int] ce,
-	map[loc, int] ca,
-	map[loc, real] i,
-	map[loc, int] rfc
+	map[loc, int] cbo
 ) {
-	// TODO determine appropriate ranges
-
-	<ok, s> = metricsWithinRange([
-		<cf, "Coupling Factor", 0.0, 1.0>
-	]);
-
-	okResults = ok;
-	txt = s;
-
-	<ok, s> = mapMetricsWithinRange([
-		<cbo, "Coupling Between Objects", 0.0, 1.0>,
-		<dac, "Data Abstraction Coupling", 0.0, 1.0>,
-		<mpc, "Message Passing Coupling", 0.0, 1.0>,
-		<ce, "Efferent Coupling", 0.0, 1.0>,
-		<ca, "Afference Coupling", 0.0, 1.0>,
-		<i, "Instability", 0.0, 1.0>,
-		<rfc, "Responce for Class", 0.0, 1.0>
-	]);
+	if (cbo == ()) {
+		throw undefined("No CBO data", |file:///|);
+	}
 	
-	okResults += ok;
-	txt += s;
-
-	maxOkResults = 8;
-	stars = \one();
+	numClassesWithBadCoupling = ( 0 | it + 1 | c <- cbo, cbo[c] > 14 );
 	
-	if (okResults > maxOkResults - 6) {
+	// CBO > 14 is too high according to:
+	// Houari A. Sahraoui, Robert Godin, Thierry Miceli: Can Metrics Help Bridging the Gap Between the Improvement of OO Design Quality and Its Automation?
+	
+	badPercentage = numClassesWithBadCoupling * 100.0 / size(cbo);
+	
+	stars = four();
+	
+	if (badPercentage > 20) {
+		stars = \one();
+	}
+	else if (badPercentage > 10) {
 		stars = two();
 	}
-	else if (okResults > maxOkResults - 4) {
+	else if (badPercentage > 5) {
 		stars = three();
 	}
-	else if (okResults > maxOkResults - 2) {
-		stars = four();
-	}
-	
-	txt = "The results of <okResults> out of <maxOkResults> coupling metrics for the <language> code are out of range.
-		  `The measured values are:\n" + txt;
-	
+
+	txt = "The percentage of <language> classes with problematic coupling is <badPercentage>%."; 
+
 	return factoid(txt, stars);
 }
 

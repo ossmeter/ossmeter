@@ -371,26 +371,9 @@ Factoid Complexity_PHP(
 @doc{PHP coupling}
 @friendlyName{PHP coupling}
 @appliesTo{php()}
-@uses{(
-	"CBO-PHP": "cbo",
-	"DAC-PHP": "dac",
-	"MPC-PHP": "mpc",
-	"CF-PHP": "cf",
-	"Ce-PHP": "ce",
-	"Ca-PHP": "ca",
-	"I-PHP": "i",
-	"RFC-PHP": "rfc")}
-Factoid Coupling_PHP(
-	map[loc, int] cbo = (),
-	map[loc, int] dac = (),
-	map[loc, int] mpc = (),
-	real cf = 0.0,
-	map[loc, int] ce = (),
-	map[loc, int] ca = (),
-	map[loc, real] i = (),
-	map[loc, int] rfc = ()
-) {
-	return Coupling("PHP", cbo, dac, mpc, cf, ce, ca, i, rfc);
+@uses{("CBO-PHP": "cbo")}
+Factoid Coupling_PHP(map[loc, int] cbo = ()) {
+	return Coupling("PHP", cbo);
 }
 
 

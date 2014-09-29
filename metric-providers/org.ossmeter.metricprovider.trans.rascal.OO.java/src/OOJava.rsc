@@ -415,27 +415,9 @@ Factoid Complexity_Java(
 @doc{Java coupling}
 @friendlyName{Java coupling}
 @appliesTo{java()}
-@uses{(
-	"CBO-Java": "cbo",
-	"DAC-Java": "dac",
-	"MPC-Java": "mpc",
-	"CF-Java": "cf",
-	"Ce-Java": "ce",
-	"Ca-Java": "ca",
-	"I-Java": "i",
-	"RFC-Java": "rfc")}
-	//TODO: link dac to sytles module
-Factoid Coupling_Java(
-	map[loc, int] cbo = (),
-	map[loc, int] dac = (),
-	map[loc, int] mpc = (),
-	real cf = 0.0,
-	map[loc, int] ce = (),
-	map[loc, int] ca = (),
-	map[loc, real] i = (),
-	map[loc, int] rfc = ()
-) {
-	return Coupling("Java", cbo, dac, mpc, cf, ce, ca, i, rfc);
+@uses{("CBO-Java": "cbo")}
+Factoid Coupling_Java(map[loc, int] cbo = ()) {
+	return Coupling("Java", cbo);
 }
 
 
