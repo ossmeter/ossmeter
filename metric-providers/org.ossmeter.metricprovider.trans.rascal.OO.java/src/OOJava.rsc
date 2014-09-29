@@ -107,7 +107,7 @@ map[loc, int] DIT_Java(rel[Language, loc, M3] m3s = {}) {
 @doc{Number of children (Java)}
 @friendlyName{Number of children (Java)}
 @appliesTo{java()}
-map[loc, int] NOC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+map[loc, int] NOC_Java(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
   
   return NOC(superTypes(m3), allTypes(m3));
@@ -237,7 +237,7 @@ map[loc, int] RFC_Java(rel[Language, loc, M3] m3s = {}) {
 @doc{Method inheritance factor (Java)}
 @friendlyName{Method inheritance factor (Java)}
 @appliesTo{java()}
-map[loc, real] MIF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+map[loc, real] MIF_Java(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
 
 	// TODO package visibility?	
@@ -250,7 +250,7 @@ map[loc, real] MIF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3
 @doc{Attribute inheritance factor (Java)}
 @friendlyName{Attribute inheritance factor (Java)}
 @appliesTo{java()}
-map[loc, real] AIF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+map[loc, real] AIF_Java(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
 
 	// TODO package visibility?	
@@ -296,7 +296,7 @@ private real hidingFactor(M3 m3, rel[loc, loc] members) {
 @doc{Method hiding factor (Java)}
 @friendlyName{Method hiding factor (Java)}
 @appliesTo{java()}
-real MHF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+real MHF_Java(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
 	return hidingFactor(m3, allMethods(m3));
 }
@@ -305,7 +305,7 @@ real MHF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}
 @doc{Attribute hiding factor (Java)}
 @friendlyName{Attribute hiding factor (Java)}
 @appliesTo{java()}
-real AHF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+real AHF_Java(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
 	return hidingFactor(m3, allFields(m3));
 }
@@ -314,7 +314,7 @@ real AHF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}
 @doc{Polymorphism factor (Java)}
 @friendlyName{Polymorphism factor (Java)}
 @appliesTo{java()}
-real PF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+real PF_Java(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
 
 	return PF(superTypes(m3), m3@methodOverrides, overridableMethods(m3), allTypes(m3));
@@ -324,7 +324,7 @@ real PF_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {})
 @doc{Lack of cohesion in methods (Java)}
 @friendlyName{Lack of cohesion in methods (Java)}
 @appliesTo{java()}
-map[loc, int] LCOM_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+map[loc, int] LCOM_Java(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
 	return LCOM(methodFieldAccesses(m3), allMethods(m3), allFields(m3), allTypes(m3));
 }
@@ -342,7 +342,7 @@ map[loc, int] LCOM4_Java(rel[Language, loc, M3] m3s = {}) {
 @doc{Tight class cohesion (Java)}
 @friendlyName{Tight class cohesion (Java)}
 @appliesTo{java()}
-map[loc, real] TCC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+map[loc, real] TCC_Java(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
 	return TCC(allMethods(m3), allFields(m3), methodMethodCalls(m3), methodFieldAccesses(m3), allTypes(m3));
 }
@@ -351,7 +351,7 @@ map[loc, real] TCC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3
 @doc{Loose class cohesion (Java)}
 @friendlyName{Loose class cohesion (Java)}
 @appliesTo{java()}
-map[loc, real] LCC_Java(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] m3s = {}) {
+map[loc, real] LCC_Java(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
 	return LCC(allMethods(m3), allFields(m3), methodMethodCalls(m3), methodFieldAccesses(m3), allTypes(m3));
 }
