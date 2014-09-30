@@ -6,8 +6,14 @@ import util::FileSystem;
 import org::ossmeter::metricprovider::ProjectDelta;
 import org::ossmeter::metricprovider::MetricProvider;
 import IO;
-import ClassPath;
-
+import util::SystemAPI;
+   
+@javaClass{org.rascalmpl.library.lang.java.m3.internal.ClassPaths}
+java map[loc,list[loc]] getClassPath(
+  loc workspace,
+  map[str,loc] updateSites = (x : |http://download.eclipse.org/releases| + x | x <- ["juno","kepler","luna"]),
+  loc mavenExecutable =getSystemPropery("MAVEN_EXECUTABLE"));
+  
 @M3Extractor{java()}
 @memo
 rel[Language, loc, M3] javaM3(loc project, ProjectDelta delta, map[loc repos,loc folders] checkouts, map[loc,loc] scratch) {  
@@ -17,7 +23,7 @@ rel[Language, loc, M3] javaM3(loc project, ProjectDelta delta, map[loc repos,loc
   
   // TODO: we will add caching on disk again and use the deltas to predict what to re-analyze and what not
   try {
-    map[loc,list[loc]] classpaths = getClassPath(parent, ());
+    map[loc,list[loc]] classpaths = getClassPath(parent);
     for (repo <- checkouts) {
       sources = findSourceRoots(repo);
       setEnvironmentOptions(classpaths[repo], sources);
@@ -48,7 +54,7 @@ rel[Language, loc, AST] javaAST(loc project, ProjectDelta delta, map[loc repos,l
   
   // TODO: we will add caching on disk again and use the deltas to predict what to re-analyze and what not
   try {
-    map[loc,list[loc]] classpaths = getClassPath(parent, ());
+    map[loc,list[loc]] classpaths = getClassPath(parent);
     for (repo <- checkouts) {
       sources = findSourceRoots(repo);
       // TODO: turn classpath into a list
