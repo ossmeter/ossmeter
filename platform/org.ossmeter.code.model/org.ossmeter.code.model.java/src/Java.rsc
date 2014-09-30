@@ -7,13 +7,30 @@ import org::ossmeter::metricprovider::ProjectDelta;
 import org::ossmeter::metricprovider::MetricProvider;
 import IO;
 import util::SystemAPI;
+  
+private str MAVEN = getSystemProperty("MAVEN_EXECUTABLE");
    
 @javaClass{org.rascalmpl.library.lang.java.m3.internal.ClassPaths}
 java map[loc,list[loc]] getClassPath(
   loc workspace,
   map[str,loc] updateSites = (x : |http://download.eclipse.org/releases| + x | x <- ["juno","kepler","luna"]),
-  loc mavenExecutable =getSystemPropery("MAVEN_EXECUTABLE"));
+  loc mavenExecutable = MAVEN == "" ? |file:///usr/local/bin/mvn| : |file:///<MAVEN>|);
+ 
+ 
+map[loc,list[loc]] inferClassPaths(loc workspace) {
+  try {
+    return getClassPath(workspace);
+  }
+  catch Java("BuildException", msg, cause): {
+    println("Could not infer classpath using Maven: <msg>, due to <cause>.");
+  }
+  catch Java("BuildException", msg): {
+    println("Could not infer classpath using Maven: <msg>.");
+  }
   
+  return (d : [*findJars({d})] + [e + "bin" | e <- workspace.ls, isDirectory(e)] | d <- workspace.ls, isDirectory(d));
+}
+
 @M3Extractor{java()}
 @memo
 rel[Language, loc, M3] javaM3(loc project, ProjectDelta delta, map[loc repos,loc folders] checkouts, map[loc,loc] scratch) {  
@@ -23,7 +40,7 @@ rel[Language, loc, M3] javaM3(loc project, ProjectDelta delta, map[loc repos,loc
   
   // TODO: we will add caching on disk again and use the deltas to predict what to re-analyze and what not
   try {
-    map[loc,list[loc]] classpaths = getClassPath(parent);
+    map[loc,list[loc]] classpaths = inferClassPaths(parent);
     for (repo <- checkouts) {
       sources = findSourceRoots(repo);
       setEnvironmentOptions(classpaths[repo], sources);
@@ -54,7 +71,7 @@ rel[Language, loc, AST] javaAST(loc project, ProjectDelta delta, map[loc repos,l
   
   // TODO: we will add caching on disk again and use the deltas to predict what to re-analyze and what not
   try {
-    map[loc,list[loc]] classpaths = getClassPath(parent);
+    map[loc,list[loc]] classpaths = inferClassPaths(parent);
     for (repo <- checkouts) {
       sources = findSourceRoots(repo);
       // TODO: turn classpath into a list
