@@ -23,6 +23,42 @@ private set[loc] build(set[loc] folders, map[str, str] extraRepos) {
   return result;
 }
 
+private set[loc] getSourceRoots(set[loc] folders) {
+	set[loc] result = {};
+	for (folder <- folders) {
+		// only consult one java file per package tree
+		top-down-break visit (crawl(folder)) {
+			case directory(d, contents): {
+				set[loc] roots = {};
+				for (file(f) <- contents, toLowerCase(f.extension) == "java") {
+					try {
+						for (/package<p:[^;]*>;/ := readFile(f)) {
+							packagedepth = size(split(".", trim(p)));
+							roots += { d[path = intercalate("/", split("/", d.path)[..-packagedepth])] };
+						}
+						
+						if (roots == {}) { // no package declaration means d is a root 
+							roots += { d };	
+						}
+						
+						break;						
+					} catch _(_) : ;					
+				}
+				
+				if (roots != {}) {
+					result += roots;
+				}
+				else {
+					fail; // continue searching subdirectories
+				}
+			}
+		}
+	}
+	
+	return result;
+}
+
+
 @M3Extractor{java()}
 @memo
 rel[Language, loc, M3] javaM3(loc project, ProjectDelta delta, map[loc repos,loc folders] checkouts, map[loc,loc] scratch) {  
@@ -31,7 +67,7 @@ rel[Language, loc, M3] javaM3(loc project, ProjectDelta delta, map[loc repos,loc
   // TODO: we will add caching on disk again and use the deltas to predict what to re-analyze and what not
   for (/VcsRepository repo := delta, repo.url in checkouts) {
     folders = { checkouts[repo.url] };
-    sources = findSourceRoots(folders);
+    sources = getSourceRoots(folders);
     // TODO: need to find a way to get external dependencies (if we want to support them)
     jars = build(folders, ());
     
