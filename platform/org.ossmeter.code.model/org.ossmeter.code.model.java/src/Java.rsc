@@ -31,6 +31,42 @@ map[loc,list[loc]] inferClassPaths(loc workspace) {
   return (d : [*findJars({d})] + [e + "bin" | e <- workspace.ls, isDirectory(e)] | d <- workspace.ls, isDirectory(d));
 }
 
+private set[loc] getSourceRoots(set[loc] folders) {
+	set[loc] result = {};
+	for (folder <- folders) {
+		// only consult one java file per package tree
+		top-down-break visit (crawl(folder)) {
+			case directory(d, contents): {
+				set[loc] roots = {};
+				for (file(f) <- contents, toLowerCase(f.extension) == "java") {
+					try {
+						for (/package<p:[^;]*>;/ := readFile(f)) {
+							packagedepth = size(split(".", trim(p)));
+							roots += { d[path = intercalate("/", split("/", d.path)[..-packagedepth])] };
+						}
+						
+						if (roots == {}) { // no package declaration means d is a root 
+							roots += { d };	
+						}
+						
+						break;						
+					} catch _(_) : ;					
+				}
+				
+				if (roots != {}) {
+					result += roots;
+				}
+				else {
+					fail; // continue searching subdirectories
+				}
+			}
+		}
+	}
+	
+	return result;
+}
+
+
 @M3Extractor{java()}
 @memo
 rel[Language, loc, M3] javaM3(loc project, ProjectDelta delta, map[loc repos,loc folders] checkouts, map[loc,loc] scratch) {  

@@ -79,7 +79,7 @@ private rel[loc, loc] getImplicitContainment(M3 m) {
     
     if (!any(method <- allMethods, method.scheme == "java+constructor")) {
       possibleNames = m@names<1,0>[class];
-      assert(size(possibleNames) <= 1) : "Found more than one simple name entry for a qualified name";
+      assert(size(possibleNames) <= 1) : "Found more than one simple name entry for qualified name <class>: <possibleNames>";
       className = isEmpty(possibleNames) ? "" : getOneFrom(possibleNames);
       defaultConstructorLOC = (class+"<className>()")[scheme="java+constructor"];
       implicitContainment += <class, defaultConstructorLOC>;
@@ -102,4 +102,12 @@ real percentageOfTestedPublicMethods(rel[Language, loc, M3] m3s = {}) {
   directlyCalledFromTestMethods = domainR(m@methodInvocation, onlyTestMethods);
   testedPublicMethods = rangeR(directlyCalledFromTestMethods + (directlyCalledFromTestMethods o m@methodOverrides<1,0>), allPublicMethods);
   return (100.0 * size(range(testedPublicMethods)))/size(allPublicMethods);
+}
+
+@metric{NumberOfTestMethods}
+@doc{Number of JUnit test methods}
+@friendlyName{Number of JUnit test methods}
+@appliesTo{java()}
+int numberOfTestMethods(rel[Language, loc, M3] m3s = {}) {
+  return size(getJUnit4TestMethods(systemM3(m3s)));
 }

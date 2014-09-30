@@ -389,9 +389,7 @@ Factoid headerUse(list[int] headerCounts = [], real headerPercentage = -1.0) {
 		throw undefined("Not enough header data available", |tmp:///|);
 	}
 
-	starLookup = [\one(), two(), three(), four()];
-	
-	stars = 0;
+	stars = 1;
 	message = "";
 
 	if (headerPercentage > 50.0) {

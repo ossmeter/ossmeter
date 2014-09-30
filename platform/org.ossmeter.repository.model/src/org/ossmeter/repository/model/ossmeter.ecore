@@ -20,8 +20,17 @@
         eType="#//MetricProvider" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="schedulingInformation"
         upperBound="-1" eType="#//SchedulingInformation" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="metricAnalysis" upperBound="-1"
+        eType="#//MetricAnalysis" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="companies" upperBound="-1"
         eType="#//Company" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MetricAnalysis">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="metricId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="projectId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="analysisDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="executionDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="millisTaken" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SchedulingInformation">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="workerIdentifier" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
@@ -68,7 +77,7 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="homePage" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="companies" upperBound="-1"
-        eType="#//Company" containment="true"/>
+        eType="#//Company"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MetricProviderExecution">
     <eStructuralFeatures xsi:type="ecore:EReference" name="metricProvider" eType="#//MetricProvider"/>
