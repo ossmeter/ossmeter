@@ -1,2 +1,2 @@
 Source: src
-Main-Module: Advanced.rsc
+Main-Module: Advanced
