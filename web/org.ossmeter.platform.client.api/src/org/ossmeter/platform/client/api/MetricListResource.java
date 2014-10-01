@@ -1,3 +1,4 @@
+
 package org.ossmeter.platform.client.api;
 
 import java.util.Map;
@@ -31,7 +32,6 @@ public class MetricListResource extends ServerResource {
 		Map<String, MetricVisualisation> vizs = manager.getRegisteredVisualisations();
 		
 		for (MetricVisualisation vis : vizs.values()) {
-//			FIXME: only want to return id, name, and description 
 			metrics.add(vis.getVis());
 		}
 		

@@ -153,6 +153,8 @@ public class OssmeterClient {
 		System.out.println(c.getProject("modeling.epsilon"));
 		System.out.println(c.postImportProject("https://projects.eclipse.org/projects/modeling.epsilon"));
 		System.out.println(c.getProjectList(0, 3));
+		System.out.println(c.getProjectList(0, 2));
+		System.out.println(c.getProjectList(0, 1));
 		
 		//Metric m2 = c.getMetric("ant", "avgnumberofreplies");
 		
