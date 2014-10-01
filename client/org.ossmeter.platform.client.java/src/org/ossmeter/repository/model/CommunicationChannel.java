@@ -19,12 +19,13 @@ import org.ossmeter.repository.model.sourceforge.*;
 import org.ossmeter.repository.model.github.*;
 import org.ossmeter.repository.model.*;
 import org.ossmeter.repository.model.metrics.*;
+import org.ossmeter.platform.factoids.*;
 
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME,
 	include=JsonTypeInfo.As.PROPERTY,
 	property = "_type")
 @JsonSubTypes({
-	@Type(value = CommunicationChannel.class, name="CommunicationChannel"), 	@Type(value = org.ossmeter.repository.model.eclipse.MailingList.class, name="org.ossmeter.repository.model.eclipse.MailingList"),
+	@Type(value = CommunicationChannel.class, name="org.ossmeter.repository.model.CommunicationChannel"), 	@Type(value = org.ossmeter.repository.model.eclipse.MailingList.class, name="org.ossmeter.repository.model.eclipse.MailingList"),
 	@Type(value = org.ossmeter.repository.model.eclipse.Wiki.class, name="org.ossmeter.repository.model.eclipse.Wiki"),
 	@Type(value = org.ossmeter.repository.model.eclipse.Documentation.class, name="org.ossmeter.repository.model.eclipse.Documentation"),
 	@Type(value = org.ossmeter.repository.model.cc.forum.Forum.class, name="org.ossmeter.repository.model.cc.forum.Forum"),

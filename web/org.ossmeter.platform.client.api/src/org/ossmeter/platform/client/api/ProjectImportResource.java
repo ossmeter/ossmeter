@@ -12,11 +12,8 @@ import org.restlet.resource.ServerResource;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.ser.FilterProvider;
-import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import com.mongodb.DBObject;
 
 public class ProjectImportResource extends ServerResource {
 
@@ -44,11 +41,16 @@ public class ProjectImportResource extends ServerResource {
 				return rep;
 			}
 			
-//			String[] excludes = new String[]{"storage", "executionInformation","metricProviderData", "_superTypes","_id"};
-//			FilterProvider fp = new SimpleFilterProvider().addFilter("foofilter", SimpleBeanPropertyFilter.serializeAllExcept(excludes));;
+			// Clean up the object
+			DBObject project = p.getDbObject();
+			project.removeField("storage");
+			project.removeField("metricProviderData");
+			project.removeField("_superTypes");
+			project.removeField("_id");
 			
-//			ObjectWriter writer = mapper.writer(fp);
-//			String proj = writer.writeValueAsString(p.getDbObject());
+			// FIXME: Temporary solution
+			project.removeField("licenses");
+			project.removeField("persons");
 			
 			StringRepresentation rep = new StringRepresentation(p.getDbObject().toString());
 			rep.setMediaType(MediaType.APPLICATION_JSON);

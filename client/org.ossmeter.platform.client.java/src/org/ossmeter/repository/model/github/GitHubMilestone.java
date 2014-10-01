@@ -19,12 +19,13 @@ import org.ossmeter.repository.model.sourceforge.*;
 import org.ossmeter.repository.model.github.*;
 import org.ossmeter.repository.model.*;
 import org.ossmeter.repository.model.metrics.*;
+import org.ossmeter.platform.factoids.*;
 
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME,
 	include=JsonTypeInfo.As.PROPERTY,
 	property = "_type")
 @JsonSubTypes({
-	@Type(value = GitHubMilestone.class, name="GitHubMilestone"), })
+	@Type(value = GitHubMilestone.class, name="org.ossmeter.repository.model.github.GitHubMilestone"), })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GitHubMilestone extends Object {
 

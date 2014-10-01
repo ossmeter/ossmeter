@@ -19,12 +19,13 @@ import org.ossmeter.repository.model.sourceforge.*;
 import org.ossmeter.repository.model.github.*;
 import org.ossmeter.repository.model.*;
 import org.ossmeter.repository.model.metrics.*;
+import org.ossmeter.platform.factoids.*;
 
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME,
 	include=JsonTypeInfo.As.PROPERTY,
 	property = "_type")
 @JsonSubTypes({
-	@Type(value = Tracker.class, name="Tracker"), })
+	@Type(value = Tracker.class, name="org.ossmeter.repository.model.sourceforge.Tracker"), })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class Tracker extends NamedElement {
 

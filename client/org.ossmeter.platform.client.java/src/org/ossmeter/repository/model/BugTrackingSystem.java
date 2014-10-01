@@ -19,12 +19,13 @@ import org.ossmeter.repository.model.sourceforge.*;
 import org.ossmeter.repository.model.github.*;
 import org.ossmeter.repository.model.*;
 import org.ossmeter.repository.model.metrics.*;
+import org.ossmeter.platform.factoids.*;
 
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME,
 	include=JsonTypeInfo.As.PROPERTY,
 	property = "_type")
 @JsonSubTypes({
-	@Type(value = BugTrackingSystem.class, name="BugTrackingSystem"), 	@Type(value = org.ossmeter.repository.model.bts.bugzilla.Bugzilla.class, name="org.ossmeter.repository.model.bts.bugzilla.Bugzilla"),
+	@Type(value = BugTrackingSystem.class, name="org.ossmeter.repository.model.BugTrackingSystem"), 	@Type(value = org.ossmeter.repository.model.bts.bugzilla.Bugzilla.class, name="org.ossmeter.repository.model.bts.bugzilla.Bugzilla"),
 	@Type(value = org.ossmeter.repository.model.github.GitHubBugTracker.class, name="org.ossmeter.repository.model.github.GitHubBugTracker"),
 	@Type(value = org.ossmeter.repository.model.googlecode.GoogleIssueTracker.class, name="org.ossmeter.repository.model.googlecode.GoogleIssueTracker"),
 	@Type(value = org.ossmeter.repository.model.redmine.RedmineBugIssueTracker.class, name="org.ossmeter.repository.model.redmine.RedmineBugIssueTracker"),

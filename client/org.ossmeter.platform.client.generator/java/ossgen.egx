@@ -23,7 +23,7 @@ rule EClass2Java
 	
 	template : "eclass2java.egl"
 	
-	target : dir + c.ePackage.name.replaceAll("\\.", "/").println() + "/" + c.name  + ".java"
+	target : dir + c.ePackage.name.replaceAll("\\.", "/") + "/" + c.name  + ".java"
 }
 
 rule EEnum2Java

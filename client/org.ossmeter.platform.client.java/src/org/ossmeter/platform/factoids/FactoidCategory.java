@@ -1,11 +1,4 @@
-package org.ossmeter.repository.model.eclipse;
-
-import java.util.*;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
-
+package org.ossmeter.platform.factoids;
 import org.ossmeter.repository.model.redmine.*;
 import org.ossmeter.repository.model.vcs.svn.*;
 import org.ossmeter.repository.model.cc.forum.*;
@@ -21,18 +14,12 @@ import org.ossmeter.repository.model.*;
 import org.ossmeter.repository.model.metrics.*;
 import org.ossmeter.platform.factoids.*;
 
-@JsonTypeInfo(use=JsonTypeInfo.Id.NAME,
-	include=JsonTypeInfo.As.PROPERTY,
-	property = "_type")
-@JsonSubTypes({
-	@Type(value = Article.class, name="org.ossmeter.repository.model.eclipse.Article"), })
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Article extends Object {
-
-	protected String url;
+public enum FactoidCategory {
 	
-	public String getUrl() {
-		return url;
-	}
+	GENERAL,	
+	CODE,	
+	COMMS,	
+	BUGS,	
+	OTHER	
 	
 }

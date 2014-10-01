@@ -2,14 +2,12 @@ import "../util/ecoreutil.eol";
 
 
 operation OSS!EClass getFullyQualifiedSubclasses() : Sequence {
-									
-		
 	var res = new Sequence;							
 	for (c in OSS!EClass.all.select(s | not s.isIgnored())) {
 		
 		for (s in c.eAllSuperTypes) {
 			if (s.isAnnotatedAs("stub")) {
-				var stub = s.getAnnotationValue("stub", "javaClass").println("\t");
+				var stub = s.getAnnotationValue("stub", "javaClass");
 				if (stub == self.ePackage.name+"."+self.name) {
 					res.add(c);
 					break;

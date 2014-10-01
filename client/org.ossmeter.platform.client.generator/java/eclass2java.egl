@@ -16,7 +16,7 @@ import [%=p%].*;
 	include=JsonTypeInfo.As.PROPERTY,
 	property = "_type")
 @JsonSubTypes({
-	@Type(value = [%=c.name%].class, name="[%=c.name%]"), [%/*=c.ePackage.nsURI --  may need including?*/%]
+	@Type(value = [%=c.name%].class, name="[%=c.ePackage.name%].[%=c.name%]"), [%/*=c.ePackage.nsURI --  may need including?*/%]
 	[%for (sub in c.getFullyQualifiedSubclasses()) {%]
 	@Type(value = [%=sub.ePackage.name%].[%=sub.name%].class, name="[%=sub.ePackage.name%].[%=sub.name%]"),
 	[%}%]

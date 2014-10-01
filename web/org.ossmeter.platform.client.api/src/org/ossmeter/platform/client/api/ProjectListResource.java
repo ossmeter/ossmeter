@@ -9,7 +9,6 @@ import org.ossmeter.repository.model.ProjectRepository;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.restlet.engine.header.Header;
-import org.restlet.ext.jackson.JacksonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
@@ -20,6 +19,7 @@ import org.restlet.util.Series;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.mongodb.DBObject;
 
 public class ProjectListResource extends ServerResource {
 
@@ -47,13 +47,18 @@ public class ProjectListResource extends ServerResource {
 		while (it.hasNext()) {
 			try {
 				Project project  = it.next();
+				DBObject p = project.getDbObject();
 				
-				ObjectNode p = mapper.createObjectNode();
-				p.put("name", project.getName());
-				p.put("shortName", project.getShortName());
-				p.put("description", project.getDescription());
+				p.removeField("storage");
+				p.removeField("metricProviderData");
+				p.removeField("_superTypes");
+				p.removeField("_id");
 				
-				projects.add(p);
+				// FIXME: Temporary solution
+				p.removeField("licenses");
+				p.removeField("persons");
+				
+				projects.add(mapper.readTree(p.toString())); //TODO: There must be a better way..
 				
 			} catch (Exception e) {
 				System.err.println("Error: " + e.getMessage());

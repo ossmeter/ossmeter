@@ -19,12 +19,13 @@ import org.ossmeter.repository.model.sourceforge.*;
 import org.ossmeter.repository.model.github.*;
 import org.ossmeter.repository.model.*;
 import org.ossmeter.repository.model.metrics.*;
+import org.ossmeter.platform.factoids.*;
 
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME,
 	include=JsonTypeInfo.As.PROPERTY,
 	property = "_type")
 @JsonSubTypes({
-	@Type(value = Bugzilla.class, name="Bugzilla"), })
+	@Type(value = Bugzilla.class, name="org.ossmeter.repository.model.bts.bugzilla.Bugzilla"), })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Bugzilla extends BugTrackingSystem {
 

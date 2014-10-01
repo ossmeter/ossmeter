@@ -13,12 +13,12 @@ operation initialise() {
 
 @cached
 operation OSS!EClassifier isIgnored() : Boolean {
-	return Sequence{"LocalStorage", "ProjectRepository", "ImportData", "MetricProviderExecution", "ProjectExecutionInformation"}.includes(self.name);
+	return Sequence{"LocalStorage", "ProjectRepository", "ImportData", "MetricProviderExecution", "ProjectExecutionInformation", "Factoids"}.includes(self.name);
 }
 
 @cached
 operation String isIgnored() : Boolean {
-	return Sequence{"LocalStorage", "ProjectRepository", "ImportData", "MetricProviderExecution", "ProjectExecutionInformation"}.includes(self);
+	return Sequence{"LocalStorage", "ProjectRepository", "ImportData", "MetricProviderExecution", "ProjectExecutionInformation", "Factoids"}.includes(self);
 }
 
 @cached

@@ -19,12 +19,13 @@ import org.ossmeter.repository.model.sourceforge.*;
 import org.ossmeter.repository.model.github.*;
 import org.ossmeter.repository.model.*;
 import org.ossmeter.repository.model.metrics.*;
+import org.ossmeter.platform.factoids.*;
 
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME,
 	include=JsonTypeInfo.As.PROPERTY,
 	property = "_type")
 @JsonSubTypes({
-	@Type(value = Project.class, name="Project"), 	@Type(value = org.ossmeter.repository.model.eclipse.EclipseProject.class, name="org.ossmeter.repository.model.eclipse.EclipseProject"),
+	@Type(value = Project.class, name="org.ossmeter.repository.model.Project"), 	@Type(value = org.ossmeter.repository.model.eclipse.EclipseProject.class, name="org.ossmeter.repository.model.eclipse.EclipseProject"),
 	@Type(value = org.ossmeter.repository.model.github.GitHubRepository.class, name="org.ossmeter.repository.model.github.GitHubRepository"),
 	@Type(value = org.ossmeter.repository.model.googlecode.GoogleCodeProject.class, name="org.ossmeter.repository.model.googlecode.GoogleCodeProject"),
 	@Type(value = org.ossmeter.repository.model.redmine.RedmineProject.class, name="org.ossmeter.repository.model.redmine.RedmineProject"),

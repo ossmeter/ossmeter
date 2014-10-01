@@ -1,9 +1,6 @@
 package org.ossmeter.platform.client.api;
 
-import java.io.IOException;
-
 import org.ossmeter.platform.Platform;
-import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectRepository;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
@@ -12,7 +9,6 @@ import org.restlet.ext.jackson.JacksonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
-import org.restlet.resource.Post;
 import org.restlet.resource.Put;
 import org.restlet.resource.ServerResource;
 import org.restlet.util.Series;
@@ -48,11 +44,15 @@ public class ProjectResource extends ServerResource {
 		ex.put("_superTypes", 0);
 		ex.put("_id", 0);
 		
+		// FIXME: Temporary solution to DBRefs not being expanded
+		// How can we auto-expand and DBRefs when serialising?
+		ex.put("licenses", 0);
+		ex.put("persons", 0);
+		
 		BasicDBObject query = new BasicDBObject("shortName", projectId);
 		
-		System.out.println(query);
 		DBObject p = projectRepo.getProjects().getDbCollection().findOne(query, ex);
-		
+
 		if (p == null) {
 			getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 			return Util.generateErrorMessageRepresentation(generateRequestJson(mapper, projectId), "No project was found with the requested name.");

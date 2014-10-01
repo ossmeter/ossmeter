@@ -19,12 +19,13 @@ import org.ossmeter.repository.model.sourceforge.*;
 import org.ossmeter.repository.model.github.*;
 import org.ossmeter.repository.model.*;
 import org.ossmeter.repository.model.metrics.*;
+import org.ossmeter.platform.factoids.*;
 
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME,
 	include=JsonTypeInfo.As.PROPERTY,
 	property = "_type")
 @JsonSubTypes({
-	@Type(value = VcsRepository.class, name="VcsRepository"), 	@Type(value = org.ossmeter.repository.model.vcs.cvs.CvsRepository.class, name="org.ossmeter.repository.model.vcs.cvs.CvsRepository"),
+	@Type(value = VcsRepository.class, name="org.ossmeter.repository.model.VcsRepository"), 	@Type(value = org.ossmeter.repository.model.vcs.cvs.CvsRepository.class, name="org.ossmeter.repository.model.vcs.cvs.CvsRepository"),
 	@Type(value = org.ossmeter.repository.model.vcs.git.GitRepository.class, name="org.ossmeter.repository.model.vcs.git.GitRepository"),
 	@Type(value = org.ossmeter.repository.model.vcs.svn.SvnRepository.class, name="org.ossmeter.repository.model.vcs.svn.SvnRepository"),
 })

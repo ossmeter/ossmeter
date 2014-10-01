@@ -19,12 +19,13 @@ import org.ossmeter.repository.model.sourceforge.*;
 import org.ossmeter.repository.model.github.*;
 import org.ossmeter.repository.model.*;
 import org.ossmeter.repository.model.metrics.*;
+import org.ossmeter.platform.factoids.*;
 
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME,
 	include=JsonTypeInfo.As.PROPERTY,
 	property = "_type")
 @JsonSubTypes({
-	@Type(value = Donation.class, name="Donation"), })
+	@Type(value = Donation.class, name="org.ossmeter.repository.model.sourceforge.Donation"), })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Donation extends Object {
 

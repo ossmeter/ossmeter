@@ -19,12 +19,13 @@ import org.ossmeter.repository.model.sourceforge.*;
 import org.ossmeter.repository.model.github.*;
 import org.ossmeter.repository.model.*;
 import org.ossmeter.repository.model.metrics.*;
+import org.ossmeter.platform.factoids.*;
 
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME,
 	include=JsonTypeInfo.As.PROPERTY,
 	property = "_type")
 @JsonSubTypes({
-	@Type(value = NamedElement.class, name="NamedElement"), 	@Type(value = org.ossmeter.repository.model.eclipse.EclipsePlatform.class, name="org.ossmeter.repository.model.eclipse.EclipsePlatform"),
+	@Type(value = NamedElement.class, name="org.ossmeter.repository.model.NamedElement"), 	@Type(value = org.ossmeter.repository.model.eclipse.EclipsePlatform.class, name="org.ossmeter.repository.model.eclipse.EclipsePlatform"),
 	@Type(value = org.ossmeter.repository.model.eclipse.Release.class, name="org.ossmeter.repository.model.eclipse.Release"),
 	@Type(value = org.ossmeter.repository.model.googlecode.GoogleLabel.class, name="org.ossmeter.repository.model.googlecode.GoogleLabel"),
 	@Type(value = org.ossmeter.repository.model.sourceforge.OS.class, name="org.ossmeter.repository.model.sourceforge.OS"),

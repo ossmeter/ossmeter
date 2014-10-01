@@ -19,12 +19,13 @@ import org.ossmeter.repository.model.sourceforge.*;
 import org.ossmeter.repository.model.github.*;
 import org.ossmeter.repository.model.*;
 import org.ossmeter.repository.model.metrics.*;
+import org.ossmeter.platform.factoids.*;
 
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME,
 	include=JsonTypeInfo.As.PROPERTY,
 	property = "_type")
 @JsonSubTypes({
-	@Type(value = RedminIssueRelation.class, name="RedminIssueRelation"), })
+	@Type(value = RedminIssueRelation.class, name="org.ossmeter.repository.model.redmine.RedminIssueRelation"), })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RedminIssueRelation extends Object {
 

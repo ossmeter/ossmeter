@@ -1,4 +1,4 @@
-package org.ossmeter.repository.model.vcs.cvs;
+package org.ossmeter.platform.factoids;
 
 import java.util.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -25,26 +25,30 @@ import org.ossmeter.platform.factoids.*;
 	include=JsonTypeInfo.As.PROPERTY,
 	property = "_type")
 @JsonSubTypes({
-	@Type(value = CvsRepository.class, name="org.ossmeter.repository.model.vcs.cvs.CvsRepository"), })
+	@Type(value = Factoid.class, name="org.ossmeter.platform.factoids.Factoid"), })
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CvsRepository extends VcsRepository {
+public class Factoid extends Object {
 
-	protected String browse;
-	protected String username;
-	protected String password;
-	protected String path;
+	protected List<String> metricDependencies;
+	protected String metricId;
+	protected String factoid;
+	protected StarRating stars;
+	protected FactoidCategory category;
 	
-	public String getBrowse() {
-		return browse;
+	public String getMetricId() {
+		return metricId;
 	}
-	public String getUsername() {
-		return username;
+	public String getFactoid() {
+		return factoid;
 	}
-	public String getPassword() {
-		return password;
+	public StarRating getStars() {
+		return stars;
 	}
-	public String getPath() {
-		return path;
+	public FactoidCategory getCategory() {
+		return category;
 	}
 	
+	public List<String> getMetricDependencies() {
+		return metricDependencies;
+	}
 }

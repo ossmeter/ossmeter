@@ -78,6 +78,11 @@
 	        metamodelUri="http://www.eclipse.org/emf/2002/Ecore"
 	        read="true" store="false" />
 		
+		<epsilon.emf.loadModel name="Factoid" aliases="OSS"
+		    	modelFile="models/factoids.ecore"
+		        metamodelUri="http://www.eclipse.org/emf/2002/Ecore"
+		        read="true" store="false" />
+		
 		<epsilon.xml.loadModel name="WADL"
 			file="models/ossmeter.wadl"
 			read="true" store="false" />
@@ -120,7 +125,8 @@
 					<model ref="Redmine"/>
 					<model ref="Sourceforge"/>
 					<model ref="SVN"/>
-		    		<model ref="Metric"/>
+					<model ref="Metric"/>
+		    		<model ref="Factoid"/>
 		    		<model ref="WADL"/>
 				</epsilon.egl>
 			</sequential>

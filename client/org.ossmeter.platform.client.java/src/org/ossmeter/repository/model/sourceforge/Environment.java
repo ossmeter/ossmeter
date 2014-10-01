@@ -19,12 +19,13 @@ import org.ossmeter.repository.model.sourceforge.*;
 import org.ossmeter.repository.model.github.*;
 import org.ossmeter.repository.model.*;
 import org.ossmeter.repository.model.metrics.*;
+import org.ossmeter.platform.factoids.*;
 
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME,
 	include=JsonTypeInfo.As.PROPERTY,
 	property = "_type")
 @JsonSubTypes({
-	@Type(value = Environment.class, name="Environment"), })
+	@Type(value = Environment.class, name="org.ossmeter.repository.model.sourceforge.Environment"), })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Environment extends NamedElement {
 

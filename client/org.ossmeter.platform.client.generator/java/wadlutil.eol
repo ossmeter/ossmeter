@@ -14,6 +14,10 @@ operation WADL!t_method getResultType() : String {
 		return representation.split(":").last();
 	} else if(representation == "projectList") {
 		return "List<Project>";
+	} else if(representation == "metricList") {
+		return "List<Metric>";
+	} else if(representation == "factoidList") {
+		return "List<Factoid>";
 	}	
 }
 
@@ -24,8 +28,14 @@ operation WADL!t_method getMapperResultType() : String {
 		return representation.split(":").last() + ".class";
 	} else if (representation.startsWith("metric:")) {
 		return representation.split(":").last() + ".class";
+	} else if (representation.startsWith("factoid:")) {
+		return representation.split(":").last() + ".class";
 	} else if(representation == "projectList") {
 		return "TypeFactory.defaultInstance().constructCollectionType(List.class, Project.class)";
+	} else if(representation == "metricList") {
+		return "TypeFactory.defaultInstance().constructCollectionType(List.class, Metric.class)";
+	} else if(representation == "factoidList") {
+		return "TypeFactory.defaultInstance().constructCollectionType(List.class, Factoid.class)";
 	}	
 }
 
