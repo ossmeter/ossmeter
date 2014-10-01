@@ -48,7 +48,7 @@ public class ProjectImporter {
 			String uName = ps[0];
 			String pName = ps[1];
 			
-			GitHubImporter importer = new GitHubImporter("f280531cd5712b6cbff971b7610155cecc134b02"); //FIXME Temporary token
+			GitHubImporter importer = new GitHubImporter();//"f280531cd5712b6cbff971b7610155cecc134b02"); //FIXME Temporary token
 			p = importer.importRepository(uName+"/" + pName, Platform.getInstance());
 		}
 		

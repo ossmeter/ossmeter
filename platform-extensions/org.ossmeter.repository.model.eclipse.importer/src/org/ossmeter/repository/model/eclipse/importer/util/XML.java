@@ -65,8 +65,8 @@ public class XML {
          //if html
          if (text.indexOf("<html")>-1 ||text.indexOf("<HTML")>-1 ){
                
-            Logger.getLogger(this.getClass().getName()).warning("The text to be parsed seems to be in html format...html is not xml");
-            Logger.getLogger(this.getClass().getName()).warning("Sanitizing html...");
+            //Logger.getLogger(this.getClass().getName()).warning("The text to be parsed seems to be in html format...html is not xml");
+            //Logger.getLogger(this.getClass().getName()).warning("Sanitizing html...");
             //replace any entity
             text=text.replaceAll("&nbsp;","_");text=text.replaceAll("&uacute;","");
             text=text.replaceAll("&","_AND_SYMBOL_");

@@ -2,147 +2,92 @@ module PHPMetrics
 
 extend lang::php::m3::Core;
 import lang::php::m3::Uses;
-import lang::php::stats::Stats;
+import lang::php::m3::Declarations;
+import lang::php::m3::Calls;
 
 import util::Math;
 
-@metric{StaticNameResolutionHistogram}
+import PHP;
+import DynamicFeatures;
+import Includes;
+
+
+@memo
+private M3 systemM3WithStdLib(rel[Language, loc, M3] m3s) {
+	return addPredefinedDeclarations(systemM3(m3s));
+}
+
+
+@metric{StaticTypeNameResolutionHistogram}
 @doc{Histogram counting type names that could be resolved to a certain number of declarations}
-@friendlyName{StaticNameResolutionHistogram}
+@friendlyName{StaticTypeNameResolutionHistogram}
 @appliesTo{php()}
-map[int, int] getNameResolutionHistogram(rel[Language, loc, M3] m3s = {})
+map[int, int] getTypeNameResolutionHistogram(rel[Language, loc, M3] m3s = {})
 {
-	if (m3s == {})
-	{
-		return ();
-	}
-
-	models = { m | <php(), _, m> <- m3s };
-
-	M3 m3 = composeM3(|project:///|, models);
+	M3 m3 = systemM3WithStdLib(m3s);
 
 	m3@uses = { <l, n> | <l, n> <- m3@uses, n.scheme in ["php+class", "php+interface", "php+trait"] };
 
-	m3 = addPredefinedDeclarations(m3);
-
-	useDecl = resolveUsesToPossibleDeclarations(propagateAliasesInUses(m3));
+	useDecl = resolveUsesToPossibleDeclarations(m3);
 	
-	return countNumPossibleDeclarations(useDecl);
+	return calculateResolutionHistogram(countNumPossibleDeclarations(useDecl));
 }
 
 
-private set[str] varClassMetrics = {
-						"class consts with variable class name",
-						"object creation with variable class name",
-						"calls of static methods with variable targets",
-						"fetches of static properties with variable targets"};
-		
-private	set[str] varVarMetrics = {
-						"assignments into variable-variables",
-						"assignments w/ops into variable-variables",
-						"list assignments into variable-variables",
-						"ref assignments into variable-variables",
-						"fetches of properties with variable names"};
-						//"uses of variable-variables (including the above)",
+@metric{StaticMethodNameResolutionHistogram}
+@doc{Histogram counting called method names that could be resolved to a certain number of declarations}
+@friendlyName{StaticMethodNameResolutionHistogram}
+@appliesTo{php()}
+map[int, int] getMethodNameResolutionHistogram(rel[Language, loc, M3] m3s = {})
+{
+	M3 m3 = composeM3s(m3s); // m3 before resolution
 
-private	set[str] varFuncMetrics = {
-						"calls of variable function names",
-						"calls of variable method names",
-						"calls of static methods with variable names",
-						"fetches of static properties with variable names"};
+	calls = resolveMethodCallsAndFieldAccesses(m3)[1];
 
-private set[str] varArgsMetrics = {"var-args support functions"};
+	return memberResolutionHistogram(calls, m3);
+}
 
-private set[str] varIncludeMetrics = {"includes with non-literal paths"};
 
-private set[str] overloadMetrics = {
-						"definitions of overloads: set",
-						"definitions of overloads: get",
-						"definitions of overloads: isset",
-						"definitions of overloads: unset",
-						"definitions of overloads: call",
-						"definitions of overloads: callStatic"};
+@metric{StaticFieldNameResolutionHistogram}
+@doc{Histogram counting accessed field names that could be resolved to a certain number of declarations}
+@friendlyName{StaticFieldNameResolutionHistogram}
+@appliesTo{php()}
+map[int, int] getFieldNameResolutionHistogram(rel[Language, loc, M3] m3s = {})
+{
+	M3 m3 = composeM3s(m3s); // m3 before resolution
 
-private set[str] varLabelMetrics = {
-						"break with non-literal argument",
-						"continue with non-literal argument"};	
+	accesses = resolveMethodCallsAndFieldAccesses(m3)[2];
+
+	return memberResolutionHistogram(accesses, m3);
+}
+
 
 @memo
-private map[str, int] getCounts(rel[Language, loc, AST] asts)
-{
-	System sys = ( ast.file : ast.script  | <php(), _, ast> <- asts );
-	return featureCounts(sys);
+map[loc, map[DynamicFeature, int]] getDynamicFeatureCountsPerFunction(rel[Language, loc, AST] asts) {
+	map[loc, map[DynamicFeature, int]] result = ();
+	
+	scripts = { s | <php(), _, phpAST(s)> <- asts };
+
+	top-down-break visit (scripts) {
+		case m:method(_, _, _, _, _): result[m@decl] = getDynamicFeatureCounts(m);
+		case f:function(_, _, _, _): result[f@decl] = getDynamicFeatureCounts(f);
+	}
+	
+	return result;
 }
 
-private int sumMetrics(rel[Language, loc, AST] asts, set[str] metricNames)
-{
-	counts = getCounts(asts);
 
-	return toInt(sum([counts[n] | n <- metricNames]));
-}
-
-@metric{numVarVar}
-@doc{number of variable variable references}
-@friendlyName{numVarVar}
+@metric{numDynamicFeatureUses-PHP}
+@doc{Number of uses of dynamic PHP language features}
+@friendlyName{Number of uses of dynamic PHP language features}
 @appliesTo{php()}
-public int getNumberOfVarVarUses(rel[Language, loc, AST] asts = {})
+public int getNumberOfDynamicFeatureUses(rel[Language, loc, AST] asts = {})
 {
-	 return sumMetrics(asts, varVarMetrics);
+	counts = getDynamicFeatureCountsPerFunction(asts);
+	
+	return ( 0 | it + sumCounts(counts[f]) | f <- counts); // includes eval() calls 
 }
 
-@metric{numVarClass}
-@doc{number of variable class references}
-@friendlyName{numVarClass}
-@appliesTo{php()}
-public int getNumberOfVarClassUses(rel[Language, loc, AST] asts = {})
-{
-	 return sumMetrics(asts, varClassMetrics);
-}
-
-@metric{numVarFunc}
-@doc{number of variable accesses to functions or methods}
-@friendlyName{numVarFunc}
-@appliesTo{php()}
-public int getNumberOfVarFuncUses(rel[Language, loc, AST] asts = {})
-{
-	 return sumMetrics(asts, varFuncMetrics);
-}
-
-@metric{numVarArgs}
-@doc{number of var args methods}
-@friendlyName{numVarArgs}
-@appliesTo{php()}
-public int getNumberOfVarArgsUses(rel[Language, loc, AST] asts = {})
-{
-	 return sumMetrics(asts, varArgsMetrics);
-}
-
-@metric{numVarIncludes}
-@doc{number of variable includes}
-@friendlyName{numVarIncludes}
-@appliesTo{php()}
-public int getNumberOfVarIncludeUses(rel[Language, loc, AST] asts = {})
-{
-	 return sumMetrics(asts, varIncludeMetrics);
-}
-
-@metric{numOverloads}
-@doc{number of overload uses}
-@friendlyName{numVarOverloads}
-@appliesTo{php()}
-public int getNumberOfOverloadUses(rel[Language, loc, AST] asts = {})
-{
-	 return sumMetrics(asts, overloadMetrics);
-}
-
-@metric{numVarLabels}
-@doc{number of variable label references}
-@friendlyName{numVarLabels}
-@appliesTo{php()}
-public int getNumberOfVarLabelUses(rel[Language, loc, AST] asts = {})
-{
-	 return sumMetrics(asts, varLabelMetrics);
-}
 
 @metric{numEvals}
 @doc{number of calls to eval}
@@ -150,5 +95,43 @@ public int getNumberOfVarLabelUses(rel[Language, loc, AST] asts = {})
 @appliesTo{php()}
 public int getNumberOfEvalCalls(rel[Language, loc, AST] asts = {})
 {
-	return (0 | it + 1 | <php(), _, ast> <- asts, /call(name(name(/eval/i)), _) <- ast);
+	counts = getDynamicFeatureCountsPerFunction(asts);
+	
+	return ( 0 | it + counts[f][eval()] | f <- counts); 
+}
+
+
+@metric{numFunctionsWithDynamicFeatures}
+@doc{Number of functions using at least one dynamic language feature}
+@friendlyName{numFunctionsWithDynamicFeatures}
+@appliesTo{php()}
+public int getNumberOfFunctionsWithDynamicFeatures(rel[Language, loc, AST] asts = {})
+{
+	counts = getDynamicFeatureCountsPerFunction(asts);
+	
+	return ( 0 | it + 1 | f <- counts, sumCounts(counts[f]) > 0); 
+}
+
+
+@metric{IncludesResolutionHistogram}
+@doc{Histogram counting number of times a PHP include could be resolved to a certain number of files}
+@friendlyName{IncludesResolutionHistogram}
+@appliesTo{php()}
+public map[int, int] getIncludesResolutionHistogram(rel[Language, loc, AST] asts = {})
+{
+	systems = { <root, sys> | <php(), root, phpSystem(sys)> <- asts };
+
+	return includeResolutionHistogram(systems);
+}
+
+
+@metric{MissingLibrariesPHP}
+@doc{Estimation of missing PHP libraries of the project}
+@friendlyName{MissingLibrariesPHP}
+@appliesTo{php()}
+public set[str] estimateMissingLibraries(rel[Language, loc, AST] asts = {})
+{
+	systems = { <root, sys> | <php(), root, phpSystem(sys)> <- asts };
+
+	return estimateMissingLibraries(systems);
 }

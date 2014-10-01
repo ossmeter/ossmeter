@@ -15,6 +15,7 @@ public class Factoid extends Pongo {
 		super();
 		dbObject.put("metricDependencies", new BasicDBList());
 		METRICID.setOwningType("org.ossmeter.platform.factoids.Factoid");
+		NAME.setOwningType("org.ossmeter.platform.factoids.Factoid");
 		FACTOID.setOwningType("org.ossmeter.platform.factoids.Factoid");
 		STARS.setOwningType("org.ossmeter.platform.factoids.Factoid");
 		METRICDEPENDENCIES.setOwningType("org.ossmeter.platform.factoids.Factoid");
@@ -22,6 +23,7 @@ public class Factoid extends Pongo {
 	}
 	
 	public static StringQueryProducer METRICID = new StringQueryProducer("metricId"); 
+	public static StringQueryProducer NAME = new StringQueryProducer("name"); 
 	public static StringQueryProducer FACTOID = new StringQueryProducer("factoid"); 
 	public static StringQueryProducer STARS = new StringQueryProducer("stars"); 
 	public static StringQueryProducer CATEGORY = new StringQueryProducer("category"); 
@@ -34,6 +36,15 @@ public class Factoid extends Pongo {
 	
 	public Factoid setMetricId(String metricId) {
 		dbObject.put("metricId", metricId);
+		notifyChanged();
+		return this;
+	}
+	public String getName() {
+		return parseString(dbObject.get("name")+"", "");
+	}
+	
+	public Factoid setName(String name) {
+		dbObject.put("name", name);
 		notifyChanged();
 		return this;
 	}

@@ -1,0 +1,3 @@
+Source: src
+Main-Module: Main
+Require-Bundles: org.ossmeter.code.model.java

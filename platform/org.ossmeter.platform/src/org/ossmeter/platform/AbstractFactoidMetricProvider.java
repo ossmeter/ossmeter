@@ -47,6 +47,7 @@ public abstract class AbstractFactoidMetricProvider implements ITransientMetricP
 		if (factoid == null) {
 			factoid = new Factoid();
 			factoid.setMetricId(getIdentifier());
+			factoid.setName(getFriendlyName());
 			List<String> uses = getIdentifiersOfUses();
 			if (uses != null) {
 				for (String dep : uses) {

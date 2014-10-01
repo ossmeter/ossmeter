@@ -11,14 +11,15 @@ import analysis::statistics::Inference;
 
 import Prelude;
 
-
+import Generic;
+ 
 @metric{genericLOC}
 @doc{loc}
 @friendlyName{Language independent physical lines of code}
 @appliesTo{generic()}
 map[loc, int] countLoc(rel[Language, loc, AST] asts = {}) {
   return (f:size(ls) | <generic(), f, lines(ls)> <- asts);
-}
+}   
 
 real giniLOC(map[loc, int] locs) {
   dist = distribution(locs);
@@ -36,68 +37,6 @@ real giniLOCOverFiles(rel[Language, loc, AST] asts = {}) {
   return giniLOC(countLoc(asts=asts));
 }
 
-@memo
-map[str, str] getLanguageExtensions() {
-	languageExtensions = {
-		<"ActionScript", ["as"]>,
-		<"Ada", ["adb"]>,
-		<"ASP", ["asp"]>,
-		<"ASP.NET", ["aspx", "axd", "asx", "asmx", "ashx"]>,
-		<"Assembler", ["asm"]>,
-		<"C", ["c", "h"]>,
-		<"C#", ["cs"]>,
-		<"C++", ["cpp", "hpp", "cxx", "hxx", "cc", "hh"]>,
-		<"Clojure", ["clj"]>,
-		<"Cobol", ["cob"]>,
-		<"CoffeeScript", ["coffee"]>,
-		<"Coldfusion", ["cfm"]>,
-		<"CSS", ["css"]>,
-		<"CUDA", ["cu"]>,
-		<"Erlang", ["erl", "hrl"]>,
-		<"F#", ["fs"]>,
-		<"Flash", ["swf"]>,
-		<"Fortran", ["f"]>,
-		<"GLSL", ["glsl", "vert", "frag"]>,
-		<"Go", ["go"]>,
-		<"Haskell", ["hs", "lhs"]>,
-		<"HLSL", ["hlsl"]>,
-		<"HTML", ["html", "htm", "xhtml", "jhtml", "dhtml"]>,
-		<"J#", ["jsl"]>,
-		<"Java", ["java", "jav"]>,
-		<"JavaScript", ["js", "jse", "ejs"]>,
-		<"JSP", ["jsp", "jspx", "wss", "do", "action"]>,
-		<"LISP", ["lisp", "cl"]>,
-		<"Lua", ["lua"]>,
-		<"Matlab", ["matlab"]>,
-		<"ML", ["ml", "mli"]>,
-		<"Objective C", ["m", "mm"]>,
-		//<"OpenCL", [""]>, // also uses cl
-		<"Pascal/Delphi", ["pas"]>,
-		<"Perl", ["pl", "prl", "perl"]>,
-		<"PHP", ["php", "php4", "php3", "phtml"]>,
-		<"PL/I", ["pli"]>,
-		<"Python", ["py"]>,
-		<"Rascal", ["rsc"]>,
-		<"Ruby", ["rb", "rhtml"]>,
-		<"Scala", ["scala"]>,
-		<"Shell script", ["sh", "bsh", "bash", "ksh", "csh"]>,
-		<"Smalltalk", ["st"]>,
-		<"SQL", ["sql"]>,
-		<"TCL", ["tcl"]>,
-		<"(Visual) Basic", ["bas", "frm", "cls", "ctl"]>,
-		<"Visual Basic Script", ["vbs", "vbscript"]>,
-		<"XML", ["xml", "xst"]>,
-		<"XSLT", ["xslt"]>
-	};
-
-	return (ext:lang | <lang, exts> <- languageExtensions, ext <- exts);
-}
-
-str estimateLanguageByFileExtension(loc filename)
-{
-	return getLanguageExtensions()[toLowerCase(filename.extension)]?"";
-}
-
 
 @metric{locPerLanguage}
 @doc{physical lines of code per language}
@@ -110,7 +49,7 @@ map[str, int] locPerLanguage(rel[Language, loc, AST] asts = {}, map[loc, int] ge
   
   // first count LOC of files with extracted ASTs
   for (<l, f, a> <- asts, l != generic()) {
-    result["<l>"]?0 += genericLoc[f];
+    result["<l>"]?0 += genericLoc[f]?0;
     filesWithLanguageDetected += {f};
   }
   
@@ -118,7 +57,7 @@ map[str, int] locPerLanguage(rel[Language, loc, AST] asts = {}, map[loc, int] ge
   for (<l, f, a> <- asts, f notin filesWithLanguageDetected) {
   	lang = estimateLanguageByFileExtension(f);
   	if (lang != "") {
-  	  result[lang]?0 += genericLoc[f];
+  	  result[lang]?0 += genericLoc[f]?0;
   	}
   }
   
@@ -126,12 +65,12 @@ map[str, int] locPerLanguage(rel[Language, loc, AST] asts = {}, map[loc, int] ge
 }
 
 
-@metric{mainLanguage}
-@doc{Main development language of the project}
-@friendlyName{Main development language of the project}
+@metric{codeSize}
+@doc{The size of the project's code base}
+@friendlyName{Code Size}
 @appliesTo{generic()}
 @uses{("locPerLanguage" :"locPerLanguage")}
-Factoid mainLanguage(map[str, int] locPerLanguage = ()) {
+Factoid codeSize(map[str, int] locPerLanguage = ()) {
   if (isEmpty(locPerLanguage)) {
     throw undefined("No LOC data available", |unknown:///|);
   }
@@ -142,15 +81,30 @@ Factoid mainLanguage(map[str, int] locPerLanguage = ()) {
     	return a[1] > b[1]; // sort from high to low
     });
 
+  totalSize = ( 0 | it + locPerLanguage[l] | l <- locPerLanguage );
+
   mainLang = sorted[0];
 
-  txt = "The main development language of the project is <mainLang[0]>, with <mainLang[1]> physical lines of code.";
+  txt = "The total size of the code base is <totalSize> physical lines of code. The main development language of the project is <mainLang[0]>, with <mainLang[1]> physical lines of code.";
   if (size(sorted) > 1) {
     otherTxt = intercalate(", ", ["<l[0]> (<l[1]>)" | l <- sorted[1..]]);
   
-    txt += " Other used languages are <otherTxt>.";
+    txt += " The following <size(sorted) - 1> other languages were recognized: <otherTxt>.";
   } 
 
-  return factoid(txt, \four()); // star rating by language level? weighted by LOC? // http://www.cs.bsu.edu/homepages/dmz/cs697/langtbl.htm	
+  stars = 1;
+  
+  if (totalSize < 1000000) { // 1 star if LOC > 1M
+    stars += 1;
+    
+    if (totalSize < 500000) {
+      stars += 1;
+    }
+  
+    if (size(locPerLanguage) <= 2) {
+      stars += 1;
+    }
+  }
+  
+  return factoid(txt, starLookup[stars]); // star rating by language level? weighted by LOC? // http://www.cs.bsu.edu/homepages/dmz/cs697/langtbl.htm	
 }
-

@@ -12,6 +12,8 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
+import org.ossmeter.platform.admin.AdminApplication;
+import org.ossmeter.platform.admin.ProjectListAnalysis;
 import org.ossmeter.platform.client.api.ProjectResource;
 import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.platform.osgi.services.IWorkerService;
@@ -25,7 +27,7 @@ import com.mongodb.ServerAddress;
 
 public class OssmeterApplication implements IApplication, ServiceTrackerCustomizer<IWorkerService, IWorkerService> {
 	
-	protected boolean master = true;
+	protected boolean master = false; // This should be set via the program arguments '-master'
 	protected OssmeterLogger logger;
 	protected boolean done = false;
 	protected Object appLock = new Object();
@@ -76,14 +78,19 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 		workerServiceTracker = new ServiceTracker<IWorkerService, IWorkerService>(Activator.getContext(), IWorkerService.class, this);	
 		workerServiceTracker.open();
 		
+		// FIXME
+		System.setProperty("MAVEN_EXECUTABLE", "/Applications/apache-maven-3.2.3/bin/mvn");
+		
 		// If master, start
 		if (master) {
 			masterService = new MasterService(workers);
 //			masterService.start();
 		}
 
+//			TODO: Make this part of the config. We might want webserver-only instances
 		// Start web server
-		ProjectResource pr = new ProjectResource();
+		new ProjectResource();
+		new ProjectListAnalysis();
 		
 		// Now, rest.
   		waitForDone();
@@ -98,6 +105,13 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 			if ("-ossmeterConfig".equals(args[i])) {
 				configuration = new Properties();
 				configuration.load(new FileReader(args[i+1]));
+				
+				// Maven
+				String maven = configuration.getProperty("maven_executable", "");
+				if (!maven.equals("")) {
+					System.setProperty("MAVEN_EXECUTABLE", maven);
+				}
+				
 				i++;
 			} else if ("-master".equals(args[i])) { 
 				master = true;

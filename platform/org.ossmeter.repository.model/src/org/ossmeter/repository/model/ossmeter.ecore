@@ -1,6 +1,7 @@
-<?xml version="1.0" encoding="ASCII"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="model" nsURI="org.ossmeter.repository.model" nsPrefix="org.ossmeter.repository.model">
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="org.ossmeter.repository.model" nsURI="org.ossmeter.repository.model"
+    nsPrefix="org.ossmeter.repository.model">
   <eClassifiers xsi:type="ecore:EClass" name="ProjectRepository" eSuperTypes="#//NamedElement">
     <eAnnotations source="db"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="projects" upperBound="-1"
@@ -19,6 +20,17 @@
         eType="#//MetricProvider" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="schedulingInformation"
         upperBound="-1" eType="#//SchedulingInformation" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="metricAnalysis" upperBound="-1"
+        eType="#//MetricAnalysis" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="companies" upperBound="-1"
+        eType="#//Company" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MetricAnalysis">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="metricId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="projectId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="analysisDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="executionDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="millisTaken" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SchedulingInformation">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="workerIdentifier" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
@@ -63,6 +75,9 @@
         eType="#//MetricProvider" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="executionInformation" eType="#//ProjectExecutionInformation"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="homePage" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="companies" upperBound="-1"
+        eType="#//Company"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MetricProviderExecution">
     <eStructuralFeatures xsi:type="ecore:EReference" name="metricProvider" eType="#//MetricProvider"/>
@@ -131,6 +146,14 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Role" eSuperTypes="#//NamedElement"/>
   <eClassifiers xsi:type="ecore:EClass" name="License" eSuperTypes="#//NamedElement">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="searchable"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="content" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Company" eSuperTypes="#//NamedElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString">
+      <eAnnotations source="searchable"/>
+    </eStructuralFeatures>
   </eClassifiers>
 </ecore:EPackage>

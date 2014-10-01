@@ -8,6 +8,7 @@ class Factoids {
 class Factoid {
 	@searchable
 	attr String metricId;
+	attr String name;
 	attr String factoid;
 	attr StarRating stars;
 	attr String[*] metricDependencies;
