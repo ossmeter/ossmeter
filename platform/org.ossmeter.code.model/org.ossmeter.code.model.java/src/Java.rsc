@@ -28,7 +28,7 @@ map[loc,list[loc]] inferClassPaths(loc workspace) {
     println("Could not infer classpath using Maven: <msg>.");
   }
   
-  return (d : [*findJars({d})] + [e + "bin" | e <- workspace.ls, isDirectory(e)] | d <- workspace.ls, isDirectory(d));
+  return (d : [*findJars({d})] | d <- workspace.ls, isDirectory(d));
 }
 
 private set[loc] getSourceRoots(set[loc] folders) {
@@ -79,7 +79,7 @@ rel[Language, loc, M3] javaM3(loc project, ProjectDelta delta, map[loc repos,loc
     map[loc,list[loc]] classpaths = inferClassPaths(parent);
     for (repo <- checkouts) {
       sources = findSourceRoots({repo});
-      setEnvironmentOptions(classpaths[repo], sources);
+      setEnvironmentOptions({*classpaths[repo]}, sources);
     
       result += {<java(), f, createM3FromFile(f)> | f <- find(repo, "java")};
     }
