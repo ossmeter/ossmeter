@@ -1,7 +1,9 @@
 [%import "javautil.eol";%]
 [%import "../util/ecoreutil.eol";%]
-//package [%=d.ePackage.name%];
-
+package [%=d.ePackage.name%];
+[% for (p in OSS!EClass.all.collect(c | c.ePackage.name).asSet()) {%]
+import [%=p%].*;
+[%} %]
 public class [%=d.name%] extends [%=d.instanceClassName%] {
 
 }

@@ -11,7 +11,7 @@ rule WADL2Java
 	
 	template : "wadl2java.egl"
 	
-	target : dir + "OssmeterClient.java"
+	target : dir + "org/ossmeter/client/OssmeterClient.java"
 
 }
 
@@ -23,7 +23,7 @@ rule EClass2Java
 	
 	template : "eclass2java.egl"
 	
-	target : dir + c.name  + ".java"
+	target : dir + c.ePackage.name.replaceAll("\\.", "/").println() + "/" + c.name  + ".java"
 }
 
 rule EEnum2Java
@@ -31,7 +31,7 @@ rule EEnum2Java
 
 	template : "eenum2java.egl"
 	
-	target : dir + e.name  + ".java"
+	target : dir + e.ePackage.name.replaceAll("\\.", "/") + "/" + e.name  + ".java"
 }
 
 
@@ -40,5 +40,5 @@ rule EDatatype2Java
 
 	template : "edatatype2java.egl"
 	
-	target : dir+d.name + ".java"	
+	target : dir + d.ePackage.name.replaceAll("\\.", "/") + "/" + d.name + ".java"	
 }

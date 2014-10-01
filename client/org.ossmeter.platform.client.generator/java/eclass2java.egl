@@ -1,6 +1,6 @@
 [%import "javautil.eol";%]
 [%import "../util/ecoreutil.eol";%]
-//package [%=c.ePackage.name%];
+package [%=c.ePackage.name%];
 
 import java.util.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -8,13 +8,17 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 
+[% for (p in OSS!EClass.all.collect(c | c.ePackage.name).asSet()) {%]
+import [%=p%].*;
+[%} %]
+
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME,
 	include=JsonTypeInfo.As.PROPERTY,
 	property = "_type")
 @JsonSubTypes({
 	@Type(value = [%=c.name%].class, name="[%=c.name%]"), [%/*=c.ePackage.nsURI --  may need including?*/%]
-	[%for (sub in OSS!EClass.all.select(s | s.eSuperTypes.includes(c) and not s.name.isIgnored())) {%]
-	@Type(value = [%=sub.name%].class, name="[%=sub.name%]"),
+	[%for (sub in c.getFullyQualifiedSubclasses()) {%]
+	@Type(value = [%=sub.ePackage.name%].[%=sub.name%].class, name="[%=sub.ePackage.name%].[%=sub.name%]"),
 	[%}%]
 })
 @JsonIgnoreProperties(ignoreUnknown = true)

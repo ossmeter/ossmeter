@@ -1,4 +1,4 @@
-package metrics;
+package org.ossmeter.repository.model.metrics;
 
 class Metric {
 	attr String _id;

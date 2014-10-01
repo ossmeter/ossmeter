@@ -10,7 +10,7 @@ public class ApiApplication extends Application {
 	public Restlet createInboundRoot() {
 		Router router = new Router(getContext());
 
-		 	
+		router.attach("/", PingResource.class); 	
 		router.attach("/search", SearchProjectResource.class);
 		router.attach("/search/", SearchProjectResource.class);
 		router.attach("/metrics", MetricListResource.class);

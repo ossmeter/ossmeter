@@ -5,12 +5,17 @@
 [%
 	// TODO: Package
 %]
+package org.ossmeter.client;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
+
+[% for (p in OSS!EClass.all.collect(c | c.ePackage.name).asSet()) {%]
+import [%=p%].*;
+[%} %]
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -69,10 +74,10 @@ public class OssmeterClient {
 	public static void main(String[] args) throws Exception{
 		OssmeterClient c = new OssmeterClient("http://localhost:8182");
 		
-		System.out.println(c.getProjectList());
+		//System.out.println(c.getProjectList("0", "5"));
 		
-		Project p = c.getProject("ant");
-		Metric m2 = c.getMetric("ant", "avgnumberofreplies");
+		Project p = c.getProject("modeling.emf");
+		//Metric m2 = c.getMetric("ant", "avgnumberofreplies");
 		
 	}
 }
