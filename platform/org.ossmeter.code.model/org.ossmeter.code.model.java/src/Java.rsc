@@ -78,7 +78,7 @@ rel[Language, loc, M3] javaM3(loc project, ProjectDelta delta, map[loc repos,loc
   try {
     map[loc,list[loc]] classpaths = inferClassPaths(parent);
     for (repo <- checkouts) {
-      sources = findSourceRoots(repo);
+      sources = findSourceRoots({repo});
       setEnvironmentOptions(classpaths[repo], sources);
     
       result += {<java(), f, createM3FromFile(f)> | f <- find(repo, "java")};
@@ -88,7 +88,7 @@ rel[Language, loc, M3] javaM3(loc project, ProjectDelta delta, map[loc repos,loc
     jars = findJars(checkouts.folders);
     
     for (repo <- checkouts) {
-      sources = findSourceRoots(repo);
+      sources = findSourceRoots({repo});
       setEnvironmentOptions(jars, sources);
     
       result += {<java(), f, createM3FromFile(f)> | f <- find(repo, "java")};
@@ -109,7 +109,7 @@ rel[Language, loc, AST] javaAST(loc project, ProjectDelta delta, map[loc repos,l
   try {
     map[loc,list[loc]] classpaths = inferClassPaths(parent);
     for (repo <- checkouts) {
-      sources = findSourceRoots(repo);
+      sources = findSourceRoots({repo});
       // TODO: turn classpath into a list
       setEnvironmentOptions({*classpaths[repo]}, sources);
     
@@ -120,7 +120,7 @@ rel[Language, loc, AST] javaAST(loc project, ProjectDelta delta, map[loc repos,l
     jars = findJars(checkouts.folders);
     
     for (repo <- checkouts) {
-      sources = findSourceRoots(repo);
+      sources = findSourceRoots({repo});
       setEnvironmentOptions(jars, sources);
     
       result += {<java(), f, declaration(createAstFromFile(f, true))> | f <- find(repo, "java")};
