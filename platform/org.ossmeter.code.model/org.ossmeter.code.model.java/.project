@@ -3,6 +3,7 @@
 	<name>org.ossmeter.code.model.java</name>
 	<comment></comment>
 	<projects>
+		<project>rascal4ossmeter</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

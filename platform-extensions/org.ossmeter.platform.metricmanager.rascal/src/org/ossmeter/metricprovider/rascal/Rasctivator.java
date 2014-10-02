@@ -27,7 +27,7 @@ public class Rasctivator implements BundleActivator {
 	}
 	
 	public static void printRascalTrace(StackTrace trace) {
-		System.err.println(trace);
+		System.err.println("Rascal stack trace:\n" + trace);
 	}
 
 	@Override
