@@ -71,8 +71,8 @@ private set[loc] getSourceRoots(set[loc] folders) {
 @memo
 rel[Language, loc, M3] javaM3(loc project, ProjectDelta delta, map[loc repos,loc folders] checkouts, map[loc,loc] scratch) {  
   rel[Language, loc, M3] result = {};
-  loc parent = (project | repo.parent | repo <- checkouts);
-  assert all(repo <- checkouts, repo.parent == parent);
+  loc parent = (project | checkouts[repo].parent | repo <- checkouts);
+  assert all(repo <- checkouts, checkouts[repo].parent == parent);
   
   // TODO: we will add caching on disk again and use the deltas to predict what to re-analyze and what not
   try {
@@ -102,8 +102,8 @@ rel[Language, loc, M3] javaM3(loc project, ProjectDelta delta, map[loc repos,loc
 @memo
 rel[Language, loc, AST] javaAST(loc project, ProjectDelta delta, map[loc repos,loc folders] checkouts, map[loc,loc] scratch) {
   rel[Language, loc, AST] result = {};
-  parent = (project | repo.parent | repo <- checkouts);
-  assert all(repo <- checkouts, repo.parent == parent);
+  loc parent = (project | checkouts[repo].parent | repo <- checkouts);
+  assert all(repo <- checkouts, checkouts[repo].parent == parent);
   
   // TODO: we will add caching on disk again and use the deltas to predict what to re-analyze and what not
   try {
