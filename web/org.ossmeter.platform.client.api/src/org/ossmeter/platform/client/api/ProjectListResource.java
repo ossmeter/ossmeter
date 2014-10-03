@@ -36,7 +36,7 @@ public class ProjectListResource extends ServerResource {
 		responseHeaders.add(new Header("Access-Control-Allow-Methods", "GET"));
 		
 		 // Defaults
-        int pageSize = 2;
+        int pageSize = 10;
         int page = 0;
         
         // Ready query params
@@ -56,6 +56,7 @@ public class ProjectListResource extends ServerResource {
         
         ObjectMapper mapper = new ObjectMapper();
         ArrayNode projects = mapper.createArrayNode();
+        
         
         while (cursor.hasNext()) {
             try {

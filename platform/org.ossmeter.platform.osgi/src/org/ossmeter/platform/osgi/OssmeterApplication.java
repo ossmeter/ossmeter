@@ -84,7 +84,7 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 		// If master, start
 		if (master) {
 			masterService = new MasterService(workers);
-//			masterService.start();
+			masterService.start();
 		}
 
 //			TODO: Make this part of the config. We might want webserver-only instances
