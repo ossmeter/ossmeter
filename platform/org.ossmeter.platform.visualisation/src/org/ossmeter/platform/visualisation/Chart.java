@@ -67,7 +67,6 @@ public class Chart {
 		
 		if (rowName != null){
 			Iterator<DBObject> it = collection.find(query).iterator();
-			System.out.println(query);
 			while(it.hasNext()) {
 				DBObject dbobj = it.next();
 				BasicDBList rows = (BasicDBList)dbobj.get(rowName);
@@ -79,8 +78,8 @@ public class Chart {
 
 					for (int i = 0; i < colNames.size(); i++) {
 						JsonNode col = colNames.get(i);
-						String name  = col.path("name").textValue();
-						String field = col.path("field").textValue();
+						String name  = col.get("name").asText();
+						String field = col.get("field").asText();
 						
 						field = field.replace("$", "");
 						Object value = null;
@@ -102,8 +101,8 @@ public class Chart {
 				ObjectNode r = mapper.createObjectNode();
 				for (int i = 0; i < colNames.size(); i++) {
 					JsonNode col = colNames.get(i);
-					String name  = col.path("name").textValue();
-					String field = col.path("field").textValue();
+					String name  = col.get("name").asText();
+					String field = col.get("field").asText();
 					
 					field = field.replace("$", "");
 					Object value = null;

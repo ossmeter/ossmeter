@@ -3,4 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: sparky
 Bundle-SymbolicName: sparky
 Bundle-Version: 1.0.0.qualifier
-Export-Package: sparky
+Export-Package: sparkle,
+ sparkle.dimensions,
+ sparkle.scales
