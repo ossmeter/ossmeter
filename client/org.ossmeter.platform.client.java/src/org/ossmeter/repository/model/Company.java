@@ -25,18 +25,14 @@ import org.ossmeter.platform.factoids.*;
 	include=JsonTypeInfo.As.PROPERTY,
 	property = "_type")
 @JsonSubTypes({
-	@Type(value = License.class, name="org.ossmeter.repository.model.License"), })
+	@Type(value = Company.class, name="org.ossmeter.repository.model.Company"), })
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class License extends NamedElement {
+public class Company extends NamedElement {
 
 	protected String url;
-	protected String content;
 	
 	public String getUrl() {
 		return url;
-	}
-	public String getContent() {
-		return content;
 	}
 	
 }

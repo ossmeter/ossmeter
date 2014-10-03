@@ -7,9 +7,21 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
-import org.ossmeter.platform.factoids.Factoid;
-import org.ossmeter.repository.model.Project;
-import org.ossmeter.repository.model.metrics.Metric;
+import org.ossmeter.repository.model.redmine.*;
+import org.ossmeter.repository.model.vcs.svn.*;
+import org.ossmeter.repository.model.cc.forum.*;
+import org.ossmeter.repository.model.bts.bugzilla.*;
+import org.ossmeter.repository.model.cc.nntp.*;
+import org.ossmeter.repository.model.vcs.cvs.*;
+import org.ossmeter.repository.model.eclipse.*;
+import org.ossmeter.repository.model.googlecode.*;
+import org.ossmeter.repository.model.vcs.git.*;
+import org.ossmeter.repository.model.sourceforge.*;
+import org.ossmeter.repository.model.github.*;
+import org.ossmeter.repository.model.*;
+import org.ossmeter.repository.model.metrics.*;
+import org.ossmeter.platform.factoids.*;
+
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -80,8 +92,6 @@ public class OssmeterClient {
 		n.put("url", projectUrl);
 		JsonNode result = doPostRequest(connectionUrl + "/projects/import", n);
 		
-		System.out.println(result);
-		
 		return mapper.readValue(result.toString(), Project.class);
 	}
 	
@@ -150,12 +160,10 @@ public class OssmeterClient {
 	public static void main(String[] args) throws Exception{
 		OssmeterClient c = new OssmeterClient("http://localhost:8182");
 		
-		System.out.println(c.getProject("modeling.epsilon"));
 		System.out.println(c.postImportProject("https://projects.eclipse.org/projects/modeling.epsilon"));
-		System.out.println(c.getProjectList(0, 3));
-		System.out.println(c.getProjectList(0, 2));
-		System.out.println(c.getProjectList(0, 1));
+		//System.out.println(c.getProjectList("0", "5"));
 		
+		Project p = c.getProject("modeling.emf");
 		//Metric m2 = c.getMetric("ant", "avgnumberofreplies");
 		
 	}

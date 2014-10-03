@@ -40,12 +40,14 @@ public class Project extends NamedElement {
 	protected List<Person> persons;
 	protected List<License> licenses;
 	protected List<MetricProvider> metricProviderData;
+	protected List<Company> companies;
 	protected String shortName;
 	protected String description;
 	protected int year;
 	protected boolean active;
 	protected String lastExecuted;
 	protected Project parent;
+	protected String homePage;
 	
 	public String getShortName() {
 		return shortName;
@@ -61,6 +63,9 @@ public class Project extends NamedElement {
 	}
 	public String getLastExecuted() {
 		return lastExecuted;
+	}
+	public String getHomePage() {
+		return homePage;
 	}
 	
 	public List<VcsRepository> getVcsRepositories() {
@@ -80,5 +85,8 @@ public class Project extends NamedElement {
 	}
 	public List<MetricProvider> getMetricProviderData() {
 		return metricProviderData;
+	}
+	public List<Company> getCompanies() {
+		return companies;
 	}
 }
