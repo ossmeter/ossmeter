@@ -78,20 +78,20 @@ rel[Language, loc, M3] javaM3(loc project, ProjectDelta delta, map[loc repos,loc
   try {
     map[loc,list[loc]] classpaths = inferClassPaths(parent);
     for (repo <- checkouts) {
-      sources = findSourceRoots({repo});
-      setEnvironmentOptions({*classpaths[repo]}, sources);
+      sources = getSourceRoots({checkouts[repo]});
+      setEnvironmentOptions({*classpaths[checkouts[repo]]}, sources);
     
-      result += {<java(), f, createM3FromFile(f)> | f <- find(repo, "java")};
+      result += {<java(), f, createM3FromFile(f)> | f <- find(checkouts[repo], "java")};
     }
   }
   catch "not-maven": {
     jars = findJars(checkouts.folders);
     
     for (repo <- checkouts) {
-      sources = findSourceRoots({repo});
+      sources = getSourceRoots({checkouts[repo]});
       setEnvironmentOptions(jars, sources);
     
-      result += {<java(), f, createM3FromFile(f)> | f <- find(repo, "java")};
+      result += {<java(), f, createM3FromFile(f)> | f <- find(checkouts[repo], "java")};
     }
   }
   
@@ -109,21 +109,21 @@ rel[Language, loc, AST] javaAST(loc project, ProjectDelta delta, map[loc repos,l
   try {
     map[loc,list[loc]] classpaths = inferClassPaths(parent);
     for (repo <- checkouts) {
-      sources = findSourceRoots({repo});
+      sources = getSourceRoots({checkouts[repo]});
       // TODO: turn classpath into a list
-      setEnvironmentOptions({*classpaths[repo]}, sources);
+      setEnvironmentOptions({*classpaths[checkouts[repo]]}, sources);
     
-      result += {<java(), f, declaration(createAstFromFile(f, true))> | f <- find(repo, "java")};
+      result += {<java(), f, declaration(createAstFromFile(f, true))> | f <- find(checkouts[repo], "java")};
     }
   }
   catch "not-maven": {
     jars = findJars(checkouts.folders);
     
     for (repo <- checkouts) {
-      sources = findSourceRoots({repo});
+      sources = getSourceRoots({checkouts[repo]});
       setEnvironmentOptions(jars, sources);
     
-      result += {<java(), f, declaration(createAstFromFile(f, true))> | f <- find(repo, "java")};
+      result += {<java(), f, declaration(createAstFromFile(f, true))> | f <- find(checkouts[repo], "java")};
     }
   }
   
