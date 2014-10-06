@@ -1,0 +1,50 @@
+import "../util/ecoreutil.eol";
+
+pre {
+	var dir = "/Users/jimmy/Code/ossmeter-git/client/org.ossmeter.platform.client.csharp/";
+	
+	// 
+	var t : Template = TemplateFactory.load("packages.egl"); 
+	t.generate(dir + "packages.config");
+	
+	t = TemplateFactory.load("assemblyinfo.egl"); 
+	t.generate(dir + "Properties/AssemblyInfo.cs");
+}
+
+rule WADL2CSharp
+	transform w : WADL!t_application {
+	
+	template : "wadl2csharp.egl"
+	
+	target : dir + "OssmeterClient.cs"
+
+}
+
+
+rule EClass2CSharp
+	transform c: OSS!EClass {
+
+	guard : not c.isIgnored() and not c.isAnnotatedAs("stub")
+	
+	template : "eclass2csharp.egl"
+	
+	target : dir + c.name  + ".cs"
+}
+
+rule EEnum2CSharp
+	transform e: OSS!EEnum {
+
+	template : "eenum2csharp.egl"
+	
+	target : dir + e.name  + ".cs"
+}
+
+rule EClass2Converter
+	transform c : OSS!EClass {
+
+	guard : c.hasSubTypes()
+
+	template : "eclass2jsonconverters.egl"
+	
+	target : dir + "Json" + c.name + "Converter.cs"	
+}

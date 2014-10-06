@@ -28,7 +28,7 @@ map[loc class, int wmcCount] getWMC(
 	map[loc, int] prev = ()
 	)
 {
-	result = prev;
+	map[loc, int] result = prev;
 	changed = getChangedFilesInWorkingCopyFolders(delta, workingCopies);
 	
 	// remove results for changed files

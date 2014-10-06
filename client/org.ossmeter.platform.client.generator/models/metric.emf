@@ -1,0 +1,24 @@
+package org.ossmeter.repository.model.metrics;
+
+class Metric {
+	attr String _id;
+	attr String name;
+	attr String description;
+	val Datatable datatable;
+}
+
+class MetricVisualisation {
+	attr String _id;
+	attr String type;
+	attr String description;
+	attr String x;
+	attr String y;
+	val Datatable datatable;
+}
+
+class Datatable {
+	attr String[*] columnNames;
+	ordered attr Row[*] rows;
+}
+
+datatype Row : java.util.HashMap;

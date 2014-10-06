@@ -8,7 +8,6 @@ Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.core.runtime,
  com.googlecode.pongo.runtime.osgi,
  org.ossmeter.platform,
- com.googlecode.pongo,
  org.ossmeter.repository.model,
  org.ossmeter.repository.model.bts.bugzilla,
  org.ossmeter.repository.model.cc.forum,

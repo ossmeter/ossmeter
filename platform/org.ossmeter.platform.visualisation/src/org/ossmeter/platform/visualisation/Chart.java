@@ -53,7 +53,7 @@ public class Chart {
 }
 	 */
 
-	protected ArrayNode createDatatable(JsonNode datatableSpec, DBCollection collection) {
+	protected ArrayNode createDatatable(JsonNode datatableSpec, DBCollection collection, DBObject query) {
 		String rowName = null;
 		if (datatableSpec.has("rows")) {
 			// TODO: May need more checking here if rows can be more complex
@@ -66,7 +66,7 @@ public class Chart {
 		ArrayNode results = mapper.createArrayNode();
 		
 		if (rowName != null){
-			Iterator<DBObject> it = collection.find().iterator();
+			Iterator<DBObject> it = collection.find(query).iterator();
 			while(it.hasNext()) {
 				DBObject dbobj = it.next();
 				BasicDBList rows = (BasicDBList)dbobj.get(rowName);
@@ -78,8 +78,8 @@ public class Chart {
 
 					for (int i = 0; i < colNames.size(); i++) {
 						JsonNode col = colNames.get(i);
-						String name  = col.path("name").textValue();
-						String field = col.path("field").textValue();
+						String name  = col.get("name").asText();
+						String field = col.get("field").asText();
 						
 						field = field.replace("$", "");
 						Object value = null;
@@ -95,14 +95,14 @@ public class Chart {
 				}
 			}
 		} else {
-			Iterator<DBObject> it = collection.find().iterator();
+			Iterator<DBObject> it = collection.find(query).iterator();
 			while(it.hasNext()) {
 				DBObject dbobj = it.next();
 				ObjectNode r = mapper.createObjectNode();
 				for (int i = 0; i < colNames.size(); i++) {
 					JsonNode col = colNames.get(i);
-					String name  = col.path("name").textValue();
-					String field = col.path("field").textValue();
+					String name  = col.get("name").asText();
+					String field = col.get("field").asText();
 					
 					field = field.replace("$", "");
 					Object value = null;

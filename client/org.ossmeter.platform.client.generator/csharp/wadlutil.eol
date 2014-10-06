@@ -1,0 +1,78 @@
+import "csharputil.eol";
+import "../util/ecoreutil.eol";
+
+// Any = t_method
+operation WADL!t_method getName() : String {
+	return self.a_id.ftuc();
+}
+
+// Any = t_method
+operation WADL!t_method getResultType() : String {
+	self.c_response.first().println();
+
+	var representation = self.c_response.first().c_representation.first().a_element;
+
+	if (representation.startsWith("oss:")) {
+		return representation.split(":").last();
+	} else if (representation.startsWith("metric:")) {
+		return representation.split(":").last();
+	} else if(representation == "projectList") {
+		return "IList<Project>";
+	}	
+}
+
+operation WADL!t_method getResultSubTypes() : Sequence {
+	var resultType = self.getResultType();
+	// Remove any ILists
+	resultType = resultType.replace("IList<","");
+	resultType = resultType.replace(">","");
+	
+	// TODO: Do we need to check if the type is primitive? Will it be?
+	var c = OSS!EClass.all.selectOne(c | c.name == resultType); //TODO: What if there are duplicate names?! Use the ns-prefix to find it!
+	return OSS!EClass.all.select(sub | sub.eSuperTypes.includes(c));
+}
+
+operation String isPrimitiveTypeName() : Boolean {
+	return Sequence{"string", "int", "bool", "float", "double" }.includes(self);
+}
+
+// Any = t_method
+operation WADL!t_method getArguments() : String {
+	var params = self.parentNode.c_param.flatten();
+	if (params.size() == 0) return "";
+	
+	var res = params.at(0).getParamType() + " " + params.at(0).a_name.cleanParamString();
+	
+	if (params.size() > 1) {
+		for (p in 1.to(params.size()-1)) {
+			res = res + ", " + params.at(p).getParamType() + " " + params.at(p).a_name.cleanParamString();
+		}
+	}
+	
+	return res.println();
+}
+
+operation String cleanParamString() : String {
+	var s = self.replace("\\{", "");
+	s = s.replace("}", "");
+	return s;
+}
+
+// Any = t_param
+operation WADL!t_param getParamType() : String {
+	switch (self.a_type) {
+		case "xs:string": return "string";
+		case "xs:int": return "int";
+		default: return "string";
+	}
+}
+ 
+// Any = t_method
+operation WADL!t_method getUrl() : String {
+	var path = self.parentNode.a_path;
+	path.println();
+	path = path.replace("\\{", "\" + ");
+	path = path.replace("}", " + \"");
+	return path;
+
+}

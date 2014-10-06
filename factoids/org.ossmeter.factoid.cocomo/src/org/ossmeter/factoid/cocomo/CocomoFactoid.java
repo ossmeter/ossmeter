@@ -6,24 +6,34 @@ import java.util.Random;
 import org.ossmeter.platform.AbstractFactoidMetricProvider;
 import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.platform.factoids.Factoid;
+import org.ossmeter.platform.factoids.FactoidCategory;
+import org.ossmeter.platform.factoids.Factoids;
 import org.ossmeter.platform.factoids.StarRating;
 import org.ossmeter.repository.model.Project;
+
+import com.mongodb.DB;
+import com.mongodb.Mongo;
 
 public class CocomoFactoid extends AbstractFactoidMetricProvider{
 
 	@Override
 	public String getShortIdentifier() {
-		return "";
+		return "cocomo";
+	}
+	
+	@Override
+	public String getIdentifier() {
+		return getShortIdentifier();
 	}
 
 	@Override
 	public String getFriendlyName() {
-		return ""; // This method will be removed in a later version.
+		return "Cocomo"; // This method will be removed in a later version.
 	}
 
 	@Override
 	public String getSummaryInformation() {
-		return ""; // This method will be removed in a later version.
+		return "COCOMO is crazy."; // This method will be removed in a later version.
 	}
 
 	@Override
@@ -54,6 +64,7 @@ public class CocomoFactoid extends AbstractFactoidMetricProvider{
 		int years = (int)effortApplied / 12;
 		
 		factoid.setFactoid("Took an estimated " + years + " years (COCOMO model).");
+		factoid.setCategory(FactoidCategory.CODE);
 		
 		if (years < 5) {
 			factoid.setStars(StarRating.ONE);
@@ -64,6 +75,17 @@ public class CocomoFactoid extends AbstractFactoidMetricProvider{
 		} else {
 			factoid.setStars(StarRating.FOUR);
 		}
+	}
+
+	public static void main(String[] args)  throws Exception {
+		Mongo mongo = new Mongo();
+		DB db = mongo.getDB("Xtext");
+		
+		CocomoFactoid f = new CocomoFactoid();
+		f.adapt(db);
+		f.measure(null, null, new Factoids(db));
+		
+		System.out.println(FactoidCategory.valueOf("asdasdasdd"));
 	}
 
 }
