@@ -14,10 +14,6 @@ import uk.ac.nactem.geniatagger.GeniaTaggerSingleton;
 import uk.ac.nactem.splitter.EnglishSentenceSplitter;
 import uk.ac.nactem.tools.GeniaTagger.GeniaToken;
 
-import weka.classifiers.meta.FilteredClassifier;
-import weka.core.Instances;
-import weka.core.converters.ConverterUtils.DataSource;
-
 public class Classifier {
 
 	private final int MAX_CHARACTERS_IN_WORD = 60;

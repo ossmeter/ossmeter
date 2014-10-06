@@ -1,0 +1,27 @@
+{
+	"metricid" : "org.ossmeter.metricprovider.historic.newsgroups.newthreads",
+	"vis" : [ 
+		{
+			"name" : "newThreads",
+			"type" : "LineChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "New Threads", "field" : "$numberOfNewThreads" } ]
+			},
+			"x" : "Date",
+			"y" : "New Threads",
+			"timeSeries" : true
+		},{
+			"name" : "cumulativeNewThreads",
+			"type" : "LineChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Cumulative New Threads", "field" : "$cumulativeNumberOfNewThreads" } ]
+			},
+			"x" : "Date",
+			"y" : "Cumulative New Threads",
+			"timeSeries" : true
+		}
+	]
+
+}

@@ -1,17 +1,18 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Overalldailynumberofbugzillapatches
-Bundle-SymbolicName: org.ossmeter.metricprovider.historic.overalldailynumberofbugzillapatches;singleton:=true
+Bundle-SymbolicName: org.ossmeter.metricprovider.historic.bugs.patches;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.ossmeter.metricprovider.historic.overalldailynumberofbugzillapatches.Activator
+Bundle-Activator: org.ossmeter.metricprovider.historic.bugs.patches.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.ossmeter.platform,
- org.ossmeter.metricprovider.trans.numberofbugzillapatches,
+ org.ossmeter.metricprovider.trans.bugs.patches,
  org.ossmeter.repository.model.bts.bugzilla,
  org.ossmeter.platform.client.api,
- com.googlecode.pongo.runtime.osgi
+ com.googlecode.pongo.runtime.osgi,
+ org.ossmeter.platform.visualisation
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.historic.overalldailynumberofbugzillapatches,
- org.ossmeter.metricprovider.historic.overalldailynumberofbugzillapatches.model
+Export-Package: org.ossmeter.metricprovider.historic.bugs.patches,
+ org.ossmeter.metricprovider.historic.bugs.patches.model

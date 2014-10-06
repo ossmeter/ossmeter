@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>org.ossmeter.metricprovider.historic.numberofnewusersperdaypernewsgroup</name>
+	<name>org.ossmeter.metricprovider.historic.newsgroups.newusers</name>
 	<comment></comment>
 	<projects>
 	</projects>

@@ -1,32 +1,32 @@
 package org.ossmeter.metricprovider.historic.numberofnonresolvedclosedbugzillabugs.model;
 
-import java.util.List;
-
 import com.googlecode.pongo.runtime.Pongo;
-import com.googlecode.pongo.runtime.PongoList;
-import com.mongodb.BasicDBList;
+import com.googlecode.pongo.runtime.querying.NumericalQueryProducer;
 
 
 public class DailyNonrcb extends Pongo {
 	
-	protected List<DailyBugzillaData> bugzillas = null;
 	
 	
 	public DailyNonrcb() { 
 		super();
-		dbObject.put("bugzillas", new BasicDBList());
+		NUMBEROFNONRESOLVEDCLOSEDBUGS.setOwningType("org.ossmeter.metricprovider.historic.numberofnonresolvedclosedbugzillabugs.model.DailyNonrcb");
+	}
+	
+	public static NumericalQueryProducer NUMBEROFNONRESOLVEDCLOSEDBUGS = new NumericalQueryProducer("numberOfNonResolvedClosedBugs");
+	
+	
+	public int getNumberOfNonResolvedClosedBugs() {
+		return parseInteger(dbObject.get("numberOfNonResolvedClosedBugs")+"", 0);
+	}
+	
+	public DailyNonrcb setNumberOfNonResolvedClosedBugs(int numberOfNonResolvedClosedBugs) {
+		dbObject.put("numberOfNonResolvedClosedBugs", numberOfNonResolvedClosedBugs);
+		notifyChanged();
+		return this;
 	}
 	
 	
-	
-	
-	
-	public List<DailyBugzillaData> getBugzillas() {
-		if (bugzillas == null) {
-			bugzillas = new PongoList<DailyBugzillaData>(this, "bugzillas", true);
-		}
-		return bugzillas;
-	}
 	
 	
 }

@@ -1,0 +1,101 @@
+{
+	"metricid" : "org.ossmeter.metricprovider.historic.newsgroups.threads",
+	"vis" : [ 
+		{
+			"name" : "threads",
+			"type" : "LineChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Date", "field" : "$__date" },
+					{ "name" : "Threads", "field" : "$numberOfThreads" } ]
+			},
+			"x" : "Date",
+			"y" : "Threads",
+			"timeSeries" : true
+		},{
+			"name" : "requestsreplies-useraverage",
+			"type" : "LineChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Date", "field" : "$__date" },
+					{ "name" : "Articles", "field" : "$averageArticlesPerUser" },
+					{ "name" : "Requests", "field" : "$averageRequestsPerUser" },
+					{ "name" : "Replies", "field" : "$averageRepliesPerUser" } ]
+			},
+			"x" : "Date",
+			"y" : ["Articles", "Requests", "Replies"],
+			"timeSeries" : true
+		},{
+			"name" : "requests-useraverage",
+			"type" : "LineChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Requests", "field" : "$averageRequestsPerUser" } ]
+			},
+			"x" : "Date",
+			"y" : "Requests",
+			"timeSeries" : true
+		},{
+			"name" : "articles-useraverage",
+			"type" : "LineChart",
+			"datatable" : { 
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Articles", "field" : "$averageArticlesPerUser" } ]
+			},
+			"x" : "Date",
+			"y" : "Articles",
+			"timeSeries" : true
+		},{
+			"name" : "replies-useraverage",
+			"type" : "LineChart",
+			"datatable" : { 
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Replies", "field" : "$averageRepliesPerUser" } ]
+			},
+			"x" : "Date",
+			"y" : "Replies",
+			"timeSeries" : true
+		},{
+			"name" : "requestsreplies-threadaverage",
+			"type" : "LineChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Date", "field" : "$__date" },
+					{ "name" : "Articles", "field" : "$averageArticlesPerThread" },
+					{ "name" : "Requests", "field" : "$averageRequestsPerThread" },
+					{ "name" : "Replies", "field" : "$averageRepliesPerThread" } ]
+			},
+			"x" : "Date",
+			"y" : ["Articles", "Requests", "Replies"],
+			"timeSeries" : true
+		},{
+			"name" : "requests-threadaverage",
+			"type" : "LineChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Requests", "field" : "$averageRequestsPerThread" } ]
+			},
+			"x" : "Date",
+			"y" : "Requests",
+			"timeSeries" : true
+		},{
+			"name" : "articles-threadaverage",
+			"type" : "LineChart",
+			"datatable" : { 
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Articles", "field" : "$averageArticlesPerThread" } ]
+			},
+			"x" : "Date",
+			"y" : "Articles",
+			"timeSeries" : true
+		},{
+			"name" : "replies-threadaverage",
+			"type" : "LineChart",
+			"datatable" : { 
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Replies", "field" : "$averageRepliesPerThread" } ]
+			},
+			"x" : "Date",
+			"y" : "Replies",
+			"timeSeries" : true
+		}
+	]
+
+}

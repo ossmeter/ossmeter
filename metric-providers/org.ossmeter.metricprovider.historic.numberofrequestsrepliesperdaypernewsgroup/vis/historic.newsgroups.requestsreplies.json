@@ -1,0 +1,69 @@
+{
+	"metricid" : "org.ossmeter.metricprovider.historic.newsgroups.requestsreplies",
+	"vis" : [ 
+		{
+			"name" : "requestsreplies",
+			"type" : "LineChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Date", "field" : "$__date" },
+					{ "name" : "Requests", "field" : "$numberOfRequests" },
+					{ "name" : "Replies", "field" : "$numberOfReplies" } ]
+			},
+			"x" : "Date",
+			"y" : ["Requests", "Replies"],
+			"timeSeries" : true
+		},{
+			"name" : "requests",
+			"type" : "LineChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Requests", "field" : "$numberOfRequests" } ]
+			},
+			"x" : "Date",
+			"y" : "Requests",
+			"timeSeries" : true
+		},{
+			"name" : "replies",
+			"type" : "LineChart",
+			"datatable" : { 
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Replies", "field" : "$numberOfReplies" } ]
+			},
+			"x" : "Date",
+			"y" : "Replies",
+			"timeSeries" : true
+		},{
+			"name" : "cumulativerequestsreplies",
+			"type" : "LineChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Date", "field" : "$__date" },
+					{ "name" : "Cumulative Requests", "field" : "$cumulativeNumberOfRequests" },
+					{ "name" : "Cumulative Replies", "field" : "$cumulativeNumberOfReplies" } ]
+			},
+			"x" : "Date",
+			"y" : ["Cumulative Requests", "Cumulative Replies"],
+			"timeSeries" : true
+		},{
+			"name" : "cumulativerequests",
+			"type" : "LineChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Cumulative Requests", "field" : "$cumulativeNumberOfRequests" } ]
+			},
+			"x" : "Date",
+			"y" : "Cumulative Requests",
+			"timeSeries" : true
+		},{
+			"name" : "cumulativereplies",
+			"type" : "LineChart",
+			"datatable" : { 
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Cumulative Replies", "field" : "$cumulativeNumberOfReplies" } ]
+			},
+			"x" : "Date",
+			"y" : "Cumulative Replies",
+			"timeSeries" : true
+		}
+	]
+
+}

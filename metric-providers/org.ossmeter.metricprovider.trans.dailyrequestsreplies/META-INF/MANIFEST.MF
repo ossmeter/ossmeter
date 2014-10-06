@@ -1,17 +1,18 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Dailyrequestsreplies
-Bundle-SymbolicName: org.ossmeter.metricprovider.trans.dailyrequestsreplies;singleton:=true
+Bundle-SymbolicName: org.ossmeter.metricprovider.trans.newsgroups.dailyrequestsreplies;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.ossmeter.metricprovider.trans.dailyrequestsreplies.Activator
+Bundle-Activator: org.ossmeter.metricprovider.trans.newsgroups.dailyrequestsreplies.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.ossmeter.platform,
  org.ossmeter.repository.model.cc.nntp,
  com.googlecode.pongo.runtime.osgi,
  org.ossmeter.platform.client.api,
- org.ossmeter.metricprovider.trans.requestreplyclassification
+ org.ossmeter.metricprovider.trans.requestreplyclassification,
+ org.ossmeter.platform.visualisation
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.trans.dailyrequestsreplies,
- org.ossmeter.metricprovider.trans.dailyrequestsreplies.model
+Export-Package: org.ossmeter.metricprovider.trans.newsgroups.dailyrequestsreplies,
+ org.ossmeter.metricprovider.trans.newsgroups.dailyrequestsreplies.model

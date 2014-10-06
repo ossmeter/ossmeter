@@ -1,0 +1,51 @@
+
+{
+	"metricid" : "org.ossmeter.metricprovider.historic.newsgroups.users",
+	"vis" : [ 
+{
+			"name" : "activeinactiveusers",
+			"type" : "LineChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Date", "field" : "$__date" },
+					{ "name" : "Users", "field" : "$numberOfUsers" },
+					{ "name" : "ActiveUsers", "field" : "$numberOfActiveUsers" },
+					{ "name" : "InactiveUsers", "field" : "$numberOfInactiveUsers" } ]
+			},
+			"x" : "Date",
+			"y" : ["Users", "ActiveUsers", "InactiveUsers"],
+			"timeSeries" : true
+		},{
+			"name" : "users",
+			"type" : "LineChart",
+			"datatable" : { 
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Users", "field" : "$numberOfUsers" } ]
+			},
+			"x" : "Date",
+			"y" : "Users",
+			"timeSeries" : true
+		},{
+			"name" : "activeusers",
+			"type" : "LineChart",
+			"datatable" : { 
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "ActiveUsers", "field" : "$numberOfActiveUsers" } ]
+			},
+			"x" : "Date",
+			"y" : "ActiveUsers",
+			"timeSeries" : true
+		}
+		{
+			"name" : "inactiveusers",
+			"type" : "LineChart",
+			"datatable" : { 
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "InactiveUsers", "field" : "$numberOfInactiveUsers" } ]
+			},
+			"x" : "Date",
+			"y" : "InactiveUsers",
+			"timeSeries" : true
+		}
+	]
+
+}

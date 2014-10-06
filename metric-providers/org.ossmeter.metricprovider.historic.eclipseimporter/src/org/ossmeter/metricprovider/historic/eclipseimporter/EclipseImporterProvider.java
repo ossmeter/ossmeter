@@ -7,16 +7,14 @@ import org.ossmeter.platform.IHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.platform.Platform;
-import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.eclipse.EclipseProject;
+import org.ossmeter.repository.model.eclipse.importer.EclipseProjectImporter;
 
 import com.googlecode.pongo.runtime.Pongo;
 import com.googlecode.pongo.runtime.PongoFactory;
 import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
 import com.mongodb.Mongo;
-
-import org.ossmeter.repository.model.eclipse.EclipseProject;
-import org.ossmeter.repository.model.eclipse.importer.*;
 
 public class EclipseImporterProvider implements IHistoricalMetricProvider {
 

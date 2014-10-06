@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Threads
-Bundle-SymbolicName: org.ossmeter.metricprovider.trans.threads;singleton:=true
+Bundle-SymbolicName: org.ossmeter.metricprovider.trans.newsgroups.threads;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.ossmeter.metricprovider.trans.threads.Activator
+Bundle-Activator: org.ossmeter.metricprovider.trans.newsgroups.threads.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  com.googlecode.pongo.runtime.osgi,
@@ -11,8 +11,9 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.repository.model.cc.nntp,
  org.ossmeter.platform,
  org.apache.commons.net,
- org.ossmeter.contentclassifier.opennlptartarus.libsvm
+ org.ossmeter.contentclassifier.opennlptartarus.libsvm,
+ org.ossmeter.platform.visualisation
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.trans.threads,
- org.ossmeter.metricprovider.trans.threads.model
+Export-Package: org.ossmeter.metricprovider.trans.newsgroups.threads,
+ org.ossmeter.metricprovider.trans.newsgroups.threads.model

@@ -7,13 +7,11 @@ import uk.ac.nactem.posstemmer.Token;
 
 public class ClassificationInstance {
 	
-	private String url;
-
-	private String product;
-	private String component;
+	private String bugTrackerId;
 	private String bugId;
 	private String commentId;
 	
+	private String url;
 	private int articleNumber;
 	private String subject;
 	private List<List<Token>> tokenSentences;
@@ -31,8 +29,8 @@ public class ClassificationInstance {
 	}
 
 	private void setComposedId() {
-		if ((url!=null)&&(product!=null)&&(component!=null)&&(bugId!=null)&&(commentId!=null))
-			composedId = product+"#"+component+"#"+bugId+"#"+commentId;
+		if ((bugTrackerId!=null)&&(bugId!=null)&&(commentId!=null))
+			composedId = bugTrackerId+"#"+bugId+"#"+commentId;
 		else if ((url!=null)&&(articleNumber!=0)) 
 			composedId = url+"#"+articleNumber;
 		else {
@@ -41,30 +39,21 @@ public class ClassificationInstance {
 		toString();
 	}
 
+	public String getBugTrackerId() {
+		return bugTrackerId;
+	}
+	
+	public void setBugTrackerId(String bugTrackerId) {
+		this.bugTrackerId = bugTrackerId;
+		if (composedId!=null) setComposedId();
+	}
+	
 	public String getUrl() {
 		return url;
 	}
 
 	public void setUrl(String url) {
 		this.url = url;
-		if (composedId!=null) setComposedId();
-	}
-
-	public String getProduct() {
-		return product;
-	}
-
-	public void setProduct(String product) {
-		this.product = product;
-		if (composedId!=null) setComposedId();
-	}
-
-	public String getComponent() {
-		return component;
-	}
-
-	public void setComponent(String component) {
-		this.component = component;
 		if (composedId!=null) setComposedId();
 	}
 
@@ -158,10 +147,15 @@ public class ClassificationInstance {
 
 	@Override
 	public String toString() {
-		return "ClassificationInstance [url=" + url + ", product=" + product
-				+ ", component=" + component + ", bugId=" + bugId
-				+ ", commentId=" + commentId + ", articleNumber="
-				+ articleNumber + ", subject=" + subject + "]";
+		if (url!=null)
+			return "ClassificationInstance "
+					+ "[url=" + url + ", articleNumber=" 
+					+ articleNumber + ", subject=" + subject + "]";
+		else
+			return "ClassificationInstance "
+					+ "[bugTrackerId=" + bugTrackerId + ", bugId=" + bugId
+					+ ", commentId=" + commentId + ", subject=" + subject + "]";
+			
 	}
 
 }

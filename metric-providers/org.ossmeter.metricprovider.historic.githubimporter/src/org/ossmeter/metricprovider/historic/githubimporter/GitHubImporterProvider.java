@@ -1,7 +1,5 @@
 package org.ossmeter.metricprovider.historic.githubimporter;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 import java.util.List;
 
@@ -11,7 +9,7 @@ import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.github.GitHubRepository;
-import org.ossmeter.repository.model.github.importer.*;
+import org.ossmeter.repository.model.github.importer.GitHubImporter;
 
 import com.googlecode.pongo.runtime.Pongo;
 import com.googlecode.pongo.runtime.PongoFactory;
@@ -90,9 +88,6 @@ public class GitHubImporterProvider implements IHistoricalMetricProvider {
 			ep = epi.importRepository( ((GitHubRepository)project).getFull_name(), platform);
 			
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

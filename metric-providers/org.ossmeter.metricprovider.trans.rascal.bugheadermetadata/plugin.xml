@@ -2,7 +2,7 @@
 <plugin>
   
   <extension point="org.ossmeter.platform.metricprovider">
-     <metricProvider provider="org.ossmeter.metricprovider.trans.bugheadermetadata.BugHeaderMetadataMetricProvider">
+     <metricProvider provider="org.ossmeter.metricprovider.trans.bugs.bugmetadata.BugMetadataTransMetricProvider">
      </metricProvider>
   </extension>
 
@@ -11,9 +11,17 @@
 
 
 
+
+<extension point="org.ossmeter.platform.visualisation.metric">
+   <visualisation json="vis/trans.bugs.bugmetadata.json">
+   </visualisation>
+</extension>
+
+
+
 <extension point="com.googlecode.pongo.runtime.osgi">
-    <class name="org.ossmeter.metricprovider.trans.bugheadermetadata.model.BugHeaderMetadata"/>
-    <class name="org.ossmeter.metricprovider.trans.bugheadermetadata.model.BugData"/>
-    <class name="org.ossmeter.metricprovider.trans.bugheadermetadata.model.CommentData"/>
+    <class name="org.ossmeter.metricprovider.trans.bugs.bugmetadata.model.BugsBugMetadataTransMetric"/>
+    <class name="org.ossmeter.metricprovider.trans.bugs.bugmetadata.model.BugTrackerData"/>
+    <class name="org.ossmeter.metricprovider.trans.bugs.bugmetadata.model.CommentData"/>
   </extension>
 </plugin>

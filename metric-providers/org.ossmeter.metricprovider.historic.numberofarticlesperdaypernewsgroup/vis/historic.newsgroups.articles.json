@@ -1,0 +1,27 @@
+{
+	"metricid" : "org.ossmeter.metricprovider.historic.newsgroups.articles",
+	"vis" : [ 
+		{
+			"name" : "articles",
+			"type" : "LineChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Articles", "field" : "$numberOfArticles" } ]
+			},
+			"x" : "Date",
+			"y" : "Articles",
+			"timeSeries" : true
+		},{
+			"name" : "cumulativeArticles",
+			"type" : "LineChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Cumulative Articles", "field" : "$cumulativeNumberOfArticles" } ]
+			},
+			"x" : "Date",
+			"y" : "Cumulative Articles",
+			"timeSeries" : true
+		}
+	]
+
+}

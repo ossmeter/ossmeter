@@ -1,0 +1,25 @@
+package org.ossmeter.metricprovider.trans.newsgroups.contentclasses.model;
+
+@db(qualifiedCollectionNames="true")
+@customize
+class NewsgroupsContentClassesTransMetric {
+	@series
+	val NewsgroupData[*] newsgroups;
+	val ContentClass[*] contentClasses;
+}
+
+class NewsgroupData {
+	@searchable
+   	attr String url_name;
+   	attr int numberOfArticles;
+}
+
+
+class ContentClass {
+	@searchable
+   	attr String url_name;
+   	attr String classLabel;
+	attr int numberOfArticles;
+	attr float percentage;
+}
+

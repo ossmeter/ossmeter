@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Threadsrequestsreplies
-Bundle-SymbolicName: org.ossmeter.metricprovider.trans.threadsrequestsreplies;singleton:=true
+Bundle-SymbolicName: org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.ossmeter.metricprovider.trans.threadsrequestsreplies.Activator
+Bundle-Activator: org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.ossmeter.platform,
@@ -12,9 +12,10 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.platform.client.api,
  org.ossmeter.platform.communicationchannel.nntp,
  org.ossmeter.metricprovider.trans.requestreplyclassification,
- org.ossmeter.metricprovider.trans.threads,
- org.ossmeter.metricprovider.trans.sentimentclassification
+ org.ossmeter.metricprovider.trans.newsgroups.threads,
+ org.ossmeter.metricprovider.trans.sentimentclassification,
+ org.ossmeter.platform.visualisation
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.trans.threadsrequestsreplies,
- org.ossmeter.metricprovider.trans.threadsrequestsreplies.model
+Export-Package: org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies,
+ org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.model
