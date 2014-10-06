@@ -8,11 +8,16 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 
+import sparkle.dimensions.DateDimension;
 import sparkle.dimensions.LinearDimension;
 import sparkle.dimensions.SparkDimension;
 
@@ -107,17 +112,26 @@ public class Sparkle {
 	}
 	
 	public static void main(String[] args) throws Exception{
-		int imgWidth = 150;
-		int imgHeight = 30;
+		int imgWidth = 300;
+		int imgHeight = 60;
 		int padding = 6;
 		
-		List<Double> xdata = Arrays.asList(0d,1d,2d,3d, 4d,5d, 6d,7d,8d, 9d,10d,11d,12d);
-	    List<Double> ydata = Arrays.asList(3d,2d,6d,14d,7d,23d,7d,8d,12d,6d,8d, 2d, 4d);
+	    Random random = new Random();
+	    List<Date> xData = new ArrayList<>();
+	    List<Double> yData = new ArrayList<>();
 	    
-		LinearDimension xdim = new LinearDimension(xdata, imgWidth-padding, padding);
-	    LinearDimension ydim = new LinearDimension(ydata, imgHeight-padding, padding);
+	    Calendar cal = new GregorianCalendar(2014, 0, 0);
+	    for (int i = 0; i < 100; i++) {
+	    	Date d = cal.getTime();
+	    	xData.add(d);
+	    	cal.add(Calendar.DATE, 1);
+	    	
+	    	yData.add(random.nextDouble());
+	    }
 	    
-		
-		new Sparkle(30, 150, 6).renderToFile(xdim, ydim, new File("test.png"));;
+		DateDimension xdim = new DateDimension(xData, imgWidth-padding, padding);
+	    LinearDimension ydim = new LinearDimension(yData, imgHeight-padding, padding);
+	    
+		new Sparkle(imgHeight, imgWidth, padding).renderToFile(xdim, ydim, new File("test.png"));;
 	}
 }
