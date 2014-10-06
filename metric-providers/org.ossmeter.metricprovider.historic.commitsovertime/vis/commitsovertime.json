@@ -16,7 +16,8 @@
 			"y" : "Commits", 
 			"series" : "Repository",
 			"x-label" : "Date",		
-			"y-label" : "Commits"	
+			"y-label" : "Commits",
+			"timeSeries" : true
 		}
 	]
 }

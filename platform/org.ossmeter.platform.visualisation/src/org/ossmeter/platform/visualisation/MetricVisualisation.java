@@ -83,6 +83,8 @@ public class MetricVisualisation {
 		visualisation.put("type", vis.path("type").textValue());
 		visualisation.put("description", vis.path("description").textValue());
 		visualisation.put("datatable", datatable);
+		visualisation.put("timeSeries", vis.path("timeSeries").asBoolean());
+		visualisation.put("ordinal", vis.path("ordinal").asBoolean());
 		
 		chart.completeFields(visualisation, vis);
 		
