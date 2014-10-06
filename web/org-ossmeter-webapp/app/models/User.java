@@ -56,6 +56,9 @@ public class User extends Model implements Subject {
 	@OneToMany(cascade=CascadeType.ALL, mappedBy="user")
 	public List<Notification> notifications;
 
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="user")
+	public List<EventGroup> eventGroups;
+
 	@ManyToMany(cascade = CascadeType.ALL)
 	public List<SecurityRole> roles;
 

@@ -70,6 +70,32 @@
         @Messages("ossmeter.profile.notifications.empty") <a href="@routes.Application.profileNotification">Click here to add one</a>
     }
 
+    <h2>Configure EventGroups</h2>
+    @if(localUser.eventGroups.size() > 0) {
+        <a href="@routes.Application.profileEventGroup">Create</a>
+        <ul>
+        @for(gr <- localUser.eventGroups) {
+            <li><p>
+            <label class="form-label" name="eventGroup" value=@gr>@gr.name</label> 
+            @if(gr.events.size() > 0) {
+                @for(ev <- gr.events) {
+                    <span>Events: @ev.name, @ev.date</span>
+                }
+            } else {
+                <span>No events yet</span>
+            }
+
+            @helper.form(routes.Account.createEvent, 'class->"form-project") {
+                <span><input type="submit">Add Event</input> &nbsp; Edit &nbsp; Delete</span>
+            }
+                </p>
+            </li> 
+        }
+        </ul>
+    } else {
+        @Messages("ossmeter.profile.eventgroup.empty") <a href="@routes.Application.profileEventGroup">Click here to add one</a>
+    }
+
     <br/>
     @currentAuth() { auth =>
         @Messages("ossmeter.profile.logged") @_providerIcon(auth.getProvider())<br/>

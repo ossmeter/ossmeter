@@ -3,8 +3,7 @@ package controllers;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import models.User;
-import models.Notification;
+import models.*;
 import play.Routes;
 import play.data.Form;
 import play.mvc.*;
@@ -58,6 +57,19 @@ public class Application extends Controller {
 		final User localUser = getLocalUser(session());
 		return ok(setupnotification.render(localUser, form(Notification.class)));
 	}
+
+	@Restrict(@Group(Application.USER_ROLE))
+	public static Result profileEventGroup() {
+		final User localUser = getLocalUser(session());
+		return ok(setupeventgroup.render(localUser, form(EventGroup.class)));
+	}
+
+	@Restrict(@Group(Application.USER_ROLE))
+	public static Result profileEvent() {
+		final User localUser = getLocalUser(session());
+		return ok(setupevent.render(localUser, form(Event.class)));
+	}
+
 
 	public static Result login() {
 		return ok(login.render(MyUsernamePasswordAuthProvider.LOGIN_FORM));

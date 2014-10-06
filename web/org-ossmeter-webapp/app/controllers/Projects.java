@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
 
-import models.*;
+import models.ProjectImport;
+import org.ossmeter.repository.model.Project;
 import play.*;
 import play.mvc.*;
 import play.data.*;
@@ -16,6 +17,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 
 import java.net.ConnectException;
 
@@ -30,25 +32,14 @@ public class Projects extends Controller {
 	            new Function<WSResponse, List<Project>>() {
 	                public List<Project> apply(WSResponse response) {
 	                	JsonNode json = response.asJson();
-	                    ArrayNode results = (ArrayNode)json;
+	                	ObjectMapper mapper = new ObjectMapper();
 
-	                    System.out.println("result: " + json);
-
-	                    List<Project> projects = new ArrayList<Project>();
-	                    Iterator<JsonNode> it = results.iterator();
-	                    while (it.hasNext()) {
-	                        JsonNode node  = it.next();
-	                        Project project = new Project();
-	                        // project.id = node.get("shortName").asText();
-	                        System.out.println("node: " + node);
-	                        project.name = node.get("name").asText();
-	                        project.shortName = node.get("shortName").asText();
-	                        // project.url = node.get("url").asText();
-	                        // project.desc = node.get("desc").asText();
-
-	                        projects.add(project);
-	                    }
-	                	return projects;
+	                	try {
+		                	return mapper.readValue(json.toString(), TypeFactory.defaultInstance().constructCollectionType(List.class, Project.class));
+		                } catch (Exception e) {
+		                	e.printStackTrace();
+		                	return null;
+		                }
 	                }
 	            }
 	    ).recover(
@@ -69,17 +60,17 @@ public class Projects extends Controller {
 	                public Project apply(WSResponse response) {
 	                	JsonNode json = response.asJson();
 
-	                	// Check the result
-	                	// TODO
+	                	// TODO : Check the result is valid
 
 	                	// We're good! Let's show them the project.
-	                    Project project = new SubProject();
-                        // project.id = node.get("shortName").asText();
-                        project.name = json.get("name").asText();
-                        project.shortName = json.get("shortName").asText();
-                        // project.url = node.get("url").asText();
-                        project.desc = json.get("description").asText();
-                        return project;
+	                    ObjectMapper mapper = new ObjectMapper();
+	                	try {
+	                    	Project project = mapper.readValue(json.toString(), Project.class);
+	                    	return project;
+	                    } catch (Exception e) {
+	                    	e.printStackTrace();
+							return null; // FIXME
+	                    }
 	                }
 	            }
 	    );
@@ -103,6 +94,10 @@ public class Projects extends Controller {
 	
 	public static Result view(String shortName) {
 		Project project  = getProject(shortName);
+		if (project == null) {
+			flash(Application.FLASH_ERROR_KEY, "An unexpected error has occurred. We are looking into it.");//TODO move to Messages.
+			return ok(views.html.index.render());
+		}
 		return ok(views.html.projects.view_item.render(project));
 	}
 	
@@ -141,16 +136,17 @@ public class Projects extends Controller {
 						}
 
 						// TODO check for errors, etc.
-						
+						ObjectMapper mapper = new ObjectMapper();
+
 						try {
-							Project project = new Project();
+							Project project = mapper.readValue(node.toString(), Project.class);
 	                        // project.id = node.get("shortName").asLong();
-	                        project.name = node.get("name").asText();
-	                        project.shortName = node.get("shortName").asText();
+	                        // project.name = node.get("name").asText();
+	                        // project.shortName = node.get("shortName").asText();
 	                        // project.url = node.get("url").asText();
 	                        // project.desc = node.get("desc").asText();
 
-							return ok(views.html.projects.view_item.render(project));
+							return redirect(routes.Projects.view(project.getShortName()));//views.html.projects.view_item.render(project));
 							// return view(project.shortName);
 						} catch (Exception e) {
 							e.printStackTrace(); //FIXME: handle better
@@ -168,27 +164,34 @@ public class Projects extends Controller {
 	        return badRequest(views.html.projects.form.render(form, form(ProjectImport.class)));
 	    } else {
 			Project project = form.get();
-			project.save();
+
+			// TODO
+
+			// project.save();
 			// flash.success("Project successfully created!");
 	    }
 	    return redirect(routes.Projects.projects());
 	}
 	
 	public static Result edit(Long id) {
-		Form<Project> form = form(Project.class).fill(models.Project.find.byId(id));
-		return ok(views.html.projects.form_edit.render(form));
+		// TODO FIXME
+
+		// Form<Project> form = form(Project.class).fill(models.Project.find.byId(id));
+		// return ok(views.html.projects.form_edit.render(form));
+		return redirect(routes.Projects.projects());
 	}
 	
 	public static Result update(Long id) {
-		Form<Project> form = form(Project.class).bindFromRequest();
-		if (form.hasErrors()) {
-	        return badRequest(views.html.projects.form.render(form, form(ProjectImport.class)));
-	    } else {
-			Project project = form.get();
-			project.id = id;
-			project.update();
-			// flash.success("Project successfully updated!");
-	    }
+		// TODO FIXME
+		// Form<Project> form = form(Project.class).bindFromRequest();
+		// if (form.hasErrors()) {
+	 //        return badRequest(views.html.projects.form.render(form, form(ProjectImport.class)));
+	 //    } else {
+		// 	Project project = form.get();
+		// 	project.id = id;
+		// 	project.update();
+		// 	// flash.success("Project successfully updated!");
+	 //    }
 		return redirect(routes.Projects.projects());
 	}
 	
@@ -197,8 +200,9 @@ public class Projects extends Controller {
 	}
 
 	public static Result delete(Long id) {
-		Project project = models.Project.find.byId(id);
-		project.delete();
+		// TODO FIXME
+		// Project project = models.Project.find.byId(id);
+		// project.delete();
 		// flash.success("Project successfully deleted!");
 		return redirect(routes.Projects.projects());
 	}

@@ -1,7 +1,8 @@
 
 /* TODO: Edit the image size, don't use CSS */
 .logo{
-    width:50%
+    width:50%;
+    margin:20px;
 }
 
 
@@ -15,7 +16,10 @@ body {
 h1,h2,h3,h4 {
     font-weight: normal; 
     font-family:'Bree Serif', Georgia, serif;
-    color:#023E73;
+    color:#023E73;  
+}
+
+.marginless {
     margin:0;
 }
 
@@ -94,8 +98,35 @@ section{
     font-size:2em;
 }
 
+.banner {
+    background-color: #0073b4;
+    padding:20px;
+    color:white;
+    text-align:center;
+    margin-top:20px;
+    margin-bottom:20px;
+}
+
+.banner h2 {
+    color:#ff9400;
+
+}
+
+.banner img {
+    height:100px;
+    margin:5px;
+}
+.search {
+    font-size:1.5em;
+    height:1.5em;
+}
+
+img.spark {
+    width : 150px;
+}
+
 footer {
-    background: #023E73;
+    background: #023E73; /*#0073b4;*/
     padding: 10px;
     margin-top: 80px;
     color: #C0C0C0;

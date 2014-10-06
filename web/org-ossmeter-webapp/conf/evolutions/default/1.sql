@@ -3,6 +3,21 @@
 
 # --- !Ups
 
+create table events (
+  id                        bigint not null,
+  event_group_id            bigint,
+  name                      varchar(255),
+  date                      timestamp,
+  constraint pk_events primary key (id))
+;
+
+create table eventgroup (
+  id                        bigint not null,
+  user_id                   bigint,
+  name                      varchar(255),
+  constraint pk_eventgroup primary key (id))
+;
+
 create table linked_account (
   id                        bigint not null,
   user_id                   bigint,
@@ -99,6 +114,10 @@ create table users_user_permission (
   user_permission_id             bigint not null,
   constraint pk_users_user_permission primary key (users_id, user_permission_id))
 ;
+create sequence events_seq;
+
+create sequence eventgroup_seq;
+
 create sequence linked_account_seq;
 
 create sequence notifications_seq;
@@ -115,12 +134,16 @@ create sequence users_seq;
 
 create sequence user_permission_seq;
 
-alter table linked_account add constraint fk_linked_account_user_1 foreign key (user_id) references users (id) on delete restrict on update restrict;
-create index ix_linked_account_user_1 on linked_account (user_id);
-alter table notifications add constraint fk_notifications_user_2 foreign key (user_id) references users (id) on delete restrict on update restrict;
-create index ix_notifications_user_2 on notifications (user_id);
-alter table token_action add constraint fk_token_action_targetUser_3 foreign key (target_user_id) references users (id) on delete restrict on update restrict;
-create index ix_token_action_targetUser_3 on token_action (target_user_id);
+alter table events add constraint fk_events_eventGroup_1 foreign key (event_group_id) references eventgroup (id) on delete restrict on update restrict;
+create index ix_events_eventGroup_1 on events (event_group_id);
+alter table eventgroup add constraint fk_eventgroup_user_2 foreign key (user_id) references users (id) on delete restrict on update restrict;
+create index ix_eventgroup_user_2 on eventgroup (user_id);
+alter table linked_account add constraint fk_linked_account_user_3 foreign key (user_id) references users (id) on delete restrict on update restrict;
+create index ix_linked_account_user_3 on linked_account (user_id);
+alter table notifications add constraint fk_notifications_user_4 foreign key (user_id) references users (id) on delete restrict on update restrict;
+create index ix_notifications_user_4 on notifications (user_id);
+alter table token_action add constraint fk_token_action_targetUser_5 foreign key (target_user_id) references users (id) on delete restrict on update restrict;
+create index ix_token_action_targetUser_5 on token_action (target_user_id);
 
 
 
@@ -143,6 +166,10 @@ alter table users_user_permission add constraint fk_users_user_permission_user_0
 # --- !Downs
 
 SET REFERENTIAL_INTEGRITY FALSE;
+
+drop table if exists events;
+
+drop table if exists eventgroup;
 
 drop table if exists linked_account;
 
@@ -169,6 +196,10 @@ drop table if exists users_user_permission;
 drop table if exists user_permission;
 
 SET REFERENTIAL_INTEGRITY TRUE;
+
+drop sequence if exists events_seq;
+
+drop sequence if exists eventgroup_seq;
 
 drop sequence if exists linked_account_seq;
 

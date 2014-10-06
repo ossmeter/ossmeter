@@ -1,21 +1,32 @@
-@(project: models.Project)
+@(project: org.ossmeter.repository.model.Project)
+
+@import org.ossmeter.repository.model._
+@import org.ossmeter.repository.model.bts.bugzilla._
+@import org.ossmeter.repository.model.cc.forum._
+@import org.ossmeter.repository.model.cc.nntp._
+@import org.ossmeter.repository.model.vcs.svn._
+@import org.ossmeter.repository.model.vcs.git._
+@import org.ossmeter.repository.model.eclipse._
 
 @main(Messages("ossmeter.index.title")) {
 <div class="container">
-	<div class="project-detail" data-project="@project.name">
+	<div class="project-detail" data-project="@project.getName()">
 
 		<div class="row">
 			<div class="col-md-12">
-		        <h1 class="name">@project.name</h1>
+		        <h1 class="name">@project.getName()</h1>
 	        </div>
 		</div>
-
 		<div class="row section-heading">
 	        <div class="col-md-6">
 		        <ol class="breadcrumb projectbreadcrumb">
-		            <li>Active (2007-present)</li>
-		            <li><a href="#">Eclipse Public License</a></li>
-		            <li><a href="http://www.eclipse.org/epsilon">Project Website</a></li>
+		            <li>@if(project.getActive()) {Active}else{Inactive} (2007-present)</li>
+                    @if(project.getLicenses() ne null) {
+                        @project.getLicenses().foreach(lic =>{
+		            <li><a href="#">lic.getName()</a></li>
+                        })
+                    }
+		            <li><a href="@project.getHomePage()">Project Website</a></li>
 		        </ol>
 	        </div>
 	        <div class="col-md-6" style="text-align:right">
@@ -29,285 +40,251 @@
 	    </div>	
 		<div class="row">
 	        <div class="col-md-6">
-	            @Html(project.desc)
+	            @Html(project.getDescription())
 	        </div>
 	        <div class="col-md-6">
 	        @project match {
-	        	case proj : SubProject => {
-	        		<p>I am a subproject</p>
+	        	case proj : EclipseProject => {
+                    <p>Forge: Eclipse</p>
+	        		@if(proj.getPlatforms().length > 0) {
+                    <p>Platforms: @proj.getPlatforms()</p>
+                    }
+                    @if(proj.getReleases().length > 0) {
+                    <p>Releases: @proj.getReleases()</p>
+                    }
+                    <p>State: @proj.getState()</p>
 	        	}
 	        	case proj : Project => {
-	        		<p>I am a project</p>
+	        		<p><!-- I am a project --></p>
 	        	}
 	        }
 	        </div>        
 	    </div>
 
-<section>
-	    <div class="row">
-	        <div class="col-md-8">
-	        Factoids summarising the overall quality of the project.
-	        </div>
-	        <div class="col-md-4">
-	            <img src="http://upload.wikimedia.org/wikipedia/commons/0/00/Spider_Chart.svg" style="width:100%"/>
-	        </div>
-        </div>
-        </section>
-
-        <!-- <section>
-	    <div class="row">
-	        <div class="col-md-4">
-	        	<h3 class="text-center">Source Code</h3>
-	        	<p><span class="quote">&#8220;</span>has had 2,470 commits made by 4 contributors representing 2,480,383 lines of code<span class="quote">&#8221;</span></p>
-
-                <p><span class="quote">&#8220;</span>is mostly written in Java 
-                with an average number of source code comments<span class="quote">&#8221;</span></p>
-
-                <p><span class="quote">&#8220;</span>has a well established, mature codebase 
-                maintained by a average size development team 
-                with stable Y-O-Y commits<span class="quote">&#8221;</span></p>
-	        	<button type="button" class="btn btn-primary">View Detail</button>
-	        </div>
-	        <div class="col-md-4">
-	        	<h3 class="text-center">Communication Channels</h3>
-	        	<p><span class="quote">&#8220;</span>has had 2,470 commits made by 4 contributors representing 2,480,383 lines of code<span class="quote">&#8221;</span></p>
-
-                <p><span class="quote">&#8220;</span>is mostly written in Java 
-                with an average number of source code comments<span class="quote">&#8221;</span></p>
-
-                <p><span class="quote">&#8220;</span>has a well established, mature codebase 
-                maintained by a average size development team 
-                with stable Y-O-Y commits<span class="quote">&#8221;</span></p>
-	        	<button type="button" class="btn btn-primary">View Detail</button>
-	        </div>
-	        <div class="col-md-4">
-	            <h3 class="text-center">Bug Tracking</h3>
-	        	<p><span class="quote">&#8220;</span>has had 2,470 commits made by 4 contributors representing 2,480,383 lines of code<span class="quote">&#8221;</span></p>
-
-                <p><span class="quote">&#8220;</span>is mostly written in Java 
-                with an average number of source code comments<span class="quote">&#8221;</span></p>
-
-                <p><span class="quote">&#8220;</span>has a well established, mature codebase 
-                maintained by a average size development team 
-                with stable Y-O-Y commits<span class="quote">&#8221;</span></p>
-	        	<button type="button" class="btn btn-primary">View Detail</button>
-	        </div>
-        </div>
-        </section> -->
-
         <section>
-   <div class="row section-heading">
-        <div class="col-md-4">
-            <h2>Source Code</h2>
-        </div>
-        <div class="col-md-6 col-md-offset-2" style="text-align:right">
-           <!--  <ol class="breadcrumb projectbreadcrumb">
-                <li><a href="#">SVN Repository</a></li>
-                <li><a href="#">SVN Repository</a></li>
-                <li><a href="#">SVN Repository</a></li>
-            </ol> -->
-        </div>
+    <div class="row">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="disabled col-md-4"><h2 class="marginless">Source Code</h2></li>
+            <li class="active"><a href="#factoids-sourcecode" role="tab" data-toggle="tab">Factoids</a></li>
+            <li class=""><a href="#sparklines-sourcecode" role="tab" data-toggle="tab" id="sparklines-sourcecode-tab">Sparklines</a></li>
+            <li class=""><a href="#details-sourcecode" role="tab" data-toggle="tab">Details</a></li>
+        </ul>
     </div>
-    <p>A bug tracking system or defect tracking system is a software application that keeps track of reported software bugs in software development projects. It may be regarded as a type of issue tracking system.</p>
     <div class="row">
         <div class="col-md-4">
-            <img src="http://upload.wikimedia.org/wikipedia/commons/0/00/Spider_Chart.svg" style="width:100%"/>
+            <img src="@routes.Assets.at("img/Spider_Chart.svg")" style="width:100%"/>
         </div>
         <div class="col-md-8">
-
-        		    <!-- Nav tabs -->
-			<ul class="nav nav-tabs" role="tablist">
-			  <li class="active"><a href="#factoids-sourcecode" role="tab" data-toggle="tab">Factoids</a></li>
-			  <li><a href="#sparklines-sourcecode" role="tab" data-toggle="tab">Sparklines</a></li>
-			</ul>
-
 			<div class="tab-content">
-			  <div class="tab-pane fade in active" id="factoids-sourcecode">	
-				<p>has had 2,470 commits made by 4 contributors representing 2,480,383 lines of code</p>
-				<p>is mostly written in Java with an average number of source code comments</p>
-				<p>has a well established, mature codebase maintained by a average size development team with stable Y-O-Y commits</p>
-				<p>took an estimated 719 years of effort (COCOMO model) starting with its first commit in September, 2008 ending with its most recent commit 6 days ago</p>
-				<p>is mostly written in Java with an average number of source code comments</p>
-				<p>has a well established, mature codebase maintained by a average size development team with stable Y-O-Y commits</p>
-			  </div>
-			  <div class="tab-pane fade" id="sparklines-sourcecode">
-			  	<table class="table">
-                <thead>
-                    <th>metric</th>
-                    <th>01/09/2007</th>
-                    <th>65 months</th>
-                    <th>15/07/2014</th>
-                    <th>low</th>
-                    <th>high</th>
-                </thead>
-                <tr>
-                    <td>lines of code</td>
-                    <td>324</td>
-                    <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
-                    <td>299</td>
-                    <td>32</td>
-                    <td>376</td>
-                </tr>
-                <tr>
-                    <td>lines of code</td>
-                    <td>324</td>
-                    <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
-                    <td>299</td>
-                    <td>32</td>
-                    <td>376</td>
-                </tr>
-                <tr>
-                    <td>lines of code</td>
-                    <td>324</td>
-                    <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
-                    <td>299</td>
-                    <td>32</td>
-                    <td>376</td>
-                </tr>
-                <tr>
-                    <td>lines of code</td>
-                    <td>324</td>
-                    <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
-                    <td>299</td>
-                    <td>32</td>
-                    <td>376</td>
-                </tr>
-                <tr>
-                    <td>lines of code</td>
-                    <td>324</td>
-                    <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
-                    <td>299</td>
-                    <td>32</td>
-                    <td>376</td>
-                </tr>
-            </table>
+		        <div class="tab-pane fade in active" id="factoids-sourcecode">	
+    				<p>has had 2,470 commits made by 4 contributors representing 2,480,383 lines of code</p>
+    				<p>is mostly written in Java with an average number of source code comments</p>
+    				<p>has a well established, mature codebase maintained by a average size development team with stable Y-O-Y commits</p>
+    				<p>took an estimated 719 years of effort (COCOMO model) starting with its first commit in September, 2008 ending with its most recent commit 6 days ago</p>
+    				<p>is mostly written in Java with an average number of source code comments</p>
+    				<p>has a well established, mature codebase maintained by a average size development team with stable Y-O-Y commits</p>
+			    </div>
+			    <div class="tab-pane fade" id="sparklines-sourcecode">
+    			  	<table class="table" id="sparklines-table-sourcecode">
+                        <thead>
+                            <th>metric</th>
+                            <th>01/09/2007</th>
+                            <th>65 months</th>
+                            <th>15/07/2014</th>
+                            <th>low</th>
+                            <th>high</th>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <script type="text/javascript">
+                        $('#sparklines-sourcecode-tab').one('click', function(e) {
+                            var ms = ["commitsovertimeline", "commitsovertimeline"];
 
-			  </div>
+                            for (m in ms) {
+                                $.get("http://localhost:8182/projects/p/@project.getShortName()/s/"+ms[m], function (data) {
+                                    $("#sparklines-table-sourcecode > tbody:last").append("<tr><td>" + data.name + 
+                                        "</td><td>" + data.first +
+                                        "</td><td><img class=\"spark\" src=\"http://localhost:8182" + data.spark + "\" />" +  
+                                        "</td><td>" + data.last + 
+                                        "</td><td>" + data.low + 
+                                        "</td><td>" + data.high + "</td></tr>");
+                                });
+                            };
+                        });
+                    </script>
+        		</div>
+                <div class="tab-pane fade" id="details-sourcecode">
+                    @if(project.getVcsRepositories() ne null) {
+                    <table class="table">
+                        <thead>
+                            <th>Repository URL</th>
+                            <th>Type</th>
+                        </thead>
+                        @for(vcs <- project.getVcsRepositories()) {
+                        <tr>
+                            <td><a href="@vcs.getUrl()">@vcs.getUrl()</a></td>
+                            <td>@vcs match {
+                                case a : SvnRepository => {
+                                SVN
+                                }
+                                case a : GitRepository => {
+                                Git
+                                }
+                            }</td>
+                        </tr>
+                        }
+                    </table>
+                    } else {
+                        <p>No source code repositories found. <a href="#">Add one</a></p>
+                    }
+                </div>
 			</div>
+            <button type="button" class="btn btn-default form-control">View in depth source code metrics</button>
         </div>        
-    </div>
     </section>
 
     <section>
-     <div class="row section-heading">
-        <div class="col-md-4">
-            <h2>Communication Channels</h2>
-        </div>
-        <div class="col-md-6 col-md-offset-2" style="text-align:right">
-           <!--  <ol class="breadcrumb projectbreadcrumb">
-                <li><a href="#">SVN Repository</a></li>
-                <li><a href="#">SVN Repository</a></li>
-                <li><a href="#">SVN Repository</a></li>
-            </ol> -->
-        </div>
+    <div class="row">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="disabled col-md-4"><h2 class="marginless">Communication Channels</h2></li>
+              <li class="active"><a href="#factoids-comms" role="tab" data-toggle="tab">Factoids</a></li>
+              <li><a href="#sparklines-comms" role="tab" data-toggle="tab">Sparklines</a></li>
+            <li class=""><a href="#details-comms" role="tab" data-toggle="tab">Details</a></li>
+        </ul>
     </div>
-    <p>A bug tracking system or defect tracking system is a software application that keeps track of reported software bugs in software development projects. It may be regarded as a type of issue tracking system.</p>
+   <!--  <div class="row">
+        <div class="col-md-12">
+            <p>Users communicate with developers of the OSS software, and with each other, via different forms of communication channel, such as forums and mailing lists. These channels are used to ask questions, exchange views, report problems, make announcements, and suggest enhancements related to the OSS project. An active and vibrant communication channel is essential for candidate adopters of an OSS product as this is often the only place where they can receive expert support.</p>
+        </div>
+    </div> -->
     <div class="row">
         <div class="col-md-4">
-            <img src="http://upload.wikimedia.org/wikipedia/commons/0/00/Spider_Chart.svg" style="width:100%"/>
+            <img src="@routes.Assets.at("img/Spider_Chart.svg")" style="width:100%"/>
         </div>
         <div class="col-md-8">
-
-        		    <!-- Nav tabs -->
-			<ul class="nav nav-tabs" role="tablist">
-			  <li class="active"><a href="#factoids-sourcecode" role="tab" data-toggle="tab">Factoids</a></li>
-			  <li><a href="#sparklines-sourcecode" role="tab" data-toggle="tab">Sparklines</a></li>
-			</ul>
-
 			<div class="tab-content">
-			  <div class="tab-pane fade in active" id="factoids-sourcecode">	
-				<p>has had 2,470 commits made by 4 contributors representing 2,480,383 lines of code</p>
-				<p>is mostly written in Java with an average number of source code comments</p>
-				<p>has a well established, mature codebase maintained by a average size development team with stable Y-O-Y commits</p>
-				<p>took an estimated 719 years of effort (COCOMO model) starting with its first commit in September, 2008 ending with its most recent commit 6 days ago</p>
-				<p>is mostly written in Java with an average number of source code comments</p>
-				<p>has a well established, mature codebase maintained by a average size development team with stable Y-O-Y commits</p>
-			  </div>
-			  <div class="tab-pane fade" id="sparklines-sourcecode">
-			  	<table class="table">
-                <thead>
-                    <th>metric</th>
-                    <th>01/09/2007</th>
-                    <th>65 months</th>
-                    <th>15/07/2014</th>
-                    <th>low</th>
-                    <th>high</th>
-                </thead>
-                <tr>
-                    <td>lines of code</td>
-                    <td>324</td>
-                    <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
-                    <td>299</td>
-                    <td>32</td>
-                    <td>376</td>
-                </tr>
-                <tr>
-                    <td>lines of code</td>
-                    <td>324</td>
-                    <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
-                    <td>299</td>
-                    <td>32</td>
-                    <td>376</td>
-                </tr>
-                <tr>
-                    <td>lines of code</td>
-                    <td>324</td>
-                    <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
-                    <td>299</td>
-                    <td>32</td>
-                    <td>376</td>
-                </tr>
-                <tr>
-                    <td>lines of code</td>
-                    <td>324</td>
-                    <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
-                    <td>299</td>
-                    <td>32</td>
-                    <td>376</td>
-                </tr>
-                <tr>
-                    <td>lines of code</td>
-                    <td>324</td>
-                    <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
-                    <td>299</td>
-                    <td>32</td>
-                    <td>376</td>
-                </tr>
-            </table>
-
-			  </div>
+			    <div class="tab-pane fade in active" id="factoids-comms">	
+    				<p>has had 2,470 commits made by 4 contributors representing 2,480,383 lines of code</p>
+    				<p>is mostly written in Java with an average number of source code comments</p>
+    				<p>has a well established, mature codebase maintained by a average size development team with stable Y-O-Y commits</p>
+    				<p>took an estimated 719 years of effort (COCOMO model) starting with its first commit in September, 2008 ending with its most recent commit 6 days ago</p>
+    				<p>is mostly written in Java with an average number of source code comments</p>
+    				<p>has a well established, mature codebase maintained by a average size development team with stable Y-O-Y commits</p>
+			    </div>
+			    <div class="tab-pane fade" id="sparklines-comms">
+    			  	<table class="table">
+                        <thead>
+                            <th>metric</th>
+                            <th>01/09/2007</th>
+                            <th>65 months</th>
+                            <th>15/07/2014</th>
+                            <th>low</th>
+                            <th>high</th>
+                        </thead>
+                        <tr>
+                            <td>lines of code</td>
+                            <td>324</td>
+                            <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
+                            <td>299</td>
+                            <td>32</td>
+                            <td>376</td>
+                        </tr>
+                        <tr>
+                            <td>lines of code</td>
+                            <td>324</td>
+                            <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
+                            <td>299</td>
+                            <td>32</td>
+                            <td>376</td>
+                        </tr>
+                        <tr>
+                            <td>lines of code</td>
+                            <td>324</td>
+                            <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
+                            <td>299</td>
+                            <td>32</td>
+                            <td>376</td>
+                        </tr>
+                        <tr>
+                            <td>lines of code</td>
+                            <td>324</td>
+                            <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
+                            <td>299</td>
+                            <td>32</td>
+                            <td>376</td>
+                        </tr>
+                        <tr>
+                            <td>lines of code</td>
+                            <td>324</td>
+                            <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
+                            <td>299</td>
+                            <td>32</td>
+                            <td>376</td>
+                        </tr>
+                    </table>
+			    </div>
+                <div class="tab-pane fade" id="details-comms">
+                    @if(project.getCommunicationChannels() ne null) {
+                    <table class="table">
+                        <thead>
+                            <th>Channel URL</th>
+                            <th>Type</th>
+                            <th>Is Analysed?</th>
+                        </thead>
+                        @for(comm <- project.getCommunicationChannels()) {
+                        <tr>
+                            <td><a href="@comm.getUrl()">@comm.getUrl()</a></td>
+                            <td>@comm match {
+                                case a : Forum => {
+                                Forum
+                                }
+                                case a : NntpNewsGroup => {
+                                NNTP
+                                }
+                                case a : MailingList => {
+                                Mailing List
+                                }
+                                case a : Wiki => {
+                                Wiki
+                                }
+                                case a : Documentation => {
+                                Documentation
+                                }
+                            }</td>
+                            <td>@if(comm.getNonProcessable()) { N } else { Y }</td>
+                        </tr>
+                        }
+                    </table>
+                    } else {
+                        <p>No communication channels found. <a href="#">Add one</a></p>
+                    }
+                </div>
 			</div>
-        </div>        
+            <button type="button" class="btn btn-default form-control">View in depth communication channel metrics</button>   
+        </div>     
     </div>
 </section>
 <section>
-     <div class="row section-heading">
-        <div class="col-md-4">
-            <h2>Bug Tracking Systems</h2>
-        </div>
-        <div class="col-md-6 col-md-offset-2" style="text-align:right">
-           <!--  <ol class="breadcrumb projectbreadcrumb">
-                <li><a href="#">SVN Repository</a></li>
-                <li><a href="#">SVN Repository</a></li>
-                <li><a href="#">SVN Repository</a></li>
-            </ol> -->
-        </div>
+    <div class="row">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="disabled col-md-4"><h2 class="marginless">Bug Tracking Systems</h2></li>
+              <li class="active"><a href="#factoids-bts" role="tab" data-toggle="tab">Factoids</a></li>
+              <li><a href="#sparklines-bts" role="tab" data-toggle="tab">Sparklines</a></li>
+            <li class=""><a href="#details-bts" role="tab" data-toggle="tab">Details</a></li>
+        </ul>
     </div>
-    <p>A bug tracking system or defect tracking system is a software application that keeps track of reported software bugs in software development projects. It may be regarded as a type of issue tracking system.</p>
+    <!-- <div class="row">
+        <div class="col-md-12">
+            <p>Users and developers formally provide defect reports and enhancement requests for the OSS project using a bug or defect tracking system. The bug tracking system can be a key indicator as to the health and activity of the OSS project.</p>
+        </div>
+    </div> -->
     <div class="row">
         <div class="col-md-4">
-            <img src="http://upload.wikimedia.org/wikipedia/commons/0/00/Spider_Chart.svg" style="width:100%"/>
+           <img src="@routes.Assets.at("img/Spider_Chart.svg")" style="width:100%"/>
         </div>
         <div class="col-md-8">
-
-        		    <!-- Nav tabs -->
-			<ul class="nav nav-tabs" role="tablist">
-			  <li class="active"><a href="#factoids-sourcecode" role="tab" data-toggle="tab">Factoids</a></li>
-			  <li><a href="#sparklines-sourcecode" role="tab" data-toggle="tab">Sparklines</a></li>
-			</ul>
-
 			<div class="tab-content">
-			  <div class="tab-pane fade in active" id="factoids-sourcecode">	
+			  <div class="tab-pane fade in active" id="factoids-bts">	
 				<p>has had 2,470 commits made by 4 contributors representing 2,480,383 lines of code</p>
 				<p>is mostly written in Java with an average number of source code comments</p>
 				<p>has a well established, mature codebase maintained by a average size development team with stable Y-O-Y commits</p>
@@ -315,7 +292,7 @@
 				<p>is mostly written in Java with an average number of source code comments</p>
 				<p>has a well established, mature codebase maintained by a average size development team with stable Y-O-Y commits</p>
 			  </div>
-			  <div class="tab-pane fade" id="sparklines-sourcecode">
+			  <div class="tab-pane fade" id="sparklines-bts">
 			  	<table class="table">
                 <thead>
                     <th>metric</th>
@@ -368,7 +345,30 @@
             </table>
 
 			  </div>
+              <div class="tab-pane fade" id="details-bts">
+                     @if(project.getBugTrackingSystems() ne null) {
+                    <table class="table">
+                        <thead>
+                            <th>Tracker URL</th>
+                            <th>Type</th>
+                        </thead>
+                        @for(bts <- project.getBugTrackingSystems()) {
+                        <tr>
+                            <td><a href="@bts.getUrl()">@bts.getUrl()</a></td>
+                            <td>@bts match {
+                                case a : Bugzilla => {
+                                Bugzilla
+                                }
+                            }</td>
+                        </tr>
+                        }
+                    </table>
+                    } else {
+                        <p>No bug tracking systems found. <a href="#">Add one</a></p>
+                    }
+                </div>
 			</div>
+            <button type="button" class="btn btn-default form-control">View in depth bug tracker metrics</button>   
         </div>        
     </div>
 </section>

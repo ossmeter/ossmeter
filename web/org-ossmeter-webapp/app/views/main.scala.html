@@ -14,11 +14,13 @@
     <meta name="description" content="OSSMETER webapp">
     <meta name="author" content="The OSSMETER Team">
     
+    <link rel="icon" type="image/png" href="@routes.Assets.at("icons/favicon.png")">
+
     <!-- Styles -->    
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,400,300' rel='stylesheet' type='text/css'>
     <link href="http://fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet" type="text/css">
     <!-- <link href="@routes.Assets.at("css/bootstrap.min.css")" rel="stylesheet"> -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link href="@routes.Assets.at("css/bootstrap.min.css")" rel="stylesheet">
     <link href="@routes.Assets.at("css/main.css")" rel="stylesheet">
     <link href="@routes.Assets.at("css/nav.css")" rel="stylesheet">
     <script src="@routes.Assets.at("js/jquery-1.9.1.js")"></script>
@@ -35,6 +37,7 @@
             <ul class="nav navbar-nav">
                   <li class="@("active".when(nav == ""))"><a href="@routes.Application.index()">@Messages("ossmeter.navigation.home")</a></li>
                   <li class="@("active".when(nav == ""))"><a href="@routes.Projects.projects()">@Messages("ossmeter.navigation.projects")</a></li>
+                  <li class="@("active".when(nav == ""))"><a href="#">API</a></li>
                   @subjectPresent() {
                     <li class="@("active".when(nav == "admin"))"><a href="@routes.Application.admin()">@Messages("ossmeter.navigation.admin")</a></li>
                   }
@@ -93,7 +96,7 @@
             <strong>Project duration:</strong> 30 months</p>
           </div>
           <div class="col-md-6">
-            <p>Contact details:</strong> <br/>
+            <p>Contact details: <br/>
             <strong>Scott Hansen:</strong> s.hansen [at] opengroup [dot] org<br/>
             <strong>Dimitris Kolovos:</strong> dimitris [dot] kolovos [at] york [dot] ac [dot] uk<br/>
             <strong>Twitter:</strong> <a href="https://www.twitter.com/ossmeter">@@ossmeter</a></p>

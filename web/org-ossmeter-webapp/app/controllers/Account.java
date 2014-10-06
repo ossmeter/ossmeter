@@ -1,7 +1,6 @@
 package controllers;
 
-import models.User;
-import models.Notification;
+import models.*;
 import be.objectify.deadbolt.java.actions.Restrict;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.SubjectPresent;
@@ -10,6 +9,7 @@ import com.feth.play.module.pa.PlayAuthenticate;
 import com.feth.play.module.pa.user.AuthUser;
 
 import play.data.Form;
+import play.data.DynamicForm;
 import play.data.format.Formats.NonEmpty;
 import play.data.validation.Constraints.MinLength;
 import play.data.validation.Constraints.Required;
@@ -37,7 +37,6 @@ public class Account extends Controller {
 		public void setAccept(Boolean accept) {
 			this.accept = accept;
 		}
-
 	}
 
 	public static class PasswordChange {
@@ -235,6 +234,55 @@ public class Account extends Controller {
 		user.save();
 
 		flash(Application.FLASH_MESSAGE_KEY, Messages.get("ossmeter.profile.notifications.creation.success"));
+		return redirect(routes.Application.profile());
+	}
+
+	@SubjectPresent
+	public static Result createEventGroup() {
+		// this is the currently logged in user
+		final User user = Application.getLocalUser(session());
+
+		final Form<EventGroup> form = form(EventGroup.class).bindFromRequest();
+
+		if (form.hasErrors()) {
+			flash("error", Messages.get("ossmeter.profile.eventgroup.creation.error"));
+			return badRequest(views.html.setupeventgroup.render(user, form));
+		}
+
+		EventGroup group = form.get();
+		System.err.println(group);
+		System.err.println(group.events);
+		System.err.println(group.events.size());
+		group.user = user;
+		user.eventGroups.add(group);
+		user.save();
+
+		flash(Application.FLASH_MESSAGE_KEY, Messages.get("ossmeter.profile.eventgroup.creation.success"));
+		return redirect(routes.Application.profile());
+	}
+
+	@SubjectPresent
+	public static Result createEvent() {
+		// this is the currently logged in user
+		final User user = Application.getLocalUser(session());
+
+		DynamicForm dForm = Form.form().bindFromRequest();
+		final Form<Event> form = form(Event.class).bindFromRequest();
+
+		if (form.hasErrors()) {
+			flash("error", Messages.get("ossmeter.profile.event.creation.error"));
+			return badRequest(views.html.setupevent.render(user, form));
+		}
+
+		Event event = form.get();
+		System.err.println(event);
+		System.err.println(event.eventGroup);
+		System.err.println(dForm.get("eventGroup"));
+		// event.user = user;
+		// user.save();
+		// TODO
+
+		flash(Application.FLASH_MESSAGE_KEY, Messages.get("ossmeter.profile.event.creation.success"));
 		return redirect(routes.Application.profile());
 	}
 

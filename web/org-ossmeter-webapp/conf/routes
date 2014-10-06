@@ -10,6 +10,10 @@ GET     /assets/javascript/routes.js    controllers.Application.jsRoutes
 GET     /profile                    controllers.Application.profile
 GET		/profile/notification		controllers.Application.profileNotification
 POST	/profile/notification		controllers.Account.createNotification
+GET		/profile/eventgroup			controllers.Application.profileEventGroup
+POST	/profile/eventgroup			controllers.Account.createEventGroup
+GET		/profile/event				controllers.Application.profileEvent
+POST	/profile/event				controllers.Account.createEvent
 
 # User accounts login/auth routes
 GET     /login                      controllers.Application.login

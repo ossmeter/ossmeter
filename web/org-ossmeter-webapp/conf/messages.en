@@ -139,10 +139,15 @@ ossmeter.profile.password_change=Change/set a password for your account
 ossmeter.profile.notifications.empty=You currently have no notifications configured.
 ossmeter.profile.notifications.creation.success=Notification successfully created
 ossmeter.profile.notifications.creation.error=Unable to create notification. Check all inputs.
+ossmeter.profile.eventgroup.empty=You currently have no event groups configured.
+ossmeter.profile.eventgroup.creation.success=Event group successfully created
+ossmeter.profile.eventgroup.creation.error=Unable to create event group. Check all inputs.
+ossmeter.profile.event.creation.success=Event successfully created
+ossmeter.profile.event.creation.error=Unable to create event . Check all inputs.
 
 
 # ossmeter - sample: Index page
-ossmeter.index.title=Welcome to OSSMETER
+ossmeter.index.title=OSSMETER
 ossmeter.index.intro=OSSMETER is an open-source platform for automatically analysing the source code, bug tracking systems, and communication channels of open source software projects.
 ossmeter.index.intro_2=Welcome to OSSMETER!!!
 ossmeter.index.intro_3=Explore and compare projects and metrics
