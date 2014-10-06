@@ -15,4 +15,6 @@ class NntpNewsGroup extends  CommunicationChannel {
 	attr String name;
 	attr int interval;
 	attr String lastArticleChecked;
+	@searchable
+	attr String newsGroupName;
 }

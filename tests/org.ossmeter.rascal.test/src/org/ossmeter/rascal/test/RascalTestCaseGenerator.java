@@ -9,8 +9,13 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
@@ -23,7 +28,9 @@ import org.eclipse.imp.pdb.facts.io.BinaryValueWriter;
 import org.eclipse.imp.pdb.facts.io.StandardTextReader;
 import org.eclipse.imp.pdb.facts.type.Type;
 import org.eclipse.imp.pdb.facts.type.TypeStore;
+import org.ossmeter.metricprovider.rascal.RascalFactoidProvider;
 import org.ossmeter.metricprovider.rascal.RascalManager;
+import org.ossmeter.metricprovider.rascal.RascalMetricHistoryWrapper;
 import org.ossmeter.metricprovider.rascal.RascalMetricProvider;
 import org.ossmeter.metricprovider.rascal.RascalProjectDeltas;
 import org.ossmeter.platform.Date;
@@ -33,6 +40,7 @@ import org.ossmeter.platform.app.example.util.ProjectCreationUtil;
 import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.platform.osgi.executors.MetricListExecutor;
+import org.ossmeter.platform.osgi.executors.ProjectExecutor;
 import org.ossmeter.repository.model.LocalStorage;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectExecutionInformation;
@@ -59,6 +67,19 @@ public class RascalTestCaseGenerator implements IApplication  {
 		Evaluator eval = manager.getEvaluator();
 		
 		List<IMetricProvider> metricProviders = manager.getMetricProviders();
+		
+		// sort metric providers topologically
+		metricProviders = new ProjectExecutor(platform, new Project()) {
+			public List<IMetricProvider> order(List<IMetricProvider> metrics) {
+				List<IMetricProvider> result = new ArrayList<>(metrics.size());
+				for (List<IMetricProvider> branch : splitIntoBranches(metrics)) {
+					branch.removeAll(result);
+					//Collections.reverse(branch);
+					result.addAll(branch);
+				}
+				return result;
+			}
+		}.order(metricProviders);
 
 		System.out.println("Available metric providers:");
 		for (IMetricProvider mp : metricProviders) {
@@ -85,42 +106,86 @@ public class RascalTestCaseGenerator implements IApplication  {
 			return null;
 		}
 
-		// generate test data
+		final int MAX_DELTAS_PER_REPO = 25;
+		Map<String, Integer> deltasProcessed = new HashMap<>();
+		Map<String, Iterator<Date>> repositoryDates = new HashMap<>();
+		
+		// set up available dates per repository
 		for (Project project : projects) {
 			for (VcsRepository repo : project.getVcsRepositories()) {
-				Date startDate = platform.getVcsManager().getDateForRevision(repo, platform.getVcsManager().getFirstRevision(repo)).addDays(-1);
+				String firstRevision = platform.getVcsManager().getFirstRevision(repo);
+				Date startDate = platform.getVcsManager().getDateForRevision(repo, firstRevision).addDays(-1);
 				Date today = new Date();
 				
 				Date[] dates = Date.range(startDate.addDays(1), today.addDays(-1));
+				repositoryDates.put(repo.getUrl(), Arrays.asList(dates).iterator());
 				
-				for (Date date : dates) {			
-					ProjectDelta delta = new ProjectDelta(project, date, platform);
-					if (delta.create()) {
-						File dir = new File(testDataDir, project.getName() + "/" + encode(repo.getUrl()) + "/" + date.toString());
-						dir.mkdirs();
+				deltasProcessed.put(repo.getUrl(), 0);
+			}
+		}
+		
+		// generate test data
+		boolean moreDatesAvailable;
+		do {
+			moreDatesAvailable = false;
+			
+			for (Project project : projects) {
+				for (VcsRepository repo : project.getVcsRepositories()) {
+					String repoURL = repo.getUrl();
+					Iterator<Date> dateIterator = repositoryDates.get(repoURL);
+					if (deltasProcessed.get(repoURL) < MAX_DELTAS_PER_REPO && dateIterator.hasNext()) {
+						Date date = dateIterator.next();
+						moreDatesAvailable |= dateIterator.hasNext();
 						
-						IValue rascalDelta = RascalMetricProvider.computeDelta(project, delta, manager, logger);
-						IValue rascalASTs = RascalMetricProvider.computeAsts(project, delta, manager, logger);
-						IValue rascalM3s = RascalMetricProvider.computeM3(project, delta, manager, logger);
-						
-						handleNewValue(new File(dir, "delta.bin"), rascalDelta, deltaTypes, eval, logger);
-						handleNewValue(new File(dir, "asts.bin"), rascalASTs, extractedTypes, eval, logger);
-						handleNewValue(new File(dir, "m3s.bin"), rascalM3s, extractedTypes, eval, logger);
-						
-						MetricListExecutor ex = new MetricListExecutor(platform, project, delta, date);
-						ex.setMetricList(metricProviders);
-						ex.run();
-						
-						for (IMetricProvider mp : metricProviders) {
-							if (mp instanceof RascalMetricProvider) {
-								IValue result = ((RascalMetricProvider) mp).getMetricResult(project, mp, manager);
+						ProjectDelta delta = new ProjectDelta(project, date, platform);
+						if (delta.create() && !delta.getVcsDelta().getRepoDeltas().isEmpty()) {
+							System.out.println("\nProject: " + project.getShortName() + ", date: " + date);
+							
+							File dir = new File(testDataDir, project.getName() + "/" + encode(repoURL) + "/" + date.toString());
+							dir.mkdirs();
+							
+							MetricListExecutor ex = new MetricListExecutor(platform, project, delta, date);
+							ex.setMetricList(metricProviders);
+							ex.run();
+							
+							IValue rascalDelta = RascalMetricProvider.computeDelta(project, delta, manager, logger);
+							IValue rascalASTs = RascalMetricProvider.computeAsts(project, delta, manager, logger);
+							IValue rascalM3s = RascalMetricProvider.computeM3(project, delta, manager, logger);
+							
+							handleNewValue(new File(dir, "delta.bin"), rascalDelta, deltaTypes, eval, logger);
+							handleNewValue(new File(dir, "asts.bin"), rascalASTs, extractedTypes, eval, logger);
+							handleNewValue(new File(dir, "m3s.bin"), rascalM3s, extractedTypes, eval, logger);
+							
+							for (IMetricProvider mp : metricProviders) {
+								IValue result = null;
+								
+								if (mp instanceof RascalMetricProvider) {
+									result = ((RascalMetricProvider) mp).getMetricResult(project, mp, manager);
+								}
+								else if (mp instanceof RascalMetricHistoryWrapper) {
+									// ignore because its automatically derived
+								}
+								else if (mp instanceof RascalFactoidProvider) {
+									RascalFactoidProvider rfp = (RascalFactoidProvider) mp;
+									result = rfp.getMeasuredFactoid(rfp.adapt(platform.getMetricsRepository(project).getDb()), eval.getValueFactory());								
+								} 
+								else {
+									logger.warn("Unknown metric provider: " + mp.getIdentifier());
+									continue;
+								}
+								
+								System.out.println(mp.getFriendlyName());
+								System.out.println("" + result);
+								
 								handleNewValue(new File(dir, mp.getIdentifier()), result, null, eval, logger);
 							}
+							
+							deltasProcessed.put(repoURL, deltasProcessed.get(repoURL) + 1);
 						}
 					}
 				}
 			}
-		}
+		} while (moreDatesAvailable);
 		
 		return null;
 	}
@@ -209,15 +274,19 @@ public class RascalTestCaseGenerator implements IApplication  {
 	}
 	
 	private static void writeValue(File path, IValue value, Evaluator eval) throws IOException {
-		OutputStream out = eval.getResolverRegistry().getOutputStream(path.toURI(), false);
-		new BinaryValueWriter().write(value, out);
-		//new StandardTextWriter().write(value, new OutputStreamWriter(out, "UTF8"));
+		try (OutputStream out = eval.getResolverRegistry().getOutputStream(path.toURI(), false)) {
+			new BinaryValueWriter().write(value, out);
+			//new StandardTextWriter().write(value, new OutputStreamWriter(out, "UTF8"));
+		} catch (RuntimeException e) {
+			// ignore
+		}
 	}
 	
 	private static IValue readValue(File path, Type type, TypeStore store, Evaluator eval) throws IOException {
-		InputStream in = new BufferedInputStream(eval.getResolverRegistry().getInputStream(path.toURI()));		
-		return new BinaryValueReader().read(eval.getValueFactory(), store, type, in);		
-		//return new StandardTextReader().read(eval.getValueFactory(), store, type, new InputStreamReader(in, "UTF8"));
+		try (InputStream in = new BufferedInputStream(eval.getResolverRegistry().getInputStream(path.toURI()))) {		
+			return new BinaryValueReader().read(eval.getValueFactory(), store, type, in);		
+			//return new StandardTextReader().read(eval.getValueFactory(), store, type, new InputStreamReader(in, "UTF8"));
+		}
 	}
 
 	private static IValue readTextValue(File path, Evaluator eval) throws IOException {

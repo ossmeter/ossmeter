@@ -20,6 +20,7 @@ import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.redmine.RedmineBugIssueTracker;
 
 import com.google.common.collect.ImmutableMap;
+import com.mongodb.DB;
 
 public class RedmineManager implements
 		IBugTrackingSystemManager<RedmineBugIssueTracker> {
@@ -84,7 +85,7 @@ public class RedmineManager implements
 	}
 
 	@Override
-	public BugTrackingSystemDelta getDelta(RedmineBugIssueTracker bugTracker,
+	public BugTrackingSystemDelta getDelta(DB db,RedmineBugIssueTracker bugTracker,
 			Date date) throws Exception {
 		java.util.Date day = date.toJavaDate();
 
@@ -116,7 +117,7 @@ public class RedmineManager implements
 	}
 
 	@Override
-	public Date getFirstDate(RedmineBugIssueTracker bugTracker)
+	public Date getFirstDate(DB db,RedmineBugIssueTracker bugTracker)
 			throws Exception {
 		RedmineRestClient redmine = getRedmineRestClient(bugTracker);
 		RedmineExtendedSearchResult result = redmine.extendedSearch(
@@ -130,7 +131,7 @@ public class RedmineManager implements
 	}
 
 	@Override
-	public String getContents(RedmineBugIssueTracker bugTracker,
+	public String getContents(DB db,RedmineBugIssueTracker bugTracker,
 			BugTrackingSystemBug bug) throws Exception {
 		RedmineRestClient redmine = getRedmineRestClient(bugTracker);
 		int bugId = Integer.parseInt(bug.getBugId());
@@ -143,7 +144,7 @@ public class RedmineManager implements
 	}
 
 	@Override
-	public String getContents(RedmineBugIssueTracker bugTracker,
+	public String getContents(DB db,RedmineBugIssueTracker bugTracker,
 			BugTrackingSystemComment comment) throws Exception {
 		RedmineRestClient redmine = getRedmineRestClient(bugTracker);
 		int bugId = Integer.parseInt(comment.getBugId());
@@ -170,22 +171,22 @@ public class RedmineManager implements
 		RedmineBugIssueTracker bugTracker = new RedmineBugIssueTracker();
 		bugTracker.setUrl("http://www.redmine.org/");
 		bugTracker.setProject("redmine");
-		Date firstDate = manager.getFirstDate(bugTracker);
+		Date firstDate = manager.getFirstDate(null, bugTracker);
 		System.out.println("FIRST DATE: " + firstDate); // Should be 2007-02-24
 		System.out.println();
 
 		RedmineIssue issue = new RedmineIssue();
 		issue.setBugId("285");
-		System.out.println(manager.getContents(bugTracker, issue));
+		System.out.println(manager.getContents(null, bugTracker, issue));
 		System.out.println();
 
 		RedmineComment comment = new RedmineComment();
 		comment.setBugId("277");
 		comment.setCommentId("597");
-		System.out.println(manager.getContents(bugTracker, comment));
+		System.out.println(manager.getContents(null, bugTracker, comment));
 		System.out.println();
 
-		BugTrackingSystemDelta delta = manager.getDelta(bugTracker, new Date(
+		BugTrackingSystemDelta delta = manager.getDelta(null, bugTracker, new Date(
 				"20140714"));
 		System.out.println(delta.getUpdatedBugs().size());
 

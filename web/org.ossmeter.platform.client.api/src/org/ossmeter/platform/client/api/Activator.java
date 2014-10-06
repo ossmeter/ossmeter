@@ -11,8 +11,6 @@ import org.restlet.*;
 
 public class Activator implements BundleActivator {
 
-    private Server server;
-    
     private Component component;
 
     public void start(BundleContext context) throws Exception {
@@ -24,18 +22,9 @@ public class Activator implements BundleActivator {
     	component.getDefaultHost().attachDefault(apiApplication);
     	
     	component.start();
-//        server = new Server(Protocol.HTTP, 8554, new Restlet() {
-//            @Override
-//            public void handle(Request request, Response response) {
-//                response.setEntity("Hello world!", MediaType.TEXT_PLAIN);
-//            }
-//        });
-//
-//        server.start();
     }
 
     public void stop(BundleContext context) throws Exception {
-//        server.stop();
         component.stop();
     }
 

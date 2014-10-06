@@ -4,7 +4,8 @@ Bundle-Name: Rascal-runtime
 Bundle-SymbolicName: rascal4ossmeter
 Bundle-Version: 0.0.1.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Bundle-ClassPath: lib/rascal.jar
+Bundle-ClassPath: lib/rascal.jar,
+ lib/rascal-java-build-manager.jar
 Export-Package: org.eclipse.imp.pdb.facts,
  org.eclipse.imp.pdb.facts.exceptions,
  org.eclipse.imp.pdb.facts.impl,
@@ -107,7 +108,6 @@ Export-Package: org.eclipse.imp.pdb.facts,
  org.rascalmpl.parser.uptr.debug,
  org.rascalmpl.parser.uptr.recovery,
  org.rascalmpl.semantics.dynamic,
- org.rascalmpl.shell,
  org.rascalmpl.tasks,
  org.rascalmpl.tasks.facts,
  org.rascalmpl.test.infrastructure,

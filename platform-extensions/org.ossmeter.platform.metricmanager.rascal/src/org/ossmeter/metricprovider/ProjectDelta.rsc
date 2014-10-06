@@ -63,6 +63,5 @@ list[loc] getChangedFilesInWorkingCopyFolders(ProjectDelta delta, map[loc, loc] 
 {
   list[loc] result = [];
   map[loc, list[str]] changedItemsPerRepo = getChangedItemsPerRepository(delta);
-  
   return [workingCopyFolders[repo] + item | repo <- changedItemsPerRepo, item <- changedItemsPerRepo[repo]];
 }

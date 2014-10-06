@@ -1,6 +1,8 @@
 package org.ossmeter.repository.model.redmine.importer;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -14,6 +16,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -22,6 +25,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.ossmeter.platform.Platform;
+import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.repository.model.License;
 import org.ossmeter.repository.model.Person;
 import org.ossmeter.repository.model.Project;
@@ -38,23 +42,52 @@ import org.ossmeter.repository.model.redmine.RedmineProjectVersionStatus;
 import org.ossmeter.repository.model.redmine.RedmineUser;
 import org.ossmeter.repository.model.redmine.RedmineWiki;
 
+import com.mongodb.Mongo;
+
 public class RedmineImporter {
 	private String key;
 	private String baseRepo;
 	private String user;
 	private String password;
 	private String essentialRepo;
+	protected OssmeterLogger logger;
 	
+	private static String getProperty(String property) throws FileNotFoundException, IOException{
+		
+    		Properties forgeProperties = new Properties();
+			forgeProperties.load(new FileReader("redmine.properties"));
+			return forgeProperties.getProperty(property);	
+			
+	}
+	
+	private String getEssentialUrl(String url)
+	{
+		url = url.replace("http://", "");
+		url = url.replace("https://", "");
+		url = url.replace("www.", "");
+		return url;
+	}
 	
 	public RedmineImporter(String baseRepo, String key, String user, String password)
 	{
+		logger = (OssmeterLogger) OssmeterLogger.getLogger("importer.redmine");
+		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 		this.baseRepo = baseRepo;
-		this.essentialRepo = baseRepo.substring(7);
+		this.essentialRepo = getEssentialUrl(baseRepo);
 		this.key = key;
 		this.user = user;
 		this.password = password;
 	}
-
+	public RedmineImporter() throws FileNotFoundException, IOException 
+	{
+		logger = (OssmeterLogger) OssmeterLogger.getLogger("importer.redmine");
+		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
+		this.baseRepo = getProperty("baseRepo");;
+		this.essentialRepo = getEssentialUrl(this.baseRepo);
+		this.key = getProperty("key");
+		this.user = getProperty("user");;
+		this.password = getProperty("password");
+	}
 	public RedmineProject importProjectFromHTML(String projectUrl, Platform platform) 
 	{
 		
@@ -70,14 +103,33 @@ public class RedmineImporter {
 			Element e = doc.getElementById("header");
 			Element name =  e.getElementsByTag("h1").first();
 			Boolean projectToBeUpdated = false;
-			Project projectTemp = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByName(name.text());
-			if (projectTemp != null)
-			{
-				if (projectTemp instanceof RedmineProject) 
-				{
+			Project projectTemp;// = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByName(name.text());
+			/////////
+			Iterable<Project> pl = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(e.text());
+			Iterator<Project> iprojects = pl.iterator();
+			//RedmineProject p = null;
+			
+			while (iprojects.hasNext()) {
+				projectTemp = iprojects.next();
+				if (projectTemp instanceof RedmineProject) {
 					project = (RedmineProject)projectTemp;
 					projectToBeUpdated = true;
-					System.out.println("-----> project " + projectUrl + " already in the repository. Its metadata will be updated.");	
+					logger.info("-----> project " + e.text() + " already in the repository. Its metadata will be updated.");
+					break;
+						
+				}
+			}
+			
+			
+			
+			////////
+			if (project != null)
+			{
+				if (project instanceof RedmineProject) 
+				{
+					project = (RedmineProject)project;
+					projectToBeUpdated = true;
+					logger.info("-----> project " + projectUrl + " already in the repository. Its metadata will be updated.");	
 				}
 			}
 			if (!projectToBeUpdated)  {
@@ -140,9 +192,7 @@ public class RedmineImporter {
 			
 
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			
-			e1.printStackTrace();
+			logger.error("Error import redmine project from HTML by url "+ projectUrl + " " + e1.getMessage());
 		}
 		return project;
 	}
@@ -169,8 +219,7 @@ public class RedmineImporter {
 				}
 				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Error import redmine version from the url" + url + " " + e.getMessage());
 			}
 		
 		
@@ -178,7 +227,6 @@ public class RedmineImporter {
 	}
 
 	private boolean exisistWiki(String url) {
-		// TODO Auto-generated method stub
 		org.jsoup.nodes.Document doc;
 		
 		try {
@@ -197,7 +245,7 @@ public class RedmineImporter {
 		try 
 		{
 			doc = Jsoup.connect(URL_PROJECT).timeout(10000).get();
-			//Paginazione
+			//Pagination
 			Element pagination = doc.getElementsByClass("pagination").first().getElementsByClass("items").first();
 			
 			String totalIssue = pagination.text().split("/")[1];
@@ -210,7 +258,7 @@ public class RedmineImporter {
 			Integer currentPage = Integer.parseInt(endString)/25;
 			Integer totPagination = Integer.parseInt(totalIssue);
 			Integer numPag = (25) == 0 ? totPagination/25:totPagination/25+1;
-			//fine paginazione
+			//end pagination
 			
 			Element e = doc.getElementsByClass("autoscroll").first().getElementsByClass("issues").first().getElementsByTag("tbody").first();
 			Elements tableRows = e.getElementsByTag("tr");
@@ -219,26 +267,24 @@ public class RedmineImporter {
 				String urlIssue = url.substring(0,url.lastIndexOf("/projects/")) +
 						iterable_element.getElementsByTag("a").first().attr("href");
 				RedmineIssue gi = getRedmineIssue(platform, urlIssue);
-				result.add(gi);//System.out.println(iterable_element.getElementsByTag("td").get(1).toString());
+				result.add(gi);
 				break;
 			}
-//			
-			//Paginazione
+			
+			//Pagination
 			if(end<totPagination)
 			{
 				
 				if (url.contains("page="));
 				{
 					String s = url.substring(0,url.lastIndexOf("="));
-					//System.out.println(s);
 					int k=currentPage+1;
 					getRedmineIssueList(platform, s+"="+(k));
 				}
 			}
 			
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			logger.error("Error import redmine issue list from the url" + url + " " + e1.getMessage());
 		}
 		return result;
 	}
@@ -423,11 +469,34 @@ public class RedmineImporter {
 			
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			logger.error("Error import redmina issue from url "+ url + " " + e1.getMessage());
 		}
 		return result;
 	}
-	
+	private void loadIssues()
+	{
+		issueArray.clear();
+		int offset = 0;
+		int total = 0;
+		while (offset <= total)
+		{ 
+			String issuesUrlString = baseRepo + "issues.json?key=" + key + "&offset=" + offset;
+			InputStream is2;
+			try {
+				is2 = new URL(issuesUrlString).openStream();
+				BufferedReader rd2 = new BufferedReader(new InputStreamReader(is2, Charset.forName("UTF-8")));
+				String jsonText2 = readAll(rd2);
+				JSONObject obj2 = (JSONObject)JSONValue.parse(jsonText2);
+				total = Integer.parseInt(obj2.get("total_count").toString());
+				issueArray.addAll((JSONArray)obj2.get("issues"));
+				offset += 25;
+			} catch (MalformedURLException e) {
+				logger.error("Error during import all redmine project " + e.getMessage());
+			} catch (IOException e) {
+				logger.error("Error during import all redmine project " + e.getMessage());
+			}
+		}
+	}
 	public void importAll(Platform platform ) 
 	{
 		int offset = 0;
@@ -445,11 +514,9 @@ public class RedmineImporter {
 				issueArray.addAll((JSONArray)obj2.get("issues"));
 				offset += 25;
 			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Error during import all redmine project " + e.getMessage());
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Error during import all redmine project " + e.getMessage());
 			}
 		}
 		
@@ -475,35 +542,95 @@ public class RedmineImporter {
 				JSONArray projArray = ((JSONArray)obj.get("projects"));
 				for (Object proj : projArray) {
 					String shortName = ((JSONObject)proj).get("identifier").toString();
-					String longName = ((JSONObject)proj).get("name").toString();
-					String description = ((JSONObject)proj).get("description").toString();
-					String createOn = ((JSONObject)proj).get("created_on").toString();
-					String updatedOn = ((JSONObject)proj).get("updated_on").toString();
-					String id = ((JSONObject)proj).get("id").toString();
-					platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(importProject(shortName, description, longName,
-																														createOn, updatedOn, id, platform));
+					platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(importProject(shortName, platform));
 					platform.getProjectRepositoryManager().getProjectRepository().sync();
 				}
 				total = Integer.parseInt(obj.get("total_count").toString());
 				offset += 25;
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Error during import all redmine project " + e.getMessage());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Error during import all redmine project " + e.getMessage());
 			}
 		}
 	}
 	
-	public RedmineProject importProject(String projectId, String description,
-			String longName, String createdOn, String updatedOn,String id, Platform platform) 
+	public void importProjects(Platform platform, int numberOfProjects ) 
+	{
+		int offset = 0;
+		int total = 0;
+		while (offset <= total)
+		{ 
+			String issuesUrlString = baseRepo + "issues.json?key=" + key + "&offset=" + offset;
+			InputStream is2;
+			try {
+				is2 = new URL(issuesUrlString).openStream();
+				BufferedReader rd2 = new BufferedReader(new InputStreamReader(is2, Charset.forName("UTF-8")));
+				String jsonText2 = readAll(rd2);
+				JSONObject obj2 = (JSONObject)JSONValue.parse(jsonText2);
+				total = Integer.parseInt(obj2.get("total_count").toString());
+				issueArray.addAll((JSONArray)obj2.get("issues"));
+				offset += 25;
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				logger.error("Error during import all redmine project " + e.getMessage());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				logger.error("Error during import all redmine project " + e.getMessage());
+			}
+		}
+		
+		
+		for (Role role : getRoles()) {
+			platform.getProjectRepositoryManager().getProjectRepository().getRoles().add(role);
+		}
+		platform.getProjectRepositoryManager().getProjectRepository().sync();
+		
+		offset = 0;
+		total = 0;
+		getRedmineUsers(platform);
+		
+		int iteration = 0;
+		while (offset <= total && iteration < numberOfProjects)
+		{ 
+			InputStream is;
+			try {
+				is = new URL(baseRepo + "projects.json?key=" + key).openStream();
+				BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+				String jsonText = readAll(rd);
+				JSONObject obj=(JSONObject)JSONValue.parse(jsonText);
+				JSONArray projArray = ((JSONArray)obj.get("projects"));
+				for (Object proj : projArray) {
+					String shortName = ((JSONObject)proj).get("identifier").toString();
+					platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(importProject(shortName, platform));
+					platform.getProjectRepositoryManager().getProjectRepository().sync();
+					iteration ++;
+					if(iteration > numberOfProjects)
+						break;
+				}
+				total = Integer.parseInt(obj.get("total_count").toString());
+				offset += 25;
+				
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				logger.error("Error during import all redmine project " + e.getMessage());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				logger.error("Error during import all redmine project " + e.getMessage());
+			}
+		}
+	}
+	
+	
+	public RedmineProject importProject(String projectId, Platform platform) 
 	{	
 		RedmineProject project = null;
-	
+		
 		Boolean projectToBeUpdated = false;
 		Project projectTemp = null;
-		Iterable<Project> pl = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByName(longName);
+		Iterable<Project> pl = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(projectId);
 		Iterator<Project> iprojects = pl.iterator();
 		
 		
@@ -512,7 +639,7 @@ public class RedmineImporter {
 			if (projectTemp instanceof RedmineProject) {
 				project = (RedmineProject)projectTemp;
 				projectToBeUpdated = true;
-				System.out.println("-----> project " + projectId + " already in the repository. Its metadata will be updated.");
+				logger.info("-----> project " + projectId + " already in the repository. Its metadata will be updated.");
 				break;
 					
 			}
@@ -531,34 +658,53 @@ public class RedmineImporter {
 			project.getVersions();
 			platform.getProjectRepositoryManager().getProjectRepository().sync();
 		}
-		
-		project.setName(longName);
-		project.setDescription(description);
-		project.setCreated_on(createdOn);
-		project.setUpdated_on(updatedOn);
-		project.setIdentifier(id);
-		
-		
-		if(exisistWiki( baseRepo + "projects/" + projectId + "/wiki"))
-		{
-			RedmineWiki wiki = new RedmineWiki();
-			wiki.setUrl(baseRepo + "projects/" + projectId + "/wiki");
-			wiki.setNonProcessable(true);
-			project.setWiki(wiki);
+		project.setHomePage(baseRepo + "projects/"+ projectId);
+		try {
+			InputStream is;
+			is = new URL(baseRepo + "projects/"+ projectId +".json?key=" + key).openStream();
+			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+			String jsonText = readAll(rd);
+			JSONObject obj=(JSONObject)JSONValue.parse(jsonText);
+			JSONObject jsonProj = (JSONObject)obj.get("project");
+			project.setShortName(projectId);
+			project.setName(jsonProj.get("name").toString());
+			project.setDescription(jsonProj.get("description").toString());
+			project.setCreated_on(jsonProj.get("created_on").toString());
+			project.setUpdated_on(jsonProj.get("updated_on").toString());
+			project.setIdentifier(jsonProj.get("id").toString());
+			if(exisistWiki( baseRepo + "projects/" + projectId + "/wiki"))
+			{
+				RedmineWiki wiki = new RedmineWiki();
+				wiki.setUrl(baseRepo + "projects/" + projectId + "/wiki");
+				wiki.setNonProcessable(true);
+				project.setWiki(wiki);
+			}			
+			project.getPersons().addAll(getPersonProject(project.getIdentifier(), platform));
+			RedmineBugIssueTracker bit = new RedmineBugIssueTracker();
+			bit.setName("Redmine_" + projectId);
+			bit.getIssues().addAll(getIssue(project.getIdentifier(), platform));
+			project.getBugTrackingSystems().add(bit);			
+			project.getVersions().addAll(getRedmineProjectVersion(project.getIdentifier()));
+			if(projectToBeUpdated)
+				logger.info("Project " + projectId + " has benn updated");
+			else
+				logger.info("Project " + projectId + " has benn added");
+			return project;
+		}
+		catch (MalformedURLException e) {
+			if(project!=null)
+				if(project.getExecutionInformation()!=null)
+					project.getExecutionInformation().setInErrorState(true);
+			logger.error("Error during import " + projectId + " redmine project ");
+			return project;
+		} catch (IOException e) {
+			if(project!=null)
+				if(project.getExecutionInformation()!=null)
+					project.getExecutionInformation().setInErrorState(true);
+			logger.error("Error during import " + projectId + " redmine project ");
+			return project;
 		}
 		
-		
-		project.getPersons().addAll(getPersonProject(id, platform));
-
-		RedmineBugIssueTracker bit = new RedmineBugIssueTracker();
-		bit.setName("Redmine_" + projectId);
-		bit.getIssues().addAll(getIssue(id, platform));
-		project.getBugTrackingSystems().add(bit);
-		
-		
-		project.getVersions().addAll(getRedmineProjectVersion(id));
-		
-		return project;
 	}
 	
 	private List<Person> getPersonProject(String id, Platform platform) {
@@ -593,11 +739,10 @@ public class RedmineImporter {
 				}
 			}
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error during import person in " + id +" project " + e.getMessage());
+			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error during import person in " + id +" project " + e.getMessage());
 		}
 		return result;
 	}
@@ -619,11 +764,9 @@ public class RedmineImporter {
 				result.add(role);
 			}
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error during import role " + e.getMessage());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error during import role " + e.getMessage());
 		}
 		return result;
 	}
@@ -662,11 +805,9 @@ public class RedmineImporter {
 				result.add(rpv);
 			}
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error during import project version for " + projectID +" " + e.getMessage());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error during import project version for " + projectID +" " + e.getMessage());
 		}
 		
 		return result;
@@ -685,6 +826,7 @@ public class RedmineImporter {
 	private List<RedmineIssue> getIssue(String id, Platform platform)
 	{
 		ArrayList<RedmineIssue> result = new ArrayList<RedmineIssue>();
+		loadIssues();
 		for (Object issue : issueArray) 
 		{
 			String issueProgId = ((JSONObject)((JSONObject)issue).get("project")).get("id").toString();
@@ -809,13 +951,65 @@ public class RedmineImporter {
 				offset += 25;
 			}
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error during import users" + e.getMessage());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("Error during import users" + e.getMessage());
 		}
-		
+	}
+	
+	public boolean isProjectInDB(String projectId)
+	{
+		try 
+		{
+			Mongo mongo;
+			mongo = new Mongo();
+			Platform platform = new Platform(mongo);
+			Iterable<Project> projects = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(projectId);
+			Iterator<Project> iprojects = projects.iterator();
+			RedmineProject project = null;
+			Project projectTemp = null;
+			while (iprojects.hasNext()) {
+				projectTemp = iprojects.next();
+				if (projectTemp instanceof RedmineProject) {
+					project = (RedmineProject)projectTemp;
+					if (project.getShortName().equals(projectId)) {
+						return true;
+					}	
+				}
+			}
+			return false;
+		}
+		catch (Exception e)
+		{
+			return false;
+		}
+	}
+	
+	public boolean isProjectInDBByUrl(String url)
+	{
+		return isProjectInDB(getProjectIdFromUrl(url));
+	}
+	
+	public RedmineProject importProjectByUrl(String url, Platform platform)
+	{
+		return importProject(getProjectIdFromUrl(url), platform);
+	}
+	
+	private String getProjectIdFromUrl(String url)
+	{
+//		url = url.replace("http://", "");
+//		url = url.replace("https://", "");
+//		url = url.replace("www.", "");
+//		if (url.startsWith("sourceforge.net/projects/")) {
+//			url= url.replace("sourceforge.net/projects/", "");
+//			if(url.contains("?"))
+//				url = url.substring(0, url.indexOf("?"));
+//			if(url.endsWith("/"))
+//				url = url.substring(0, url.length()-1);
+//			return url;
+//		}
+//		else 
+			return null;
 	}
 	
 }

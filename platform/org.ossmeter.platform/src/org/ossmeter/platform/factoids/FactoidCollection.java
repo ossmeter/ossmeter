@@ -9,6 +9,7 @@ public class FactoidCollection extends PongoCollection<Factoid> {
 	public FactoidCollection(DBCollection dbCollection) {
 		super(dbCollection);
 		createIndex("metricId");
+		createIndex("category");
 	}
 	
 	public Iterable<Factoid> findById(String id) {
@@ -30,6 +31,22 @@ public class FactoidCollection extends PongoCollection<Factoid> {
 
 	public long countByMetricId(String q) {
 		return dbCollection.count(new BasicDBObject("metricId", q + ""));
+	}
+	public Iterable<Factoid> findByCategory(FactoidCategory q) {
+		return new IteratorIterable<Factoid>(new PongoCursorIterator<Factoid>(this, dbCollection.find(new BasicDBObject("category", q + ""))));
+	}
+	
+	public Factoid findOneByCategory(FactoidCategory q) {
+		Factoid factoid = (Factoid) PongoFactory.getInstance().createPongo(dbCollection.findOne(new BasicDBObject("category", q + "")));
+		if (factoid != null) {
+			factoid.setPongoCollection(this);
+		}
+		return factoid;
+	}
+	
+
+	public long countByCategory(FactoidCategory q) {
+		return dbCollection.count(new BasicDBObject("category", q + ""));
 	}
 	
 	@Override

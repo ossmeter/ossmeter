@@ -1,6 +1,7 @@
 package org.ossmeter.platform.osgi.executors;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -61,7 +62,7 @@ public class MetricExecutorTest {
 		ProjectExecutor pe = new ProjectExecutor(platform, project);
 		pe.run();
 		
-//		assertTrue(project.getInErrorState());
+		assertTrue(project.getExecutionInformation().getInErrorState());
 		assertEquals(startDate, project.getLastExecuted());
 		
 		// 

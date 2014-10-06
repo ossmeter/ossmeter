@@ -82,7 +82,7 @@ public class RequestsRepliesHistoricMetricProvider extends AbstractHistoricalMet
 		avgRRThread.setAverageArticlesPerUser(avgArticlesPerUser);
 		avgRRThread.setAverageRepliesPerUser(avgRepliesPerUser);
 		avgRRThread.setAverageRequestsPerUser(avgRequestsPerUser);
-		
+	
 		return avgRRThread;
 	}
 			

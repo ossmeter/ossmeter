@@ -24,7 +24,6 @@ public class EclipseProject extends org.ossmeter.repository.model.Project {
 		PARAGRAPHURL.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
 		DESCRIPTIONURL.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
 		DOWNLOADSURL.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
-		HOMEPAGE.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
 		PROJECTPLANURL.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
 		UPDATESITEURL.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
 		STATE.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
@@ -33,7 +32,6 @@ public class EclipseProject extends org.ossmeter.repository.model.Project {
 	public static StringQueryProducer PARAGRAPHURL = new StringQueryProducer("paragraphUrl"); 
 	public static StringQueryProducer DESCRIPTIONURL = new StringQueryProducer("descriptionUrl"); 
 	public static StringQueryProducer DOWNLOADSURL = new StringQueryProducer("downloadsUrl"); 
-	public static StringQueryProducer HOMEPAGE = new StringQueryProducer("homePage"); 
 	public static StringQueryProducer PROJECTPLANURL = new StringQueryProducer("projectplanUrl"); 
 	public static StringQueryProducer UPDATESITEURL = new StringQueryProducer("updatesiteUrl"); 
 	public static StringQueryProducer STATE = new StringQueryProducer("state"); 
@@ -63,15 +61,6 @@ public class EclipseProject extends org.ossmeter.repository.model.Project {
 	
 	public EclipseProject setDownloadsUrl(String downloadsUrl) {
 		dbObject.put("downloadsUrl", downloadsUrl);
-		notifyChanged();
-		return this;
-	}
-	public String getHomePage() {
-		return parseString(dbObject.get("homePage")+"", "");
-	}
-	
-	public EclipseProject setHomePage(String homePage) {
-		dbObject.put("homePage", homePage);
 		notifyChanged();
 		return this;
 	}

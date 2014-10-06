@@ -89,7 +89,7 @@ public class SvnManager extends AbstractVcsManager {
 							
 							String relativePath = makeRelative(overLappedURL, path);
 							if (!relativePath.startsWith("/")) {
-								relativePath = "/" + path;
+								relativePath = "/" + relativePath;
 							}
 							commitItem.setPath(relativePath);
 							

@@ -154,7 +154,13 @@ public class RascalProjectDeltas {
 //	children.add(convertToLocation(commitItem.getCommit().getDelta().getRepository().getUrl() + "/" + commitItem.getPath()));
 	children.add(convert(commitItem.getPath()));
 	children.add(convert(commitItem.getChangeType()));
-	children.add(createChurn(churns.get(commitItem.getCommit()), commitItem.getPath()));
+	List<Churn> commitChurns = churns.get(commitItem.getCommit());
+	if (commitChurns != null) {
+		children.add(createChurn(commitChurns, commitItem.getPath()));
+	}
+	else {
+		children.add(values.listWriter().done());
+	}
 				
 	return createConstructor("VcsCommitItem", "vcsCommitItem", children.toArray(new IValue[0]));
   }

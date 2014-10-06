@@ -1,13 +1,17 @@
+
 package org.ossmeter.platform.client.api;
 
-import java.util.Iterator;
+import java.util.Map;
 
-import org.ossmeter.platform.IMetricProvider;
-import org.ossmeter.platform.Platform;
+import org.ossmeter.platform.visualisation.MetricVisualisation;
+import org.ossmeter.platform.visualisation.MetricVisualisationExtensionPointManager;
 import org.restlet.engine.header.Header;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 import org.restlet.util.Series;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 
 public class MetricListResource extends ServerResource {
 
@@ -21,20 +25,16 @@ public class MetricListResource extends ServerResource {
 		responseHeaders.add(new Header("Access-Control-Allow-Origin", "*"));
 		responseHeaders.add(new Header("Access-Control-Allow-Methods", "GET"));
 		
-		Platform platform = Platform.getInstance();
-		String json = "{ \"metrics\" : [ ";
+		ObjectMapper mapper = new ObjectMapper();
+		ArrayNode metrics = mapper.createArrayNode();
 		
-		Iterator<IMetricProvider> it = platform.getMetricProviderManager().getMetricProviders().iterator();
+		MetricVisualisationExtensionPointManager manager = MetricVisualisationExtensionPointManager.getInstance();
+		Map<String, MetricVisualisation> vizs = manager.getRegisteredVisualisations();
 		
-		while (it.hasNext()) {
-			IMetricProvider ip =  it.next();
-			json += "{ \"name\" : \"" + ip.getFriendlyName() + "\", \"type\" : \"" + ip.getClass().getName() + "\", \"description\" : \"" + ip.getSummaryInformation() + "\" }";
-			if (it.hasNext()) json += ",";
+		for (MetricVisualisation vis : vizs.values()) {
+			metrics.add(vis.getVis());
 		}
-
-		json += " ] }";
-		return json;
+		
+		return metrics.toString();
 	}
-
-	
 }

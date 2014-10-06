@@ -21,6 +21,8 @@ import org.ossmeter.platform.delta.bugtrackingsystem.IBugTrackingSystemManager;
 import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.github.GitHubBugTracker;
 
+import com.mongodb.DB;
+
 public class GitHubManager implements
 		IBugTrackingSystemManager<GitHubBugTracker> {
 
@@ -41,7 +43,7 @@ public class GitHubManager implements
 	}
 
 	@Override
-	public BugTrackingSystemDelta getDelta(GitHubBugTracker bts, Date date)
+	public BugTrackingSystemDelta getDelta(DB db,GitHubBugTracker bts, Date date)
 			throws Exception {
 		GitHubBugTrackingSystemDelta delta = new GitHubBugTrackingSystemDelta();
 		delta.setBugTrackingSystem(bts);
@@ -56,12 +58,12 @@ public class GitHubManager implements
 	}
 
 	@Override
-	public Date getFirstDate(GitHubBugTracker bts) throws Exception {
+	public Date getFirstDate(DB db,GitHubBugTracker bts) throws Exception {
 		return getEarliestIssueDate(bts);
 	}
 
 	@Override
-	public String getContents(GitHubBugTracker bts, BugTrackingSystemBug bug)
+	public String getContents(DB db,GitHubBugTracker bts, BugTrackingSystemBug bug)
 			throws Exception {
 		GitHubSession github = getSession(bts);
 		Issue issue = github.getIssue(bts.getUser(), bts.getRepository(),
@@ -73,7 +75,7 @@ public class GitHubManager implements
 	}
 
 	@Override
-	public String getContents(GitHubBugTracker bts,
+	public String getContents(DB db,GitHubBugTracker bts,
 			BugTrackingSystemComment comment) throws Exception {
 		GitHubSession github = getSession(bts);
 
@@ -224,7 +226,7 @@ public class GitHubManager implements
 
 		GitHubManager github = new GitHubManager();
 		GitHubBugTrackingSystemDelta delta = (GitHubBugTrackingSystemDelta) github
-				.getDelta(bugTracker, date);
+				.getDelta(null, bugTracker, date);
 
 		System.out.println(delta.getNewBugs().size());
 		System.out.println(delta.getUpdatedBugs().size());
@@ -232,7 +234,7 @@ public class GitHubManager implements
 		date = new Date(new DateTime(2014, 6, 20, 0, 0).toDate());
 
 		delta = (GitHubBugTrackingSystemDelta) github
-				.getDelta(bugTracker, date);
+				.getDelta(null, bugTracker, date);
 		System.out.println(delta.getNewBugs().size());
 		System.out.println(delta.getUpdatedBugs().size());
 	}

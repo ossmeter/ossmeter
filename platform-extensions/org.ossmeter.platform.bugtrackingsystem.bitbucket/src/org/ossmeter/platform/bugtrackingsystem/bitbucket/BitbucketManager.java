@@ -17,6 +17,8 @@ import org.ossmeter.platform.delta.bugtrackingsystem.IBugTrackingSystemManager;
 import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.bitbucket.BitbucketBugTrackingSystem;
 
+import com.mongodb.DB;
+
 public class BitbucketManager implements
 		IBugTrackingSystemManager<BitbucketBugTrackingSystem> {
 
@@ -32,7 +34,7 @@ public class BitbucketManager implements
 	}
 
 	@Override
-	public BugTrackingSystemDelta getDelta(
+	public BugTrackingSystemDelta getDelta(DB db,
 			BitbucketBugTrackingSystem bugTracker, Date date) throws Exception {
 
 		java.util.Date day = date.toJavaDate();
@@ -78,7 +80,7 @@ public class BitbucketManager implements
 	}
 
 	@Override
-	public Date getFirstDate(BitbucketBugTrackingSystem bugTracker)
+	public Date getFirstDate(DB db,BitbucketBugTrackingSystem bugTracker)
 			throws Exception {
 		BitbucketIssueQuery query = new BitbucketIssueQuery(
 				bugTracker.getUser(), bugTracker.getRepository());
@@ -92,7 +94,7 @@ public class BitbucketManager implements
 	}
 
 	@Override
-	public String getContents(BitbucketBugTrackingSystem bugTracker,
+	public String getContents(DB db,BitbucketBugTrackingSystem bugTracker,
 			BugTrackingSystemBug bug) throws Exception {
 		BitbucketRestClient bitbucket = getBitbucketRestClient(bugTracker);
 		BitbucketIssue issue = bitbucket.getIssue(bugTracker.getUser(),
@@ -104,7 +106,7 @@ public class BitbucketManager implements
 	}
 
 	@Override
-	public String getContents(BitbucketBugTrackingSystem bugTracker,
+	public String getContents(DB db,BitbucketBugTrackingSystem bugTracker,
 			BugTrackingSystemComment comment) throws Exception {
 		BitbucketRestClient bitbucket = getBitbucketRestClient(bugTracker);
 		BitbucketIssueComment bitbucketComment = bitbucket.getIssueComment(
@@ -132,19 +134,19 @@ public class BitbucketManager implements
 		bts.setRepository("jets3t");
 		BitbucketManager manager = new BitbucketManager();
 
-		Date firstDate = manager.getFirstDate(bts);
+		Date firstDate = manager.getFirstDate(null, bts);
 		System.out.println(firstDate);
 
 		BitbucketIssue issue = new BitbucketIssue();
 		issue.setBugId("189");
-		System.out.println(manager.getContents(bts, issue));
+		System.out.println(manager.getContents(null, bts, issue));
 
 		BitbucketIssueComment comment = new BitbucketIssueComment();
 		comment.setBugId("189");
 		comment.setCommentId("11288353");
-		System.out.println(manager.getContents(bts, comment));
+		System.out.println(manager.getContents(null, bts, comment));
 
-		BugTrackingSystemDelta delta = manager.getDelta(bts, new Date(
+		BugTrackingSystemDelta delta = manager.getDelta(null, bts, new Date(
 				"20140626"));
 		System.out.println(delta.getUpdatedBugs().size());
 	}

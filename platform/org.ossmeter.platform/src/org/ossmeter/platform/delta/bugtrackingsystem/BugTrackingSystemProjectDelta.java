@@ -8,17 +8,19 @@ import org.ossmeter.platform.delta.NoManagerFoundException;
 import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.Project;
 
+import com.mongodb.DB;
+
 
 public class BugTrackingSystemProjectDelta {
 	
 	protected List<BugTrackingSystemDelta> bugTrackingSystemDeltas = 
 			new ArrayList<BugTrackingSystemDelta>();
 	
-	public BugTrackingSystemProjectDelta(Project project, Date date, 
+	public BugTrackingSystemProjectDelta(DB db, Project project, Date date, 
 			IBugTrackingSystemManager bugTrackingSystemManager) throws Exception {
 		for (BugTrackingSystem bugTrackingSystem : project.getBugTrackingSystems()) {
 			try {
-				bugTrackingSystemDeltas.add(bugTrackingSystemManager.getDelta(bugTrackingSystem, date));
+				bugTrackingSystemDeltas.add(bugTrackingSystemManager.getDelta(db, bugTrackingSystem, date));
 			} catch (NoManagerFoundException e) {
 				System.err.println(e.getMessage());
 			}
