@@ -11,7 +11,12 @@ Require-Bundle: org.eclipse.core.runtime,
  org.jackson.all;bundle-version="1.0.0",
  com.googlecode.pongo.runtime,
  org.ossmeter.repository.model.eclipse,
- org.ossmeter.platform.visualisation
+ org.ossmeter.platform.visualisation,
+ org.restlet.ext.jackson;bundle-version="2.1.4",
+ org.ossmeter.repository.model.eclipse.importer,
+ org.ossmeter.repository.model.github.importer,
+ org.ossmeter.repository.model.github,
+ org.mapdb
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.platform.client.api

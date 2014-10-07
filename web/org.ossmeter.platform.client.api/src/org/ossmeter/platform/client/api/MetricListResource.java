@@ -1,3 +1,4 @@
+
 package org.ossmeter.platform.client.api;
 
 import java.util.Map;

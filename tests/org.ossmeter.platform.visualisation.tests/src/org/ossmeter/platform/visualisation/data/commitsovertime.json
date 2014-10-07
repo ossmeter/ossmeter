@@ -3,6 +3,7 @@
 	"vis" : [ 
 		{
 			"name" : "commitsovertimeline",
+			"nicename" : "commits",
 			"description" : "This metric shows a cumulative count of the commits.",
 			"type" : "LineChart",
 			"datatable" : {

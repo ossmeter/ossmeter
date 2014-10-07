@@ -1,32 +1,32 @@
 package org.ossmeter.metricprovider.historic.numberofactiveusersperday.model;
 
-import java.util.List;
-
 import com.googlecode.pongo.runtime.Pongo;
-import com.googlecode.pongo.runtime.PongoList;
-import com.mongodb.BasicDBList;
+import com.googlecode.pongo.runtime.querying.NumericalQueryProducer;
 
 
 public class DailyActiveUsers extends Pongo {
 	
-	protected List<DailyNewsgroupData> newsgroups = null;
 	
 	
 	public DailyActiveUsers() { 
 		super();
-		dbObject.put("newsgroups", new BasicDBList());
+		NUMBEROFACTIVEUSERS.setOwningType("org.ossmeter.metricprovider.historic.numberofactiveusersperday.model.DailyActiveUsers");
+	}
+	
+	public static NumericalQueryProducer NUMBEROFACTIVEUSERS = new NumericalQueryProducer("numberOfActiveUsers");
+	
+	
+	public int getNumberOfActiveUsers() {
+		return parseInteger(dbObject.get("numberOfActiveUsers")+"", 0);
+	}
+	
+	public DailyActiveUsers setNumberOfActiveUsers(int numberOfActiveUsers) {
+		dbObject.put("numberOfActiveUsers", numberOfActiveUsers);
+		notifyChanged();
+		return this;
 	}
 	
 	
-	
-	
-	
-	public List<DailyNewsgroupData> getNewsgroups() {
-		if (newsgroups == null) {
-			newsgroups = new PongoList<DailyNewsgroupData>(this, "newsgroups", true);
-		}
-		return newsgroups;
-	}
 	
 	
 }

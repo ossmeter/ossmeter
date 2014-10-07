@@ -2,20 +2,28 @@
 <plugin>
 
    <extension point="org.ossmeter.platform.metricprovider">
-      <metricProvider provider="org.ossmeter.metricprovider.historic.numberofrequestsrepliesperdaypernewsgroup.NumberOfRequestsRepliesPerDayPerNewsgroupProvider"/>
+      <metricProvider provider="org.ossmeter.metricprovider.historic.newsgroups.requestsreplies.RequestsRepliesHistoricMetricProvider"/>
    </extension>
 
 
 
 
-<extension point="org.ossmeter.platform.client.api.pongoviz">
-   <visualiser metricProviderId="org.ossmeter.metricprovider.generic.numberofrequestsrepliesperdaypernewsgroup" pongoVisualiser="org.ossmeter.metricprovider.historic.numberofrequestsrepliesperdaypernewsgroup.model.DailyNorrViz">
-   </visualiser>
+
+
+<extension point="org.ossmeter.platform.visualisation.metric">
+   <visualisation json="vis/historic.newsgroups.requestsreplies.json">
+   </visualisation>
 </extension>
 
+
+
+
+
+
+
+
 <extension point="com.googlecode.pongo.runtime.osgi">
-    <class name="org.ossmeter.metricprovider.historic.numberofrequestsrepliesperdaypernewsgroup.model.DailyNorr"/>
-    <class name="org.ossmeter.metricprovider.historic.numberofrequestsrepliesperdaypernewsgroup.model.DailyNewsgroupRequestsData"/>
-    <class name="org.ossmeter.metricprovider.historic.numberofrequestsrepliesperdaypernewsgroup.model.DailyNewsgroupRepliesData"/>
+    <class name="org.ossmeter.metricprovider.historic.newsgroups.requestsreplies.model.NewsgroupsRequestsRepliesHistoricMetric"/>
+    <class name="org.ossmeter.metricprovider.historic.newsgroups.requestsreplies.model.DailyNewsgroupData"/>
   </extension>
 </plugin>

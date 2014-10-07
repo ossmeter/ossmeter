@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <plugin>
 <extension point="org.ossmeter.platform.metricprovider">
-   <metricProvider provider="org.ossmeter.metricprovider.trans.threadsrequestsreplies.ThreadsRequestsRepliesProvider">
+   <metricProvider provider="org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.ThreadsRequestsRepliesTransMetricProvider">
    </metricProvider>
 </extension>
 
 
+
+<extension point="org.ossmeter.platform.visualisation.metric">
+   <visualisation json="vis/trans.newsgroups.threadsrequestsreplies.json">
+   </visualisation>
+</extension>
+
 <extension point="com.googlecode.pongo.runtime.osgi">
-    <class name="org.ossmeter.metricprovider.trans.threadsrequestsreplies.model.ThreadsRR"/>
-    <class name="org.ossmeter.metricprovider.trans.threadsrequestsreplies.model.CurrentDate"/>
-    <class name="org.ossmeter.metricprovider.trans.threadsrequestsreplies.model.ThreadStatistics"/>
+    <class name="org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.model.NewsgroupsThreadsRequestsRepliesTransMetric"/>
+    <class name="org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.model.ThreadStatistics"/>
   </extension>
 </plugin>

@@ -77,8 +77,7 @@ public class JiraManager implements
 	}
 
 	@Override
-	public BugTrackingSystemDelta getDelta(DB db, JiraBugTrackingSystem bugTracker,
-			Date date) throws Exception {
+	public BugTrackingSystemDelta getDelta(DB db, JiraBugTrackingSystem bugTracker, Date date) throws Exception {
 
 		java.util.Date day = date.toJavaDate();
 
@@ -130,8 +129,7 @@ public class JiraManager implements
 	}
 
 	@Override
-	public String getContents(DB db, JiraBugTrackingSystem bts,
-			BugTrackingSystemBug bug) throws Exception {
+	public String getContents(DB db, JiraBugTrackingSystem bts, BugTrackingSystemBug bug) throws Exception {
 
 		JiraRestClient jira = getJiraRestClient(bts);
 		// Request only the description field in the rest response
@@ -144,8 +142,7 @@ public class JiraManager implements
 	}
 
 	@Override
-	public String getContents(DB db, JiraBugTrackingSystem bts,
-			BugTrackingSystemComment bugComment) throws Exception {
+	public String getContents(DB db, JiraBugTrackingSystem bts, BugTrackingSystemComment bugComment) throws Exception {
 
 		JiraRestClient jira = getJiraRestClient(bts);
 		JiraComment comment = jira.getComment(bugComment.getBugId(),

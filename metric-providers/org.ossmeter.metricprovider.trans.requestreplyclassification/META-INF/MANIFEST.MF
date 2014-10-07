@@ -11,7 +11,8 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.repository.model.bts.bugzilla,
  com.googlecode.pongo.runtime.osgi,
  org.ossmeter.requestreplyclassifier.opennlptartarus.libsvm,
- org.apache.commons.lang
+ org.apache.commons.lang,
+ org.ossmeter.platform.visualisation
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.metricprovider.trans.requestreplyclassification,

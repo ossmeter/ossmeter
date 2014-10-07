@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <plugin>
   
-  <extension point="org.ossmeter.platform.client.api.pongoviz">
-     <visualiser metricProviderId="org.ossmeter.metricprovider.generic.numberofnewusersperdaypernewsgroup" pongoVisualiser="org.ossmeter.metricprovider.historic.numberofnewusersperdaypernewsgroup.model.DailyNewUsersViz">
-     </visualiser>
-  </extension>
   <extension point="org.ossmeter.platform.metricprovider">
-     <metricProvider provider="org.ossmeter.metricprovider.historic.numberofnewusersperdaypernewsgroup.NumberOfNewUsersPerDayPerNewsgroupProvider">
+     <metricProvider provider="org.ossmeter.metricprovider.historic.newsgroups.newusers.NewUsersHistoricMetricProvider">
      </metricProvider>
   </extension>
+
+
+<extension point="org.ossmeter.platform.visualisation.metric">
+   <visualisation json="vis/historic.newsgroups.newusers.json">
+   </visualisation>
+</extension>
+
 <extension point="com.googlecode.pongo.runtime.osgi">
-    <class name="org.ossmeter.metricprovider.historic.numberofnewusersperdaypernewsgroup.model.DailyNewUsers"/>
-    <class name="org.ossmeter.metricprovider.historic.numberofnewusersperdaypernewsgroup.model.DailyNewsgroupData"/>
+    <class name="org.ossmeter.metricprovider.historic.newsgroups.newusers.model.NewsgroupsNewUsersHistoricMetric"/>
+    <class name="org.ossmeter.metricprovider.historic.newsgroups.newusers.model.DailyNewsgroupData"/>
   </extension>
 </plugin>

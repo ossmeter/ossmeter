@@ -47,6 +47,14 @@ public class TestDate {
 		Date sToday = new Date(jToday.toString());
 		assertEquals(0, jToday.compareTo(sToday));
 	}
+	
+	@Test
+	public void testEquals() throws ParseException {
+		Date jBirthday = new Date("19860812");
+		Date jBirthday2 = new Date("19860812");
+		
+		assertEquals(jBirthday, jBirthday2);
+	}
 
 	@Test
 	public void testRange() throws Exception {

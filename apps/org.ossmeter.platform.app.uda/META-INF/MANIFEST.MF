@@ -12,12 +12,12 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.repository.model.github,
  org.ossmeter.repository.model.sourceforge,
  org.ossmeter.repository.model,
- org.ossmeter.repository.model.eclipse.importer;bundle-version="1.0.0",
- org.ossmeter.repository.model.eclipse;bundle-version="0.1.0",
- org.ossmeter.repository.model.googlecode.importer;bundle-version="1.0.0",
- org.ossmeter.repository.model.redmine;bundle-version="1.0.0",
- org.ossmeter.repository.model.redmine.importer;bundle-version="1.0.0",
- org.ossmeter.repository.model.importerdependencies;bundle-version="1.0.0"
+ org.ossmeter.repository.model.eclipse.importer,
+ org.ossmeter.repository.model.eclipse,
+ org.ossmeter.repository.model.googlecode.importer,
+ org.ossmeter.repository.model.redmine,
+ org.ossmeter.repository.model.redmine.importer,
+ org.ossmeter.repository.model.importerdependencies
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.repository.app

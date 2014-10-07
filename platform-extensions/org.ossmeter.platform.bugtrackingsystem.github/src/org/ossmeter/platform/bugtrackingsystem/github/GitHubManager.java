@@ -63,8 +63,7 @@ public class GitHubManager implements
 	}
 
 	@Override
-	public String getContents(DB db, GitHubBugTracker bts, BugTrackingSystemBug bug)
-			throws Exception {
+	public String getContents(DB db, GitHubBugTracker bts, BugTrackingSystemBug bug) throws Exception {
 		GitHubSession github = getSession(bts);
 		Issue issue = github.getIssue(bts.getUser(), bts.getRepository(),
 				bug.getBugId());

@@ -4,10 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.ossmeter.metricprovider.historic.numberofactiveusersperday.model.DailyActiveUsers;
-import org.ossmeter.metricprovider.historic.numberofactiveusersperday.model.DailyNewsgroupData;
-import org.ossmeter.metricprovider.trans.activeusers.ActiveUsersMetricProvider;
-import org.ossmeter.metricprovider.trans.activeusers.model.ActiveUsers;
-import org.ossmeter.metricprovider.trans.activeusers.model.NewsgroupData;
+import org.ossmeter.metricprovider.trans.newsgroups.activeusers.ActiveUsersTransMetricProvider;
+import org.ossmeter.metricprovider.trans.newsgroups.activeusers.model.NewsgroupData;
+import org.ossmeter.metricprovider.trans.newsgroups.activeusers.model.NewsgroupsActiveUsersTransMetric;
 import org.ossmeter.platform.AbstractHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
@@ -45,18 +44,14 @@ public class NumberOfActiveUsersPerDayProvider extends AbstractHistoricalMetricP
 
 	@Override
 	public Pongo measure(Project project) {
-
-		 DailyActiveUsers dailyActiveUsers = new DailyActiveUsers();
-		for (IMetricProvider used : uses) {
-			ActiveUsers ActiveUsers = ((ActiveUsersMetricProvider)used).adapt(context.getProjectDB(project));
-			int activeUsers = 0;
-			for (NewsgroupData newsgroup: ActiveUsers.getNewsgroups())
-				activeUsers += newsgroup.getActiveUsers();
-			if (activeUsers > 0) {
-				DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
-				dailyNewsgroupData.setNumberOfActiveUsers(activeUsers);
-				dailyActiveUsers.getNewsgroups().add(dailyNewsgroupData);
-			}
+		DailyActiveUsers dailyActiveUsers = new DailyActiveUsers();
+		if (uses.size()==1) {
+			NewsgroupsActiveUsersTransMetric activeUsers = ((ActiveUsersTransMetricProvider)uses.get(0)).adapt(context.getProjectDB(project));
+			int numberOfActiveUsers = 0;
+			for (NewsgroupData newsgroup: activeUsers.getNewsgroups())
+				numberOfActiveUsers += newsgroup.getActiveUsers();
+			if (numberOfActiveUsers > 0)
+				dailyActiveUsers.setNumberOfActiveUsers(numberOfActiveUsers);
 		}
 		return dailyActiveUsers;
 	}
@@ -68,7 +63,7 @@ public class NumberOfActiveUsersPerDayProvider extends AbstractHistoricalMetricP
 	
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return Arrays.asList(ActiveUsersMetricProvider.class.getCanonicalName());
+		return Arrays.asList(ActiveUsersTransMetricProvider.class.getCanonicalName());
 	}
 
 	@Override

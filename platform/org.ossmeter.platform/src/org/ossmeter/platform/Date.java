@@ -83,6 +83,14 @@ public class Date {
 		return compareTo(date.toJavaDate());
 	}
 	
+	@Override
+	public boolean equals(Object date) {
+		if (date instanceof Date) {
+			return date.toString().equals(this.toString());
+		}
+		return false;
+	}
+	
 	/**
 	 * @param start INCLUSIVE
 	 * @param end INCLUSIVE

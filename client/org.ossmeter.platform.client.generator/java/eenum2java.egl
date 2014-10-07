@@ -1,0 +1,14 @@
+[%import "javautil.eol";%]
+package [%=e.ePackage.name%];
+[% for (p in OSS!EClass.all.collect(c | c.ePackage.name).asSet()) {%]
+import [%=p%].*;
+[%} %]
+
+public enum [%=e.name%] {
+	
+	[%for (l in e.eLiterals) { %]
+	[%=l.name%][%if (hasMore){%],[%}%]
+	
+	[%}%]
+	
+}

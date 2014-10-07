@@ -85,8 +85,7 @@ public class RedmineManager implements
 	}
 
 	@Override
-	public BugTrackingSystemDelta getDelta(DB db, RedmineBugIssueTracker bugTracker,
-			Date date) throws Exception {
+	public BugTrackingSystemDelta getDelta(DB db, RedmineBugIssueTracker bugTracker, Date date) throws Exception {
 		java.util.Date day = date.toJavaDate();
 
 		Cache<RedmineIssue, String> issueCache = issueCaches
@@ -117,8 +116,7 @@ public class RedmineManager implements
 	}
 
 	@Override
-	public Date getFirstDate(DB db, RedmineBugIssueTracker bugTracker)
-			throws Exception {
+	public Date getFirstDate(DB db, RedmineBugIssueTracker bugTracker) throws Exception {
 		RedmineRestClient redmine = getRedmineRestClient(bugTracker);
 		RedmineExtendedSearchResult result = redmine.extendedSearch(
 				ImmutableMap.of("project_id", bugTracker.getProject(), "sort",
@@ -131,8 +129,7 @@ public class RedmineManager implements
 	}
 
 	@Override
-	public String getContents(DB db, RedmineBugIssueTracker bugTracker,
-			BugTrackingSystemBug bug) throws Exception {
+	public String getContents(DB db, RedmineBugIssueTracker bugTracker, BugTrackingSystemBug bug) throws Exception {
 		RedmineRestClient redmine = getRedmineRestClient(bugTracker);
 		int bugId = Integer.parseInt(bug.getBugId());
 		RedmineIssue issue = redmine.getIssue(bugId);
@@ -144,8 +141,7 @@ public class RedmineManager implements
 	}
 
 	@Override
-	public String getContents(DB db, RedmineBugIssueTracker bugTracker,
-			BugTrackingSystemComment comment) throws Exception {
+	public String getContents(DB db, RedmineBugIssueTracker bugTracker, BugTrackingSystemComment comment) throws Exception {
 		RedmineRestClient redmine = getRedmineRestClient(bugTracker);
 		int bugId = Integer.parseInt(comment.getBugId());
 		int commentId = Integer.parseInt(comment.getCommentId());

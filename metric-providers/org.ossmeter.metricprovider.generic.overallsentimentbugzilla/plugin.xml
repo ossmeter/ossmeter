@@ -5,17 +5,20 @@
 
 
 <extension point="org.ossmeter.platform.metricprovider">
-   <metricProvider provider="org.ossmeter.metricprovider.historic.overallsentimentbugzilla.OverallSentimentBugzillaMetricProvider">
+   <metricProvider provider="org.ossmeter.metricprovider.historic.bugs.sentiment.SentimentHistoricMetricProvider">
    </metricProvider>
 </extension>
-<extension point="org.ossmeter.platform.client.api.pongoviz">
-   <visualiser metricProviderId="org.ossmeter.metricprovider.generic.overallsentimentbugzilla" pongoVisualiser="org.ossmeter.metricprovider.historic.overallsentimentbugzilla.model.OverallSentimentBugsViz">
-   </visualiser>
+
+
+
+
+<extension point="org.ossmeter.platform.visualisation.metric">
+   <visualisation json="vis/historic.bugs.sentiment.json">
+   </visualisation>
 </extension>
 
 
 <extension point="com.googlecode.pongo.runtime.osgi">
-    <class name="org.ossmeter.metricprovider.historic.overallsentimentbugzilla.model.OverallSentimentBugs"/>
-    <class name="org.ossmeter.metricprovider.historic.overallsentimentbugzilla.model.DailyBugzillaData"/>
+    <class name="org.ossmeter.metricprovider.historic.bugs.sentiment.model.BugsSentimentHistoricMetric"/>
   </extension>
 </plugin>

@@ -2,12 +2,18 @@
 <plugin>
 	
 	<extension point="org.ossmeter.platform.metricprovider">
-   		<metricProvider provider="org.ossmeter.metricprovider.trans.contentclassesnntp.ContentClassesMetricProvider">
+   		<metricProvider provider="org.ossmeter.metricprovider.trans.newsgroups.contentclasses.ContentClassesTransMetricProvider">
    		</metricProvider>
 	</extension>
+
+<extension point="org.ossmeter.platform.visualisation.metric">
+   <visualisation json="vis/trans.newsgroups.contentclasses.json">
+   </visualisation>
+</extension>
+
 <extension point="com.googlecode.pongo.runtime.osgi">
-    <class name="org.ossmeter.metricprovider.trans.contentclassesnntp.model.ContentClassesNNTP"/>
-    <class name="org.ossmeter.metricprovider.trans.contentclassesnntp.model.NewsgroupData"/>
-    <class name="org.ossmeter.metricprovider.trans.contentclassesnntp.model.ContentClass"/>
+    <class name="org.ossmeter.metricprovider.trans.newsgroups.contentclasses.model.NewsgroupsContentClassesTransMetric"/>
+    <class name="org.ossmeter.metricprovider.trans.newsgroups.contentclasses.model.NewsgroupData"/>
+    <class name="org.ossmeter.metricprovider.trans.newsgroups.contentclasses.model.ContentClass"/>
   </extension>
 </plugin>

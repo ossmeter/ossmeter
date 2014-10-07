@@ -77,9 +77,7 @@ public class SourceForgeManager implements
 	}
 
 	@Override
-	public BugTrackingSystemDelta getDelta(DB db, 
-			SourceForgeBugTrackingSystem bugTracker, Date date)
-			throws Exception {
+	public BugTrackingSystemDelta getDelta(DB db, SourceForgeBugTrackingSystem bugTracker, Date date) throws Exception {
 
 		java.util.Date day = date.toJavaDate();
 
@@ -116,8 +114,7 @@ public class SourceForgeManager implements
 	}
 
 	@Override
-	public Date getFirstDate(DB db, SourceForgeBugTrackingSystem bugTracker)
-			throws Exception {
+	public Date getFirstDate(DB db, SourceForgeBugTrackingSystem bugTracker) throws Exception {
 		SourceForgeTrackerRestClient sourceforge = getSourceForge(bugTracker);
 		SourceForgeSearchResult result = sourceforge.search("*:*", 0, 1);
 		List<Integer> ids = result.getTicketIds();
@@ -129,8 +126,7 @@ public class SourceForgeManager implements
 	}
 
 	@Override
-	public String getContents(DB db, SourceForgeBugTrackingSystem bugTracker,
-			BugTrackingSystemBug bug) throws Exception {
+	public String getContents(DB db, SourceForgeBugTrackingSystem bugTracker, BugTrackingSystemBug bug) throws Exception {
 		SourceForgeTrackerRestClient sourceforge = getSourceForge(bugTracker);
 		int ticketId = Integer.parseInt(bug.getBugId());
 		SourceForgeTicket ticket = sourceforge.getTicket(ticketId);
@@ -141,8 +137,7 @@ public class SourceForgeManager implements
 	}
 
 	@Override
-	public String getContents(DB db, SourceForgeBugTrackingSystem bugTracker,
-			BugTrackingSystemComment comment) throws Exception {
+	public String getContents(DB db, SourceForgeBugTrackingSystem bugTracker, BugTrackingSystemComment comment) throws Exception {
 		SourceForgeTrackerRestClient sourceforge = getSourceForge(bugTracker);
 		int ticketId = Integer.parseInt(comment.getBugId());
 		SourceForgeComment sfComment = sourceforge.getComment(ticketId,

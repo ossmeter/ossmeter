@@ -1,0 +1,14 @@
+package org.ossmeter.metricprovider.historic.newsgroups.newthreads.model;
+
+class NewsgroupsNewThreadsHistoricMetric {
+   attr int numberOfNewThreads;
+   attr int cumulativeNumberOfNewThreads;
+   val DailyNewsgroupData[*] newsgroups;
+}
+
+class DailyNewsgroupData {
+   attr String url_name;
+   attr int numberOfNewThreads;
+   attr int cumulativeNumberOfNewThreads;
+}
+

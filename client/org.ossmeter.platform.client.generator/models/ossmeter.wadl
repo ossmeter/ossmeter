@@ -1,0 +1,100 @@
+<application xmlns="http://wadl.dev.java.net/2009/02"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:oss="org.ossmeter.repository.model"
+	xmlns:metric="org.ossmeter.repository.model.metric"
+	xmlns:factoid="org.ossmeter.repository.platform.factoids">
+	<grammars>
+		<include href="ossmeter.xsd"/>
+		<include href="metric.xsd"/>
+		
+		<xs:simpleType name="projectList">
+			<xs:list itemType="oss:Project" />
+		</xs:simpleType>
+		<xs:simpleType name="metricList">
+			<xs:list itemType="metric:Metric" />
+		</xs:simpleType>
+		<xs:simpleType name="factoidList">
+			<xs:list itemType="factoid:Factoid" />
+		</xs:simpleType>
+	</grammars>
+
+	<resources base="http://www.ossmeter.com/api">
+		<resource path="/factoids">
+			<method name="GET" id="FactoidList">
+				<request>
+					<param name="page" required="false" type="xs:int" default="1" style="query" />
+					<param name="size" required="true" type="xs:int" default="20" style="query" />
+				</request>
+				<response>
+					<representation mediaType="application/json" element="factoidList" />
+				</response>
+			</method>
+		</resource>
+		<resource path="/metrics">
+			<method name="GET" id="MetricList">
+				<request>
+					<param name="page" required="false" type="xs:int" default="1" style="query" />
+					<param name="size" required="true" type="xs:int" default="20" style="query" />
+				</request>
+				<response>
+					<representation mediaType="application/json" element="metricList" />
+				</response>
+			</method>
+		</resource>
+		<resource path="/projects">
+			<method name="GET" id="ProjectList">
+				<request>
+					<param name="page" required="false" type="xs:int" default="1" style="query" />
+					<param name="size" required="true" type="xs:int" default="20" style="query" />
+				</request>
+				<response>
+					<representation mediaType="application/json" element="projectList" />
+				</response>
+			</method>
+		</resource>
+		<resource path="/projects/import">
+			<method name="POST" id="ImportProject">
+				<request>
+					<param name="page" required="false" type="xs:int" default="1" style="query" />
+					<param name="size" required="true" type="xs:int" default="20" style="query" />
+				</request>
+				<response>
+					<representation mediaType="application/json" element="projectList" />
+				</response>
+			</method>
+		</resource>
+		<resource path="/projects/p/{projectId}">
+			<param required="true" style="template" type="xs:string" name="projectId" />
+			<method name="GET" id="Project">
+				<response>
+					<representation mediaType="application/json" element="oss:Project" />
+				</response>
+			</method>
+		</resource>
+		<resource path="/projects/p/{projectId}/m/{metricId}">
+			<param required="true" style="template" type="xs:string" name="projectId" />
+			<param required="true" style="template" type="xs:string" name="metricId" />
+			<method name="GET" id="Metric">
+				<request>
+					<param name="agg" required="false" default="none" style="query" />
+					<param name="startDate" required="false" default="20010101" style="query" />
+					<param name="endDate" required="false" default="20010101" style="query" />
+				</request>
+				<response status="200">
+					<representation mediaType="application/json" element="metric:Metric" />
+				</response>							
+			</method>
+		</resource>
+		<resource path="/projects/p/{projectId}/f/{factoidId}">
+			<param required="true" style="template" type="xs:string" name="projectId" />
+			<param required="true" style="template" type="xs:string" name="factoidId" />
+			<method name="GET" id="Factoid">
+				<request>
+				</request>
+				<response>
+					<representation mediaType="application/json" element="metric:Factoid" />
+				</response>
+			</method>
+		</resource>
+	</resources>
+</application>

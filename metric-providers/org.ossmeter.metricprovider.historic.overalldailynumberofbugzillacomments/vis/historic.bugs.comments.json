@@ -1,0 +1,27 @@
+{
+	"metricid" : "org.ossmeter.metricprovider.historic.bugs.comments",
+	"vis" : [ 
+		{
+			"name" : "comments",
+			"type" : "LineChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Comments", "field" : "$numberOfComments" } ]
+			},
+			"x" : "Date",
+			"y" : "Comments",
+			"timeSeries" : true
+		},{
+			"name" : "cumulativeComments",
+			"type" : "LineChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Cumulative Comments", "field" : "$cumulativeNumberOfComments" } ]
+			},
+			"x" : "Date",
+			"y" : "Cumulative Comments",
+			"timeSeries" : true
+		}
+	]
+
+}

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xsd:schema xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:org.ossmeter.repository.model="org.ossmeter.repository.model" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ecore:nsPrefix="org.ossmeter.repository.model" ecore:package="org.ossmeter.repository.model" targetNamespace="org.ossmeter.repository.model">
+  <xsd:import namespace="http://www.eclipse.org/emf/2002/Ecore" schemaLocation="platform:/plugin/org.eclipse.emf.ecore/model/Ecore.xsd"/>
+  <xsd:element ecore:ignore="true" name="ProjectRepository" type="org.ossmeter.repository.model:ProjectRepository"/>
+  <xsd:element ecore:ignore="true" name="SchedulingInformation" type="org.ossmeter.repository.model:SchedulingInformation"/>
+  <xsd:element ecore:ignore="true" name="ImportData" type="org.ossmeter.repository.model:ImportData"/>
+  <xsd:element ecore:ignore="true" name="NamedElement" type="org.ossmeter.repository.model:NamedElement"/>
+  <xsd:element ecore:ignore="true" name="Project" type="org.ossmeter.repository.model:Project"/>
+  <xsd:element ecore:ignore="true" name="MetricProviderExecution" type="org.ossmeter.repository.model:MetricProviderExecution"/>
+  <xsd:element ecore:ignore="true" name="ProjectExecutionInformation" type="org.ossmeter.repository.model:ProjectExecutionInformation"/>
+  <xsd:element ecore:ignore="true" name="MetricProvider" type="org.ossmeter.repository.model:MetricProvider"/>
+  <xsd:element ecore:ignore="true" name="LocalStorage" type="org.ossmeter.repository.model:LocalStorage"/>
+  <xsd:element ecore:ignore="true" name="CommunicationChannel" type="org.ossmeter.repository.model:CommunicationChannel"/>
+  <xsd:element ecore:ignore="true" name="VcsRepository" type="org.ossmeter.repository.model:VcsRepository"/>
+  <xsd:element ecore:ignore="true" name="BugTrackingSystem" type="org.ossmeter.repository.model:BugTrackingSystem"/>
+  <xsd:element ecore:ignore="true" name="Person" type="org.ossmeter.repository.model:Person"/>
+  <xsd:element ecore:ignore="true" name="Role" type="org.ossmeter.repository.model:Role"/>
+  <xsd:element ecore:ignore="true" name="License" type="org.ossmeter.repository.model:License"/>
+  <xsd:complexType name="ProjectRepository">
+    <xsd:complexContent>
+      <xsd:extension base="org.ossmeter.repository.model:NamedElement">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="projects" type="org.ossmeter.repository.model:Project"/>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="roles" type="org.ossmeter.repository.model:Role"/>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="gitHubImportData" type="org.ossmeter.repository.model:ImportData"/>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="sfImportData" type="org.ossmeter.repository.model:ImportData"/>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="persons" type="org.ossmeter.repository.model:Person"/>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="licenses" type="org.ossmeter.repository.model:License"/>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="metricProviders" type="org.ossmeter.repository.model:MetricProvider"/>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="schedulingInformation" type="org.ossmeter.repository.model:SchedulingInformation"/>
+        </xsd:sequence>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="SchedulingInformation">
+    <xsd:sequence>
+      <xsd:element ecore:unique="true" maxOccurs="unbounded" minOccurs="0" name="currentLoad" nillable="true" type="ecore:EString"/>
+    </xsd:sequence>
+    <xsd:attribute name="workerIdentifier" type="ecore:EString"/>
+    <xsd:attribute name="isMaster" type="ecore:EBooleanObject"/>
+  </xsd:complexType>
+  <xsd:complexType name="ImportData">
+    <xsd:attribute name="forge" type="ecore:EString"/>
+    <xsd:attribute name="lastImportedProject" type="ecore:EString"/>
+  </xsd:complexType>
+  <xsd:complexType abstract="true" name="NamedElement">
+    <xsd:attribute name="name" type="ecore:EString"/>
+  </xsd:complexType>
+  <xsd:complexType name="Project">
+    <xsd:complexContent>
+      <xsd:extension base="org.ossmeter.repository.model:NamedElement">
+        <xsd:sequence>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="vcsRepositories" type="org.ossmeter.repository.model:VcsRepository"/>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="communicationChannels" type="org.ossmeter.repository.model:CommunicationChannel"/>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="bugTrackingSystems" type="org.ossmeter.repository.model:BugTrackingSystem"/>
+          <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="metricProviderData" type="org.ossmeter.repository.model:MetricProvider"/>
+          <xsd:element ecore:resolveProxies="true" minOccurs="0" name="executionInformation" type="org.ossmeter.repository.model:ProjectExecutionInformation"/>
+        </xsd:sequence>
+        <xsd:attribute name="shortName" type="ecore:EString"/>
+        <xsd:attribute name="description" type="ecore:EString"/>
+        <xsd:attribute ecore:unsettable="false" name="year" type="ecore:EInt"/>
+        <xsd:attribute default="true" ecore:unsettable="false" name="active" type="ecore:EBoolean"/>
+        <xsd:attribute name="lastExecuted" type="ecore:EString"/>
+        <xsd:attribute ecore:reference="org.ossmeter.repository.model:Project" name="parent" type="xsd:anyURI"/>
+        <xsd:attribute ecore:reference="org.ossmeter.repository.model:Person" name="persons">
+          <xsd:simpleType>
+            <xsd:list itemType="xsd:anyURI"/>
+          </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute ecore:reference="org.ossmeter.repository.model:License" name="licenses">
+          <xsd:simpleType>
+            <xsd:list itemType="xsd:anyURI"/>
+          </xsd:simpleType>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="MetricProviderExecution">
+    <xsd:attribute ecore:reference="org.ossmeter.repository.model:MetricProvider" name="metricProvider" type="xsd:anyURI"/>
+    <xsd:attribute name="metricProviderId" type="ecore:EString"/>
+    <xsd:attribute ecore:unsettable="false" name="type" type="org.ossmeter.repository.model:MetricProviderType"/>
+    <xsd:attribute default="-1" ecore:unsettable="false" name="lastExecuted" type="ecore:EString"/>
+  </xsd:complexType>
+  <xsd:complexType name="ProjectExecutionInformation">
+    <xsd:sequence>
+      <xsd:element ecore:resolveProxies="true" minOccurs="0" name="storage" type="org.ossmeter.repository.model:LocalStorage"/>
+      <xsd:element ecore:resolveProxies="true" maxOccurs="unbounded" minOccurs="0" name="metricProviderData" type="org.ossmeter.repository.model:MetricProviderExecution"/>
+    </xsd:sequence>
+    <xsd:attribute name="lastExecuted" type="ecore:EString"/>
+    <xsd:attribute default="true" ecore:unsettable="false" name="monitor" type="ecore:EBoolean"/>
+    <xsd:attribute default="false" ecore:unsettable="false" name="inErrorState" type="ecore:EBoolean"/>
+  </xsd:complexType>
+  <xsd:complexType name="MetricProvider">
+    <xsd:complexContent>
+      <xsd:extension base="org.ossmeter.repository.model:NamedElement">
+        <xsd:attribute name="metricProviderId" type="ecore:EString"/>
+        <xsd:attribute ecore:unsettable="false" name="type" type="org.ossmeter.repository.model:MetricProviderType"/>
+        <xsd:attribute ecore:unsettable="false" name="category" type="org.ossmeter.repository.model:MetricProviderCategory"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:simpleType name="MetricProviderCategory">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="BUGTRACKINGSYSTEM"/>
+      <xsd:enumeration value="COMMUNICATIONCHANNEL"/>
+      <xsd:enumeration value="VERSIONCONTROLSYSTEM"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="MetricProviderType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="HISTORIC"/>
+      <xsd:enumeration value="TRANSIENT"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:complexType name="LocalStorage">
+    <xsd:attribute name="path" type="ecore:EString"/>
+  </xsd:complexType>
+  <xsd:complexType abstract="true" name="CommunicationChannel">
+    <xsd:attribute name="url" type="ecore:EString"/>
+    <xsd:attribute ecore:reference="org.ossmeter.repository.model:Person" name="persons">
+      <xsd:simpleType>
+        <xsd:list itemType="xsd:anyURI"/>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute ecore:unsettable="false" name="nonProcessable" type="ecore:EBoolean"/>
+  </xsd:complexType>
+  <xsd:complexType abstract="true" name="VcsRepository">
+    <xsd:complexContent>
+      <xsd:extension base="org.ossmeter.repository.model:NamedElement">
+        <xsd:attribute ecore:name="created_at" name="created_at" type="ecore:EString"/>
+        <xsd:attribute ecore:name="updated_at" name="updated_at" type="ecore:EString"/>
+        <xsd:attribute name="url" type="ecore:EString"/>
+        <xsd:attribute ecore:reference="org.ossmeter.repository.model:Person" name="persons">
+          <xsd:simpleType>
+            <xsd:list itemType="xsd:anyURI"/>
+          </xsd:simpleType>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType abstract="true" name="BugTrackingSystem">
+    <xsd:attribute name="url" type="ecore:EString"/>
+    <xsd:attribute ecore:reference="org.ossmeter.repository.model:Person" name="persons">
+      <xsd:simpleType>
+        <xsd:list itemType="xsd:anyURI"/>
+      </xsd:simpleType>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="Person">
+    <xsd:complexContent>
+      <xsd:extension base="org.ossmeter.repository.model:NamedElement">
+        <xsd:attribute name="homePage" type="ecore:EString"/>
+        <xsd:attribute ecore:reference="org.ossmeter.repository.model:Role" name="roles">
+          <xsd:simpleType>
+            <xsd:list itemType="xsd:anyURI"/>
+          </xsd:simpleType>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="Role">
+    <xsd:complexContent>
+      <xsd:extension base="org.ossmeter.repository.model:NamedElement"/>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="License">
+    <xsd:complexContent>
+      <xsd:extension base="org.ossmeter.repository.model:NamedElement">
+        <xsd:attribute name="url" type="ecore:EString"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+</xsd:schema>

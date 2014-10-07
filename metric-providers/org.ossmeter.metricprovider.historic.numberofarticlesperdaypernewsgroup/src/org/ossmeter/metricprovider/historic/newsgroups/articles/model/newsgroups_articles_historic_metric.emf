@@ -1,0 +1,14 @@
+package org.ossmeter.metricprovider.historic.newsgroups.articles.model;
+
+class NewsgroupsArticlesHistoricMetric {
+   attr int numberOfArticles;
+   attr int cumulativeNumberOfArticles;
+   val DailyNewsgroupData[*] newsgroups;
+}
+
+class DailyNewsgroupData {
+   attr String url_name;
+   attr int numberOfArticles;
+   attr int cumulativeNumberOfArticles;
+}
+

@@ -65,12 +65,12 @@ map[str, int] locPerLanguage(rel[Language, loc, AST] asts = {}, map[loc, int] ge
 }
 
 
-@metric{mainLanguage}
-@doc{Main development language of the project}
-@friendlyName{Main development language of the project}
+@metric{codeSize}
+@doc{The size of the project's code base}
+@friendlyName{Code Size}
 @appliesTo{generic()}
 @uses{("locPerLanguage" :"locPerLanguage")}
-Factoid mainLanguage(map[str, int] locPerLanguage = ()) {
+Factoid codeSize(map[str, int] locPerLanguage = ()) {
   if (isEmpty(locPerLanguage)) {
     throw undefined("No LOC data available", |unknown:///|);
   }
@@ -81,14 +81,30 @@ Factoid mainLanguage(map[str, int] locPerLanguage = ()) {
     	return a[1] > b[1]; // sort from high to low
     });
 
+  totalSize = ( 0 | it + locPerLanguage[l] | l <- locPerLanguage );
+
   mainLang = sorted[0];
 
-  txt = "The main development language of the project is <mainLang[0]>, with <mainLang[1]> physical lines of code.";
+  txt = "The total size of the code base is <totalSize> physical lines of code. The main development language of the project is <mainLang[0]>, with <mainLang[1]> physical lines of code.";
   if (size(sorted) > 1) {
     otherTxt = intercalate(", ", ["<l[0]> (<l[1]>)" | l <- sorted[1..]]);
   
-    txt += " <size(sorted) - 1> other languages were recognized: <otherTxt>.";
+    txt += " The following <size(sorted) - 1> other languages were recognized: <otherTxt>.";
   } 
 
-  return factoid(txt, \four()); // star rating by language level? weighted by LOC? // http://www.cs.bsu.edu/homepages/dmz/cs697/langtbl.htm	
+  stars = 1;
+  
+  if (totalSize < 1000000) { // 1 star if LOC > 1M
+    stars += 1;
+    
+    if (totalSize < 500000) {
+      stars += 1;
+    }
+  
+    if (size(locPerLanguage) <= 2) {
+      stars += 1;
+    }
+  }
+  
+  return factoid(txt, starLookup[stars]); // star rating by language level? weighted by LOC? // http://www.cs.bsu.edu/homepages/dmz/cs697/langtbl.htm	
 }

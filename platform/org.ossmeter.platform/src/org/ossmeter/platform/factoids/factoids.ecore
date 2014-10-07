@@ -19,6 +19,16 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="metricDependencies" upperBound="-1">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="category" eType="//FactoidCategory">
+      <eAnnotations source="searchable"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="FactoidCategory">
+    <eLiterals name="GENERAL"/>
+    <eLiterals name="CODE" value="1"/>
+    <eLiterals name="COMMS" value="2"/>
+    <eLiterals name="BUGS" value="3"/>
+    <eLiterals name="OTHER" value="4"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EEnum" name="StarRating">
     <eLiterals name="ONE"/>

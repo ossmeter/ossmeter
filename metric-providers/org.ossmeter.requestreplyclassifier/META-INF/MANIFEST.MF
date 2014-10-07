@@ -6,7 +6,6 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.requestreplyclassifier.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.ossmeter.weka,
  uk.ac.nactem.geniatagger,
  uk.ac.nactem.geniatagger.dependencies
 Bundle-ActivationPolicy: lazy

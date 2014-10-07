@@ -34,8 +34,7 @@ public class BitbucketManager implements
 	}
 
 	@Override
-	public BugTrackingSystemDelta getDelta(DB db, 
-			BitbucketBugTrackingSystem bugTracker, Date date) throws Exception {
+	public BugTrackingSystemDelta getDelta(DB db, BitbucketBugTrackingSystem bugTracker, Date date) throws Exception {
 
 		java.util.Date day = date.toJavaDate();
 

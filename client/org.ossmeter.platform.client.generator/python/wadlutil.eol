@@ -1,0 +1,77 @@
+import "javautil.eol";
+
+// Any = t_method
+operation WADL!t_method getName() : String {
+	return self.a_id.ftuc();
+}
+
+// Any = t_method
+operation WADL!t_method getResultType() : String {
+	self.c_response.first().println();
+
+	var representation = self.c_response.first().c_representation.first().a_element;
+
+	if (representation.startsWith("oss:")) {
+		return representation.split(":").last();
+	} else if (representation.startsWith("metric:")) {
+		return representation.split(":").last();
+	} else if(representation == "projectList") {
+		return "List<Project>";
+	}	
+}
+
+// Any = t_method
+operation WADL!t_method getMapperResultType() : String {
+	self.c_response.first().println();
+
+	var representation = self.c_response.first().c_representation.first().a_element;
+
+	if (representation.startsWith("oss:")) {
+		return representation.split(":").last() + ".class";
+	} else if (representation.startsWith("metric:")) {
+		return representation.split(":").last() + ".class";
+	} else if(representation == "projectList") {
+		return "TypeFactory.defaultInstance().constructCollectionType(List.class, Project.class)";
+	}	
+}
+
+// Any = t_method
+operation WADL!t_method getArguments() : String {
+	var params = self.parentNode.c_param.flatten();
+	if (params.size() == 0) return "";
+	
+	var res = params.at(0).getParamType() + " " + params.at(0).a_name.cleanParamString();
+	
+	if (params.size() > 1) {
+		for (p in 1.to(params.size()-1)) {
+			res = res + ", " + params.at(p).getParamType() + " " + params.at(p).a_name.cleanParamString();
+		}
+	}
+	
+	return res.println();
+}
+
+operation String cleanParamString() : String {
+	var s = self.replace("\\{", "");
+	s = s.replace("}", "");
+	return s;
+}
+
+// Any = t_param
+operation WADL!t_param getParamType() : String {
+	switch (self.a_type) {
+		case "xs:string": return "String";
+		case "xs:int": return "int";
+		default: return "String";
+	}
+}
+ 
+// Any = t_method
+operation WADL!t_method getUrl() : String {
+	var path = self.parentNode.a_path;
+	path.println();
+	path = path.replace("\\{", "\" + ");
+	path = path.replace("}", " + \"");
+	return path;
+
+}

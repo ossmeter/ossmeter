@@ -5,14 +5,19 @@
 
 
 <extension point="org.ossmeter.platform.metricprovider">
-   <metricProvider provider="org.ossmeter.metricprovider.trans.overallemotionsnntp.OverallEmotionsMetricProvider">
+   <metricProvider provider="org.ossmeter.metricprovider.trans.overallemotionsnntp.EmotionsTransMetricProvider">
    </metricProvider>
 </extension>
 
 
 
+
+<extension point="org.ossmeter.platform.visualisation.metric">
+   <visualisation json="vis/trans.newsgroups.emotions.json">
+   </visualisation>
+</extension>
 <extension point="com.googlecode.pongo.runtime.osgi">
-    <class name="org.ossmeter.metricprovider.trans.overallemotionsnntp.model.OverallEmotionNNTP"/>
+    <class name="org.ossmeter.metricprovider.trans.overallemotionsnntp.model.NewsgroupsEmotionsTransMetric"/>
     <class name="org.ossmeter.metricprovider.trans.overallemotionsnntp.model.NewsgroupData"/>
     <class name="org.ossmeter.metricprovider.trans.overallemotionsnntp.model.Emotion"/>
   </extension>

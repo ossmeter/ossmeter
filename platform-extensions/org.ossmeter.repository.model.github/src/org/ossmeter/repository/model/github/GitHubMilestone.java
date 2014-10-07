@@ -15,7 +15,6 @@ public class GitHubMilestone extends Pongo {
 	
 	public GitHubMilestone() { 
 		super();
-		dbObject.put("creator", new BasicDBObject());
 		dbObject.put("open_issues", new BasicDBList());
 		dbObject.put("closed_issues", new BasicDBList());
 		URL.setOwningType("org.ossmeter.repository.model.github.GitHubMilestone");
@@ -118,7 +117,6 @@ public class GitHubMilestone extends Pongo {
 	public GitHubUser getCreator() {
 		if (creator == null && dbObject.containsField("creator")) {
 			creator = (GitHubUser) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("creator"));
-			creator.setContainer(this);
 		}
 		return creator;
 	}

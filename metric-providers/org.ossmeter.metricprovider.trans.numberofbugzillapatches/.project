@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>org.ossmeter.metricprovider.trans.numberofbugzillapatches</name>
+	<name>org.ossmeter.metricprovider.trans.bugs.patches</name>
 	<comment></comment>
 	<projects>
 	</projects>

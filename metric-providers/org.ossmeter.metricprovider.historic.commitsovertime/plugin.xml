@@ -12,10 +12,9 @@
      </metricProvider>
   </extension>
   <extension
-        point="org.ossmeter.platform.client.api.pongoviz">
-     <visualiser
-           metricProviderId="org.ossmeter.metricprovider.historic.commitsovertime.CommitsOverTimeHistoricMetricProvider"
-           pongoVisualiser="org.ossmeter.metricprovider.historic.commitsovertime.model.CommitsOverTimeViz">
-     </visualiser>
+        point="org.ossmeter.platform.visualisation.metric">
+     <visualisation
+           json="vis/commitsovertime.json">
+     </visualisation>
   </extension>
 </plugin>

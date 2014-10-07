@@ -11,7 +11,6 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.repository.model.github,
  org.eclipse.egit.github.core,
  org.joda.time,
- org.apache.commons.lang,
  com.google.guava,
  org.ossmeter.platform.bugtrackingsystem
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

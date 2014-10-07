@@ -48,7 +48,6 @@ public class Project extends NamedElement {
 	public static StringQueryProducer LASTEXECUTED = new StringQueryProducer("lastExecuted"); 
 	public static StringQueryProducer HOMEPAGE = new StringQueryProducer("homePage"); 
 	
-	
 	public String getShortName() {
 		return parseString(dbObject.get("shortName")+"", "");
 	}

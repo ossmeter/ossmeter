@@ -1,0 +1,14 @@
+[%import "csharputil.eol";%]
+
+
+namespace ossmeterclient
+{
+	enum [%=e.name%] {
+		
+		[%for (l in e.eLiterals) { %]
+		[%=l.name%][%if (hasMore){%],[%}%]
+		
+		[%}%]
+		
+	}
+}

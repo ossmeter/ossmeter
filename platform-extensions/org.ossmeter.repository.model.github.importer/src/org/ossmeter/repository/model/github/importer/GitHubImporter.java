@@ -376,7 +376,7 @@ public class GitHubImporter {
 				user.setFollowers_url((String)ownerObject.get("followers_url"));							
 				
 				lastImportedId = new Integer(currentRepo.get("id").toString()); 
-				platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().first().setLastImportedProject(String.valueOf(lastImportedId));
+//				platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().first().setLastImportedProject(String.valueOf(lastImportedId));
 				platform.getProjectRepositoryManager().getProjectRepository().sync();	
 				if (!projectToBeUpdated) {
 					platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(repository);
