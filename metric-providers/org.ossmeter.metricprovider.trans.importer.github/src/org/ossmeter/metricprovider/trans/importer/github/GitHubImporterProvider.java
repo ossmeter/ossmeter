@@ -91,23 +91,15 @@ public class GitHubImporterProvider implements ITransientMetricProvider{
 	@Override
 	public void measure(Project project, ProjectDelta delta, PongoDB db) {
 		GitHubRepository ep = null;
-		Mongo mongo;
-		try {
-			GitHubImporter epi = new GitHubImporter();
-			mongo = new Mongo();
-			PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
-			Platform platform = new Platform(mongo);
-			ep = epi.importRepository( ((GitHubRepository)project).getFull_name(), platform);
-			if (ep.getExecutionInformation().getInErrorState() )
-				project.getExecutionInformation().setInErrorState(true);
-			mongo.close();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			logger.error("GitHub metric provider exception:" + e.getMessage());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			logger.error("GitHub metric provider exception:" + e.getMessage());
-		}
+		GitHubImporter epi = new GitHubImporter();
+		
+		// JW (7th Oct, 14) is 'ep' needed? ep === project?
+		ep = epi.importRepository( ((GitHubRepository)project).getFull_name(), Platform.getInstance());
+		
+		// JW (7th Oct, 14): Why does it test this? As far as I can tell, the importer
+		// does not update the inErrorState field..?
+		if (ep.getExecutionInformation().getInErrorState() )
+			project.getExecutionInformation().setInErrorState(true);
 	}
 
 //	@Override

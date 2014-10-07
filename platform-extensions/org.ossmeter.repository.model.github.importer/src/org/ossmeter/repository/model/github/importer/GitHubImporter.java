@@ -267,7 +267,7 @@ public class GitHubImporter {
 	
 	public GitHubRepository importRepository(String projectId, Platform platform) {
 		try {
-				int lastImportedId = new Integer(platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().first().getLastImportedProject());
+//				int lastImportedId = new Integer(platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().first().getLastImportedProject());
 
 				GitHubRepository repository = null;
 				
@@ -305,7 +305,7 @@ public class GitHubImporter {
 					repository.setDescription(currentRepo.get("description").toString());
 
 				repository.setFull_name(projectId);
-				repository.setShortName(projectId);
+				repository.setShortName(currentRepo.get("name").toString());
 				repository.setName(currentRepo.get("name").toString());
 
 				if ((isNotNull(currentRepo,"private")))					
@@ -375,7 +375,7 @@ public class GitHubImporter {
 				user.setName((String)ownerObject.get("login"));
 				user.setFollowers_url((String)ownerObject.get("followers_url"));							
 				
-				lastImportedId = new Integer(currentRepo.get("id").toString()); 
+//				int lastImportedId = new Integer(currentRepo.get("id").toString()); 
 //				platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().first().setLastImportedProject(String.valueOf(lastImportedId));
 				platform.getProjectRepositoryManager().getProjectRepository().sync();	
 				if (!projectToBeUpdated) {
