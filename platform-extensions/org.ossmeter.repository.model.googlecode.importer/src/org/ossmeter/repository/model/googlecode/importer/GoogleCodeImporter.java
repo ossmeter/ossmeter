@@ -1,24 +1,18 @@
 package org.ossmeter.repository.model.googlecode.importer;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import org.eclipse.ui.progress.PendingUpdateAdapter;
 import org.jsoup.Jsoup;
 import org.ossmeter.repository.model.License;
 import org.ossmeter.repository.model.Person;
 import org.ossmeter.repository.model.Project;
-import org.ossmeter.repository.model.ProjectCollection;
 import org.ossmeter.repository.model.Role;
 import org.ossmeter.repository.model.VcsRepository;
-import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.ossmeter.repository.model.googlecode.*;

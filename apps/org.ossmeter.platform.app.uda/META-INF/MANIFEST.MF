@@ -17,7 +17,8 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.repository.model.googlecode.importer;bundle-version="1.0.0",
  org.ossmeter.repository.model.redmine;bundle-version="1.0.0",
  org.ossmeter.repository.model.redmine.importer;bundle-version="1.0.0",
- org.ossmeter.repository.model.importerdependencies;bundle-version="1.0.0"
+ org.ossmeter.repository.model.importerdependencies;bundle-version="1.0.0",
+ org.ossmeter.repository.model.importer.exception;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.repository.app

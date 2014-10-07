@@ -2,6 +2,8 @@ package org.ossmeter.metricprovider.trans.importer.eclipse;
 
 import org.ossmeter.platform.ITransientMetricProvider;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 import java.util.List;
 
@@ -23,11 +25,12 @@ import com.mongodb.Mongo;
 
 import org.ossmeter.repository.model.eclipse.EclipseProject;
 import org.ossmeter.repository.model.eclipse.importer.*;
+import org.ossmeter.repository.model.importer.exception.ProjectUnknownException;
 
 
 public class EclipseImporterProvider implements ITransientMetricProvider{
 	public final static String IDENTIFIER = 
-			"org.ossmeter.metricprovider.historic.eclipseimporter";
+			"org.ossmeter.metricprovider.trans.eclipseimporter";
 	
 	protected MetricProviderContext context;
 	OssmeterLogger logger;
@@ -110,9 +113,13 @@ public class EclipseImporterProvider implements ITransientMetricProvider{
 				project.getExecutionInformation().setInErrorState(true);
 			mongo.close();
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			logger.error("Error launch EclipseImporterProvider " + e.getMessage());
+			logger.error("Error launch RedmineImporterProvider " + e.getMessage());
+		}catch (ProjectUnknownException e) {
+			logger.error("Error launch RedmineImporterProvider " + e.getMessage());
+		} catch (MalformedURLException e) {
+			logger.error("Error launch RedmineImporterProvider " + e.getMessage());
+		} catch (IOException e) {
+			logger.error("Error launch RedmineImporterProvider " + e.getMessage());
 		}
-		
 	}
 }
