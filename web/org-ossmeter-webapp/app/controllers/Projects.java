@@ -94,6 +94,9 @@ public class Projects extends Controller {
 	
 	public static Result view(String shortName) {
 		Project project  = getProject(shortName);
+
+		// TODO: Grab Factoids as well
+
 		if (project == null) {
 			flash(Application.FLASH_ERROR_KEY, "An unexpected error has occurred. We are looking into it.");//TODO move to Messages.
 			return ok(views.html.index.render());

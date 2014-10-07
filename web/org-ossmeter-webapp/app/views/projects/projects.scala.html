@@ -5,24 +5,28 @@
 
 
 @main(Messages("ossmeter.index.title")) {
-<h1>Projects</h1>
-@if(!projects.isEmpty()){
-<div class="control-group"> 
-  <ul class="row">
-  @for(project <- projects) {
-    <li class="">
-        <h3><a href="@routes.Projects.view(project.getShortName())">@project.getName()</a></h3>
-        <!-- <small>@Html(project.getDescription())</small> -->
-    </li>
-  }
-  </ul>
-}else{
-	<div class="">No projects found</div>
-}
- 
-@subjectPresentOr() {
-            @defining(Application.getLocalUser(session())) { user =>
-    <a class="btn btn-success" href="@routes.Projects.create()">New project</a>
-}}{<!--  Print nothing -->}
-</div>
+<section class="foo">
+  <div class="container">
+    <h1>Projects</h1>
+    @if(!projects.isEmpty()){
+    <div class="control-group"> 
+      <ul class="row">
+      @for(project <- projects) {
+        <li class="">
+            <h3><a href="@routes.Projects.view(project.getShortName())">@project.getName()</a></h3>
+            <!-- <small>@Html(project.getDescription())</small> -->
+        </li>
+      }
+      </ul>
+    }else{
+    	<div class="">No projects found</div>
+    }
+     
+    @subjectPresentOr() {
+                @defining(Application.getLocalUser(session())) { user =>
+        <a class="btn btn-success" href="@routes.Projects.create()">New project</a>
+    }}{<!--  Print nothing -->}
+    </div>
+  </div>
+</section>
 }

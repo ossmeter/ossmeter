@@ -17,7 +17,7 @@
     <link rel="icon" type="image/png" href="@routes.Assets.at("icons/favicon.png")">
 
     <!-- Styles -->    
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,400,300' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,400,300,800' rel='stylesheet' type='text/css'>
     <link href="http://fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet" type="text/css">
     <!-- <link href="@routes.Assets.at("css/bootstrap.min.css")" rel="stylesheet"> -->
     <link href="@routes.Assets.at("css/bootstrap.min.css")" rel="stylesheet">
@@ -29,7 +29,7 @@
   <body>
 
     <nav class="navbar navbar-static-top">
-      <div class="container clearfix">
+      <div class="container blank clearfix">
           <div class="navbar-header">
             <a class="brand" href="@routes.Application.index()"><img src="@routes.Assets.at("img/osslogo.png")" style="width:60px;" alt="OSSMETER" /></a>
           </div>
@@ -69,7 +69,6 @@
           </div><!--  container clearfix -->
     </nav>
 
-    <div class="container">
 	    @if(flash.contains(Application.FLASH_ERROR_KEY)) {
 	      <div class="alert alert-danger">
 	      	@flash().get(Application.FLASH_ERROR_KEY)
@@ -82,11 +81,8 @@
 	    }
 		@content
 
-    </div> <!-- /container -->
-    <hr>
-
-      <footer>
-      <div class="container">
+    <footer>
+      <div class="container blank">
       <p>OSSMETER is funded by the European Commission under the Seventh (FP7) Framework Programme for Research and Technological Development.</p>
         <div class="row">
           <div class="col-md-6">
