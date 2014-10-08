@@ -6,15 +6,15 @@
      </metricProvider>
   </extension>
 
+
+
 <extension point="com.googlecode.pongo.runtime.osgi">
-    <class name="org.ossmeter.metricprovider.generic.numberofnonresolvedclosedbugzillabugs.model.DailyNonrcb"/>
-    <class name="org.ossmeter.metricprovider.generic.numberofnonresolvedclosedbugzillabugs.model.DailyBugzillaData"/>
+    <class name="org.ossmeter.metricprovider.historic.numberofnonresolvedclosedbugzillabugs.model.DailyNonrcb"/>
   </extension>
 <extension
-      point="org.ossmeter.platform.client.api.pongoviz">
-   <visualiser
-         metricProviderId="org.ossmeter.metricprovider.generic.numberofnonresolvedclosedbugzillabugs"
-         pongoVisualiser="org.ossmeter.metricprovider.historic.numberofnonresolvedclosedbugzillabugs.model.DailyNonrcbViz">
-   </visualiser>
+      point="org.ossmeter.platform.visualisation.metric">
+   <visualisation
+         json="vis/numberofnonresolvedclosedbugzillabugs.json">
+   </visualisation>
 </extension>
 </plugin>

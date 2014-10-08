@@ -116,6 +116,7 @@ abstract class VcsRepository extends NamedElement {
   ref Person[*] persons;
 }
 
+@customize
 abstract class BugTrackingSystem {
   attr String url;
   ref Person[*] persons;

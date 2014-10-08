@@ -1,0 +1,10 @@
+package org.ossmeter.metricprovider.historic.newsgroups.requestsreplies.average.model;
+
+class BugsRequestsRepliesHistoricMetric {
+	attr float averageArticlesPerDay;
+	attr float averageRequestsPerDay;
+	attr float averageRepliesPerDay;
+	attr float averageArticlesPerUser;
+	attr float averageRequestsPerUser;
+	attr float averageRepliesPerUser;
+}

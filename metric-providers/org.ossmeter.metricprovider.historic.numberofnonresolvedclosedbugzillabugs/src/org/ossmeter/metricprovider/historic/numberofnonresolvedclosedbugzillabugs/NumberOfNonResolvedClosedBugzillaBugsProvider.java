@@ -3,12 +3,11 @@ package org.ossmeter.metricprovider.historic.numberofnonresolvedclosedbugzillabu
 import java.util.Arrays;
 import java.util.List;
 
-import org.ossmeter.metricprovider.historic.numberofnonresolvedclosedbugzillabugs.model.DailyBugzillaData;
 import org.ossmeter.metricprovider.historic.numberofnonresolvedclosedbugzillabugs.model.DailyNonrcb;
-import org.ossmeter.metricprovider.trans.bugheadermetadata.BugHeaderMetadataMetricProvider;
-import org.ossmeter.metricprovider.trans.bugheadermetadata.model.BugData;
-import org.ossmeter.metricprovider.trans.bugheadermetadata.model.BugHeaderMetadata;
-import org.ossmeter.platform.IHistoricalMetricProvider;
+import org.ossmeter.metricprovider.trans.bugs.bugmetadata.BugMetadataTransMetricProvider;
+import org.ossmeter.metricprovider.trans.bugs.bugmetadata.model.BugData;
+import org.ossmeter.metricprovider.trans.bugs.bugmetadata.model.BugsBugMetadataTransMetric;
+import org.ossmeter.platform.AbstractHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.repository.model.BugTrackingSystem;
@@ -17,7 +16,7 @@ import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
 
 import com.googlecode.pongo.runtime.Pongo;
 
-public class NumberOfNonResolvedClosedBugzillaBugsProvider implements IHistoricalMetricProvider{
+public class NumberOfNonResolvedClosedBugzillaBugsProvider extends AbstractHistoricalMetricProvider{
 
 	public final static String IDENTIFIER = 
 			"org.ossmeter.metricprovider.historic.numberofnonresolvedclosedbugzillabugs";
@@ -46,19 +45,15 @@ public class NumberOfNonResolvedClosedBugzillaBugsProvider implements IHistorica
 	@Override
 	public Pongo measure(Project project) {
 		DailyNonrcb dailyNorcb = new DailyNonrcb();
-		for (IMetricProvider used : uses) {
-			 BugHeaderMetadata usedBhm = ((BugHeaderMetadataMetricProvider)used).adapt(context.getProjectDB(project));
+		if (uses.size()==1) {
+			 BugsBugMetadataTransMetric usedBhm = ((BugMetadataTransMetricProvider)uses.get(0)).adapt(context.getProjectDB(project));
 			 int numberOfNonResolvedClosedBugs = 0;
-			 for (BugData bugData: usedBhm.getBugs()) {
+			 for (BugData bugData: usedBhm.getBugs())
 				 if (!bugData.getStatus().toLowerCase().equals("resolved")
 						 &&(!bugData.getStatus().toLowerCase().equals("closed")))
 					 numberOfNonResolvedClosedBugs++;
-			 }
-			 if (numberOfNonResolvedClosedBugs > 0) {
-				 DailyBugzillaData dailyBugzillaData = new DailyBugzillaData();
-				 dailyBugzillaData.setNumberOfNonResolvedClosedBugs(numberOfNonResolvedClosedBugs);
-				 dailyNorcb.getBugzillas().add(dailyBugzillaData);
-			 }
+			 if (numberOfNonResolvedClosedBugs > 0)
+				 dailyNorcb.setNumberOfNonResolvedClosedBugs(numberOfNonResolvedClosedBugs);
 		}
 		return dailyNorcb;
 	}
@@ -70,7 +65,7 @@ public class NumberOfNonResolvedClosedBugzillaBugsProvider implements IHistorica
 	
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return Arrays.asList(BugHeaderMetadataMetricProvider.class.getCanonicalName());
+		return Arrays.asList(BugMetadataTransMetricProvider.class.getCanonicalName());
 	}
 
 	@Override

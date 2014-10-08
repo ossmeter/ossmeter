@@ -7,7 +7,7 @@ import com.mongodb.DB;
 
 public interface IBugTrackingSystemManager<B extends BugTrackingSystem> {
 	
-	public boolean appliesTo(B bugTrackingSystem);
+	public boolean appliesTo(BugTrackingSystem bugTrackingSystem);
 	
 	public BugTrackingSystemDelta getDelta(DB db, B bugTrackingSystem, Date date) throws Exception;
 

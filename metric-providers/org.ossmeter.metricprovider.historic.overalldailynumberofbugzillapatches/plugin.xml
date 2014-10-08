@@ -3,18 +3,21 @@
   
 
 <extension point="org.ossmeter.platform.metricprovider">
-   <metricProvider provider="org.ossmeter.metricprovider.historic.overalldailynumberofbugzillapatches.OverallDailyNumberOfBugzillaPatchesProvider">
+   <metricProvider provider="org.ossmeter.metricprovider.historic.bugs.patches.PatchesHistoricMetricProvider">
    </metricProvider>
 </extension>
-<extension point="com.googlecode.pongo.runtime.osgi">
-    <class name="org.ossmeter.metricprovider.generic.overalldailynumberofbugzillapatches.model.DailyNobp"/>
-    <class name="org.ossmeter.metricprovider.generic.overalldailynumberofbugzillapatches.model.DailyBugzillaData"/>
-  </extension>
-<extension
-      point="org.ossmeter.platform.client.api.pongoviz">
-   <visualiser
-         metricProviderId="org.ossmeter.metricprovider.generic.overalldailynumberofbugzillapatches"
-         pongoVisualiser="org.ossmeter.metricprovider.historic.overalldailynumberofbugzillapatches.model.DailyNobpViz">
-   </visualiser>
+
+
+
+<extension point="org.ossmeter.platform.visualisation.metric">
+   <visualisation json="vis/historic.bugs.patches.json">
+   </visualisation>
 </extension>
+
+
+
+<extension point="com.googlecode.pongo.runtime.osgi">
+    <class name="org.ossmeter.metricprovider.historic.bugs.patches.model.BugsPatchesHistoricMetric"/>
+    <class name="org.ossmeter.metricprovider.historic.bugs.patches.model.DailyBugData"/>
+  </extension>
 </plugin>

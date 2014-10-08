@@ -24,7 +24,6 @@ import java.util.Map;
 
 import com.j2bugzilla.base.Bug;
 import com.j2bugzilla.base.BugzillaMethod;
-import utils.Comment;
 
 /**
  * This class allows clients to request a list of all public {@link Comment Comments} made on a 

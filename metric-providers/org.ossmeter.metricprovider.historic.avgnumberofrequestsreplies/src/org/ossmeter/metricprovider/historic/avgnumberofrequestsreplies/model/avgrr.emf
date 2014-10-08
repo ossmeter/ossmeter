@@ -1,7 +1,0 @@
-package org.ossmeter.metricprovider.historic.avgnumberofrequestsreplies.model;
-
-class AverageRR {
-	attr float averageArticles;
-	attr float averageRequests;
-	attr float averageReplies;
-}

@@ -1,0 +1,47 @@
+{
+	"metricid" : "org.ossmeter.metricprovider.historic.newsgroups.responsetime",
+	"vis" : [ 
+		{
+			"name" : "averageResponseTime",
+			"type" : "LineChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Average Response Time", "field" : "$avgResponseTime" } ]
+			},
+			"x" : "Date",
+			"y" : "Average Response Time",
+			"timeSeries" : true
+		},{
+			"name" : "averageResponseTime-threads",
+			"type" : "BarChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Bugs", "field" : "$threadsConsidered" }, 
+					{ "name" : "Average Response Time", "field" : "$avgResponseTime" } ]
+			},
+			"x" : "Threads",
+			"y" : "Average Response Time",
+			"timeSeries" : false
+		},{
+			"name" : "cumulativeAverageResponseTime",
+			"type" : "LineChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Cumulative Average Response Time", "field" : "$cumulativeAvgResponseTime" } ]
+			},
+			"x" : "Date",
+			"y" : "Cumulative Average Response Time",
+			"timeSeries" : true
+		},{
+			"name" : "cumulativeAverageResponseTime-threads",
+			"type" : "BarChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Bugs", "field" : "$threadsConsidered" }, 
+					{ "name" : "Cumulative Average Response Time", "field" : "$cumulativeAvgResponseTime" } ]
+			},
+			"x" : "Threads",
+			"y" : "Cumulative Average Response Time",
+			"timeSeries" : false
+		}
+	]
+
+}

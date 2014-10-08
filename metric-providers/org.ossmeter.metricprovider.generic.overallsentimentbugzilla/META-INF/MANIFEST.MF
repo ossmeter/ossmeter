@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Overallsentimentbugzilla
+Bundle-SymbolicName: org.ossmeter.metricprovider.historic.bugs.sentiment;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.ossmeter.metricprovider.historic.bugs.sentiment.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.ossmeter.repository.model.bts.bugzilla,
+ org.ossmeter.platform,
+ org.ossmeter.platform.client.api,
+ com.googlecode.pongo.runtime.osgi,
+ org.ossmeter.metricprovider.trans.bugs.bugmetadata,
+ org.ossmeter.platform.visualisation
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: org.ossmeter.metricprovider.historic.bugs.sentiment

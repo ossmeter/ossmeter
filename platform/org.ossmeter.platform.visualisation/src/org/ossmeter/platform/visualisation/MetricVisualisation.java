@@ -1,27 +1,16 @@
 package org.ossmeter.platform.visualisation;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.imageio.ImageIO;
-
 import sparkle.Sparkle;
 import sparkle.dimensions.DateDimension;
 import sparkle.dimensions.LinearDimension;
-import sparkle.scales.DateScale;
-import sparkle.scales.LinearScale;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -67,6 +56,7 @@ public class MetricVisualisation {
 	public JsonNode getVis() {
 		return vis;
 	}
+	
 	public JsonNode visualise(DB db) {
 		return visualise(db, new BasicDBObject());
 		
