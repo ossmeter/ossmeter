@@ -24,13 +24,15 @@
     <link href="@routes.Assets.at("css/main.css")" rel="stylesheet">
     <link href="@routes.Assets.at("css/nav.css")" rel="stylesheet">
     <link href="@routes.Assets.at("css/ossplots.css")" rel="stylesheet">
+    <link href="@routes.Assets.at("css/jquery.gridster.min.css")" rel="stylesheet">
     <script src="@routes.Assets.at("js/jquery-1.9.1.js")"></script>
+    <script src="@routes.Assets.at("js/jquery.gridster.min.js")"></script>
   </head>
 
   <body>
 
     <nav class="navbar navbar-static-top">
-      <div class="container blank clearfix">
+      <div class="container box blank clearfix">
           <div class="navbar-header">
             <a class="brand" href="@routes.Application.index()"><img src="@routes.Assets.at("img/osslogo.png")" style="width:60px;" alt="OSSMETER" /></a>
           </div>
@@ -83,7 +85,7 @@
 		@content
 
     <footer>
-      <div class="container blank">
+      <div class="container box blank">
       <p>OSSMETER is funded by the European Commission under the Seventh (FP7) Framework Programme for Research and Technological Development.</p>
         <div class="row">
           <div class="col-md-6">
