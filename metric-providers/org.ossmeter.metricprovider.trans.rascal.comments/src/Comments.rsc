@@ -267,21 +267,33 @@ Factoid commentPercentage(map[str, int] locPerLanguage = (), map[str, int] comme
   
   stars = \one();
   
-  // TODO verify star ratings
+  // according to Software Assessments, Benchmarks, and Best Practices. Capers Jones 2000,
+  // the ideal comment density is 1 comment per 10 statements. (less AND more is worse).
+  // (which is around 9% if all lines would be either statements or comments)
   
-  if (totalPercentage >= 15) {
-    stars = \four();
-  } else if (totalPercentage >= 10) {
-    stars = three();
-  } else if (totalPercentage >= 1) {
-    stars = two();
+  // according to The comment density of open source software code. Arafat and Riehle, 2009,
+  // the average comment density of >5000 OSS projects is 18.67%
+    
+  if (totalPercentage < 25) {
+  	if (totalPercentage > 8) {
+  		stars = four();
+  	}
+  	else if (totalPercentage > 6) {
+  		stars = three();
+  	}
+  	else if (totalPercentage > 4) {
+  		stars = two();
+  	}
+  }
+  else {
+  	stars = three();
   }
   
   txt = "The percentage of lines containing comments over all measured languages is <totalPercentage>%. Headers and commented out code are not included in this measure.";
 
   languagePercentage = ( l : 100 * commentLinesPerLanguage[l] / toReal(locPerLanguage[l]) | l <- languages ); 
 
-  otherTxt = intercalate(", ", ["<l[0]> (<languagePercentage[l]>%)" | l <- languages]);  
+  otherTxt = intercalate(", ", ["<l> (<languagePercentage[l]>%)" | l <- languages]);  
   txt += " The percentages per language are <otherTxt>.";
 
   return factoid(txt, stars);	
