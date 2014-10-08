@@ -50,7 +50,7 @@ public class MetricListExecutor implements Runnable {
 	private final ThreadMXBean bean = ManagementFactory.getThreadMXBean( );
 	
 	private long now() {
-		return  bean.isCurrentThreadCpuTimeSupported( ) ? bean.getCurrentThreadCpuTime( ) / 1000: -1L;
+		return  bean.isCurrentThreadCpuTimeSupported( ) ? bean.getCurrentThreadCpuTime( ) / 1000000: -1L;
 	}
 	
 	@Override
