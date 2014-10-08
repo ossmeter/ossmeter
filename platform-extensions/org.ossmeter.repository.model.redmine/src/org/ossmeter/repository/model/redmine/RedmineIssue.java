@@ -19,6 +19,8 @@ public class RedmineIssue extends Pongo {
 		super();
 		dbObject.put("author", new BasicDBObject());
 		dbObject.put("assignedTo", new BasicDBObject());
+		dbObject.put("category", new BasicDBObject());
+		dbObject.put("feature", new BasicDBObject());
 		dbObject.put("relations", new BasicDBList());
 		DESCRIPTION.setOwningType("org.ossmeter.repository.model.redmine.RedmineIssue");
 		STATUS.setOwningType("org.ossmeter.repository.model.redmine.RedmineIssue");
@@ -154,6 +156,7 @@ public class RedmineIssue extends Pongo {
 	public RedmineCategory getCategory() {
 		if (category == null && dbObject.containsField("category")) {
 			category = (RedmineCategory) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("category"));
+			category.setContainer(this);
 		}
 		return category;
 	}
@@ -174,6 +177,7 @@ public class RedmineIssue extends Pongo {
 	public RedmineFeature getFeature() {
 		if (feature == null && dbObject.containsField("feature")) {
 			feature = (RedmineFeature) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("feature"));
+			feature.setContainer(this);
 		}
 		return feature;
 	}

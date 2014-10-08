@@ -23,7 +23,7 @@ import com.mongodb.Mongo;
 public class GoogleCodeImporterProvider implements ITransientMetricProvider{
 
 	public final static String IDENTIFIER = 
-			"org.ossmeter.metricprovider.historic.googlecodeimporter";
+			"org.ossmeter.metricprovider.trans.googlecodeimporter";
 	
 	protected MetricProviderContext context;
 	

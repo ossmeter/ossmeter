@@ -32,7 +32,7 @@ public abstract class PlatformBugTrackingSystemManager implements IBugTrackingSy
 
 	protected IBugTrackingSystemManager getBugTrackingSystemManager(BugTrackingSystem bugTrackingSystem) throws Exception {
 		for (IBugTrackingSystemManager bugTrackingSystemManager : getBugTrackingSystemManagers()) {
-			//JURI inserimento if//
+			//JURI inserimento if (only for redmine) //
 			if (bugTrackingSystemManager.getClass().toString().equals("Bugzilla"))
 			{
 				if (bugTrackingSystemManager.appliesTo(bugTrackingSystem)) {

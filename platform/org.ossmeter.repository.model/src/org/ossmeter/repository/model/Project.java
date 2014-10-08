@@ -22,6 +22,7 @@ public class Project extends NamedElement {
 	public Project() { 
 		super();
 		dbObject.put("parent", new BasicDBObject());
+		dbObject.put("executionInformation", new BasicDBObject());
 		dbObject.put("vcsRepositories", new BasicDBList());
 		dbObject.put("communicationChannels", new BasicDBList());
 		dbObject.put("bugTrackingSystems", new BasicDBList());
@@ -29,7 +30,6 @@ public class Project extends NamedElement {
 		dbObject.put("licenses", new BasicDBList());
 		dbObject.put("metricProviderData", new BasicDBList());
 		dbObject.put("companies", new BasicDBList());
-		dbObject.put("executionInformation", new ProjectExecutionInformation().getDbObject());
 		super.setSuperTypes("org.ossmeter.repository.model.NamedElement");
 		NAME.setOwningType("org.ossmeter.repository.model.Project");
 		SHORTNAME.setOwningType("org.ossmeter.repository.model.Project");

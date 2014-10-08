@@ -5,15 +5,19 @@ Bundle-SymbolicName: org.ossmeter.metricprovider.trans.importer.redmine;singleto
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.ossmeter.repository.model.vcs.cvs,
- org.ossmeter.repository.model,
- org.ossmeter.platform,
+Require-Bundle:  org.ossmeter.platform,
  com.googlecode.pongo.runtime,
- org.ossmeter.repository.model.vcs.git,
- org.ossmeter.repository.model.vcs.svn,
- org.ossmeter.repository.model.importerdependencies;bundle-version="1.0.0",
- org.eclipse.core.runtime,
- org.ossmeter.repository.model.importer.exception,
+ org.ossmeter.repository.model,
+ org.ossmeter.repository.model.github,
+ org.ossmeter.repository.model.googlecode,
+ org.ossmeter.repository.model.eclipse,
  org.ossmeter.repository.model.redmine,
- org.ossmeter.repository.model.redmine.importer
-Import-Package: com.googlecode.pongo.runtime.osgi
+ org.ossmeter.repository.model.sourceforge,
+ org.ossmeter.repository.model.eclipse.importer,
+ org.ossmeter.repository.model.github.importer,
+ org.ossmeter.repository.model.googlecode.importer,
+ org.ossmeter.repository.model.redmine.importer,
+ org.ossmeter.repository.model.sourceforge.importer,
+ org.ossmeter.repository.model.importer.exception,
+ org.eclipse.ui,
+ com.googlecode.pongo.runtime.osgi

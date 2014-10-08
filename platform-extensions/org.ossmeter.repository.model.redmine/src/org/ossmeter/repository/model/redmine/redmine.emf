@@ -22,15 +22,19 @@ class RedmineProject extends Project {
   attr String description;
   attr String created_on;
   attr String updated_on;
+  attr String username;
+  attr String password;
+  attr String token;
+  attr String baseRepo;
   val RedmineWiki wiki;
   val RedmineQueryManager queryManager;
   val RedmineBugIssueTracker[*] issueTracker;
   val RedmineUser[*] members;
   val RedmineProjectVersion[*] versions;
-  val RedmineRepositoryInfo repositoryInfo;
 }
 
 class RedmineWiki extends CommunicationChannel {
+
 }
 
 class RedmineQueryManager extends CommunicationChannel {
@@ -57,6 +61,8 @@ class RedmineProjectVersion {
 
 class RedmineUser extends Person {
   attr String login;
+  @serchable
+  attr String ID;
  // val RedmineUserRole[*] roles;
 }
 
@@ -104,13 +110,6 @@ class RedmineFeature {
   attr String name;
 }
 
-class RedmineRepositoryInfo
-{
-	attr String username;
-	attr String password;
-	attr String token;
-	attr String baseRepo;
-}
 
 //enum RedmineIssueRelationType {
 //  related = 0;
