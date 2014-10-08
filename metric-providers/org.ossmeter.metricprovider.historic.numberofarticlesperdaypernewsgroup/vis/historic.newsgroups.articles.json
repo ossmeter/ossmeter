@@ -2,7 +2,9 @@
 	"metricid" : "org.ossmeter.metricprovider.historic.newsgroups.articles",
 	"vis" : [ 
 		{
-			"name" : "articles",
+			"id" : "newsgroups.articles",
+			"name" : "Articles",
+			"description" : "The number of articles submitted every day." ,
 			"type" : "LineChart",
 			"datatable" : {
 				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
@@ -12,14 +14,16 @@
 			"y" : "Articles",
 			"timeSeries" : true
 		},{
-			"name" : "cumulativeArticles",
+			"id" : "newsgroups.cumulativeArticles",
+			"name" : "Articles (Cumulative)",
+			"description" : "The number of articles submitted up to and including the current date." ,
 			"type" : "LineChart",
 			"datatable" : {
 				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
-					{ "name" : "Cumulative Articles", "field" : "$cumulativeNumberOfArticles" } ]
+					{ "name" : "Articles", "field" : "$cumulativeNumberOfArticles" } ]
 			},
 			"x" : "Date",
-			"y" : "Cumulative Articles",
+			"y" : "Articles",
 			"timeSeries" : true
 		}
 	]

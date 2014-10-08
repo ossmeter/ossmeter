@@ -2,7 +2,9 @@
 	"metricid" : "org.ossmeter.metricprovider.historic.bugs.newbugs",
 	"vis" : [ 
 		{
-			"name" : "bugs",
+			"id" : "bugs.bugs",
+			"name" : "Bugs",
+			"description" : "The number of bugs submitted every day." ,
 			"type" : "LineChart",
 			"datatable" : {
 				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
@@ -12,14 +14,16 @@
 			"y" : "Bugs",
 			"timeSeries" : true
 		},{
-			"name" : "cumulativeBugs",
+			"id" : "bugs.cumulativeBugs",
+			"name" : "Bugs (Cumulative)",
+			"description" : "The number of bugs submitted up to and including the current date." ,
 			"type" : "LineChart",
 			"datatable" : {
 				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
-					{ "name" : "Cumulative Bugs", "field" : "$cumulativeNumberOfBugs" } ]
+					{ "name" : "Bugs", "field" : "$cumulativeNumberOfBugs" } ]
 			},
 			"x" : "Date",
-			"y" : "Cumulative Bugs",
+			"y" : "Bugs",
 			"timeSeries" : true
 		}
 	]

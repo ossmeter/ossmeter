@@ -2,7 +2,9 @@
 	"metricid" : "org.ossmeter.metricprovider.historic.newsgroups.threads",
 	"vis" : [ 
 		{
-			"name" : "threads",
+			"id" : "newsgroups.threads",
+			"name" : "Threads",
+			"description" : "The number of threads per day, up to and including the current date." ,
 			"type" : "LineChart",
 			"datatable" : {
 				"cols" : [  { "name" : "Date", "field" : "$__date" },
@@ -12,7 +14,9 @@
 			"y" : "Threads",
 			"timeSeries" : true
 		},{
-			"name" : "requestsreplies-useraverage",
+			"id" : "newsgroups.requestsreplies-useraverage",
+			"name" : "Articles, Requests and Replies Per User",
+			"description" : "The average number of articles, requests and replies per user, up to and including the current date." ,
 			"type" : "LineChart",
 			"datatable" : {
 				"cols" : [  { "name" : "Date", "field" : "$__date" },
@@ -24,7 +28,9 @@
 			"y" : ["Articles", "Requests", "Replies"],
 			"timeSeries" : true
 		},{
-			"name" : "requests-useraverage",
+			"id" : "newsgroups.requests-useraverage",
+			"name" : "Requests Per User",
+			"description" : "The average number of requests per user, up to and including the current date." ,
 			"type" : "LineChart",
 			"datatable" : {
 				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
@@ -34,7 +40,9 @@
 			"y" : "Requests",
 			"timeSeries" : true
 		},{
-			"name" : "articles-useraverage",
+			"id" : "newsgroups.articles-useraverage",
+			"name" : "Articles Per User",
+			"description" : "The average number of articles per user, up to and including the current date." ,
 			"type" : "LineChart",
 			"datatable" : { 
 				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
@@ -44,7 +52,9 @@
 			"y" : "Articles",
 			"timeSeries" : true
 		},{
-			"name" : "replies-useraverage",
+			"id" : "newsgroups.replies-useraverage",
+			"name" : "Replies Per User",
+			"description" : "The average number of replies per user, up to and including the current date." ,
 			"type" : "LineChart",
 			"datatable" : { 
 				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
@@ -54,7 +64,9 @@
 			"y" : "Replies",
 			"timeSeries" : true
 		},{
-			"name" : "requestsreplies-threadaverage",
+			"id" : "newsgroups.requestsreplies-threadaverage",
+			"name" : "Articles, Requests and Replies Per Thread",
+			"description" : "The average number of articles, requests and replies per thread, up to and including the current date." ,
 			"type" : "LineChart",
 			"datatable" : {
 				"cols" : [  { "name" : "Date", "field" : "$__date" },
@@ -66,7 +78,9 @@
 			"y" : ["Articles", "Requests", "Replies"],
 			"timeSeries" : true
 		},{
-			"name" : "requests-threadaverage",
+			"id" : "newsgroups.requests-threadaverage",
+			"name" : "Requests Per Thread",
+			"description" : "The average number of requests per thread, up to and including the current date." ,
 			"type" : "LineChart",
 			"datatable" : {
 				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
@@ -76,7 +90,9 @@
 			"y" : "Requests",
 			"timeSeries" : true
 		},{
-			"name" : "articles-threadaverage",
+			"id" : "newsgroups.articles-threadaverage",
+			"name" : "Articles Per Thread",
+			"description" : "The average number of articles per thread, up to and including the current date." ,
 			"type" : "LineChart",
 			"datatable" : { 
 				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
@@ -86,7 +102,9 @@
 			"y" : "Articles",
 			"timeSeries" : true
 		},{
-			"name" : "replies-threadaverage",
+			"id" : "newsgroups.replies-threadaverage",
+			"name" : "Replies Per Thread",
+			"description" : "The average number of replies per thread, up to and including the current date." ,
 			"type" : "LineChart",
 			"datatable" : { 
 				"cols" : [  { "name" : "Date", "field" : "$__date" }, 

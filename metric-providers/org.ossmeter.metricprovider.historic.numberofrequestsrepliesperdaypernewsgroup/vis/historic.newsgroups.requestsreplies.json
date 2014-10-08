@@ -2,7 +2,9 @@
 	"metricid" : "org.ossmeter.metricprovider.historic.newsgroups.requestsreplies",
 	"vis" : [ 
 		{
-			"name" : "requestsreplies",
+			"id" : "newsgroups.requestsreplies",
+			"name" : "Requests and Replies",
+			"description" : "The number of requests and replies submitted every day." ,
 			"type" : "LineChart",
 			"datatable" : {
 				"cols" : [  { "name" : "Date", "field" : "$__date" },
@@ -13,7 +15,9 @@
 			"y" : ["Requests", "Replies"],
 			"timeSeries" : true
 		},{
-			"name" : "requests",
+			"id" : "newsgroups.requests",
+			"name" : "Requests",
+			"description" : "The number of requests submitted every day." ,
 			"type" : "LineChart",
 			"datatable" : {
 				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
@@ -23,7 +27,9 @@
 			"y" : "Requests",
 			"timeSeries" : true
 		},{
-			"name" : "replies",
+			"id" : "newsgroups.replies",
+			"name" : "Replies",
+			"description" : "The number of replies submitted every day." ,
 			"type" : "LineChart",
 			"datatable" : { 
 				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
@@ -33,35 +39,41 @@
 			"y" : "Replies",
 			"timeSeries" : true
 		},{
-			"name" : "cumulativerequestsreplies",
+			"id" : "newsgroups.cumulativerequestsreplies",
+			"name" : "Requests and Replies (Cumulative)",
+			"description" : "The number of requests and replies submitted up to and including the current date." ,
 			"type" : "LineChart",
 			"datatable" : {
 				"cols" : [  { "name" : "Date", "field" : "$__date" },
-					{ "name" : "Cumulative Requests", "field" : "$cumulativeNumberOfRequests" },
-					{ "name" : "Cumulative Replies", "field" : "$cumulativeNumberOfReplies" } ]
+					{ "name" : "Requests", "field" : "$cumulativeNumberOfRequests" },
+					{ "name" : "Replies", "field" : "$cumulativeNumberOfReplies" } ]
 			},
 			"x" : "Date",
-			"y" : ["Cumulative Requests", "Cumulative Replies"],
+			"y" : ["Requests", "Replies"],
 			"timeSeries" : true
 		},{
-			"name" : "cumulativerequests",
+			"id" : "newsgroups.cumulativerequests",
+			"name" : "Requests (Cumulative)",
+			"description" : "The number of requests submitted up to and including the current date." ,
 			"type" : "LineChart",
 			"datatable" : {
 				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
-					{ "name" : "Cumulative Requests", "field" : "$cumulativeNumberOfRequests" } ]
+					{ "name" : "Requests", "field" : "$cumulativeNumberOfRequests" } ]
 			},
 			"x" : "Date",
-			"y" : "Cumulative Requests",
+			"y" : "Requests",
 			"timeSeries" : true
 		},{
-			"name" : "cumulativereplies",
+			"id" : "newsgroups.cumulativereplies",
+			"name" : "Replies (Cumulative)",
+			"description" : "The number of replies submitted up to and including the current date." ,
 			"type" : "LineChart",
 			"datatable" : { 
 				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
-					{ "name" : "Cumulative Replies", "field" : "$cumulativeNumberOfReplies" } ]
+					{ "name" : "Replies", "field" : "$cumulativeNumberOfReplies" } ]
 			},
 			"x" : "Date",
-			"y" : "Cumulative Replies",
+			"y" : "Replies",
 			"timeSeries" : true
 		}
 	]

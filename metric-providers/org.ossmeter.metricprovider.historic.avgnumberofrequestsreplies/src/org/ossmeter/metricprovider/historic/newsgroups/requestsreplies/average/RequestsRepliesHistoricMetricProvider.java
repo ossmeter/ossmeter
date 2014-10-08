@@ -3,7 +3,7 @@ package org.ossmeter.metricprovider.historic.newsgroups.requestsreplies.average;
 import java.util.Arrays;
 import java.util.List;
 
-import org.ossmeter.metricprovider.historic.newsgroups.requestsreplies.average.model.BugsRequestsRepliesHistoricMetric;
+import org.ossmeter.metricprovider.historic.newsgroups.requestsreplies.average.model.NewsgroupsRequestsRepliesHistoricMetric;
 import org.ossmeter.metricprovider.trans.newsgroups.activeusers.ActiveUsersTransMetricProvider;
 import org.ossmeter.metricprovider.trans.newsgroups.activeusers.model.NewsgroupData;
 import org.ossmeter.metricprovider.trans.newsgroups.activeusers.model.NewsgroupsActiveUsersTransMetric;
@@ -71,17 +71,10 @@ public class RequestsRepliesHistoricMetricProvider extends AbstractHistoricalMet
 		float avgRepliesPerDay = ((float) numberOrReplies) / days;
 		float avgRequestsPerDay = ((float) numberOrRequests) / days;
 
-		float avgArticlesPerUser = ((float) numberOfArticles) / usedUsers.getUsers().size();
-		float avgRepliesPerUser = ((float) numberOrReplies) / usedUsers.getUsers().size();
-		float avgRequestsPerUser = ((float) numberOrRequests) / usedUsers.getUsers().size();
-
-		BugsRequestsRepliesHistoricMetric avgRRThread = new BugsRequestsRepliesHistoricMetric();
+		NewsgroupsRequestsRepliesHistoricMetric avgRRThread = new NewsgroupsRequestsRepliesHistoricMetric();
 		avgRRThread.setAverageArticlesPerDay(avgArticlesPerDay);
 		avgRRThread.setAverageRepliesPerDay(avgRepliesPerDay);
 		avgRRThread.setAverageRequestsPerDay(avgRequestsPerDay);
-		avgRRThread.setAverageArticlesPerUser(avgArticlesPerUser);
-		avgRRThread.setAverageRepliesPerUser(avgRepliesPerUser);
-		avgRRThread.setAverageRequestsPerUser(avgRequestsPerUser);
 	
 		return avgRRThread;
 	}

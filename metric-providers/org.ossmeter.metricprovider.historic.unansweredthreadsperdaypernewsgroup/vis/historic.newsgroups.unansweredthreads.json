@@ -3,7 +3,9 @@
 	"metricid" : "org.ossmeter.metricprovider.historic.newsgroups.unansweredthreads",
 	"vis" : [ 
 		{
-			"name" : "numberOfUnansweredThreads",
+			"id" : "newsgroups.unansweredThreads",
+			"name" : "Unanswered Threads",
+			"description" : "The number of unanswered threads per day, up to and including the current date." ,
 			"type" : "LineChart",
 			"datatable" : { 
 				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
