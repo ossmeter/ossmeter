@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Libsvm
+Bundle-SymbolicName: org.ossmeter.requestreplyclassifier.opennlptartarus.libsvm
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.ossmeter.requestreplyclassifier.opennlptartarus.libsvm.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.ossmeter.opennlp,
+ org.ossmeter.libsvm,
+ org.ossmeter.tartarus.parser.posstemmer,
+ org.ossmeter.libsvm.dependencies
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: org.ossmeter.requestreplyclassifier.opennlptartarus.libsvm

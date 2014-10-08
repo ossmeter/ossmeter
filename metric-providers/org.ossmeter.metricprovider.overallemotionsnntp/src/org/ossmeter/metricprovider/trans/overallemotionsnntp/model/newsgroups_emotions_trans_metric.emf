@@ -1,0 +1,26 @@
+package org.ossmeter.metricprovider.trans.overallemotionsnntp.model;
+
+@db(qualifiedCollectionNames="true")
+@customize
+class NewsgroupsEmotionsTransMetric {
+	@series
+	val NewsgroupData[*] newsgroups;
+	val Emotion[*] dimensions;
+}
+
+class NewsgroupData {
+	@searchable
+   	attr String url_name;
+   	attr int numberOfArticles;
+}
+
+
+class Emotion {
+	@searchable
+   	attr String url_name;
+	@searchable
+   	attr String emotionLabel;
+	attr int numberOfArticles;
+	attr float percentage;
+}
+

@@ -1,0 +1,7 @@
+package org.ossmeter.metricprovider.historic.bugs.opentime.model;
+
+class BugsOpenTimeHistoricMetric {
+	attr String avgBugOpenTime;
+	attr int bugsConsidered;
+}
+

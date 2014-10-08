@@ -60,6 +60,8 @@ public class FullMetricAnalysis extends ServerResource {
 					}
 				}
 				
+				mongo.close();
+				
 				return results.toString();
 				
 			} catch (UnknownHostException e1) {

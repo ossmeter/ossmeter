@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: BugsChannelUsageFactoid
+Bundle-SymbolicName: org.ossmeter.factoid.bugs.channelusage;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: org.ossmeter.metricprovider.historic.bugs.newbugs,
+ org.ossmeter.metricprovider.historic.bugs.comments,
+ org.ossmeter.metricprovider.historic.bugs.patches,
+ com.googlecode.pongo.runtime,
+ org.ossmeter.platform,
+ org.ossmeter.repository.model

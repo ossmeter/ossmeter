@@ -2,16 +2,22 @@
 <?eclipse version="3.4"?><plugin>
    
    <extension point="org.ossmeter.platform.metricprovider">
-      <metricProvider provider="org.ossmeter.metricprovider.historic.overalldailynumberofnewbugzillabugs.OverallDailyNumberOfNewBugzillaBugsProvider">
+      <metricProvider provider="org.ossmeter.metricprovider.historic.bugs.newbugs.NewBugsHistoricMetricProvider">
       </metricProvider>
    </extension>
-   <extension point="org.ossmeter.platform.client.api.pongoviz">
-      <visualiser metricProviderId="org.ossmeter.metricprovider.generic.overalldailynumberofnewbugzillabugs" pongoVisualiser="org.ossmeter.metricprovider.historic.overalldailynumberofnewbugzillabugs.model.DailyNonbbViz">
-      </visualiser>
-   </extension>
+
+
+
+
+<extension point="org.ossmeter.platform.visualisation.metric">
+   <visualisation json="vis/historic.bugs.newbugs.json">
+   </visualisation>
+</extension>
+
+
 
 <extension point="com.googlecode.pongo.runtime.osgi">
-    <class name="org.ossmeter.metricprovider.generic.overalldailynumberofnewbugzillabugs.model.DailyNonbb"/>
-    <class name="org.ossmeter.metricprovider.generic.overalldailynumberofnewbugzillabugs.model.DailyBugzillaData"/>
+    <class name="org.ossmeter.metricprovider.historic.bugs.newbugs.model.BugsNewBugsHistoricMetric"/>
+    <class name="org.ossmeter.metricprovider.historic.bugs.newbugs.model.DailyBugData"/>
   </extension>
 </plugin>

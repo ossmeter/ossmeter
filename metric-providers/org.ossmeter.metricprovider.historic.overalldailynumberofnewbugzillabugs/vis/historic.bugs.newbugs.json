@@ -1,0 +1,27 @@
+{
+	"metricid" : "org.ossmeter.metricprovider.historic.bugs.newbugs",
+	"vis" : [ 
+		{
+			"name" : "bugs",
+			"type" : "LineChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Bugs", "field" : "$numberOfBugs" } ]
+			},
+			"x" : "Date",
+			"y" : "Bugs",
+			"timeSeries" : true
+		},{
+			"name" : "cumulativeBugs",
+			"type" : "LineChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Cumulative Bugs", "field" : "$cumulativeNumberOfBugs" } ]
+			},
+			"x" : "Date",
+			"y" : "Cumulative Bugs",
+			"timeSeries" : true
+		}
+	]
+
+}

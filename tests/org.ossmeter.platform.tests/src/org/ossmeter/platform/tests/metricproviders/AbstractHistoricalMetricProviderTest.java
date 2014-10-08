@@ -1,8 +1,8 @@
 package org.ossmeter.platform.tests.metricproviders;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.junit.Assert.assertEquals;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,7 +15,6 @@ import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.repository.model.Project;
 
 import com.googlecode.pongo.runtime.Pongo;
-import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
@@ -99,5 +98,10 @@ public class AbstractHistoricalMetricProviderTest {
 		public List<String> getIdentifiersOfUses() {
 			return Collections.emptyList();
 		}
+
+		@Override
+		public void setMetricProviderContext(MetricProviderContext context) {
+		}
 	}
 }
+

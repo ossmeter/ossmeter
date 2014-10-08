@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Libsvm
+Bundle-SymbolicName: org.ossmeter.sentimentclassifier.opennlptartarus.libsvm
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.ossmeter.sentimentclassifier.opennlptartarus.libsvm.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.ossmeter.libsvm,
+ org.ossmeter.libsvm.dependencies,
+ org.ossmeter.opennlp,
+ org.ossmeter.tartarus.parser.posstemmer,
+ org.apache.commons.lang
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: org.ossmeter.sentimentclassifier.opennlptartarus.libsvm

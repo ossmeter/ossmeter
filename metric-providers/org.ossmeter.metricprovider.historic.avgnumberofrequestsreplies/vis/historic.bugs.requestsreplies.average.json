@@ -1,0 +1,91 @@
+{
+	"metricid" : "org.ossmeter.metricprovider.historic.newsgroups.requestsreplies.average",
+	"vis" : [ 
+		{
+			"name" : "requestsreplies-averageperday",
+			"type" : "LineChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Date", "field" : "$__date" },
+					{ "name" : "Articles Per Day", "field" : "$averageArticlesPerDay" },
+					{ "name" : "Requests Per Day", "field" : "$averageRequestsPerDay" },
+					{ "name" : "Replies Per Day", "field" : "$averageRepliesPerDay" } ]
+			},
+			"x" : "Date",
+			"y" : ["Articles Per Day", "Requests Per Day", "Replies Per Day"],
+			"timeSeries" : true
+		},{
+			"name" : "requests-averageperday",
+			"type" : "LineChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Requests Per Day", "field" : "$averageRequestsPerDay" } ]
+			},
+			"x" : "Date",
+			"y" : "Requests Per Day",
+			"timeSeries" : true
+		},{
+			"name" : "articles-averageperday",
+			"type" : "LineChart",
+			"datatable" : { 
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Articles Per Day", "field" : "$averageArticlesPerDay" } ]
+			},
+			"x" : "Date",
+			"y" : "Articles Per Day",
+			"timeSeries" : true
+		},{
+			"name" : "replies-averageperday",
+			"type" : "LineChart",
+			"datatable" : { 
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Replies Per Day", "field" : "$averageRepliesPerDay" } ]
+			},
+			"x" : "Date",
+			"y" : "Replies Per Day",
+			"timeSeries" : true
+		},{
+			"name" : "requestsreplies-averageperuser",
+			"type" : "LineChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Date", "field" : "$__date" },
+					{ "name" : "Articles Per User", "field" : "$averageArticlesPerUser" },
+					{ "name" : "Requests Per User", "field" : "$averageRequestsPerUser" },
+					{ "name" : "Replies Per User", "field" : "$averageRepliesPerUser" } ]
+			},
+			"x" : "Date",
+			"y" : ["Articles Per User", "Requests Per User", "Replies Per User"],
+			"timeSeries" : true
+		},{
+			"name" : "requests-averageperuser",
+			"type" : "LineChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Requests Per User", "field" : "$averageRequestsPerUser" } ]
+			},
+			"x" : "Date",
+			"y" : "Requests Per User",
+			"timeSeries" : true
+		},{
+			"name" : "articles-averageperuser",
+			"type" : "LineChart",
+			"datatable" : { 
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Articles Per User", "field" : "$averageArticlesPerUser" } ]
+			},
+			"x" : "Date",
+			"y" : "Articles Per User",
+			"timeSeries" : true
+		},{
+			"name" : "replies-averageperuser",
+			"type" : "LineChart",
+			"datatable" : { 
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Replies Per User", "field" : "$averageRepliesPerUser" } ]
+			},
+			"x" : "Date",
+			"y" : "Replies Per User",
+			"timeSeries" : true
+		}
+	]
+
+}

@@ -67,17 +67,26 @@ public class BugTrackingSystemComment implements Serializable {
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof BugTrackingSystemComment) {
-			if ( this.bugId != ((BugTrackingSystemComment) obj).getBugId() ) {
+			if ( this.bugId != ((BugTrackingSystemComment) obj).getBugId() )
 				return false;
-			} 
-			if (!this.commentId.equals(((BugTrackingSystemComment) obj).getCommentId())) {
+			if (!this.commentId.equals(((BugTrackingSystemComment) obj).getCommentId()))
 				return false;
-			}
 			return true;
 		}
 		
 		return false;
 	}
 	
+	public boolean equals(int bugId, int commentId) {
+		return equals(Integer.toString(bugId), Integer.toString(commentId));
+	}
+
+	public boolean equals(String bugId, String commentId) {
+		if (!this.bugId.equals(bugId))
+			return false;
+		if (!this.commentId.equals(commentId))
+			return false;
+		return true;
+	}
 	
 }

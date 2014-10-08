@@ -1,15 +1,16 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: NumberOfBugzillaComments
-Bundle-SymbolicName: org.ossmeter.metricprovider.trans.numberofbugzillacomments;singleton:=true
+Bundle-SymbolicName: org.ossmeter.metricprovider.trans.bugs.comments;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.ossmeter.metricprovider.trans.numberofbugzillacomments.Activator
+Bundle-Activator: org.ossmeter.metricprovider.trans.bugs.comments.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.ossmeter.platform,
  org.ossmeter.repository.model.bts.bugzilla,
- com.googlecode.pongo.runtime.osgi
+ com.googlecode.pongo.runtime.osgi,
+ org.ossmeter.platform.visualisation
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.trans.numberofbugzillacomments,
- org.ossmeter.metricprovider.trans.numberofbugzillacomments.model
+Export-Package: org.ossmeter.metricprovider.trans.bugs.comments,
+ org.ossmeter.metricprovider.trans.bugs.comments.model

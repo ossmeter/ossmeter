@@ -11,7 +11,7 @@ public class ResetApp {
 		mongo.dropDatabase("pdb_values");
 		mongo.dropDatabase("pongo");
 		mongo.dropDatabase("fedora");
-//		mongo.dropDatabase("epsilon");
+		mongo.dropDatabase("epsilon");
 		mongo.dropDatabase("Epsilon");
 		mongo.dropDatabase("hamcrest");
 		mongo.dropDatabase("jMonkeyEngine");
@@ -19,6 +19,10 @@ public class ResetApp {
 		mongo.dropDatabase("fedora");
 		mongo.dropDatabase("saf");
 		mongo.dropDatabase("mojambo-grit");
+		mongo.dropDatabase("emf");
+		mongo.dropDatabase("xText");
+		mongo.dropDatabase("toolsEmf");
+		mongo.dropDatabase("eclipsePlatform");
 		mongo.dropDatabase("pdb_values");
 		mongo.dropDatabase("pongo");
 	}

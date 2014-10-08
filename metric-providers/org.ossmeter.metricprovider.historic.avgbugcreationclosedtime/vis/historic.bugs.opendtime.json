@@ -1,0 +1,27 @@
+{
+	"metricid" : "org.ossmeter.metricprovider.historic.bugs.opentime",
+	"vis" : [ 
+		{
+			"name" : "bugOpenTime",
+			"type" : "LineChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Bug Open Time", "field" : "$avgBugOpenTime" } ]
+			},
+			"x" : "Date",
+			"y" : "Bug Open Time",
+			"timeSeries" : true
+		},{
+			"name" : "bugOpenTime-bugs",
+			"type" : "BarChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Bugs", "field" : "$bugsConsidered" }, 
+					{ "name" : "Bug Open Time", "field" : "$avgBugOpenTime" } ]
+			},
+			"x" : "Bugs",
+			"y" : "Bug Open Time",
+			"timeSeries" : false
+		}
+	]
+
+}

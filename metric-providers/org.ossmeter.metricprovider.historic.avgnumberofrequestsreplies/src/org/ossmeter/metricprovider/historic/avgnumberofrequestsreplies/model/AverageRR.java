@@ -1,9 +1,7 @@
 package org.ossmeter.metricprovider.historic.avgnumberofrequestsreplies.model;
 
-import com.mongodb.*;
-import java.util.*;
-import com.googlecode.pongo.runtime.*;
-import com.googlecode.pongo.runtime.querying.*;
+import com.googlecode.pongo.runtime.Pongo;
+import com.googlecode.pongo.runtime.querying.NumericalQueryProducer;
 
 
 public class AverageRR extends Pongo {
@@ -49,6 +47,8 @@ public class AverageRR extends Pongo {
 		notifyChanged();
 		return this;
 	}
+	
+	
 	
 	
 	

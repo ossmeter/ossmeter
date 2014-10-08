@@ -1,0 +1,21 @@
+package org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.model;
+
+@db(qualifiedCollectionNames="true")
+class NewsgroupsThreadsRequestsRepliesTransMetric {
+	val ThreadStatistics[*] threads;
+}    
+
+class ThreadStatistics {
+   @searchable
+   attr String url_name;
+   @searchable
+   attr int threadId;
+   attr boolean firstRequest;
+   attr boolean answered;
+   attr long responseDurationSec;
+   attr String responseDate;
+   
+   attr float averageSentiment;
+   attr String startSentiment; 
+   attr String endSentiment; 
+}

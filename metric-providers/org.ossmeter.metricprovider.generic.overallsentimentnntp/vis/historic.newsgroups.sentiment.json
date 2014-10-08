@@ -1,0 +1,38 @@
+{
+	"metricid" : "org.ossmeter.metricprovider.historic.newsgroups.sentiment",
+	"vis" : [ 
+		{
+			"name" : "averageSentiment",
+			"type" : "LineChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Average Sentiment", "field" : "$overallAverageSentiment" } ]
+			},
+			"x" : "Date",
+			"y" : "Average Sentiment",
+			"timeSeries" : true
+		},{
+			"name" : "sentimentAtThreadBeggining",
+			"type" : "LineChart",
+			"datatable" : { 
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Sentiment At Thread Beginning", "field" : "$overallSentimentAtThreadBeggining" } ]
+			},
+			"x" : "Date",
+			"y" : "Sentiment At Thread Beginning",
+			"timeSeries" : true
+		},{
+			"name" : "sentimentAtThreadEnd",
+			"type" : "BarChart",
+			"datatable" : { 
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Sentiment At Thread End", "field" : "$overallSentimentAtThreadEnd" } ]
+			},
+			"x" : "Date",
+			"y" : "Sentiment At Thread End",
+			"timeSeries" : true
+		}
+	]
+
+}
+	

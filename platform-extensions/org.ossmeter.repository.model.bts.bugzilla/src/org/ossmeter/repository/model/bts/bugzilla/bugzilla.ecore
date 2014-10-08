@@ -6,6 +6,7 @@
     </eAnnotations>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Bugzilla" eSuperTypes="//BugTrackingSystem">
+    <eAnnotations source="customize"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="username">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>

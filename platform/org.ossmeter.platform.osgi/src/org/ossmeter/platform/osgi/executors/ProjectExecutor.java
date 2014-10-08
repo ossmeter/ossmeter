@@ -96,6 +96,11 @@ public class ProjectExecutor implements Runnable {
 		}
 		Date today = new Date();
 		
+		if (lastExecuted.compareTo(today) >= 0) {
+			logger.info("Project up to date. Skipping metric execution.");
+			return;
+		}
+		
 		Date[] dates = Date.range(lastExecuted.addDays(1), today.addDays(-1));
 		logger.info("Dates: " + dates.length);
 		
@@ -235,7 +240,6 @@ public class ProjectExecutor implements Runnable {
 	protected Date getLastExecutedDate() {
 		Date lastExec;
 		String lastExecuted = project.getExecutionInformation().getLastExecuted();
-		
 		if(lastExecuted.equals("null") || lastExecuted.equals("")) {
 			lastExec = new Date();
 			
