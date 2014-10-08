@@ -61,11 +61,12 @@ GET     /projects                  	controllers.Projects.projects()
 GET     /projects/new               controllers.Projects.create()
 POST    /projects/new               controllers.Projects.save()
 # Import
-POST    /projects/import               controllers.Projects.importProject()
+POST    /projects/import            controllers.Projects.importProject()
 # Read/View
-# TODO: use the id instead the shortName 
-# GET		/projects/:id				controllers.Projects.view(id:Long)
-GET		/projects/:shortName				controllers.Projects.view(shortName:String)
+GET		/projects/:id				controllers.Projects.view(id:String)
+GET		/projects/:id/code			controllers.Projects.viewCode(id:String)
+GET		/projects/:id/cc			controllers.Projects.viewComms(id:String)
+GET		/projects/:id/bts			controllers.Projects.viewBts(id:String)
 # Update/Edit
 # GET 	/projects/:id/edit 			controllers.Projects.edit(id:Long)
 # POST 	/projects/:id/edit  		controllers.Projects.update(id:Long)

@@ -1,0 +1,309 @@
+@(project: org.ossmeter.repository.model.Project)
+
+@import org.ossmeter.repository.model._
+@import org.ossmeter.repository.model.bts.bugzilla._
+@import org.ossmeter.repository.model.cc.forum._
+@import org.ossmeter.repository.model.cc.nntp._
+@import org.ossmeter.repository.model.vcs.svn._
+@import org.ossmeter.repository.model.vcs.git._
+@import org.ossmeter.repository.model.eclipse._
+
+@main(Messages("ossmeter.index.title")) {
+<section class="foo">
+    <div class="container">
+    	<div class="project-detail" data-project="@project.getName()">
+
+    		<div class="row section-heading">
+    			<div class="col-md-12">
+                <ol class="breadcrumb projectbreadcrumb" style="float:right">
+                        <li class="active">
+                            <a href="#"><button type="button" class="btn btn-primary btn-xs">Star <span class="badge">42</span></button></a>
+                        </li>
+                        <li><a href="#">Settings</a></li>
+                    </ol>
+                    <h1 class="name">@project.getName()</h1>
+    	        </div>
+    		</div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Source Code</h2>
+                </div>
+            </div>
+    		<div class="row">
+                <div class="col-md-4">
+                    <img src="@routes.Assets.at("img/Spider_Chart.svg")" style="width:100%"/>
+                </div> 
+                <div class="col-md-8">  
+                    <p>has had 2,470 commits made by 4 contributors representing 2,480,383 lines of code</p>
+                    <p>is mostly written in Java with an average number of source code comments</p>
+                    <p>has a well established, mature codebase maintained by a average size development team with stable Y-O-Y commits</p>
+                    <p>took an estimated 719 years of effort (COCOMO model) starting with its first commit in September, 2008 ending with its most recent commit 6 days ago</p>
+                    <p>is mostly written in Java with an average number of source code comments</p>
+                    <p>has a well established, mature codebase maintained by a average size development team with stable Y-O-Y commits</p>
+                </div>
+    	    </div>
+        </div>
+    </div>
+</section>
+
+
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 section-heading">
+                <p style="float:right">Click the names of the historical metrics below to see how they have evolved over time. </p>
+                <h2 class="marginless">Project Evolution</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10" id="plot"></div>
+            <div class="col-md-2">
+                <h4>Legend</h4>
+                <span class="label label-danger">&mdash;</span> <span class="label" style="background-color:#1f77b4; font-weight:normal;">lines of code</span> <br/>
+                <span class="label label-danger">&mdash;</span> <span class="label" style="background-color:#aec7e8; font-weight:normal;">complexity</span> <br/>
+                <span class="label label-danger">&mdash;</span> <span class="label" style="background-color:#ff7f0e; font-weight:normal;">code coverage</span> 
+            </div>
+        </div>
+    </div>     
+</section>
+
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 section-heading">
+                <h2 class="marginless">Historical Metrics</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <table class="table" id="sparklines-table-alltime">
+                        <thead>
+                            <th>metric</th>
+                            <th>15/07/2003</th>
+                            <th>12 months</th>
+                            <th>15/07/2014</th>
+                            <th>low</th>
+                            <th>high</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><a href="#">lines of code</a></td>
+                                <td>324</td>
+                                <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
+                                <td>299</td>
+                                <td>32</td>
+                                <td>376</td>
+                            </tr>
+                            <tr>
+                                <td><a href="#">lines of code</a></td>
+                                <td>324</td>
+                                <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
+                                <td>299</td>
+                                <td>32</td>
+                                <td>376</td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                    <script type="text/javascript">
+                        $(function() {
+                            var ms = ["commitsovertimeline", "commitsovertimeline"];
+
+                            for (m in ms) {
+                                $.get("http://localhost:8182/projects/p/@project.getShortName()/s/"+ms[m], function (data) {
+                                    $("#sparklines-table-alltime > tbody:last").append("<tr><td>" + data.name + 
+                                        "</td><td>" + data.first +
+                                        "</td><td><img class=\"spark\" src=\"http://localhost:8182" + data.spark + "\" />" +  
+                                        "</td><td>" + data.last + 
+                                        "</td><td>" + data.low + 
+                                        "</td><td>" + data.high + "</td></tr>");
+                                });
+                            };
+                        });
+                    </script>
+            </div>
+            <div class="col-md-6">
+                <table class="table" id="sparklines-table-lastyear">
+                        <thead>
+                            <th>metric</th>
+                            <th>01/09/2007</th>
+                            <th>65 months</th>
+                            <th>15/07/2014</th>
+                            <th>low</th>
+                            <th>high</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>lines of code</td>
+                                <td>324</td>
+                                <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
+                                <td>299</td>
+                                <td>32</td>
+                                <td>376</td>
+                            </tr>
+                            <tr>
+                                <td>lines of code</td>
+                                <td>324</td>
+                                <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
+                                <td>299</td>
+                                <td>32</td>
+                                <td>376</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <script type="text/javascript">
+                        $(function() {
+                            var ms = ["commitsovertimeline", "commitsovertimeline"];
+
+                            for (m in ms) {
+                                $.get("http://localhost:8182/projects/p/@project.getShortName()/s/"+ms[m], function (data) {
+                                    $("#sparklines-table-lastyear > tbody:last").append("<tr><td>" + data.name + 
+                                        "</td><td>" + data.first +
+                                        "</td><td><img class=\"spark\" src=\"http://localhost:8182" + data.spark + "\" />" +  
+                                        "</td><td>" + data.last + 
+                                        "</td><td>" + data.low + 
+                                        "</td><td>" + data.high + "</td></tr>");
+                                });
+                            };
+                        });
+                    </script>
+            </div>
+        </div>
+    </div>     
+</section>
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 section-heading">
+                <h2 class="marginless">Other Metrics</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Tabular Metric</h3>
+                <p>Hover over the metric names in the table to the right to see a description of the metrics.</p>
+            </div>
+            <div class="col-md-6">
+                <table class="table" id="sparklines-table-lastyear">
+                    <thead>
+                        <th>metric</th>
+                        <th>value</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>lines of code</td>
+                            <td>324</td>
+                        </tr>
+                        <tr>
+                            <td>lines of code</td>
+                            <td>324</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <hr/>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Excellence Metric</h3>
+                <p>Lorem ipsum dolor sit amet, no pri sint tation aliquip. Est scripta sadipscing vituperatoribus id, facilisi senserit ex per, dicam gubergren sed ea. Eos commodo dissentiet id, sed cu tamquam sadipscing, duo ad laudem scripta invidunt.</p>
+            </div>
+            <div class="col-md-6" id="eg2"></div>
+        </div>
+        <hr/>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Brilliance Metric</h3>
+                <p>Lorem ipsum dolor sit amet, no pri sint tation aliquip. Est scripta sadipscing vituperatoribus id, facilisi senserit ex per, dicam gubergren sed ea. Eos commodo dissentiet id, sed cu tamquam sadipscing, duo ad laudem scripta invidunt.</p>
+            </div>
+            <div class="col-md-6" id="eg1"></div>
+        </div>
+        <hr/>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Awesomeness Metric</h3>
+                <p>Lorem ipsum dolor sit amet, no pri sint tation aliquip. Est scripta sadipscing vituperatoribus id, facilisi senserit ex per, dicam gubergren sed ea. Eos commodo dissentiet id, sed cu tamquam sadipscing, duo.</p>
+            </div>
+            <div class="col-md-6" id="eg3"></div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    $(function() {
+        viss = [
+        {
+            "name" : "avgnumberofarticlesrequestsreplies",
+            "type" : "LineChart",
+            "datatable" : {
+                "cols" : [  { "name" : "Date", "field" : "$__date" },
+                    { "name" : "Articles", "field" : "$averageArticles" },
+                    { "name" : "Requests", "field" : "$averageRequests" },
+                    { "name" : "Replies", "field" : "$averageReplies" } ]
+            },
+            "x" : "Date",
+            "y" : ["Articles", "Requests", "Replies"],
+            "timeSeries" : true
+        },
+        {
+            "name" : "avgnumberofrequests",
+            "type" : "LineChart",
+            "datatable" : {
+                "cols" : [  { "name" : "Date", "field" : "$__date" }, 
+                    { "name" : "Requests", "field" : "$averageRequests" } ]
+            },
+            "x" : "Date",
+            "y" : "Requests",
+            "timeSeries" : true
+        },{
+            "name" : "sentiment",
+            "type" : "BarChart",
+            "datatable" : {
+                "rows" : "$repositories",
+                "cols" : [  { "name" : "Count", "field" : "$count" }, 
+                    { "name" : "Sentiment", "field" : "$sentiment" } ]
+            },
+            "x" : "Sentiment",
+            "y" : "Count", 
+            "x-label" : "Sentiment",        
+            "y-label" : "Count",
+            "timeSeries" : false,
+            "ordinal" : true
+        }
+    ];
+        viss[0].datatable = generateTestData(viss[0], 500);
+        viss[1].datatable = generateTestData(viss[1], 500);
+        viss[2].datatable = [
+                {"Count" : 23, "Sentiment" : "Joy"},
+                {"Count" : 4, "Sentiment" : "Desire"},
+                {"Count" : 22, "Sentiment" : "Fear"},
+                {"Count" : 12, "Sentiment" : "Anger"}, 
+            ];
+
+        var chart = new ossplots.Chart("#plot", viss[0], 400);
+        chart.draw();
+
+        chart = new ossplots.Chart("#eg1", viss[1], 200);
+        chart.draw();
+
+        chart = new ossplots.Chart("#eg2", viss[2], 200);
+        chart.draw();
+
+        viss[2].datatable = [
+                {"Count" : 1, "Sentiment" : "Foo"},
+                {"Count" : 11, "Sentiment" : "Bar"},
+                {"Count" : 23, "Sentiment" : "Biz"},
+                {"Count" : 15, "Sentiment" : "Whizz"}, 
+                {"Count" : 9, "Sentiment" : "FoShiz"}, 
+            ];
+
+        chart = new ossplots.Chart("#eg3", viss[2], 200);
+        chart.draw();
+    });
+
+</script>
+ 
+<script type="text/javascript" src="@routes.Assets.at("js/ossplots2.js")"></script>
+<script type="text/javascript" src="@routes.Assets.at("js/generators.js")"></script>
+<script type="text/javascript" src="@routes.Assets.at("js/d3.v3.min.js")"></script>
+}

@@ -157,3 +157,7 @@ footer {
 }
 footer a { color: #ddd; }
 footer a:hover { color: #fff; }
+
+th {
+    font-weight: normal;
+}

@@ -92,8 +92,8 @@ public class Projects extends Controller {
 		}
 	}
 	
-	public static Result view(String shortName) {
-		Project project  = getProject(shortName);
+	public static Result view(String id) {
+		Project project  = getProject(id);
 
 		// TODO: Grab Factoids as well
 
@@ -101,7 +101,37 @@ public class Projects extends Controller {
 			flash(Application.FLASH_ERROR_KEY, "An unexpected error has occurred. We are looking into it.");//TODO move to Messages.
 			return ok(views.html.index.render());
 		}
-		return ok(views.html.projects.view_item.render(project));
+		return ok(views.html.projects.view_project.render(project));
+	}
+
+	public static Result viewCode(String id) {
+		Project project  = getProject(id);
+
+		if (project == null) {
+			flash(Application.FLASH_ERROR_KEY, "An unexpected error has occurred. We are looking into it.");//TODO move to Messages.
+			return ok(views.html.index.render());
+		}
+		return ok(views.html.projects.view_project_code.render(project));
+	}
+
+	public static Result viewComms(String id) {
+		Project project  = getProject(id);
+
+		if (project == null) {
+			flash(Application.FLASH_ERROR_KEY, "An unexpected error has occurred. We are looking into it.");//TODO move to Messages.
+			return ok(views.html.index.render());
+		}
+		return ok(views.html.projects.view_project_code.render(project));
+	}
+
+	public static Result viewBts(String id) {
+		Project project  = getProject(id);
+
+		if (project == null) {
+			flash(Application.FLASH_ERROR_KEY, "An unexpected error has occurred. We are looking into it.");//TODO move to Messages.
+			return ok(views.html.index.render());
+		}
+		return ok(views.html.projects.view_project_code.render(project));
 	}
 	
 	public static Result create() {
