@@ -332,16 +332,6 @@ map[loc, int] NOA_PHP(rel[Language, loc, M3] m3s = {}) {
 }
 
 
-@metric{OOComplexity-PHP}
-@doc{PHP OO complexity}
-@friendlyName{PHP OO complexity}
-@appliesTo{php()}
-@uses{("DIT-PHP": "dit")}
-Factoid OOComplexity_PHP(map[loc, int] dit = ()) {
-	return Complexity("PHP", dit);
-}
-
-
 @metric{Coupling-PHP}
 @doc{PHP coupling}
 @friendlyName{PHP coupling}
