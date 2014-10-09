@@ -35,69 +35,6 @@
         <br/>
         }
     }
-
-    <h2>Configure Notifications</h2>
-    @if(localUser.notifications.size() > 0) {
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Project</th>
-                    <th>Metric</th>
-                    <th>Threshold</th>
-                    <th>Trigger</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-        @for(n <- localUser.notifications) {
-            <tr> <!-- TODO: Will want to present the project and metric name, not ID. -->
-                <td>@n.projectId</td>
-                <td>@n.metricId</td>
-                <td>@n.thresholdValue</td>
-                <td>
-                @if(n.aboveThreshold) {
-                    ABOVE
-                } else {
-                    BELOW
-                }
-                </td>
-                <td>
-                    Edit &nbsp; Delete
-                </td>
-            </tr>
-        }
-            </tbody>
-        </table>
-    } else {
-        @Messages("ossmeter.profile.notifications.empty") <a href="@routes.Application.profileNotification">Click here to add one</a>
-    }
-
-    <h2>Configure EventGroups</h2>
-    @if(localUser.eventGroups.size() > 0) {
-        <a href="@routes.Application.profileEventGroup">Create</a>
-        <ul>
-        @for(gr <- localUser.eventGroups) {
-            <li><p>
-            <label class="form-label" name="eventGroup" value=@gr>@gr.name</label> 
-            @if(gr.events.size() > 0) {
-                @for(ev <- gr.events) {
-                    <span>Events: @ev.name, @ev.date</span>
-                }
-            } else {
-                <span>No events yet</span>
-            }
-
-            @helper.form(routes.Account.createEvent, 'class->"form-project") {
-                <span><input type="submit">Add Event</input> &nbsp; Edit &nbsp; Delete</span>
-            }
-                </p>
-            </li> 
-        }
-        </ul>
-    } else {
-        @Messages("ossmeter.profile.eventgroup.empty") <a href="@routes.Application.profileEventGroup">Click here to add one</a>
-    }
-
     <br/>
     @currentAuth() { auth =>
         @Messages("ossmeter.profile.logged") @_providerIcon(auth.getProvider())<br/>
@@ -109,10 +46,81 @@
     }
     <br/>
     <ul>
-    	<li><a href="@routes.Account.changePassword">@Messages("ossmeter.profile.password_change")</a></li>
+        <li><a href="@routes.Account.changePassword">@Messages("ossmeter.profile.password_change")</a></li>
     </ul>
     </p>
 </div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 box">
+        <h2>Notifications</h2>
+        @if(localUser.notifications.size() > 0) {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Project</th>
+                        <th>Metric</th>
+                        <th>Threshold</th>
+                        <th>Trigger</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+            @for(n <- localUser.notifications) {
+                <tr> <!-- TODO: Will want to present the project and metric name, not ID. -->
+                    <td>@n.projectId</td>
+                    <td>@n.metricId</td>
+                    <td>@n.thresholdValue</td>
+                    <td>
+                    @if(n.aboveThreshold) {
+                        ABOVE
+                    } else {
+                        BELOW
+                    }
+                    </td>
+                    <td>
+                        Edit &nbsp; Delete
+                    </td>
+                </tr>
+            }
+                </tbody>
+            </table>
+        } else {
+            @Messages("ossmeter.profile.notifications.empty") <a href="@routes.Application.profileNotification">Click here to add one</a>
+        }
+        </div>
+        <div class="col-md-6 box">
+
+        <h2>Configure EventGroups</h2>
+        @if(localUser.eventGroups.size() > 0) {
+            <a href="@routes.Application.profileEventGroup">Create</a>
+            <ul>
+            @for(gr <- localUser.eventGroups) {
+                <li><p>
+                <label class="form-label" name="eventGroup" value=@gr>@gr.name</label> 
+                @if(gr.events.size() > 0) {
+                    @for(ev <- gr.events) {
+                        <span>Events: @ev.name, @ev.date</span>
+                    }
+                } else {
+                    <span>No events yet</span>
+                }
+
+                @helper.form(routes.Account.createEvent, 'class->"form-project") {
+                    <span><input type="submit">Add Event</input> &nbsp; Edit &nbsp; Delete</span>
+                }
+                    </p>
+                </li> 
+            }
+            </ul>
+        } else {
+            @Messages("ossmeter.profile.eventgroup.empty") <a href="@routes.Application.profileEventGroup">Click here to add one</a>
+        }
+        </div>
+    </div>
+
+</div>
+    
 <div class="container">
     <div class="gridster">
         <ul>

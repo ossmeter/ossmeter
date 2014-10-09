@@ -93,29 +93,40 @@
 			    <div class="tab-pane fade" id="sparklines-sourcecode">
     			  	<table class="table" id="sparklines-table-sourcecode">
                         <thead>
-                            <th>metric</th>
-                            <th>01/09/2007</th>
-                            <th>65 months</th>
-                            <th>15/07/2014</th>
-                            <th>low</th>
-                            <th>high</th>
                         </thead>
                         <tbody></tbody>
                     </table>
                     <script type="text/javascript">
                         $('#sparklines-sourcecode-tab').one('click', function(e) {
-                            var ms = ["commitsovertimeline", "commitsovertimeline"];
+                            var ms = [ "sentimentAtThreadEnd", "averageSentiment", "cumulativeComments", "cumulativeBugs", "invalidBugs", "patches", "bugs", "worksForMeBugs", "resolvedClosedBugs", "nonResolvedClosedBugs", "sentimentAtThreadBeggining", "cumulativePatches", "wontFixBugs", "duplicateBugs", "comments", "fixedBugs"];
 
-                            for (m in ms) {
-                                $.get("http://localhost:8182/projects/p/@project.getShortName()/s/"+ms[m], function (data) {
-                                    $("#sparklines-table-sourcecode > tbody:last").append("<tr><td>" + data.name + 
-                                        "</td><td>" + data.first +
-                                        "</td><td><img class=\"spark\" src=\"http://localhost:8182" + data.spark + "\" />" +  
-                                        "</td><td>" + data.last + 
-                                        "</td><td>" + data.low + 
-                                        "</td><td>" + data.high + "</td></tr>");
+                            // for (m in ms) {
+                                $.get("http://localhost:8182/projects/p/@project.getShortName()/s/"+ms.join("+"), function (result) {
+
+                                    for (var r in result) {
+                                        var data = result[r];
+
+                                        if (r == 0) { // Set up the header
+                                            $("#sparklines-table-sourcecode > thead:last").append(
+                                                "<tr><th>metric</th>" +
+                                                "<th>" + data.firstDate + "</th>" +
+                                                "<th>" + data.months + " months</th>" +
+                                                "<th>" + data.lastDate + "</th>" +
+                                                "<th>low</th>" +
+                                                "<th>high</th></tr>");
+                                        }
+
+                                        console.log(data);
+
+                                        $("#sparklines-table-sourcecode > tbody:last").append("<tr><td>" + data.name + 
+                                            "</td><td>" + Math.round(data.first * 100) / 100  +
+                                            "</td><td><img class=\"spark\" src=\"http://localhost:8182" + data.spark + "\" />" +  
+                                            "</td><td>" + Math.round(data.last * 100) / 100  + 
+                                            "</td><td>" + Math.round(data.low * 100) / 100 + 
+                                            "</td><td>" + Math.round(data.high * 100) / 100 + "</td></tr>");
+                                    }
                                 });
-                            };
+                            // };
                         });
                     </script>
         		</div>
