@@ -18,10 +18,6 @@
 
 
 
-<extension point="org.ossmeter.platform.visualisation.metric">
-   <visualisation json="vis/trans.requestreplyclassification.json">
-   </visualisation>
-</extension>
 
 
 <extension point="com.googlecode.pongo.runtime.osgi">

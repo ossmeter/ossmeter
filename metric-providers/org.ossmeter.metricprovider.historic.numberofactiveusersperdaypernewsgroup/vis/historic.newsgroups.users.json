@@ -34,7 +34,7 @@
 			"x" : "Date",
 			"y" : "ActiveUsers",
 			"timeSeries" : true
-		}
+		},
 		{
 			"name" : "inactiveusers",
 			"type" : "LineChart",
