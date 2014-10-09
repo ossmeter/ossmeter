@@ -5,7 +5,6 @@ import org.ossmeter.repository.model.ProjectRepository;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.restlet.engine.header.Header;
-import org.restlet.ext.jackson.JacksonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
@@ -73,10 +72,10 @@ public class ProjectResource extends ServerResource {
 	 * This is an update to the existing project (identified by projectId field)
 	 * @param entity
 	 */
-	@Put("json")
-	public void updateProject(JacksonRepresentation<ObjectNode> entity) {
-		
-	}
+//	@Put("json")
+//	public void updateProject(JacksonRepresentation<ObjectNode> entity) {
+//		
+//	}
 	
 	private JsonNode generateRequestJson(ObjectMapper mapper, String projectName) {
 		ObjectNode n = mapper.createObjectNode();
