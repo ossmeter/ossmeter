@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.jsoup.Jsoup;
 import org.ossmeter.repository.model.License;
 import org.ossmeter.repository.model.Person;
@@ -16,6 +17,7 @@ import org.ossmeter.repository.model.VcsRepository;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.ossmeter.repository.model.googlecode.*;
+import org.ossmeter.repository.model.importer.exception.WrongUrlException;
 import org.ossmeter.repository.model.vcs.git.GitRepository;
 import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 import org.ossmeter.platform.Platform;
@@ -35,7 +37,7 @@ public class GoogleCodeImporter {
 		logger = (OssmeterLogger) OssmeterLogger.getLogger("importer.GoogleCode");
 		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 	}
-	public GoogleCodeProject importProject(String projectId, Platform platform) 
+	public GoogleCodeProject importProject(String projectId, Platform platform) throws WrongUrlException 
 	{
 		org.jsoup.nodes.Document doc;
 		org.jsoup.nodes.Element content;
@@ -220,11 +222,9 @@ public class GoogleCodeImporter {
 			
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
-			logger.error("Eclipse project " + projectUrl + "Importer exception:" + e1.getMessage());
-			return null;
+			logger.error("Unable to connect at " + projectUrl + "Importer exception:" + e1.getMessage());
+			throw new WrongUrlException();
 		}
-		
-		
 	}
 	
 	
@@ -664,7 +664,12 @@ public class GoogleCodeImporter {
 				String string = element.getElementsByTag("td").get(1).getElementsByTag("a").first().attr("href");
 				string = string.substring(3);
 				string = string.substring(0, string.length()-1);
-				result.add(importProject(string,platform));			
+				try{
+					result.add(importProject(string,platform));	
+				} catch (WrongUrlException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
@@ -690,7 +695,12 @@ public class GoogleCodeImporter {
 				String string = element.getElementsByTag("td").get(1).getElementsByTag("a").first().attr("href");
 				string = string.substring(3);
 				string = string.substring(0, string.length()-1);
-				result.add(importProject(string,platform));	
+				try{
+					result.add(importProject(string,platform));	
+				} catch (WrongUrlException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				if(result.size() > numberOfProjects)
 					break;
 			}
@@ -701,13 +711,10 @@ public class GoogleCodeImporter {
 		return result;
 	}
 	
-	public boolean isProjectInDB(String projectId)
+	public boolean isProjectInDB(String projectId, Platform platform)
 	{
 		try 
 		{
-			Mongo mongo;
-			mongo = new Mongo();
-			Platform platform = new Platform(mongo);
 			Iterable<Project> projects = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(projectId);
 			Iterator<Project> iprojects = projects.iterator();
 			GoogleCodeProject project = null;
@@ -729,17 +736,17 @@ public class GoogleCodeImporter {
 		}
 	}
 	
-	public boolean isProjectInDBByUrl(String url)
+	public boolean isProjectInDBByUrl(String url, Platform platform) throws WrongUrlException
 	{
-		return isProjectInDB(getProjectIdFromUrl(url));
+		return isProjectInDB(getProjectIdFromUrl(url), platform);
 	}
 	
-	public GoogleCodeProject importProjectByUrl(String url, Platform platform)
+	public GoogleCodeProject importProjectByUrl(String url, Platform platform) throws WrongUrlException
 	{
 		return importProject(getProjectIdFromUrl(url), platform);
 	}
 	
-	private String getProjectIdFromUrl(String url)
+	private String getProjectIdFromUrl(String url) throws WrongUrlException
 	{
 		//https://code.google.com/p/firetray/
 		url = url.replace("http://", "");
@@ -753,7 +760,7 @@ public class GoogleCodeImporter {
 				url = url.substring(0, url.length()-1);
 			return url;
 		}
-		else return null;
+		else throw new WrongUrlException();
 	}
 
 	

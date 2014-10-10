@@ -572,13 +572,10 @@ public class RedmineImporter {
 	}
 
 	
-	public boolean isProjectInDB(String projectId)
+	public boolean isProjectInDB(String projectId, Platform platform)
 	{
 		try 
 		{
-			Mongo mongo;
-			mongo = new Mongo();
-			Platform platform = new Platform(mongo);
 			Iterable<Project> projects = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(projectId);
 			Iterator<Project> iprojects = projects.iterator();
 			RedmineProject project = null;
@@ -600,23 +597,26 @@ public class RedmineImporter {
 		}
 	}
 	
-	public boolean isProjectInDBByUrl(String url)
+	public boolean isProjectInDBByUrl(String url, Platform platform) throws WrongUrlException
 	{
-		return isProjectInDB(getProjectIdFromUrl(url));
+		return isProjectInDB(getProjectIdFromUrl(url), platform);
 	}
 	
-	public RedmineProject importProjectByUrl(String url, Platform platform) throws RepoInfoNotFound//, String token, String username, String password) throws RepoInfoNotFound
+	public RedmineProject importProjectByUrl(String url, Platform platform) throws RepoInfoNotFound, WrongUrlException
 	{
 		return importProject(getProjectIdFromUrl(url), platform);
 	}
-	
-	private String getProjectIdFromUrl(String url)
+	public RedmineProject importProjectByUrl(String url, Platform platform, String baseRepo, String token, String username, String password) throws RepoInfoNotFound, WrongUrlException
+	{
+		return importProject(getProjectIdFromUrl(url), platform, baseRepo, password, username, token);
+	}
+	private String getProjectIdFromUrl(String url) throws WrongUrlException
 	{
 		baseRepo = url.startsWith("http://")? url:"http://" + url;
 		url = url.endsWith("/")?url.substring(0,url.length()-1):url;
 		if (url.contains("/"))
 			return url.substring(url.lastIndexOf("/")+1,url.length());
-		else return null;
+		else throw new WrongUrlException();
 	}
 	
 }

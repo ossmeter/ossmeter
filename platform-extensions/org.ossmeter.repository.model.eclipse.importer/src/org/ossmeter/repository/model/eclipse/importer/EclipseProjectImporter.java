@@ -1,3 +1,4 @@
+
 package org.ossmeter.repository.model.eclipse.importer;
 
 import java.io.BufferedReader;
@@ -939,9 +940,9 @@ public class EclipseProjectImporter {
 		return importProject(getProjectIdFromUrl(url), platform);
 	}
 	
-	public boolean isProjectInDBByUrl(String url) throws WrongUrlException, ProjectUnknownException, MalformedURLException, IOException
+	public boolean isProjectInDBByUrl(String url, Platform platform) throws WrongUrlException, ProjectUnknownException, MalformedURLException, IOException
 	{
-		return isProjectInDB(getProjectIdFromUrl(url));
+		return isProjectInDB(getProjectIdFromUrl(url),platform);
 	}
 	private boolean isValidProjectId(String projectId) throws MalformedURLException, IOException
 	{
@@ -966,13 +967,10 @@ public class EclipseProjectImporter {
 		return result;
 	}
 	
-	public boolean isProjectInDB(String projectId) throws ProjectUnknownException, MalformedURLException, IOException
+	public boolean isProjectInDB(String projectId, Platform platform) throws ProjectUnknownException, MalformedURLException, IOException
 	{
 		if(!isValidProjectId(projectId))
 			throw new ProjectUnknownException();
-		Mongo mongo;
-		mongo = new Mongo();
-		Platform platform = new Platform(mongo);
 		Iterable<Project> pl = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(projectId);
 		Iterator<Project> iprojects = pl.iterator();
 		Project projectTemp = null;

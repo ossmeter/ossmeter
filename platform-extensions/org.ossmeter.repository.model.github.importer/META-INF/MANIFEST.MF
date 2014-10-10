@@ -7,5 +7,8 @@ Export-Package: org.ossmeter.repository.model.github.importer
 Require-Bundle: org.ossmeter.repository.model,
  org.ossmeter.repository.model.github,
  org.ossmeter.platform,
- org.ossmeter.repository.model.importerdependencies
+ org.ossmeter.repository.model.importerdependencies,
+ org.ossmeter.repository.model.importer.exception,
+ org.ossmeter.repository.model.vcs.git,
+ org.ossmeter.repository.model.vcs.svn
 Import-Package: org.json.simple
