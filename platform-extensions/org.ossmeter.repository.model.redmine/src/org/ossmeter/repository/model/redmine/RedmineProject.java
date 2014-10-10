@@ -13,7 +13,6 @@ public class RedmineProject extends org.ossmeter.repository.model.Project {
 	protected List<RedmineProjectVersion> versions = null;
 	protected RedmineWiki wiki = null;
 	protected RedmineQueryManager queryManager = null;
-	protected RedmineRepositoryInfo repositoryInfo = null;
 	
 	
 	public RedmineProject() { 
@@ -28,12 +27,20 @@ public class RedmineProject extends org.ossmeter.repository.model.Project {
 		DESCRIPTION.setOwningType("org.ossmeter.repository.model.redmine.RedmineProject");
 		CREATED_ON.setOwningType("org.ossmeter.repository.model.redmine.RedmineProject");
 		UPDATED_ON.setOwningType("org.ossmeter.repository.model.redmine.RedmineProject");
+		USERNAME.setOwningType("org.ossmeter.repository.model.redmine.RedmineProject");
+		PASSWORD.setOwningType("org.ossmeter.repository.model.redmine.RedmineProject");
+		TOKEN.setOwningType("org.ossmeter.repository.model.redmine.RedmineProject");
+		BASEREPO.setOwningType("org.ossmeter.repository.model.redmine.RedmineProject");
 	}
 	
 	public static StringQueryProducer IDENTIFIER = new StringQueryProducer("identifier"); 
 	public static StringQueryProducer DESCRIPTION = new StringQueryProducer("description"); 
 	public static StringQueryProducer CREATED_ON = new StringQueryProducer("created_on"); 
 	public static StringQueryProducer UPDATED_ON = new StringQueryProducer("updated_on"); 
+	public static StringQueryProducer USERNAME = new StringQueryProducer("username"); 
+	public static StringQueryProducer PASSWORD = new StringQueryProducer("password"); 
+	public static StringQueryProducer TOKEN = new StringQueryProducer("token"); 
+	public static StringQueryProducer BASEREPO = new StringQueryProducer("baseRepo"); 
 	
 	
 	public String getIdentifier() {
@@ -69,6 +76,42 @@ public class RedmineProject extends org.ossmeter.repository.model.Project {
 	
 	public RedmineProject setUpdated_on(String updated_on) {
 		dbObject.put("updated_on", updated_on);
+		notifyChanged();
+		return this;
+	}
+	public String getUsername() {
+		return parseString(dbObject.get("username")+"", "");
+	}
+	
+	public RedmineProject setUsername(String username) {
+		dbObject.put("username", username);
+		notifyChanged();
+		return this;
+	}
+	public String getPassword() {
+		return parseString(dbObject.get("password")+"", "");
+	}
+	
+	public RedmineProject setPassword(String password) {
+		dbObject.put("password", password);
+		notifyChanged();
+		return this;
+	}
+	public String getToken() {
+		return parseString(dbObject.get("token")+"", "");
+	}
+	
+	public RedmineProject setToken(String token) {
+		dbObject.put("token", token);
+		notifyChanged();
+		return this;
+	}
+	public String getBaseRepo() {
+		return parseString(dbObject.get("baseRepo")+"", "");
+	}
+	
+	public RedmineProject setBaseRepo(String baseRepo) {
+		dbObject.put("baseRepo", baseRepo);
 		notifyChanged();
 		return this;
 	}
@@ -132,26 +175,6 @@ public class RedmineProject extends org.ossmeter.repository.model.Project {
 				dbObject.put("queryManager", queryManager.getDbObject());
 			}
 			this.queryManager = queryManager;
-			notifyChanged();
-		}
-		return this;
-	}
-	public RedmineRepositoryInfo getRepositoryInfo() {
-		if (repositoryInfo == null && dbObject.containsField("repositoryInfo")) {
-			repositoryInfo = (RedmineRepositoryInfo) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("repositoryInfo"));
-		}
-		return repositoryInfo;
-	}
-	
-	public RedmineProject setRepositoryInfo(RedmineRepositoryInfo repositoryInfo) {
-		if (this.repositoryInfo != repositoryInfo) {
-			if (repositoryInfo == null) {
-				dbObject.removeField("repositoryInfo");
-			}
-			else {
-				dbObject.put("repositoryInfo", repositoryInfo.getDbObject());
-			}
-			this.repositoryInfo = repositoryInfo;
 			notifyChanged();
 		}
 		return this;

@@ -10,9 +10,13 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.UnknownHostException;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.json.simple.JSONArray;
@@ -24,10 +28,16 @@ import org.ossmeter.repository.model.ImportData;
 import org.ossmeter.repository.model.Person;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.Role;
+import org.ossmeter.repository.model.github.GitHubBugTracker;
+import org.ossmeter.repository.model.github.GitHubContent;
+import org.ossmeter.repository.model.github.GitHubDownload;
+import org.ossmeter.repository.model.github.GitHubIssue;
 import org.ossmeter.repository.model.github.GitHubRepository;
 import org.ossmeter.repository.model.github.GitHubUser;
+import org.ossmeter.repository.model.importer.exception.WrongUrlException;
+import org.ossmeter.repository.model.vcs.git.GitRepository;
+import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 
-import com.mongodb.Mongo;
 
 
 public class GitHubImporter {
@@ -80,17 +90,15 @@ public class GitHubImporter {
 			Integer remaining = new Integer(rate.get("remaining").toString());
 			return remaining;
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			logger.error("Get remaining api exception");
 			return 0;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			logger.error("Get remaining api exception");
 			return 0;
 		}
 	}
 	
-	public void waitApiRate(){
+	private void waitApiRate(){
 		
 		String url = "https://api.github.com/rate_limit" + authString;
 		boolean sleep = true;
@@ -185,7 +193,11 @@ public class GitHubImporter {
 				Iterator iter = obj.iterator();
 				while (iter.hasNext()) {
 					JSONObject entry = (JSONObject) iter.next();		
-					GitHubRepository repository = importRepository((String) entry.get("full_name"), platform);
+					try {
+						GitHubRepository repository = importRepository((String) entry.get("full_name"), platform);
+					} catch (WrongUrlException e) {
+						logger.error("Wrong project id");
+					}
 				}
 				lastImportedId = lastId;
 			} else {
@@ -196,9 +208,8 @@ public class GitHubImporter {
 		}
 	}
 	
-	public void importProjects(Platform platform, int numberOfProjects){
+	public void importProjects(Platform platform, int numberOfProjects) throws WrongUrlException{
 		int lastImportedId = 1;
-		InputStream is = null;
 		BufferedReader rd = null;
 		String jsonText = null;
 		boolean stop = false;
@@ -227,7 +238,13 @@ public class GitHubImporter {
 			try {
 				if (getRemainingResource()==0)
 					waitApiRate();
-				is = new URL("https://api.github.com/repositories?since=" + lastImportedId + authString).openStream();		
+				URL obj2 = new URL("https://api.github.com/repositories?since=" + lastImportedId + authString);
+				URLConnection conn = obj2.openConnection();
+				String sorry = conn.getHeaderField("STATUS");
+				if (sorry.startsWith("404"))
+					throw new WrongUrlException();
+				InputStream is = conn.getInputStream();
+					
 				rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
 				jsonText = readAll(rd);			
 				JSONArray obj=(JSONArray)JSONValue.parse(jsonText);
@@ -242,7 +259,11 @@ public class GitHubImporter {
 					Iterator iter = obj.iterator();
 					while (iter.hasNext()) {
 						JSONObject entry = (JSONObject) iter.next();		
-						GitHubRepository repository = importRepository((String) entry.get("full_name"), platform);
+						try {
+							GitHubRepository repository = importRepository((String) entry.get("full_name"), platform);
+						} catch (WrongUrlException e) {
+							logger.error("Wrong project id");
+						}
 						iteration++;
 						if (iteration > numberOfProjects)
 							break;
@@ -265,42 +286,48 @@ public class GitHubImporter {
 	}
 	
 	
-	public GitHubRepository importRepository(String projectId, Platform platform) {
-		try {
-//				int lastImportedId = new Integer(platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().first().getLastImportedProject());
 
-				GitHubRepository repository = null;
+	public GitHubRepository importRepository(String projectId, Platform platform) throws WrongUrlException {
+		try 
+		{
+			
+			int lastImportedId = 0;
+			if (platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().size()!=0)
+				lastImportedId = new Integer(platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().first().getLastImportedProject());
+			GitHubRepository repository = null;
+			JSONObject currentRepo = null;
+			Boolean projectToBeUpdated = false;
+			logger.info("---> processing repository " + projectId);
+			URL obj = new URL("https://api.github.com/repos/" + projectId + authString);
+			URLConnection conn = obj.openConnection();
+			String sorry = conn.getHeaderField("STATUS");
+			if (sorry.startsWith("404"))
+				throw new WrongUrlException();
+			InputStream is = conn.getInputStream();
+
 				
-				JSONObject currentRepo = null;
-				Boolean projectToBeUpdated = false;
-				logger.info("---> processing repository " + projectId);
-				InputStream is = new URL("https://api.github.com/repos/" + projectId + authString).openStream();
-				BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-				String jsonText = readAll(rd);
-			     		
-				currentRepo=(JSONObject)JSONValue.parse(jsonText);
+			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+			String jsonText = readAll(rd);
+		     		
+			currentRepo=(JSONObject)JSONValue.parse(jsonText);
 
-				Iterable<Project> projects = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByName(currentRepo.get("name").toString());		
+			Iterable<Project> projects = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByName(currentRepo.get("name").toString());		
 
-				Iterator<Project> ip = projects.iterator();
-				Project p = null;
-				while (ip.hasNext()) {
-					p = ip.next();				
-					if (p instanceof GitHubRepository) {
-						repository = (GitHubRepository)p;
-						if (repository.getFull_name().equals(projectId)) {
-							logger.info("-----> repository " + repository.getFull_name() + " already in the repository. Its metadata will be updated.");
-							projectToBeUpdated = true;
-							break;
-						}
+			Iterator<Project> ip = projects.iterator();
+			Project p = null;
+			while (ip.hasNext()) {
+				p = ip.next();				
+				if (p instanceof GitHubRepository) {
+					repository = (GitHubRepository)p;
+					if (repository.getFull_name().equals(projectId)) {
+						logger.info("-----> repository " + repository.getFull_name() + " already in the repository. Its metadata will be updated.");
+						projectToBeUpdated = true;
+						break;
 					}
 				}
-					
-				if (!projectToBeUpdated)  {
-					repository = new GitHubRepository();
-				}
-								
+			}
 				
+<<<<<<< HEAD
 				if ((isNotNull(currentRepo,"description")))					
 					repository.setDescription(currentRepo.get("description").toString());
 
@@ -310,57 +337,50 @@ public class GitHubImporter {
 
 				if ((isNotNull(currentRepo,"private")))					
 					repository.set_private(new Boolean(currentRepo.get("private").toString()));
+=======
+			if (!projectToBeUpdated)  {
+				repository = new GitHubRepository();
+			}
+			if ((isNotNull(currentRepo,"description")))					
+				repository.setDescription(currentRepo.get("description").toString());
+>>>>>>> redminefix
 
-				if ((isNotNull(currentRepo,"fork")))					
-					repository.setFork(new Boolean(currentRepo.get("fork").toString()));
-				
-				if ((isNotNull(currentRepo,"git_url")))					
-					repository.setGit_url(currentRepo.get("git_url").toString());
-				
-				if ((isNotNull(currentRepo,"html_url")))					
-					repository.setHtml_url(currentRepo.get("html_url").toString());
-				
-				if ((isNotNull(currentRepo,"clone_url")))					
-					repository.setClone_url(currentRepo.get("clone_url").toString());
+			repository.setFull_name(projectId);
+			repository.setShortName(projectId);
+			repository.setName(currentRepo.get("name").toString());
 
-				if ((isNotNull(currentRepo,"homepage")))					
-					repository.setHomePage(currentRepo.get("homepage").toString());
+			if ((isNotNull(currentRepo,"private")))					
+				repository.set_private(new Boolean(currentRepo.get("private").toString()));
 
-				if ((isNotNull(currentRepo,"mirror_url")))					
-					repository.setMirror_url(currentRepo.get("mirror_url").toString());
-
-				if ((isNotNull(currentRepo,"master_branch")))					
-					repository.setMaster_branch(currentRepo.get("master_branch").toString());
-
-				if ((isNotNull(currentRepo,"ssh_url")))					
-					repository.setSsh_url(currentRepo.get("ssh_url").toString());
-				
-				if ((isNotNull(currentRepo,"svn_url")))					
-					repository.setSvn_url(currentRepo.get("svn_url").toString());
-				
-				repository.setSize(new Integer(currentRepo.get("size").toString()));
-								
-				Role gitHubOwnerRole = platform.getProjectRepositoryManager().getProjectRepository().getRoles().findOneByName("gitHub_owner");
-				
-				if (gitHubOwnerRole == null) { 
-					gitHubOwnerRole = new Role();
-					gitHubOwnerRole.setName("gitHub_owner");
-					platform.getProjectRepositoryManager().getProjectRepository().getRoles().add(gitHubOwnerRole);
-				}
-
-				JSONObject ownerObject = (JSONObject)currentRepo.get("owner");
-				Iterable<Person> persons = platform.getProjectRepositoryManager().getProjectRepository().getPersons().findByName((String)ownerObject.get("login"));		
-				Iterator<Person> ipersons = persons.iterator();
-				Person person = null;
-				GitHubUser user = null;
-				while (ipersons.hasNext()) {
-					person = ipersons.next();				
-					if (person instanceof GitHubUser) {
-						user = (GitHubUser) person;
-						break;
-					}
-				}
+			if ((isNotNull(currentRepo,"fork")))					
+				repository.setFork(new Boolean(currentRepo.get("fork").toString()));
 			
+			if ((isNotNull(currentRepo,"git_url")))					
+				repository.setGit_url(currentRepo.get("git_url").toString());
+			
+			if ((isNotNull(currentRepo,"html_url")))					
+				repository.setHtml_url(currentRepo.get("html_url").toString());
+			
+			if ((isNotNull(currentRepo,"clone_url")))
+			{
+				repository.setClone_url(currentRepo.get("clone_url").toString());
+				GitRepository git = new GitRepository();
+				git.setUrl(currentRepo.get("clone_url").toString());
+				repository.getVcsRepositories().add(git);
+			}
+			if ((isNotNull(currentRepo,"homepage")))					
+				repository.setHomePage(currentRepo.get("homepage").toString());
+
+			if ((isNotNull(currentRepo,"mirror_url")))					
+				repository.setMirror_url(currentRepo.get("mirror_url").toString());
+
+			if ((isNotNull(currentRepo,"master_branch")))					
+				repository.setMaster_branch(currentRepo.get("master_branch").toString());
+
+			if ((isNotNull(currentRepo,"ssh_url")))					
+				repository.setSsh_url(currentRepo.get("ssh_url").toString());
+			
+<<<<<<< HEAD
 				if (user == null) {
 					user = new GitHubUser();
 					user.getRoles().add(gitHubOwnerRole);
@@ -386,23 +406,378 @@ public class GitHubImporter {
 				logger.info("Project has been importerd");
 				return repository;
 			} catch (FileNotFoundException e1) {
+=======
+			if ((isNotNull(currentRepo,"svn_url")))	
+			{
+				repository.setSvn_url(currentRepo.get("svn_url").toString());
+				SvnRepository svn = new SvnRepository();
+				svn.setUrl(currentRepo.get("svn_url").toString());
+				repository.getVcsRepositories().add(svn);
+			}
+			repository.setSize(new Integer(currentRepo.get("size").toString()));
+			try{
+				List<Person> persons = getPersonsInAProject(platform, projectId);
+				platform.getProjectRepositoryManager().getProjectRepository().sync();
+				for (Person person : persons)
+					repository.getPersons().add((Person)person);
+			}
+			catch(Exception e)
+			{
+				logger.debug("Unable to load collaborators for this project");
+			}
+			GitHubBugTracker bt = new GitHubBugTracker();
+			try{
+				List<GitHubIssue> issues = getIssuesInAProject(platform, projectId);
+				platform.getProjectRepositoryManager().getProjectRepository().sync();
+				bt.getIssues().clear();
+				for (GitHubIssue person : issues)
+					bt.getIssues().add((GitHubIssue)person);
+			}
+			catch(Exception e)
+			{
+				logger.debug("Unable to load collaborators for this project");
+			}
+			repository.getBugTrackingSystems().add(bt);
+			
+			try{
+				List<GitHubContent> issues = getContentInAProject(platform, projectId);
+				platform.getProjectRepositoryManager().getProjectRepository().sync();
+				for (GitHubContent person : issues)
+					repository.getContents().add((GitHubContent)person);
+			}
+			catch(Exception e)
+			{
+				logger.debug("Unable to load collaborators for this project");
+			}
+			
+			try{
+				List<GitHubDownload> downloads = getDownloadsInAProject(platform, projectId);
+				platform.getProjectRepositoryManager().getProjectRepository().sync();
+				for (GitHubDownload person : downloads)
+					repository.getDownloads().add((GitHubDownload)person);
+			}
+			catch(Exception e)
+			{
+				logger.debug("Unable to load collaborators for this project");
+			}
+			
+			
+			lastImportedId = new Integer(currentRepo.get("id").toString());
+			if (platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().size() == 0)
+			{
+				ImportData importData = new ImportData();
+				importData.setLastImportedProject(String.valueOf(lastImportedId));
+				platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().add(importData);
+				platform.getProjectRepositoryManager().getProjectRepository().sync();
+			}
+			platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().first().setLastImportedProject(String.valueOf(lastImportedId));
+			platform.getProjectRepositoryManager().getProjectRepository().sync();
+			if (!projectToBeUpdated) {
+				platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(repository);
+			}
+			
+			platform.getProjectRepositoryManager().getProjectRepository().sync();	
+			logger.info("Project has been importerd");
+			return repository;
+		}  catch (IOException e1) {
+			if (getRemainingResource()==0)
+			{
+>>>>>>> redminefix
 				logger.error("API rate limit exceeded. Waiting to restart the importing..." + e1.getMessage());
+				waitApiRate();
+				return importRepository(projectId, platform);
+			}
+			else
+			{
+				logger.error("Repository access blocked for project " + projectId + " " + e1.getMessage());
 				return null;
-			} catch (IOException e1) {
-				if (getRemainingResource()==0)
+			}
+		} 
+	}
+	private List<GitHubContent> getContentInAProject(Platform platform, String projectId) {
+		List<GitHubContent> result = new ArrayList<GitHubContent>();
+		JSONArray currentRepo = null;
+		InputStream is;
+		try {
+			URL obj = new URL("https://api.github.com/repos/" + projectId + "/contents" + authString);
+			URLConnection conn = obj.openConnection();
+			int numberOfPage = getNumberOfPage(conn);
+			is = conn.getInputStream();
+			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+			String jsonText = readAll(rd);
+			for (int i = 1; i <= numberOfPage; i++)
+			{
+				try
 				{
-					logger.error("API rate limit exceeded. Waiting to restart the importing..." + e1.getMessage());
-					waitApiRate();
-					return importRepository(projectId, platform);
+					if(i != 1)
+					{	URL obj2 = new URL("https://api.github.com/repos/" + projectId + "/contents" + authString + "&page=" + i);
+						URLConnection conn2 = obj2.openConnection();
+						InputStream is2 = conn2.getInputStream();
+						BufferedReader rd2 = new BufferedReader(new InputStreamReader(is2, Charset.forName("UTF-8")));
+						jsonText = readAll(rd2);
+					}
+					currentRepo=(JSONArray)JSONValue.parse(jsonText);
+					for (Object object : currentRepo) {
+						JSONObject ownerObject = (JSONObject)object;
+						GitHubContent content = new GitHubContent();
+						
+						content.setType((String)ownerObject.get("type"));
+						content.setName((String)ownerObject.get("name"));
+						content.setSha((String)ownerObject.get("sha"));
+						int number = 0;
+						try {
+							number = Integer.parseInt((String)ownerObject.get("size"));
+						}
+						catch (Exception e) {}
+						content.setPath((String)ownerObject.get("path"));
+						content.setSize(number);
+						result.add(content);
+					}
+				}catch (MalformedURLException e) {
+					return result;
+				} catch (IOException e) {
+					return result;
+				} catch (Exception e) {
+					return result;
 				}
-				else
+			}
+			return result;
+		} catch (MalformedURLException e) {
+			return result;
+		} catch (IOException e) {
+			return result;
+		} catch (Exception e)
+		{
+			return result;
+		}
+	}
+	private List<GitHubDownload> getDownloadsInAProject(Platform platform, String projectId) {
+		List<GitHubDownload> result = new ArrayList<GitHubDownload>();
+		JSONArray currentRepo = null;
+		InputStream is;
+		try {
+			URL obj = new URL("https://api.github.com/repos/" + projectId + "/releases" + authString);
+			URLConnection conn = obj.openConnection();
+			int numberOfPage = getNumberOfPage(conn);
+			is = conn.getInputStream();
+			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+			String jsonText = readAll(rd);
+			for (int i = 1; i <= numberOfPage; i++)
+			{
+				try
 				{
-					logger.error("Repository access blocked for project " + projectId + " " + e1.getMessage());
-					return null;
+					if(i != 1)
+					{	URL obj2 = new URL("https://api.github.com/repos/" + projectId + "/releases" + authString + "&page=" + i);
+						URLConnection conn2 = obj2.openConnection();
+						InputStream is2 = conn2.getInputStream();
+						BufferedReader rd2 = new BufferedReader(new InputStreamReader(is2, Charset.forName("UTF-8")));
+						jsonText = readAll(rd2);
+					}
+					currentRepo=(JSONArray)JSONValue.parse(jsonText);
+					for (Object object : currentRepo) {
+						JSONObject ownerObject = (JSONObject)object;
+						GitHubDownload download = new GitHubDownload();
+						
+						int number = 0;
+						try {
+							number = Integer.parseInt((String)ownerObject.get("size"));
+						}
+						catch (Exception e) {}
+						download.set_id(number);
+						download.setDescription((String)ownerObject.get("body"));
+						download.setName((String)ownerObject.get("name"));
+						download.setUrl((String)ownerObject.get("zipball_url"));
+						download.setHtml_url((String)ownerObject.get("html_url"));
+						result.add(download);
+					}
+				}catch (MalformedURLException e) {
+					return result;
+				} catch (IOException e) {
+					return result;
+				} catch (Exception e) {
+					return result;
 				}
-			} 
+			}
+			return result;
+		} catch (MalformedURLException e) {
+			return result;
+		} catch (IOException e) {
+			return result;
+		} catch (Exception e)
+		{
+			return result;
+		}
 	}
 	
+	private List<GitHubIssue> getIssuesInAProject(Platform platform, String projectId) {
+		List<GitHubIssue> result = new ArrayList<GitHubIssue>();
+		JSONArray currentRepo = null;
+		InputStream is;
+		try {
+			URL obj = new URL("https://api.github.com/repos/" + projectId + "/issues" + authString);
+			URLConnection conn = obj.openConnection();
+			int numberOfPage = getNumberOfPage(conn);
+			is = conn.getInputStream();
+			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+			String jsonText = readAll(rd);
+			for (int i = 1; i <= numberOfPage; i++)
+			{
+				try
+				{
+					if(i != 1)
+					{	URL obj2 = new URL("https://api.github.com/repos/" + projectId + "/issues" + authString + "&page=" + i);
+						URLConnection conn2 = obj2.openConnection();
+						InputStream is2 = conn2.getInputStream();
+						BufferedReader rd2 = new BufferedReader(new InputStreamReader(is2, Charset.forName("UTF-8")));
+						jsonText = readAll(rd2);
+					}
+					currentRepo=(JSONArray)JSONValue.parse(jsonText);
+					for (Object object : currentRepo) {
+						JSONObject ownerObject = (JSONObject)object;
+						String login = (String)ownerObject.get("login");
+						String role = (String)ownerObject.get("type");
+						GitHubIssue issues = new GitHubIssue();
+						
+						
+						issues.setState((String)ownerObject.get("state"));
+						issues.setBody((String)ownerObject.get("body"));
+						issues.setClosed_at((String)ownerObject.get("closed_at"));
+						issues.setCreated_at((String)ownerObject.get("created_at"));
+						int number = 0;
+						try {
+							number = Integer.parseInt((String)ownerObject.get("number"));
+						}
+						catch (Exception e) {}
+						issues.setNumber(number);
+						issues.setState((String)ownerObject.get("state"));
+						issues.setTitle((String)ownerObject.get("title"));
+						issues.setTitle((String)ownerObject.get("html_url"));
+						result.add(issues);
+					}
+				}catch (MalformedURLException e) {
+					return result;
+				} catch (IOException e) {
+					return result;
+				} catch (Exception e) {
+					return result;
+				}
+			}
+			return result;
+		} catch (MalformedURLException e) {
+			return result;
+		} catch (IOException e) {
+			return result;
+		} catch (Exception e)
+		{
+			return result;
+		}
+	}
+	private int getNumberOfPage(URLConnection urlConn)
+	{
+		int result = 1;
+		Map<String, List<String>> map = urlConn.getHeaderFields();
+		List<String> numberOfElements = map.get("Link");
+		if (numberOfElements != null)
+		for (String string : numberOfElements) {
+			int indexOfLast = string.lastIndexOf("&page=") + 6;
+			string = string.substring(indexOfLast);
+			string = string.substring(0,string.indexOf(">"));
+			try
+			{
+				result = Integer.parseInt(string);
+			}
+			catch(NumberFormatException e)
+			{
+				result = 1;
+			}
+		}
+		return result;
+	}
+	private List<Person> getPersonsInAProject(Platform platform, String projectId) {
+		List<Person> result = new ArrayList<Person>();
+		JSONArray currentRepo = null;
+		InputStream is;
+		try {
+			URL obj = new URL("https://api.github.com/repos/" + projectId + "/contributors" + authString);
+			URLConnection conn = obj.openConnection();
+			int numberOfPage = getNumberOfPage(conn);
+			is = conn.getInputStream();
+			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+			String jsonText = readAll(rd);
+			
+			
+			for (int i = 1; i <= numberOfPage; i++)
+			{
+				try
+				{
+					if(i != 1)
+					{	URL obj2 = new URL("https://api.github.com/repos/" + projectId + "/contributors" + authString + "&page=" + i);
+						URLConnection conn2 = obj2.openConnection();
+						InputStream is2 = conn2.getInputStream();
+						BufferedReader rd2 = new BufferedReader(new InputStreamReader(is2, Charset.forName("UTF-8")));
+						jsonText = readAll(rd2);
+					}
+					currentRepo=(JSONArray)JSONValue.parse(jsonText);
+					for (Object object : currentRepo) {
+						JSONObject ownerObject = (JSONObject)object;
+						String login = (String)ownerObject.get("login");
+						String role = (String)ownerObject.get("type");
+						
+						Role gitHubOwnerRole = platform.getProjectRepositoryManager().getProjectRepository().getRoles().findOneByName(role);
+						if (gitHubOwnerRole == null)
+						{ 
+							gitHubOwnerRole = new Role();
+							gitHubOwnerRole.setName(role);
+							platform.getProjectRepositoryManager().getProjectRepository().getRoles().add(gitHubOwnerRole);
+						}
+						GitHubUser user = null;
+						for (Person p : platform.getProjectRepositoryManager().getProjectRepository().getPersons().findByName(login))
+							if(p instanceof GitHubUser)
+								user = (GitHubUser)p;
+						if (user == null)
+						{
+							user = new GitHubUser();
+							platform.getProjectRepositoryManager().getProjectRepository().getPersons().add(user);
+						}
+						user.setHtml_url((String)ownerObject.get("login"));
+						user.setHtml_url((String)ownerObject.get("html_url"));
+						user.setHomePage((String)ownerObject.get("html_url"));
+						user.setUrl((String)ownerObject.get("url"));
+						user.setLogin((String)ownerObject.get("login"));
+						user.setName((String)ownerObject.get("login"));
+						user.setFollowers_url((String)ownerObject.get("followers_url"));
+						boolean inRole = false;
+						for (Role r : user.getRoles())
+						{
+							if (r.getName().equals(role))
+							{	
+								inRole = true;
+								break;
+							}
+						}
+						if (!inRole)
+							user.getRoles().add(gitHubOwnerRole);
+						result.add(user);
+					}
+				}catch (MalformedURLException e) {
+					return result;
+				} catch (IOException e) {
+					return result;
+				} catch (Exception e) {
+					return result;
+				}
+			}
+			return result;
+		} catch (MalformedURLException e) {
+			return result;
+		} catch (IOException e) {
+			return result;
+		} catch (Exception e)
+		{
+			return result;
+		}
+		
+	}
 	private String getProjectIdFromUrl(String url)
 	{
 		url = url.replace("http://", "");
@@ -417,33 +792,28 @@ public class GitHubImporter {
 		}
 		else return null;
 	}
-	public GitHubRepository importProjectByUrl(String url, Platform platform) {
-		return importRepository(getProjectIdFromUrl(url), platform);
+	public GitHubRepository importProjectByUrl(String url, Platform platform) throws WrongUrlException {
+		String s = getProjectIdFromUrl(url);
+		if (s == null)
+			throw new WrongUrlException();
+		return importRepository(s, platform);
 	}
-	public boolean isProjectInDB(String projectId)
-	{
-		try {
-			Mongo mongo;
-			mongo = new Mongo();
-			Platform platform = new Platform(mongo);
-			Iterable<Project> projects = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(projectId);		
-	
-			Iterator<Project> ip = projects.iterator();
-			Project p = null;
-			while (ip.hasNext()) {
-				p = ip.next();				
-				if (p instanceof GitHubRepository) {
-					return true;		
-				}
+	public boolean isProjectInDB(String projectId, Platform platform)
+	{	
+		Iterable<Project> projects = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(projectId);		
+
+		Iterator<Project> ip = projects.iterator();
+		Project p = null;
+		while (ip.hasNext()) {
+			p = ip.next();				
+			if (p instanceof GitHubRepository) {
+				return true;		
 			}
-			return false;
 		}
-		catch (UnknownHostException e) {
-			return false;
-		}
+		return false;
 	}
-	public boolean isProjectInDBByUrl(String url)
+	public boolean isProjectInDBByUrl(String url, Platform platform)
 	{
-		return isProjectInDB(getProjectIdFromUrl(url));
+		return isProjectInDB(getProjectIdFromUrl(url), platform);
 	}
 }

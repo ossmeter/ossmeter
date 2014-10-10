@@ -22,7 +22,7 @@ import com.mongodb.Mongo;
 public class GitHubImporterProvider implements ITransientMetricProvider{
 
 	public final static String IDENTIFIER = 
-			"org.ossmeter.metricprovider.historic.githubimporter";
+			"org.ossmeter.metricprovider.trans.githubimporter";
 	protected OssmeterLogger logger;
 	protected MetricProviderContext context;
 	public GitHubImporterProvider()
