@@ -1,31 +1,28 @@
 package org.ossmeter.metricprovider.trans.importer.eclipse;
 
-import org.ossmeter.platform.ITransientMetricProvider;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 import java.util.List;
 
-import org.ossmeter.platform.IHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
+import org.ossmeter.platform.ITransientMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.platform.logging.OssmeterLogger;
-import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.eclipse.EclipseProject;
+import org.ossmeter.repository.model.eclipse.importer.EclipseProjectImporter;
+import org.ossmeter.repository.model.importer.exception.ProjectUnknownException;
 
-import com.googlecode.pongo.runtime.Pongo;
 import com.googlecode.pongo.runtime.PongoDB;
 import com.googlecode.pongo.runtime.PongoFactory;
 import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
 import com.mongodb.DB;
 import com.mongodb.Mongo;
 
-import org.ossmeter.repository.model.eclipse.EclipseProject;
-import org.ossmeter.repository.model.eclipse.importer.*;
-import org.ossmeter.repository.model.importer.exception.ProjectUnknownException;
 
 
 public class EclipseImporterProvider implements ITransientMetricProvider{

@@ -8,6 +8,9 @@
       <visualisationKind
             json="chartdefs/linechart.json">
       </visualisationKind>
+      <visualisationKind
+            json="chartdefs/barchart.json">
+      </visualisationKind>
    </extension>
 
 </plugin>

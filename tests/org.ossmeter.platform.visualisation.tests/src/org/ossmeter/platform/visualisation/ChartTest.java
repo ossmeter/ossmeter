@@ -1,16 +1,9 @@
 package org.ossmeter.platform.visualisation;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-
 import org.junit.Test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.Mongo;
 
@@ -34,7 +27,7 @@ public class ChartTest {
 		JsonNode datatable = vis.get(0).get("datatable");
 		
 		Chart chart = ChartUtil.loadChart("");
-		ArrayNode table = chart.createDatatable(datatable, collection);
+		ArrayNode table = chart.createDatatable(datatable, collection, null);
 		System.out.println(table);
 	}
 	
@@ -47,7 +40,7 @@ public class ChartTest {
 		JsonNode datatable = vis.get(0).get("datatable");
 		
 		Chart chart = ChartUtil.loadChart("");
-		ArrayNode table = chart.createDatatable(datatable, collection);
+		ArrayNode table = chart.createDatatable(datatable, collection, null);
 		System.out.println(table);
 	}
 }

@@ -94,6 +94,7 @@ abstract class Tracker extends NamedElement {
   attr String status;
 }
 
+@customize
 class SourceForgeBugTrackingSystem extends BugTrackingSystem {
   val BugTS[*] bugsTS;
 }

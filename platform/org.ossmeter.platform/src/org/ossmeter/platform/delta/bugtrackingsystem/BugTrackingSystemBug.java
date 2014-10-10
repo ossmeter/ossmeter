@@ -101,18 +101,22 @@ public class BugTrackingSystemBug implements Serializable {
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof BugTrackingSystemBug) {
-//			if (!this.newsgroup.equals(((CommunicationChannelArticle) obj).getCommunicationChannel())) {
-//				return false;
-//			} 
-			if (this.bugId != ((BugTrackingSystemBug) obj).getBugId()) {
+			if (this.bugId != ((BugTrackingSystemBug) obj).getBugId())
 				return false;
-			}
 			return true;
 		}
-		
 		return false;
 	}
 
+	public boolean equals(int bugId) {
+		return equals(Integer.toString(bugId));
+	}
+
+	public boolean equals(String bugId) {
+		if (!this.bugId.equals(bugId))
+			return false;
+		return true;
+	}
 
 
 }

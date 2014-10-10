@@ -8,4 +8,5 @@ Require-Bundle: org.ossmeter.platform.visualisation,
  org.ossmeter.platform,
  org.ossmeter.repository.model,
  org.junit,
- org.jackson.all
+ org.jackson.all,
+ org.ossmeter.metricprovider.historic.commitsovertime

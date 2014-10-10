@@ -29,6 +29,7 @@ private set[loc] methodsWithIgnoreAnnotation(M3 m) {
   return result;
 }
 
+@memo
 set[loc] getJUnit4TestMethods(M3 m) {
   return getJUnit3TestMethods(m) + { testMethod | testMethod <- m@declarations<0>, isMethod(testMethod), jUnit4TestAnnotation in m@annotations[testMethod] } - methodsWithIgnoreAnnotation(m);
 }

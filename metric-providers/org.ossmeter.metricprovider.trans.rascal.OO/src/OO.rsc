@@ -184,3 +184,32 @@ map[loc, real] LCC(
 	
 	return lcc;
 }
+
+@doc{
+	LCOM4: Lack of Cohesion of Methods as defined by Hitz & Montazeri
+	The number of connected components within the related methods graph of a class.
+	Two methods are related if one of them calls the other of if they both access the same field.
+}
+map[loc, int] LCOM4(
+	rel[loc caller, loc callee] methodCalls,
+	rel[loc method, loc field] fieldAccesses,
+	rel[loc \type, loc method] methods,
+	rel[loc \type, loc field] fields,
+	set[loc] allTypes) {
+	
+	map[loc, int] lcom = ();
+	
+	for (t <- allTypes) {
+		fs = fields[t];
+		ms = methods[t];
+		
+		localAccesses = rangeR(domainR(fieldAccesses, ms), fs);
+		
+		relatedMethods = carrierR(methodCalls, ms);
+		relatedMethods += localAccesses o invert(localAccesses);
+		
+		lcom[t] = size(connectedComponents(relatedMethods));
+	}
+	
+	return lcom;
+}

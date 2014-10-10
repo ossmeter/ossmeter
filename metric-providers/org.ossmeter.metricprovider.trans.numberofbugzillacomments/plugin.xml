@@ -2,12 +2,19 @@
 <?eclipse version="3.4"?><plugin>
    
    <extension point="org.ossmeter.platform.metricprovider">
-      <metricProvider provider="org.ossmeter.metricprovider.trans.numberofbugzillacomments.NobcMetricProvider">
+      <metricProvider provider="org.ossmeter.metricprovider.trans.bugs.comments.CommentsTransMetricProvider">
       </metricProvider>
    </extension>
 
+
+
+
+
+
+
+
 <extension point="com.googlecode.pongo.runtime.osgi">
-    <class name="org.ossmeter.metricprovider.numberofbugzillacomments.model.Nobc"/>
-    <class name="org.ossmeter.metricprovider.numberofbugzillacomments.model.BugzillaData"/>
+    <class name="org.ossmeter.metricprovider.trans.bugs.comments.model.BugsCommentsTransMetric"/>
+    <class name="org.ossmeter.metricprovider.trans.bugs.comments.model.BugTrackerData"/>
   </extension>
 </plugin>

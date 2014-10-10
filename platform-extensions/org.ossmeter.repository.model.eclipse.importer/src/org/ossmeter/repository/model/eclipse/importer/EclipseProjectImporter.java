@@ -216,11 +216,11 @@ public class EclipseProjectImporter {
 				project.getPlatforms().add(eclipsePlatform);
 				platform.getProjectRepositoryManager().getProjectRepository().sync();	
 			}
-			
 			InputStream is = new URL("http://projects.eclipse.org/json/project/" + projectId).openStream();
 			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
 			String jsonText = readAll(rd);
 						
+			System.out.println(jsonText);
 			JSONObject obj=(JSONObject)JSONValue.parse(jsonText);
 			JSONObject currentProg = (JSONObject)((JSONObject)obj.get("projects")).get(projectId);
 			

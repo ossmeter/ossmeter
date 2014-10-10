@@ -80,6 +80,13 @@ public class SimpleMetricProviderScheduler {
 			
 
 			for (VcsRepository repo : project.getVcsRepositories()) {
+				if (platform.getCommunicationChannelManager()==null)
+					System.err.println("platform.getCommunicationChannelManager()==null");
+				if (platform.getMetricsRepository(project).getDb()==null)
+					System.err.println("platform.getMetricsRepository(project).getDb()==null");
+				if (platform.getCommunicationChannelManager().getFirstDate(platform.getMetricsRepository(project).getDb(), communicationChannel)==null)
+					System.err.println("platform.getCommunicationChannelManager().getFirstDate(platform.getMetricsRepository(project).getDb(), communicationChannel)==null");
+
 				// This needs to be the day BEFORE the first day! (Hence the addDays(-1))
 				Date d = platform.getVcsManager().getDateForRevision(repo, platform.getVcsManager().getFirstRevision(repo)).addDays(-1);
 				if (lastExec.compareTo(d) < 0) {
@@ -106,7 +113,7 @@ public class SimpleMetricProviderScheduler {
 
 		//DEBUG
 //		if (project.getName().equals("Epsilon"))
-//			last = new Date("20130901");
+			last = new Date("20130901");
 //		today = new Date("20131014");
 		//END DEBUG
 		

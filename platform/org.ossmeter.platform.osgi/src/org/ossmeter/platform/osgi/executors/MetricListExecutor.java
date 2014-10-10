@@ -1,6 +1,8 @@
 package org.ossmeter.platform.osgi.executors;
 
 import java.io.FileWriter;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -16,11 +18,13 @@ import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.platform.logging.OssmeterLoggerFactory;
+import org.ossmeter.repository.model.MetricAnalysis;
 import org.ossmeter.repository.model.MetricProviderExecution;
 import org.ossmeter.repository.model.MetricProviderType;
 import org.ossmeter.repository.model.Project;
 
 public class MetricListExecutor implements Runnable {
+	
 	protected FileWriter writer;
 
 	final protected Platform platform;
@@ -37,25 +41,22 @@ public class MetricListExecutor implements Runnable {
 		this.date = date;
 		this.logger = (OssmeterLogger) OssmeterLogger.getLogger("MetricListExecutor (" + project.getName() + ", " + date.toString() + ")");
 		this.logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
-		
-		// DEBUG
-//		try {
-////					this.writer = null;
-//			this.writer = new FileWriter("/Users/esgroup/Desktop/D5.3-logs/" + project.getName() + "-" + ".csv");
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
 	}
 	
 	public void setMetricList(List<IMetricProvider> metrics) {
 		this.metrics = metrics;
 	}
 	
+	private final ThreadMXBean bean = ManagementFactory.getThreadMXBean( );
+	
+	private long now() {
+		return  bean.isCurrentThreadCpuTimeSupported( ) ? bean.getCurrentThreadCpuTime( ) / 1000000: -1L;
+	}
+	
 	@Override
 	public void run() {
 
 		for (IMetricProvider m : metrics) {
-			//logger.info("\t" + m.getShortIdentifier() + " executing.");
 			
 			m.setMetricProviderContext(new MetricProviderContext(platform, new OssmeterLoggerFactory().makeNewLoggerInstance(m.getIdentifier())));
 			addDependenciesToMetricProvider(m);
@@ -86,6 +87,15 @@ public class MetricListExecutor implements Runnable {
 				// we can ignore this
 			} 
 			
+			// Performance analysis
+			MetricAnalysis mAnal = new MetricAnalysis();
+			mAnal.setMetricId(m.getIdentifier());
+			mAnal.setProjectId(project.getShortName()); // FIXME
+			mAnal.setAnalysisDate(date.toJavaDate());
+			mAnal.setExecutionDate(new java.util.Date());
+			platform.getProjectRepositoryManager().getProjectRepository().getMetricAnalysis().add(mAnal);
+			long start = now(); // TODO: Could edit the generated code to encapsulate this.
+
 			// Now execute
 			try {
 				if (m instanceof ITransientMetricProvider) {
@@ -101,13 +111,16 @@ public class MetricListExecutor implements Runnable {
 				
 				// Update the meta data
 				mpd.setLastExecuted(date.toString()); 
-				platform.getProjectRepositoryManager().getProjectRepository().sync();
+//				platform.getProjectRepositoryManager().getProjectRepository().sync();
 			} catch (Exception e) {
 				logger.error("Exception thrown during metric provider execution ("+m.getShortIdentifier()+").", e);
 				project.getExecutionInformation().setInErrorState(true);
 				platform.getProjectRepositoryManager().getProjectRepository().sync();
 				break;
 			}
+			
+			mAnal.setMillisTaken(now() - start);
+			platform.getProjectRepositoryManager().getProjectRepository().sync(); // Will sync-ing here mess things up?
 		}
 	}
 

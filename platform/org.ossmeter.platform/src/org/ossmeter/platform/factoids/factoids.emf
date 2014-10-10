@@ -8,9 +8,16 @@ class Factoids {
 class Factoid {
 	@searchable
 	attr String metricId;
+	attr String name;
 	attr String factoid;
 	attr StarRating stars;
 	attr String[*] metricDependencies;
+	@searchable
+	attr FactoidCategory category;
+}
+
+enum FactoidCategory {
+	GENERAL; CODE; COMMS; BUGS; OTHER;
 }
 
 enum StarRating {

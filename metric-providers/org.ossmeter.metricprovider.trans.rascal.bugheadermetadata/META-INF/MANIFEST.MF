@@ -1,17 +1,20 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Bugstatus
-Bundle-SymbolicName: org.ossmeter.metricprovider.trans.bugheadermetadata;singleton:=true
+Bundle-SymbolicName: org.ossmeter.metricprovider.trans.bugs.bugmetadata;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.ossmeter.metricprovider.trans.bugheadermetadata.Activator
+Bundle-Activator: org.ossmeter.metricprovider.trans.bugs.bugmetadata.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  com.googlecode.pongo.runtime,
  org.ossmeter.repository.model.bts.bugzilla,
  com.googlecode.pongo.runtime.osgi,
  org.ossmeter.platform.bugtrackingsystem.bugzilla,
- org.ossmeter.platform
+ org.ossmeter.platform,
+ org.ossmeter.contentclassifier.opennlptartarus.libsvm,
+ org.ossmeter.metricprovider.trans.sentimentclassification,
+ org.ossmeter.platform.visualisation
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.trans.bugheadermetadata,
- org.ossmeter.metricprovider.trans.bugheadermetadata.model
+Export-Package: org.ossmeter.metricprovider.trans.bugs.bugmetadata,
+ org.ossmeter.metricprovider.trans.bugs.bugmetadata.model

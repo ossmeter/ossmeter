@@ -14,7 +14,7 @@ Require-Bundle: org.ossmeter.repository.model.eclipse,
  org.ossmeter.repository.model.cc.nntp,
  org.ossmeter.repository.model.importerdependencies;bundle-version="1.0.0",
  org.ossmeter.platform,
- org.ossmeter.repository.model.importer.exception;bundle-version="1.0.0"
+ org.json
 Export-Package: org.ossmeter.repository.model.eclipse.importer
 Import-Package: org.apache.commons.net,
  org.json.simple,

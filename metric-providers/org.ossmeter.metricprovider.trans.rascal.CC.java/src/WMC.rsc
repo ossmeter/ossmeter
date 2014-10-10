@@ -28,14 +28,14 @@ map[loc class, int wmcCount] getWMC(
 	map[loc, int] prev = ()
 	)
 {
-	result = prev;
+	map[loc, int] result = prev;
 	changed = getChangedFilesInWorkingCopyFolders(delta, workingCopies);
 	
 	// remove results for changed files
 	result -= (file : 0 | file <- changed); 
 	
 	for (file <- changed, m3 <- m3s[java(), file]) {
-		result += (cl : (0 | it + methodCC[m] | m <- m3@containment[cl], isMethod(m)) | <cl, _> <- m3@containment, isClass(cl));
+		result += (cl : (0 | it + methodCC[m]?0 | m <- m3@containment[cl], isMethod(m)) | <cl, _> <- m3@containment, isClass(cl));
 	}
 	 
 	return result;

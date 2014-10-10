@@ -62,8 +62,7 @@ public class MetricExecutorTest {
 		ProjectExecutor pe = new ProjectExecutor(platform, project);
 		pe.run();
 		
-		//JURI Commented this statement generate an Exception
-		//assertTrue(project.getInErrorState());
+		assertTrue(project.getExecutionInformation().getInErrorState());
 		assertEquals(startDate, project.getLastExecuted());
 		
 		// 

@@ -10,16 +10,28 @@ public class ApiApplication extends Application {
 	public Restlet createInboundRoot() {
 		Router router = new Router(getContext());
 
+		
+		router.attach("/", PingResource.class); 	
+		router.attach("/search", SearchProjectResource.class);
+		router.attach("/search/", SearchProjectResource.class);
 		router.attach("/metrics", MetricListResource.class);
 		router.attach("/metrics/", MetricListResource.class);
+		router.attach("/factoids", FactoidListResource.class);
+		router.attach("/factoids/", FactoidListResource.class);
 		router.attach("/projects", ProjectListResource.class);
 		router.attach("/projects/", ProjectListResource.class);
-		router.attach("/projects/{page}", ProjectListResource.class);
-		router.attach("/projects/{page}/", ProjectListResource.class);
-		router.attach("/projects/p/{name}", ProjectResource.class);
-		router.attach("/projects/p/{name}/", ProjectResource.class);
-		router.attach("/projects/p/{name}/m/{metricId}", MetricVisualisationResource.class);
-		router.attach("/projects/p/{name}/m/{metricId}/", MetricVisualisationResource.class);
+		router.attach("/projects/import", ProjectImportResource.class);
+		router.attach("/projects/p/{projectid}", ProjectResource.class);
+		router.attach("/projects/p/{projectid}/", ProjectResource.class);
+		router.attach("/projects/p/{projectid}/m/{metricid}", MetricVisualisationResource.class);
+		router.attach("/projects/p/{projectid}/m/{metricid}/", MetricVisualisationResource.class);
+		router.attach("/projects/p/{projectid}/f", FactoidResource.class);
+		router.attach("/projects/p/{projectid}/f/", FactoidResource.class);
+		router.attach("/projects/p/{projectid}/f/{factoidid}", FactoidResource.class);
+		router.attach("/projects/p/{projectid}/f/{factoidid}/", FactoidResource.class);
+		router.attach("/projects/p/{projectid}/s/{metricid}", SparkResource.class);
+		router.attach("/projects/p/{projectid}/s/{metricid}/", SparkResource.class);
+		router.attach("/spark/{sparkid}", SparkImageResource.class);
 		
 		router.attach("/raw/metrics", RawMetricListResource.class);
 		router.attach("/raw/metrics/", RawMetricListResource.class);
@@ -27,10 +39,10 @@ public class ApiApplication extends Application {
 		router.attach("/raw/projects/", ProjectListResource.class);
 		router.attach("/raw/projects/{page}", ProjectListResource.class);
 		router.attach("/raw/projects/{page}/", ProjectListResource.class);
-		router.attach("/raw/projects/p/{name}", ProjectResource.class);
-		router.attach("/raw/projects/p/{name}/", ProjectResource.class);
-		router.attach("/raw/projects/p/{name}/m/{metricId}", RawMetricResource.class);
-		router.attach("/raw/projects/p/{name}/m/{metricId}/", RawMetricResource.class);
+		router.attach("/raw/projects/p/{projectid}", ProjectResource.class);
+		router.attach("/raw/projects/p/{projectid}/", ProjectResource.class);
+		router.attach("/raw/projects/p/{projectid}/m/{metricid}", RawMetricResource.class);
+		router.attach("/raw/projects/p/{projectid}/m/{metricid}/", RawMetricResource.class);
 		
 		return router;
 	}

@@ -1,16 +1,17 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Numberofarticlesperdaypernewsgroup
-Bundle-SymbolicName: org.ossmeter.metricprovider.historic.numberofarticlesperdaypernewsgroup;singleton:=true
+Bundle-SymbolicName: org.ossmeter.metricprovider.historic.newsgroups.articles;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.ossmeter.metricprovider.historic.numberofarticlesperdaypernewsgroup.Activator
+Bundle-Activator: org.ossmeter.metricprovider.historic.newsgroups.articles.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.ossmeter.metricprovider.trans.numberofarticles,
+ org.ossmeter.metricprovider.trans.newsgroups.articles,
  org.ossmeter.platform,
  org.ossmeter.repository.model.cc.nntp,
  org.ossmeter.platform.client.api,
- com.googlecode.pongo.runtime.osgi
+ com.googlecode.pongo.runtime.osgi,
+ org.ossmeter.platform.visualisation
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.historic.numberofarticlesperdaypernewsgroup
+Export-Package: org.ossmeter.metricprovider.historic.newsgroups.articles

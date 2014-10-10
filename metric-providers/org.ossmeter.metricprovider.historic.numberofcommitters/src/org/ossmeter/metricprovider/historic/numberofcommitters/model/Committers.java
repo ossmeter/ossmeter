@@ -1,9 +1,7 @@
 package org.ossmeter.metricprovider.historic.numberofcommitters.model;
 
-import com.mongodb.*;
-import java.util.*;
-import com.googlecode.pongo.runtime.*;
-import com.googlecode.pongo.runtime.querying.*;
+import com.googlecode.pongo.runtime.Pongo;
+import com.googlecode.pongo.runtime.querying.NumericalQueryProducer;
 
 
 public class Committers extends Pongo {

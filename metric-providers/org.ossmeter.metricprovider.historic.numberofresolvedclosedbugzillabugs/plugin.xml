@@ -2,21 +2,26 @@
 <plugin>
   
   <extension point="org.ossmeter.platform.metricprovider">
-     <metricProvider provider="org.ossmeter.metricprovider.historic.numberofresolvedclosedbugzillabugs.NumberOfResolvedClosedBugzillaBugsProvider">
+     <metricProvider provider="org.ossmeter.metricprovider.historic.bugs.status.StatusHistoricMetricProvider">
      </metricProvider>
   </extension>
 
 
 
-<extension point="com.googlecode.pongo.runtime.osgi">
-    <class name="org.ossmeter.metricprovider.generic.numberofresolvedclosedbugzillabugs.model.DailyNorcb"/>
-    <class name="org.ossmeter.metricprovider.generic.numberofresolvedclosedbugzillabugs.model.DailyBugzillaData"/>
-  </extension>
-<extension
-      point="org.ossmeter.platform.client.api.pongoviz">
-   <visualiser
-         metricProviderId="org.ossmeter.metricprovider.generic.numberofresolvedclosedbugzillabugs"
-         pongoVisualiser="org.ossmeter.metricprovider.historic.numberofresolvedclosedbugzillabugs.model.DailyNorcbViz">
-   </visualiser>
+
+
+<extension point="org.ossmeter.platform.visualisation.metric">
+   <visualisation json="vis/historic.bugs.status.json">
+   </visualisation>
 </extension>
+
+
+
+
+
+
+
+<extension point="com.googlecode.pongo.runtime.osgi">
+    <class name="org.ossmeter.metricprovider.historic.bugs.status.model.BugsStatusHistoricMetric"/>
+  </extension>
 </plugin>

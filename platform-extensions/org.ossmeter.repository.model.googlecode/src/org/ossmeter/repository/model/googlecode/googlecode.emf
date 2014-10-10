@@ -35,6 +35,7 @@ class GoogleWiki extends CommunicationChannel {
 class GoogleForum extends CommunicationChannel {
 }
 
+@customize
 class GoogleIssueTracker extends BugTrackingSystem {
   attr String url;
   val GoogleIssue[*] issues;

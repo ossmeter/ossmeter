@@ -46,6 +46,7 @@ public class ProjectCreationUtil {
 			Boolean authenticationRequired, String username, String password, int port, int interval){
 		Project project = new Project();
 		project.setName(name);
+		project.setShortName(name);
 		
 		NntpNewsGroup newsGroup = new NntpNewsGroup();
 		newsGroup.setUrl(url+'/' + newsGroupName);

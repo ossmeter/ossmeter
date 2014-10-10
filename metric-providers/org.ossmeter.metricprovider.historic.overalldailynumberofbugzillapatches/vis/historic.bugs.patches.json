@@ -1,0 +1,28 @@
+{
+	"metricid" : "org.ossmeter.metricprovider.historic.bugs.patches",
+	"vis" : [ 
+		{
+			"name" : "patches",
+			"type" : "LineChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Patches", "field" : "$numberOfPatches" } ]
+			},
+			"x" : "Date",
+			"y" : "Patches",
+			"timeSeries" : true
+		},{
+			"name" : "cumulativePatches",
+			"type" : "LineChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Cumulative Patches", "field" : "$cumulativeNumberOfPatches" } ]
+			},
+			"x" : "Date",
+			"y" : "Cumulative Patches",
+			"timeSeries" : true
+		}
+	]
+
+}
+

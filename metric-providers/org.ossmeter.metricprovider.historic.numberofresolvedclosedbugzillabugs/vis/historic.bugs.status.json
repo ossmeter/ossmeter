@@ -1,0 +1,77 @@
+{
+	"metricid" : "org.ossmeter.metricprovider.historic.bugs.status",
+	"vis" : [ 
+		{
+			"name" : "resolvedClosedBugs",
+			"type" : "LineChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Resolved or Closed Bugs", "field" : "$numberOfResolvedClosedBugs" } ]
+			},
+			"x" : "Date",
+			"y" : "Resolved or Closed Bugs",
+			"timeSeries" : true
+		},{
+			"name" : "wontFixBugs",
+			"type" : "LineChart",
+			"datatable" : { 
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Won't-Fix Bugs", "field" : "$numberOfWontFixBugs" } ]
+			},
+			"x" : "Date",
+			"y" : "Won't-Fix Bugs",
+			"timeSeries" : true
+		},{
+			"name" : "worksForMeBugs",
+			"type" : "BarChart",
+			"datatable" : { 
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Works-For-Me Bugs", "field" : "$numberOfWorksForMeBugs" } ]
+			},
+			"x" : "Date",
+			"y" : "Works-For-Me Bugs",
+			"timeSeries" : true
+		},{
+			"name" : "nonResolvedClosedBugs",
+			"type" : "BarChart",
+			"datatable" : { 
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Non-Resolved or Closed Bugs", "field" : "$numberOfNonResolvedClosedBugs" } ]
+			},
+			"x" : "Date",
+			"y" : "Non-Resolved or Closed Bugs",
+			"timeSeries" : true
+		},{
+			"name" : "invalidBugs",
+			"type" : "BarChart",
+			"datatable" : { 
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Invalid Bugs", "field" : "$numberOfInvalidBugs" } ]
+			},
+			"x" : "Date",
+			"y" : "Invalid Bugs",
+			"timeSeries" : true
+		},{
+			"name" : "fixedBugs",
+			"type" : "BarChart",
+			"datatable" : { 
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Fixed Bugs", "field" : "$numberOfFixedBugs" } ]
+			},
+			"x" : "Date",
+			"y" : "Fixed Bugs",
+			"timeSeries" : true
+		},{
+			"name" : "duplicateBugs",
+			"type" : "BarChart",
+			"datatable" : { 
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Duplicate Bugs", "field" : "$numberOfDuplicateBugs" } ]
+			},
+			"x" : "Date",
+			"y" : "Duplicate Bugs",
+			"timeSeries" : true
+		}
+	]
+
+}

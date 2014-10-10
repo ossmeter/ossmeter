@@ -6,12 +6,12 @@ import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.ossmeter.platform.Date;
 import org.ossmeter.platform.Platform;
+import org.ossmeter.platform.app.example.util.ProjectCreationUtil;
 import org.ossmeter.platform.delta.NoManagerFoundException;
 import org.ossmeter.platform.osgi.OssmeterApplication;
 import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.Project;
-import org.ossmeter.repository.model.ProjectExecutionInformation;
 import org.ossmeter.repository.model.ProjectRepository;
 import org.ossmeter.repository.model.VcsRepository;
 
@@ -28,26 +28,23 @@ public class App implements IApplication {
 		PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
 		Platform platform = new Platform(mongo);
 		
-		// THIS NEEDS TO RUN DUE TO UPDATES IN THE PROJECT MODEL	
-		for (Project p : platform.getProjectRepositoryManager().getProjectRepository().getProjects()) {
-			try {
-				if (p.getExecutionInformation() == null) p.setExecutionInformation(new ProjectExecutionInformation());
-			} catch (RuntimeException e) {
-				p.setExecutionInformation(new ProjectExecutionInformation());
-			}
-			
-//			p.getExecutionInformation().setMonitor(false);
-		}
+//		Project pongo = ProjectCreationUtil.createSvnProject("pongo", "http://pongo.googlecode.com/svn/trunk");
+//		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(pongo);
+		
+//		Project pdb = ProjectCreationUtil.createProjectWithNewsGroup("xText", "news.eclipse.org", "eclipse.modeling.tmf", true, "exquisitus", "flinder1f7", 80, 10000);
+		Project pdb = ProjectCreationUtil.createProjectWithBugTrackingSystem("epsilon", "https://bugs.eclipse.org/bugs/xmlrpc.cgi", "epsilon", null);
+//		Project pdb = ProjectCreationUtil.createGitProject("rascal", "file:///Users/jurgenv/Workspaces/Rascal/rascal");
+
+		pdb.getExecutionInformation().setMonitor(true);
+		
+		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(pdb);
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 		
-//		GitHubImporter importer = new GitHubImporter("ffab283e2be3265c7b0af244e474b28430351973");	
-//		importer.importAll(platform);
-		
+		System.err.println(platform.getBugTrackingSystemManager().getBugTrackingSystemManagers());
 		
 		mongo.close();
 		
 		// Start the application
-//		return null;
 		return  new OssmeterApplication().start(context);
 	}
 
@@ -88,7 +85,7 @@ public class App implements IApplication {
 			}
 			for (BugTrackingSystem bugTrackingSystem : project.getBugTrackingSystems()) {
 				try {
-					Date d = platform.getBugTrackingSystemManager().getFirstDate(null, bugTrackingSystem).addDays(-1);
+					Date d = platform.getBugTrackingSystemManager().getFirstDate(platform.getMetricsRepository(project).getDb(), bugTrackingSystem).addDays(-1);
 					if (d == null) continue;
 					if (lastExec.compareTo(d) > 0) {
 						lastExec = d;

@@ -1,22 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.4"?>
-<plugin>
-   <extension
-         point="com.googlecode.pongo.runtime.osgi">
-         
-	  <class
-            name="org.ossmeter.metricprovider.numberofarticles.model.Noa">
-      </class>
-	  <class
-            name="org.ossmeter.metricprovider.numberofarticles.model.NewsgroupData">
-      </class>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?eclipse version="3.4"?><plugin>
    
-   </extension>
-   <extension
-         point="org.ossmeter.platform.metricprovider">
-      <metricProvider
-            provider="org.ossmeter.metricprovider.trans.numberofarticles.NoaMetricProvider">
+   <extension point="org.ossmeter.platform.metricprovider">
+      <metricProvider provider="org.ossmeter.metricprovider.trans.newsgroups.articles.ArticlesTransMetricProvider">
       </metricProvider>
    </extension>
 
+
+
+
+<extension point="com.googlecode.pongo.runtime.osgi">
+    <class name="org.ossmeter.metricprovider.trans.newsgroups.articles.model.NewsgroupsArticlesTransMetric"/>
+    <class name="org.ossmeter.metricprovider.trans.newsgroups.articles.model.NewsgroupData"/>
+  </extension>
 </plugin>

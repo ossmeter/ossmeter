@@ -5,6 +5,7 @@ abstract class BugTrackingSystem {
    
 }
 
+@customize
 class Bugzilla extends BugTrackingSystem {
   	attr String username;
 	attr String password;

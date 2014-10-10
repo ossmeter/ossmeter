@@ -43,149 +43,66 @@ private tuple[int, str] mapMetricsWithinRange(lrel[map[loc, num] result, str lab
 }
 
 
-Factoid Complexity(
-	str language,
-	real a,
-	real rr,
-	real sr,
-	map[loc, int] dit,
-	map[loc, int] noc,
-	map[loc, int] noa,
-	map[loc, int] nom,
-	map[loc, real] mif,
-	map[loc, real] aif,
-	real mhf,
-	real ahf,
-	real pf
-) {
-	// TODO determine appropriate ranges
-
-	<ok, s> = metricsWithinRange([
-		<a, "Abstractness", 0.0, 1.0>,
-		<rr, "Reuse Ratio", 0.0, 1.0>,
-		<sr, "Specialization Ratio", 0.0, 1.0>,
-		<mhf, "Method Hiding Factor", 0.0, 1.0>,
-		<ahf, "Attribute Hiding Factor", 0.0, 1.0>,
-		<pf, "Polymorphism Factor", 0.0, 1.0>
-	]);
-
-	okResults = ok;
-	txt = s;
-
-	<ok, s> = mapMetricsWithinRange([
-		<dit, "Depth in Inheritance Tree", 0.0, 1.0>,
-		<noc, "Number of Children", 0.0, 1.0>,
-		<noa, "Number of Attributes", 0.0, 1.0>,
-		<nom, "Number of Methods", 0.0, 1.0>,
-		<mif, "Method Inheritance Factor", 0.0, 1.0>,
-		<aif, "Attribute Inheritance Factor", 0.0, 1.0>
-	]);
-	
-	okResults += ok;
-	txt += s;
-
-	maxOkResults = 12;
-	stars = \one();
-	
-	if (okResults > maxOkResults - 6) {
-		stars = two();
-	}
-	else if (okResults > maxOkResults - 4) {
-		stars = three();
-	}
-	else if (okResults > maxOkResults - 2) {
-		stars = four();
-	}
-	
-	txt = "The results of <okResults> out of <maxOkResults> complexity metrics for the <language> code are out of range.
-		  `The measured values are:\n" + txt;
-	
-	return factoid(txt, stars);
-}
-
-
 Factoid Coupling(
 	str language,
-	map[loc, int] cbo,
-	map[loc, int] dac,
-	map[loc, int] mpc,
-	real cf,
-	map[loc, int] ce,
-	map[loc, int] ca,
-	map[loc, real] i,
-	map[loc, int] rfc
+	map[loc, int] cbo
 ) {
-	// TODO determine appropriate ranges
-
-	<ok, s> = metricsWithinRange([
-		<cf, "Coupling Factor", 0.0, 1.0>
-	]);
-
-	okResults = ok;
-	txt = s;
-
-	<ok, s> = mapMetricsWithinRange([
-		<cbo, "Coupling Between Objects", 0.0, 1.0>,
-		<dac, "Data Abstraction Coupling", 0.0, 1.0>,
-		<mpc, "Message Passing Coupling", 0.0, 1.0>,
-		<ce, "Efferent Coupling", 0.0, 1.0>,
-		<ca, "Afference Coupling", 0.0, 1.0>,
-		<i, "Instability", 0.0, 1.0>,
-		<rfc, "Responce for Class", 0.0, 1.0>
-	]);
+	if (cbo == ()) {
+		throw undefined("No CBO data", |file:///|);
+	}
 	
-	okResults += ok;
-	txt += s;
-
-	maxOkResults = 8;
-	stars = \one();
+	numClassesWithBadCoupling = ( 0 | it + 1 | c <- cbo, cbo[c] > 14 );
 	
-	if (okResults > maxOkResults - 6) {
+	// CBO > 14 is too high according to:
+	// Houari A. Sahraoui, Robert Godin, Thierry Miceli: Can Metrics Help Bridging the Gap Between the Improvement of OO Design Quality and Its Automation?
+	
+	badPercentage = numClassesWithBadCoupling * 100.0 / size(cbo);
+	
+	stars = four();
+	
+	if (badPercentage > 20) {
+		stars = \one();
+	}
+	else if (badPercentage > 10) {
 		stars = two();
 	}
-	else if (okResults > maxOkResults - 4) {
+	else if (badPercentage > 5) {
 		stars = three();
 	}
-	else if (okResults > maxOkResults - 2) {
-		stars = four();
-	}
-	
-	txt = "The results of <okResults> out of <maxOkResults> coupling metrics for the <language> code are out of range.
-		  `The measured values are:\n" + txt;
-	
+
+	txt = "The percentage of <language> classes with problematic coupling is <badPercentage>%."; 
+
 	return factoid(txt, stars);
 }
 
 
 Factoid Cohesion(
 	str language,
-	map[loc, int] lcom,
-	map[loc, real] tcc,
-	map[loc, real] lcc
+	map[loc, int] lcom4
 ) {
-	// TODO determine appropriate ranges
+	if (lcom4 == ()) {
+		throw undefined("No LCOM4 data", |file:///|);
+	}
 
-	<okResults, txt> = mapMetricsWithinRange([
-		<lcom, "Lack of Cohesion in Methods", 0.0, 1.0>,
-		<tcc, "Tight Class Cohesion", 0.0, 1.0>,
-		<lcc, "Loose Class Cohesion", 0.0, 1.0>
-	]);
-
-	maxOkResults = 3;
-	stars = \one();
+	// LCOM4: Hitz and Montazeri: Measuring coupling and cohesion in object oriented systems, 1995
 	
-	if (okResults > maxOkResults - 3) {
+	numClassesWithBadCohesion = ( 0 | it + 1 | c <- lcom4, lcom4[c] != 1 );
+	
+	badPercentage = numClassesWithBadCohesion * 100.0 / size(lcom4);
+	
+	stars = four();
+	
+	if (badPercentage > 20) {
+		stars = \one();
+	}
+	else if (badPercentage > 10) {
 		stars = two();
 	}
-	else if (okResults > maxOkResults - 2) {
+	else if (badPercentage > 5) {
 		stars = three();
 	}
-	else if (okResults > maxOkResults - 1) {
-		stars = four();
-	}
-	
-	txt = "The results of <okResults> out of <maxOkResults> cohesion metrics for the <language> code are out of range.
-		  `The measured values are:\n" + txt;
-	
+
+	txt = "The percentage of <language> classes with problematic cohesion is <badPercentage>%."; 
+
 	return factoid(txt, stars);
 }

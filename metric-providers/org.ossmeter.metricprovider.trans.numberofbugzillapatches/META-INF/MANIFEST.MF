@@ -1,16 +1,17 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Numberofbugzillapatches
-Bundle-SymbolicName: org.ossmeter.metricprovider.trans.numberofbugzillapatches;singleton:=true
+Bundle-SymbolicName: org.ossmeter.metricprovider.trans.bugs.patches;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.ossmeter.metricprovider.trans.numberofbugzillapatches.Activator
+Bundle-Activator: org.ossmeter.metricprovider.trans.bugs.patches.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.ossmeter.platform,
  org.ossmeter.repository.model,
  com.googlecode.pongo.runtime.osgi,
- org.ossmeter.repository.model.bts.bugzilla
+ org.ossmeter.repository.model.bts.bugzilla,
+ org.ossmeter.platform.visualisation
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.trans.numberofbugzillapatches,
- org.ossmeter.metricprovider.trans.numberofbugzillapatches.model
+Export-Package: org.ossmeter.metricprovider.trans.bugs.patches,
+ org.ossmeter.metricprovider.trans.bugs.patches.model

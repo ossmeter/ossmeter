@@ -1,0 +1,45 @@
+[%import "javautil.eol";%]
+[%import "../util/ecoreutil.eol";%]
+package [%=c.ePackage.name%];
+
+import java.util.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+
+[% for (p in OSS!EClass.all.collect(c | c.ePackage.name).asSet()) {%]
+import [%=p%].*;
+[%} %]
+
+@JsonTypeInfo(use=JsonTypeInfo.Id.NAME,
+	include=JsonTypeInfo.As.PROPERTY,
+	property = "_type")
+@JsonSubTypes({
+	@Type(value = [%=c.name%].class, name="[%=c.ePackage.name%].[%=c.name%]"), [%/*=c.ePackage.nsURI --  may need including?*/%]
+	[%for (sub in c.getFullyQualifiedSubclasses()) {%]
+	@Type(value = [%=sub.ePackage.name%].[%=sub.name%].class, name="[%=sub.ePackage.name%].[%=sub.name%]"),
+	[%}%]
+})
+@JsonIgnoreProperties(ignoreUnknown = true)
+public[%=c.getAbstractModifier()%] class [%=c.name%] extends [%=c.getJavaExtends()%] {
+
+	[%for (sf in c.eStructuralFeatures.select(sf|sf.isMany and not sf.eType.name.isIgnored())) { /**/ %]
+	protected List<[%=sf.eType.name.getJavaBoxedName(sf.eType)%]> [%=sf.name%];
+	[%}%]
+	[%for (r in c.eStructuralFeatures.select(r|not r.isMany and not r.eType.name.isIgnored())) { /**/%]
+	protected [%=r.eType.name.getJavaName(r.eType)%] [%=r.name%];
+	[%}%]
+	
+	[%for (a in c.eAttributes.select(a|not a.isMany)) { %]
+	public [%=a.eType.name.getJavaName(a.eType)%] get[%=a.name.ftuc()%]() {
+		return [%=a.name%];
+	}
+	[%}	%]
+	
+	[%for (a in c.eStructuralFeatures.select(a|a.isMany)) { %]
+	public List<[%=a.eType.name.getJavaBoxedName(a.eType)%]> get[%=a.name.ftuc()%]() {
+		return [%=a.name%];
+	}
+	[%}%]
+}
