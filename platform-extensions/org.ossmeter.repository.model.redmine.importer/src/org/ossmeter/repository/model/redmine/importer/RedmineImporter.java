@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
+//import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.JSONArray;
@@ -25,7 +25,7 @@ import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.Role;
 import org.ossmeter.repository.model.redmine.*; 
 
-import com.mongodb.Mongo;
+//import com.mongodb.Mongo;
 
 import org.ossmeter.repository.model.importer.exception.*;
 
