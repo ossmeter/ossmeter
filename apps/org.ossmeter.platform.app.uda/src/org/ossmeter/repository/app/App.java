@@ -23,6 +23,8 @@ import org.ossmeter.repository.model.eclipse.*;
 import org.ossmeter.repository.model.github.GitHubRepository;
 import org.ossmeter.repository.model.github.importer.GitHubImporter;
 import org.ossmeter.repository.model.googlecode.importer.GoogleCodeImporter;
+import org.ossmeter.repository.model.importer.exception.RepoInfoNotFound;
+import org.ossmeter.repository.model.importer.exception.WrongUrlException;
 import org.ossmeter.repository.model.*;
 
 import com.googlecode.pongo.runtime.PongoFactory;
@@ -62,10 +64,7 @@ public class App implements IApplication {
 			importer = new RedmineImporter();
 			importer.importProjects(platform, 5);	
 			platform.getProjectRepositoryManager().getProjectRepository().sync();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (RepoInfoNotFound e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -80,13 +79,23 @@ public class App implements IApplication {
 	
 	private void addGitHubRepositories(Platform platform) {
 		GitHubImporter importer = new GitHubImporter();	
-		importer.importProjects(platform, 5);
+		try {
+			importer.importProjects(platform, 5);
+		} catch (WrongUrlException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		//importer.importProjectByUrl("https://github.com/canadaduane/house", platform);
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 	}
 	private void addGoogleCodeRepositories(Platform platform) {
 		GoogleCodeImporter importer = new GoogleCodeImporter();	
-		importer.importProjectByUrl("https://code.google.com/p/firetray/", platform);
+		try {
+			importer.importProjectByUrl("https://code.google.com/p/firetray/", platform);
+		} catch (WrongUrlException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 	}
 	

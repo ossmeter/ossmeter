@@ -12,6 +12,7 @@ import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.github.GitHubRepository;
 import org.ossmeter.repository.model.github.importer.GitHubImporter;
+import org.ossmeter.repository.model.importer.exception.WrongUrlException;
 
 import com.googlecode.pongo.runtime.Pongo;
 import com.googlecode.pongo.runtime.PongoDB;
@@ -97,7 +98,12 @@ public class GitHubImporterProvider implements ITransientMetricProvider{
 			mongo = new Mongo();
 			PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
 			Platform platform = new Platform(mongo);
-			ep = epi.importRepository( ((GitHubRepository)project).getFull_name(), platform);
+			try{
+				ep = epi.importRepository( ((GitHubRepository)project).getFull_name(), platform);
+			}catch(WrongUrlException e)
+			{
+				
+			}
 			if (ep.getExecutionInformation().getInErrorState() )
 				project.getExecutionInformation().setInErrorState(true);
 			mongo.close();
