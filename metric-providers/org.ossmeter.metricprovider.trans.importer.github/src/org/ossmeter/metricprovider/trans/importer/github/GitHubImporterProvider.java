@@ -12,6 +12,7 @@ import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.github.GitHubRepository;
 import org.ossmeter.repository.model.github.importer.GitHubImporter;
+import org.ossmeter.repository.model.importer.exception.WrongUrlException;
 
 import com.googlecode.pongo.runtime.Pongo;
 import com.googlecode.pongo.runtime.PongoDB;
@@ -91,15 +92,29 @@ public class GitHubImporterProvider implements ITransientMetricProvider{
 	@Override
 	public void measure(Project project, ProjectDelta delta, PongoDB db) {
 		GitHubRepository ep = null;
-		GitHubImporter epi = new GitHubImporter();
-		
-		// JW (7th Oct, 14) is 'ep' needed? ep === project?
-		ep = epi.importRepository( ((GitHubRepository)project).getFull_name(), Platform.getInstance());
-		
-		// JW (7th Oct, 14): Why does it test this? As far as I can tell, the importer
-		// does not update the inErrorState field..?
-		if (ep.getExecutionInformation().getInErrorState() )
-			project.getExecutionInformation().setInErrorState(true);
+
+		Mongo mongo;
+		try {
+			GitHubImporter epi = new GitHubImporter();
+			mongo = new Mongo();
+			PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
+			Platform platform = new Platform(mongo);
+			try{
+				ep = epi.importRepository( ((GitHubRepository)project).getFull_name(), platform);
+			}catch(WrongUrlException e)
+			{
+				
+			}
+			if (ep.getExecutionInformation().getInErrorState() )
+				project.getExecutionInformation().setInErrorState(true);
+			mongo.close();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			logger.error("GitHub metric provider exception:" + e.getMessage());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			logger.error("GitHub metric provider exception:" + e.getMessage());
+		}
 	}
 
 //	@Override
