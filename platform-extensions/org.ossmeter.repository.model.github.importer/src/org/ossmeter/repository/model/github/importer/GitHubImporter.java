@@ -327,7 +327,7 @@ public class GitHubImporter {
 				}
 			}
 				
-<<<<<<< HEAD
+
 				if ((isNotNull(currentRepo,"description")))					
 					repository.setDescription(currentRepo.get("description").toString());
 
@@ -337,13 +337,6 @@ public class GitHubImporter {
 
 				if ((isNotNull(currentRepo,"private")))					
 					repository.set_private(new Boolean(currentRepo.get("private").toString()));
-=======
-			if (!projectToBeUpdated)  {
-				repository = new GitHubRepository();
-			}
-			if ((isNotNull(currentRepo,"description")))					
-				repository.setDescription(currentRepo.get("description").toString());
->>>>>>> redminefix
 
 			repository.setFull_name(projectId);
 			repository.setShortName(projectId);
@@ -380,33 +373,7 @@ public class GitHubImporter {
 			if ((isNotNull(currentRepo,"ssh_url")))					
 				repository.setSsh_url(currentRepo.get("ssh_url").toString());
 			
-<<<<<<< HEAD
-				if (user == null) {
-					user = new GitHubUser();
-					user.getRoles().add(gitHubOwnerRole);
-					platform.getProjectRepositoryManager().getProjectRepository().getPersons().add(user);
-					repository.getPersons().add(user);								
-				}
-				
-				user.setHtml_url((String)ownerObject.get("html_url"));
-				user.setHomePage((String)ownerObject.get("html_url"));
-				user.setUrl((String)ownerObject.get("url"));
-				user.setLogin((String)ownerObject.get("login"));
-				user.setName((String)ownerObject.get("login"));
-				user.setFollowers_url((String)ownerObject.get("followers_url"));							
-				
-//				int lastImportedId = new Integer(currentRepo.get("id").toString()); 
-//				platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().first().setLastImportedProject(String.valueOf(lastImportedId));
-				platform.getProjectRepositoryManager().getProjectRepository().sync();	
-				if (!projectToBeUpdated) {
-					platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(repository);
-				}
-				
-				platform.getProjectRepositoryManager().getProjectRepository().sync();	
-				logger.info("Project has been importerd");
-				return repository;
-			} catch (FileNotFoundException e1) {
-=======
+
 			if ((isNotNull(currentRepo,"svn_url")))	
 			{
 				repository.setSvn_url(currentRepo.get("svn_url").toString());
@@ -482,7 +449,6 @@ public class GitHubImporter {
 		}  catch (IOException e1) {
 			if (getRemainingResource()==0)
 			{
->>>>>>> redminefix
 				logger.error("API rate limit exceeded. Waiting to restart the importing..." + e1.getMessage());
 				waitApiRate();
 				return importRepository(projectId, platform);
