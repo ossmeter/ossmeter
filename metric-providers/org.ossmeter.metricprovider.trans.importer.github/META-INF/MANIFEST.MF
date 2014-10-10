@@ -14,3 +14,4 @@ Require-Bundle: org.ossmeter.repository.model,
  com.googlecode.pongo,
  org.ossmeter.repository.model.github.importer,
  org.ossmeter.repository.model.importer.exception
+Export-Package: org.ossmeter.metricprovider.trans.importer.github
