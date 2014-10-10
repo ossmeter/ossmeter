@@ -72,10 +72,10 @@ public class ProjectResource extends ServerResource {
 	 * This is an update to the existing project (identified by projectId field)
 	 * @param entity
 	 */
-//	@Put("json")
-//	public void updateProject(JacksonRepresentation<ObjectNode> entity) {
-//		
-//	}
+	@Put("json")
+	public void updateProject(Representation entity) {
+		
+	}
 	
 	private JsonNode generateRequestJson(ObjectMapper mapper, String projectName) {
 		ObjectNode n = mapper.createObjectNode();

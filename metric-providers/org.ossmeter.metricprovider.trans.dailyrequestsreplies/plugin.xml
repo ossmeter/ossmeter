@@ -10,10 +10,6 @@
 
 
 
-<extension point="org.ossmeter.platform.visualisation.metric">
-   <visualisation json="vis/trans.newsgroups.dailyrequestsreplies.json">
-   </visualisation>
-</extension>
 
 
 

@@ -4,7 +4,7 @@ import java.util.concurrent.ConcurrentNavigableMap;
 
 import org.mapdb.DBMaker;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * Provides two caches for sparks:
@@ -25,26 +25,26 @@ public class SparkCache {
 	}
 
 	protected ConcurrentNavigableMap<String, byte[]> sparkMap;
-	protected ConcurrentNavigableMap<String, ObjectNode> dataMap;
+	protected ConcurrentNavigableMap<String, String> dataMap;
 	
 	private SparkCache() {
 		sparkMap = DBMaker.newTempTreeMap();
 		dataMap = DBMaker.newTempTreeMap();
 	}
 
-	public byte[] getSpark(String sparkId) {
+	public synchronized byte[] getSpark(String sparkId) {
 		return sparkMap.get(sparkId);
 	}
 	
-	public void putSpark(String sparkId, byte[] img) {
+	public synchronized void putSpark(String sparkId, byte[] img) {
 		sparkMap.put(sparkId, img);
 	}
 	
-	public ObjectNode getSparkData(String query) {
+	public synchronized String getSparkData(String query) {
 		return dataMap.get(query);
 	}
 	
-	public void putSparkData(String query, ObjectNode obj) {
-		dataMap.put(query, obj);
+	public synchronized void putSparkData(String query, JsonNode obj) {
+		dataMap.put(query, obj.toString());
 	}
 }

@@ -8,10 +8,6 @@
 
 
 
-<extension point="org.ossmeter.platform.visualisation.metric">
-   <visualisation json="vis/trans.bugs.newbugs.json">
-   </visualisation>
-</extension>
 
 
 

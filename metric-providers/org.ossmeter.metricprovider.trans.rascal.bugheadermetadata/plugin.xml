@@ -12,10 +12,6 @@
 
 
 
-<extension point="org.ossmeter.platform.visualisation.metric">
-   <visualisation json="vis/trans.bugs.bugmetadata.json">
-   </visualisation>
-</extension>
 
 
 

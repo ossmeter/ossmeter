@@ -18,10 +18,6 @@
 </extension>
 
 
-<extension point="org.ossmeter.platform.visualisation.metric">
-   <visualisation json="vis/trans.bugs.emotions.json">
-   </visualisation>
-</extension>
 
 <extension point="com.googlecode.pongo.runtime.osgi">
     <class name="org.ossmeter.metricprovider.trans.bugs.emotions.model.BugsEmotionsTransMetric"/>

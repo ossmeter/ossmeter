@@ -6,10 +6,6 @@
    		</metricProvider>
 	</extension>
 
-<extension point="org.ossmeter.platform.visualisation.metric">
-   <visualisation json="vis/trans.newsgroups.contentclasses.json">
-   </visualisation>
-</extension>
 
 <extension point="com.googlecode.pongo.runtime.osgi">
     <class name="org.ossmeter.metricprovider.trans.newsgroups.contentclasses.model.NewsgroupsContentClassesTransMetric"/>
