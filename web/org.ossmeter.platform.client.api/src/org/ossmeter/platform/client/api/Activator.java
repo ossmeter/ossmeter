@@ -3,9 +3,7 @@ package org.ossmeter.platform.client.api;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.restlet.Component;
-import org.restlet.Server;
 import org.restlet.data.Protocol;
-import org.restlet.ext.jetty.JettyServerHelper;
 
 public class Activator implements BundleActivator {
 
