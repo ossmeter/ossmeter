@@ -3,7 +3,7 @@ package controllers;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import models.*;
+import model.*;
 import play.Routes;
 import play.data.Form;
 import play.mvc.*;
@@ -24,11 +24,13 @@ import com.feth.play.module.pa.user.AuthUser;
 
 import static play.data.Form.*;
 
+import auth.MongoAuthenticator;
+
 public class Application extends Controller {
 
 	public static final String FLASH_MESSAGE_KEY = "message";
 	public static final String FLASH_ERROR_KEY = "danger";
-	public static final String USER_ROLE = "user";
+	
 	
 	public static Result index() {
 		return ok(index.render());
@@ -36,35 +38,35 @@ public class Application extends Controller {
 
 	public static User getLocalUser(final Session session) {
 		final AuthUser currentAuthUser = PlayAuthenticate.getUser(session);
-		final User localUser = User.findByAuthUserIdentity(currentAuthUser);
+		final User localUser = MongoAuthenticator.findUser(currentAuthUser);
 		return localUser;
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result admin() {
 		final User localUser = getLocalUser(session());
 		return ok(admin.render(localUser));
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result profile() {
 		final User localUser = getLocalUser(session());
 		return ok(profile.render(localUser));
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result profileNotification() {
 		final User localUser = getLocalUser(session());
 		return ok(setupnotification.render(localUser, form(Notification.class)));
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result profileEventGroup() {
 		final User localUser = getLocalUser(session());
-		return ok(setupeventgroup.render(localUser, form(EventGroup.class)));
+		return ok();//setupeventgroup.render(localUser, form(EventGroup.class)));
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result profileEvent() {
 		final User localUser = getLocalUser(session());
 		return ok(setupevent.render(localUser, form(Event.class)));

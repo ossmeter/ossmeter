@@ -1,6 +1,6 @@
 package controllers;
 
-import models.*;
+import model.*;
 import be.objectify.deadbolt.java.actions.Restrict;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.SubjectPresent;
@@ -21,6 +21,8 @@ import providers.MyUsernamePasswordAuthUser;
 import views.html.account.*;
 
 import static play.data.Form.form;
+
+import auth.MongoAuthenticator;
 
 public class Account extends Controller {
 
@@ -82,41 +84,41 @@ public class Account extends Controller {
 		return ok(link.render());
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result verifyEmail() {
 		com.feth.play.module.pa.controllers.Authenticate.noCache(response());
 		final User user = Application.getLocalUser(session());
-		if (user.emailValidated) {
+		if (user.getEmailValidated()) {
 			// E-Mail has been validated already
 			flash(Application.FLASH_MESSAGE_KEY,
 					Messages.get("ossmeter.verify_email.error.already_validated"));
-		} else if (user.email != null && !user.email.trim().isEmpty()) {
+		} else if (user.getEmail() != null && !user.getEmail().trim().isEmpty()) {
 			flash(Application.FLASH_MESSAGE_KEY, Messages.get(
 					"ossmeter.verify_email.message.instructions_sent",
-					user.email));
+					user.getEmail()));
 			MyUsernamePasswordAuthProvider.getProvider()
 					.sendVerifyEmailMailingAfterSignup(user, ctx());
 		} else {
 			flash(Application.FLASH_MESSAGE_KEY, Messages.get(
 					"ossmeter.verify_email.error.set_email_first",
-					user.email));
+					user.getEmail()));
 		}
 		return redirect(routes.Application.profile());
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result changePassword() {
 		com.feth.play.module.pa.controllers.Authenticate.noCache(response());
 		final User u = Application.getLocalUser(session());
 
-		if (!u.emailValidated) {
+		if (!u.getEmailValidated()) {
 			return ok(unverified.render());
 		} else {
 			return ok(password_change.render(PASSWORD_CHANGE_FORM));
 		}
 	}
 
-	@Restrict(@Group(Application.USER_ROLE))
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result doChangePassword() {
 		com.feth.play.module.pa.controllers.Authenticate.noCache(response());
 		final Form<Account.PasswordChange> filledForm = PASSWORD_CHANGE_FORM
@@ -127,7 +129,7 @@ public class Account extends Controller {
 		} else {
 			final User user = Application.getLocalUser(session());
 			final String newPassword = filledForm.get().password;
-			user.changePassword(new MyUsernamePasswordAuthUser(newPassword),
+			MongoAuthenticator.changeUserPassword(new MyUsernamePasswordAuthUser(newPassword, user.getEmail()),
 					true);
 			flash(Application.FLASH_MESSAGE_KEY,
 					Messages.get("ossmeter.change_password.success"));
@@ -229,9 +231,8 @@ public class Account extends Controller {
 		}
 
 		Notification noti = form.get();
-		noti.user = user;
-		user.notifications.add(noti);
-		user.save();
+		user.getNotifications().add(noti);
+		// user.save(); //TODODODODODOD
 
 		flash(Application.FLASH_MESSAGE_KEY, Messages.get("ossmeter.profile.notifications.creation.success"));
 		return redirect(routes.Application.profile());
@@ -240,49 +241,52 @@ public class Account extends Controller {
 	@SubjectPresent
 	public static Result createEventGroup() {
 		// this is the currently logged in user
-		final User user = Application.getLocalUser(session());
+		// final User user = Application.getLocalUser(session());
 
-		final Form<EventGroup> form = form(EventGroup.class).bindFromRequest();
+		// final Form<EventGroup> form = form(EventGroup.class).bindFromRequest();
 
-		if (form.hasErrors()) {
-			flash("error", Messages.get("ossmeter.profile.eventgroup.creation.error"));
-			return badRequest(views.html.setupeventgroup.render(user, form));
-		}
+		// if (form.hasErrors()) {
+		// 	flash("error", Messages.get("ossmeter.profile.eventgroup.creation.error"));
+		// 	return badRequest(views.html.setupeventgroup.render(user, form));
+		// }
 
-		EventGroup group = form.get();
-		System.err.println(group);
-		System.err.println(group.events);
-		System.err.println(group.events.size());
-		group.user = user;
-		user.eventGroups.add(group);
-		user.save();
+		// EventGroup group = form.get();
+		// System.err.println(group);
+		// System.err.println(group.events);
+		// System.err.println(group.events.size());
+		// group.user = user;
+		// user.eventGroups.add(group);
+		// user.save();
 
-		flash(Application.FLASH_MESSAGE_KEY, Messages.get("ossmeter.profile.eventgroup.creation.success"));
+		// flash(Application.FLASH_MESSAGE_KEY, Messages.get("ossmeter.profile.eventgroup.creation.success"));
+
+		flash(Application.FLASH_MESSAGE_KEY, "Unimplemented!");
 		return redirect(routes.Application.profile());
 	}
 
 	@SubjectPresent
 	public static Result createEvent() {
 		// this is the currently logged in user
-		final User user = Application.getLocalUser(session());
+		// final User user = Application.getLocalUser(session());
 
-		DynamicForm dForm = Form.form().bindFromRequest();
-		final Form<Event> form = form(Event.class).bindFromRequest();
+		// DynamicForm dForm = Form.form().bindFromRequest();
+		// final Form<Event> form = form(Event.class).bindFromRequest();
 
-		if (form.hasErrors()) {
-			flash("error", Messages.get("ossmeter.profile.event.creation.error"));
-			return badRequest(views.html.setupevent.render(user, form));
-		}
+		// if (form.hasErrors()) {
+		// 	flash("error", Messages.get("ossmeter.profile.event.creation.error"));
+		// 	return badRequest(views.html.setupevent.render(user, form));
+		// }
 
-		Event event = form.get();
-		System.err.println(event);
-		System.err.println(event.eventGroup);
-		System.err.println(dForm.get("eventGroup"));
-		// event.user = user;
-		// user.save();
-		// TODO
+		// Event event = form.get();
+		// System.err.println(event);
+		// System.err.println(event.eventGroup);
+		// System.err.println(dForm.get("eventGroup"));
+		// // event.user = user;
+		// // user.save();
+		// // TODO
 
-		flash(Application.FLASH_MESSAGE_KEY, Messages.get("ossmeter.profile.event.creation.success"));
+		// flash(Application.FLASH_MESSAGE_KEY, Messages.get("ossmeter.profile.event.creation.success"));
+		flash(Application.FLASH_MESSAGE_KEY, "Unimplemented!");
 		return redirect(routes.Application.profile());
 	}
 

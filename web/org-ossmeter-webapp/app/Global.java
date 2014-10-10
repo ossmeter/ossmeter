@@ -1,7 +1,5 @@
 import java.util.Arrays;
 
-import models.SecurityRole;
-
 import com.feth.play.module.pa.PlayAuthenticate;
 import com.feth.play.module.pa.PlayAuthenticate.Resolver;
 import com.feth.play.module.pa.exceptions.AccessDeniedException;
@@ -67,17 +65,7 @@ public class Global extends GlobalSettings {
 			}
 		});
 
-		initialData();
-	}
-
-	private void initialData() {
-		if (SecurityRole.find.findRowCount() == 0) {
-			for (final String roleName : Arrays
-					.asList(controllers.Application.USER_ROLE)) {
-				final SecurityRole role = new SecurityRole();
-				role.roleName = roleName;
-				role.save();
-			}
-		}
+	
+		// initialData();
 	}
 }

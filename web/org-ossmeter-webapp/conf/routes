@@ -77,10 +77,10 @@ GET		/projects/:id/bts			controllers.Projects.viewBts(id:String)
 ## Users
 # List
 GET     /users                  	controllers.Users.users()
-GET     /users/:id                  controllers.Users.view(id:Long)
+GET     /users/:id                  controllers.Users.view(id:String)
 # Delete
-GET    /users/:id/delete        	controllers.Users.delete_confirmation(id: Long)
-POST   /users/:id/delete        	controllers.Users.delete(id: Long)
+GET    /users/:id/delete        	controllers.Users.delete_confirmation(id: String)
+POST   /users/:id/delete        	controllers.Users.delete(id: String)
 
 
 # Map static resources from the /public folder to the /assets URL path

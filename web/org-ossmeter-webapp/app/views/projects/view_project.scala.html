@@ -285,7 +285,7 @@
             <ul class="nav nav-tabs" role="tablist">
                 <li class="disabled col-md-4"><h2 class="marginless">Bug Tracking Systems</h2></li>
                   <li class="active"><a href="#factoids-bts" role="tab" data-toggle="tab">Factoids</a></li>
-                  <li><a href="#sparklines-bts" role="tab" data-toggle="tab">Sparklines</a></li>
+                  <li><a href="#sparklines-bts" role="tab" data-toggle="tab" id="sparklines-bts-tab">Sparklines</a></li>
                 <li class=""><a href="#details-bts" role="tab" data-toggle="tab">Details</a></li>
             </ul>
         </div>
@@ -304,57 +304,18 @@
     				<p>has a well established, mature codebase maintained by a average size development team with stable Y-O-Y commits</p>
     			  </div>
     			  <div class="tab-pane fade" id="sparklines-bts">
-    			  	<table class="table">
-                    <thead>
-                        <th>metric</th>
-                        <th>01/09/2007</th>
-                        <th>65 months</th>
-                        <th>15/07/2014</th>
-                        <th>low</th>
-                        <th>high</th>
-                    </thead>
-                    <tr>
-                        <td>lines of code</td>
-                        <td>324</td>
-                        <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
-                        <td>299</td>
-                        <td>32</td>
-                        <td>376</td>
-                    </tr>
-                    <tr>
-                        <td>lines of code</td>
-                        <td>324</td>
-                        <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
-                        <td>299</td>
-                        <td>32</td>
-                        <td>376</td>
-                    </tr>
-                    <tr>
-                        <td>lines of code</td>
-                        <td>324</td>
-                        <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
-                        <td>299</td>
-                        <td>32</td>
-                        <td>376</td>
-                    </tr>
-                    <tr>
-                        <td>lines of code</td>
-                        <td>324</td>
-                        <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
-                        <td>299</td>
-                        <td>32</td>
-                        <td>376</td>
-                    </tr>
-                    <tr>
-                        <td>lines of code</td>
-                        <td>324</td>
-                        <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
-                        <td>299</td>
-                        <td>32</td>
-                        <td>376</td>
-                    </tr>
-                </table>
+                    <table class="table" id="sparklines-table-bts">
+                        <thead>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <script type="text/javascript">
+                        $('#sparklines-bts-tab').one('click', function(e) {
+                            var ms = [ "bugs", "cumulativeBugs", "comments", "cumulativeComments", "fixedBugs"  ]; //"sentimentAtThreadEnd", "averageSentiment",  "invalidBugs", "patches",  "resolvedClosedBugs", "nonResolvedClosedBugs", "sentimentAtThreadBeggining", "cumulativePatches", "wontFixBugs", "duplicateBugs",
 
+                            drawSparklineTable("#sparklines-table-bts", ms);
+                        });
+                    </script>
     			  </div>
                   <div class="tab-pane fade" id="details-bts">
                          @if(project.getBugTrackingSystems() ne null) {
@@ -389,6 +350,34 @@
 	    <a class="btn btn-success" href="@routes.Projects.edit(project.id)">Edit</a>
 		<a class="btn btn-danger" href="@routes.Projects.delete(project.id)">Delete</a>
 *@	    
+
+<script type="text/javascript">
+    function drawSparklineTable(table, metriclist) {
+         $.get("http://localhost:8182/projects/p/@project.getShortName()/s/"+metriclist.join("+"), function (result) {
+            for (var r in result) {
+                var data = result[r];
+
+                if (r == 0) { // Set up the header
+                    $(table + " > thead:last").append(
+                        "<tr><th>metric</th>" +
+                        "<th>" + data.firstDate + "</th>" +
+                        "<th>" + data.months + " months</th>" +
+                        "<th>" + data.lastDate + "</th>" +
+                        "<th>low</th>" +
+                        "<th>high</th></tr>");
+                }
+
+                $(table + " > tbody:last").append("<tr><td title=\"" + data.description + "\">" + data.name + 
+                    "</td><td>" + Math.round(data.first * 100) / 100  +
+                    "</td><td><img class=\"spark\" src=\"http://localhost:8182" + data.spark + "\" />" +  
+                    "</td><td>" + Math.round(data.last * 100) / 100  + 
+                    "</td><td>" + Math.round(data.low * 100) / 100 + 
+                    "</td><td>" + Math.round(data.high * 100) / 100 + "</td></tr>");
+            }
+        });
+    }
+
+</script>
 
 	</div>
 </div>

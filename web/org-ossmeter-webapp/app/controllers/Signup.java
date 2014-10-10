@@ -1,8 +1,11 @@
 package controllers;
 
-import models.TokenAction;
-import models.TokenAction.Type;
-import models.User;
+import java.util.*;
+
+import model.Token;
+import model.TokenType;
+import model.User;
+
 import play.data.Form;
 import play.i18n.Messages;
 import play.mvc.Controller;
@@ -16,6 +19,8 @@ import views.html.account.signup.*;
 import com.feth.play.module.pa.PlayAuthenticate;
 
 import static play.data.Form.form;
+
+import auth.MongoAuthenticator;
 
 public class Signup extends Controller {
 
@@ -79,7 +84,7 @@ public class Signup extends Controller {
 							"ossmeter.reset_password.message.instructions_sent",
 							email));
 
-			final User user = User.findByEmail(email);
+			final User user = MongoAuthenticator.findUser(email);
 			if (user != null) {
 				// yep, we have a user with this email that is active - we do
 				// not know if the user owning that account has requested this
@@ -87,7 +92,7 @@ public class Signup extends Controller {
 				final MyUsernamePasswordAuthProvider provider = MyUsernamePasswordAuthProvider
 						.getProvider();
 				// User exists
-				if (user.emailValidated) {
+				if (user.getEmailValidated()) {
 					provider.sendPasswordResetMailing(user, ctx());
 					// In case you actually want to let (the unknown person)
 					// know whether a user was found/an email was sent, use,
@@ -117,12 +122,12 @@ public class Signup extends Controller {
 	 * @param type
 	 * @return
 	 */
-	private static TokenAction tokenIsValid(final String token, final Type type) {
-		TokenAction ret = null;
+	private static Token tokenIsValid(final String token, final TokenType type) {
+		Token ret = null;
 		if (token != null && !token.trim().isEmpty()) {
-			final TokenAction ta = TokenAction.findByToken(token, type);
-			if (ta != null && ta.isValid()) {
-				ret = ta;
+			Token t = MongoAuthenticator.findToken(token, type);
+			if (t != null && t.getExpires().after(new Date())) {
+				ret = t;
 			}
 		}
 
@@ -131,7 +136,7 @@ public class Signup extends Controller {
 
 	public static Result resetPassword(final String token) {
 		com.feth.play.module.pa.controllers.Authenticate.noCache(response());
-		final TokenAction ta = tokenIsValid(token, Type.PASSWORD_RESET);
+		final Token ta = tokenIsValid(token, TokenType.PASSWORD_RESET);
 		if (ta == null) {
 			return badRequest(no_token_or_invalid.render());
 		}
@@ -150,17 +155,16 @@ public class Signup extends Controller {
 			final String token = filledForm.get().token;
 			final String newPassword = filledForm.get().password;
 
-			final TokenAction ta = tokenIsValid(token, Type.PASSWORD_RESET);
+			final Token ta = tokenIsValid(token, TokenType.PASSWORD_RESET);
 			if (ta == null) {
 				return badRequest(no_token_or_invalid.render());
 			}
-			final User u = ta.targetUser;
+			final User u = ta.getUser(); // FIXME: This looks like it might shit a brick
 			try {
 				// Pass true for the second parameter if you want to
 				// automatically create a password and the exception never to
 				// happen
-				u.resetPassword(new MyUsernamePasswordAuthUser(newPassword),
-						false);
+				MongoAuthenticator.resetUserPassword(new MyUsernamePasswordAuthUser(newPassword));
 			} catch (final RuntimeException re) {
 				flash(Application.FLASH_MESSAGE_KEY,
 						Messages.get("ossmeter.reset_password.message.no_password_account"));
@@ -173,7 +177,7 @@ public class Signup extends Controller {
 						Messages.get("ossmeter.reset_password.message.success.auto_login"));
 
 				return PlayAuthenticate.loginAndRedirect(ctx(),
-						new MyLoginUsernamePasswordAuthUser(u.email));
+						new MyLoginUsernamePasswordAuthUser(u.getEmail()));
 			} else {
 				// send the user to the login page
 				flash(Application.FLASH_MESSAGE_KEY,
@@ -195,14 +199,17 @@ public class Signup extends Controller {
 
 	public static Result verify(final String token) {
 		com.feth.play.module.pa.controllers.Authenticate.noCache(response());
-		final TokenAction ta = tokenIsValid(token, Type.EMAIL_VERIFICATION);
+		final Token ta = tokenIsValid(token, TokenType.EMAIL_VERIFICATION);
 		if (ta == null) {
 			return badRequest(no_token_or_invalid.render());
 		}
-		final String email = ta.targetUser.email;
-		User.verify(ta.targetUser);
-		flash(Application.FLASH_MESSAGE_KEY,
-				Messages.get("ossmeter.verify_email.success", email));
+		final String email = ta.getUser().getEmail(); 
+		
+		MongoAuthenticator.verifyUser(ta.getUser());
+		MongoAuthenticator.deleteToken(ta.getToken());
+
+		flash(Application.FLASH_MESSAGE_KEY, Messages.get("ossmeter.verify_email.success", email));
+
 		if (Application.getLocalUser(session()) != null) {
 			return redirect(routes.Application.index());
 		} else {

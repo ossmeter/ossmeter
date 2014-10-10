@@ -1,4 +1,4 @@
-@(localUser: models.User = null)
+@(localUser: model.User = null)
 
 @import com.feth.play.module.pa.views.html._
 
@@ -6,23 +6,19 @@
 
 <section>
 <div class="container box">
-    <h1>@Messages("ossmeter.profile.title")</h1>
+    <h1>My Account</h1>
     <p>
-    Your name is @localUser.name and your email address is @if(!localUser.email) {<em>&lt;unknown&gt;</em>.} else {
-    	@localUser.email.
+    Your name is @localUser.getName() and your email address is @if(!localUser.getEmail()) {<em>&lt;unknown&gt;</em>.} else {
+    	@localUser.getEmail().
 	    <i>
-	    @if(!localUser.emailValidated && localUser.email) {
+	    @if(!localUser.getEmailValidated() && localUser.getEmail()) {
 	      (<a href="@routes.Account.verifyEmail">unverified - click to verify</a>)
 	    } else {
 	      (verified)
 	    }</i>
     }
     <br />
-        @if(localUser.firstName && localUser.lastName) {
-            Your first name is @localUser.firstName and your last name is @localUser.lastName
-            <br/>
-        }
-    @defining(localUser.getProviders()) { providers =>
+    @* @defining(localUser.getProviders()) { providers =>
         @if(providers.size() > 0) {
             @if(providers.size() ==1) {
                 @Messages("ossmeter.profile.providers_one")
@@ -34,7 +30,7 @@
             }
         <br/>
         }
-    }
+    }*@
     <br/>
     @currentAuth() { auth =>
         @Messages("ossmeter.profile.logged") @_providerIcon(auth.getProvider())<br/>
@@ -54,7 +50,7 @@
     <div class="row">
         <div class="col-md-6 box">
         <h2>Notifications</h2>
-        @if(localUser.notifications.size() > 0) {
+        @if(localUser.getNotifications().size() > 0) {
             <table class="table">
                 <thead>
                     <tr>
@@ -66,13 +62,13 @@
                     </tr>
                 </thead>
                 <tbody>
-            @for(n <- localUser.notifications) {
+            @for(n <- localUser.getNotifications()) {
                 <tr> <!-- TODO: Will want to present the project and metric name, not ID. -->
-                    <td>@n.projectId</td>
-                    <td>@n.metricId</td>
-                    <td>@n.thresholdValue</td>
+                    <td>@n.getProject().getId()</td>
+                    <td>@n.getMetric().getId</td>
+                    <td>@n.getThreshold()</td>
                     <td>
-                    @if(n.aboveThreshold) {
+                    @if(n.getAboveThreshold()) {
                         ABOVE
                     } else {
                         BELOW
@@ -91,7 +87,7 @@
         </div>
         <div class="col-md-6 box">
 
-        <h2>Configure EventGroups</h2>
+@*        <h2>Configure EventGroups</h2>
         @if(localUser.eventGroups.size() > 0) {
             <a href="@routes.Application.profileEventGroup">Create</a>
             <ul>
@@ -116,7 +112,7 @@
         } else {
             @Messages("ossmeter.profile.eventgroup.empty") <a href="@routes.Application.profileEventGroup">Click here to add one</a>
         }
-        </div>
+        </div>*@
     </div>
 
 </div>

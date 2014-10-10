@@ -50,7 +50,7 @@
                 @subjectPresentOr() {
                   @defining(Application.getLocalUser(session())) { user =>
                   <li><a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="icon-user"></i> @user.name
+                    <i class="icon-user"></i> @if(user.getName()=="null"){My Account}else{@user.getName()}
                     <span class="caret"></span>
                   </a>
                   <ul class="dropdown-menu">

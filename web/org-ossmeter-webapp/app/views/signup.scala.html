@@ -22,12 +22,7 @@
 		            <span class="label label-important">@signupForm.globalError.message</span>
 		        </p>
             }
-            
-             @inputText(
-                signupForm("name"),
-                '_label -> Messages("ossmeter.signup.name")
-             )
-             
+                       
              @_emailPartial(signupForm)
              
              @_passwordPartial(signupForm)

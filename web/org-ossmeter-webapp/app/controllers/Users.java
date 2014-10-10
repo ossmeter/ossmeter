@@ -4,29 +4,31 @@ import java.util.List;
 
 import play.*;
 import play.mvc.*;
-import models.Project;
-import models.User;
+
+import model.Project;
+import model.User;
+
+import auth.MongoAuthenticator;
 
 public class Users extends Controller {
 
 	public static Result users() {
-	    List<User> userList = User.find.all();
+	    List<User> userList = MongoAuthenticator.findAllUsers();
 	    return ok(views.html.users.users.render(userList));
 	}
 	
-	public static Result view(Long id) {
-	    User user = User.findById(id);
+	public static Result view(String email) {
+	    User user = MongoAuthenticator.findUser(email);
 	    return ok(views.html.users.view_item.render(user));
 	}
 	
-	public static Result delete_confirmation(Long id) {
+	public static Result delete_confirmation(String id) {
 		return ok(views.html.users.confirmation.render(id));
 	}
 	
-	public static Result delete(Long id) {
-		User user = User.findById(id);
-		// user.roles.delete();
-		user.delete();
+	public static Result delete(String id) {
+		User user = MongoAuthenticator.findUser(id);
+		MongoAuthenticator.deleteUser(user);
 		return redirect(routes.Users.users());
 	}
 }

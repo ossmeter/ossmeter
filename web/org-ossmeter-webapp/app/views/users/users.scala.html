@@ -1,4 +1,4 @@
-@(users: List[User])
+@(users: List[model.User])
 
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
@@ -15,7 +15,7 @@
     <div class="container show-top-margin separate-rows tall-rows">  
       @for(user <- users) {
       	<div class="user row show-grid">      		
-      		<div class="col-md-9"><a href="@routes.Users.view(user.id)">@user.name</a> <span class="mail">@user.email</span></div>      		
+      		<div class="col-md-9"><a href="@routes.Users.view(user.getEmail())">@user.getName()</a> <span class="mail">@user.getEmail()</span></div>      		
         </div>
       }
     </div>

@@ -5,10 +5,8 @@ import com.feth.play.module.pa.PlayAuthenticate;
 import com.feth.play.module.pa.providers.password.UsernamePasswordAuthProvider;
 import com.feth.play.module.pa.providers.password.UsernamePasswordAuthUser;
 import controllers.routes;
-import models.LinkedAccount;
-import models.TokenAction;
-import models.TokenAction.Type;
-import models.User;
+
+
 import play.Application;
 import play.Logger;
 import play.data.Form;
@@ -25,6 +23,13 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import auth.MongoAuthenticator;
+
+import model.User;
+import model.LinkedAccount;
+import model.Token;
+import model.TokenType;
 
 import static play.data.Form.form;
 
@@ -95,9 +100,6 @@ public class MyUsernamePasswordAuthProvider
 		@MinLength(5)
 		public String repeatPassword;
 
-		@Required
-		public String name;
-
 		public String validate() {
 			if (password == null || !password.equals(repeatPassword)) {
 				return Messages
@@ -124,9 +126,9 @@ public class MyUsernamePasswordAuthProvider
 
 	@Override
 	protected com.feth.play.module.pa.providers.password.UsernamePasswordAuthProvider.SignupResult signupUser(final MyUsernamePasswordAuthUser user) {
-		final User u = User.findByUsernamePasswordIdentity(user);
+		final User u = MongoAuthenticator.findUser(user);
 		if (u != null) {
-			if (u.emailValidated) {
+			if (u.getEmailValidated()) {
 				// This user exists, has its email validated and is active
 				return SignupResult.USER_EXISTS;
 			} else {
@@ -137,7 +139,7 @@ public class MyUsernamePasswordAuthProvider
 		}
 		// The user either does not exist or is inactive - create a new one
 		@SuppressWarnings("unused")
-		final User newUser = User.create(user);
+		final User newUser = MongoAuthenticator.createUser(user);
 		// Usually the email should be verified before allowing login, however
 		// if you return
 		// return SignupResult.USER_CREATED;
@@ -148,16 +150,16 @@ public class MyUsernamePasswordAuthProvider
 	@Override
 	protected com.feth.play.module.pa.providers.password.UsernamePasswordAuthProvider.LoginResult loginUser(
 			final MyLoginUsernamePasswordAuthUser authUser) {
-		final User u = User.findByUsernamePasswordIdentity(authUser);
+		final User u = MongoAuthenticator.findUser(authUser);
 		if (u == null) {
 			return LoginResult.NOT_FOUND;
 		} else {
-			if (!u.emailValidated) {
+			if (!u.getEmailValidated()) {
 				return LoginResult.USER_UNVERIFIED;
 			} else {
-				for (final LinkedAccount acc : u.linkedAccounts) {
-					if (getKey().equals(acc.providerKey)) {
-						if (authUser.checkPassword(acc.providerUserId,
+				for (final LinkedAccount acc : u.getLinkedAccounts()) {
+					if (getKey().equals(acc.getProviderKey())) {
+						if (authUser.checkPassword(acc.getProviderUserId(),
 								authUser.getPassword())) {
 							// Password was correct
 							return LoginResult.USER_LOGGED_IN;
@@ -247,19 +249,24 @@ public class MyUsernamePasswordAuthProvider
 	@Override
 	protected String generateVerificationRecord(
 			final MyUsernamePasswordAuthUser user) {
-		return generateVerificationRecord(User.findByAuthUserIdentity(user));
+		return generateVerificationRecord(MongoAuthenticator.findUser(user));
 	}
 
 	protected String generateVerificationRecord(final User user) {
 		final String token = generateToken();
 		// Do database actions, etc.
-		TokenAction.create(Type.EMAIL_VERIFICATION, token, user);
+		// TokenAction.create(Type.EMAIL_VERIFICATION, token, user);
+
+		MongoAuthenticator.createToken(TokenType.EMAIL_VERIFICATION, token, user);
 		return token;
 	}
 
 	protected String generatePasswordResetRecord(final User u) {
 		final String token = generateToken();
-		TokenAction.create(Type.PASSWORD_RESET, token, u);
+		// TokenAction.create(Type.PASSWORD_RESET, token, u);
+
+		MongoAuthenticator.createToken(TokenType.PASSWORD_RESET, token, u);
+
 		return token;
 	}
 
@@ -281,10 +288,10 @@ public class MyUsernamePasswordAuthProvider
 
 		final String html = getEmailTemplate(
 				"views.html.account.email.password_reset", langCode, url,
-				token, user.name, user.email);
+				token, user.getName(), user.getEmail());
 		final String text = getEmailTemplate(
 				"views.txt.account.email.password_reset", langCode, url, token,
-				user.name, user.email);
+				user.getName(), user.getEmail());
 
 		return new Body(text, html);
 	}
@@ -362,10 +369,10 @@ public class MyUsernamePasswordAuthProvider
 
 		final String html = getEmailTemplate(
 				"views.html.account.email.verify_email", langCode, url, token,
-				user.name, user.email);
+				user.getName(), user.getEmail());
 		final String text = getEmailTemplate(
 				"views.txt.account.email.verify_email", langCode, url, token,
-				user.name, user.email);
+				user.getName(), user.getEmail());
 
 		return new Body(text, html);
 	}
@@ -381,6 +388,6 @@ public class MyUsernamePasswordAuthProvider
 	}
 
 	private String getEmailName(final User user) {
-		return getEmailName(user.email, user.name);
+		return getEmailName(user.getEmail(), user.getName());
 	}
 }

@@ -1,11 +1,11 @@
-@(user: models.User)
+@(user: model.User)
 
 @main(Messages("ossmeter.index.title")) {
 <div class="container">
-	<div class="user-detail" data-project="@user.name">
-	    <h1 class="name">@user.name</h1>
+	<div class="user-detail" data-project="@user.getName()">
+	    <h1 class="name">@user.getName()</h1>
 	    <div class="fields">
-	    	Email: <label class="email">@user.email</label>
+	    	Email: <label class="email">@user.getEmail()</label>
 @* 	    	First name: <label class="firstName">@user.firstName</label>
 	    	Last name: <label class="lastName">@user.lastName</label> *@
 	    </div>
@@ -14,7 +14,7 @@
 		<a class="btn" href="@routes.Account.changePassword">@Messages("ossmeter.profile.password_change")</a>
 *@
 		<a class="btn btn-success" href="#">Edit</a>
-		<a class="btn btn-danger" href="@routes.Users.delete(user.id)">Delete</a>
+		<a class="btn btn-danger" href="@routes.Users.delete(user.getEmail())">Delete</a>
 
 
 	</div>

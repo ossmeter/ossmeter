@@ -11,6 +11,8 @@ val appDependencies = Seq(
   // Comment the next line for local development of the Play Authentication core:
   "com.feth"      %% "play-authenticate" % "0.6.5-SNAPSHOT",
   "postgresql"    %  "postgresql"        % "9.1-901-1.jdbc4",
+  "mysql"         % "mysql-connector-java" % "5.1.18",
+  "org.mongodb"   % "mongo-java-driver" % "2.7.3",
   javaCore,
   cache,
   javaWs,

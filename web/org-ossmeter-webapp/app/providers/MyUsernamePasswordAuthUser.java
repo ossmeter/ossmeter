@@ -12,11 +12,14 @@ public class MyUsernamePasswordAuthUser extends UsernamePasswordAuthUser
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private final String name;
+	private final String name = "THIS SHOULD NEVER WORK.";
 
 	public MyUsernamePasswordAuthUser(final MySignup signup) {
 		super(signup.password, signup.email);
-		this.name = signup.name;
+	}
+
+	public MyUsernamePasswordAuthUser(String password, String email) {
+		super(password, email);
 	}
 
 	/**
@@ -25,7 +28,6 @@ public class MyUsernamePasswordAuthUser extends UsernamePasswordAuthUser
 	 */
 	public MyUsernamePasswordAuthUser(final String password) {
 		super(password, null);
-		name = null;
 	}
 
 	@Override

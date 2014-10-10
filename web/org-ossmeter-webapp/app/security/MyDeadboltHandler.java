@@ -1,6 +1,6 @@
 package security;
 
-import models.User;
+import model.User;
 import play.i18n.Messages;
 import play.libs.F;
 import play.mvc.Http;
@@ -11,6 +11,8 @@ import be.objectify.deadbolt.core.models.Subject;
 
 import com.feth.play.module.pa.PlayAuthenticate;
 import com.feth.play.module.pa.user.AuthUserIdentity;
+
+import auth.MongoAuthenticator;
 
 public class MyDeadboltHandler extends AbstractDeadboltHandler {
 
@@ -51,7 +53,7 @@ public class MyDeadboltHandler extends AbstractDeadboltHandler {
 	public Subject getSubject(final Http.Context context) {
 		final AuthUserIdentity u = PlayAuthenticate.getUser(context);
 		// Caching might be a good idea here
-		return User.findByAuthUserIdentity(u);
+		return MongoAuthenticator.findUser(u);
 	}
 
 	@Override

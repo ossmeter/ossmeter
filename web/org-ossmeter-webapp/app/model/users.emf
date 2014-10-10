@@ -1,0 +1,97 @@
+package model;
+
+@db
+class Users {
+	val User[*] users;
+	val Token[*] tokens;
+}
+
+@customize
+class Token {
+	ref User user;
+	@searchable
+	attr String token;
+	attr TokenType type;
+	attr Date created;
+	attr Date expires;
+}
+
+enum TokenType {
+	EMAIL_VERIFICATION; PASSWORD_RESET;
+}
+
+@customize
+class User {
+	@searchable
+	attr String identifier;
+	attr String password;
+	attr String name;	
+	@searchable
+	attr String email;
+	attr boolean emailValidated;
+	attr Date lastLogin;
+
+	// Deadbolt classes
+	val Role[*] roles;
+	val Permission[*] permissions;
+	
+	val LinkedAccount[*] linkedAccounts;
+
+	val Project[*] watching;
+	val Project[*] owns;
+
+	val Notification[*] notifications;
+	val Event[*] events;
+	val GridEntry[*] grid;
+}
+
+class Role {
+	attr String name;
+}
+
+class Permission {
+	attr String value;
+}
+
+class Notification {
+	val Project project;
+	val Metric metric;
+	attr double threshold;
+	attr boolean aboveThreshold;
+}
+
+class Project {
+	attr String ~id;
+	attr String name;
+}
+
+class Metric {
+	attr String ~id;
+	attr String name;
+}
+
+class LinkedAccount {
+	attr String providerUserId;
+	attr String providerKey;
+}
+
+class Event {}
+
+abstract class GridEntry {
+	attr int col;
+	attr int row;
+	attr int sizeX;
+	attr int sizeY;
+}
+
+abstract class MetricGridEntry extends GridEntry {
+	attr String projectId;
+	attr String metricId;
+}
+
+class PlotGridEntry extends MetricGridEntry { }
+
+class SparkGridEntry extends MetricGridEntry {
+	attr double lastValue;
+}
+
