@@ -13,7 +13,8 @@ Require-Bundle: org.ossmeter.repository.model.eclipse,
  org.ossmeter.platform.communicationchannel.nntp;bundle-version="1.0.0",
  org.ossmeter.repository.model.cc.nntp,
  org.ossmeter.repository.model.importerdependencies;bundle-version="1.0.0",
- org.ossmeter.platform
+ org.ossmeter.platform,
+ org.ossmeter.repository.model.importer.exception
 Export-Package: org.ossmeter.repository.model.eclipse.importer
 Import-Package: org.apache.commons.net,
  org.json.simple,
