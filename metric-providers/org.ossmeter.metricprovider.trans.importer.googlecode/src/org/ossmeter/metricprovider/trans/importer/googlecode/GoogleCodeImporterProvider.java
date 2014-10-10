@@ -12,6 +12,7 @@ import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.googlecode.GoogleCodeProject;
 import org.ossmeter.repository.model.googlecode.importer.GoogleCodeImporter;
+import org.ossmeter.repository.model.importer.exception.WrongUrlException;
 
 import com.googlecode.pongo.runtime.Pongo;
 import com.googlecode.pongo.runtime.PongoDB;
@@ -23,7 +24,7 @@ import com.mongodb.Mongo;
 public class GoogleCodeImporterProvider implements ITransientMetricProvider{
 
 	public final static String IDENTIFIER = 
-			"org.ossmeter.metricprovider.historic.googlecodeimporter";
+			"org.ossmeter.metricprovider.trans.googlecodeimporter";
 	
 	protected MetricProviderContext context;
 	
@@ -95,9 +96,12 @@ public class GoogleCodeImporterProvider implements ITransientMetricProvider{
 			PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
 			
 			Platform platform = new Platform(mongo);
-			ep = epi.importProject(project.getShortName(), platform);
-			if (ep.getExecutionInformation().getInErrorState() )
+			try
+			{
+				ep = epi.importProject(project.getShortName(), platform);
+			}catch (WrongUrlException e){
 				project.getExecutionInformation().setInErrorState(true);
+			}
 			mongo.close();
 			
 		} catch (UnknownHostException e) {

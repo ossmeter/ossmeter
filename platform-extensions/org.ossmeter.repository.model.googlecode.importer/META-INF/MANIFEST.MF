@@ -13,7 +13,8 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.repository.model.vcs.git;bundle-version="1.0.0",
  org.ossmeter.repository.model.vcs.svn;bundle-version="1.0.0",
  org.ossmeter.repository.model.importerdependencies,
- org.ossmeter.platform
+ org.ossmeter.platform,
+ org.ossmeter.repository.model.importer.exception
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: org.jsoup,

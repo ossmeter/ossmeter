@@ -18,4 +18,5 @@ Require-Bundle: org.ossmeter.repository.model.eclipse,
  org.ossmeter.repository.model.importerdependencies,
  org.ossmeter.platform,
  org.eclipse.core.runtime,
- com.googlecode.pongo.runtime.osgi
+ com.googlecode.pongo.runtime.osgi,
+ org.ossmeter.repository.model.importer.exception

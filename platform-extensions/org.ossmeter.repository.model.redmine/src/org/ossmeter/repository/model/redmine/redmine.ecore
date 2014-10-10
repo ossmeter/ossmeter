@@ -33,6 +33,18 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="updated_on">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="username">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="password">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="token">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="baseRepo">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="wiki" eType="//RedmineWiki" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="queryManager" eType="//RedmineQueryManager" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="issueTracker" upperBound="-1" eType="//RedmineBugIssueTracker" containment="true"/>
@@ -102,7 +114,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="template">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="relations" upperBound="-1" eType="//RedminIssueRelation" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="relations" upperBound="-1" eType="//RedmineIssueRelation" containment="true"/>
+
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="start_date">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
@@ -119,7 +132,7 @@
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RedminIssueRelation">
+  <eClassifiers xsi:type="ecore:EClass" name="RedmineIssueRelation">
     <eStructuralFeatures xsi:type="ecore:EReference" name="relatedIssue" eType="//RedmineIssue"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>

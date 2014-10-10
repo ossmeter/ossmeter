@@ -836,13 +836,10 @@ public class SourceforgeProjectImporter {
 		
 		return hasRole;
 	}
-	public boolean isProjectInDB(String projectId)
+	public boolean isProjectInDB(String projectId, Platform platform)
 	{
 		try 
 		{
-			Mongo mongo;
-			mongo = new Mongo();
-			Platform platform = new Platform(mongo);
 			Iterable<Project> projects = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(projectId);
 			Iterator<Project> iprojects = projects.iterator();
 			SourceForgeProject project = null;
@@ -864,9 +861,9 @@ public class SourceforgeProjectImporter {
 		}
 	}
 	
-	public boolean isProjectInDBByUrl(String url)
+	public boolean isProjectInDBByUrl(String url, Platform platform)
 	{
-		return isProjectInDB(getProjectIdFromUrl(url));
+		return isProjectInDB(getProjectIdFromUrl(url),platform);
 	}
 	
 	public SourceForgeProject importProjectByUrl(String url, Platform platform)

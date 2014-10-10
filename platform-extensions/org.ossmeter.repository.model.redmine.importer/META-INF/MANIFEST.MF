@@ -8,9 +8,16 @@ Require-Bundle: org.ossmeter.repository.model.redmine;bundle-version="1.0.0",
  org.ossmeter.repository.model.vcs.git;bundle-version="1.0.0",
  org.ossmeter.repository.model.vcs.svn;bundle-version="1.0.0",
  org.ossmeter.repository.model.importerdependencies,
- org.ossmeter.platform
+ org.ossmeter.platform,
+ org.ossmeter.repository.model.importer.exception;bundle-version="1.0.0",
+ com.googlecode.pongo,
+ com.googlecode.pongo,
+ com.googlecode.pongo.runtime.osgi,
+ com.googlecode.pongo.ui
 Export-Package: org.ossmeter.repository.model.redmine.importer
-Import-Package: org.json.simple,
+Import-Package: org.apache.commons.io;version="2.0.1",
+ org.json.simple,
+ org.json.simple.parser,
  org.jsoup,
  org.jsoup.examples,
  org.jsoup.helper,
