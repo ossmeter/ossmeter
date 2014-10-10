@@ -78,7 +78,7 @@ rel[datetime, set[str]] activeCommitters(ProjectDelta delta = \empty(), rel[date
 
 @metric{longerTermActiveCommitters}
 @doc{Committers who have been active the last 6 months}
-@friendlyName{committersLastTwoWeeks}
+@friendlyName{committersLastSixMonths}
 @uses = ("committersToday":"committersToday")
 @appliesTo{generic()}
 rel[datetime, set[str]] longerTermActiveCommitters(ProjectDelta delta = \empty(), rel[datetime,set[str]] prev = {}, set[str] committersToday = {}) {
@@ -98,10 +98,11 @@ int numberOfActiveCommitters(rel[datetime, set[str]] activeCommitters = {})
   = size({c | /str c := activeCommitters});
     
 @metric{numberOfActiveCommittersLongTerm}
-@doc{Number of active committers over time}
+@doc{Number of long time active committers over time}
 @friendlyName{numberOfActiveCommittersLongTerm}
 @uses = ("longerTermActiveCommitters" :"activeCommitters")
 @appliesTo{generic()}
+@historic
 int numberOfActiveCommittersLongTerm(rel[datetime, set[str]] activeCommitters = {}) 
   = size({c | /str c := activeCommitters});
 
