@@ -1,8 +1,6 @@
 package org.ossmeter.platform.importers.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
+import static org.junit.Assert.*;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -34,13 +32,13 @@ public class GitHubImporterTest {
 		mongo.close();
 	}
 	
-	@Test (expected = WrongUrlException.class)
-	public void testInvalidInput() throws WrongUrlException {
+	@Test
+	public void testValidInput() throws WrongUrlException {
 		// Prints " API rate limit exceeded." message.
 		// TODO: should we throw a InvalidUrlException instead of returning null? 
-		assertNull( im.importProjectByUrl("", platform));
+		assertNotNull( im.importProjectByUrl("https://github.com/facebook/react", platform));
 //		assertNull( im.importProjectByUrl(null, platform)); // This will fail
-		assertNull( im.importRepository("", platform));
+		assertNotNull( im.importRepository("facebook/react", platform));
 //		assertNull( im.importRepository(null, platform)); // This will fail
 	}
 
@@ -69,7 +67,7 @@ public class GitHubImporterTest {
 	}
 	
 	@Test(expected = WrongUrlException.class)
-	public void eclipseInvalidInput() throws WrongUrlException {
+	public void testInvalidInput() throws WrongUrlException {
 		// Prints " API rate limit exceeded." message.
 		// TODO: should we throw a InvalidUrlException instead of returning null? 
 		

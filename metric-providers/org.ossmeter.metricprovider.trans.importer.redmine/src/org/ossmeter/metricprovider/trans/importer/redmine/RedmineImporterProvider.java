@@ -11,6 +11,7 @@ import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.ProjectExecutionInformation;
 import org.ossmeter.repository.model.importer.exception.RepoInfoNotFound;
 import org.ossmeter.repository.model.redmine.RedmineProject;
 import org.ossmeter.repository.model.redmine.importer.RedmineImporter;
@@ -94,22 +95,26 @@ public class RedmineImporterProvider implements ITransientMetricProvider {
 	@Override
 	public void measure(Project project, ProjectDelta delta, PongoDB db) {
 		RedmineProject ep = null;
-		try {
 			RedmineImporter epi = new RedmineImporter();
-			Mongo mongo = new Mongo();
-			PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
-			Platform platform = new Platform(mongo);
-			ep = epi.importProject(project.getShortName(), platform);//, "http://mancoosi.di.univaq.it/redmine/","juri","juri", "369fb37d8ca43f186505f588a14809a294aea732");
-			if (ep.getExecutionInformation().getInErrorState() )
+			
+			Platform platform = Platform.getInstance();
+			try {
+				ep = epi.importProject(project.getShortName(), platform);
+				if(ep == null)
+				{
+					if(project.getExecutionInformation() == null)
+						project.setExecutionInformation(new ProjectExecutionInformation());
+					project.getExecutionInformation().setInErrorState(true);
+				}
+			} catch (RepoInfoNotFound e) {			
+				if(project.getExecutionInformation() == null)
+					project.setExecutionInformation(new ProjectExecutionInformation());
 				project.getExecutionInformation().setInErrorState(true);
-			mongo.close();
-		} catch (UnknownHostException e) {
-			logger.error("Error launch EclipseImporterProvider " );
-		} catch (IOException e) {
-			logger.error("Error launch EclipseImporterProvider " );
-		} catch (RepoInfoNotFound e) {
-			logger.error("Error launch EclipseImporterProvider " );
-		}
+			}
+			//, "http://mancoosi.di.univaq.it/redmine/","juri","juri", "369fb37d8ca43f186505f588a14809a294aea732");
+			
+			
+		
 		
 	}
 }

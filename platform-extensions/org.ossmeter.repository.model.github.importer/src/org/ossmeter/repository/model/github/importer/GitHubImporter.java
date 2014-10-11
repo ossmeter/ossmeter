@@ -437,13 +437,15 @@ public class GitHubImporter {
 			
 			
 			lastImportedId = new Integer(currentRepo.get("id").toString());
+			ImportData importData = null;
 			if (platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().size() == 0)
 			{
-				ImportData importData = new ImportData();
-				importData.setLastImportedProject(String.valueOf(lastImportedId));
+				importData = new ImportData();
 				platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().add(importData);
-				platform.getProjectRepositoryManager().getProjectRepository().sync();
 			}
+			else importData = platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().first();
+			importData.setLastImportedProject(String.valueOf(lastImportedId));
+			platform.getProjectRepositoryManager().getProjectRepository().sync();
 			platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().first().setLastImportedProject(String.valueOf(lastImportedId));
 			platform.getProjectRepositoryManager().getProjectRepository().sync();
 			if (!projectToBeUpdated) {

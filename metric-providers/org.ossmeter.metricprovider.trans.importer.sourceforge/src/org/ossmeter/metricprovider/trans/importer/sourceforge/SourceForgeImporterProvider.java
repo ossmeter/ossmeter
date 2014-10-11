@@ -92,37 +92,22 @@ public class SourceForgeImporterProvider  implements ITransientMetricProvider {
 	@Override
 	public void measure(Project project, ProjectDelta delta, PongoDB db) {
 		SourceForgeProject ep = null;
-		Mongo mongo;
+		SourceforgeProjectImporter epi = new SourceforgeProjectImporter();
+		Platform platform = Platform.getInstance();
 		try {
-			SourceforgeProjectImporter epi = new SourceforgeProjectImporter();
-			mongo = new Mongo();
-			PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
-			Platform platform = new Platform(mongo);
-			try {
-				ep = epi.importProject(project.getShortName(), platform);
-			} catch (WrongUrlException e) {
-				project.getExecutionInformation().setInErrorState(false);
-			}
-			if (ep == null)
+			ep = epi.importProject(project.getShortName(), platform);
+			if(ep == null)
 			{
 				if(project.getExecutionInformation() == null)
 					project.setExecutionInformation(new ProjectExecutionInformation());
 				project.getExecutionInformation().setInErrorState(true);
 			}
-			mongo.close();
-		} catch (UnknownHostException e) {
-			logger.error("Sourceforge metric provider exception:");
-			if(project.getExecutionInformation() == null)
-				project.setExecutionInformation(new ProjectExecutionInformation());
-			project.getExecutionInformation().setInErrorState(true);
-		} catch (IOException e) {
-			logger.error("Sourceforge metric provider exception:");
+		} catch (WrongUrlException e) {
+			logger.error("Error launch sourceforge importer: Wrong Url or ProjectId");
 			if(project.getExecutionInformation() == null)
 				project.setExecutionInformation(new ProjectExecutionInformation());
 			project.getExecutionInformation().setInErrorState(true);
 		}
-		
-		
 	}
 
 }

@@ -99,31 +99,22 @@ public class EclipseImporterProvider implements ITransientMetricProvider{
 	public void measure(Project project, ProjectDelta delta, PongoDB db) {
 		// TODO Auto-generated method stub
 		EclipseProject ep = null;
-		Mongo mongo;
-		try {
-			EclipseProjectImporter epi = new EclipseProjectImporter();
-			mongo = new Mongo();
-			PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
-			try 
-			{
-				Platform platform = new Platform(mongo);
-				ep = epi.importProject(project.getShortName(), platform);
-			} catch (ProjectUnknownException e) {
-				logger.error("Error launch RedmineImporterProvider " + e.getMessage());
-				if(project.getExecutionInformation() == null)
-					project.setExecutionInformation(new ProjectExecutionInformation());
-				project.getExecutionInformation().setInErrorState(true);
-			}
+		EclipseProjectImporter epi = new EclipseProjectImporter();
+		try 
+		{
+			Platform platform = Platform.getInstance();
+			ep = epi.importProject(project.getShortName(), platform);
 			if (ep==null )
 			{	
 				if(project.getExecutionInformation() == null)
 					project.setExecutionInformation(new ProjectExecutionInformation());
 				project.getExecutionInformation().setInErrorState(true);
 			}
-			mongo.close();
-		} catch (UnknownHostException e) {
-			logger.error("Error launch RedmineImporterProvider " + e.getMessage());
-		
+		} catch (ProjectUnknownException e) {
+			logger.error("Error launch Eclipse importer: WreongUrl");
+			if(project.getExecutionInformation() == null)
+				project.setExecutionInformation(new ProjectExecutionInformation());
+			project.getExecutionInformation().setInErrorState(true);
 		}
 	}
 }
