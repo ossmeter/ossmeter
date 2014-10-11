@@ -326,17 +326,18 @@ public class GitHubImporter {
 					}
 				}
 			}
-				
+			if(!projectToBeUpdated)
+				repository = new GitHubRepository();
+			String appDescription = (String)currentRepo.get("description");
+			if (appDescription != null)					
+				repository.setDescription(appDescription);
 
-				if ((isNotNull(currentRepo,"description")))					
-					repository.setDescription(currentRepo.get("description").toString());
+			repository.setFull_name(projectId);
+			repository.setShortName(projectId);
+			repository.setName(currentRepo.get("name").toString());
 
-				repository.setFull_name(projectId);
-				repository.setShortName(currentRepo.get("name").toString());
-				repository.setName(currentRepo.get("name").toString());
-
-				if ((isNotNull(currentRepo,"private")))					
-					repository.set_private(new Boolean(currentRepo.get("private").toString()));
+			if ((isNotNull(currentRepo,"private")))					
+				repository.set_private(new Boolean(currentRepo.get("private").toString()));
 
 			repository.setFull_name(projectId);
 			repository.setShortName(projectId);
@@ -392,11 +393,17 @@ public class GitHubImporter {
 			{
 				logger.debug("Unable to load collaborators for this project");
 			}
-			GitHubBugTracker bt = new GitHubBugTracker();
+			GitHubBugTracker bt;
+			if (repository.getBugTrackingSystems().isEmpty())
+			{
+				bt = new GitHubBugTracker();
+				repository.getBugTrackingSystems().add(bt);
+			}
+			else bt = (GitHubBugTracker) repository.getBugTrackingSystems().get(0);
 			try{
 				List<GitHubIssue> issues = getIssuesInAProject(platform, projectId);
 				platform.getProjectRepositoryManager().getProjectRepository().sync();
-				bt.getIssues().clear();
+				
 				for (GitHubIssue person : issues)
 					bt.getIssues().add((GitHubIssue)person);
 			}

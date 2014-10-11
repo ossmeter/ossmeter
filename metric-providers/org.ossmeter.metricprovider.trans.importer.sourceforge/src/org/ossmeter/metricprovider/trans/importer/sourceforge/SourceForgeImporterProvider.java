@@ -12,6 +12,8 @@ import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.ProjectExecutionInformation;
+import org.ossmeter.repository.model.importer.exception.WrongUrlException;
 import org.ossmeter.repository.model.sourceforge.SourceForgeBugTrackingSystem;
 import org.ossmeter.repository.model.sourceforge.SourceForgeProject;
 import org.ossmeter.repository.model.sourceforge.importer.SourceforgeProjectImporter;
@@ -96,14 +98,28 @@ public class SourceForgeImporterProvider  implements ITransientMetricProvider {
 			mongo = new Mongo();
 			PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
 			Platform platform = new Platform(mongo);
-			ep = epi.importProject(project.getShortName(), platform);
-			if (ep.getExecutionInformation().getInErrorState() )
+			try {
+				ep = epi.importProject(project.getShortName(), platform);
+			} catch (WrongUrlException e) {
+				project.getExecutionInformation().setInErrorState(false);
+			}
+			if (ep == null)
+			{
+				if(project.getExecutionInformation() == null)
+					project.setExecutionInformation(new ProjectExecutionInformation());
 				project.getExecutionInformation().setInErrorState(true);
+			}
 			mongo.close();
 		} catch (UnknownHostException e) {
 			logger.error("Sourceforge metric provider exception:");
+			if(project.getExecutionInformation() == null)
+				project.setExecutionInformation(new ProjectExecutionInformation());
+			project.getExecutionInformation().setInErrorState(true);
 		} catch (IOException e) {
 			logger.error("Sourceforge metric provider exception:");
+			if(project.getExecutionInformation() == null)
+				project.setExecutionInformation(new ProjectExecutionInformation());
+			project.getExecutionInformation().setInErrorState(true);
 		}
 		
 		

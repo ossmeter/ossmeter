@@ -20,3 +20,4 @@ Require-Bundle: org.ossmeter.repository.model.eclipse,
  org.eclipse.core.runtime,
  com.googlecode.pongo.runtime.osgi,
  org.ossmeter.repository.model.importer.exception
+Export-Package: org.ossmeter.metricprovider.trans.importer.eclipse

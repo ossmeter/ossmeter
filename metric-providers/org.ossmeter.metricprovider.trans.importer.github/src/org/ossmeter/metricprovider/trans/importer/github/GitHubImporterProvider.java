@@ -10,6 +10,7 @@ import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.ProjectExecutionInformation;
 import org.ossmeter.repository.model.github.GitHubRepository;
 import org.ossmeter.repository.model.github.importer.GitHubImporter;
 import org.ossmeter.repository.model.importer.exception.WrongUrlException;
@@ -101,19 +102,23 @@ public class GitHubImporterProvider implements ITransientMetricProvider{
 			Platform platform = new Platform(mongo);
 			try{
 				ep = epi.importRepository( ((GitHubRepository)project).getFull_name(), platform);
-			}catch(WrongUrlException e)
+				if (ep == null)
+				{
+					if(project.getExecutionInformation() == null)
+						project.setExecutionInformation(new ProjectExecutionInformation());
+					project.getExecutionInformation().setInErrorState(false);
+				}
+ 			}catch(WrongUrlException e)
 			{
-				
-			}
-			if (ep.getExecutionInformation().getInErrorState() )
+				if(project.getExecutionInformation() == null)
+					project.setExecutionInformation(new ProjectExecutionInformation());
 				project.getExecutionInformation().setInErrorState(true);
+			}	
 			mongo.close();
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			logger.error("GitHub metric provider exception:" + e.getMessage());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			logger.error("GitHub metric provider exception:" + e.getMessage());
+			project.getExecutionInformation().setInErrorState(true);
 		}
 	}
 

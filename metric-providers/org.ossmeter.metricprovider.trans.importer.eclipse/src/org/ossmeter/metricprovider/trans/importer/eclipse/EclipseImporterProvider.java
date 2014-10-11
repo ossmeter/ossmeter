@@ -13,6 +13,7 @@ import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.ProjectExecutionInformation;
 import org.ossmeter.repository.model.eclipse.EclipseProject;
 import org.ossmeter.repository.model.eclipse.importer.EclipseProjectImporter;
 import org.ossmeter.repository.model.importer.exception.ProjectUnknownException;
@@ -103,20 +104,26 @@ public class EclipseImporterProvider implements ITransientMetricProvider{
 			EclipseProjectImporter epi = new EclipseProjectImporter();
 			mongo = new Mongo();
 			PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
-
-			Platform platform = new Platform(mongo);
-			ep = epi.importProject(project.getShortName(), platform);
-			if (ep.getExecutionInformation().getInErrorState() )
+			try 
+			{
+				Platform platform = new Platform(mongo);
+				ep = epi.importProject(project.getShortName(), platform);
+			} catch (ProjectUnknownException e) {
+				logger.error("Error launch RedmineImporterProvider " + e.getMessage());
+				if(project.getExecutionInformation() == null)
+					project.setExecutionInformation(new ProjectExecutionInformation());
 				project.getExecutionInformation().setInErrorState(true);
+			}
+			if (ep==null )
+			{	
+				if(project.getExecutionInformation() == null)
+					project.setExecutionInformation(new ProjectExecutionInformation());
+				project.getExecutionInformation().setInErrorState(true);
+			}
 			mongo.close();
 		} catch (UnknownHostException e) {
 			logger.error("Error launch RedmineImporterProvider " + e.getMessage());
-		}catch (ProjectUnknownException e) {
-			logger.error("Error launch RedmineImporterProvider " + e.getMessage());
-		} catch (MalformedURLException e) {
-			logger.error("Error launch RedmineImporterProvider " + e.getMessage());
-		} catch (IOException e) {
-			logger.error("Error launch RedmineImporterProvider " + e.getMessage());
+		
 		}
 	}
 }

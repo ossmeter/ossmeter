@@ -558,13 +558,13 @@ public class RedmineImporter {
 				total = Integer.parseInt(obj2.get("total_count").toString());
 				offset += 25;
 			} catch (MalformedURLException e) {
-				logger.error("Error during import all redmine project " + e.getMessage());
+				logger.error("Error during import issue for redmine project: " + id);
 				break;
 			} catch (IOException e) {
-				logger.error("Error during import all redmine project " + e.getMessage());
+				logger.error("Error during import issue for redmine project: " + id);
 				break;
 			} catch (ParseException e) {
-				logger.error("Error during import all redmine project " + e.getMessage());
+				logger.error("Error during import issue for redmine project: " + id);
 				break;
 			}
 		}

@@ -11,6 +11,7 @@ import org.ossmeter.platform.Platform;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.github.GitHubRepository;
 import org.ossmeter.repository.model.github.importer.GitHubImporter;
+import org.ossmeter.repository.model.importer.exception.WrongUrlException;
 
 import com.googlecode.pongo.runtime.PongoDB;
 import com.mongodb.Mongo;
@@ -33,8 +34,8 @@ public class GitHubImporterTest {
 		mongo.close();
 	}
 	
-	@Test
-	public void testInvalidInput() {
+	@Test (expected = WrongUrlException.class)
+	public void testInvalidInput() throws WrongUrlException {
 		// Prints " API rate limit exceeded." message.
 		// TODO: should we throw a InvalidUrlException instead of returning null? 
 		assertNull( im.importProjectByUrl("", platform));
@@ -44,7 +45,7 @@ public class GitHubImporterTest {
 	}
 
 	@Test	
-	public void testImportByUrlAndUpdate() {
+	public void testImportByUrlAndUpdate() throws WrongUrlException {
 		GitHubRepository project = im.importProjectByUrl("https://github.com/facebook/react", platform);
 		
 		String pr = project.getDbObject().toString();
@@ -66,5 +67,16 @@ public class GitHubImporterTest {
 		platform.getProjectRepositoryManager().getProjectRepository().getProjects().remove(project);
 		platform.getProjectRepositoryManager().getProjectRepository().getProjects().sync();
 	}
-
+	
+	@Test(expected = WrongUrlException.class)
+	public void eclipseInvalidInput() throws WrongUrlException {
+		// Prints " API rate limit exceeded." message.
+		// TODO: should we throw a InvalidUrlException instead of returning null? 
+		
+			assertNull( im.importProjectByUrl("", platform));
+			//assertNull( im.importProjectByUrl(null, platform)); // This will fail
+			assertNull( im.importRepository("", platform));
+			//assertNull( im.importRepository(null, platform)); // This will fail
+		
+	}
 }

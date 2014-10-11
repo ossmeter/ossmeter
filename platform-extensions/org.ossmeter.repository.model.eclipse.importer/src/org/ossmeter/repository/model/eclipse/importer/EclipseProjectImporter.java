@@ -169,10 +169,9 @@ public class EclipseProjectImporter {
 	}
 	
 
-	public EclipseProject importProject(String projectId, Platform platform) throws ProjectUnknownException, MalformedURLException, IOException{
+	public EclipseProject importProject(String projectId, Platform platform) throws ProjectUnknownException{
 			
-		if(!isValidProjectId(projectId))
-			throw new ProjectUnknownException();
+		
 		String URL_PROJECT = "http://projects.eclipse.org/projects/"+ projectId;
 		String html = null;
 		XML xml = null;
@@ -200,9 +199,10 @@ public class EclipseProjectImporter {
 			html = getRawHtml(URL_PROJECT);
 			xml = new XML(html);
 			Document xmlDoc = xml.getDOM();
+			List<String> eclipsePlatformNames = getPlatforms(xmlDoc, projectId);
 			String platformName;
 			
-			List<String> eclipsePlatformNames = getPlatforms(xmlDoc, projectId);
+			
 			Iterator it  = (Iterator) eclipsePlatformNames.iterator();
 			
 			if (projectToBeUpdated) {
@@ -217,13 +217,20 @@ public class EclipseProjectImporter {
 				project.getPlatforms().add(eclipsePlatform);
 				platform.getProjectRepositoryManager().getProjectRepository().sync();	
 			}
-			InputStream is = new URL("http://projects.eclipse.org/json/project/" + projectId).openStream();
+			URL projectUrl = new URL("http://projects.eclipse.org/json/project/" + projectId);
+			URLConnection conn = projectUrl.openConnection();
+			String sorry = conn.getHeaderField("STATUS");
+			
+			if (sorry !=null && sorry.startsWith("404"))
+				throw new WrongUrlException();
+			
+			InputStream is = conn.getInputStream();
 			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
 			String jsonText = readAll(rd);
 						
-			System.out.println(jsonText);
-			JSONObject obj=(JSONObject)JSONValue.parse(jsonText);
-			JSONObject currentProg = (JSONObject)((JSONObject)obj.get("projects")).get(projectId);
+			
+			JSONObject obj2=(JSONObject)JSONValue.parse(jsonText);
+			JSONObject currentProg = (JSONObject)((JSONObject)obj2.get("projects")).get(projectId);
 			
 			project.setShortName(projectId);
 			if ((isNotNullObj(currentProg,"title")))
@@ -436,8 +443,6 @@ public class EclipseProjectImporter {
 	
 	private EclipseProject importProjectFromImportAll(String projectId, Platform platform) throws ProjectUnknownException, MalformedURLException, IOException{
 		
-		if(!isValidProjectId(projectId))
-			throw new ProjectUnknownException();
 		String URL_PROJECT = "http://projects.eclipse.org/projects/"+ projectId;
 		String html = null;
 		XML xml = null;
@@ -894,21 +899,28 @@ public class EclipseProjectImporter {
 	 * is not xhtml->SAX error)
 	 * 
 	 * @return
+	 * @throws WrongUrlException 
 	 * @throws Exception
 	 */
-	private String getRawHtml(String projectURL) throws Exception {
-		URL url = new URL(projectURL);
-		URLConnection con = url.openConnection();
-		BufferedReader rd = new BufferedReader(new InputStreamReader(
-				con.getInputStream()));
-		String line;
-		StringBuilder sb = new StringBuilder();
-		while ((line = rd.readLine()) != null) {
-			sb.append(line + "\n");
+	private String getRawHtml(String projectURL) throws WrongUrlException  {
+		URL url;
+		try {
+			url = new URL(projectURL);
+		
+			URLConnection con = url.openConnection();
+			BufferedReader rd = new BufferedReader(new InputStreamReader(
+					con.getInputStream()));
+			String line;
+			StringBuilder sb = new StringBuilder();
+			while ((line = rd.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+			rd.close();
+			String text = sb.toString();
+			return text;
+		} catch (IOException e) {
+			throw new WrongUrlException();
 		}
-		rd.close();
-		String text = sb.toString();
-		return text;
 	}
 
 	private String getProjectIdFromUrl(String url) throws WrongUrlException
@@ -935,7 +947,7 @@ public class EclipseProjectImporter {
 			throw new WrongUrlException();
 	}
 	
-	public EclipseProject importProjectByUrl(String url, Platform platform) throws WrongUrlException, ProjectUnknownException, MalformedURLException, IOException
+	public EclipseProject importProjectByUrl(String url, Platform platform) throws WrongUrlException, ProjectUnknownException
 	{
 		return importProject(getProjectIdFromUrl(url), platform);
 	}
@@ -944,33 +956,39 @@ public class EclipseProjectImporter {
 	{
 		return isProjectInDB(getProjectIdFromUrl(url),platform);
 	}
-	private boolean isValidProjectId(String projectId) throws MalformedURLException, IOException
+	private boolean isValidProjectId(String projectId) 
 	{
 		boolean result = false;
 		//InputStream is = new FileInputStream(new File("C:\\eclipse.json"));
-		InputStream is = new URL("http://projects.eclipse.org/json/projects/all").openStream();
-		BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-		String jsonText = readAll(rd);		
-		JSONObject obj=(JSONObject)JSONValue.parse(jsonText);
-		Iterator iter = obj.entrySet().iterator();
-		Map.Entry jsonAr =  null;
-		if (iter.hasNext())
-			jsonAr = (Map.Entry) iter.next(); 
-		Object o =jsonAr.getValue();
-		Iterator iter2 = ((JSONObject)jsonAr.getValue()).entrySet().iterator();
-		while (iter2.hasNext()) 
-		{
-			Map.Entry entry = (Map.Entry) iter2.next();
-			if (projectId.equals((String) entry.getKey()))
-				return true;
+		InputStream is;
+		try {
+			is = new URL("http://projects.eclipse.org/json/projects/all").openStream();
+			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+			String jsonText = readAll(rd);		
+			JSONObject obj=(JSONObject)JSONValue.parse(jsonText);
+			Iterator iter = obj.entrySet().iterator();
+			Map.Entry jsonAr =  null;
+			if (iter.hasNext())
+				jsonAr = (Map.Entry) iter.next(); 
+			Object o =jsonAr.getValue();
+			Iterator iter2 = ((JSONObject)jsonAr.getValue()).entrySet().iterator();
+			while (iter2.hasNext()) 
+			{
+				Map.Entry entry = (Map.Entry) iter2.next();
+				if (projectId.equals((String) entry.getKey()))
+					return true;
+			}
+			return result;
+		} catch (MalformedURLException e) {
+			return false;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			return false;
 		}
-		return result;
 	}
 	
 	public boolean isProjectInDB(String projectId, Platform platform) throws ProjectUnknownException, MalformedURLException, IOException
 	{
-		if(!isValidProjectId(projectId))
-			throw new ProjectUnknownException();
 		Iterable<Project> pl = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(projectId);
 		Iterator<Project> iprojects = pl.iterator();
 		Project projectTemp = null;
