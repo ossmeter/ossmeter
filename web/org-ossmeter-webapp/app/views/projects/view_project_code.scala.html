@@ -21,7 +21,8 @@
                         </li>
                         <li><a href="#">Settings</a></li>
                     </ol>
-                    <h1 class="name">@project.getName()</h1>
+                    <a href="@routes.Projects.view(project.getShortName())"><h1 class="name">@project.getName()</h1></a>
+                    
     	        </div>
     		</div>
             <div class="row">
@@ -46,7 +47,6 @@
     </div>
 </section>
 
-
 <section>
     <div class="container box">
         <div class="row">
@@ -58,6 +58,10 @@
         <div class="row">
             <div class="col-md-10" id="plot"></div>
             <div class="col-md-2">
+                <h4>Toolbox</h4>
+                <a href="#"><span class="glyphicon glyphicon-eye-open tip btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Add plot to dashboard"></span></a>
+                <a href="#"><span class="glyphicon glyphicon-time tip btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Create notification"></span></a>
+                <a href="#"><span class="glyphicon glyphicon-refresh tip btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Clear plot"></span></a>
                 <h4>Legend</h4>
                 <span class="label label-danger">&mdash;</span> <span class="label" style="background-color:#1f77b4; font-weight:normal;">lines of code</span> <br/>
                 <span class="label label-danger">&mdash;</span> <span class="label" style="background-color:#aec7e8; font-weight:normal;">complexity</span> <br/>
@@ -78,15 +82,20 @@
             <div class="col-md-6">
                 <table class="table" id="sparklines-table-alltime">
                         <thead>
+                            <th></th>
                             <th>metric</th>
-                            <th>15/07/2003</th>
+                            <th>15/07/03</th>
                             <th>12 months</th>
-                            <th>15/07/2014</th>
+                            <th>15/07/14</th>
                             <th>low</th>
                             <th>high</th>
                         </thead>
                         <tbody>
                             <tr>
+                                <td>
+                                    <a href="#"><span class="glyphicon glyphicon-eye-open tip" data-toggle="tooltip" data-placement="left" title="Add sparkline to dashboard"></span></a>
+                                    <a href="#"><span class="glyphicon glyphicon-plus tip" data-toggle="tooltip" data-placement="left" title="Add metric to plot above"></span></a>
+                                </td>
                                 <td><a href="#">lines of code</a></td>
                                 <td>324</td>
                                 <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
@@ -95,6 +104,10 @@
                                 <td>376</td>
                             </tr>
                             <tr>
+                                <td>
+                                    <a href="#"><span class="glyphicon glyphicon-eye-open tip" data-toggle="tooltip" data-placement="left" title="Add sparkline to dashboard"></span></a>
+                                    <a href="#"><span class="glyphicon glyphicon-plus tip" data-toggle="tooltip" data-placement="left" title="Add metric to plot above"></span></a>
+                                </td>
                                 <td><a href="#">lines of code</a></td>
                                 <td>324</td>
                                 <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
@@ -124,49 +137,46 @@
             </div>
             <div class="col-md-6">
                 <table class="table" id="sparklines-table-lastyear">
-                        <thead>
-                            <th>metric</th>
-                            <th>01/09/2007</th>
-                            <th>65 months</th>
-                            <th>15/07/2014</th>
-                            <th>low</th>
-                            <th>high</th>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>lines of code</td>
-                                <td>324</td>
-                                <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
-                                <td>299</td>
-                                <td>32</td>
-                                <td>376</td>
-                            </tr>
-                            <tr>
-                                <td>lines of code</td>
-                                <td>324</td>
-                                <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
-                                <td>299</td>
-                                <td>32</td>
-                                <td>376</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <script type="text/javascript">
-                        $(function() {
-                            var ms = ["commitsovertimeline", "commitsovertimeline"];
+                    <thead>
+                        <th>01/09/2007</th>
+                        <th>65 months</th>
+                        <th>15/07/2014</th>
+                        <th>low</th>
+                        <th>high</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>324</td>
+                            <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
+                            <td>299</td>
+                            <td>32</td>
+                            <td>376</td>
+                        </tr>
+                        <tr>
+                            <td>324</td>
+                            <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
+                            <td>299</td>
+                            <td>32</td>
+                            <td>376</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <script type="text/javascript">
+                    $(function() {
+                        var ms = ["commitsovertimeline", "commitsovertimeline"];
 
-                            for (m in ms) {
-                                $.get("http://localhost:8182/projects/p/@project.getShortName()/s/"+ms[m], function (data) {
-                                    $("#sparklines-table-lastyear > tbody:last").append("<tr><td>" + data.name + 
-                                        "</td><td>" + data.first +
-                                        "</td><td><img class=\"spark\" src=\"http://localhost:8182" + data.spark + "\" />" +  
-                                        "</td><td>" + data.last + 
-                                        "</td><td>" + data.low + 
-                                        "</td><td>" + data.high + "</td></tr>");
-                                });
-                            };
-                        });
-                    </script>
+                        for (m in ms) {
+                            $.get("http://localhost:8182/projects/p/@project.getShortName()/s/"+ms[m], function (data) {
+                                $("#sparklines-table-lastyear > tbody:last").append("<tr><td>" + data.name + 
+                                    "</td><td>" + data.first +
+                                    "</td><td><img class=\"spark\" src=\"http://localhost:8182" + data.spark + "\" />" +  
+                                    "</td><td>" + data.last + 
+                                    "</td><td>" + data.low + 
+                                    "</td><td>" + data.high + "</td></tr>");
+                            });
+                        };
+                    });
+                </script>
             </div>
         </div>
     </div>     
@@ -182,6 +192,9 @@
             <div class="col-md-6">
                 <h3>Tabular Metric</h3>
                 <p>Hover over the metric names in the table to the right to see a description of the metrics.</p>
+                
+                <a href="#"><span class="glyphicon glyphicon-eye-open tip" data-toggle="tooltip" data-placement="left" title="Add sparkline to dashboard"></span></a>
+                <a href="#"><span class="glyphicon glyphicon-plus tip" data-toggle="tooltip" data-placement="left" title="Add metric to plot above"></span></a>
             </div>
             <div class="col-md-6">
                 <table class="table" id="sparklines-table-lastyear">

@@ -121,12 +121,13 @@ ossmeter.navigation.home=Home
 ossmeter.navigation.admin=Admin
 ossmeter.navigation.signup=Sign up
 ossmeter.navigation.projects=Projects
+ossmeter.navigation.compare=Compare
 
 # ossmeter: Handler
 ossmeter.handler.loginfirst=You need to log in first, to view ''{0}''
 
 # ossmeter: Profile
-ossmeter.profile.title=User profile
+ossmeter.profile.title=My Account
 ossmeter.profile.mail=Your name is {0} and your email address is {1}!
 ossmeter.profile.unverified=unverified - click to verify
 ossmeter.profile.verified=verified

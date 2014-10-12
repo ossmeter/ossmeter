@@ -36,6 +36,20 @@ public class Application extends Controller {
 		return ok(index.render());
 	}
 
+	public static Result compare() {
+		return ok(compare.render()); //FIXME
+	}
+
+	public static Result jsRoutes() {
+		return ok(
+				Routes.javascriptRouter("jsRoutes",
+						controllers.routes.javascript.Signup.forgotPassword(),
+						controllers.routes.javascript.Account.watchSpark()
+						)
+				)
+				.as("text/javascript");
+	}
+
 	public static User getLocalUser(final Session session) {
 		final AuthUser currentAuthUser = PlayAuthenticate.getUser(session);
 		final User localUser = MongoAuthenticator.findUser(currentAuthUser);
@@ -63,7 +77,7 @@ public class Application extends Controller {
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result profileEventGroup() {
 		final User localUser = getLocalUser(session());
-		return ok();//setupeventgroup.render(localUser, form(EventGroup.class)));
+		return ok(setupeventgroup.render(localUser, form(EventGroup.class)));
 	}
 
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
@@ -92,13 +106,6 @@ public class Application extends Controller {
 
 	public static Result signup() {
 		return ok(signup.render(MyUsernamePasswordAuthProvider.SIGNUP_FORM));
-	}
-
-	public static Result jsRoutes() {
-		return ok(
-				Routes.javascriptRouter("jsRoutes",
-						controllers.routes.javascript.Signup.forgotPassword()))
-				.as("text/javascript");
 	}
 
 	public static Result doSignup() {

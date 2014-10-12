@@ -1,0 +1,302 @@
+
+@main(Messages("ossmeter.index.title")) {
+<section>
+    <div class="container box">
+        <h1>Compare</h1>
+        <p>Filler text</p>
+	</div>
+</section>
+<section>
+    <div class="container box">
+	    <h2>Select Projects</h2>
+        <p>Choose the projects you wish to compare your selected projects on. Start typing into the text boxes to search for a project.</p>
+        <div class="row"  data-bind="foreach: projects">
+        	<div class="col-md-4">
+			    <div class="input-group" data-bind="css: css()">
+				    <input type="text" class="form-control" id="project0" placeholder="Search..." data-bind="value: name">
+				    <div class="input-group-addon" data-bind="click: $parent.removeProject">
+				    	<span class="glyphicon glyphicon-remove"></span>
+				    </div>
+			    </div>
+		    </div>
+	    </div>
+	    <div class="row">
+	    	<div class="col-md-12 center">
+			    <button class="btn btn-default" data-bind="click: addProject, enable: projects().length < 3"><span class="glyphicon glyphicon-plus"></span> Add Project</button>
+		    </div>
+	    </div>
+    </div>
+</section>
+
+<section>
+    <div class="container box">
+        <h2>Select Metrics</h2>
+        <p>Choose the metrics you wish to compare your selected projects on.</p>
+        <form class="form-horizontal" role="form">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="marginless">Source Code</h3>
+                        </div>
+                         <div class="form-group panel-body metric-list" data-bind="foreach: metrics">
+                            <div class="checkbox">
+                                  <input type="checkbox" value="id" data-bind="checked: selected">
+                                  <span data-bind="text: name"></span>
+
+                              </div>
+                          </div>
+                      </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="marginless">Communication Channels</h3>
+                        </div>
+                         <div class="form-group panel-body metric-list">
+                            <div class="checkbox">
+                                <label>
+                                  <input type="checkbox"> Lines of code
+                                </label>
+                              </div>
+                              <div class="checkbox">
+                                <label>
+                                  <input type="checkbox"> Lines of code
+                                </label>
+                              </div>
+                              <div class="checkbox">
+                                <label>
+                                  <input type="checkbox"> Lines of code
+                                </label>
+                              </div>
+                          </div>
+                      </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="marginless">Bug Tracking</h3>
+                        </div>
+                         <div class="form-group panel-body metric-list">
+                            <div class="checkbox">
+                                <label>
+                                  <input type="checkbox"> Lines of code
+                                </label>
+                              </div>
+                              <div class="checkbox">
+                                <label>
+                                  <input type="checkbox"> Lines of code
+                                </label>
+                              </div>
+                              <div class="checkbox">
+                                <label>
+                                  <input type="checkbox"> Lines of code
+                                </label>
+                              </div>
+                          </div>
+                      </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+<section>
+    <div class="container box">
+	    <div class="row">
+		    <div class="col-md-12">
+		    	<a href="#" class="btn btn-primary form-control">Compare</a>
+		    </div>
+	    </div>
+    </div>
+</section>
+
+<section>
+    <div class="container box">
+        <div class="row" id="parcoods-plot"></div>
+        <div class="row" id="parcoods-table"></div>
+    </div>
+</section>
+
+<section>
+    <div class="container box">
+        <div class="row">
+            <div class="col-md-10">
+                <div id="metricplot-plot">
+                    
+                </div>    
+            </div>
+            <div class="col-md-2">
+                <div id="metricplot-metrics">
+                    <h3>Metrics</h3>
+                    <div class="radio" data-bind="foreach: selectedMetrics">
+                      
+                        <input type="radio" name="metricplot-metrics-radios" id="metricplot-metrics-radios" data-bind="id: id, value: name" checked>
+                        <span data-bind="text: name">
+                    </div>
+                </div>    
+            </div>
+        </div>
+        <div class="row" id="parcoods-table"></div>
+    </div>
+</section>
+
+<section>
+    <div class="container box">
+        <table class="table">
+        	<thead>
+        		<th></th>
+        		<th>Metric</th>
+        		<!-- ko foreach: validProjects --> 
+        		<th data-bind="text: name"></th>
+        		<!-- /ko -->
+        	</thead>
+        	<tbody data-bind="foreach: metrics">
+        		<tr>
+        			<td>
+        				<a href="#"><span class="glyphicon glyphicon-eye-open tip" data-toggle="tooltip" data-placement="left" title="Add sparkline to dashboard"></span></a>
+						<a href="#"><span class="glyphicon glyphicon-plus tip" data-toggle="tooltip" data-placement="left" title="Add metric to plot above"></span></a>
+					</td>
+					<td data-bind="text: name"></td>
+					<!-- ko foreach: $parent.validProjects --> 
+	        		<td>
+	        			<span data-bind="sparkplot: { project: $data, metric: $parent }"></span>
+	        		</td>
+	        		<!-- /ko -->
+        		</tr>
+        		
+        	</tbody>
+        </table>
+    </div>
+</section>
+ 
+<script type="text/javascript" src="@routes.Assets.at("js/ossplots2.js")"></script>
+<script type="text/javascript" src="@routes.Assets.at("js/generators.js")"></script>
+<script type="text/javascript" src="@routes.Assets.at("js/d3.v3.min.js")"></script>
+
+<script type="text/javascript">// DEBUG ONLY
+$(function() {
+	var vis = {
+            "name" : "avgnumberofarticlesrequestsreplies",
+            "type" : "LineChart",
+            "datatable" : {
+                "cols" : [  { "name" : "Date", "field" : "$__date" },
+                    { "name" : "Articles", "field" : "$averageArticles" },
+                    { "name" : "Requests", "field" : "$averageRequests" },
+                    { "name" : "Replies", "field" : "$averageReplies" } ]
+            },
+            "x" : "Date",
+            "y" : ["Articles", "Requests", "Replies"],
+            "timeSeries" : true
+        };
+    vis.datatable = generateTestData(vis, 500);
+	var chart = new ossplots.Chart("#metricplot-plot", vis, 400);
+    chart.draw();
+});
+// END DEBUG ONLY
+</script> 
+
+<script type="text/javascript">
+$(function(){
+
+	ko.bindingHandlers.sparkplot = {
+		init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+			$(element).html("Loading...");	
+		},
+		update: function(element, valueAccessor, allBindingsAccessor) {
+	        // Extract info
+	        var value = valueAccessor();
+	        var project = value.project;
+	        var metric = value.metric;
+
+	        // TODO keep the sparks in memory (in the view model)
+	        // then check the VM before invoking the API
+	        // Grab all sparks in single query on "Compare" push
+	        $.getJSON("http://localhost:8182/projects/p/" + project.id() +"/s/" + metric.id, function (data) {
+	        	$(element).html('<img src="http://localhost:8182'+data.spark+'" class="spark" /> ' + abbreviateNumber(data.last));
+	        });
+		}
+	};
+
+	var Project = function(id, name, valid) {
+		this.id = ko.observable(id);
+		this.name = ko.observable(name);
+		this.valid = ko.observable(valid);
+		
+		this.css = function() {
+			return this.valid() ? "has-success" : "";
+		}
+	}
+
+	var Metric = function(id, name, selected) {
+		this.id = id;
+		this.name = name;
+		this.selected = ko.observable(selected);
+	}
+
+	var ComparisonModel = function() {
+		"use strict";
+		var self = this;
+		self.metrics = ko.observableArray();
+		self.projects = ko.observableArray();
+
+		self.selectedMetrics = ko.computed(function() {
+			var sel = [];
+			ko.utils.arrayForEach(self.metrics(), function(m){
+				if (m.selected()) {
+					sel.push(m);
+				}
+			});
+			return sel;
+		});
+
+		self.validProjects = ko.computed(function() {
+			var val = [];
+			ko.utils.arrayForEach(self.projects(), function(p) {
+				if (p.valid()) {
+					val.push(p);
+				}
+			});
+			return val;
+		});
+
+		self.removeProject = function(project) {
+			self.projects.remove(project);
+		}.bind(self);
+
+		self.addProject = function() {
+			self.projects.push(new Project("", "", false));
+		}.bind(self);
+
+	}
+
+	vm = new ComparisonModel();
+
+	$.getJSON("http://localhost:8182/metrics", function (data) {
+		for (d in data) {
+			var m = new Metric(data[d].name, data[d].name, false); //FIXME ID/NAME
+			vm.metrics.push(m);
+		}
+	});
+	ko.applyBindings(vm);
+
+	// Load projects from cookies
+	var comp = JSON.parse($.cookie("compare"));
+	if (comp) {
+		for (c in comp) {
+			// Bind
+			var p = new Project(comp[c].id, comp[c].name, true);
+			vm.projects.push(p);
+
+			// And populate the text boxes
+			$("#project"+c).val(comp[c].name);
+		}
+	}
+
+});
+
+
+</script>
+<script type="text/javascript" src="@routes.Assets.at("js/knockout-2.3.0.js")"></script>
+
+}

@@ -6,17 +6,17 @@ import com.googlecode.pongo.runtime.*;
 import com.googlecode.pongo.runtime.querying.*;
 
 
-public class PlotGridEntry extends MetricGridEntry {
+public class Message extends GridEntry {
 	
 	
 	
-	public PlotGridEntry() { 
+	public Message() { 
 		super();
-		super.setSuperTypes("model.MetricGridEntry","model.GridEntry");
-		COL.setOwningType("model.PlotGridEntry");
-		ROW.setOwningType("model.PlotGridEntry");
-		SIZEX.setOwningType("model.PlotGridEntry");
-		SIZEY.setOwningType("model.PlotGridEntry");
+		super.setSuperTypes("model.GridEntry");
+		COL.setOwningType("model.Message");
+		ROW.setOwningType("model.Message");
+		SIZEX.setOwningType("model.Message");
+		SIZEY.setOwningType("model.Message");
 	}
 	
 	public static NumericalQueryProducer COL = new NumericalQueryProducer("col");

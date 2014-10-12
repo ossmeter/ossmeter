@@ -23,13 +23,15 @@ enum TokenType {
 @customize
 class User {
 	@searchable
-	attr String identifier;
-	attr String password;
-	attr String name;	
-	@searchable
 	attr String email;
+	
+	attr String name;
+	attr String company;
+	attr String country;
+
 	attr boolean emailValidated;
 	attr Date lastLogin;
+	attr Date joinDate;	
 
 	// Deadbolt classes
 	val Role[*] roles;
@@ -40,24 +42,19 @@ class User {
 	val Project[*] watching;
 	val Project[*] owns;
 
-	val Notification[*] notifications;
-	val Event[*] events;
+	//val Notification[*] notifications;
+	//val Event[*] events;
 	val GridEntry[*] grid;
 }
 
+@customize
 class Role {
 	attr String name;
 }
 
+@customize
 class Permission {
 	attr String value;
-}
-
-class Notification {
-	val Project project;
-	val Metric metric;
-	attr double threshold;
-	attr boolean aboveThreshold;
 }
 
 class Project {
@@ -75,8 +72,6 @@ class LinkedAccount {
 	attr String providerKey;
 }
 
-class Event {}
-
 abstract class GridEntry {
 	attr int col;
 	attr int row;
@@ -84,9 +79,32 @@ abstract class GridEntry {
 	attr int sizeY;
 }
 
+class EventGroup extends GridEntry {
+	attr String name;
+	val Event[*] events;
+}
+
+@customize
+class Event {
+	attr String name;
+	attr Date date;
+}
+
+
+class Message extends GridEntry {
+	
+}
+
 abstract class MetricGridEntry extends GridEntry {
-	attr String projectId;
-	attr String metricId;
+	val Project project;
+	val Metric metric;
+	//TODO: sohuld have a query here? e.g. for date. Just store querystring
+	//attr String queryString;
+}
+
+class Notification extends MetricGridEntry {
+	attr double threshold;
+	attr boolean aboveThreshold;
 }
 
 class PlotGridEntry extends MetricGridEntry { }

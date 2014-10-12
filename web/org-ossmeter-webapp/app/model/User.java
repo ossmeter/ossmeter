@@ -10,14 +10,12 @@ import be.objectify.deadbolt.core.models.Subject;
 
 public class User extends Pongo implements Subject {
 // protected region custom-imports end
-
+	
 	protected List<Role> roles = null;
 	protected List<Permission> permissions = null;
 	protected List<LinkedAccount> linkedAccounts = null;
 	protected List<Project> watching = null;
 	protected List<Project> owns = null;
-	protected List<Notification> notifications = null;
-	protected List<Event> events = null;
 	protected List<GridEntry> grid = null;
 	
 	// protected region custom-fields-and-methods on begin
@@ -31,6 +29,22 @@ public class User extends Pongo implements Subject {
 		notifyChanged();
 		return this;
 	}
+	public Date getJoinDate() {
+		Object d = dbObject.get("lastLogin");
+		if (d == null) return null;
+		else return (Date)d;
+	}
+	
+	public User setJoinDate(Date joinDate) {
+		dbObject.put("joinDate", joinDate);
+		notifyChanged();
+		return this;
+	}
+
+	@Override
+	public String getIdentifier() {
+		return getEmail();
+	}
 	// protected region custom-fields-and-methods end
 	
 	public User() { 
@@ -40,40 +54,31 @@ public class User extends Pongo implements Subject {
 		dbObject.put("linkedAccounts", new BasicDBList());
 		dbObject.put("watching", new BasicDBList());
 		dbObject.put("owns", new BasicDBList());
-		dbObject.put("notifications", new BasicDBList());
-		dbObject.put("events", new BasicDBList());
 		dbObject.put("grid", new BasicDBList());
-		IDENTIFIER.setOwningType("model.User");
-		PASSWORD.setOwningType("model.User");
-		NAME.setOwningType("model.User");
 		EMAIL.setOwningType("model.User");
+		NAME.setOwningType("model.User");
+		COMPANY.setOwningType("model.User");
+		COUNTRY.setOwningType("model.User");
 		EMAILVALIDATED.setOwningType("model.User");
 		LASTLOGIN.setOwningType("model.User");
+		JOINDATE.setOwningType("model.User");
 	}
 	
-	public static StringQueryProducer IDENTIFIER = new StringQueryProducer("identifier"); 
-	public static StringQueryProducer PASSWORD = new StringQueryProducer("password"); 
-	public static StringQueryProducer NAME = new StringQueryProducer("name"); 
 	public static StringQueryProducer EMAIL = new StringQueryProducer("email"); 
+	public static StringQueryProducer NAME = new StringQueryProducer("name"); 
+	public static StringQueryProducer COMPANY = new StringQueryProducer("company"); 
+	public static StringQueryProducer COUNTRY = new StringQueryProducer("country"); 
 	public static StringQueryProducer EMAILVALIDATED = new StringQueryProducer("emailValidated"); 
 	public static StringQueryProducer LASTLOGIN = new StringQueryProducer("lastLogin"); 
+	public static StringQueryProducer JOINDATE = new StringQueryProducer("joinDate"); 
 	
 	
-	public String getIdentifier() {
-		return parseString(dbObject.get("identifier")+"", "");
+	public String getEmail() {
+		return parseString(dbObject.get("email")+"", "");
 	}
 	
-	public User setIdentifier(String identifier) {
-		dbObject.put("identifier", identifier);
-		notifyChanged();
-		return this;
-	}
-	public String getPassword() {
-		return parseString(dbObject.get("password")+"", "");
-	}
-	
-	public User setPassword(String password) {
-		dbObject.put("password", password);
+	public User setEmail(String email) {
+		dbObject.put("email", email);
 		notifyChanged();
 		return this;
 	}
@@ -86,12 +91,21 @@ public class User extends Pongo implements Subject {
 		notifyChanged();
 		return this;
 	}
-	public String getEmail() {
-		return parseString(dbObject.get("email")+"", "");
+	public String getCompany() {
+		return parseString(dbObject.get("company")+"", "");
 	}
 	
-	public User setEmail(String email) {
-		dbObject.put("email", email);
+	public User setCompany(String company) {
+		dbObject.put("company", company);
+		notifyChanged();
+		return this;
+	}
+	public String getCountry() {
+		return parseString(dbObject.get("country")+"", "");
+	}
+	
+	public User setCountry(String country) {
+		dbObject.put("country", country);
 		notifyChanged();
 		return this;
 	}
@@ -134,18 +148,6 @@ public class User extends Pongo implements Subject {
 			owns = new PongoList<Project>(this, "owns", true);
 		}
 		return owns;
-	}
-	public List<Notification> getNotifications() {
-		if (notifications == null) {
-			notifications = new PongoList<Notification>(this, "notifications", true);
-		}
-		return notifications;
-	}
-	public List<Event> getEvents() {
-		if (events == null) {
-			events = new PongoList<Event>(this, "events", true);
-		}
-		return events;
 	}
 	public List<GridEntry> getGrid() {
 		if (grid == null) {

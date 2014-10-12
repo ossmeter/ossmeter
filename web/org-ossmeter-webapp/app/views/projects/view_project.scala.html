@@ -1,5 +1,8 @@
 @(project: org.ossmeter.repository.model.Project)
 
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
 @import org.ossmeter.repository.model._
 @import org.ossmeter.repository.model.bts.bugzilla._
 @import org.ossmeter.repository.model.cc.forum._
@@ -8,7 +11,23 @@
 @import org.ossmeter.repository.model.vcs.git._
 @import org.ossmeter.repository.model.eclipse._
 
+@import model.Notification
+@import model.SparkGridEntry
+
 @main(Messages("ossmeter.index.title")) {
+<script type="text/javascript">
+$(function() {
+@subjectPresentOr() {
+@defining(Application.getLocalUser(session())) { user =>
+app.loggedIn = true;
+@for(g <- user.getGrid()) {@g match {
+case n : Notification => {@if(n.getProject().getId()) {app.grid.notifications.push("@n.getMetric().getId()");
+}}
+case s : SparkGridEntry => {@if(s.getProject().getId()) {app.grid.sparks.push("@s.getMetric().getId()");
+}}case other => {}}}}}{ }
+});
+</script>
+
 <section class="foo">
     <div class="container box">
     	<div class="project-detail" data-project="@project.getName()">
@@ -28,6 +47,7 @@
                             })
                         }
     		            <li><a href="@project.getHomePage()">Project Website</a></li>
+    		            <li><a href="javascript:addProjectToComparison('@project.getShortName()','@project.getName()')">Add to comparison</a></li>
     		        </ol>
     	        </div>
     	        <div class="col-md-6" style="text-align:right">
@@ -108,7 +128,7 @@
 
                                         if (r == 0) { // Set up the header
                                             $("#sparklines-table-sourcecode > thead:last").append(
-                                                "<tr><th>metric</th>" +
+                                                "<tr><th></th><th>metric</th>" +
                                                 "<th>" + data.firstDate + "</th>" +
                                                 "<th>" + data.months + " months</th>" +
                                                 "<th>" + data.lastDate + "</th>" +
@@ -116,18 +136,31 @@
                                                 "<th>high</th></tr>");
                                         }
 
-                                        console.log(data);
+                                        var a = ""; 
+                                        if ($.inArray(data.name, app.grid.sparks) != -1){
+                                        	a = "active";
+                                        }
+                                        var toAppend = "<tr><td>";
 
-                                        $("#sparklines-table-sourcecode > tbody:last").append("<tr><td>" + data.name + 
+                                        if (app.loggedIn) {
+                                        	var id = "watch-spark-@project.getShortName()-" + data.name;
+	                                        toAppend = toAppend + '<a href="javascript:toggleSpark(\'#'+id+'\',\'@project.getShortName()\',\'@project.getName()\',\''+ data.name + '\', \''+data.name+'\')"><span id="' + id + '" class="glyphicon glyphicon-eye-open spark-watch tip ' + a + '" data-toggle="tooltip" data-placement="left" title="Watch/unwatch on dashboard"></span></a>';
+	                                    }
+                                       toAppend = toAppend + "</td>" +
+                                            "<td>" + data.name + 
                                             "</td><td>" + Math.round(data.first * 100) / 100  +
                                             "</td><td><img class=\"spark\" src=\"http://localhost:8182" + data.spark + "\" />" +  
                                             "</td><td>" + Math.round(data.last * 100) / 100  + 
                                             "</td><td>" + Math.round(data.low * 100) / 100 + 
-                                            "</td><td>" + Math.round(data.high * 100) / 100 + "</td></tr>");
+                                            "</td><td>" + Math.round(data.high * 100) / 100 + "</td></tr>";
+
+                                        $("#sparklines-table-sourcecode > tbody:last").append(toAppend);
                                     }
+                                    $(".tip").tooltip(app.tooltipOptions);
                                 });
                             // };
                         });
+
                     </script>
         		</div>
                 <div class="tab-pane fade" id="details-sourcecode">
@@ -156,7 +189,7 @@
                     }
                 </div>
 			</div>
-            <button type="button" class="btn btn-default form-control">View in depth source code metrics</button>
+            <a class="btn btn-default form-control" href="@routes.Projects.viewCode(project.getShortName())">View in depth source code metrics</a>
         </div>  
     </div>     
 </section>
@@ -274,7 +307,7 @@
                         }
                     </div>
     			</div>
-                <button type="button" class="btn btn-default form-control">View in depth communication channel metrics</button>   
+                <a class="btn btn-default form-control" href="@routes.Projects.viewComms(project.getShortName())">View in depth communication channel metrics</a>
             </div>     
         </div>
     </div>
@@ -340,46 +373,9 @@
                         }
                     </div>
     			</div>
-                <button type="button" class="btn btn-default form-control">View in depth bug tracker metrics</button>   
+                <a class="btn btn-default form-control" href="@routes.Projects.viewBts(project.getShortName())">View in depth bug tracker metrics</a>
             </div>        
         </div>
     </div>
 </section>
-
-@*  	Need to assign projects to the users who created them
-	    <a class="btn btn-success" href="@routes.Projects.edit(project.id)">Edit</a>
-		<a class="btn btn-danger" href="@routes.Projects.delete(project.id)">Delete</a>
-*@	    
-
-<script type="text/javascript">
-    function drawSparklineTable(table, metriclist) {
-         $.get("http://localhost:8182/projects/p/@project.getShortName()/s/"+metriclist.join("+"), function (result) {
-            for (var r in result) {
-                var data = result[r];
-
-                if (r == 0) { // Set up the header
-                    $(table + " > thead:last").append(
-                        "<tr><th>metric</th>" +
-                        "<th>" + data.firstDate + "</th>" +
-                        "<th>" + data.months + " months</th>" +
-                        "<th>" + data.lastDate + "</th>" +
-                        "<th>low</th>" +
-                        "<th>high</th></tr>");
-                }
-
-                $(table + " > tbody:last").append("<tr><td title=\"" + data.description + "\">" + data.name + 
-                    "</td><td>" + Math.round(data.first * 100) / 100  +
-                    "</td><td><img class=\"spark\" src=\"http://localhost:8182" + data.spark + "\" />" +  
-                    "</td><td>" + Math.round(data.last * 100) / 100  + 
-                    "</td><td>" + Math.round(data.low * 100) / 100 + 
-                    "</td><td>" + Math.round(data.high * 100) / 100 + "</td></tr>");
-            }
-        });
-    }
-
-</script>
-
-	</div>
-</div>
-
 }

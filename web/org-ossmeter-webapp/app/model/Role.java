@@ -5,10 +5,12 @@ import java.util.*;
 import com.googlecode.pongo.runtime.*;
 import com.googlecode.pongo.runtime.querying.*;
 
-
+// protected region custom-imports on begin
 public class Role extends Pongo implements be.objectify.deadbolt.core.models.Role {
+// protected region custom-imports end	
 	
-	
+	// protected region custom-fields-and-methods on begin
+	// protected region custom-fields-and-methods end
 	
 	public Role() { 
 		super();

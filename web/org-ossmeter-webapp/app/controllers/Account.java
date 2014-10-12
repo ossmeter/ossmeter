@@ -26,6 +26,25 @@ import auth.MongoAuthenticator;
 
 public class Account extends Controller {
 
+	@SubjectPresent
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
+	public static Result watchSpark(String projectid, String metricid, String projectName, String metricName) {
+		System.out.println();
+
+		User user = Application.getLocalUser(session());
+
+		if (user == null) {
+			// Not logged in
+			return ok("Sorry, you need to be logged in to do that.");
+		}
+
+		MongoAuthenticator.toggleSparkGrid(user, projectid, projectName, metricid, metricName);
+
+		System.out.println("Looks like it worked!" + request().getQueryString("projectid") + " " + request().getQueryString("metricid"));
+		
+		return ok("");
+	}
+
 	public static class Accept {
 
 		@Required
@@ -221,46 +240,46 @@ public class Account extends Controller {
 	@SubjectPresent
 	public static Result createNotification() {
 		// this is the currently logged in user
-		final User user = Application.getLocalUser(session());
+		// // final User user = Application.getLocalUser(session());
 
-		final Form<Notification> form = form(Notification.class).bindFromRequest();
+		// final Form<Notification> form = form(Notification.class).bindFromRequest();
 
-		if (form.hasErrors()) {
-			flash("error", Messages.get("ossmeter.profile.notifications.creation.error"));
-			return badRequest(views.html.setupnotification.render(user, form));
-		}
+		// if (form.hasErrors()) {
+		// 	flash("error", Messages.get("ossmeter.profile.notifications.creation.error"));
+		// 	return badRequest(views.html.setupnotification.render(user, form));
+		// }
 
-		Notification noti = form.get();
-		user.getNotifications().add(noti);
-		// user.save(); //TODODODODODOD
+		// Notification noti = form.get();
+		// user.getNotifications().add(noti);
+		// // user.save(); //TODODODODODOD
 
-		flash(Application.FLASH_MESSAGE_KEY, Messages.get("ossmeter.profile.notifications.creation.success"));
+		// flash(Application.FLASH_MESSAGE_KEY, Messages.get("ossmeter.profile.notifications.creation.success"));
 		return redirect(routes.Application.profile());
 	}
 
 	@SubjectPresent
 	public static Result createEventGroup() {
 		// this is the currently logged in user
-		// final User user = Application.getLocalUser(session());
+		final User user = Application.getLocalUser(session());
 
-		// final Form<EventGroup> form = form(EventGroup.class).bindFromRequest();
+		final Form<EventGroup> form = form(EventGroup.class).bindFromRequest();
 
-		// if (form.hasErrors()) {
-		// 	flash("error", Messages.get("ossmeter.profile.eventgroup.creation.error"));
-		// 	return badRequest(views.html.setupeventgroup.render(user, form));
-		// }
+		if (form.hasErrors()) {
+			flash("error", Messages.get("ossmeter.profile.eventgroup.creation.error"));
+			return badRequest(views.html.setupeventgroup.render(user, form));
+		}
 
-		// EventGroup group = form.get();
-		// System.err.println(group);
-		// System.err.println(group.events);
-		// System.err.println(group.events.size());
-		// group.user = user;
-		// user.eventGroups.add(group);
-		// user.save();
+		EventGroup group = form.get();
+		group.setRow(1);
+		group.setCol(1);
+		group.setSizeX(1);
+		group.setSizeY(2);
+		
+		MongoAuthenticator.insertNewGrid(user, group);
 
-		// flash(Application.FLASH_MESSAGE_KEY, Messages.get("ossmeter.profile.eventgroup.creation.success"));
+		flash(Application.FLASH_MESSAGE_KEY, Messages.get("ossmeter.profile.eventgroup.creation.success"));
 
-		flash(Application.FLASH_MESSAGE_KEY, "Unimplemented!");
+		// flash(Application.FLASH_MESSAGE_KEY, "Unimplemented!");
 		return redirect(routes.Application.profile());
 	}
 

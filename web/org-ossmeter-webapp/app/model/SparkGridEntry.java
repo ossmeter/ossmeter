@@ -17,8 +17,6 @@ public class SparkGridEntry extends MetricGridEntry {
 		ROW.setOwningType("model.SparkGridEntry");
 		SIZEX.setOwningType("model.SparkGridEntry");
 		SIZEY.setOwningType("model.SparkGridEntry");
-		PROJECTID.setOwningType("model.SparkGridEntry");
-		METRICID.setOwningType("model.SparkGridEntry");
 		LASTVALUE.setOwningType("model.SparkGridEntry");
 	}
 	
@@ -26,8 +24,6 @@ public class SparkGridEntry extends MetricGridEntry {
 	public static NumericalQueryProducer ROW = new NumericalQueryProducer("row");
 	public static NumericalQueryProducer SIZEX = new NumericalQueryProducer("sizeX");
 	public static NumericalQueryProducer SIZEY = new NumericalQueryProducer("sizeY");
-	public static StringQueryProducer PROJECTID = new StringQueryProducer("projectId"); 
-	public static StringQueryProducer METRICID = new StringQueryProducer("metricId"); 
 	public static NumericalQueryProducer LASTVALUE = new NumericalQueryProducer("lastValue");
 	
 	

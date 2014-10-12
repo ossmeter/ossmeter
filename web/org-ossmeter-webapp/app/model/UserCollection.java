@@ -8,7 +8,6 @@ public class UserCollection extends PongoCollection<User> {
 	
 	public UserCollection(DBCollection dbCollection) {
 		super(dbCollection);
-		createIndex("identifier");
 		createIndex("email");
 	}
 	
@@ -16,22 +15,6 @@ public class UserCollection extends PongoCollection<User> {
 		return new IteratorIterable<User>(new PongoCursorIterator<User>(this, dbCollection.find(new BasicDBObject("_id", id))));
 	}
 	
-	public Iterable<User> findByIdentifier(String q) {
-		return new IteratorIterable<User>(new PongoCursorIterator<User>(this, dbCollection.find(new BasicDBObject("identifier", q + ""))));
-	}
-	
-	public User findOneByIdentifier(String q) {
-		User user = (User) PongoFactory.getInstance().createPongo(dbCollection.findOne(new BasicDBObject("identifier", q + "")));
-		if (user != null) {
-			user.setPongoCollection(this);
-		}
-		return user;
-	}
-	
-
-	public long countByIdentifier(String q) {
-		return dbCollection.count(new BasicDBObject("identifier", q + ""));
-	}
 	public Iterable<User> findByEmail(String q) {
 		return new IteratorIterable<User>(new PongoCursorIterator<User>(this, dbCollection.find(new BasicDBObject("email", q + ""))));
 	}

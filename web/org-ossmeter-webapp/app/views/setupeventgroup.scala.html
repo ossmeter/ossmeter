@@ -5,6 +5,9 @@
 
 @main(Messages("ossmeter.profile.title"),"profile") {
 
+<section>
+<div class="container box">
+
     <h1>@Messages("ossmeter.profile.title")</h1>
 
     @helper.form(routes.Account.createEventGroup, 'class->"form-project") {
@@ -15,20 +18,6 @@
               <label class="form-label">Group name: </label>
               <input class="form-control" type="text" name="name" placeholder="Group name" value="@eForm("name").value">
             </div>
-
-            @helper.repeat(eForm("events"), min = 1) { eventsField =>
-
-                @helper.inputText(eForm("eventsField.name"))
-                <label class="form-label">Date: </label><input class="form-control" type="date" name="date" value="@eForm("eventsField.date").value">
-
-            }
-
-            <!-- Have a form underneath that allows you to add a single item and just returns back to the same page. Then have a "Finish" button which returns to the profile. I.e. one at a time adding. Stop trying to be clever. -->
-
-            <div class="form-group">
-              
-
-            </div>
      </fieldset>
         
      <div class="actions">
@@ -36,5 +25,7 @@
          <a href="@routes.Application.profile" class="btn btn-danger">Cancel</a>
      </div>
  }
+ </div>
+ </section>
     
 }

@@ -84,6 +84,11 @@ h1 {
 	margin-left: 0px;
 }
 
+.nopadding {
+   padding: 0 ;
+   margin: 0 ;
+}
+
 .span4 {
 	width: 360px;
 }
@@ -144,7 +149,8 @@ ol.projectbreadcrumb {
 }
 
 img.spark {
-    width : 150px;
+    width:100%;
+    max-width : 150px;
 }
 
 footer {
@@ -162,7 +168,70 @@ th {
     font-weight: normal;
 }
 
+.gridster {
+    position:relative;
+}
+
 .gridster ul {
     list-style:none;
     margin:0;
+}
+
+li.gridentry {
+    box-shadow: 0px 1px 1px #888888;
+    padding:5px;
+    overflow:hidden;
+}
+li.gridentry h3 {
+    margin:0;
+}
+
+.spark-table {
+    font-size:0.8em;
+    margin-bottom:0;
+}
+.spark-table>thead>tr>th, .spark-table>tbody>tr>td{
+    margin:0;
+    padding: 0;
+}
+
+.glyphicon.dash {
+    font-size:1.2em;
+    color:#023E73;
+}
+
+.glyphicon.dash {
+    font-size:1.2em;
+    color:#023E73;
+}
+
+.glyphicon.dash.edit  {
+    color : #aaa;
+}
+
+.glyphicon.dash.edit:hover  {
+    color : #ff9400;
+}
+
+.no-overflow {
+    overflow:hidden;
+    white-space : nowrap;
+    text-overflow: ellipsis;
+}
+
+span.spark-watch {
+    color : #aaa;
+}
+span.spark-watch.active {
+    color : #000;
+}
+.comparison {
+    opacity: 0.9;
+    border-top:1px solid #ddd;
+}
+
+.panel-body.metric-list {
+    height:200px;
+    overflow:scroll;
+    margin-left: 0;
 }

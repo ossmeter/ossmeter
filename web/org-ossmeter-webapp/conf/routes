@@ -2,10 +2,12 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
+POST    /profile/spark                   	controllers.Account.watchSpark(projectid:String, metricid:String, projectName:String, metricName:String)
+
 # Home page
 GET     /                           controllers.Application.index
 GET     /admin                 		controllers.Application.admin
-GET     /assets/javascript/routes.js    controllers.Application.jsRoutes
+GET     /assets/javascripts/routes    controllers.Application.jsRoutes
 
 GET     /profile                    controllers.Application.profile
 GET		/profile/notification		controllers.Application.profileNotification
@@ -73,6 +75,9 @@ GET		/projects/:id/bts			controllers.Projects.viewBts(id:String)
 # Delete
 # GET    /projects/:id/delete        	controllers.Projects.delete_confirmation(id: Long)
 # POST   /projects/:id/delete        	controllers.Projects.delete(id: Long)
+
+## Compare
+GET 	/compare 					controllers.Application.compare()
 
 ## Users
 # List
