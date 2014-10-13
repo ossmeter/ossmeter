@@ -4,6 +4,7 @@ import org.ossmeter.platform.Platform;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.eclipse.importer.EclipseProjectImporter;
 import org.ossmeter.repository.model.github.importer.GitHubImporter;
+import org.ossmeter.repository.model.importer.exception.WrongUrlException;
 
 public class ProjectImporter {
 
@@ -49,7 +50,12 @@ public class ProjectImporter {
 			String pName = ps[1];
 			
 			GitHubImporter importer = new GitHubImporter();//"f280531cd5712b6cbff971b7610155cecc134b02"); //FIXME Temporary token
-			p = importer.importRepository(uName+"/" + pName, Platform.getInstance());
+			try {
+				p = importer.importRepository(uName+"/" + pName, Platform.getInstance());
+			} catch (WrongUrlException e) {
+				e.printStackTrace(); // FIXME better handling
+				return null;
+			}
 		}
 		
 		return p;

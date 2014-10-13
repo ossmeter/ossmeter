@@ -15,7 +15,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.repository.model.eclipse.importer,
  org.ossmeter.repository.model.github.importer,
  org.ossmeter.repository.model.github,
- org.mapdb
+ org.mapdb,
+ org.ossmeter.repository.model.importer.exception;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.platform.client.api
