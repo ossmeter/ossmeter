@@ -22,6 +22,10 @@ class RedmineProject extends Project {
   attr String description;
   attr String created_on;
   attr String updated_on;
+  attr String username;
+  attr String password;
+  attr String token;
+  attr String baseRepo;
   val RedmineWiki wiki;
   val RedmineQueryManager queryManager;
   val RedmineBugIssueTracker[*] issueTracker;
@@ -30,6 +34,7 @@ class RedmineProject extends Project {
 }
 
 class RedmineWiki extends CommunicationChannel {
+
 }
 
 class RedmineQueryManager extends CommunicationChannel {
@@ -56,6 +61,8 @@ class RedmineProjectVersion {
 
 class RedmineUser extends Person {
   attr String login;
+  @serchable
+  attr String ID;
  // val RedmineUserRole[*] roles;
 }
 
@@ -80,7 +87,7 @@ class RedmineIssue {
   attr String priority;
   ref RedmineUser[1] author;
   attr String template;
-  val RedminIssueRelation[*] relations;
+  val RedmineIssueRelation[*] relations;
   attr String start_date;
   attr String update_date;
   attr String due_date;
@@ -92,12 +99,12 @@ class RedmineCategory {
   attr String name;
 }
 
-class RedminIssueRelation {
+class RedmineIssueRelation {
   ref RedmineIssue relatedIssue;
   attr String type;
 }
 
-//enum RedminIssueTemplate {
+//enum RedmineIssueTemplate {
 //  defectReportFromUser = 0;
 //  defectReportFromDeveloper = 1;
 //  reviewRequest = 2;
@@ -107,7 +114,8 @@ class RedmineFeature {
   attr String name;
 }
 
-//enum RedminIssueRelationType {
+
+//enum RedmineIssueRelationType {
 //  related = 0;
 //  duplicates = 1;
 //  duplicated = 2;

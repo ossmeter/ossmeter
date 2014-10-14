@@ -1,6 +1,4 @@
 package org.ossmeter.metricprovider.trans.importer.github;
-import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.List;
 
 import org.ossmeter.platform.IMetricProvider;
@@ -10,19 +8,19 @@ import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.ProjectExecutionInformation;
 import org.ossmeter.repository.model.github.GitHubRepository;
 import org.ossmeter.repository.model.github.importer.GitHubImporter;
+import org.ossmeter.repository.model.importer.exception.WrongUrlException;
 
-import com.googlecode.pongo.runtime.Pongo;
 import com.googlecode.pongo.runtime.PongoDB;
 import com.googlecode.pongo.runtime.PongoFactory;
 import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
 import com.mongodb.DB;
-import com.mongodb.Mongo;
 public class GitHubImporterProvider implements ITransientMetricProvider{
 
 	public final static String IDENTIFIER = 
-			"org.ossmeter.metricprovider.historic.githubimporter";
+			"org.ossmeter.metricprovider.trans.githubimporter";
 	protected OssmeterLogger logger;
 	protected MetricProviderContext context;
 	public GitHubImporterProvider()
@@ -91,15 +89,25 @@ public class GitHubImporterProvider implements ITransientMetricProvider{
 	@Override
 	public void measure(Project project, ProjectDelta delta, PongoDB db) {
 		GitHubRepository ep = null;
+
+		
 		GitHubImporter epi = new GitHubImporter();
-		
-		// JW (7th Oct, 14) is 'ep' needed? ep === project?
-		ep = epi.importRepository( ((GitHubRepository)project).getFull_name(), Platform.getInstance());
-		
-		// JW (7th Oct, 14): Why does it test this? As far as I can tell, the importer
-		// does not update the inErrorState field..?
-		if (ep.getExecutionInformation().getInErrorState() )
+		Platform platform = Platform.getInstance();
+		try{
+			ep = epi.importRepository( ((GitHubRepository)project).getFull_name(), platform);
+			if (ep == null)
+			{
+				if(project.getExecutionInformation() == null)
+					project.setExecutionInformation(new ProjectExecutionInformation());
+				project.getExecutionInformation().setInErrorState(false);
+			}
+		}catch(WrongUrlException e)
+		{
+			if(project.getExecutionInformation() == null)
+				project.setExecutionInformation(new ProjectExecutionInformation());
 			project.getExecutionInformation().setInErrorState(true);
+		}
+		
 	}
 
 //	@Override

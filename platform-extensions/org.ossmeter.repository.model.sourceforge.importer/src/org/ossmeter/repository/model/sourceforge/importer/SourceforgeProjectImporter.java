@@ -14,6 +14,7 @@ import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectCollection;
 import org.ossmeter.repository.model.Role;
 import org.ossmeter.repository.model.cc.wiki.Wiki;
+import org.ossmeter.repository.model.importer.exception.WrongUrlException;
 import org.ossmeter.repository.model.sourceforge.*;
 
 import java.io.BufferedReader;
@@ -43,8 +44,12 @@ import java.nio.charset.Charset;
 
 
 
+
+
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathFactory;
 
 import org.ossmeter.repository.model.vcs.svn.SvnRepository;
@@ -60,6 +65,7 @@ import org.ossmeter.platform.logging.OssmeterLogger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import com.googlecode.pongo.runtime.IteratorIterable;
 import com.googlecode.pongo.runtime.PongoCursorIterator;
@@ -77,13 +83,7 @@ public class SourceforgeProjectImporter {
 		logger = (OssmeterLogger) OssmeterLogger.getLogger("importer.sourceforge");
 		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 	}
-	private boolean isNotNull(JSONObject currentProg, String attribute ) 
-	{
-		if (currentProg.get(attribute)==null)
-			return false;
-		else 
-			return true;		
-	}
+
 	
 	
 	private static String readAll(Reader rd) throws IOException 
@@ -183,7 +183,12 @@ public class SourceforgeProjectImporter {
 				logger.info(el);
 				SourceForgeProject project = null;
 				if ((platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByName(el.split("/")[2])) != null) {
-					project = importProject(el.split("/")[2], platform);
+					try {
+						project = importProject(el.split("/")[2], platform);
+					} catch (WrongUrlException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 				
 			}
@@ -282,7 +287,12 @@ public class SourceforgeProjectImporter {
 				logger.info(el);
 				SourceForgeProject project = null;
 				if ((platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByName(el.split("/")[2])) != null) {
-					project = importProject(el.split("/")[2], platform);
+					try {
+						project = importProject(el.split("/")[2], platform);
+					} catch (WrongUrlException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 				
 			}
@@ -305,7 +315,7 @@ public class SourceforgeProjectImporter {
 		return text;
 	}
 	
-	public SourceForgeProject importProject(String projectId, Platform platform)  {
+	public SourceForgeProject importProject(String projectId, Platform platform) throws WrongUrlException  {
 		
 		Boolean projectToBeUpdated = false;
 		
@@ -331,18 +341,21 @@ public class SourceforgeProjectImporter {
 		if (!projectToBeUpdated)  {
 			project = new SourceForgeProject();
 		}
-		try
-		{
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-	         
-			DocumentBuilder db = dbf.newDocumentBuilder(); 
-			
-			org.w3c.dom.Document doc = db.parse("https://sourceforge.net/rest/p/" + projectId + "?doap");
+		try {
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance(); 
+			DocumentBuilder db = null;
+			org.w3c.dom.Document doc = null;
+			try {
+				db = dbf.newDocumentBuilder();
+				doc = db.parse("https://sourceforge.net/rest/p/" + projectId + "?doap");
+			} catch (ParserConfigurationException e1) {
+				throw new WrongUrlException();
+			} catch (SAXException | IOException e1) {
+				throw new WrongUrlException();
+			}
 			doc.getDocumentElement().normalize();
 			doc.getElementById("creation_date");
-			Element nList = (Element)doc.getElementsByTagName("Project").item(0);
-
-				
+			Element nList = (Element)doc.getElementsByTagName("Project").item(0);	
 			project.setShortName(projectId); 
 			String app = getXMLNodeValue(nList,"name");
 			project.setName(app);
@@ -365,19 +378,29 @@ public class SourceforgeProjectImporter {
 			{
 				app = nList.getElementsByTagName("download-page").item(0).getAttributes().item(0).getNodeValue();
 				project.setDownloadPage(app);
-				InputStream isJSON = new URL("https://sourceforge.net/rest/p/" + projectId).openStream();
-				BufferedReader rdJSON = new BufferedReader(new InputStreamReader(isJSON, Charset.forName("UTF-8")));	
-				String jsonText = readAll(rdJSON);
-				JSONObject currentProg=(JSONObject)JSONValue.parse(jsonText);
-				project.setSupportPage((String)currentProg.get("preferred_support_url"));
-				project.setSummary((String)currentProg.get("summary"));
-				project.setHomePage((String)currentProg.get("external_homepage"));
 			}
 			catch (Exception e)
 			{
-				project.getExecutionInformation().setInErrorState(true);
 				logger.info("Retrive value for key: download-page trhows an exception.");
+			}	
+				
+			InputStream isJSON = null;
+			String jsonText = null;
+			try {
+				isJSON = new URL("https://sourceforge.net/rest/p/" + projectId).openStream();
+				BufferedReader rdJSON = new BufferedReader(new InputStreamReader(isJSON, Charset.forName("UTF-8")));	
+				jsonText = readAll(rdJSON);
+			} catch (MalformedURLException e1) {
+				throw new WrongUrlException();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				throw new WrongUrlException();
 			}
+			JSONObject currentProg=(JSONObject)JSONValue.parse(jsonText);
+			project.setSupportPage((String)currentProg.get("preferred_support_url"));
+			project.setSummary((String)currentProg.get("summary"));
+			project.setHomePage((String)currentProg.get("external_homepage"));
+			
 		
 			// Clear containments to be updated
 			project.getOs().clear();
@@ -440,7 +463,6 @@ public class SourceforgeProjectImporter {
 				}
 				catch ( Exception e)
 				{
-					project.getExecutionInformation().setInErrorState(true);
 					logger.info("Project " + projectId + " unable to import programmin languages");
 				}
 			}
@@ -459,7 +481,6 @@ public class SourceforgeProjectImporter {
 				}
 				catch (Exception e)
 				{
-					project.getExecutionInformation().setInErrorState(true);
 					logger.info("Project " + projectId + " unable to import Audiences");
 				}
 				
@@ -478,7 +499,6 @@ public class SourceforgeProjectImporter {
 		    	}
 		    	catch (Exception e)
 				{
-		    		project.getExecutionInformation().setInErrorState(true);
 					logger.info("Project " + projectId + " unable to import environment");
 				}
 				
@@ -611,8 +631,7 @@ public class SourceforgeProjectImporter {
 		    	}
 		    	catch (Exception e)
 				{
-		    		project.getExecutionInformation().setInErrorState(true);
-					logger.info("Project " + projectId + " unable to import feature " + type);
+		    		logger.info("Project " + projectId + " unable to import feature " + type);
 
 				}
 				
@@ -634,8 +653,7 @@ public class SourceforgeProjectImporter {
 		    	}
 		    	catch (Exception e)
 				{
-		    		project.getExecutionInformation().setInErrorState(true);
-					logger.info("Project " + projectId + " unable to import mailing list");
+		    		logger.info("Project " + projectId + " unable to import mailing list");
 
 				}
 				
@@ -667,9 +685,9 @@ public class SourceforgeProjectImporter {
 		    	{
 		    		License license = platform.getProjectRepositoryManager().getProjectRepository().getLicenses().findOneByName("");
 			    	if(license == null)
-			    	{
 						license = new License();
 			    		license.setName(nl.item(i).getFirstChild().getNodeValue());
+			    		{
 			    		platform.getProjectRepositoryManager().getProjectRepository().getLicenses().add(license);
 			    	}
 			    	project.getLicenses().add(license);
@@ -677,9 +695,7 @@ public class SourceforgeProjectImporter {
 		    	}
 		    	catch (Exception e)
 				{
-		    		project.getExecutionInformation().setInErrorState(true);
 		    		logger.info("Project " + projectId + " unable to import license");
-
 				}
 				
 			}
@@ -723,7 +739,6 @@ public class SourceforgeProjectImporter {
 		    	}
 		    	catch (Exception e)
 				{
-		    		project.getExecutionInformation().setInErrorState(true);
 					logger.info("Project " + projectId + " unable to import person (mainteners)");
 				}
 			}
@@ -762,7 +777,6 @@ public class SourceforgeProjectImporter {
 		    	}
 		    	catch (Exception e)
 				{
-		    		project.getExecutionInformation().setInErrorState(true);
 					logger.info("Project " + projectId + " unable to import person (mainteners)");
 				}
 			}
@@ -773,25 +787,11 @@ public class SourceforgeProjectImporter {
 			
 			platform.getProjectRepositoryManager().getProjectRepository().sync();
 			logger.info("Project " + projectId + " is imported");
+		} catch (Exception e){
+			logger.error("Project: " + projectId + " unknow error during import data.");
 		}
-		catch(MalformedURLException e)
-		{
-			if (project.getExecutionInformation()!=null)
-				project.getExecutionInformation().setInErrorState(true);
-			logger.error("Project " + projectId + " is NOT imported");
-		}
-		catch(IOException e)
-		{
-			if (project.getExecutionInformation()!=null)
-				project.getExecutionInformation().setInErrorState(true);
-			logger.error("Project " + projectId + " is NOT imported");
-		}
-		catch(Exception e)
-		{
-			if (project.getExecutionInformation()!=null)
-				project.getExecutionInformation().setInErrorState(true);
-			logger.error("Project " + projectId + " is NOT imported");
-		}
+		
+	
 		return project;		
 		
 	}
@@ -836,13 +836,10 @@ public class SourceforgeProjectImporter {
 		
 		return hasRole;
 	}
-	public boolean isProjectInDB(String projectId)
+	public boolean isProjectInDB(String projectId, Platform platform)
 	{
 		try 
 		{
-			Mongo mongo;
-			mongo = new Mongo();
-			Platform platform = new Platform(mongo);
 			Iterable<Project> projects = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(projectId);
 			Iterator<Project> iprojects = projects.iterator();
 			SourceForgeProject project = null;
@@ -864,17 +861,17 @@ public class SourceforgeProjectImporter {
 		}
 	}
 	
-	public boolean isProjectInDBByUrl(String url)
+	public boolean isProjectInDBByUrl(String url, Platform platform) throws WrongUrlException
 	{
-		return isProjectInDB(getProjectIdFromUrl(url));
+		return isProjectInDB(getProjectIdFromUrl(url),platform);
 	}
 	
-	public SourceForgeProject importProjectByUrl(String url, Platform platform)
+	public SourceForgeProject importProjectByUrl(String url, Platform platform) throws WrongUrlException
 	{
 		return importProject(getProjectIdFromUrl(url), platform);
 	}
 	
-	private String getProjectIdFromUrl(String url)
+	private String getProjectIdFromUrl(String url) throws WrongUrlException
 	{
 		url = url.replace("http://", "");
 		url = url.replace("https://", "");
@@ -887,7 +884,7 @@ public class SourceforgeProjectImporter {
 				url = url.substring(0, url.length()-1);
 			return url;
 		}
-		else return null;
+		else throw new WrongUrlException();
 	}
 
 }

@@ -376,16 +376,6 @@ map[loc, int] NOA_Java(rel[Language, loc, M3] m3s = {}) {
 }
 
 
-@metric{OOComplexity-Java}
-@doc{Java OO complexity}
-@friendlyName{Java OO complexity}
-@appliesTo{java()}
-@uses{("DIT-Java": "dit")}
-Factoid OOComplexity_Java(map[loc, int] dit = ()) {
-	return Complexity("Java", dit);
-}
-
-
 @metric{Coupling-Java}
 @doc{Java coupling}
 @friendlyName{Java coupling}

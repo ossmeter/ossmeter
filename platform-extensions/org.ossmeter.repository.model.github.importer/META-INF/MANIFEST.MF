@@ -8,5 +8,11 @@ Require-Bundle: org.ossmeter.repository.model,
  org.ossmeter.repository.model.github,
  org.ossmeter.platform,
  org.ossmeter.repository.model.importerdependencies,
- org.json
+ org.ossmeter.repository.model.importer.exception,
+ org.ossmeter.repository.model.vcs.git,
+ org.ossmeter.repository.model.vcs.svn,
+ org.ossmeter.repository.model.importer.exception,
+ org.ossmeter.repository.model.importer.exception,
+ org.ossmeter.repository.model.importer.exception,
+ org.ossmeter.repository.model.importer.exception
 Import-Package: org.json.simple

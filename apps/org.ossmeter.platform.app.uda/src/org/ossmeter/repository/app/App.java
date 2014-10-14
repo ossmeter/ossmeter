@@ -23,6 +23,8 @@ import org.ossmeter.repository.model.eclipse.*;
 import org.ossmeter.repository.model.github.GitHubRepository;
 import org.ossmeter.repository.model.github.importer.GitHubImporter;
 import org.ossmeter.repository.model.googlecode.importer.GoogleCodeImporter;
+import org.ossmeter.repository.model.importer.exception.RepoInfoNotFound;
+import org.ossmeter.repository.model.importer.exception.WrongUrlException;
 import org.ossmeter.repository.model.*;
 
 import com.googlecode.pongo.runtime.PongoFactory;
@@ -33,10 +35,7 @@ public class App implements IApplication {
 	
 	public void run(IMetricProviderManager metricProviderManager, PlatformVcsManager platformVcsManager) throws Exception {
 		Mongo mongo = new Mongo();
-		
 		PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
-		
-		
 		Platform platform = new Platform(mongo);
 		platform.setMetricProviderManager(metricProviderManager);
 		platform.setPlatformVcsManager(platformVcsManager);
@@ -46,20 +45,15 @@ public class App implements IApplication {
 		//addGitHubRepositories(platform);
 		//addGoogleCodeRepositories(platform);
 		//addRedmineProjects(platform);
-		
 		//DA TESTARE
-		
-		
-		
-		
-		
 		//platform.run(); 
 	}
 	
 	private void addSourceForgeProjects(Platform platform) {
 		
 		SourceforgeProjectImporter importer = new SourceforgeProjectImporter();
-		importer.importProjectByUrl("http://sourceforge.net/projects/tortoisesvn/?source=directory-featured",platform);	
+		//importer.importProjectByUrl("http://sourceforge.net/projects/tortoisesvn/?source=directory-featured",platform);	
+		importer.importAll(platform);
 		
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 	}
@@ -70,10 +64,7 @@ public class App implements IApplication {
 			importer = new RedmineImporter();
 			importer.importProjects(platform, 5);	
 			platform.getProjectRepositoryManager().getProjectRepository().sync();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (RepoInfoNotFound e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -82,20 +73,29 @@ public class App implements IApplication {
 	
 	private void addEclipseProjects(Platform platform) {
 		EclipseProjectImporter importer = new EclipseProjectImporter();
-		importer.importProjectByUrl("asdasa", platform);
-		importer.importProjects(platform, 5);
+		importer.importAll(platform);
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 	}
 	
 	private void addGitHubRepositories(Platform platform) {
 		GitHubImporter importer = new GitHubImporter();	
-		importer.importProjects(platform, 5);
+		try {
+			importer.importProjects(platform, 5);
+		} catch (WrongUrlException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		//importer.importProjectByUrl("https://github.com/canadaduane/house", platform);
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 	}
 	private void addGoogleCodeRepositories(Platform platform) {
 		GoogleCodeImporter importer = new GoogleCodeImporter();	
-		importer.importProjectByUrl("https://code.google.com/p/firetray/", platform);
+		try {
+			importer.importProjectByUrl("https://code.google.com/p/firetray/", platform);
+		} catch (WrongUrlException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 	}
 	

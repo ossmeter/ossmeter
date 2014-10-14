@@ -69,8 +69,8 @@ map[str, int] locPerLanguage(rel[Language, loc, AST] asts = {}, map[loc, int] ge
 @doc{The size of the project's code base}
 @friendlyName{Code Size}
 @appliesTo{generic()}
-@uses{("locPerLanguage" :"locPerLanguage")}
-Factoid codeSize(map[str, int] locPerLanguage = ()) {
+@uses{("locPerLanguage": "locPerLanguage", "org.ossmeter.metricprovider.trans.rascal.activecommitters.projectAge": "projectAge")}
+Factoid codeSize(map[str, int] locPerLanguage = (), int projectAge = -1) {
   if (isEmpty(locPerLanguage)) {
     throw undefined("No LOC data available", |unknown:///|);
   }
@@ -90,7 +90,11 @@ Factoid codeSize(map[str, int] locPerLanguage = ()) {
     otherTxt = intercalate(", ", ["<l[0]> (<l[1]>)" | l <- sorted[1..]]);
   
     txt += " The following <size(sorted) - 1> other languages were recognized: <otherTxt>.";
-  } 
+  }
+  
+  if (projectAge > 0) {
+  	txt += "The age of the code base is <projectAge> days.";
+  }
 
   stars = 1;
   

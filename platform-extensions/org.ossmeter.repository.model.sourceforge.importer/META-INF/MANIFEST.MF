@@ -22,4 +22,5 @@ Import-Package: org.json.simple,
  org.jsoup.nodes,
  org.jsoup.parser,
  org.jsoup.safety,
- org.jsoup.select
+ org.jsoup.select,
+ org.ossmeter.repository.model.importer.exception

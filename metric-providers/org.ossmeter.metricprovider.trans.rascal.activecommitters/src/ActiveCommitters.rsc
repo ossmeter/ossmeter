@@ -30,7 +30,9 @@ map[str, tuple[datetime, datetime]] firstLastCommitDates(ProjectDelta delta = \e
   map[str, tuple[datetime, datetime]] developerCommitDates = ();
   for (author <- committersToday) {
     if (author in prev) {
-      developerCommitDates[author] = <prev[author].first, delta.date>;
+      // don't assume the dates in delta are newer than in prev.
+      // for instance, then can get mixed up during conversion from svn to git
+      developerCommitDates[author] = <min([delta.date, prev[author].first]), max([delta.date, prev[author].last])>;
     } else {
       developerCommitDates[author] = <delta.date, delta.date>;
     }
@@ -78,7 +80,7 @@ rel[datetime, set[str]] activeCommitters(ProjectDelta delta = \empty(), rel[date
 
 @metric{longerTermActiveCommitters}
 @doc{Committers who have been active the last 6 months}
-@friendlyName{committersLastTwoWeeks}
+@friendlyName{committersLastSixMonths}
 @uses = ("committersToday":"committersToday")
 @appliesTo{generic()}
 rel[datetime, set[str]] longerTermActiveCommitters(ProjectDelta delta = \empty(), rel[datetime,set[str]] prev = {}, set[str] committersToday = {}) {
@@ -98,10 +100,11 @@ int numberOfActiveCommitters(rel[datetime, set[str]] activeCommitters = {})
   = size({c | /str c := activeCommitters});
     
 @metric{numberOfActiveCommittersLongTerm}
-@doc{Number of active committers over time}
+@doc{Number of long time active committers over time}
 @friendlyName{numberOfActiveCommittersLongTerm}
 @uses = ("longerTermActiveCommitters" :"activeCommitters")
 @appliesTo{generic()}
+@historic
 int numberOfActiveCommittersLongTerm(rel[datetime, set[str]] activeCommitters = {}) 
   = size({c | /str c := activeCommitters});
 
@@ -158,3 +161,18 @@ Factoid developmentTeamStability(rel[datetime day, int active] history = {}, int
   return factoid(txt, stability);
 }
 
+@metric{projectAge}
+@doc{Age of the project (nr of days between first and last commit)}
+@friendlyName{Age of the project (nr of days between first and last commit)}
+@uses = ("firstLastCommitDatesPerDeveloper":"firstLastCommitDatesPerDeveloper")
+@appliesTo{generic()}
+int projectAge(map[str, tuple[datetime first, datetime last]] firstLastCommitDates = ()) {
+  if (firstLastCommitDates == ()) {
+    throw undefined("No commit dates available", |tmp:///|);
+  }
+
+  firstDate = min([ firstLastCommitDates[name][0] | name <- firstLastCommitDates]);
+  lastDate = max([ firstLastCommitDates[name][1] | name <- firstLastCommitDates]);
+  
+  return daysDiff(lastDate, firstDate) + 1;
+}

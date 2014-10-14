@@ -30,4 +30,5 @@ Require-Bundle: org.ossmeter.platform,
  org.ossmeter.metricprovider.trans.importer.googlecode;bundle-version="1.0.0",
  org.ossmeter.metricprovider.trans.importer.redmine;bundle-version="1.0.0",
  org.ossmeter.metricprovider.trans.importer.sourceforge;bundle-version="1.0.0",
- org.junit
+ org.junit,
+ org.ossmeter.repository.model.importer.exception;bundle-version="1.0.0"

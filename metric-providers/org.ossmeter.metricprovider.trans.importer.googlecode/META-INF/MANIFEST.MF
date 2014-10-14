@@ -17,4 +17,5 @@ Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.repository.model.vcs.git,
  org.ossmeter.repository.model.vcs.svn,
  org.ossmeter.repository.model.importerdependencies,
- org.ossmeter.repository.model.googlecode.importer
+ org.ossmeter.repository.model.googlecode.importer,
+ org.ossmeter.repository.model.importer.exception
