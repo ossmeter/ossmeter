@@ -5,14 +5,14 @@ import java.util.*;
 import com.googlecode.pongo.runtime.*;
 import com.googlecode.pongo.runtime.querying.*;
 
-//protected region custom-imports on begin
-//protected region custom-imports end
+// protected region custom-imports on begin
+// protected region custom-imports end
 
 public abstract class BugTrackingSystem extends Pongo {
 	
 	protected List<Person> persons = null;
 	
-	 // protected region custom-fields-and-methods on begin
+	// protected region custom-fields-and-methods on begin
     /**
      * @return a string unique to each subclass of BugTrackingSystem (e.g.
      *         "bugzilla", "github")
@@ -41,7 +41,6 @@ public abstract class BugTrackingSystem extends Pongo {
     }
 
     // protected region custom-fields-and-methods end
-	
 	
 	public BugTrackingSystem() { 
 		super();

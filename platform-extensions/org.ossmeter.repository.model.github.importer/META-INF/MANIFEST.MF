@@ -15,4 +15,4 @@ Require-Bundle: org.ossmeter.repository.model,
  org.ossmeter.repository.model.importer.exception,
  org.ossmeter.repository.model.importer.exception,
  org.ossmeter.repository.model.importer.exception
-Import-Package: org.json.simple
+

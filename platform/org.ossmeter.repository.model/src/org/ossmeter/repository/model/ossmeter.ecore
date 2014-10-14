@@ -10,14 +10,25 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="licenses" upperBound="-1" eType="//License" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="metricProviders" upperBound="-1" eType="//MetricProvider" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="schedulingInformation" upperBound="-1" eType="//SchedulingInformation" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="metricAnalysis" upperBound="-1" eType="//MetricAnalysis" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="companies" upperBound="-1" eType="//Company" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MetricAnalysis">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="metricId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="projectId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="analysisDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="executionDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="millisTaken" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="metricId">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="projectId">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="analysisDate">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="executionDate">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="millisTaken">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SchedulingInformation">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="workerIdentifier">
@@ -74,7 +85,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="homePage">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="companies" upperBound="-1" eType="//Company" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="companies" upperBound="-1" eType="//Company"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MetricProviderExecution">
     <eStructuralFeatures xsi:type="ecore:EReference" name="metricProvider" eType="//MetricProvider"/>
@@ -148,6 +159,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="persons" upperBound="-1" eType="//Person"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BugTrackingSystem" abstract="true">
+    <eAnnotations source="customize"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="url">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
