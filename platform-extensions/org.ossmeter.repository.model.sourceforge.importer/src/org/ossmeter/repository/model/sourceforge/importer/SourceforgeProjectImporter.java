@@ -5,21 +5,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.ImportData;
 import org.ossmeter.repository.model.License;
 import org.ossmeter.repository.model.Person;
-import org.ossmeter.repository.model.PersonCollection;
 import org.ossmeter.repository.model.Project;
-import org.ossmeter.repository.model.ProjectCollection;
 import org.ossmeter.repository.model.Role;
 import org.ossmeter.repository.model.cc.wiki.Wiki;
 import org.ossmeter.repository.model.importer.exception.WrongUrlException;
 import org.ossmeter.repository.model.sourceforge.*;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -29,49 +24,20 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathFactory;
-
 import org.ossmeter.repository.model.vcs.svn.SvnRepository;
-import org.ossmeter.repository.model.vcs.cvs.CvsRepository;
 import org.ossmeter.repository.model.vcs.git.GitRepository;
 import org.jsoup.select.*;
 import org.jsoup.*;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONValue;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.logging.OssmeterLogger;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
-import com.googlecode.pongo.runtime.IteratorIterable;
-import com.googlecode.pongo.runtime.PongoCursorIterator;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCursor;
-import com.mongodb.Mongo;
 
 
 

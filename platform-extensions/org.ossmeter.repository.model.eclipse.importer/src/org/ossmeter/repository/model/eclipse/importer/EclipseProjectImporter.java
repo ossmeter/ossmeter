@@ -50,12 +50,10 @@ import org.ossmeter.repository.model.vcs.git.GitRepository;
 import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 import org.ossmeter.repository.model.importer.exception.*;
 import org.w3c.dom.Document;
-//import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.mongodb.Mongo;
 
 public class EclipseProjectImporter {
 	protected OssmeterLogger logger;

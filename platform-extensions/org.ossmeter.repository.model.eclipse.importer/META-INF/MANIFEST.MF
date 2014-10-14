@@ -14,19 +14,9 @@ Require-Bundle: org.ossmeter.repository.model.eclipse,
  org.ossmeter.repository.model.cc.nntp,
  org.ossmeter.repository.model.importerdependencies;bundle-version="1.0.0",
  org.ossmeter.platform,
- org.ossmeter.repository.model.importer.exception
-Export-Package: org.ossmeter.repository.model.eclipse.importer
-Import-Package: org.apache.commons.net,
- org.json.simple,
- org.jsoup,
- org.jsoup.examples,
- org.jsoup.helper,
- org.jsoup.nodes,
- org.jsoup.parser,
- org.jsoup.safety,
- org.jsoup.select,
- org.ossmeter.platform,
+ org.ossmeter.repository.model.importer.exception,
  org.ossmeter.repository.model.vcs.cvs
+Export-Package: org.ossmeter.repository.model.eclipse.importer
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 

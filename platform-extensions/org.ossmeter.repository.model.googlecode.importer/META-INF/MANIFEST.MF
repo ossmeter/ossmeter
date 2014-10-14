@@ -17,12 +17,4 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.repository.model.importer.exception
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Import-Package: org.jsoup,
- org.jsoup.examples,
- org.jsoup.helper,
- org.jsoup.nodes,
- org.jsoup.parser,
- org.jsoup.safety,
- org.jsoup.select,
- org.ossmeter.platform
 Export-Package: org.ossmeter.repository.model.googlecode.importer
