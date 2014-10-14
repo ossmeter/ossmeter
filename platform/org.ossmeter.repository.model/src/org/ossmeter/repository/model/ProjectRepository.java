@@ -22,6 +22,8 @@ public class ProjectRepository extends PongoDB {
 	protected MetricAnalysisCollection metricAnalysis = null;
 	protected CompanyCollection companies = null;
 	
+	
+	
 	public ProjectCollection getProjects() {
 		return projects;
 	}
@@ -57,6 +59,7 @@ public class ProjectRepository extends PongoDB {
 	public MetricAnalysisCollection getMetricAnalysis() {
 		return metricAnalysis;
 	}
+	
 	public CompanyCollection getCompanies() {
 		return companies;
 	}
