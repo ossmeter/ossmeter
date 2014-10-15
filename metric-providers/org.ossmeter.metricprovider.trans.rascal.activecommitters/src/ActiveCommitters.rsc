@@ -11,6 +11,7 @@ import DateTime;
 import String;
 import util::Math;
 import analysis::statistics::SimpleRegression;
+import analysis::statistics::Descriptive;
  
 @metric{committersToday}
 @doc{activeCommitters}
@@ -38,6 +39,20 @@ map[str, tuple[datetime, datetime]] firstLastCommitDates(ProjectDelta delta = \e
     }
   }
   return developerCommitDates;
+}
+
+@metric{commitsPerDeveloper}
+@doc{commitsPerDeveloper}
+@friendlyName{Number of commits per developer}
+@appliesTo{generic()}
+map[str, int] commitsPerDeveloper(ProjectDelta delta = \empty(), map[str, int] prev = ()) {
+  map[str, int] result = prev;
+  
+  for (/VcsCommit co := delta) {
+    result[co.author]?0 += 1;
+  }
+  
+  return result;
 }
 
 @metric{committersAge}
@@ -175,4 +190,59 @@ int projectAge(map[str, tuple[datetime first, datetime last]] firstLastCommitDat
   lastDate = max([ firstLastCommitDates[name][1] | name <- firstLastCommitDates]);
   
   return daysDiff(lastDate, firstDate) + 1;
+}
+
+@metric{developmentTeamExperience}
+@doc{Based on committer activity, how experienced is the current team?}
+@friendlyName{Development team experience}
+@uses = ("firstLastCommitDatesPerDeveloper": "firstLastCommitDatesPerDeveloper", "commitsPerDeveloper": "commitsPerDeveloper")
+@appliesTo{generic()}
+Factoid developmentTeamExperience(
+  ProjectDelta delta = \empty(),
+  map[str, tuple[datetime first, datetime last]] firstLastCommitDates = (),
+  map[str, int] commitsPerDeveloper = ())
+{
+  if (delta == \empty() || commitsPerDeveloper == ()) {
+    throw undefined("No delta available", |tmp:///|);
+  }
+  
+  today = delta.date;
+  sixMonthsAgo = decrementMonths(today, 6);
+  
+  committersInLastHalfYear = { name | name <- firstLastCommitDates, firstLastCommitDates[name].last > sixMonthsAgo };
+  
+  experiencedCommittersInLastHalfYear = { name | name <- committersInLastHalfYear,
+    firstLastCommitDates[name].last > decrementMonths(firstLastCommitDates[name].first, 6),
+    (commitsPerDeveloper[name]?0) > 24 }; // at least 1 commit per week on average
+  
+  numExperiencedCommitters = size(experiencedCommittersInLastHalfYear);
+  
+  stars = numExperiencedCommitters + 1;
+  
+  if (stars > 4) {
+    stars = 4;
+  }
+  
+  txt = "";
+  
+  if (stars == 1) {
+    txt = "There were no experienced committers working for the project in the last 6 months.";
+  }
+  else if (stars == 2) {
+    txt = "The was only one experienced committer working for the project in the last 6 months.";
+    txt += " Overall, he/she contributed <commitsPerDeveloper[getOneFrom(experiencedCommittersInLastHalfYear)]> commits.";
+  }
+  else {
+    txt = "The number of experienced committers working for the project in the last 6 months is <numExperiencedCommitters>.";
+    txt += " Their average overall number of commits is <mean([commitsPerDeveloper[d] | d <- experiencedCommittersInLastHalfYear])>.";
+  }
+
+  if (size(committersInLastHalfYear) == numExperiencedCommitters) {
+    txt += " There were no other committers active in the last 6 months."; 
+  }
+  else {
+    txt += " In total, <size(committersInLastHalfYear)> committers have worked on the project in the last six months.";
+  }
+
+  return factoid(txt, starLookup[stars]);
 }
