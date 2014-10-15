@@ -14,7 +14,7 @@ import Java;
 @doc{Static Estimation of test coverage}
 @friendlyName{Static Estimation of test coverage}
 @appliesTo{java()}
-@memo
+@historic
 real estimateTestCoverage(rel[Language, loc, M3] m3s = {}) {
   m = systemM3(m3s);
   implicitContainment = getImplicitContainment(m);
@@ -93,6 +93,7 @@ private rel[loc, loc] getImplicitContainment(M3 m) {
 @doc{Number of JUnit tests averaged over the total number of public methods}
 @friendlyName{Number of JUnit tests averaged over the total number of public methods}
 @appliesTo{java()}
+@historic
 real percentageOfTestedPublicMethods(rel[Language, loc, M3] m3s = {}) {
   m = systemM3(m3s);
   onlyTestMethods = getJUnit4TestMethods(m);
