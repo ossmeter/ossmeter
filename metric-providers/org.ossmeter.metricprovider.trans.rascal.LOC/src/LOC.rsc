@@ -103,7 +103,7 @@ Factoid codeSize(
   }
 
   if (numberOfActiveCommittersLongTerm > 0) {
-    txt += " In the last six months there have been <numberOfActiveCommittersLongTerm> people working on this project.";
+    txt += " In the last 12 months there have been <numberOfActiveCommittersLongTerm> people working on this project.";
   }
 
   stars = 1;

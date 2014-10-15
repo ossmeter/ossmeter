@@ -79,8 +79,8 @@ rel[datetime, set[str]] activeCommitters(ProjectDelta delta = \empty(), rel[date
 }
 
 @metric{longerTermActiveCommitters}
-@doc{Committers who have been active the last 6 months}
-@friendlyName{committersLastSixMonths}
+@doc{Committers who have been active the last 12 months}
+@friendlyName{committersLastYear}
 @uses = ("committersToday":"committersToday")
 @appliesTo{generic()}
 rel[datetime, set[str]] longerTermActiveCommitters(ProjectDelta delta = \empty(), rel[datetime,set[str]] prev = {}, set[str] committersToday = {}) {
