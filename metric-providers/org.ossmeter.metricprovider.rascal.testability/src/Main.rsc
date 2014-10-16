@@ -111,6 +111,7 @@ real percentageOfTestedPublicMethods(rel[Language, loc, M3] m3s = {}) {
 @doc{Number of JUnit test methods}
 @friendlyName{Number of JUnit test methods}
 @appliesTo{java()}
+@historic
 int numberOfTestMethods(rel[Language, loc, M3] m3s = {}) {
   return size(getJUnit4TestMethods(systemM3(m3s)));
 }
