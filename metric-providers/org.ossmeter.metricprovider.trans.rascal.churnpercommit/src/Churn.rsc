@@ -34,7 +34,7 @@ map[loc file, int churn] churnPerFile(ProjectDelta delta = \empty())
   = (rd.repository.url + co.path : churn(co) | /VcsRepositoryDelta rd := delta, /VcsCommitItem co := rd)
   ;
       
-int churn(VcsCommit item) 
+int churn(node item) 
   = (0 | it + count | /linesAdded(count) := item)
   + (0 | it + count | /linesDeleted(count) := item)
   ;

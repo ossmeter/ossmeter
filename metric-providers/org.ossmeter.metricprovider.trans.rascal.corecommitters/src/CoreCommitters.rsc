@@ -16,16 +16,14 @@ import List;
 @uses = ("org.ossmeter.metricprovider.trans.rascal.churnpercommitter.churnPerCommitter.historic" : "history")
 list[loc] coreCommitters(rel[datetime, map[loc, int]] history = {}) {
   //NOTE: pongo stores items are sets so this metric breaks
-  println(history);
+
   map[loc author, int churn] totalChurnPerAuthor = ();
   for (<_, historyMap> <- history) {
     for (author <- historyMap) {
       totalChurnPerAuthor[author] ? 0 += historyMap[author];
     }
   }
-  println(totalChurnPerAuthor);
   list[int] churns = reverse(sort(range(totalChurnPerAuthor)));
-  println(churns);
   map[int, set[loc]] comparator = invert(totalChurnPerAuthor);
   
   return [author | authorChurn <- churns, author <- comparator[authorChurn]];

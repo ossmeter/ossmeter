@@ -4,17 +4,19 @@ import Set;
 import Relation;
 import IO;
 import util::ValueUI;
+import util::Math;
 import analysis::graphs::Graph;
 extend lang::java::m3::Core;
 import JUnit4;
 import Java;
+import org::ossmeter::metricprovider::Factoid;
 
 
 @metric{TestCoverage}
 @doc{Static Estimation of test coverage}
 @friendlyName{Static Estimation of test coverage}
 @appliesTo{java()}
-@memo
+@historic
 real estimateTestCoverage(rel[Language, loc, M3] m3s = {}) {
   m = systemM3(m3s);
   implicitContainment = getImplicitContainment(m);
@@ -93,6 +95,7 @@ private rel[loc, loc] getImplicitContainment(M3 m) {
 @doc{Number of JUnit tests averaged over the total number of public methods}
 @friendlyName{Number of JUnit tests averaged over the total number of public methods}
 @appliesTo{java()}
+@historic
 real percentageOfTestedPublicMethods(rel[Language, loc, M3] m3s = {}) {
   m = systemM3(m3s);
   onlyTestMethods = getJUnit4TestMethods(m);
@@ -110,4 +113,27 @@ real percentageOfTestedPublicMethods(rel[Language, loc, M3] m3s = {}) {
 @appliesTo{java()}
 int numberOfTestMethods(rel[Language, loc, M3] m3s = {}) {
   return size(getJUnit4TestMethods(systemM3(m3s)));
+}
+
+
+@metric{JavaUnitTestCoverage}
+@doc{How well do the project's unit tests cover its code (Java)}
+@friendlyName{Java unit test coverage}
+@uses{("TestOverPublicMethods": "testOverPublicMethods", "TestCoverage", "testCoverage")}
+@appliesTo{java()}
+Factoid JavaUnitTestCoverage(real testOverPublicMethods = -1.0, real testCoverage = -1.0) {
+
+  if (testOverPublicMethods == -1.0 || testCoverage == -1.0) {
+    throw undefined("Not enough test coverage data available", |tmp:///|);
+  }
+
+  stars = 1 + toInt(testCoverage / 25.0);
+
+  if (stars > 4) {
+    stars = 4;
+  }
+
+  txt = "The percentage of methods covered by unit tests is estimated at <testCoverage>%. The estimated coverage of public methods is <testOverPublicMethods>%";
+  
+  return factoid(txt, starLookup[stars]); 
 }

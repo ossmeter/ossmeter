@@ -69,8 +69,14 @@ map[str, int] locPerLanguage(rel[Language, loc, AST] asts = {}, map[loc, int] ge
 @doc{The size of the project's code base}
 @friendlyName{Code Size}
 @appliesTo{generic()}
-@uses{("locPerLanguage": "locPerLanguage", "org.ossmeter.metricprovider.trans.rascal.activecommitters.projectAge": "projectAge")}
-Factoid codeSize(map[str, int] locPerLanguage = (), int projectAge = -1) {
+@uses{("locPerLanguage": "locPerLanguage",
+       "org.ossmeter.metricprovider.trans.rascal.activecommitters.projectAge": "projectAge",
+       "org.ossmeter.metricprovider.trans.rascal.activecommitters.numberOfActiveCommittersLongTerm": "numberOfActiveCommittersLongTerm")}
+Factoid codeSize(
+	map[str, int] locPerLanguage = (),
+	int projectAge = -1,
+	int numberOfActiveCommittersLongTerm = -1
+) {
   if (isEmpty(locPerLanguage)) {
     throw undefined("No LOC data available", |unknown:///|);
   }
@@ -93,7 +99,11 @@ Factoid codeSize(map[str, int] locPerLanguage = (), int projectAge = -1) {
   }
   
   if (projectAge > 0) {
-  	txt += "The age of the code base is <projectAge> days.";
+  	txt += " The age of the code base is <projectAge> days.";
+  }
+
+  if (numberOfActiveCommittersLongTerm > 0) {
+    txt += " In the last 12 months there have been <numberOfActiveCommittersLongTerm> people working on this project.";
   }
 
   stars = 1;
