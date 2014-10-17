@@ -86,8 +86,8 @@ function drawCompareBar(warn) {
 	}
 }
 
-function drawSparklineTable(table, metriclist) {
-         $.get("http://localhost:8182/projects/p/@project.getShortName()/s/"+metriclist.join("+"), function (result) {
+function drawSparklineTable(projectname, table, metriclist) {
+         $.get("http://localhost:8182/projects/p/"+projectname+"/s/"+metriclist.join("+"), function (result) {
             for (var r in result) {
                 var data = result[r];
 
@@ -121,4 +121,51 @@ function compareProjects() {
 
         }
 	});
+}
+
+function getOneYearAgoDateString() {
+	var d = new Date();
+	return (d.getFullYear()-1) + "" + (d.getMonth()+1) + "" + d.getDate();
+}
+
+/*
+	Taken from: http://stackoverflow.com/questions/10599933/convert-long-number-into-abbreviated-string-in-javascript-with-a-special-shortn 
+*/
+function abbreviateNumber(value) {
+    var newValue = value;
+    if (value >= 1000) {
+        var suffixes = ["", "k", "m", "b","t"];
+        var suffixNum = Math.floor( (""+value).length/3 );
+        var shortValue = '';
+        for (var precision = 2; precision >= 1; precision--) {
+            shortValue = parseFloat( (suffixNum != 0 ? (value / Math.pow(1000,suffixNum) ) : value).toPrecision(precision));
+            var dotLessShortValue = (shortValue + '').replace(/[^a-zA-Z 0-9]+/g,'');
+            if (dotLessShortValue.length <= 2) { break; }
+        }
+        if (shortValue % 1 != 0)  shortNum = shortValue.toFixed(1);
+        newValue = shortValue+suffixes[suffixNum];
+    } else if (value % 1 != 0){
+    	newValue = value.toFixed(2);
+    }
+    return newValue;
+}
+
+function drawSpiderChart(container, factoids) {
+
+	var d = [];
+
+	for (var f in factoids) {
+		var ax = { axis: factoids[f].name, value: factoids[f].stars } ;
+		d.push(ax);
+	}
+
+	var config = {
+		w: 200,
+		h: 200,
+		maxValue: 5,
+		levels: 5,
+		ExtraWidthX:200
+	};
+
+	RadarChart.draw(container, [d], config);
 }

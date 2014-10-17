@@ -32,7 +32,7 @@
             </div>
     		<div class="row">
                 <div class="col-md-4">
-                    <img src="@routes.Assets.at("img/Spider_Chart.svg")" style="width:100%"/>
+                    <div id="spider"></div>
                 </div> 
                 <div class="col-md-8">  
                     <p>has had 2,470 commits made by 4 contributors representing 2,480,383 lines of code</p>
@@ -56,127 +56,71 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-10" id="plot"></div>
-            <div class="col-md-2">
+            <div class="col-md-9" id="plot"></div>
+            <div class="col-md-3">
                 <h4>Toolbox</h4>
                 <a href="#"><span class="glyphicon glyphicon-eye-open tip btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Add plot to dashboard"></span></a>
                 <a href="#"><span class="glyphicon glyphicon-time tip btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Create notification"></span></a>
                 <a href="#"><span class="glyphicon glyphicon-refresh tip btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Clear plot"></span></a>
+                <a href="#"><span class="glyphicon glyphicon-calendar tip btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Show events"></span></a>
                 <h4>Legend</h4>
-                <span class="label label-danger">&mdash;</span> <span class="label" style="background-color:#1f77b4; font-weight:normal;">lines of code</span> <br/>
-                <span class="label label-danger">&mdash;</span> <span class="label" style="background-color:#aec7e8; font-weight:normal;">complexity</span> <br/>
-                <span class="label label-danger">&mdash;</span> <span class="label" style="background-color:#ff7f0e; font-weight:normal;">code coverage</span> 
-            </div>
-        </div>
-    </div>     
-</section>
-
-<section>
-    <div class="container box">
-        <div class="row">
-            <div class="col-md-12 section-heading">
-                <h2 class="marginless">Historical Metrics</h2>
+                <div data-bind="foreach: selectedMetrics">
+                    <div class="row">
+                        <div class="col-md-2"><input type="checkbox" data-bind="checked: selected"/></div>
+                        <div class="col-md-2">
+                            <div class="legend-box" style="background-color:red" ></div> 
+                        </div>
+                        <div class="col-md-8" data-bind="text:name">name</div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6">
-                <table class="table" id="sparklines-table-alltime">
-                        <thead>
-                            <th></th>
-                            <th>metric</th>
-                            <th>15/07/03</th>
-                            <th>12 months</th>
-                            <th>15/07/14</th>
-                            <th>low</th>
-                            <th>high</th>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <a href="#"><span class="glyphicon glyphicon-eye-open tip" data-toggle="tooltip" data-placement="left" title="Add sparkline to dashboard"></span></a>
-                                    <a href="#"><span class="glyphicon glyphicon-plus tip" data-toggle="tooltip" data-placement="left" title="Add metric to plot above"></span></a>
-                                </td>
-                                <td><a href="#">lines of code</a></td>
-                                <td>324</td>
-                                <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
-                                <td>299</td>
-                                <td>32</td>
-                                <td>376</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <a href="#"><span class="glyphicon glyphicon-eye-open tip" data-toggle="tooltip" data-placement="left" title="Add sparkline to dashboard"></span></a>
-                                    <a href="#"><span class="glyphicon glyphicon-plus tip" data-toggle="tooltip" data-placement="left" title="Add metric to plot above"></span></a>
-                                </td>
-                                <td><a href="#">lines of code</a></td>
-                                <td>324</td>
-                                <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
-                                <td>299</td>
-                                <td>32</td>
-                                <td>376</td>
-                            </tr>
-                            
-                        </tbody>
-                    </table>
-                    <script type="text/javascript">
-                        $(function() {
-                            var ms = ["commitsovertimeline", "commitsovertimeline"];
-
-                            for (m in ms) {
-                                $.get("http://localhost:8182/projects/p/@project.getShortName()/s/"+ms[m], function (data) {
-                                    $("#sparklines-table-alltime > tbody:last").append("<tr><td>" + data.name + 
-                                        "</td><td>" + data.first +
-                                        "</td><td><img class=\"spark\" src=\"http://localhost:8182" + data.spark + "\" />" +  
-                                        "</td><td>" + data.last + 
-                                        "</td><td>" + data.low + 
-                                        "</td><td>" + data.high + "</td></tr>");
-                                });
-                            };
-                        });
-                    </script>
-            </div>
             <div class="col-md-6">
                 <table class="table" id="sparklines-table-lastyear">
-                    <thead>
-                        <th>01/09/2007</th>
-                        <th>65 months</th>
-                        <th>15/07/2014</th>
+                    <thead data-bind="with: sparks12MonthsDates">
+                        <th></th>
+                        <th>metric</th>
+                        <th data-bind="text: first">01/09/2007</th>
+                        <th data-bind="text: months + ' months'">65 months</th>
+                        <th data-bind="text: last">15/07/2014</th>
                         <th>low</th>
                         <th>high</th>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>324</td>
-                            <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
-                            <td>299</td>
-                            <td>32</td>
-                            <td>376</td>
-                        </tr>
-                        <tr>
-                            <td>324</td>
-                            <td><img src="http://betterdashboards.files.wordpress.com/2010/02/sparkline1.jpg" style="width:150px"/></td>
-                            <td>299</td>
-                            <td>32</td>
-                            <td>376</td>
+                    <tbody data-bind="foreach: metrics">
+                        <tr data-bind="with: spark12Months">
+                            <td><input type="checkbox" data-bind="checked: $parent.selected"/></td>
+                            <td data-bind="text: name"></td>
+                            <td data-bind="text: first"></td>
+                            <td><img class="spark" data-bind="attr:{src: 'http://localhost:8182' + spark}"/></td>
+                            <td data-bind="text: last"></td>
+                            <td data-bind="text: low"></td>
+                            <td data-bind="text: high"></td>
                         </tr>
                     </tbody>
                 </table>
-                <script type="text/javascript">
-                    $(function() {
-                        var ms = ["commitsovertimeline", "commitsovertimeline"];
-
-                        for (m in ms) {
-                            $.get("http://localhost:8182/projects/p/@project.getShortName()/s/"+ms[m], function (data) {
-                                $("#sparklines-table-lastyear > tbody:last").append("<tr><td>" + data.name + 
-                                    "</td><td>" + data.first +
-                                    "</td><td><img class=\"spark\" src=\"http://localhost:8182" + data.spark + "\" />" +  
-                                    "</td><td>" + data.last + 
-                                    "</td><td>" + data.low + 
-                                    "</td><td>" + data.high + "</td></tr>");
-                            });
-                        };
-                    });
-                </script>
+            </div>
+            <div class="col-md-6">
+                <table class="table" id="sparklines-table-alltime">
+                    <thead data-bind="with: sparksAllTimeDates">
+                        <th>metric</th>
+                        <th data-bind="text: first">01/09/2007</th>
+                        <th data-bind="text: months + ' months'">65 months</th>
+                        <th data-bind="text: last">15/07/2014</th>
+                        <th>low</th>
+                        <th>high</th>
+                    </thead>
+                    <tbody data-bind="foreach: metrics">
+                        <tr data-bind="with: sparkAllTime">
+                            <td data-bind="text: name"></td>
+                            <td data-bind="text: first"></td>
+                            <td><img class="spark" data-bind="attr:{src: 'http://localhost:8182' + spark}"/></td>
+                            <td data-bind="text: last"></td>
+                            <td data-bind="text: low"></td>
+                            <td data-bind="text: high"></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>     
@@ -192,7 +136,7 @@
             <div class="col-md-6">
                 <h3>Tabular Metric</h3>
                 <p>Hover over the metric names in the table to the right to see a description of the metrics.</p>
-                
+
                 <a href="#"><span class="glyphicon glyphicon-eye-open tip" data-toggle="tooltip" data-placement="left" title="Add sparkline to dashboard"></span></a>
                 <a href="#"><span class="glyphicon glyphicon-plus tip" data-toggle="tooltip" data-placement="left" title="Add metric to plot above"></span></a>
             </div>
@@ -243,6 +187,161 @@
 </section>
 
 <script type="text/javascript">
+/// DEBUG
+    $(function() {
+        "use strict";
+        var Metric = function(id, name, selected) {
+            self = this;
+            self.id = id;
+            self.name = name;
+            self.selected = ko.observable(selected);
+
+            self.sparkAllTime = ko.observable();
+            self.spark12Months = ko.observable();
+        }
+
+        var MetricModel = function() {
+            "use strict";
+            var self = this;
+            self.metrics = ko.observableArray();
+
+            self.selectedMetrics = ko.computed(function() {
+                var sel = [];
+                ko.utils.arrayForEach(self.metrics(), function(m){
+                    if (m.selected()) {
+                        sel.push(m);
+                    }
+                });
+                return sel;
+            });
+
+            self.addMetric = function(metric) {
+                self.metrics.push(metric);
+
+                // Grab spark data
+                $.get("http://localhost:8182/projects/p/@project.getShortName()/s/"+metric.id, function (data) {
+                    vm.addSparkAllTime(data);
+                });
+                $.get("http://localhost:8182/projects/p/@project.getShortName()/s/"+metric.id+"?startDate="+getOneYearAgoDateString(), function (data) {
+                    vm.addSpark12Months(data);
+                });
+            }.bind(self);
+
+            self.addSparkAllTime = function(spark) {
+                for (m in self.metrics()) {
+                    if (self.metrics()[m].id === spark.name) {// FIXME:id
+                        self.metrics()[m].sparkAllTime(spark);
+                        break;
+                    }
+                }
+            }.bind(self);
+
+            self.addSpark12Months = function(spark) {
+                for (m in self.metrics()) {
+                    if (self.metrics()[m].id === spark.name) {// FIXME:id
+                        self.metrics()[m].spark12Months(spark);
+                        break;
+                    }
+                }
+            }.bind(self);
+
+            self.sparksAllTimeDates = ko.computed(function() {
+                if (self.metrics()[0] && self.metrics()[0].sparkAllTime()) {
+
+                    var f = {
+                        first: self.metrics()[0].sparkAllTime().firstDate,
+                        last: self.metrics()[0].sparkAllTime().lastDate,
+                        months: self.metrics()[0].sparkAllTime().months
+                    };
+                    return f;
+                } else{
+                    var f = {
+                        first: 0,
+                        last : 0,
+                        months:0
+                    };
+                    return f;
+                }
+            });
+
+            self.sparks12MonthsDates = ko.computed(function() {
+                if (self.metrics()[0] && self.metrics()[0].spark12Months()) { 
+                    var f = {
+                        first: self.metrics()[0].spark12Months().firstDate,
+                        last: self.metrics()[0].spark12Months().lastDate,
+                        months: self.metrics()[0].spark12Months().months
+                    };
+                    return f;
+                } else{
+                    var f = {
+                        first: 0,
+                        last : 0,
+                        months:0
+                    };
+                    return f;
+                }
+            });
+        }
+
+        var vm = new MetricModel();
+
+
+
+        vm.selectedMetrics.subscribe(function(newValue) {
+        
+
+        // TODO the simpler option is to just destroy the svg each time.
+            
+            // delete vm.chart;
+            // $("#plot").empty();
+
+            console.log("yo "+ newValue.length)
+
+            for (var m in vm.selectedMetrics()) {
+                if (vm.selectedMetrics()[m].vis) {
+                    var vis = vm.selectedMetrics()[m].vis;
+                    if (vm.chart) {
+                        vm.chart.addVis(vis);
+                    } else {
+                        vm.chart = new ossplots.Chart("#plot", vis);
+                        vm.chart.height = 400;
+                        vm.chart.draw();
+                    }
+                } else {
+                    $.getJSON("http://localhost:8182/projects/p/@project.getShortName()/m/" + vm.selectedMetrics()[m].id, function(vis) {
+                        vm.selectedMetrics()[m].vis = vis;
+
+                        if (vm.chart) {
+                            vm.chart.addVis(vis);
+                        } else {
+                            vm.chart = new ossplots.Chart("#plot", vis);
+                            vm.chart.height = 400;
+                            vm.chart.draw();
+                        }
+
+                    });
+                }
+            }
+        });
+
+        ko.applyBindings(vm);
+
+
+        var ms = [new Metric("bugs", "Bugs", true), 
+            new Metric("fixedBugs", "Fixed Bugs", false),
+            new Metric("cumulativeBugs", "Cumulative Bugs", false), 
+            new Metric("comments", "Comments", false), 
+            new Metric("cumulativeComments", "Cumulative Comments", false)
+            ];
+        for (var m in ms) {
+            vm.addMetric(ms[m]);
+        }
+    });
+
+ </script>   
+
+<script type="text/javascript">
+/// DEBUG
     $(function() {
         viss = [
         {
@@ -294,13 +393,13 @@
             ];
 
         var chart = new ossplots.Chart("#plot", viss[0], 400);
-        chart.draw();
+        // chart.draw();
 
         chart = new ossplots.Chart("#eg1", viss[1], 200);
-        chart.draw();
+        // chart.draw();
 
         chart = new ossplots.Chart("#eg2", viss[2], 200);
-        chart.draw();
+        // chart.draw();
 
         viss[2].datatable = [
                 {"Count" : 1, "Sentiment" : "Foo"},
@@ -311,12 +410,31 @@
             ];
 
         chart = new ossplots.Chart("#eg3", viss[2], 200);
-        chart.draw();
+        // chart.draw();
     });
+/// END DEBUG
+</script>
 
+<script type="text/javascript">
+    // TODO: Make this part of the knockout VM
+
+    $(function() {
+        var factoids = [
+            { name : "Foo", stars : Math.floor(Math.random() * (6 - 1) + 1)},
+            { name : "Bar", stars : Math.floor(Math.random() * (6 - 1) + 1)},
+            { name : "Whizz", stars : Math.floor(Math.random() * (6 - 1) + 1)},
+            { name : "Bash", stars : Math.floor(Math.random() * (6 - 1) + 1)},
+            { name : "Boop", stars : Math.floor(Math.random() * (6 - 1) + 1)},
+            { name : "Buzz", stars : Math.floor(Math.random() * (6 - 1) + 1)},
+        ];
+
+        drawSpiderChart("#spider", factoids);
+    });
 </script>
  
 <script type="text/javascript" src="@routes.Assets.at("js/ossplots2.js")"></script>
 <script type="text/javascript" src="@routes.Assets.at("js/generators.js")"></script>
 <script type="text/javascript" src="@routes.Assets.at("js/d3.v3.min.js")"></script>
+<script type="text/javascript" src="@routes.Assets.at("js/knockout-2.3.0.js")"></script>
+<script type="text/javascript" src="@routes.Assets.at("js/RadarChart.js")"></script>
 }

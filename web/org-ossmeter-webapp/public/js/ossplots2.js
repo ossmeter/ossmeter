@@ -11,7 +11,7 @@ var ossplots = {
 		this.label = label;
 	}
 
-	ossplots.Chart = function(container, vis, height) {
+	ossplots.Chart = function(container, vis) {
 		self = this;
 		// The HTML element to contain the plot
 		self.container = container;
@@ -42,12 +42,36 @@ var ossplots = {
 		self.svg;
 		// List of annotations to include on the plot
 		self.annotations = [];
+		// To stop people calling draw() multiple times
+		self._drawn = false;
+		// The default dimensions
+		self.width = $(container).width(); 
+		self.height = $(container).height(); 
+		// The format for date labels: http://bl.ocks.org/mbostock/4149176
+		// self.dateAxisFormat = d3.time.format.multi([
+		// 	[".%L", function(d) { return d.getMilliseconds(); }],
+		// 	[":%S", function(d) { return d.getSeconds(); }],
+		// 	["%I:%M", function(d) { return d.getMinutes(); }],
+		// 	["%I %p", function(d) { return d.getHours(); }],
+		// 	["%a %d", function(d) { return d.getDay() && d.getDate() != 1; }],
+		// 	["%b %d", function(d) { return d.getDate() != 1; }],
+		// 	["%B", function(d) { return d.getMonth(); }],
+		// 	["%Y", function() { return true; }]
+		// ]);
 
 		// Draws the base visualisation only
 		// FIXME: NO! It should draw all!
 		this.draw = function() {
+			"use strict";
+			if (self._drawn) {
+				console.err("draw() invoked multiple times. Only call once, then use redraw()");
+				return;
+			}
+			self._drawn = true;
+
+			// Add margins to the dimensions
 			self.width = $(self.container).width() - self.margin.left - self.margin.right,
-			self.height = height - self.margin.top - self.margin.bottom;
+			self.height = self.height - self.margin.top - self.margin.bottom;
 
 			// Format the data
 			self._formatData(self.vis);
@@ -55,12 +79,32 @@ var ossplots = {
 	        // Define the scales for the data
 	        self._updateScales();
 
-			// Setup the axes: TODO 
+			// Setup the axes: TODO infer ticks?
 			var xAxis = self._createAxis(self.xScale, "bottom", 10); 	// TODO infer #ticks?
 			var yAxis = self._createAxis(self.yScale, "left", 5); 	// TODO infer #ticks
 			
+			if (self.vis.timeSeries) {
+				// xAxis.tickFormat(self.dateAxisFormat); // FIXME
+			}
+
 			self.axes.push(xAxis);
 			self.axes.push(yAxis);
+
+        	// Extract series
+        	var ss = self._extractSeries(self.vis);
+
+        	for (var s in ss) {
+        		self.series.push(ss[s]);
+			}
+
+			// Now draw it :)
+        	self._draw();
+
+		} // end ossplots.chart.draw
+
+		// The internal drawing function. Actually performs the draw
+		self._draw = function() {
+			"use strict";
 
 			// Create the SVG
 			self.svg = d3.select(container)
@@ -69,35 +113,38 @@ var ossplots = {
 					.attr("height", self.height + self.margin.top + self.margin.bottom)
 				.append("g")
 					.attr("transform", "translate(" + self.margin.left + "," + self.margin.top + ")");
-
+			
         	// Draw gridlines
         	self._drawGridlines(self.xScale, self.yScale);
 
-        	// Extract and draw series
-        	var ss = self._extractSeries(self.vis);
-
-        	for (var s in ss) {
-	        	self._drawSeries(ss[s], self.colors(s));
-        		self.series.push(ss[s]);
+        	// Draw the series
+        	for (var s in self.series) {
+	        	self._drawSeries(self.series[s], self.colors(s));
 			}
 
-        	// Add the X Axis: TODO generalise
+			var xAxis = self._createAxis(self.xScale, "bottom", 10); 	// TODO infer #ticks?
+			var yAxis = self._createAxis(self.yScale, "left", 5); 	// TODO infer #ticks
+			
+			if (self.vis.timeSeries) {
+				xAxis.tickFormat(self.dateAxisFormat);
+			}
+
+			// Add the X Axis: TODO generalise
 	        self.svg.append("g")
 	            .attr("class", "x axis")
 	            .attr("transform", "translate(0," + self.height + ")")
-	            .call(xAxis);  
+	            .call(xAxis);//self.axes[0]);  
 
 	        // Add the Y Axis: TODO generalise
 	        self.svg.append("g")
 	            .attr("class", "y axis")
-	            .call(yAxis);
+	            .call(yAxis);//self.axes[1]);
 
 	        // Draw annotations
 	        self.svg.append("g")
 				.attr("id", "ossplots-annotations")
 				.attr("class", "threshold-line");
-
-        	// d3.select("#ossplots-annotations").selectAll("line").remove();
+			// d3.select("#ossplots-annotations").selectAll("line").remove();
         	d3.select("#ossplots-annotations").selectAll("line")
 	        	.data(self.annotations)
 	        	.enter()
@@ -130,23 +177,15 @@ var ossplots = {
 	        				return 0;
 	        			}
 	        		});
-
-		} // end ossplots.chart.draw
-
-		self.redraw = function() {
-			self.svg.selectAll("g").remove();
-			for (var s in self.series) {
-				self._drawSeries(self.series[s], self.colors[s]);
-			}
-		} // end ossplots.chart.redraw
-
-
+		} // end ossplots.chart._draw
 
 		self._createAxis = function(scale, orient, ticks) {
-			return d3.svg.axis().scale(scale).orient(orient).ticks(ticks);
+			"use strict";
+			return  d3.svg.axis().scale(scale).orient(orient).ticks(ticks);
 		} // end ossplots.chart._createAxis
 
 		self.addAnnotation = function(annotation) {
+			"use strict";
 			// TODO: Validate the annotation
 			if (typeof annotation.axis === 'undefined' || 
 				typeof annotation.intersect === 'undefined' ||
@@ -160,6 +199,7 @@ var ossplots = {
 		}
 
 		self._drawSeries = function(s, col) {
+			"use strict";
 			if (s.vis.type === "LineChart") {
 				self.svg.append("g").append("path")
 					.attr("class", "line")
@@ -182,7 +222,7 @@ var ossplots = {
 			            }
 		            })
 		            .attr("width", function (d) {
-		            	if (s.vis.ordinal) {
+		            	if (s.vis.categorical) {
 		            		return self.xScale.rangeBand();
 		            	} else {
 		            		return self.width / s.vis.datatable.length - 1;
@@ -209,10 +249,11 @@ var ossplots = {
 		} // end ossplots.chart._drawSeries
 
 		self._updateScales = function() {
+			"use strict";
 			// Validate the vis
 			for (var v in self.vises) {
-				if (self.vises[v].timeSeries && self.vises[v].ordinal) {
-					throw "Data cannot be both ordinal and time series."
+				if (self.vises[v].timeSeries && self.vises[v].categorical) {
+					throw "Data cannot be both categorical and time series."
 				}
 			}
 
@@ -228,7 +269,7 @@ var ossplots = {
 			if (self.vis.timeSeries) {
 				self.xScale = d3.time.scale().range([0, self.width]);
 				self.xScale.domain(d3.extent(xs));
-			} else if (self.vis.ordinal) {
+			} else if (self.vis.categorical) {
 				self.xScale = d3.scale.ordinal().rangeRoundBands([0, self.width], .1);
 				self.xScale.domain(xs);
 			} else {
@@ -256,7 +297,7 @@ var ossplots = {
 			self.yScale = d3.scale.linear().range([self.height, 0]);
 			if (self.vis.timeSeries) {
 				self.yScale.domain(d3.extent(ys)).nice();
-			} else if (self.vis.ordinal) {
+			} else if (self.vis.categorical) {
 				self.yScale.domain([Math.min(0, d3.min(ys)), d3.max(ys)]);
 			} else {
 				self.yScale.domain(d3.extent(ys)).nice();
@@ -264,6 +305,7 @@ var ossplots = {
 		} // end ossplots.chart._createScales
 
 		self._extractSeries = function(vis) {
+			"use strict";
 			if (typeof vis.y === 'string') {
         		var l = (function(vi, value) {
 	                    return d3.svg.line()
@@ -300,17 +342,20 @@ var ossplots = {
 
 		// Adds another dataset to the chart. Checks if the X-axes are
 		// compatible. Will create a new Y axis if necessary.
-		self.addData = function(vis) {
+		self.addVis = function(vis) {
+			"use strict";
 			// TODO Check axes compatibility
 			// TODO Recalculate domain of scales based on ALL data points
 			if (self.vis.timeSeries != vis.timeSeries ||
-				self.vis.ordinal != vis.ordinal) {
+				self.vis.categorical != vis.categorical) {
 				throw "Incompatible data types, cannot overlay data."
 			}
 
+			$(container).empty();
 
 			if (self.vises.indexOf(vis) === -1) {
 				self.vises.push(vis);
+				self._formatData(vis);
 				self._updateScales();
 
 				var ss = self._extractSeries(vis);
@@ -318,18 +363,46 @@ var ossplots = {
 					self.series.push(ss[s]);
 					self._drawSeries(ss[s], "red");
 				}
-				// self.draw();
+				
 			}
+			self._draw();
 		} // end ossplots.chart.addData
+
+		self.removeVis = function(vis) {	
+			"use strict";
+			$(container).empty();
+
+			var ind = self.vises.indexOf(vis);
+
+			if (ind != -1) {
+				self.vises.splice(ind, 1);
+				self._updateScales();
+
+				var toRemove = -1;
+				for (var s in self.series) {
+					if (self.series[s].vis === vis) {
+						toRemove = s;
+						break;
+					}
+				}
+
+				if (toRemove != -1) {
+					self.series.splice(toRemove, 1);
+				}
+
+			}
+			self._draw();
+		}
 
 		// Iterates through data to ensure plot-able type
 		self._formatData = function(vis) {
+			"use strict";
 
 			var parseDate = d3.time.format(self.dateFormat).parse;
 			vis.datatable.forEach(function(d) { 
 	            if (vis.timeSeries === true && typeof d[vis.x] != 'object') {
 	                d[vis.x] = parseDate(d[vis.x]);
-	            } else if (!vis.ordinal === true) {
+	            } else if (!vis.categorical === true) {
 	                d[vis.x] = +d[vis.x];            
 	            }
 	            if (typeof vis.y === 'string') {
@@ -343,6 +416,7 @@ var ossplots = {
 		} //end ossplots.chart._formatData
 
 		self._drawGridlines = function(xScale, yScale) {
+			"use strict";
 			self.svg.selectAll("line.y")
 	          .data(yScale.ticks(5))
 		          .enter().append("line")
@@ -357,25 +431,3 @@ var ossplots = {
 		return this;
 	} // end ossplots.chart
 })();
-
-/*
-	Taken from: http://stackoverflow.com/questions/10599933/convert-long-number-into-abbreviated-string-in-javascript-with-a-special-shortn 
-*/
-function abbreviateNumber(value) {
-    var newValue = value;
-    if (value >= 1000) {
-        var suffixes = ["", "k", "m", "b","t"];
-        var suffixNum = Math.floor( (""+value).length/3 );
-        var shortValue = '';
-        for (var precision = 2; precision >= 1; precision--) {
-            shortValue = parseFloat( (suffixNum != 0 ? (value / Math.pow(1000,suffixNum) ) : value).toPrecision(precision));
-            var dotLessShortValue = (shortValue + '').replace(/[^a-zA-Z 0-9]+/g,'');
-            if (dotLessShortValue.length <= 2) { break; }
-        }
-        if (shortValue % 1 != 0)  shortNum = shortValue.toFixed(1);
-        newValue = shortValue+suffixes[suffixNum];
-    } else if (value % 1 != 0){
-    	newValue = value.toFixed(2);
-    }
-    return newValue;
-}

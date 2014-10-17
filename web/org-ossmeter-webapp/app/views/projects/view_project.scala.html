@@ -7,6 +7,7 @@
 @import org.ossmeter.repository.model.bts.bugzilla._
 @import org.ossmeter.repository.model.cc.forum._
 @import org.ossmeter.repository.model.cc.nntp._
+@import org.ossmeter.repository.model.cc.wiki._
 @import org.ossmeter.repository.model.vcs.svn._
 @import org.ossmeter.repository.model.vcs.git._
 @import org.ossmeter.repository.model.eclipse._
@@ -98,7 +99,7 @@ case s : SparkGridEntry => {@if(s.getProject().getId()) {app.grid.sparks.push("@
     </div>
     <div class="row">
         <div class="col-md-4">
-            <img src="@routes.Assets.at("img/Spider_Chart.svg")" style="width:100%"/>
+            <div id="spider-sourcecode"></div>
         </div>
         <div class="col-md-8">
 			<div class="tab-content">
@@ -206,7 +207,7 @@ case s : SparkGridEntry => {@if(s.getProject().getId()) {app.grid.sparks.push("@
         </div>
         <div class="row">
             <div class="col-md-4">
-                <img src="@routes.Assets.at("img/Spider_Chart.svg")" style="width:100%"/>
+	            <div id="spider-comms"></div>
             </div>
             <div class="col-md-8">
     			<div class="tab-content">
@@ -297,6 +298,9 @@ case s : SparkGridEntry => {@if(s.getProject().getId()) {app.grid.sparks.push("@
                                     case a : Documentation => {
                                     Documentation
                                     }
+                                    case default => {
+
+                                    }
                                 }</td>
                                 <td>@if(comm.getNonProcessable()) { N } else { Y }</td>
                             </tr>
@@ -324,7 +328,7 @@ case s : SparkGridEntry => {@if(s.getProject().getId()) {app.grid.sparks.push("@
         </div>
         <div class="row">
             <div class="col-md-4">
-               <img src="@routes.Assets.at("img/Spider_Chart.svg")" style="width:100%"/>
+	            <div id="spider-bts"></div>
             </div>
             <div class="col-md-8">
     			<div class="tab-content">
@@ -346,7 +350,7 @@ case s : SparkGridEntry => {@if(s.getProject().getId()) {app.grid.sparks.push("@
                         $('#sparklines-bts-tab').one('click', function(e) {
                             var ms = [ "bugs", "cumulativeBugs", "comments", "cumulativeComments", "fixedBugs"  ]; //"sentimentAtThreadEnd", "averageSentiment",  "invalidBugs", "patches",  "resolvedClosedBugs", "nonResolvedClosedBugs", "sentimentAtThreadBeggining", "cumulativePatches", "wontFixBugs", "duplicateBugs",
 
-                            drawSparklineTable("#sparklines-table-bts", ms);
+                            drawSparklineTable("@project.getShortName()", "#sparklines-table-bts", ms);
                         });
                     </script>
     			  </div>
@@ -378,4 +382,26 @@ case s : SparkGridEntry => {@if(s.getProject().getId()) {app.grid.sparks.push("@
         </div>
     </div>
 </section>
+
+<script type="text/javascript">
+	// TODO: Make this part of the knockout VM
+
+	$(function() {
+    	var factoids = [
+    		{ name : "Foo", stars : Math.floor(Math.random() * (6 - 1) + 1)},
+    		{ name : "Bar", stars : Math.floor(Math.random() * (6 - 1) + 1)},
+    		{ name : "Whizz", stars : Math.floor(Math.random() * (6 - 1) + 1)},
+    		{ name : "Bash", stars : Math.floor(Math.random() * (6 - 1) + 1)},
+    		{ name : "Boop", stars : Math.floor(Math.random() * (6 - 1) + 1)},
+    		{ name : "Buzz", stars : Math.floor(Math.random() * (6 - 1) + 1)},
+    	];
+
+        drawSpiderChart("#spider-sourcecode", factoids);
+        drawSpiderChart("#spider-comms", factoids);
+        drawSpiderChart("#spider-bts", factoids);
+    });
+</script>
+
+<script type="text/javascript" src="@routes.Assets.at("js/d3.v3.min.js")"></script>
+<script type="text/javascript" src="@routes.Assets.at("js/RadarChart.js")"></script>
 }

@@ -113,13 +113,20 @@
 
 <section>
     <div class="container box">
-        <div class="row" id="parcoods-plot"></div>
+        <div class="row" id="parcoods-plot">
+        	parallel coordinates
+        </div>
         <div class="row" id="parcoods-table"></div>
     </div>
 </section>
 
 <section>
     <div class="container box">
+	    <div class="row">
+		    <div class="col-md-12 center" id="metricplot-legend">
+		    	
+		    </div>
+	    </div>
         <div class="row">
             <div class="col-md-10">
                 <div id="metricplot-plot">
@@ -190,7 +197,8 @@ $(function() {
             "timeSeries" : true
         };
     vis.datatable = generateTestData(vis, 500);
-	var chart = new ossplots.Chart("#metricplot-plot", vis, 400);
+	var chart = new ossplots.Chart("#metricplot-plot", vis);
+	chart.height = 400;
     chart.draw();
 });
 // END DEBUG ONLY
