@@ -15,5 +15,6 @@ Require-Bundle: org.eclipse.core.runtime,
  rascal4ossmeter;bundle-version="0.0.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
-Export-Package: org.ossmeter.metricprovider.rascal
+Export-Package: org.ossmeter.metricprovider.rascal,
+ org.ossmeter.metricprovider.rascal.trans.model
 Import-Package: org.mapdb

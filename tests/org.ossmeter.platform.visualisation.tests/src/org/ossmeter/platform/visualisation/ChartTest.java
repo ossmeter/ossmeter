@@ -1,10 +1,19 @@
 package org.ossmeter.platform.visualisation;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import org.junit.Test;
+import org.ossmeter.metricprovider.rascal.trans.model.IntegerMeasurement;
+import org.ossmeter.metricprovider.rascal.trans.model.ListMeasurement;
+import org.ossmeter.metricprovider.rascal.trans.model.StringMeasurement;
+import org.ossmeter.metricprovider.rascal.trans.model.TupleMeasurement;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 
 public class ChartTest {
@@ -26,9 +35,56 @@ public class ChartTest {
 		ArrayNode vis = (ArrayNode) node.get("vis");
 		JsonNode datatable = vis.get(0).get("datatable");
 		
-		Chart chart = ChartUtil.loadChart("");
+		Chart chart = ChartUtil.loadChart("charts/linechart.json");
 		ArrayNode table = chart.createDatatable(datatable, collection, null);
 		System.out.println(table);
+	}
+ 	
+ 	@Test
+	public void testRascalDatatable() throws Exception {
+ 		
+ 		
+ 		// Create test data
+ 		DB db = mongo.getDB("rascalloc");
+ 		DBCollection collection = db.getCollection("locperlanguage");
+
+ 		Calendar cal = Calendar.getInstance();
+ 		for (int i = 0; i < 10; i++) {
+ 			
+ 			ListMeasurement list = new ListMeasurement();
+ 			
+ 			for (String lang : new String[]{"HTML", "Java", "PHP"}) {
+ 				StringMeasurement l = new StringMeasurement();
+ 				l.setValue(lang);
+ 				
+ 				IntegerMeasurement loc = new IntegerMeasurement();
+ 				loc.setValue(3);
+ 				
+ 				TupleMeasurement tuple = new TupleMeasurement();
+ 				tuple.getValue().add(l);
+ 				tuple.getValue().add(loc);
+ 				
+ 				list.getValue().add(tuple);
+ 			}
+ 			
+ 			DBObject obj = list.getDbObject();
+ 			obj.put("__date", new org.ossmeter.platform.Date(cal.getTime()).toString());
+ 			obj.put("__datetime", cal.getTime());
+ 			collection.save(obj);
+ 			cal.add(Calendar.DATE, 1);
+ 		}
+ 		
+		JsonNode node = ChartUtil.loadJsonFile("data/rascalloc.json");
+		
+		ArrayNode vis = (ArrayNode) node.get("vis");
+		JsonNode datatable = vis.get(0).get("datatable");
+		
+		Chart chart = ChartUtil.loadChart("charts/linechart.json");
+		ArrayNode table = chart.createDatatable(datatable, collection, null);
+		System.out.println(table);
+		
+		// Tidy up
+		mongo.dropDatabase("rascalloc");
 	}
 	
 	@Test
@@ -39,7 +95,7 @@ public class ChartTest {
 		ArrayNode vis = (ArrayNode) node.get("vis");
 		JsonNode datatable = vis.get(0).get("datatable");
 		
-		Chart chart = ChartUtil.loadChart("");
+		Chart chart = ChartUtil.loadChart("charts/linechart.json");
 		ArrayNode table = chart.createDatatable(datatable, collection, null);
 		System.out.println(table);
 	}

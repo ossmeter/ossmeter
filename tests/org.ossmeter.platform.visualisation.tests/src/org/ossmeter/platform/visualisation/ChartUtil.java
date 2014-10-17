@@ -11,7 +11,7 @@ import com.mongodb.Mongo;
 public class ChartUtil {
 	
 	public static Chart loadChart(String path) throws Exception {
-		JsonNode node = loadJsonFile("charts/linechart.json");
+		JsonNode node = loadJsonFile(path);
 		System.out.println(node);
 		return new Chart(node);
 	}

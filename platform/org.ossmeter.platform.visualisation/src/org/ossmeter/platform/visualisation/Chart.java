@@ -89,7 +89,19 @@ public class Chart {
 						if (field.equals("__date")) {
 							value = dbobj.get(field);
 						} else {
-							value = row.get(field);
+							// U.G.L.Y. FIXME
+							if (field.contains("[")) {
+								String[] _ = field.split("\\[");
+								String[] __ = _[1].split("\\]");
+								int _index = Integer.valueOf(__[0]);
+								String _field = __[1].replace(".","");
+								BasicDBList _row = (BasicDBList)row.get(_[0]);
+								
+								BasicDBObject _entry = (BasicDBObject) _row.get(_index);
+								value = _entry.get(_field);
+							} else {
+								value = row.get(field);
+							}
 						}
 						
 						r.put(name, mapper.valueToTree(value));
