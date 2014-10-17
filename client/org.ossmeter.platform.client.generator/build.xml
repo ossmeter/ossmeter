@@ -72,6 +72,11 @@
 	    	modelFile="models/eclipse.ecore"
 	        metamodelUri="http://www.eclipse.org/emf/2002/Ecore"
 	        read="true" store="false" />
+		
+		<epsilon.emf.loadModel name="Wiki" aliases="OSS"
+	    	modelFile="models/wiki.ecore"
+	        metamodelUri="http://www.eclipse.org/emf/2002/Ecore"
+	        read="true" store="false" />
 
 		<epsilon.emf.loadModel name="Metric" aliases="OSS"
 	    	modelFile="models/metric.ecore"
@@ -125,6 +130,7 @@
 					<model ref="Redmine"/>
 					<model ref="Sourceforge"/>
 					<model ref="SVN"/>
+					<model ref="Wiki"/>
 					<model ref="Metric"/>
 		    		<model ref="Factoid"/>
 		    		<model ref="WADL"/>
