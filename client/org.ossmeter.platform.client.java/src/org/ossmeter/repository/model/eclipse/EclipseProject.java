@@ -18,6 +18,7 @@ import org.ossmeter.repository.model.vcs.git.*;
 import org.ossmeter.repository.model.sourceforge.*;
 import org.ossmeter.repository.model.github.*;
 import org.ossmeter.repository.model.*;
+import org.ossmeter.repository.model.cc.wiki.*;
 import org.ossmeter.repository.model.metrics.*;
 import org.ossmeter.platform.factoids.*;
 
@@ -36,7 +37,6 @@ public class EclipseProject extends Project {
 	protected String paragraphUrl;
 	protected String descriptionUrl;
 	protected String downloadsUrl;
-	protected String homePage;
 	protected String projectplanUrl;
 	protected String updatesiteUrl;
 	protected String state;
@@ -49,9 +49,6 @@ public class EclipseProject extends Project {
 	}
 	public String getDownloadsUrl() {
 		return downloadsUrl;
-	}
-	public String getHomePage() {
-		return homePage;
 	}
 	public String getProjectplanUrl() {
 		return projectplanUrl;
