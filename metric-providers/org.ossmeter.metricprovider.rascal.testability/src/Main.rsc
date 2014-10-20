@@ -9,7 +9,7 @@ import analysis::graphs::Graph;
 extend lang::java::m3::Core;
 import JUnit4;
 import Java;
-import org::ossmeter::metricprovider::Factoid;
+import org::ossmeter::metricprovider::MetricProvider;
 
 
 @metric{TestCoverage}
@@ -120,7 +120,7 @@ int numberOfTestMethods(rel[Language, loc, M3] m3s = {}) {
 @metric{JavaUnitTestCoverage}
 @doc{How well do the project's unit tests cover its code (Java)}
 @friendlyName{Java unit test coverage}
-@uses{("TestOverPublicMethods": "testOverPublicMethods", "TestCoverage", "testCoverage")}
+@uses{("TestOverPublicMethods": "testOverPublicMethods", "TestCoverage": "testCoverage")}
 @appliesTo{java()}
 Factoid JavaUnitTestCoverage(real testOverPublicMethods = -1.0, real testCoverage = -1.0) {
 
