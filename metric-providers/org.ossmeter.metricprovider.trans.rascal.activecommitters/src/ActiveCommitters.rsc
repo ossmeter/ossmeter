@@ -249,16 +249,15 @@ Factoid developmentTeamExperience(
   return factoid(txt, starLookup[stars]);
 }
 
-// TODO: this metric is broken because it does not consider the full history @metric{committersoverfile}
+@metric{committersoverfile}
 @doc{Calculates the gini coefficient of committeroverfile}
 @friendlyName{committersoverfile}
 @appliesTo{generic()}
+@uses=("countCommittersPerFile":"perFile")
 @historic{}
-real giniCommittersOverFile(ProjectDelta delta = \empty()) {
-  rel[str, str] filesCommitters = {< commitItem.path, vcC.author > | /VcsCommit vcC <- delta, commitItem <- vcC.items};
-
-  committersOverFile = distribution(filesCommitters<1,0>);
-  distCommitterOverFile = distribution(committersOverFile);
+real giniCommittersOverFile(ProjectDelta delta = \empty(), rel[loc,str] perFile = {}) {
+  committersOverFile = distribution(perFile<1,0>);
+  distCommitterOverFile = distribution(perFile);
   
   if (size(distCommitterOverFile) > 0) {
     return gini([<0,0>]+[<x, distCommitterOverFile[x]> | x <- distCommitterOverFile]);
@@ -267,30 +266,53 @@ real giniCommittersOverFile(ProjectDelta delta = \empty()) {
   throw undefined("not enough data to compute committer over file spread");
 }
 
-// TODO: this metric is broken because it does not consider the full history @metric{NumberOfCommittersperFile}
+@metric{countCommittersPerFile}
 @doc{Count the number of committers that have touched a file.}
 @friendlyName{Number of Committers per file}
 @appliesTo{generic()}
+@uses= ("committersPerFile" : "perFile")
 @historic{}
-map[loc file, int numberOfCommitters] countCommittersPerFile(ProjectDelta delta = \empty()) {
-  commPerFile = committersPerFile(delta);
+map[loc file, int numberOfCommitters] countCommittersPerFile(ProjectDelta delta = \empty(), rel[loc,str] perFile = {}) {
+  commPerFile = index(perFile);
   return (f : size(commPerFile[f]) | f <- commPerFile);
 }
 
-map[loc, set[str]] committersPerFile(ProjectDelta delta) {
-  map[loc file, set[str] committers] result = ();
-  set[str] emptySet = {};
-  for (/VcsRepositoryDelta vcrd <- delta) {
-    loc repo = vcrd.repository.url;
-    for (/VcsCommit vc <- delta, vc.author != "null") {
-      for (VcsCommitItem vci <- vc.items) {
-        // Need to check that the committer is not already counted
-        result[repo+vci.path]? emptySet += {vc.author};
-      }
+@doc{Register which committers have contributed to which files}
+@friendlyName{Number of Committers per file}
+@appliesTo{generic()}
+rel[loc, str] committersPerFile(ProjectDelta delta, rel[loc, str] prev) 
+  = prev + { <vcrd.repository.url + vci.path, vc.author> 
+           | /VcsRepositoryDelta vcrd <- delta
+           , /VcsCommit vc <- delta
+           , vc.author != "null", vc.author != ""
+           , VcsCommitItem vci <- vc.items
+           }; 
+
+
+@metric{developmentTeamExperienceSpread}
+@doc{How specialized is the development team? Or are people working on different parts of the project?}
+@friendlyName{Development team experience}
+@uses = ("committersoverfile": "committersoverfile", "countCommittersPerFile":"perFile")
+@appliesTo{generic()}
+Factoid developmentTeamExperienceSpread(real developmentTeamExperienceSpread = 0.0, rel[loc,int] perFile = {}) {
+  amounts = [ i | <_, i> <- perFile];
+  med = median(amounts);
+  max = max(amounts);
+    
+  if (developmentTeamExperienceSpread >= 0.5) {
+    if (med >= 2) {
+      return factoid(\four(), "Developers are spreading out over the entire project and it can be expected that most files have more than one contributor.");
+    }
+    else {
+        return factoid(\three(), "Developers are spreading out over the entire project but most files will have only one contributor.");
     }
   }
-  
-  return result;
+  else {
+    if (max > 1) {
+      return factoid(\two(), "Developers are mostly focusing on their own files in the project, but there is definitely some collaboration going on.");
+    }
+    else {
+        return factoid(\one(), "Developers are mostly focused on their own files in the project.");
+    }
+  }
 }
-
-
