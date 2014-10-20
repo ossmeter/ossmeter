@@ -249,7 +249,7 @@ Factoid developmentTeamExperience(
   return factoid(txt, starLookup[stars]);
 }
 
-@metric{committersoverfile}
+// TODO: this metric is broken because it does not consider the full history @metric{committersoverfile}
 @doc{Calculates the gini coefficient of committeroverfile}
 @friendlyName{committersoverfile}
 @appliesTo{generic()}
@@ -267,10 +267,11 @@ real giniCommittersOverFile(ProjectDelta delta = \empty()) {
   throw undefined("not enough data to compute committer over file spread");
 }
 
-@metric{NumberOfCommittersperFile}
-@doc{Count the number of committers that have touced a file}
+// TODO: this metric is broken because it does not consider the full history @metric{NumberOfCommittersperFile}
+@doc{Count the number of committers that have touched a file.}
 @friendlyName{Number of Committers per file}
 @appliesTo{generic()}
+@historic{}
 map[loc file, int numberOfCommitters] countCommittersPerFile(ProjectDelta delta = \empty()) {
   commPerFile = committersPerFile(delta);
   return (f : size(commPerFile[f]) | f <- commPerFile);
@@ -291,3 +292,5 @@ map[loc, set[str]] committersPerFile(ProjectDelta delta) {
   
   return result;
 }
+
+
