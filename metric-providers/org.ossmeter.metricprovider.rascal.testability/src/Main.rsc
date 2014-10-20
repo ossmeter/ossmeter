@@ -9,7 +9,7 @@ import analysis::graphs::Graph;
 extend lang::java::m3::Core;
 import JUnit4;
 import Java;
-import org::ossmeter::metricprovider::Factoid;
+import org::ossmeter::metricprovider::MetricProvider;
 
 
 @metric{TestCoverage}
@@ -111,6 +111,7 @@ real percentageOfTestedPublicMethods(rel[Language, loc, M3] m3s = {}) {
 @doc{Number of JUnit test methods}
 @friendlyName{Number of JUnit test methods}
 @appliesTo{java()}
+@historic
 int numberOfTestMethods(rel[Language, loc, M3] m3s = {}) {
   return size(getJUnit4TestMethods(systemM3(m3s)));
 }
