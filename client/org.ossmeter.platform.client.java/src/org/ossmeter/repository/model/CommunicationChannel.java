@@ -18,6 +18,7 @@ import org.ossmeter.repository.model.vcs.git.*;
 import org.ossmeter.repository.model.sourceforge.*;
 import org.ossmeter.repository.model.github.*;
 import org.ossmeter.repository.model.*;
+import org.ossmeter.repository.model.cc.wiki.*;
 import org.ossmeter.repository.model.metrics.*;
 import org.ossmeter.platform.factoids.*;
 
@@ -26,7 +27,6 @@ import org.ossmeter.platform.factoids.*;
 	property = "_type")
 @JsonSubTypes({
 	@Type(value = CommunicationChannel.class, name="org.ossmeter.repository.model.CommunicationChannel"), 	@Type(value = org.ossmeter.repository.model.eclipse.MailingList.class, name="org.ossmeter.repository.model.eclipse.MailingList"),
-	@Type(value = org.ossmeter.repository.model.eclipse.Wiki.class, name="org.ossmeter.repository.model.eclipse.Wiki"),
 	@Type(value = org.ossmeter.repository.model.eclipse.Documentation.class, name="org.ossmeter.repository.model.eclipse.Documentation"),
 	@Type(value = org.ossmeter.repository.model.cc.forum.Forum.class, name="org.ossmeter.repository.model.cc.forum.Forum"),
 	@Type(value = org.ossmeter.repository.model.googlecode.GoogleWiki.class, name="org.ossmeter.repository.model.googlecode.GoogleWiki"),
@@ -36,6 +36,7 @@ import org.ossmeter.platform.factoids.*;
 	@Type(value = org.ossmeter.repository.model.redmine.RedmineQueryManager.class, name="org.ossmeter.repository.model.redmine.RedmineQueryManager"),
 	@Type(value = org.ossmeter.repository.model.sourceforge.MailingList.class, name="org.ossmeter.repository.model.sourceforge.MailingList"),
 	@Type(value = org.ossmeter.repository.model.sourceforge.Discussion.class, name="org.ossmeter.repository.model.sourceforge.Discussion"),
+	@Type(value = org.ossmeter.repository.model.cc.wiki.Wiki.class, name="org.ossmeter.repository.model.cc.wiki.Wiki"),
 })
 @JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class CommunicationChannel extends Object {

@@ -12,6 +12,8 @@ import String;
 import util::Math;
 import analysis::statistics::SimpleRegression;
 import analysis::statistics::Descriptive;
+import analysis::statistics::Frequency;
+import analysis::statistics::Inference;
  
 @metric{committersToday}
 @doc{activeCommitters}
@@ -246,3 +248,49 @@ Factoid developmentTeamExperience(
 
   return factoid(txt, starLookup[stars]);
 }
+
+// TODO: this metric is broken because it does not consider the full history @metric{committersoverfile}
+@doc{Calculates the gini coefficient of committeroverfile}
+@friendlyName{committersoverfile}
+@appliesTo{generic()}
+@historic{}
+real giniCommittersOverFile(ProjectDelta delta = \empty()) {
+  rel[str, str] filesCommitters = {< commitItem.path, vcC.author > | /VcsCommit vcC <- delta, commitItem <- vcC.items};
+
+  committersOverFile = distribution(filesCommitters<1,0>);
+  distCommitterOverFile = distribution(committersOverFile);
+  
+  if (size(distCommitterOverFile) > 0) {
+    return gini([<0,0>]+[<x, distCommitterOverFile[x]> | x <- distCommitterOverFile]);
+  }
+
+  throw undefined("not enough data to compute committer over file spread");
+}
+
+// TODO: this metric is broken because it does not consider the full history @metric{NumberOfCommittersperFile}
+@doc{Count the number of committers that have touched a file.}
+@friendlyName{Number of Committers per file}
+@appliesTo{generic()}
+@historic{}
+map[loc file, int numberOfCommitters] countCommittersPerFile(ProjectDelta delta = \empty()) {
+  commPerFile = committersPerFile(delta);
+  return (f : size(commPerFile[f]) | f <- commPerFile);
+}
+
+map[loc, set[str]] committersPerFile(ProjectDelta delta) {
+  map[loc file, set[str] committers] result = ();
+  set[str] emptySet = {};
+  for (/VcsRepositoryDelta vcrd <- delta) {
+    loc repo = vcrd.repository.url;
+    for (/VcsCommit vc <- delta, vc.author != "null") {
+      for (VcsCommitItem vci <- vc.items) {
+        // Need to check that the committer is not already counted
+        result[repo+vci.path]? emptySet += {vc.author};
+      }
+    }
+  }
+  
+  return result;
+}
+
+
