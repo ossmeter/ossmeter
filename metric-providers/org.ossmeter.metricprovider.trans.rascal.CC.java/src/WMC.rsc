@@ -9,15 +9,13 @@ import String;
 import Map;
 import ValueIO;
 
-import analysis::statistics::Frequency;
-import analysis::statistics::Inference;
-
-import org::ossmeter::metricprovider::ProjectDelta;
+import org::ossmeter::metricprovider::MetricProvider;
+import CC;
 
 
 @metric{WMCJava}
 @doc{Compute your WMC}
-@friendlyName{Weighted Method Count}
+@friendlyName{Weighted Method Count (Java)}
 @appliesTo{java()}
 @uses = ("CCJava" : "methodCC")
 map[loc class, int wmcCount] getWMC(
@@ -43,7 +41,7 @@ map[loc class, int wmcCount] getWMC(
 
 @metric{CCJava}
 @doc{Compute your McCabe}
-@friendlyName{McCabe's Cyclomatic Complexity Metric}
+@friendlyName{McCabe's Cyclomatic Complexity Metric (Java)}
 @appliesTo{java()}
 map[loc, int] getCC(ProjectDelta delta = ProjectDelta::\empty(),
     map[loc, loc] workingCopies = (),
@@ -94,19 +92,20 @@ int countCC(Declaration ast) {
 
 @metric{CCOverJavaMethods}
 @doc{Calculates the gini coefficient of cc over methods}
-@friendlyName{ccovermethods}
+@friendlyName{ccovermethodsJava}
 @appliesTo{java()}
 @uses = ("CCJava" : "methodCC")
-real giniCCOverMethods(map[loc, int] methodCC = ()) {
-  if (isEmpty(methodCC)) {
-    return -1.0;
-  }
-  
-  distCCOverMethods = distribution(methodCC);
-  
-  if (size(distCCOverMethods) < 2) {
-    return -1.0;
-  }
-  
-  return gini([<0,0>]+[<x, distCCOverMethods[x]> | x <- distCCOverMethods]);
+real giniCCOverMethodsJava(map[loc, int] methodCC = ()) {
+  return giniCCOverMethods(methodCC);
 }
+
+
+@metric{CCJavaFactoid}
+@doc{The cyclometic complexity of the project's Java code}
+@friendlyName{CCJavaFactoid}
+@appliesTo{java()}
+@uses = ("CCJava" : "methodCC")
+Factoid CC(map[loc, int] methodCC = ()) {
+  return CCFactoid(methodCC, "Java");
+}
+
