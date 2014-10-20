@@ -1,7 +1,7 @@
 module ActiveCommitters
 
 import org::ossmeter::metricprovider::MetricProvider;
-
+import org::ossmeter::metricprovider::ProjectDelta;
 import ValueIO;
 import IO;
 import Map;
@@ -256,14 +256,14 @@ Factoid developmentTeamExperience(
 @uses=("countCommittersPerFile":"perFile")
 @historic{}
 real giniCommittersOverFile(ProjectDelta delta = \empty(), rel[loc,str] perFile = {}) {
-  committersOverFile = distribution(perFile<1,0>);
-  distCommitterOverFile = distribution(perFile);
+  map[loc, int] committersOverFile = distribution(perFile<1,0>);
+  map[int, int] distCommitterOverFile = distribution(committersOverFile);
   
   if (size(distCommitterOverFile) > 0) {
     return gini([<0,0>]+[<x, distCommitterOverFile[x]> | x <- distCommitterOverFile]);
   }
 
-  throw undefined("not enough data to compute committer over file spread");
+  throw undefined("not enough data to compute committer over file spread", |project://<delta.project.name>|);
 }
 
 @metric{countCommittersPerFile}
@@ -272,11 +272,11 @@ real giniCommittersOverFile(ProjectDelta delta = \empty(), rel[loc,str] perFile 
 @appliesTo{generic()}
 @uses= ("committersPerFile" : "perFile")
 @historic{}
-map[loc file, int numberOfCommitters] countCommittersPerFile(ProjectDelta delta = \empty(), rel[loc,str] perFile = {}) {
-  commPerFile = index(perFile);
-  return (f : size(commPerFile[f]) | f <- commPerFile);
+map[loc file, int numberOfCommitters] countCommittersPerFile(ProjectDelta delta = \empty(), rel[loc file,str person] perFile = {}) {
+  return (f : size(perFile[f]) | f <- perFile.file);
 }
 
+@metric{committersPerFile}
 @doc{Register which committers have contributed to which files}
 @friendlyName{Number of Committers per file}
 @appliesTo{generic()}
@@ -292,12 +292,12 @@ rel[loc, str] committersPerFile(ProjectDelta delta, rel[loc, str] prev)
 @metric{developmentTeamExperienceSpread}
 @doc{How specialized is the development team? Or are people working on different parts of the project?}
 @friendlyName{Development team experience}
-@uses = ("committersoverfile": "committersoverfile", "countCommittersPerFile":"perFile")
+@uses = ("committersoverfile": "developmentTeamExperienceSpread", "countCommittersPerFile":"perFile")
 @appliesTo{generic()}
 Factoid developmentTeamExperienceSpread(real developmentTeamExperienceSpread = 0.0, rel[loc,int] perFile = {}) {
-  amounts = [ i | <_, i> <- perFile];
+  list[int] amounts = [ i | <_, i> <- perFile];
   med = median(amounts);
-  max = max(amounts);
+  maxi = List::max(amounts);
     
   if (developmentTeamExperienceSpread >= 0.5) {
     if (med >= 2) {
@@ -308,11 +308,58 @@ Factoid developmentTeamExperienceSpread(real developmentTeamExperienceSpread = 0
     }
   }
   else {
-    if (max > 1) {
+    if (maxi > 1) {
       return factoid(\two(), "Developers are mostly focusing on their own files in the project, but there is definitely some collaboration going on.");
     }
     else {
-        return factoid(\one(), "Developers are mostly focused on their own files in the project.");
+      return factoid(\one(), "Developers are mostly focused on their own files in the project.");
     }
+  }
+}
+
+@metric{commitsPerWeekday}
+@doc{On which day of the week do commits take place?}
+@friendlyName{commitsPerWeekday}
+@appliesTo{generic()}
+map[str, int] commitsPerWeekday(ProjectDelta delta = \empty(), map[str, int] prev = {}) {
+  dayOfWeek = printDate(delta.date, "EEE");
+  return prev + ( dayOfWeek : (prev[dayOfWeek]?0) + (0 | it + 1 | /VcsCommit vcsCommit <- delta));
+}
+
+@metric{percentageOfWeekendCommits}
+@doc{Number of commits during the weekend}
+@friendlyName{percentageOfWeekendCommits}
+@appliesTo{generic()}
+@uses=("commitsPerWeekDay":"commitsPerWeekDay")
+@historic{}
+int percentageOfWeekendCommits(map[str,int] commitsPerWeekDay) {
+  total = sum([commitsPerWeekDay[d] | d <- commitsPerWeekDay]);
+  weekend = commitsPerWeekDay["Sat"] + commitsPerWeekDay["Sun"];
+
+  if (total > 0) {
+    return percent(total, weekend);
+  }
+  
+  return 0;  
+}
+
+private Factoid factoid(StarRating stars, str msg) = factoid(msg, stars);
+
+@metric{weekendProject}
+@doc{Is this a weekend project or not?}
+@appliesTo{generic()}
+@uses=("percentageOfWeekendCommits":"percentageOfWeekendCommits")
+Factoid weekendProject(int percentageOfWeekendCommits) {
+  if (percentageOfWeekendCommits > 75) {
+    return factoid(\one(), "Over the entire lifetime of this project, commits have been done usually over the weekend.");
+  }
+  else if (percentageOfWeekendCommits > 50) {
+    return factoid(\two(), "Over the entire lifetime of this project, commits are done mostly over the weekend, but also significantly during the week.");
+  }
+  else if (percentageOfWeekendCommits > 25) {
+    return factoid(\three(), "Over the entire lifetime of this project, commits are done mostly during the week, but also significantly during the weekend.");
+  }
+  else {
+    return factoid(\four(), "Over the entire lifetime of this project, commits are done usually during the week, and hardly during the weekend.");
   }
 }
