@@ -95,7 +95,7 @@ int churnPerCommitInTwoWeeks(int churn = 0, int commits = 1) = churn / commits;
 @appliesTo{generic()}
 @uses= ("churnPerCommitInTwoWeeks.historic":"ratioHistory",
         "churnPerCommitInTwoWeeks":"ratio")
-Factoid commitFrequencyAndSize(rel[datetime, int] ratioHistory = {}, int ratio = 0) {
+Factoid commitSize(rel[datetime, int] ratioHistory = {}, int ratio = 0) {
   ratioSlope = historicalSlope(ratioHistory, 6);
   ratioMedian = historicalMedian(ratioHistory, 6);
 
@@ -152,9 +152,14 @@ Factoid churnVolume(rel[datetime, int] churnHistory = {}, int churn = 0) {
 @appliesTo{generic()}
 @historic{}
 map[loc author, int churn] churnPerCommitter(ProjectDelta delta = \empty())
-  = (|author:///| + co.author : churn(co) | /VcsCommit co := delta)
+  = sumPerItem([<|author:///| + co.author, churn(co)> | /VcsCommit co := delta])
   ;
-
+  
+private map[loc item, int val] sumPerItem(lrel[loc item, int val] input)
+  = (x : s | x <- { * input<item> }, int s := sum(filt(input, x)));  
+ 
+private list[int] filt(lrel[loc, int] input, loc i) = [n | <i, n> <- input];
+  
 @metric{churnPerFile}
 @doc{Count churn}
 @friendlyName{Counts number of lines added and deleted per file over the lifetime of the project}
@@ -208,44 +213,12 @@ Factoid commitLocality(rel[datetime day, map[loc, int] files] filesPerCommit) {
    }  
 }
   
-@metric{coreCommitters}
-@doc{Finds the core committers based on the churn they produce}
-@friendlyName{Core committers}
-@appliesTo{generic()}
-@uses = ("churnPerCommitter.historic" : "history")
-list[loc] coreCommitters(rel[datetime, map[loc, int]] history = {}) {
-  //NOTE: pongo stores items are sets so this metric breaks
-
-  map[loc author, int churn] totalChurnPerAuthor = ();
-  for (<_, historyMap> <- history) {
-    for (author <- historyMap) {
-      totalChurnPerAuthor[author] ? 0 += historyMap[author];
-    }
-  }
-  list[int] churns = reverse(sort(range(totalChurnPerAuthor)));
-  map[int, set[loc]] comparator = invert(totalChurnPerAuthor);
-  
-  return [author | authorChurn <- churns, author <- comparator[authorChurn]];
-}
-
-@metric{coreCommitersChurn}
+@metric{coreCommittersChurn}
 @doc{Find the core committers and the churn they have produced}
 @friendlyName{Churn per core committer}
 @appliesTo{generic()}
 @uses = ("churnPerCommitter" : "committerChurn")
-map[loc, int] coreCommittersChurn(map[loc, int] prev = (), map[loc, int] committerChurn = ()) {
-  map[loc, int] result = ();
+map[loc, int] coreCommittersChurn(map[loc, int] prev = (), map[loc, int] committerChurn = ()) 
+  = prev + (author : prev[author]?0 + committerChurn[author] | author <- committerChurn);
   
-  for (/map[loc, int] prevMap := prev) {
-    for (author <- prevMap) {
-      result[author] ? 0 += prevMap[author];
-    }
-  }
-  
-  for (author <- committerChurn) {
-    result[author] ? 0 += committerChurn[author];
-  }
-  
-  return result;
-}
   
