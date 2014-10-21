@@ -19,7 +19,7 @@ map[loc, int] churnPerCommit(ProjectDelta delta = \empty()) {
   
 @metric{churnPerCommitter}
 @doc{Count churn per committer}
-@friendlyName{Counts number of lines added and deleted per committer}
+@friendlyName{Counts number of lines added and deleted per committer over the lifetime of the project}
 @appliesTo{generic()}
 @historic{}
 map[loc author, int churn] churnPerCommitter(ProjectDelta delta = \empty())
@@ -28,11 +28,11 @@ map[loc author, int churn] churnPerCommitter(ProjectDelta delta = \empty())
 
 @metric{churnPerFile}
 @doc{Count churn}
-@friendlyName{Counts number of lines added and deleted per file}
+@friendlyName{Counts number of lines added and deleted per file over the lifetime of the project}
 @appliesTo{generic()}
 @historic{}
 map[loc file, int churn] churnPerFile(ProjectDelta delta = \empty())
-  = (rd.repository.url + co.path : churn(co) | /VcsRepositoryDelta rd := delta, /VcsCommitItem co := rd)
+  = (rd.repository.url + co.path :churn(co) | /VcsRepositoryDelta rd := delta, /VcsCommitItem co := rd)
   ;
       
 int churn(node item) 
@@ -44,6 +44,7 @@ int churn(node item)
 @doc{Counts the number of files per commit}
 @friendlyName{Number of files per commit}
 @appliesTo{generic()}
+@historic{}
 map[loc, int] numberOfFilesPerCommit(ProjectDelta delta = \empty()) {
   map[loc, int] result = ();
   
@@ -60,7 +61,7 @@ map[loc, int] numberOfFilesPerCommit(ProjectDelta delta = \empty()) {
 @doc{Finds the core committers based on the churn they produce}
 @friendlyName{Core committers}
 @appliesTo{generic()}
-@uses = ("org.ossmeter.metricprovider.trans.rascal.churnpercommitter.churnPerCommitter.historic" : "history")
+@uses = ("churnPerCommitter.historic" : "history")
 list[loc] coreCommitters(rel[datetime, map[loc, int]] history = {}) {
   //NOTE: pongo stores items are sets so this metric breaks
 
@@ -80,7 +81,7 @@ list[loc] coreCommitters(rel[datetime, map[loc, int]] history = {}) {
 @doc{Find the core committers and the churn they have produced}
 @friendlyName{Churn per core committer}
 @appliesTo{generic()}
-@uses = ("org.ossmeter.metricprovider.trans.rascal.churnpercommitter.churnPerCommitter" : "committerChurn")
+@uses = ("churnPerCommitter" : "committerChurn")
 map[loc, int] coreCommittersChurn(map[loc, int] prev = (), map[loc, int] committerChurn = ()) {
   map[loc, int] result = ();
   
