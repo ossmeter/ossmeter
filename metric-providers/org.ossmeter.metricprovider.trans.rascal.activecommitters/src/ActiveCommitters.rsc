@@ -253,7 +253,7 @@ Factoid developmentTeamExperience(
 @doc{Calculates the gini coefficient of committeroverfile}
 @friendlyName{committersoverfile}
 @appliesTo{generic()}
-@uses=("countCommittersPerFile":"perFile")
+@uses=("countCommittersPerFile": "perFile")
 @historic{}
 real giniCommittersOverFile(ProjectDelta delta = \empty(), rel[loc,str] perFile = {}) {
   map[loc, int] committersOverFile = distribution(perFile<1,0>);
@@ -270,7 +270,7 @@ real giniCommittersOverFile(ProjectDelta delta = \empty(), rel[loc,str] perFile 
 @doc{Count the number of committers that have touched a file.}
 @friendlyName{Number of Committers per file}
 @appliesTo{generic()}
-@uses= ("committersPerFile" : "perFile")
+@uses= ("committersPerFile": "perFile")
 @historic{}
 map[loc file, int numberOfCommitters] countCommittersPerFile(ProjectDelta delta = \empty(), rel[loc file,str person] perFile = {}) {
   return (f : size(perFile[f]) | f <- perFile.file);
@@ -292,7 +292,7 @@ rel[loc, str] committersPerFile(ProjectDelta delta, rel[loc, str] prev)
 @metric{developmentTeamExperienceSpread}
 @doc{How specialized is the development team? Or are people working on different parts of the project?}
 @friendlyName{Development team experience}
-@uses = ("committersoverfile": "developmentTeamExperienceSpread", "countCommittersPerFile":"perFile")
+@uses = ("committersoverfile": "developmentTeamExperienceSpread", "countCommittersPerFile": "perFile")
 @appliesTo{generic()}
 Factoid developmentTeamExperienceSpread(real developmentTeamExperienceSpread = 0.0, rel[loc,int] perFile = {}) {
   list[int] amounts = [ i | <_, i> <- perFile];
@@ -317,11 +317,11 @@ Factoid developmentTeamExperienceSpread(real developmentTeamExperienceSpread = 0
   }
 }
 
-@metric{commitsPerWeekday}
+@metric{commitsPerWeekDay}
 @doc{On which day of the week do commits take place?}
-@friendlyName{commitsPerWeekday}
+@friendlyName{commitsPerWeekDay}
 @appliesTo{generic()}
-map[str, int] commitsPerWeekday(ProjectDelta delta = \empty(), map[str, int] prev = {}) {
+map[str, int] commitsPerWeekDay(ProjectDelta delta = \empty(), map[str, int] prev = ()) {
   dayOfWeek = printDate(delta.date, "EEE");
   return prev + ( dayOfWeek : (prev[dayOfWeek]?0) + (0 | it + 1 | /VcsCommit vcsCommit <- delta));
 }
@@ -347,9 +347,14 @@ private Factoid factoid(StarRating stars, str msg) = factoid(msg, stars);
 
 @metric{weekendProject}
 @doc{Is this a weekend project or not?}
+@friendlyName{weekendProject}
 @appliesTo{generic()}
-@uses=("percentageOfWeekendCommits":"percentageOfWeekendCommits")
-Factoid weekendProject(int percentageOfWeekendCommits) {
+@uses=("percentageOfWeekendCommits": "percentageOfWeekendCommits")
+Factoid weekendProject(int percentageOfWeekendCommits = -1) {
+  if (percentageOfWeekendCommits == -1) {
+    throw undefined("No weekend commit data available.", |tmp:///|);
+  }
+
   if (percentageOfWeekendCommits > 75) {
     return factoid(\one(), "Over the entire lifetime of this project, commits have been done usually over the weekend.");
   }
