@@ -26,6 +26,7 @@ import org.eclipse.imp.pdb.facts.ISourceLocation;
 import org.eclipse.imp.pdb.facts.IString;
 import org.eclipse.imp.pdb.facts.IValue;
 import org.eclipse.imp.pdb.facts.IValueFactory;
+import org.eclipse.imp.pdb.facts.exceptions.FactParseError;
 import org.eclipse.imp.pdb.facts.exceptions.FactTypeUseException;
 import org.eclipse.imp.pdb.facts.io.StandardTextReader;
 import org.eclipse.imp.pdb.facts.type.Type;
@@ -314,29 +315,34 @@ public class RascalManager {
 			for (final AbstractFunction f : func.getSecond()) {
 				// TODO: add some type checking on the arguments
 				if (f.hasTag("metric")) {
-					String metricName = getTag(f, "metric");
-					String metricId = bundle.getSymbolicName() + "." + metricName;
-					String friendlyName = getTag(f, "friendlyName");
-					String description = getTag(f, "doc");
-					IValue language = f.getTag("appliesTo");
-					Map<String,String> uses = getUses(f);
-					
-					if (!extractedLanguages.contains(language)) {
-						eval.getStdOut().println("Warning: metric " + f + " not loaded, no extractors available for language " + language);
-						continue;
-					}
-
-					if (f.getReturnType().toString().equals("Factoid")) {
-						providers.add(new RascalFactoidProvider(bundle.getSymbolicName(), metricId, funcName, friendlyName, description, f, uses));
-					}
-					else { 
-						RascalMetricProvider m = new RascalMetricProvider(bundle.getSymbolicName(), metricId, funcName, friendlyName, description, f, uses); 
-					
-						providers.add(m);
-
-						if (f.hasTag("historic")) {
-							providers.add(new RascalMetricHistoryWrapper(m));
+					try {
+						String metricName = getTag(f, "metric");
+						String metricId = bundle.getSymbolicName() + "." + metricName;
+						String friendlyName = getTag(f, "friendlyName");
+						String description = getTag(f, "doc");
+						IValue language = f.getTag("appliesTo");
+						Map<String,String> uses = getUses(f);
+						
+						if (!extractedLanguages.contains(language)) {
+							eval.getStdOut().println("Warning: metric " + f + " not loaded, no extractors available for language " + language);
+							continue;
 						}
+	
+						if (f.getReturnType().toString().equals("Factoid")) {
+							providers.add(new RascalFactoidProvider(bundle.getSymbolicName(), metricId, funcName, friendlyName, description, f, uses));
+						}
+						else { 
+							RascalMetricProvider m = new RascalMetricProvider(bundle.getSymbolicName(), metricId, funcName, friendlyName, description, f, uses); 
+						
+							providers.add(m);
+	
+							if (f.hasTag("historic")) {
+								providers.add(new RascalMetricHistoryWrapper(m));
+							}
+						}
+					}
+					catch (Exception e) {
+						Rasctivator.logException("Error loading metric " + f, e);
 					}
 				}
 			}
@@ -353,9 +359,10 @@ public class RascalManager {
 	}
 	
 	private Map<String,String> getUses(AbstractFunction f) {
+		IValue tag = null;
 		try {			
 			if (f.hasTag("uses")) {
-				IValue tag = f.getTag("uses");
+				tag = f.getTag("uses");
 				IMap m = null;
 				if (tag instanceof IMap) {
 					m = (IMap) tag;
@@ -373,8 +380,8 @@ public class RascalManager {
 					return map;
 				}
 			}
-		} catch (FactTypeUseException | IOException e) {
-			Rasctivator.logException("could not parse uses tag", e);
+		} catch (FactTypeUseException | IOException | FactParseError e) {
+			Rasctivator.logException("could not parse uses tag" + (tag != null ? tag.toString() : ""), e);
 		}
 		
 		return Collections.emptyMap();
