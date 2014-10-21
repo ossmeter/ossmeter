@@ -255,8 +255,8 @@ Factoid developmentTeamExperience(
 @appliesTo{generic()}
 @uses=("countCommittersPerFile": "perFile")
 @historic{}
-real giniCommittersOverFile(ProjectDelta delta = \empty(), rel[loc,str] perFile = {}) {
-  map[loc, int] committersOverFile = distribution(perFile<1,0>);
+real giniCommittersOverFile(ProjectDelta delta = \empty(), map[loc,int] perFile = ()) {
+  map[loc, int] committersOverFile = distribution({<perFile[l], l> | l <- perFile});
   map[int, int] distCommitterOverFile = distribution(committersOverFile);
   
   if (size(distCommitterOverFile) > 0) {
@@ -278,9 +278,9 @@ map[loc file, int numberOfCommitters] countCommittersPerFile(ProjectDelta delta 
 
 @metric{committersPerFile}
 @doc{Register which committers have contributed to which files}
-@friendlyName{Number of Committers per file}
+@friendlyName{Committers per file}
 @appliesTo{generic()}
-rel[loc, str] committersPerFile(ProjectDelta delta, rel[loc, str] prev) 
+rel[loc, str] committersPerFile(ProjectDelta delta = \empty(), rel[loc, str] prev = {}) 
   = prev + { <vcrd.repository.url + vci.path, vc.author> 
            | /VcsRepositoryDelta vcrd <- delta
            , /VcsCommit vc <- delta
@@ -294,8 +294,8 @@ rel[loc, str] committersPerFile(ProjectDelta delta, rel[loc, str] prev)
 @friendlyName{Development team experience}
 @uses = ("committersoverfile": "developmentTeamExperienceSpread", "countCommittersPerFile": "perFile")
 @appliesTo{generic()}
-Factoid developmentTeamExperienceSpread(real developmentTeamExperienceSpread = 0.0, rel[loc,int] perFile = {}) {
-  list[int] amounts = [ i | <_, i> <- perFile];
+Factoid developmentTeamExperienceSpread(real developmentTeamExperienceSpread = 0.0, map[loc,int] perFile = ()) {
+  list[int] amounts = [ perFile[i] | i <- perFile];
   med = median(amounts);
   maxi = List::max(amounts);
     
@@ -332,11 +332,11 @@ map[str, int] commitsPerWeekDay(ProjectDelta delta = \empty(), map[str, int] pre
 @appliesTo{generic()}
 @uses=("commitsPerWeekDay":"commitsPerWeekDay")
 @historic{}
-int percentageOfWeekendCommits(map[str,int] commitsPerWeekDay) {
+int percentageOfWeekendCommits(map[str,int] commitsPerWeekDay = ()) {
   total = sum([commitsPerWeekDay[d] | d <- commitsPerWeekDay]);
-  weekend = commitsPerWeekDay["Sat"] + commitsPerWeekDay["Sun"];
+  weekend = (commitsPerWeekDay["Sat"]?0) + (commitsPerWeekDay["Sun"]?0);
 
-  if (total > 0) {
+  if (total > 0 && weekend > 0) {
     return percent(total, weekend);
   }
   

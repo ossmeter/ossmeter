@@ -62,8 +62,8 @@ real historicalSlope(rel[datetime day, num amount] history, int monthsAgo) {
   if (history == {}) {
     throw undefined("No history available for slope computation.", |unknown:///|);
   }
-    
-  sorted = sort(history, bool(tuple[datetime,int] a, tuple[datetime,int] b) { return a[0] < b[0]; });
+
+  sorted = sort(history, bool(tuple[datetime, num] a, tuple[datetime, num] b) { return a[0] < b[0]; });
   lastYear = [<d,m> | <d,m> <- sorted, d > decrementMonths(sorted[-1].day, monthsAgo)];
   return size(lastYear) > 2 ? toReal(slope([<i,lastYear[i][1]> | i <- index(lastYear)])) : 0.0;
 }
