@@ -38,3 +38,10 @@ int churn(node item)
   = (0 | it + count | /linesAdded(count) := item)
   + (0 | it + count | /linesDeleted(count) := item)
   ;
+
+  
+@metric{commitBehavior}
+@doc{Are commits big or small? Spread out or focused?}  
+Factoid commitBehavior() {
+
+} 
