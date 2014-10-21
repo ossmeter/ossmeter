@@ -120,7 +120,7 @@ int numberOfTestMethods(rel[Language, loc, M3] m3s = {}) {
 @metric{JavaUnitTestCoverage}
 @doc{How well do the project's unit tests cover its code (Java)}
 @friendlyName{Java unit test coverage}
-@uses{("TestOverPublicMethods": "testOverPublicMethods", "TestCoverage", "testCoverage", "TestCoverage.historic", "history")}
+@uses{("TestOverPublicMethods": "testOverPublicMethods", "TestCoverage": "testCoverage", "TestCoverage.historic": "history")}
 @appliesTo{java()}
 Factoid JavaUnitTestCoverage(real testOverPublicMethods = -1.0, real testCoverage = -1.0, rel[datetime, real] history = {}) {
   sl = historicalSlope(history, 6);
