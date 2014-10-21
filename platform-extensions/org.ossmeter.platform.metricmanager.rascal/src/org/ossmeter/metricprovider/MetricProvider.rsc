@@ -45,11 +45,13 @@ extend org::ossmeter::metricprovider::Factoid;
 import analysis::statistics::SimpleRegression;
 import analysis::statistics::Inference;
 import analysis::statistics::Frequency;
+import analysis::statistics::Descriptive;
 import DateTime;
 import String;
 import util::Math;
 import Set;
 import List;
+import Relation;
 
 data MetricException
  = 
@@ -68,7 +70,7 @@ real historicalSlope(rel[datetime day, num amount] history, int monthsAgo) {
   return size(lastYear) > 2 ? toReal(slope([<i,lastYear[i][1]> | i <- index(lastYear)])) : 0.0;
 }
 
-real slopeText(real slope, str down, str stable, str up) {
+str slopeText(real slope, str down, str stable, str up) {
   if (-0.1 <= slope && slope <= 0.1) {
     return stable;
   }
@@ -85,7 +87,8 @@ num historicalMedian(rel[datetime day, num amount] history, int monthsAgo) {
     throw undefined("No history available for median computation.", |unknown:///|);
   }
   
-  threshold = decrementMonths(history[-1].day, monthsAgo);
+  latestDate = max(domain(history));  
+  threshold = decrementMonths(latestDate, monthsAgo);
   
   return median([ m | <d,m> <- history, d > threshold]);
 }

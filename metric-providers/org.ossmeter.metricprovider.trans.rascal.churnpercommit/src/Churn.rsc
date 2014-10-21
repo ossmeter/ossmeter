@@ -5,6 +5,7 @@ import org::ossmeter::metricprovider::MetricProvider;
 
 import Relation;
 import List;
+import DateTime;
 import analysis::statistics::SimpleRegression;
 import analysis::statistics::Descriptive;
 import analysis::statistics::Frequency;
@@ -84,13 +85,14 @@ int commitsInTwoWeeks(rel[datetime, int] activity = {})
   
 @metric{churnPerCommitInTwoWeeks}
 @doc{The ration between the churn and the number of commits indicates how each commits is on average}
-@friendlyName{churnPerCommitIntwoWeekd}
+@friendlyName{churnPerCommitInTwoWeeks}
 @uses = ("commitsInTwoWeeks":"commits","churnInTwoWeeks":"churn")
 @appliesTo{generic()}
 @historic{}  
 int churnPerCommitInTwoWeeks(int churn = 0, int commits = 1) = churn / commits;  
 
 @metric{commitSize}
+@doc{Commit frequency and size}
 @friendlyName{Commit frequency and size}
 @appliesTo{generic()}
 @uses= ("churnPerCommitInTwoWeeks.historic":"ratioHistory",
@@ -120,6 +122,7 @@ Factoid commitSize(rel[datetime, int] ratioHistory = {}, int ratio = 0) {
 }
 
 @metric{churnVolume}
+@doc{Churn Volume}
 @friendlyName{Churn Volume}
 @appliesTo{generic()}
 @uses= ("churnInTwoWeeks.historic":"churnHistory", "churnInTwoWeeks":"churn")
@@ -164,10 +167,13 @@ private list[int] filt(lrel[loc, int] input, loc i) = [n | <i, n> <- input];
 @doc{Count churn}
 @friendlyName{Counts number of lines added and deleted per file over the lifetime of the project}
 @appliesTo{generic()}
-@historic{}
-map[loc file, int churn] churnPerFile(ProjectDelta delta = \empty())
-  = (rd.repository.url + co.path : churn(co) | /VcsRepositoryDelta rd := delta, /VcsCommitItem co := rd)
-  ;
+map[loc file, int churn] churnPerFile(ProjectDelta delta = \empty(), map[loc file, int churn] prev = ()) {
+  result = prev;
+  for (/VcsRepositoryDelta rd := delta, /VcsCommitItem co := rd) {
+    result[rd.repository.url + co.path]?0 += churn(co);
+  }
+  return result;
+}
       
 int churn(node item) 
   = (0 | it + count | /linesAdded(count) := item)
@@ -196,9 +202,14 @@ map[loc, int] numberOfFilesPerCommit(ProjectDelta delta = \empty()) {
 @friendlyName{Commit locality}
 @appliesTo{generic()}
 @uses=("filesPerCommit":"filesPerCommit.historic")
-Factoid commitLocality(rel[datetime day, map[loc, int] files] filesPerCommit) {
-   med = median([ d[f] | <_, map[loc, int] d> <- filesPerCommit, loc f <- d]);
- 
+Factoid commitLocality(rel[datetime day, map[loc, int] files] filesPerCommit = {}) {
+   counts = [ d[f] | <_, map[loc, int] d> <- filesPerCommit, loc f <- d];
+   if (counts == []) {
+      throw undefined("No commit data available.", |tmp:///|);
+   }
+   
+   med = median(counts);
+   
    if (med <= 1) {
      return factoid("Commits are usually local to a single file.", \four());
    }

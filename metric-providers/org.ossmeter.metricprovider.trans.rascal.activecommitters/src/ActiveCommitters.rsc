@@ -296,9 +296,13 @@ rel[loc, str] committersPerFile(ProjectDelta delta = \empty(), rel[loc, str] pre
 @appliesTo{generic()}
 Factoid developmentTeamExperienceSpread(real developmentTeamExperienceSpread = 0.0, map[loc,int] perFile = ()) {
   list[int] amounts = [ perFile[i] | i <- perFile];
+  if (amounts == []) {
+    throw undefined("No commit data available.", |tmp:///|);
+  }
+  
   med = median(amounts);
   maxi = List::max(amounts);
-    
+  
   if (developmentTeamExperienceSpread >= 0.5) {
     if (med >= 2) {
       return factoid(\four(), "Developers are spreading out over the entire project and it can be expected that most files have more than one contributor.");
