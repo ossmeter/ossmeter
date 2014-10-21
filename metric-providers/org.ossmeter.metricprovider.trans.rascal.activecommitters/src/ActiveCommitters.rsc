@@ -259,8 +259,8 @@ real giniCommittersOverFile(ProjectDelta delta = \empty(), map[loc,int] perFile 
   map[loc, int] committersOverFile = distribution({<perFile[l], l> | l <- perFile});
   map[int, int] distCommitterOverFile = distribution(committersOverFile);
   
-  if (size(distCommitterOverFile) > 0) {
-    return gini([<0,0>]+[<x, distCommitterOverFile[x]> | x <- distCommitterOverFile]);
+  if (size(distCommitterOverFile) > 1) {
+    return gini([<x, distCommitterOverFile[x]> | x <- distCommitterOverFile]);
   }
 
   throw undefined("not enough data to compute committer over file spread", |project://<delta.project.name>|);

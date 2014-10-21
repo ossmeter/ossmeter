@@ -18,10 +18,10 @@ public real giniCCOverMethods(map[loc, int] methodCC) {
   distCCOverMethods = distribution(methodCC);
   
   if (size(distCCOverMethods) < 2) {
-    return -1.0;
+    throw undefined("Not enough data available.", |tmp:///|);
   }
   
-  return gini([<0,0>]+[<x, distCCOverMethods[x]> | x <- distCCOverMethods]);
+  return gini([<x, distCCOverMethods[x]> | x <- distCCOverMethods]);
 }
 
 
