@@ -43,6 +43,7 @@ real giniLOCOverFiles(rel[Language, loc, AST] asts = {}) {
 @friendlyName{Physical lines of code per language}
 @appliesTo{generic()}
 @uses{("genericLOC" :"genericLoc")}
+@historic
 map[str, int] locPerLanguage(rel[Language, loc, AST] asts = {}, map[loc, int] genericLoc = ()) {
   map[str, int] result = ();
   set[loc] filesWithLanguageDetected = {};
