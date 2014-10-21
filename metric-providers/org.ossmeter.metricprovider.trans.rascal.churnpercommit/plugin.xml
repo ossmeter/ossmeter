@@ -4,5 +4,11 @@
    <extension
          point="ossmeter.rascal.metricprovider">
    </extension>
+   <extension
+         point="org.ossmeter.platform.visualisation.metric">
+      <visualisation
+            json="vis/committerChurn.json">
+      </visualisation>
+   </extension>
 
 </plugin>
