@@ -1,5 +1,7 @@
 module Readability
 
+import org::ossmeter::metricprovider::MetricProvider;
+
 import String;
 import Set;
 import util::Math;
@@ -50,33 +52,70 @@ public real checkSpaces(list[str] lines, set[str] symbolsTwoSides, set[str] symb
 }
 
 
-real checkSpacesGeneric(list[str] lines, Language lang) {
-  real result;
+//real checkSpacesGeneric(list[str] lines, Language lang) {
+//  real result;
+//
+//  switch(lang) {
+//    case java(): result = checkSpaces(lines, {"{", "}"}, {";", ","});
+//    case php(): result = checkSpaces(lines, {"{", "}"}, {";", ","});
+//    default: result = -1.0;
+//  }
+//  
+//  return result;
+//}
 
-  switch(lang) {
-    case java(): result = checkSpaces(lines, {"{", "}"}, {";", ","});
-    case php(): result = checkSpaces(lines, {"{", "}"}, {";", ","});
-    default: result = -1.0;
-  }
-  
-  return result;
-}
 
-
-@metric{FileReadability}
+@metric{fileReadability}
 @doc{Code readability per file, measured by use of whitespace}
 @friendlyName{FileReadability}
 @appliesTo{generic()}
 map[loc, real] fileReadability(rel[Language, loc, AST] asts = {}) {
-  map[loc, real] result = ();
-  
-  for (<lang, f, _> <- asts, lang != generic(), {lines(l)} := asts[generic(), f]) {
-    r = checkSpacesGeneric(l, lang);
-    if (r >= 0.0) {
-    	result[f] = r;
-    }
-  }
-  return result;
+  return (f : checkSpaces(l, {"{", "}"}, {";", ","}) 
+         | <generic(), f, lines(l)> <- asts
+         , f.extension == "java" || f.extension == "php");
 }
 
+@metric{ReadabilityFactoid}
+@doc{Check for proper use of whitespace}
+@friendlyName{Use of whitespace}
+@appliesTo{generic()}
+@uses=("fileReadability":"fileReadability")
+Factoid readabilityFactoid(map[loc, real] fileReadability) {
+  re = {<l,fileReadability[l]> | l <- fileReadability };
+  
+  allgood  = [ r | <_,r> <- re, r == 1];
+  oneperc  = [ r | <_,r> <- re, r < 1 && r >= 0.99];
+  tenperc  = [ r | <_,r> <- re, r < 0.99 && r >= 0.90];
+  moreperc = [ r | <_,r> <- re, r < 0.9];
+
+  med = median(oneperc + tenperc + moreperc);
+  
+  total = size(fileReadability);
+  star = \one();
+  
+  txt = "For readability of source code it is import that spaces around delimiters such as [,;{}] are used.\n";
+  
+  if (size(allgood) == total) {
+     txt += "In this project all spaces in all files help in readability of the source code";
+     star = \four();
+  }
+  else if (size(moreperc) == 0 &&  size(tenperc) == 0 && size(oneperc) <= (total / 10)) {
+     // if less than 10% of the files have 1% problems, we still give three stars
+     star = \three();
+     txt += "In this project less than 10% of the files have minor readability issues.
+            'An average file in this category has <med> of the spaces in the wrong place (either no space or too many spaces).";
+  }
+  else if (size(moreperc) == 0 && size(tenperc) <= (total / 10)) {
+     star = \two();
+     txt += "In this project less than 10% of the files have major readability issues.
+            'An average file in this category has <med> of the spaces in the wrong place (either no space or too many spaces).";
+  }
+  else {
+     star = \one();
+     txt += "In this project, <percent(size(moreperc) + size(tenperc) + size(oneperc), total)> of the files readability issues.
+            'An average file has <med> of the spaces in the wrong place (either no space or too many spaces).";
+  }
+  
+  return factoid(txt, star);
+}
 
