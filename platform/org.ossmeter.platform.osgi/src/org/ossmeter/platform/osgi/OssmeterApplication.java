@@ -27,6 +27,7 @@ import com.mongodb.ServerAddress;
 
 public class OssmeterApplication implements IApplication, ServiceTrackerCustomizer<IWorkerService, IWorkerService> {
 	
+	private static final String MAVEN_EXECUTABLE = "MAVEN_EXECUTABLE";
 	protected boolean master = false; // This should be set via the program arguments '-master'
 	protected OssmeterLogger logger;
 	protected boolean done = false;
@@ -78,8 +79,10 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 		workerServiceTracker = new ServiceTracker<IWorkerService, IWorkerService>(Activator.getContext(), IWorkerService.class, this);	
 		workerServiceTracker.open();
 		
-		// FIXME
-		System.setProperty("MAVEN_EXECUTABLE", "/Applications/apache-maven-3.2.3/bin/mvn");
+		if (System.getProperty(MAVEN_EXECUTABLE) == null) {
+			// FIXME		
+			System.setProperty(MAVEN_EXECUTABLE, "/Applications/apache-maven-3.2.3/bin/mvn");
+		}
 		
 		// If master, start
 		if (master) {
@@ -109,7 +112,7 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 				// Maven
 				String maven = configuration.getProperty("maven_executable", "");
 				if (!maven.equals("")) {
-					System.setProperty("MAVEN_EXECUTABLE", maven);
+					System.setProperty(MAVEN_EXECUTABLE, maven);
 				}
 				
 				i++;
