@@ -69,7 +69,7 @@ public class MetricVisualisation {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode visualisation = mapper.createObjectNode();
 		
-		DBCollection collection = db.getCollection(metricId); // TODO metric ID won't always be the correct identififer
+		DBCollection collection = getCollection(db);
 		ArrayNode datatable = chart.createDatatable(vis.get("datatable"), collection, query);
 		
 		visualisation.put("id", vis.path("id").textValue());
@@ -99,8 +99,7 @@ public class MetricVisualisation {
 		String yColName = vis.get("y").asText();
 		yColName = yColName.replace("\"", "");
 		
-		// TODO metric ID might not always be the correct identififer??
-		DBCollection collection = db.getCollection(metricId); 
+		DBCollection collection = getCollection(db); 
 		
 		ArrayNode datatable = chart.createDatatable(vis.get("datatable"), collection, query);
 		Iterator<JsonNode> it = datatable.iterator();
@@ -151,6 +150,17 @@ public class MetricVisualisation {
 		sparkData.put("months", (int)((xdata.get(xdata.size()-1).getTime() - xdata.get(0).getTime())/(365.24 * 24 * 60 * 60 * 1000 / 12)));
 		
 		return bytes;
+	}
+
+	private DBCollection getCollection(DB db) {
+		// TODO metric ID might not always be the correct identififer??
+		
+		if (!db.collectionExists(metricId)) {
+			System.err.println("ERROR: Could not find collection: " + metricId);
+		}
+		
+		DBCollection collection = db.getCollection(metricId);
+		return collection;
 	}
 	
 	public ObjectNode getSparkData() {
