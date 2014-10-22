@@ -63,7 +63,7 @@ int filesWithStyleViolations(rel[Language, loc, M3] m3s = {}, Table styleViolati
 @historic{}
 real spreadOfStyleViolations(rel[Language, loc, M3] m3s = {}, Table styleViolations = {}) 
   = spreadOverFiles(m3s=m3s, violations=styleViolations);
-  
+
 private set[str] errorProneCategories = {
   "blockCheck",
   "coding"
@@ -88,7 +88,7 @@ int filesWithErrorProneness(rel[Language, loc, M3] m3s = {}, Table styleViolatio
 
 @metric{spreadOfErrorProneness}
 @doc{Between 0 and 1 how evenly spread are the style violations which indicate error proneness.}
-@friendlyName{Spread of style violations over files}
+@friendlyName{Spread of error proneness style violations over files}
 @appliesTo{java()}
 @uses=("errorProneness":"styleViolations")
 @historic{}
@@ -105,11 +105,11 @@ private set[str] inefficiencyCategories = {
 @uses = ("styleViolations":"styleViolations")
 @appliesTo{java()}
 Table inefficiencies(rel[Language, loc, M3] m3s = {}, Table styleViolations = {}) 
-  = { <g,c,f,l> | <g, c, f, l> <- styleViolations, c in errorProneCategories};
+  = { <g,c,f,l> | <g, c, f, l> <- styleViolations, c in inefficiencyCategories};
 
 @metric{filesWithInefficiencies}
-@doc{Percentage of files with error proneness}
-@friendlyName{Files with style violations which make the code error prone}
+@doc{Percentage of files with inefficiencies}
+@friendlyName{Files with style violations which indicate inefficiencies}
 @appliesTo{java()}
 @uses=("inefficiencies":"styleViolations")
 @historic{}
@@ -117,8 +117,8 @@ int filesWithInefficiencies(rel[Language, loc, M3] m3s = {}, Table styleViolatio
   = percentageOfFilesWithViolations(m3s=m3s, violations=styleViolations);
 
 @metric{spreadOfInefficiencies}
-@doc{Between 0 and 1 how evenly spread are the style violations which indicate error proneness.}
-@friendlyName{Spread of style violations over files}
+@doc{Between 0 and 1 how evenly spread are the style violations which indicate inefficiencies.}
+@friendlyName{Spread of inefficiencies over files}
 @appliesTo{java()}
 @uses=("inefficiencies":"styleViolations")
 @historic{}
@@ -143,7 +143,7 @@ Table understandability(rel[Language, loc, M3] m3s = {}, Table styleViolations =
   = { <g,c,f,l> | <g, c, f, l> <- styleViolations, c in unreadableCategories};
 
 @metric{filesWithUnderstandabilityIssues}
-@doc{Percentage of files with error proneness}
+@doc{Percentage of files with understandability issues}
 @friendlyName{Files with style violations which make the code harder to understand}
 @appliesTo{java()}
 @uses=("understandability":"styleViolations")
@@ -152,8 +152,8 @@ int filesWithUnderstandabilityIssues(rel[Language, loc, M3] m3s = {}, Table styl
   = percentageOfFilesWithViolations(m3s=m3s, violations=styleViolations);
 
 @metric{spreadOfUnderstandabilityIssues}
-@doc{Between 0 and 1 how evenly spread are the style violations which indicate error proneness.}
-@friendlyName{Spread of style violations over files}
+@doc{Between 0 and 1 how evenly spread are the understandability issues.}
+@friendlyName{Spread of understandability issues over files}
 @appliesTo{java()}
 @uses=("understandability":"styleViolations")
 @historic{}
@@ -174,7 +174,7 @@ Factoid errorProneFactoid( real spreadOfErrorProneness  = 0.0
                          ) 
   = genericFactoid("error prone", spread=spreadOfErrorProneness, files=filesWithErrorProneness, history=fileWithErrorPronenessHistory);
 
-@metric{errorProneFactoid}
+@metric{inefficientStringsFactoid}
 @uses=("spreadOfInefficiencies":"spreadOfInefficiencies" 
       ,"filesWithInefficiencies":"filesWithInefficiencies"
       ,"filesWithInefficiencies.historic":"filesWithInefficienciesHistory"
@@ -182,13 +182,13 @@ Factoid errorProneFactoid( real spreadOfErrorProneness  = 0.0
 @doc{Explains what the impact of style violations is for the project.}
 @friendlyName{Spread of style violations over files}
 @appliesTo{java()}      
-Factoid ineffientStringsFactoid( real spreadOfInefficiencies  = 0.0
+Factoid inefficientStringsFactoid( real spreadOfInefficiencies  = 0.0
                                , int filesWithInefficiencies  = 0
                                , rel[datetime, int] filesWithInefficienciesHistory = {}
                          ) 
   = genericFactoid("inefficient string usage", spread=spreadOfInefficiencies, files=filesWithInefficiencies, history=filesWithInefficienciesHistory);
 
-@metric{errorProneFactoid}
+@metric{understandabilityFactoid}
 @uses=("spreadOfUnderstandabilityIssues":"spreadOfUnderstandabilityIssues"
       ,"filesWithUnderstandabilityIssues":"filesWithUnderstandabilityIssues"
       ,"filesWithUnderstandabilityIssues.historic":"filesWithUnderstandabilityIssuesHistory"

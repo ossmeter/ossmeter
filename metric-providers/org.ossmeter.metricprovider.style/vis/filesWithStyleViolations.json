@@ -1,0 +1,21 @@
+{
+	"metricid" : "org.ossmeter.metricprovider.style.filesWithStyleViolations.historic",
+	"vis" : [ 
+		{
+			"name" : "filesWithStyleViolationsTimeLine",
+			"nicename" : "filesWithStyleViolationsTimeLine",
+			"description" : "This metric shows the percentage of files with style violations over time.",
+			"type" : "LineChart",
+			"datatable" : {
+				"rows" : "$value",
+				"cols" : [  { "name" : "Date", 			"field" : "$__date" }, 
+							{ "name" : "Percentage", 	"field" : "$value" } ]
+			},
+			"x" : "Date",
+			"y" : "Percentage", 
+			"x-label" : "Date",		
+			"y-label" : "Files with violations (%)",
+			"timeseries" : "true"
+		}
+	]
+}

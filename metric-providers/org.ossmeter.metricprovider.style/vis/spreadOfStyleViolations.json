@@ -1,0 +1,21 @@
+{
+	"metricid" : "org.ossmeter.metricprovider.style.spreadOfStyleViolations.historic",
+	"vis" : [ 
+		{
+			"name" : "spreadOfStyleViolationsTimeLine",
+			"nicename" : "spreadOfStyleViolationsTimeLine",
+			"description" : "This metric shows the spread of style violations over the project's files, over time.",
+			"type" : "LineChart",
+			"datatable" : {
+				"rows" : "$value",
+				"cols" : [  { "name" : "Date", 			"field" : "$__date" }, 
+							{ "name" : "Spread", 	"field" : "$value" } ]
+			},
+			"x" : "Date",
+			"y" : "Spread", 
+			"x-label" : "Date",		
+			"y-label" : "Spread (0-1)",
+			"timeseries" : "true"
+		}
+	]
+}
