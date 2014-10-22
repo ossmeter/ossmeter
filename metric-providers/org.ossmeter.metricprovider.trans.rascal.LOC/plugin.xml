@@ -10,5 +10,11 @@
             json="vis/LOCovertime.json">
       </visualisation>
    </extension>
+   <extension
+         point="org.ossmeter.platform.visualisation.metric">
+      <visualisation
+            json="vis/LOCoverfilesovertime.json">
+      </visualisation>
+   </extension>
 
 </plugin>

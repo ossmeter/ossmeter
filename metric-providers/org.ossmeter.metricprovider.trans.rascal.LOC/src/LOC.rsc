@@ -32,6 +32,7 @@ real giniLOC(map[loc, int] locs) {
 @doc{Language independent physical lines of code over files}
 @friendlyName{Language independent physical lines of code over files}
 @appliesTo{generic()}
+@historic
 real giniLOCOverFiles(rel[Language, loc, AST] asts = {}) {
   return giniLOC(countLoc(asts=asts));
 }
