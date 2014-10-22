@@ -72,6 +72,10 @@ map[loc, map[DynamicFeature, int]] getDynamicFeatureCountsPerFunction(rel[Langua
 	
 	scripts = { s | <php(), _, phpAST(s)> <- asts };
 
+	if (scripts == {}) {
+		throw undefined("No PHP ASTs available.", |tmp:///|);
+	}
+
 	top-down-break visit (scripts) {
 		case m:method(_, _, _, _, _): result[m@decl] = getDynamicFeatureCounts(m);
 		case f:function(_, _, _, _): result[f@decl] = getDynamicFeatureCounts(f);
@@ -192,7 +196,7 @@ Factoid dynamicLanguageFeaturesFactoid(rel[Language, loc, AST] asts = {}, int nu
   "IncludesResolutionHistogram": "includes",
   "MissingLibrariesPHP": "missingLibraries"
 )
-Factoid dynamicLanguageFeaturesFactoid(
+Factoid staticNameResolutionFactoid(
   map[int, int] typeNames = (),
   map[int, int] methodNames = (),
   map[int, int] fieldNames = (),
@@ -210,6 +214,10 @@ Factoid dynamicLanguageFeaturesFactoid(
   txt = "The percentages of unresolved and ambiguous names for the following categories are respectively:\n";
   
   for (<m, n> <- [<typeNames, "Type names">, <methodNames, "Method names">, <fieldNames, "Field names">, <includes, "Included files">]) {
+    if (m == ()) {
+      continue;
+    }
+  
     numNames = sum([m[i] | i <- m]);
     unresolved = m[0]?0;
     ambiguous = numNames - (m[0]?0) - (m[1]?0);
@@ -223,27 +231,30 @@ Factoid dynamicLanguageFeaturesFactoid(
 
   if (missingLibraries != {}) {
     txt += "The following missing libraries were detected: <intercalate(", ", sort(toList(missingLibraries)))>. Adding these to the configuration might increase the name resolution scores.";
-  } 
+  }
   
-  percUnresolved = percent(totalUnresolved, totalNames);
-  percAmbiguous = percent(totalAmbiguous, totalNames);
-  percProblematic = percUnresolved + percAmbiguous;  
+  percProblematic = percent(totalUnresolved + totalAmbiguous, totalNames);
   
   stars = \one();
-  summary = "<percProblematic>% of the names in the code could not be statically resolved to a unique declaration.\n"; 
   
-  if (percProblematic < 10) {
+  if (totalUnresolved + totalAmbiguous == 0) {
     stars = four();
-    summary = "Only <summary>"; 
+    txt = "All names in the code could be statically resolved to a unique declaration.\n";
   }
-  else if (percProblematic < 20) {
-    stars = three();
+  else {
+    txt = "<percProblematic>% of the names in the code could not be statically resolved to a unique declaration. This might influence the results of other metrics, for instance the OO related ones.\n" + txt;
+  
+    if (percProblematic < 10) {
+      stars = four();
+      txt = "Only <txt>"; 
+    }
+    else if (percProblematic < 20) {
+      stars = three();
+    }
+    else if (percProblematic < 30) {
+      stars = two();
+    }
   }
-  else if (percProblematic < 30) {
-    stars = two();
-  }
-
-  txt = summary + txt;
 
   return factoid(txt, stars);
 }
