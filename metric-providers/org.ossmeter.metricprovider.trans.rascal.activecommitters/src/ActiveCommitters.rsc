@@ -48,6 +48,7 @@ map[str, tuple[datetime, datetime]] firstLastCommitDates(ProjectDelta delta = \e
 @doc{commitsPerDeveloper}
 @friendlyName{Number of commits per developer}
 @appliesTo{generic()}
+@historic
 map[str, int] commitsPerDeveloper(ProjectDelta delta = \empty(), map[str, int] prev = ()) {
   map[str, int] result = prev;
   
@@ -59,7 +60,7 @@ map[str, int] commitsPerDeveloper(ProjectDelta delta = \empty(), map[str, int] p
 }
 
 @metric{committersAge}
-@doc{Age of committers}
+@doc{Age of committers in days}
 @friendlyName{Age of committers}
 @uses = ("firstLastCommitDatesPerDeveloper" : "commitDates")
 @appliesTo{generic()}
@@ -109,7 +110,7 @@ rel[datetime, set[str]] longerTermActiveCommitters(ProjectDelta delta = \empty()
 
 
 @metric{numberOfActiveCommitters}
-@doc{Number of active committers over time}
+@doc{Number of active committers over time (active in last two weeks)}
 @friendlyName{numberOfActiveCommitters}
 @uses = ("activeCommitters" :"activeCommitters")
 @appliesTo{generic()}
@@ -118,7 +119,7 @@ int numberOfActiveCommitters(rel[datetime, set[str]] activeCommitters = {})
   = size({c | /str c := activeCommitters});
     
 @metric{numberOfActiveCommittersLongTerm}
-@doc{Number of long time active committers over time}
+@doc{Number of long time active committers over time (active in last year)}
 @friendlyName{numberOfActiveCommittersLongTerm}
 @uses = ("longerTermActiveCommitters" :"activeCommitters")
 @appliesTo{generic()}
@@ -342,7 +343,7 @@ int percentageOfWeekendCommits(map[str,int] commitsPerWeekDay = ()) {
   weekend = (commitsPerWeekDay["Sat"]?0) + (commitsPerWeekDay["Sun"]?0);
 
   if (total > 0 && weekend > 0) {
-    return percent(total, weekend);
+    return percent(weekend, total);
   }
   
   return 0;  
