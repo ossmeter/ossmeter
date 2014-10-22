@@ -75,8 +75,8 @@ int churnInTwoWeeks(rel[datetime, int] activity = {})
   = (0 | it + ch | <_, ch> <- activity);
   
 @metric{commitsInTwoWeeks}
-@doc{Sum of churn over the last two weeks}
-@friendlyName{Sum of churn in the last two weeks}
+@doc{Number of commits in the last two weeks}
+@friendlyName{Number of commits in the last two weeks}
 @uses = ("commitActivity":"activity")
 @appliesTo{generic()}
 @historic{}
@@ -88,7 +88,7 @@ int commitsInTwoWeeks(rel[datetime, int] activity = {})
 @friendlyName{churnPerCommitInTwoWeeks}
 @uses = ("commitsInTwoWeeks":"commits","churnInTwoWeeks":"churn")
 @appliesTo{generic()}
-@historic{}  
+@historic{}
 int churnPerCommitInTwoWeeks(int churn = 0, int commits = 1) = churn / commits;  
 
 @metric{commitSize}

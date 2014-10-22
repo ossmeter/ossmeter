@@ -4,7 +4,7 @@
 		{
 			"name" : "coreCommittersChurnBar",
 			"nicename" : "coreCommittersChurnBar",
-			"description" : "This metric shows the total churn per committer.",
+			"description" : "This metric shows the total accumulated churn per committer.",
 			"type" : "BarChart",
 			"datatable" : {
 				"cols" : [  { "name" : "Committer", "field" : "$value[0].value" }, 
