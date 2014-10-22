@@ -18,6 +18,8 @@ import analysis::m3::AST;
 	Returns the ratio of found spaces v.s. total spaces possible.
 }
 public real checkSpaces(list[str] lines, set[str] symbolsTwoSides, set[str] symbolsOneSide) {
+
+	// TODO ignore comments
 	
 	map[str, int] whitespaceRequired = toMapUnique(symbolsTwoSides * {2} + symbolsOneSide * {1});
 	
@@ -103,20 +105,20 @@ Factoid readabilityFactoid(map[loc, real] fileReadability = ()) {
   star = \one();
   
   txt = "For readability of source code it is import that spaces around delimiters such as [,;{}] are used.\n";
-  
-  if (size(lowPerc) == total) {
-     txt += "In this project all spaces in all files help in readability of the source code";
-     star = \four();
-  }
-  else if (size(veryHighPerc) == 0 && size(highPerc) == 0 && size(medPerc) <= (total / 10)) {
-     // if less than 10% of the files have medium problems, we still give three stars
-     star = \three();
+
+  if (size(veryHighPerc) == 0 && size(highPerc) == 0 && size(medPerc) <= (total / 10)) {
+     star = four();
      txt += "In this project less than 10% of the files have minor readability issues.
             'An average file in this category has <med>% of the expected whitespace.";
   }
-  else if (size(veryHighPerc) == 0 && size(highPerc) <= (total / 10)) {
-     star = \two();
-     txt += "In this project less than 10% of the files have major readability issues.
+  else if (size(veryHighPerc) == 0 && size(highPerc) <= (total / 5) && size(medPerc) <= (total / 15)) {
+     star = three();
+     txt += "In this project less than 20% of the files have moderate readability issues.
+            'An average file in this category has <med>% of the expected whitespace.";
+  }
+  else if (size(veryHighPerc) <= (total / 5) && size(highPerc) <= (total / 25)) {
+     star = two();
+     txt += "In this project less than 30% of the files have major readability issues.
             'An average file in this category has <med>% of the expected whitespace.";
   }
   else {
