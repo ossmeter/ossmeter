@@ -17,7 +17,8 @@ java map[loc,list[loc]] getClassPath(
   loc mavenExecutable = MAVEN == "" ? |file:///usr/local/bin/mvn| : |file:///<MAVEN>|);
  
  
-map[loc,list[loc]] inferClassPaths(loc workspace) {
+@memo
+map[loc,list[loc]] inferClassPaths(loc workspace, ProjectDelta delta) {
   try {
     return getClassPath(workspace);
   }
@@ -76,7 +77,7 @@ rel[Language, loc, M3] javaM3(loc project, ProjectDelta delta, map[loc repos,loc
   
   // TODO: we will add caching on disk again and use the deltas to predict what to re-analyze and what not
   try {
-    map[loc,list[loc]] classpaths = inferClassPaths(parent);
+    map[loc,list[loc]] classpaths = inferClassPaths(parent, delta);
     for (repo <- checkouts) {
       checkout = checkouts[repo];
       sources = getSourceRoots({checkout});
@@ -109,7 +110,7 @@ rel[Language, loc, AST] javaAST(loc project, ProjectDelta delta, map[loc repos,l
   
   // TODO: we will add caching on disk again and use the deltas to predict what to re-analyze and what not
   try {
-    map[loc,list[loc]] classpaths = inferClassPaths(parent);
+    map[loc,list[loc]] classpaths = inferClassPaths(parent, delta);
     for (repo <- checkouts) {
       checkout = checkouts[repo];
       sources = getSourceRoots({checkout});
