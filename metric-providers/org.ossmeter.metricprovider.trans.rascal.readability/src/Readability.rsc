@@ -4,10 +4,14 @@ import org::ossmeter::metricprovider::MetricProvider;
 
 import String;
 import Set;
+import Map;
+import List;
 import util::Math;
+import analysis::statistics::Descriptive;
 
 import analysis::m3::Core;
 import analysis::m3::AST;
+
 
 @doc{
 	Checks the appearance of whitespace in lines of code around given symbols.
@@ -80,40 +84,45 @@ map[loc, real] fileReadability(rel[Language, loc, AST] asts = {}) {
 @friendlyName{Use of whitespace}
 @appliesTo{generic()}
 @uses=("fileReadability":"fileReadability")
-Factoid readabilityFactoid(map[loc, real] fileReadability) {
+Factoid readabilityFactoid(map[loc, real] fileReadability = ()) {
+  if (isEmpty(fileReadability)) {
+    throw undefined("No readability data available.", |tmp:///|);
+  }
+
   re = {<l,fileReadability[l]> | l <- fileReadability };
   
-  allgood  = [ r | <_,r> <- re, r == 1];
-  oneperc  = [ r | <_,r> <- re, r < 1 && r >= 0.99];
-  tenperc  = [ r | <_,r> <- re, r < 0.99 && r >= 0.90];
-  moreperc = [ r | <_,r> <- re, r < 0.9];
+  // percentages per risk group
+  lowPerc  = [ r | <_,r> <- re, r >= 0.90];
+  medPerc  = [ r | <_,r> <- re, r < 0.90 && r >= 0.75];
+  highPerc  = [ r | <_,r> <- re, r < 0.75 && r >= 0.50];
+  veryHighPerc = [ r | <_,r> <- re, r < 0.50];
 
-  med = median(oneperc + tenperc + moreperc);
+  med = 100.0 * median(medPerc + highPerc + veryHighPerc);
   
   total = size(fileReadability);
   star = \one();
   
   txt = "For readability of source code it is import that spaces around delimiters such as [,;{}] are used.\n";
   
-  if (size(allgood) == total) {
+  if (size(lowPerc) == total) {
      txt += "In this project all spaces in all files help in readability of the source code";
      star = \four();
   }
-  else if (size(moreperc) == 0 &&  size(tenperc) == 0 && size(oneperc) <= (total / 10)) {
-     // if less than 10% of the files have 1% problems, we still give three stars
+  else if (size(veryHighPerc) == 0 && size(highPerc) == 0 && size(medPerc) <= (total / 10)) {
+     // if less than 10% of the files have medium problems, we still give three stars
      star = \three();
      txt += "In this project less than 10% of the files have minor readability issues.
-            'An average file in this category has <med> of the spaces in the wrong place (either no space or too many spaces).";
+            'An average file in this category has <med>% of the expected whitespace.";
   }
-  else if (size(moreperc) == 0 && size(tenperc) <= (total / 10)) {
+  else if (size(veryHighPerc) == 0 && size(highPerc) <= (total / 10)) {
      star = \two();
      txt += "In this project less than 10% of the files have major readability issues.
-            'An average file in this category has <med> of the spaces in the wrong place (either no space or too many spaces).";
+            'An average file in this category has <med>% of the expected whitespace.";
   }
   else {
      star = \one();
-     txt += "In this project, <percent(size(moreperc) + size(tenperc) + size(oneperc), total)> of the files readability issues.
-            'An average file has <med> of the spaces in the wrong place (either no space or too many spaces).";
+     txt += "In this project, <percent(size(veryHighPerc) + size(highPerc) + size(medPerc), total)>% of the files have readability issues.
+            'An average file has <med>% of the expected whitespace.";
   }
   
   return factoid(txt, star);
