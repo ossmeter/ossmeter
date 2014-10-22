@@ -6,6 +6,7 @@ import ValueIO;
 import IO;
 import Map;
 import Set;
+import Relation;
 import List;
 import DateTime;
 import String;
@@ -272,8 +273,8 @@ real giniCommittersOverFile(ProjectDelta delta = \empty(), map[loc,int] perFile 
 @appliesTo{generic()}
 @uses= ("committersPerFile": "perFile")
 @historic{}
-map[loc file, int numberOfCommitters] countCommittersPerFile(ProjectDelta delta = \empty(), rel[loc file,str person] perFile = {}) {
-  return (f : size(perFile[f]) | f <- perFile.file);
+map[loc file, int numberOfCommitters] countCommittersPerFile(ProjectDelta delta = \empty(), rel[loc file, str person] perFile = {}) {
+  return (f : size(perFile[f]) | f <- domain(perFile));
 }
 
 @metric{committersPerFile}
@@ -291,7 +292,7 @@ rel[loc, str] committersPerFile(ProjectDelta delta = \empty(), rel[loc, str] pre
 
 @metric{developmentTeamExperienceSpread}
 @doc{How specialized is the development team? Or are people working on different parts of the project?}
-@friendlyName{Development team experience}
+@friendlyName{Development team experience spread}
 @uses = ("committersoverfile": "developmentTeamExperienceSpread", "countCommittersPerFile": "perFile")
 @appliesTo{generic()}
 Factoid developmentTeamExperienceSpread(real developmentTeamExperienceSpread = 0.0, map[loc,int] perFile = ()) {
