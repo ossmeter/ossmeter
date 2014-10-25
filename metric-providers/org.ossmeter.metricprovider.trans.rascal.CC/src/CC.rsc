@@ -59,7 +59,7 @@ public Factoid CCFactoid(map[loc, int] methodCC, str language) {
   }
 
   txt = "The cyclomatic complexity footprint of the system\'s <language> code shows a <["", "very high", "high", "moderate", "low"][stars]> risk."; 
-  txt += " The percentages of methods with moderate, high and very high risk CC are respectably <percentages[0]>%, <percentages[1]>% and <percentages[2]>%.";
+  txt += " The percentages of methods with moderate, high and very high risk CC are respectively <percentages[0]>%, <percentages[1]>% and <percentages[2]>%.";
 
   return factoid(txt, starLookup[stars]);
 }
