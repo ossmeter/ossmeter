@@ -7,5 +7,6 @@ Bundle-Vendor: OSSMETER
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.ossmeter.metricprovider.rascal,
  org.apache.commons.math,
- org.ossmeter.metricprovider.trans.rascal.OO;bundle-version="0.0.0"
+ org.ossmeter.metricprovider.trans.rascal.OO;bundle-version="0.0.0",
+ org.ossmeter.platform.visualisation
 Import-Package: org.ossmeter.platform
