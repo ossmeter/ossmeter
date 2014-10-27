@@ -233,7 +233,7 @@ Factoid developmentTeamExperience(
     txt = "There were no experienced committers working for the project in the last 6 months.";
   }
   else if (stars == 2) {
-    txt = "The was only one experienced committer working for the project in the last 6 months.";
+    txt = "There was only one experienced committer working for the project in the last 6 months.";
     txt += " Overall, he/she contributed <commitsPerDeveloper[getOneFrom(experiencedCommittersInLastHalfYear)]> commits.";
   }
   else {
