@@ -91,7 +91,7 @@ Factoid readabilityFactoid(map[loc, real] fileReadability = ()) {
     throw undefined("No readability data available.", |tmp:///|);
   }
 
-  re = {<l,fileReadability[l]> | l <- fileReadability };
+  re = { <l, fileReadability[l]> | l <- fileReadability };
   
   // percentages per risk group
   lowPerc  = [ r | <_,r> <- re, r >= 0.90];
@@ -99,32 +99,38 @@ Factoid readabilityFactoid(map[loc, real] fileReadability = ()) {
   highPerc  = [ r | <_,r> <- re, r < 0.75 && r >= 0.50];
   veryHighPerc = [ r | <_,r> <- re, r < 0.50];
 
-  med = 100.0 * median(medPerc + highPerc + veryHighPerc);
-  
   total = size(fileReadability);
+
+  med = 100.0 * ((size(lowPerc) == total) ? median(lowPerc) : median(medPerc + highPerc + veryHighPerc));
+  
   star = \one();
   
   txt = "For readability of source code it is import that spaces around delimiters such as [,;{}] are used.\n";
 
-  if (size(veryHighPerc) == 0 && size(highPerc) == 0 && size(medPerc) <= (total / 10)) {
+  if (size(lowPerc) == total) {
      star = four();
-     txt += "In this project less than 10% of the files have minor readability issues.
+     txt += "In this project all files have only minor readability issues.
+            'An average file in this category has <med>% of the expected whitespace.";
+  }
+  else if (size(veryHighPerc) == 0 && size(highPerc) == 0 && size(medPerc) <= (total / 10)) {
+     star = four();
+     txt += "In this project less than 10% of the files have moderate readability issues.
             'An average file in this category has <med>% of the expected whitespace.";
   }
   else if (size(veryHighPerc) == 0 && size(highPerc) <= (total / 5) && size(medPerc) <= (total / 15)) {
      star = three();
-     txt += "In this project less than 20% of the files have moderate readability issues.
+     txt += "In this project less than 20% of the files have major readability issues.
             'An average file in this category has <med>% of the expected whitespace.";
   }
   else if (size(veryHighPerc) <= (total / 5) && size(highPerc) <= (total / 25)) {
      star = two();
-     txt += "In this project less than 30% of the files have major readability issues.
+     txt += "In this project less than 30% of the files have severe readability issues.
             'An average file in this category has <med>% of the expected whitespace.";
   }
   else {
      star = \one();
-     txt += "In this project, <percent(size(veryHighPerc) + size(highPerc) + size(medPerc), total)>% of the files have readability issues.
-            'An average file has <med>% of the expected whitespace.";
+     txt += "In this project, <percent(size(veryHighPerc) + size(highPerc) + size(medPerc), total)>% of the files have serious readability issues.
+            'An average file in this category has <med>% of the expected whitespace.";
   }
   
   return factoid(txt, star);
