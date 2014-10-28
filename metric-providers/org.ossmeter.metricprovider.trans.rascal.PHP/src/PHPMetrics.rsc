@@ -154,11 +154,11 @@ public set[str] estimateMissingLibraries(rel[Language, loc, AST] asts = {})
 @appliesTo{php()}
 @uses=("numFunctionsWithDynamicFeatures": "numFunctionsWithDynamicFeatures")
 Factoid dynamicLanguageFeaturesFactoid(rel[Language, loc, AST] asts = {}, int numFunctionsWithDynamicFeatures = -1) {
-  if (numFunctionsWithDynamicFeatures == -1) {
+  numFunctions = size(getDynamicFeatureCountsPerFunction(asts));
+
+  if (numFunctionsWithDynamicFeatures == -1 || numFunctions == 0) {
     throw undefined("No data available.", |tmp:///|);
   }
-
-  numFunctions = size(getDynamicFeatureCountsPerFunction(asts));
 
   perc = percent(numFunctionsWithDynamicFeatures, numFunctions);
   
