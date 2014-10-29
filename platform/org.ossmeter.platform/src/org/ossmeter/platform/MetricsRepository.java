@@ -15,7 +15,7 @@ public class MetricsRepository {
 		super();
 		this.project = project;
 		this.mongo = mongo;
-		this.db = mongo.getDB(project.getName());
+		this.db = mongo.getDB(project.getShortName());
 	}
 	
 	public DB getDb() {

@@ -15,11 +15,13 @@ public class SchedulingInformation extends Pongo {
 		super();
 		dbObject.put("currentLoad", new BasicDBList());
 		WORKERIDENTIFIER.setOwningType("org.ossmeter.repository.model.SchedulingInformation");
+		HEARTBEAT.setOwningType("org.ossmeter.repository.model.SchedulingInformation");
 		ISMASTER.setOwningType("org.ossmeter.repository.model.SchedulingInformation");
 		CURRENTLOAD.setOwningType("org.ossmeter.repository.model.SchedulingInformation");
 	}
 	
 	public static StringQueryProducer WORKERIDENTIFIER = new StringQueryProducer("workerIdentifier"); 
+	public static NumericalQueryProducer HEARTBEAT = new NumericalQueryProducer("heartbeat");
 	public static StringQueryProducer ISMASTER = new StringQueryProducer("isMaster"); 
 	public static ArrayQueryProducer CURRENTLOAD = new ArrayQueryProducer("currentLoad");
 	
@@ -30,6 +32,15 @@ public class SchedulingInformation extends Pongo {
 	
 	public SchedulingInformation setWorkerIdentifier(String workerIdentifier) {
 		dbObject.put("workerIdentifier", workerIdentifier);
+		notifyChanged();
+		return this;
+	}
+	public long getHeartbeat() {
+		return parseLong(dbObject.get("heartbeat")+"", 0);
+	}
+	
+	public SchedulingInformation setHeartbeat(long heartbeat) {
+		dbObject.put("heartbeat", heartbeat);
 		notifyChanged();
 		return this;
 	}

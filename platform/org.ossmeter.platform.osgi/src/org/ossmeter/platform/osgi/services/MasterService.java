@@ -37,18 +37,18 @@ public class MasterService implements IMasterService {
 		mongo = new Mongo(); //FIXME: should use replica set / conf
 		platform = new Platform(mongo);
 	
-		SchedulingInformationCollection schedCol = platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation();
-		
-		SchedulingInformation schedulingInformation = null;
-		if (schedCol == null || schedCol.size() ==0) {
-			schedulingInformation = new SchedulingInformation();
-			schedCol.add(schedulingInformation);
-			platform.getProjectRepositoryManager().getProjectRepository().sync();
-		} else {
-			schedulingInformation = schedCol.first();
-		}
-		schedulingInformation.setIsMaster(true);
-		platform.getProjectRepositoryManager().getProjectRepository().sync();
+//		SchedulingInformationCollection schedCol = platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation();
+//		
+//		SchedulingInformation schedulingInformation = null;
+//		if (schedCol == null || schedCol.size() ==0) {
+//			schedulingInformation = new SchedulingInformation();
+//			schedCol.add(schedulingInformation);
+//			platform.getProjectRepositoryManager().getProjectRepository().sync();
+//		} else {
+//			schedulingInformation = schedCol.first();
+//		}
+//		schedulingInformation.setIsMaster(true);
+//		platform.getProjectRepositoryManager().getProjectRepository().sync();
 		
 		// Now start scheduling
 		master = new Thread() {
@@ -69,7 +69,7 @@ public class MasterService implements IMasterService {
 							if (projects.size() >= 3) break;
 						}
 						
-						IWorkerService worker = null;
+						SchedulingInformation worker = null;
 						while (worker == null) {
 							worker = nextFreeWorker();
 							if (worker == null) {
@@ -80,27 +80,12 @@ public class MasterService implements IMasterService {
 									e.printStackTrace();
 								}
 							} else {
-								//worker.queueProjects(projects);
 								logger.info("Queuing " + projects.size() + " on worker ");
 								
-								worker.queueProjects(projects);
+								for (String p : projects)
+									worker.getCurrentLoad().add(p);
 								
-								// Update DB with load
-								SchedulingInformation wn = null;
-								for (SchedulingInformation n : platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation()) {
-									if (n.getWorkerIdentifier().equals(worker.getIdentifier())) { 
-										wn = n;
-										break;
-									}
-								}
-								if (wn == null) {
-									wn = new SchedulingInformation();
-									wn.setWorkerIdentifier(worker.getIdentifier());
-									platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().add(wn);
-								}
-								wn.getCurrentLoad().clear();
-								wn.getCurrentLoad().addAll(projects);
-								platform.getProjectRepositoryManager().getProjectRepository().sync();
+								platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().sync();
 							}
 						}
 					}
@@ -116,12 +101,21 @@ public class MasterService implements IMasterService {
 		master.start();
 	}
 
-	protected IWorkerService nextFreeWorker() {
-		for (IWorkerService worker : workers) {
-			if (worker.getStatus().equals(SchedulerStatus.AVAILABLE)){
-				return worker;
+	protected SchedulingInformation nextFreeWorker() {
+		Iterator<SchedulingInformation> it = platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().iterator();
+		
+		while (it.hasNext()) {
+			SchedulingInformation job = it.next();
+			if (job.getCurrentLoad() == null || job.getCurrentLoad().size() == 0) {
+				return job;
 			}
 		}
+		
+//		for (IWorkerService worker : workers) {
+//			if (worker.getStatus().equals(SchedulerStatus.AVAILABLE)){
+//				return worker;
+//			}
+//		}
 		return null;
 	}
 	

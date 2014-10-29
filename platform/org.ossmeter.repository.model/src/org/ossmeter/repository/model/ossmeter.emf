@@ -26,6 +26,7 @@ class MetricAnalysis {
 class SchedulingInformation {
   @searchable
   attr String workerIdentifier;
+  attr long heartbeat;
   attr Boolean isMaster;
   attr String[*] currentLoad; // List of projects its executing
 }
@@ -37,7 +38,6 @@ class ImportData {
 }
 
 abstract class NamedElement {
-
   @searchable
   attr String name;
 }

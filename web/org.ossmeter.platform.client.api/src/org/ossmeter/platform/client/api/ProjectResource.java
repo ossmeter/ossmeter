@@ -47,6 +47,7 @@ public class ProjectResource extends ServerResource {
 		// How can we auto-expand and DBRefs when serialising?
 		ex.put("licenses", 0);
 		ex.put("persons", 0);
+		ex.put("companies", 0);
 		
 		BasicDBObject query = new BasicDBObject("shortName", projectId);
 		
