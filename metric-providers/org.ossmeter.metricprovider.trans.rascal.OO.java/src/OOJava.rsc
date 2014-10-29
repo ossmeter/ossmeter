@@ -65,6 +65,7 @@ private rel[loc, loc] overridableMethods(M3 m3) = { <p, m> | <p, m> <- allMethod
 @doc{Abstractness (Java)}
 @friendlyName{Abstractness (Java)}
 @appliesTo{java()}
+@historic
 real A_Java(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
   
@@ -79,6 +80,7 @@ real A_Java(rel[Language, loc, M3] m3s = {}) {
 @doc{Reuse ratio (Java)}
 @friendlyName{Reuse ratio (Java)}
 @appliesTo{java()}
+@historic
 real RR_Java(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
 
@@ -89,6 +91,7 @@ real RR_Java(rel[Language, loc, M3] m3s = {}) {
 @doc{Specialization ratio (Java)}
 @friendlyName{Specialization ratio (Java)}
 @appliesTo{java()}
+@historic
 real SR_Java(rel[Language, loc, M3] m3s = {}) {
 	return SR(superTypes(systemM3(m3s)));
 }
@@ -190,6 +193,7 @@ map[loc, int] MPC_Java(rel[Language, loc, AST] asts = {}) {
 @doc{Coupling factor (Java)}
 @friendlyName{Coupling factor (Java)}
 @appliesTo{java()}
+@historic
 real CF_Java(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
   return CF(typeDependencies(m3), superTypes(m3), allTypes(m3));
@@ -296,6 +300,7 @@ private real hidingFactor(M3 m3, rel[loc, loc] members) {
 @doc{Method hiding factor (Java)}
 @friendlyName{Method hiding factor (Java)}
 @appliesTo{java()}
+@historic
 real MHF_Java(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
 	return hidingFactor(m3, allMethods(m3));
@@ -305,6 +310,7 @@ real MHF_Java(rel[Language, loc, M3] m3s = {}) {
 @doc{Attribute hiding factor (Java)}
 @friendlyName{Attribute hiding factor (Java)}
 @appliesTo{java()}
+@historic
 real AHF_Java(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
 	return hidingFactor(m3, allFields(m3));
@@ -314,6 +320,7 @@ real AHF_Java(rel[Language, loc, M3] m3s = {}) {
 @doc{Polymorphism factor (Java)}
 @friendlyName{Polymorphism factor (Java)}
 @appliesTo{java()}
+@historic
 real PF_Java(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
 

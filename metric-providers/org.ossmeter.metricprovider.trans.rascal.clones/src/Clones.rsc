@@ -99,6 +99,7 @@ private alias Block = list[str];
 @doc{Lines of code in Type I clones larger than 6 lines, per language}
 @friendlyName{Lines of code in Type I clones larger than 6 lines, per language}
 @appliesTo{generic()}
+@historic
 map[str, int] cloneLOCPerLanguage(rel[Language, loc, AST] asts = {}) {
 
   map[str, int] result = ();

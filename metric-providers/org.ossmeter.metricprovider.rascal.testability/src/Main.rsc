@@ -9,14 +9,14 @@ import analysis::graphs::Graph;
 extend lang::java::m3::Core;
 import JUnit4;
 import Java;
-import org::ossmeter::metricprovider::Factoid;
+import org::ossmeter::metricprovider::MetricProvider;
 
 
 @metric{TestCoverage}
 @doc{Static Estimation of test coverage}
 @friendlyName{Static Estimation of test coverage}
 @appliesTo{java()}
-@historic
+@historic{}
 real estimateTestCoverage(rel[Language, loc, M3] m3s = {}) {
   m = systemM3(m3s);
   implicitContainment = getImplicitContainment(m);
@@ -36,17 +36,17 @@ real estimateTestCoverage(rel[Language, loc, M3] m3s = {}) {
       caller = getOneFrom(inverseContainment[caller]);
     }
     if (caller.scheme == "java+class" || caller.scheme == "java+anonymousClass" || caller.scheme == "java+enum") {
-      for (method <- fullContainment[caller], method.scheme == "java+constructor") {
-        liftedInvocations += { <method, callee> };
+      for (meth <- fullContainment[caller], meth.scheme == "java+constructor") {
+        liftedInvocations += { <meth, callee> };
       }
     }
   }
   
   fullCallGraph = liftedInvocations + implicitCalls + m@methodOverrides<1,0>;
   allTestMethods = getJUnit4TestMethods(m) + getJUnit4SetupMethods(m);
-  interfaceMethods = { method | <entity, method> <- m@containment, isMethod(method), isInterface(entity) };
-  set[loc] reachableMethods = { method | method <- reach(fullCallGraph, allTestMethods), method in m@declarations<0> } - allTestMethods - interfaceMethods;
-  int totalDefinedMethods = (0 | it + 1 | method <- m@declarations<0> - allTestMethods - interfaceMethods, isMethod(method));
+  interfaceMethods = { meth | <entity, meth> <- m@containment, isMethod(meth), isInterface(entity) };
+  set[loc] reachableMethods = { meth | meth <- reach(fullCallGraph, allTestMethods), meth in m@declarations<0> } - allTestMethods - interfaceMethods;
+  int totalDefinedMethods = (0 | it + 1 | meth <- m@declarations<0> - allTestMethods - interfaceMethods, isMethod(meth));
   return (100.0 * size(reachableMethods)) / totalDefinedMethods;
 }
 
@@ -58,11 +58,11 @@ private rel[loc, loc] getImplicitCalls(M3 m, rel[loc, loc] implicitContainment) 
   
   rel[loc, loc] implicitCalls = {};
   
-  for (<child, parent> <- m@extends) {
-    if (parent in implicitContainment<0>) {
-      for (constructor <- fullContainment[child], constructor.scheme == "java+constructor") {
-        assert(size(implicitContainment[parent]) == 1) : "Found more than one implicit constuctor";
-        implicitCalls += <constructor, getOneFrom(implicitContainment[parent])>;
+  for (<ch, par> <- m@extends) {
+    if (par in implicitContainment<0>) {
+      for (con <- fullContainment[ch], con.scheme == "java+constructor") {
+        assert(size(implicitContainment[par]) == 1) : "Found more than one implicit constuctor";
+        implicitCalls += <con, getOneFrom(implicitContainment[par])>;
       }
     }
   }
@@ -76,15 +76,15 @@ private rel[loc, loc] getImplicitCalls(M3 m, rel[loc, loc] implicitContainment) 
 private rel[loc, loc] getImplicitContainment(M3 m) {
   rel[loc, loc] implicitContainment = {};
   
-  for (class <- m@declarations<0>, class.scheme == "java+class" || class.scheme == "java+anonymousClass" || class.scheme == "java+enum") {
-    allMethods = { candidate | candidate <- m@containment[class], isMethod(candidate) };
+  for (cl <- m@declarations<0>, cl.scheme == "java+class" || cl.scheme == "java+anonymousClass" || cl.scheme == "java+enum") {
+    allMethods = { candidate | candidate <- m@containment[cl], isMethod(candidate) };
     
-    if (!any(method <- allMethods, method.scheme == "java+constructor")) {
-      possibleNames = m@names<1,0>[class];
-      assert(size(possibleNames) <= 1) : "Found more than one simple name entry for qualified name <class>: <possibleNames>";
+    if (!any(meth <- allMethods, meth.scheme == "java+constructor")) {
+      possibleNames = m@names<1,0>[cl];
+      assert(size(possibleNames) <= 1) : "Found more than one simple name entry for qualified name <cl>: <possibleNames>";
       className = isEmpty(possibleNames) ? "" : getOneFrom(possibleNames);
-      defaultConstructorLOC = (class+"<className>()")[scheme="java+constructor"];
-      implicitContainment += <class, defaultConstructorLOC>;
+      defaultConstructorLOC = (cl+"<className>()")[scheme="java+constructor"];
+      implicitContainment += <cl, defaultConstructorLOC>;
     }
   }
   
@@ -95,13 +95,13 @@ private rel[loc, loc] getImplicitContainment(M3 m) {
 @doc{Number of JUnit tests averaged over the total number of public methods}
 @friendlyName{Number of JUnit tests averaged over the total number of public methods}
 @appliesTo{java()}
-@historic
+@historic{}
 real percentageOfTestedPublicMethods(rel[Language, loc, M3] m3s = {}) {
   m = systemM3(m3s);
   onlyTestMethods = getJUnit4TestMethods(m);
   supportTestMethods = getJUnit4SetupMethods(m);
-  interfaceMethods = { method | <entity, method> <- m@containment, isMethod(method), isInterface(entity) };
-  allPublicMethods = { method | method <- m@declarations<0> - interfaceMethods - onlyTestMethods - supportTestMethods, isMethod(method), \public() in m@modifiers[method] };
+  interfaceMethods = { meth | <entity, meth> <- m@containment, isMethod(meth), isInterface(entity) };
+  allPublicMethods = { meth | meth <- m@declarations<0> - interfaceMethods - onlyTestMethods - supportTestMethods, isMethod(meth), \public() in m@modifiers[meth] };
   directlyCalledFromTestMethods = domainR(m@methodInvocation, onlyTestMethods);
   testedPublicMethods = rangeR(directlyCalledFromTestMethods + (directlyCalledFromTestMethods o m@methodOverrides<1,0>), allPublicMethods);
   return (100.0 * size(range(testedPublicMethods)))/size(allPublicMethods);
@@ -111,6 +111,7 @@ real percentageOfTestedPublicMethods(rel[Language, loc, M3] m3s = {}) {
 @doc{Number of JUnit test methods}
 @friendlyName{Number of JUnit test methods}
 @appliesTo{java()}
+@historic
 int numberOfTestMethods(rel[Language, loc, M3] m3s = {}) {
   return size(getJUnit4TestMethods(systemM3(m3s)));
 }
@@ -119,10 +120,19 @@ int numberOfTestMethods(rel[Language, loc, M3] m3s = {}) {
 @metric{JavaUnitTestCoverage}
 @doc{How well do the project's unit tests cover its code (Java)}
 @friendlyName{Java unit test coverage}
-@uses{("TestOverPublicMethods": "testOverPublicMethods", "TestCoverage", "testCoverage")}
+@uses{("TestOverPublicMethods": "testOverPublicMethods", "TestCoverage": "testCoverage", "TestCoverage.historic": "history")}
 @appliesTo{java()}
-Factoid JavaUnitTestCoverage(real testOverPublicMethods = -1.0, real testCoverage = -1.0) {
-
+Factoid JavaUnitTestCoverage(real testOverPublicMethods = -1.0, real testCoverage = -1.0, rel[datetime, real] history = {}) {
+  sl = historicalSlope(history, 6);
+                         
+  expect = "";
+                            
+  switch (<sl < 0.1, -0.1 >= sl && sl <= 0.1, sl > 0.1>) {
+    case <true   , _      , _     > : { expect = "The situation is getting worse in the last six months";  }
+    case <_      , true   , _     > : { expect = "This situation is stable";  }
+    case <_      , _      , true  > : { expect = "This situation is improving over the last six months";  }
+  }
+   
   if (testOverPublicMethods == -1.0 || testCoverage == -1.0) {
     throw undefined("Not enough test coverage data available", |tmp:///|);
   }
@@ -133,7 +143,7 @@ Factoid JavaUnitTestCoverage(real testOverPublicMethods = -1.0, real testCoverag
     stars = 4;
   }
 
-  txt = "The percentage of methods covered by unit tests is estimated at <testCoverage>%. The estimated coverage of public methods is <testOverPublicMethods>%";
+  txt = "The percentage of methods covered by unit tests is estimated at <testCoverage>%. <expect>. The estimated coverage of public methods is <testOverPublicMethods>%";
   
   return factoid(txt, starLookup[stars]); 
 }

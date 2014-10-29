@@ -178,6 +178,7 @@ map[loc, int] commentedOutCode(rel[Language, loc, AST] asts = {}) {
 @friendlyName{Lines of commented out code per language}
 @appliesTo{generic()}
 @uses{("commentedOutCode": "commentedOutCode")}
+@historic
 map[str, int] commentedOutCodePerLanguage(rel[Language, loc, AST] asts = {}, map[loc, int] commentedOutCode = ()) {
   map[str, int] result = ();
   for (<l, f, a> <- asts, l != generic(), f in commentedOutCode) {
@@ -305,6 +306,7 @@ Factoid commentPercentage(map[str, int] locPerLanguage = (), map[str, int] comme
 @friendlyName{Percentage of files with headers}
 @appliesTo{generic()}
 @uses{("headerLOC": "headerLOC")}
+@historic
 real headerPercentage(map[loc, int] headerLOC = ()) {
 	int measuredFiles = size(headerLOC);
 	if (measuredFiles == 0) {

@@ -32,6 +32,7 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 	protected boolean apiServer = false;
 	protected boolean master = false; 
 	
+	private static final String MAVEN_EXECUTABLE = "MAVEN_EXECUTABLE";
 	protected OssmeterLogger logger;
 	protected boolean done = false;
 	protected Object appLock = new Object();
@@ -76,9 +77,11 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 //		workerServiceTracker = new ServiceTracker<IWorkerService, IWorkerService>(Activator.getContext(), IWorkerService.class, this);	
 //		workerServiceTracker.open();
 		
-		// FIXME: take from configuration file
-		System.setProperty("MAVEN_EXECUTABLE", "/Applications/apache-maven-3.2.3/bin/mvn");
-
+		if (System.getProperty(MAVEN_EXECUTABLE) == null) {
+			// FIXME: take from configuration file
+			System.setProperty(MAVEN_EXECUTABLE, "/Applications/apache-maven-3.2.3/bin/mvn");
+		}
+		
 		// If master, start
 		if (master) {
 			masterService = new MasterService(workers);
@@ -86,7 +89,6 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 		}
 
 		if (slave) {
-//			WorkerService worker = new WorkerService(mongo);
 			SlaveScheduler slave = new SlaveScheduler(mongo);
 			slave.run();
 		}
@@ -114,7 +116,7 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 				// Maven
 				String maven = configuration.getProperty("maven_executable", "");
 				if (!maven.equals("")) {
-					System.setProperty("MAVEN_EXECUTABLE", maven);
+					System.setProperty(MAVEN_EXECUTABLE, maven);
 				}
 				
 				i++;

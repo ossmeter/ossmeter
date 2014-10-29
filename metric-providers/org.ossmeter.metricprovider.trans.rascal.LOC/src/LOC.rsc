@@ -3,7 +3,6 @@ module LOC
 import analysis::m3::Core;
 import analysis::m3::AST;
 import analysis::graphs::Graph;
-import org::ossmeter::metricprovider::ProjectDelta;
 import org::ossmeter::metricprovider::MetricProvider;
 
 import analysis::statistics::Frequency;
@@ -23,16 +22,17 @@ map[loc, int] countLoc(rel[Language, loc, AST] asts = {}) {
 
 real giniLOC(map[loc, int] locs) {
   dist = distribution(locs);
-  if (size(dist) < 1) {
-  	return -1.0; // TODO how can we return no result at all?
+  if (size(dist) < 2) {
+  	throw undefined("Not enough LOC data available.", |tmp:///|);
   }
-  return gini([<0,0>] + [<x, dist[x]> | x <- dist]);
+  return gini([<x, dist[x]> | x <- dist]);
 }
 
 @metric{genericLOCoverFiles}
 @doc{Language independent physical lines of code over files}
 @friendlyName{Language independent physical lines of code over files}
 @appliesTo{generic()}
+@historic
 real giniLOCOverFiles(rel[Language, loc, AST] asts = {}) {
   return giniLOC(countLoc(asts=asts));
 }
@@ -43,6 +43,7 @@ real giniLOCOverFiles(rel[Language, loc, AST] asts = {}) {
 @friendlyName{Physical lines of code per language}
 @appliesTo{generic()}
 @uses{("genericLOC" :"genericLoc")}
+@historic
 map[str, int] locPerLanguage(rel[Language, loc, AST] asts = {}, map[loc, int] genericLoc = ()) {
   map[str, int] result = ();
   set[loc] filesWithLanguageDetected = {};

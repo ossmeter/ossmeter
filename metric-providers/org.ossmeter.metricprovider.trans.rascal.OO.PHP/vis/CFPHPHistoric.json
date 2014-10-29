@@ -1,0 +1,21 @@
+{
+	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.PHP.CF-PHP.historic",
+	"vis" : [ 
+		{
+			"name" : "CFPHPHistoric",
+			"nicename" : "CFPHPHistoric",
+			"description" : "This metric shows the Coupling Factor for PHP over time.",
+			"type" : "LineChart",
+			"datatable" : {
+				"rows" : "$value",
+				"cols" : [ { "name" : "Date", "field" : "$__date" }, 
+							 { "name" : "Val",  "field" : "$value" } ]
+			},
+			"x" : "Date",
+			"y" : "Val", 
+			"x-label" : "Date",		
+			"y-label" : "Coupling Factor",
+			"timeSeries" : true
+		}
+	]
+}
