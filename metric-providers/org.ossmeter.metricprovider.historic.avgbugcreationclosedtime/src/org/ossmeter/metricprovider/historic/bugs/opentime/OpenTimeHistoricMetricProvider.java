@@ -58,7 +58,9 @@ public class OpenTimeHistoricMetricProvider extends AbstractHistoricalMetricProv
 			}
 			if (durations>0) {
 				long avgDuration = seconds/durations;
-				int days = (int) (avgDuration / SECONDS_DAY);
+				double daysReal = avgDuration / SECONDS_DAY;
+				avgBugOpenTime.setAvgBugOpenTimeInDays(daysReal);
+				int days = (int) daysReal;
 				long lessThanDay = (avgDuration % SECONDS_DAY);
 				String formatted = DurationFormatUtils.formatDuration(lessThanDay*1000, "HH:mm:ss:SS");
 				avgBugOpenTime.setAvgBugOpenTime(days+":"+formatted);

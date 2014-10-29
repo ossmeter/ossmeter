@@ -1,3 +1,4 @@
+
 package org.ossmeter.metricprovider.trans.bugs.bugmetadata;
 
 import java.util.ArrayList;

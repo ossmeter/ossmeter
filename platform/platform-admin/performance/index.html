@@ -97,10 +97,10 @@
 
 				$("#metrics > tbody:last").append("<tr"+classs+"><td>" + metricId + 
 					"</td><td>" + data.length + 
-					"</td><td>" + mean + 
-					"</td><td>" + ss.median(data) + 
-					"</td><td>" + ss.iqr(data) + 
-					"</td><td>" + ss.max(data) + "</td></tr>");
+					"</td><td>" + mean/1000 + 
+					"</td><td>" + ss.median(data)/1000 + 
+					"</td><td>" + ss.iqr(data)/1000 + 
+					"</td><td>" + ss.max(data)/1000 + "</td></tr>");
 					$(".tablesorter").trigger('update');
 				});
 		}

@@ -32,7 +32,10 @@ public class App implements IApplication {
 //		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(pongo);
 		
 //		Project pdb = ProjectCreationUtil.createProjectWithNewsGroup("xText", "news.eclipse.org", "eclipse.modeling.tmf", true, "exquisitus", "flinder1f7", 80, 10000);
-		Project pdb = ProjectCreationUtil.createProjectWithBugTrackingSystem("epsilon", "https://bugs.eclipse.org/bugs/xmlrpc.cgi", "epsilon", null);
+//		Project pdb = ProjectCreationUtil.createProjectWithBugTrackingSystem("epsilon", "https://bugs.eclipse.org/bugs/xmlrpc.cgi", "epsilon", null);
+		Project pdb = ProjectCreationUtil.createProjectWithBugTrackingSystem("eclipse", "https://bugs.eclipse.org/bugs/xmlrpc.cgi", "platform", null);
+
+//		Project pdb = ProjectCreationUtil.createProjectWithBugTrackingSystem("epsilon", "https://bugs.eclipse.org/bugs/xmlrpc.cgi", "epsilon", null);
 //		Project pdb = ProjectCreationUtil.createGitProject("rascal", "file:///Users/jurgenv/Workspaces/Rascal/rascal");
 
 		pdb.getExecutionInformation().setMonitor(true);

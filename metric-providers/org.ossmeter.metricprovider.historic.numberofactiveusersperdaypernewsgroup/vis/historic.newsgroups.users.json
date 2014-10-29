@@ -3,7 +3,9 @@
 	"metricid" : "org.ossmeter.metricprovider.historic.newsgroups.users",
 	"vis" : [ 
 {
-			"name" : "activeinactiveusers",
+			"id" : "newsgroups.activeinactiveusers",
+			"name" : "Users, Active Users and Inactive Users",
+			"description" : "The number of users, active users and inactive users per day, up to and including the current date." ,
 			"type" : "LineChart",
 			"datatable" : {
 				"cols" : [  { "name" : "Date", "field" : "$__date" },
@@ -15,7 +17,9 @@
 			"y" : ["Users", "ActiveUsers", "InactiveUsers"],
 			"timeSeries" : true
 		},{
-			"name" : "users",
+			"id" : "newsgroups.users",
+			"name" : "Users",
+			"description" : "The number of users per day, up to and including the current date." ,
 			"type" : "LineChart",
 			"datatable" : { 
 				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
@@ -25,7 +29,9 @@
 			"y" : "Users",
 			"timeSeries" : true
 		},{
-			"name" : "activeusers",
+			"id" : "newsgroups.activeusers",
+			"name" : "Active Users",
+			"description" : "The number of active users per day, up to and including the current date." ,
 			"type" : "LineChart",
 			"datatable" : { 
 				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
@@ -36,7 +42,9 @@
 			"timeSeries" : true
 		}
 		{
-			"name" : "inactiveusers",
+			"id" : "newsgroups.inactiveusers",
+			"name" : "Inactive Users",
+			"description" : "The number of inactive users per day, up to and including the current date." ,
 			"type" : "LineChart",
 			"datatable" : { 
 				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
