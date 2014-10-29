@@ -12,7 +12,7 @@ import org::ossmeter::metricprovider::MetricProvider;
 
 public real giniCCOverMethods(map[loc, int] methodCC) {
   if (isEmpty(methodCC)) {
-    return -1.0;
+    throw undefined("No CC data available", |tmp:///|);
   }
   
   distCCOverMethods = distribution(methodCC);
@@ -25,14 +25,14 @@ public real giniCCOverMethods(map[loc, int] methodCC) {
 }
 
 
-public Factoid CCFactoid(map[loc, int] methodCC, str language) {
+public map[str, int] CCHistogram(map[loc, int] methodCC) {
   if (isEmpty(methodCC)) {
     throw undefined("No CC data available", |tmp:///|);
   }
 
   thresholds = [10, 20, 50]; // moderate, high, very high
 
-  counts = [0, 0, 0];
+  list[int] counts = [0, 0, 0];
   
   for (m <- methodCC) {
     cc = methodCC[m];
@@ -45,7 +45,25 @@ public Factoid CCFactoid(map[loc, int] methodCC, str language) {
 
   numMethods = size(methodCC);
   
-  percentages = [ 100.0 * c / numMethods | c <- counts ];
+  counts = [( numMethods | it - c | c <- counts )] + counts; // add nr of low risk methods
+  risks = ["low", "moderate", "high", "very high"];
+  
+  return toMapUnique(zip(risks, counts));
+}
+
+
+public Factoid CCFactoid(map[str, int] riskCounts, str language) {
+  if (isEmpty(riskCounts)) {
+    throw undefined("No CC data available", |tmp:///|);
+  }
+
+  numMethods = ( 0 | it + riskCounts[r] | r <- riskCounts);
+
+  if (numMethods == 0) {
+    throw undefined("No methods", |tmp:///|);
+  }
+  
+  percentages = [ 100.0 * c / numMethods | c <- riskCounts[1..] ]; // drop low risk counts
   
   rankings = [ [25, 0, 0], [30, 5, 0], [40, 10, 0] ];
   
@@ -63,3 +81,4 @@ public Factoid CCFactoid(map[loc, int] methodCC, str language) {
 
   return factoid(txt, starLookup[stars]);
 }
+
