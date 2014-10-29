@@ -43,36 +43,6 @@ private tuple[int, str] mapMetricsWithinRange(lrel[map[loc, num] result, str lab
 }
 
 
-Factoid Complexity(
-	str language,
-	map[loc, int] dit
-) {
-	if (dit == ()) {
-		throw undefined("No DIT data", |file:///|);
-	}
-	
-	numClassesWithBadDepth = ( 0 | it + 1 | c <- dit, dit[c] > 5 ); // TODO find source for DIT > 5
-	
-	badPercentage = numClassesWithBadDepth * 100.0 / size(dit);
-	
-	stars = four();
-	
-	if (badPercentage > 20) {
-		stars = \one();
-	}
-	else if (badPercentage > 10) {
-		stars = two();
-	}
-	else if (badPercentage > 5) {
-		stars = three();
-	}
-
-	txt = "The percentage of <language> classes with a problematic inheritance depth is <badPercentage>%."; 
-
-	return factoid(txt, stars);
-}
-
-
 Factoid Coupling(
 	str language,
 	map[loc, int] cbo
@@ -113,6 +83,8 @@ Factoid Cohesion(
 	if (lcom4 == ()) {
 		throw undefined("No LCOM4 data", |file:///|);
 	}
+
+	// LCOM4: Hitz and Montazeri: Measuring coupling and cohesion in object oriented systems, 1995
 	
 	numClassesWithBadCohesion = ( 0 | it + 1 | c <- lcom4, lcom4[c] != 1 );
 	

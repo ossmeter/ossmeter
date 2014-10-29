@@ -16,6 +16,7 @@ import org.ossmeter.platform.admin.AdminApplication;
 import org.ossmeter.platform.admin.ProjectListAnalysis;
 import org.ossmeter.platform.client.api.ProjectResource;
 import org.ossmeter.platform.logging.OssmeterLogger;
+import org.ossmeter.platform.osgi.executors.SlaveScheduler;
 import org.ossmeter.platform.osgi.services.IWorkerService;
 import org.ossmeter.platform.osgi.services.MasterService;
 import org.ossmeter.platform.osgi.services.WorkerService;
@@ -27,10 +28,15 @@ import com.mongodb.ServerAddress;
 
 public class OssmeterApplication implements IApplication, ServiceTrackerCustomizer<IWorkerService, IWorkerService> {
 	
-	protected boolean master = false; // This should be set via the program arguments '-master'
+	protected boolean slave = false;
+	protected boolean apiServer = false;
+	protected boolean master = false; 
+	
+	private static final String MAVEN_EXECUTABLE = "MAVEN_EXECUTABLE";
 	protected OssmeterLogger logger;
 	protected boolean done = false;
 	protected Object appLock = new Object();
+	
 	protected Properties configuration;
 	protected List<ServerAddress> mongoHostAddresses;
 	
@@ -63,23 +69,18 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 		// Ensure OSGi contributors are active
 		PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
 		
-		// Advertise as being a worker
-		Dictionary props = new Properties();
-//		props.put(IDistributionConstants.SERVICE_EXPORTED_INTERFACES, IDistributionConstants.SERVICE_EXPORTED_INTERFACES_WILDCARD);
-//		props.put(IDistributionConstants.SERVICE_EXPORTED_CONFIGS, "ecf.generic.server");
-//		props.put(IDistributionConstants.SERVICE_EXPORTED_CONTAINER_FACTORY_ARGUMENTS, "ecftcp://localhost:3788/worker");
-		// FIXME: Understand the above: commenting out the props has no effect (at least locally - maybe a clue to network issue).
-		
 		// TODO: Pass the service any configuration details it needs
-		WorkerService worker = new WorkerService(mongo);
-		workerRegistration = Activator.getContext().registerService(IWorkerService.class, worker, props);		
+//		WorkerService worker = new WorkerService(mongo);
+//		workerRegistration = Activator.getContext().registerService(IWorkerService.class, worker, props);		
+//		
+//		// Detect other workers
+//		workerServiceTracker = new ServiceTracker<IWorkerService, IWorkerService>(Activator.getContext(), IWorkerService.class, this);	
+//		workerServiceTracker.open();
 		
-		// Detect other workers
-		workerServiceTracker = new ServiceTracker<IWorkerService, IWorkerService>(Activator.getContext(), IWorkerService.class, this);	
-		workerServiceTracker.open();
-		
-		// FIXME
-		System.setProperty("MAVEN_EXECUTABLE", "/Applications/apache-maven-3.2.3/bin/mvn");
+		if (System.getProperty(MAVEN_EXECUTABLE) == null) {
+			// FIXME: take from configuration file
+			System.setProperty(MAVEN_EXECUTABLE, "/Applications/apache-maven-3.2.3/bin/mvn");
+		}
 		
 		// If master, start
 		if (master) {
@@ -87,11 +88,17 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 			masterService.start();
 		}
 
-//			TODO: Make this part of the config. We might want webserver-only instances
-		// Start web server
-		new ProjectResource();
-		new ProjectListAnalysis();
+		if (slave) {
+			SlaveScheduler slave = new SlaveScheduler(mongo);
+			slave.run();
+		}
 		
+		// Start web server
+		if (apiServer) {
+			new ProjectResource();
+			new ProjectListAnalysis();
+		}
+
 		// Now, rest.
   		waitForDone();
 		return IApplication.EXIT_OK;
@@ -109,12 +116,16 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 				// Maven
 				String maven = configuration.getProperty("maven_executable", "");
 				if (!maven.equals("")) {
-					System.setProperty("MAVEN_EXECUTABLE", maven);
+					System.setProperty(MAVEN_EXECUTABLE, maven);
 				}
 				
 				i++;
 			} else if ("-master".equals(args[i])) { 
 				master = true;
+			} else if ("-slave".equals(args[i])) { 
+				slave = true;
+			} else if ("-apiServer".equals(args[i])) { 
+				apiServer = true;
 			}
 		}
 	}

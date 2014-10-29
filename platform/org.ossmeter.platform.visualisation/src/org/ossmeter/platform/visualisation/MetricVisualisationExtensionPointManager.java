@@ -39,9 +39,12 @@ public class MetricVisualisationExtensionPointManager {
 		return visMap.keySet();
 	}
 	
-	public Map<String, MetricVisualisation> getRegisteredVisualisations() {
+	public synchronized Map<String, MetricVisualisation> getRegisteredVisualisations() {
 		if (visMap == null) {
 			visMap = new HashMap<>();
+		} else {
+			// FIXME, this will not allow any viss to be added at runtime
+			return visMap;
 		}
 		
 		IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(extensionPointId);
@@ -57,6 +60,7 @@ public class MetricVisualisationExtensionPointManager {
 						// TODO: More validation is needed here, as it's very susceptible
 						// to error. Only load the chart if it passes validation.
 						URL url = bundle.getResource(path);
+						
 						JsonNode json;
 						try {
 							json = loadJsonFile(url);

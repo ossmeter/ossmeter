@@ -1,21 +1,16 @@
+
 package org.ossmeter.repository.model.eclipse.importer;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.SocketTimeoutException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -35,8 +30,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.logging.OssmeterLogger;
-import org.ossmeter.repository.model.BugTrackingSystem;
-import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.Company;
 import org.ossmeter.repository.model.License;
 import org.ossmeter.repository.model.Person;
@@ -52,116 +45,23 @@ import org.ossmeter.repository.model.eclipse.EclipsePlatform;
 import org.ossmeter.repository.model.eclipse.EclipseProject;
 import org.ossmeter.repository.model.eclipse.MailingList;
 import org.ossmeter.repository.model.eclipse.importer.util.XML;
-import org.ossmeter.repository.model.eclipse.importer.util.NNTP.NTTPManager;
 import org.ossmeter.repository.model.vcs.cvs.CvsRepository;
 import org.ossmeter.repository.model.vcs.git.GitRepository;
 import org.ossmeter.repository.model.vcs.svn.SvnRepository;
+import org.ossmeter.repository.model.importer.exception.*;
 import org.w3c.dom.Document;
-//import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.mongodb.Mongo;
 
 public class EclipseProjectImporter {
-	
-	private Map<EclipseProject,String> pendingParentReferences = new HashMap<EclipseProject,String>();
-	private Collection<EclipseProject> importedProjects = new ArrayList<EclipseProject>();
-	private ArrayList<String> NNTPUrllist;
-
 	protected OssmeterLogger logger;
-	private Map<String, Role> rolePending = new HashMap<String, Role>();
-	private Map<String, License> licensePending = new HashMap<String, License>();
-	private Map<String, Person> userPending = new HashMap<String, Person>();
-	
-	private EclipseProject getProjectByName(String projectName) {
-		for (EclipseProject p : importedProjects) {
-	         if (p.getShortName().equals(projectName))
-	             return p;
-	    }
-		return null;	
-	}
 	public EclipseProjectImporter(){
 		logger = (OssmeterLogger) OssmeterLogger.getLogger("importer.eclipse ");
 		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 	}
-	private Collection<EclipseProject> fixPendingParentReferences(){
 
-		EclipseProject child = null;
-	    EclipseProject parent = null;
-	    
-		Iterator it = pendingParentReferences.entrySet().iterator();
-		while (it.hasNext()) {
-	        Map.Entry pr = (Map.Entry)it.next();
-	        child = (EclipseProject) pr.getKey();
-	        parent = getProjectByName((String)pr.getValue());
-	        if (parent != null)
-	        	child.setParent(parent);
-	    }
-		
-		return importedProjects;
-	}
-	
-
-	private Collection<EclipseProject> cleanParent()
-	{
-
-		EclipseProject child = null;
-	    EclipseProject parent = null;
-	    
-		Iterator it = pendingParentReferences.entrySet().iterator();
-		while (it.hasNext()) {
-	        Map.Entry pr = (Map.Entry)it.next();
-	        
-	        child = (EclipseProject) pr.getKey();
-	        parent = getProjectByName((String)pr.getValue());
-	        
-	        if (parent != null)
-	        	{
-	        		ArrayList<VcsRepository> toBeRemovedFromParentVCS = new ArrayList<VcsRepository>();
-	        		for (VcsRepository i : child.getVcsRepositories()) 
-	        		{
-	        			for (VcsRepository j : parent.getVcsRepositories()) 
-		        		{
-		        			if (i.getUrl().equals(j.getUrl()))
-		        				toBeRemovedFromParentVCS.add(j);
-						}
-					}
-	        		for (VcsRepository vcsRepository : toBeRemovedFromParentVCS) {
-						parent.getVcsRepositories().remove(vcsRepository);
-					}
-	        		ArrayList<CommunicationChannel> toBeRemovedFromParentCC = new ArrayList<CommunicationChannel>();
-	        		for (CommunicationChannel i : child.getCommunicationChannels()) 
-	        		{
-	        			for (CommunicationChannel j : parent.getCommunicationChannels()) 
-		        		{
-		        			if (i.getUrl().equals(j.getUrl()))
-		        				toBeRemovedFromParentCC.add(j);
-						}
-					}
-	        		for (CommunicationChannel vcsRepository : toBeRemovedFromParentCC) {
-						parent.getCommunicationChannels().remove(vcsRepository);
-					}
-	        		ArrayList<BugTrackingSystem> toBeRemovedFromParentBTS = new ArrayList<BugTrackingSystem>();
-	        		
-	        		for (BugTrackingSystem i : child.getBugTrackingSystems()) 
-	        		{
-	        			for (BugTrackingSystem j : parent.getBugTrackingSystems()) 
-		        		{
-		        			if (i.getUrl().equals(j.getUrl()))
-		        				//parent.getBugTrackingSystems().remove(j);
-		        				toBeRemovedFromParentBTS.add(j);
-						}
-					}
-	        		for (BugTrackingSystem vcsRepository : toBeRemovedFromParentBTS) {
-						parent.getBugTrackingSystems().remove(vcsRepository);
-					}
-	        	}
-		}
-		
-		return importedProjects;
-	}
 	
 	private boolean isNotNull(JSONObject currentProg, String attribute ) 
 	{
@@ -196,9 +96,6 @@ public class EclipseProjectImporter {
 	public void importAll(Platform platform) 
 	{		
 		try {
-			NTTPManager man = new NTTPManager();
-			NNTPUrllist = man.GetListNNTPGroups();
-			
 			logger.info("Retrieving the list of Eclipse projects...");
 
 			//InputStream is = new FileInputStream(new File("C:\\eclipse.json"));
@@ -214,22 +111,16 @@ public class EclipseProjectImporter {
 			
 			Object o =jsonAr.getValue();
 			Iterator iter2 = ((JSONObject)jsonAr.getValue()).entrySet().iterator();
-			//Max iteration 0
-			//
-			int MAX_ITERATION = 0;
-			while (iter2.hasNext() 
-					//&& MAX_ITERATION <= 0
-					
-					) {
+			
+			while (iter2.hasNext()) {
 				Map.Entry entry = (Map.Entry) iter2.next();
 				EclipseProject pi = (EclipseProject)platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByShortName((String) entry.getKey());
-				EclipseProject project = importProject((String) entry.getKey(), platform);
-				importedProjects.add(project);
-				MAX_ITERATION++;
+				try {
+					EclipseProject project = importProjectFromImportAll((String) entry.getKey(), platform);
+				} catch (ProjectUnknownException e) {
+					e.printStackTrace();
+				}
 			}			
-			fixPendingParentReferences();
-			cleanParent();
-			
 		} 
 		catch (IOException e1) {
 			logger.error("EclipseProject error: Unable to retrive eclipse project's list");
@@ -240,11 +131,8 @@ public class EclipseProjectImporter {
 	public void importProjects(Platform platform, int numberfOfProjects) 
 	{		
 		try {
-			NTTPManager man = new NTTPManager();
-			NNTPUrllist = man.GetListNNTPGroups();
-			
-			logger.info("Retrieving the list of Eclipse projects...");
 
+			logger.info("Retrieving the list of Eclipse projects...");
 			//InputStream is = new FileInputStream(new File("C:\\eclipse.json"));
 			InputStream is = new URL("http://projects.eclipse.org/json/projects/all").openStream();
 			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
@@ -258,21 +146,19 @@ public class EclipseProjectImporter {
 			
 			Object o =jsonAr.getValue();
 			Iterator iter2 = ((JSONObject)jsonAr.getValue()).entrySet().iterator();
-			//Max iteration 0
-			//
 			int MAX_ITERATION = 0;
 			while (iter2.hasNext() &&
 					 MAX_ITERATION <= numberfOfProjects) 
 			{
 				Map.Entry entry = (Map.Entry) iter2.next();
 				EclipseProject pi = (EclipseProject)platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByShortName((String) entry.getKey());
-				EclipseProject project = importProject((String) entry.getKey(), platform);
-				importedProjects.add(project);
+				try {
+					importProjectFromImportAll((String) entry.getKey(), platform);
+				} catch (ProjectUnknownException e) {
+					e.printStackTrace();
+				}
 				MAX_ITERATION++;
-			}			
-			fixPendingParentReferences();
-			cleanParent();
-			
+			}
 		} 
 		catch (IOException e1) {
 			logger.error("EclipseProject error: Unable to retrive eclipse project's list");
@@ -281,8 +167,9 @@ public class EclipseProjectImporter {
 	}
 	
 
-	public EclipseProject importProject(String projectId, Platform platform) {
+	public EclipseProject importProject(String projectId, Platform platform) throws ProjectUnknownException{
 			
+		
 		String URL_PROJECT = "http://projects.eclipse.org/projects/"+ projectId;
 		String html = null;
 		XML xml = null;
@@ -310,9 +197,10 @@ public class EclipseProjectImporter {
 			html = getRawHtml(URL_PROJECT);
 			xml = new XML(html);
 			Document xmlDoc = xml.getDOM();
+			List<String> eclipsePlatformNames = getPlatforms(xmlDoc, projectId);
 			String platformName;
 			
-			List<String> eclipsePlatformNames = getPlatforms(xmlDoc, projectId);
+			
 			Iterator it  = (Iterator) eclipsePlatformNames.iterator();
 			
 			if (projectToBeUpdated) {
@@ -327,13 +215,20 @@ public class EclipseProjectImporter {
 				project.getPlatforms().add(eclipsePlatform);
 				platform.getProjectRepositoryManager().getProjectRepository().sync();	
 			}
-			InputStream is = new URL("http://projects.eclipse.org/json/project/" + projectId).openStream();
+			URL projectUrl = new URL("http://projects.eclipse.org/json/project/" + projectId);
+			URLConnection conn = projectUrl.openConnection();
+			String sorry = conn.getHeaderField("STATUS");
+			
+			if (sorry !=null && sorry.startsWith("404"))
+				throw new WrongUrlException();
+			
+			InputStream is = conn.getInputStream();
 			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
 			String jsonText = readAll(rd);
 						
-			System.out.println(jsonText);
-			JSONObject obj=(JSONObject)JSONValue.parse(jsonText);
-			JSONObject currentProg = (JSONObject)((JSONObject)obj.get("projects")).get(projectId);
+			
+			JSONObject obj2=(JSONObject)JSONValue.parse(jsonText);
+			JSONObject currentProg = (JSONObject)((JSONObject)obj2.get("projects")).get(projectId);
 			
 			project.setShortName(projectId);
 			if ((isNotNullObj(currentProg,"title")))
@@ -347,12 +242,9 @@ public class EclipseProjectImporter {
 		
 			if ((isNotNull(currentProg,"parent_project"))){
 				String parentProjectName = ((JSONObject)((JSONArray)currentProg.get("parent_project")).get(0)).get("id").toString();
-				EclipseProject parentProject = (EclipseProject)platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByShortName(parentProjectName);				
-				if (parentProject != null) {
-					project.setParent(parentProject);
-				    logger.info("The project " + parentProject.getShortName() + " is parent of " + project.getShortName());
-				} else {
-					pendingParentReferences.put(project,parentProjectName);
+				if (parentProjectName != null) {
+					project.setParent(importProjectFromImportAll(parentProjectName, platform));
+					logger.info("The project " + parentProjectName + " is parent of " + project.getShortName());
 				}				    
 			}		
 			
@@ -541,14 +433,275 @@ public class EclipseProjectImporter {
 			logger.error("Unable to import " + projectId + "project.");
 			return null;
 		}
-			
-		
-		
 		platform.getProjectRepositoryManager().getProjectRepository().sync();	
 		logger.info("Project " + projectId + " has been correctly parsed");
 		return project;
 		
 	}
+	
+	private EclipseProject importProjectFromImportAll(String projectId, Platform platform) throws ProjectUnknownException, MalformedURLException, IOException{
+		
+		String URL_PROJECT = "http://projects.eclipse.org/projects/"+ projectId;
+		String html = null;
+		XML xml = null;
+		
+		Iterable<Project> pl = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(projectId);
+		Iterator<Project> iprojects = pl.iterator();
+		
+		Project projectTemp = null;
+		EclipseProject project = new EclipseProject();
+		Boolean projectToBeUpdated = false;
+		while (iprojects.hasNext()) {
+			projectTemp = iprojects.next();
+			if (projectTemp instanceof EclipseProject) {
+				project = (EclipseProject)projectTemp;
+				projectToBeUpdated = true;
+				logger.info("-----> project " + projectId + " already in the repository. Its metadata will be updated.");
+				break;
+					
+			}
+		}
+		
+		//Retrieving data by parsing the Web page of the project
+		//This is necessary to retrieve metadata not available in JSON
+		try {
+			html = getRawHtml(URL_PROJECT);
+			xml = new XML(html);
+			Document xmlDoc = xml.getDOM();
+			String platformName;
+			
+			List<String> eclipsePlatformNames = getPlatforms(xmlDoc, projectId);
+			Iterator it  = (Iterator) eclipsePlatformNames.iterator();
+			
+			if (projectToBeUpdated) {
+				project.getPlatforms().clear();
+				platform.getProjectRepositoryManager().getProjectRepository().sync();	
+			}
+			
+			while (it.hasNext()) {
+				platformName = (String) it.next();
+				EclipsePlatform eclipsePlatform = new EclipsePlatform();
+				eclipsePlatform.setName(platformName);
+				project.getPlatforms().add(eclipsePlatform);
+				platform.getProjectRepositoryManager().getProjectRepository().sync();	
+			}
+			
+			InputStream is = new URL("http://projects.eclipse.org/json/project/" + projectId).openStream();
+			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+			String jsonText = readAll(rd);
+						
+			JSONObject obj=(JSONObject)JSONValue.parse(jsonText);
+			JSONObject currentProg = (JSONObject)((JSONObject)obj.get("projects")).get(projectId);
+			
+			project.setShortName(projectId);
+			if ((isNotNullObj(currentProg,"title")))
+				project.setName(currentProg.get("title").toString());
+			logger.info("---> Retrieving metadata of " + project.getShortName());
+						
+			project.setParagraphUrl(getParagraphUrl(projectId));
+
+			if ((isNotNull(currentProg,"description")))
+				project.setDescription(((JSONObject)((JSONArray)currentProg.get("description")).get(0)).get("value").toString());
+		
+			if ((isNotNull(currentProg,"parent_project"))){
+				String parentProjectName = ((JSONObject)((JSONArray)currentProg.get("parent_project")).get(0)).get("id").toString();
+				if (parentProjectName != null) {
+					project.setParent(importProjectFromImportAll(parentProjectName, platform));
+					logger.info("The project " + parentProjectName + " is parent of " + project.getShortName());
+				}				    
+			}		
+			
+			if ((isNotNull(currentProg,"download_url")))
+					project.setDownloadsUrl(((JSONObject)((JSONArray)currentProg.get("download_url")).get(0)).get("url").toString());
+
+			if ((isNotNull(currentProg,"website_url")))
+				project.setHomePage(((JSONObject)((JSONArray)currentProg.get("website_url")).get(0)).get("url").toString());
+	
+			if ((isNotNull(currentProg,"plan_url")))
+				project.setProjectplanUrl(((JSONObject)((JSONArray)currentProg.get("plan_url")).get(0)).get("url").toString());
+			
+			if ((isNotNull(currentProg,"update_sites")))
+				project.setUpdatesiteUrl(((JSONObject)((JSONArray)currentProg.get("update_sites")).get(0)).get("url").toString());
+
+			if ((isNotNull(currentProg,"state")))
+				project.setState(((JSONObject)((JSONArray)currentProg.get("state")).get(0)).get("value").toString());		
+
+			
+		// BEGIN Management of Communication Channels 		
+			if (projectToBeUpdated) {
+				project.getCommunicationChannels().clear();
+				platform.getProjectRepositoryManager().getProjectRepository().sync();	
+			}
+				
+			if ((isNotNull(currentProg,"documentation_url")))
+			{
+				JSONArray bugzillaJsonArray = (JSONArray)currentProg.get("documentation_url");
+				for (Object object : bugzillaJsonArray) {
+					Documentation documentation_url = new Documentation();
+					documentation_url.setUrl((String)((JSONObject)object).get("url"));
+					documentation_url.setNonProcessable(true);
+					project.getCommunicationChannels().add(documentation_url);
+				}
+			}
+								
+			if ((isNotNull(currentProg,"wiki_url"))) {			
+				JSONArray bugzillaJsonArray = (JSONArray)currentProg.get("wiki_url");
+				for (Object object : bugzillaJsonArray) {
+					Wiki wiki = new Wiki();
+					String sApp = (String)((JSONObject)object).get("url");
+					wiki.setUrl(sApp);
+					wiki.setNonProcessable(true);
+					project.getCommunicationChannels().add(wiki);
+				}				
+			}
+
+			if ((isNotNull(currentProg,"mailing_lists"))){			
+				JSONArray mailingLists = (JSONArray)currentProg.get("mailing_lists");
+				Iterator<JSONObject> iter  = mailingLists.iterator();
+			    MailingList mailingList = null;
+				while(iter.hasNext()){					
+					JSONObject entry = (JSONObject)iter.next();
+					mailingList = new MailingList();
+					mailingList.setName((String)entry.get("name"));
+					mailingList.setUrl((String)entry.get("url"));
+					if(mailingList.getUrl().startsWith("news://")
+							|| mailingList.getUrl().startsWith("git://")
+							|| mailingList.getUrl().startsWith("svn://"))
+						mailingList.setNonProcessable(false);
+					else mailingList.setNonProcessable(true);
+					project.getCommunicationChannels().add(mailingList);
+				}
+			}
+
+			if ((isNotNull(currentProg,"forums"))){
+				JSONArray forums = (JSONArray)currentProg.get("forums");
+				Iterator<JSONObject> iter  = forums.iterator();
+			    Forum forum = null;
+				while(iter.hasNext()){					
+					JSONObject entry = (JSONObject)iter.next();
+					forum = new Forum();
+					forum.setName((String)entry.get("name"));
+					forum.setUrl((String)entry.get("url"));
+					if(forum.getUrl().startsWith("news://")
+							|| forum.getUrl().startsWith("git:	//")
+							|| forum.getUrl().startsWith("svn://"))
+						forum.setNonProcessable(false);
+					else forum.setNonProcessable(true);
+					forum.setDescription((String)entry.get("description"));
+					project.getCommunicationChannels().add(forum);
+				}
+			}
+			
+			for (NntpNewsGroup cc : getNntpNewsGroup(projectId)) {
+				project.getCommunicationChannels().add(cc);
+			}
+			
+			for (Company cc : getCompany(projectId, platform)) {
+				project.getCompanies().add(cc);
+			}
+		// END Management of Communication Channels
+						
+			
+		// BEGIN Management of Bug Tracking Systems
+			if (projectToBeUpdated) {
+				project.getBugTrackingSystems().clear();
+				platform.getProjectRepositoryManager().getProjectRepository().sync();	
+			}
+			
+			if ((isNotNull(currentProg,"bugzilla"))) {
+				JSONArray bugzillaJsonArray = (JSONArray)currentProg.get("bugzilla");
+				for (Object object : bugzillaJsonArray) {
+					Bugzilla bugzilla = new Bugzilla();
+					bugzilla.setComponent((String)((JSONObject)object).get("component"));
+					bugzilla.setCgiQueryProgram((String)((JSONObject)object).get("query_url"));
+					bugzilla.setUrl((String)((JSONObject)object).get("create_url"));
+					bugzilla.setProduct((String)((JSONObject)object).get("product"));
+					project.getBugTrackingSystems().add(bugzilla);
+				}				
+			}
+		// END Management of Bug Tracking Systems
+	
+		// BEGIN Management of Licenses
+			if (projectToBeUpdated) {
+				project.getLicenses().clear();
+				platform.getProjectRepositoryManager().getProjectRepository().sync();	
+			}
+	
+			if ((isNotNull(currentProg,"licenses"))){			
+				JSONArray licenses = (JSONArray)currentProg.get("licenses");
+				Iterator<JSONObject> iter  = licenses.iterator();
+			    License license = null;
+				while(iter.hasNext()){
+					JSONObject entry = (JSONObject)iter.next();
+					license = platform.getProjectRepositoryManager().getProjectRepository().getLicenses().findOneByName((String)entry.get("name"));
+					if (license == null) {
+						license = new License();
+						license.setName((String)entry.get("name"));
+						license.setUrl((String)entry.get("url"));
+						platform.getProjectRepositoryManager().getProjectRepository().getLicenses().add(license);
+						project.getLicenses().add(license);
+					} else {
+						license.setUrl((String)entry.get("url"));						
+					}
+					platform.getProjectRepositoryManager().getProjectRepository().sync();	
+				}
+			}
+			// END Management of Licenses
+
+			
+			// BEGIN Management of VcsRepositories
+			if (projectToBeUpdated) {
+				project.getVcsRepositories().clear();
+				platform.getProjectRepositoryManager().getProjectRepository().sync();	
+			}
+			
+			if ((isNotNull(currentProg,"source_repo"))){
+				JSONArray source_repo = (JSONArray)currentProg.get("source_repo");
+				Iterator<JSONObject> iter  = source_repo.iterator();
+				while(iter.hasNext()){					
+					JSONObject entry = (JSONObject)iter.next();
+					VcsRepository repository = null;
+					if (((String)entry.get("type")).equals("git")  || ((String)entry.get("type")).equals("github")) {
+						repository = new GitRepository();
+					} else if (((String)entry.get("type")).equals("svn")) {
+						repository = new SvnRepository();
+					} else if (((String)entry.get("type")).equals("cvs")) {
+						repository = new CvsRepository();
+					}
+				if (repository != null) {
+					repository.setName((String)entry.get("name"));
+					if (!((String)entry.get("path")).startsWith("/") && ((String)entry.get("type")).equals("github"))
+						repository.setUrl((String)entry.get("path"));
+					if (((String)entry.get("path")).startsWith("/") && ((String)entry.get("type")).equals("git"))
+						repository.setUrl("http://git.eclipse.org" + (String)entry.get("path"));
+					if (((String)entry.get("path")).startsWith("/") && ((String)entry.get("type")).equals("svn"))
+						repository.setUrl("http://dev.eclipse.org/" + (String)entry.get("path"));
+				}
+				project.getVcsRepositories().add(repository);
+				}
+			}
+			// END Management of VcsRepositories
+			
+			List<Person> ps = getProjectPersons(platform, projectId);
+			for (Person person : ps) {
+				project.getPersons().add(person);
+			}
+			if (!projectToBeUpdated) {
+			platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
+			}
+		} catch (ParserConfigurationException | SAXException | IOException e) {
+			logger.error("Unable to import " + projectId + "project.");
+			return null;
+		} catch (Exception e) {
+			logger.error("Unable to import " + projectId + "project.");
+			return null;
+		}
+		platform.getProjectRepositoryManager().getProjectRepository().sync();	
+		logger.info("Project " + projectId + " has been correctly parsed");
+		return project;
+		
+	}
+	
 	
 	private ArrayList<Company> getCompany(String projectShortName, Platform platform)
 	{
@@ -589,7 +742,6 @@ public class EclipseProjectImporter {
 			return new ArrayList<Company>();
 		} catch (Exception e) {
 			logger.info("The project " + projectShortName +" does not have a company");
-			// TODO: handle exception
 		}
 		return result;
 	}
@@ -677,37 +829,25 @@ public class EclipseProjectImporter {
 				Role gr = platform.getProjectRepositoryManager().getProjectRepository().getRoles().findOneByName(roleName);
 				if (gr == null)
 				{				
-					gr = rolePending.get(roleName);
-					if(gr==null)
-					{
-						gr = new Role();
-						gr.setName("Eclipse " + roleName);
-						rolePending.put(roleName, gr);
-						platform.getProjectRepositoryManager().getProjectRepository().getRoles().add(gr);
-					}
+					gr = new Role();
+					gr.setName("Eclipse " + roleName);
+					platform.getProjectRepositoryManager().getProjectRepository().getRoles().add(gr);
+					platform.getProjectRepositoryManager().getProjectRepository().sync();
 				}
 				roleName = iterable_element.getElementsByTag("h3").first().text();
 				
 				Elements usersInRole = iterable_element.getElementsByTag("li");
 				for (Element element : usersInRole) {
-					//logger.println(element.text());
 					String username = element.text();
 					String url = "http://projects.eclipse.org/" + element.getElementsByAttribute("href").attr("href");
-					Person gu = userPending.get(username);
-					if (gu==null)
+					Person gu = platform.getProjectRepositoryManager().getProjectRepository().getPersons().findOneByName(username);			
+					if(gu==null)
 					{
-						gu = platform.getProjectRepositoryManager().getProjectRepository().getPersons().findOneByName(username);			
-						if(gu==null)
-						{
-							gu = new Person();
-							gu.setName(username);
-							gu.setHomePage(url);
-							
-							platform.getProjectRepositoryManager().getProjectRepository().getPersons().add(gu);
-							
-						}
-						userPending.put(username, gu);
-						
+						gu = new Person();
+						gu.setName(username);
+						gu.setHomePage(url);
+						platform.getProjectRepositoryManager().getProjectRepository().getPersons().add(gu);
+						platform.getProjectRepositoryManager().getProjectRepository().sync();
 					}
 					gu.getRoles().add(gr);
 					result.add(gu);
@@ -757,30 +897,37 @@ public class EclipseProjectImporter {
 	 * is not xhtml->SAX error)
 	 * 
 	 * @return
+	 * @throws WrongUrlException 
 	 * @throws Exception
 	 */
-	private String getRawHtml(String projectURL) throws Exception {
-		URL url = new URL(projectURL);
-		URLConnection con = url.openConnection();
-		BufferedReader rd = new BufferedReader(new InputStreamReader(
-				con.getInputStream()));
-		String line;
-		StringBuilder sb = new StringBuilder();
-		while ((line = rd.readLine()) != null) {
-			sb.append(line + "\n");
+	private String getRawHtml(String projectURL) throws WrongUrlException  {
+		URL url;
+		try {
+			url = new URL(projectURL);
+		
+			URLConnection con = url.openConnection();
+			BufferedReader rd = new BufferedReader(new InputStreamReader(
+					con.getInputStream()));
+			String line;
+			StringBuilder sb = new StringBuilder();
+			while ((line = rd.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+			rd.close();
+			String text = sb.toString();
+			return text;
+		} catch (IOException e) {
+			throw new WrongUrlException();
 		}
-		rd.close();
-		String text = sb.toString();
-		return text;
 	}
 
-	private String getProjectIdFromUrl(String url)
+	private String getProjectIdFromUrl(String url) throws WrongUrlException
 	{
 		
 		url = url.replace("http://", "");
 		url = url.replace("https://", "");
 		url = url.replace("www.", "");
-		
+		WrongUrlException q;
 		if (url.startsWith("projects.eclipse.org") ){//|| url.startsWith("eclipse.org")) {
 			
 			url = url.replace("projects/", "");
@@ -795,41 +942,63 @@ public class EclipseProjectImporter {
 			return url;
 		} 
 		else 
-			return null;
+			throw new WrongUrlException();
 	}
 	
-	public EclipseProject importProjectByUrl(String url, Platform platform)
+	public EclipseProject importProjectByUrl(String url, Platform platform) throws WrongUrlException, ProjectUnknownException
 	{
 		return importProject(getProjectIdFromUrl(url), platform);
 	}
 	
-	public boolean isProjectInDBByUrl(String url)
+	public boolean isProjectInDBByUrl(String url, Platform platform) throws WrongUrlException, ProjectUnknownException, MalformedURLException, IOException
 	{
-		return isProjectInDB(getProjectIdFromUrl(url+"asda"));
+		return isProjectInDB(getProjectIdFromUrl(url),platform);
 	}
-	
-	public boolean isProjectInDB(String projectId) 
+	private boolean isValidProjectId(String projectId) 
 	{
-		
+		boolean result = false;
+		//InputStream is = new FileInputStream(new File("C:\\eclipse.json"));
+		InputStream is;
 		try {
-			Mongo mongo;
-			mongo = new Mongo();
-			Platform platform = new Platform(mongo);
-			Iterable<Project> pl = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(projectId);
-			Iterator<Project> iprojects = pl.iterator();
-			Project projectTemp = null;
-			EclipseProject project = new EclipseProject();
-			Boolean projectToBeUpdated = false;
-			while (iprojects.hasNext()) {
-				projectTemp = iprojects.next();
-				if (projectTemp instanceof EclipseProject) {
+			is = new URL("http://projects.eclipse.org/json/projects/all").openStream();
+			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+			String jsonText = readAll(rd);		
+			JSONObject obj=(JSONObject)JSONValue.parse(jsonText);
+			Iterator iter = obj.entrySet().iterator();
+			Map.Entry jsonAr =  null;
+			if (iter.hasNext())
+				jsonAr = (Map.Entry) iter.next(); 
+			Object o =jsonAr.getValue();
+			Iterator iter2 = ((JSONObject)jsonAr.getValue()).entrySet().iterator();
+			while (iter2.hasNext()) 
+			{
+				Map.Entry entry = (Map.Entry) iter2.next();
+				if (projectId.equals((String) entry.getKey()))
 					return true;
-				}
 			}
+			return result;
+		} catch (MalformedURLException e) {
 			return false;
-		} catch (UnknownHostException e) {
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			return false;
 		}
+	}
+	
+	public boolean isProjectInDB(String projectId, Platform platform) throws ProjectUnknownException, MalformedURLException, IOException
+	{
+		Iterable<Project> pl = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(projectId);
+		Iterator<Project> iprojects = pl.iterator();
+		Project projectTemp = null;
+		EclipseProject project = new EclipseProject();
+		Boolean projectToBeUpdated = false;
+		while (iprojects.hasNext()) {
+			projectTemp = iprojects.next();
+			if (projectTemp instanceof EclipseProject) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 //#######OLD METHODS#####################

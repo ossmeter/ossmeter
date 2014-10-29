@@ -1,6 +1,4 @@
 package org.ossmeter.metricprovider.trans.importer.github;
-import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.List;
 
 import org.ossmeter.platform.IMetricProvider;
@@ -10,19 +8,19 @@ import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.ProjectExecutionInformation;
 import org.ossmeter.repository.model.github.GitHubRepository;
 import org.ossmeter.repository.model.github.importer.GitHubImporter;
+import org.ossmeter.repository.model.importer.exception.WrongUrlException;
 
-import com.googlecode.pongo.runtime.Pongo;
 import com.googlecode.pongo.runtime.PongoDB;
 import com.googlecode.pongo.runtime.PongoFactory;
 import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
 import com.mongodb.DB;
-import com.mongodb.Mongo;
 public class GitHubImporterProvider implements ITransientMetricProvider{
 
 	public final static String IDENTIFIER = 
-			"org.ossmeter.metricprovider.historic.githubimporter";
+			"org.ossmeter.metricprovider.trans.githubimporter";
 	protected OssmeterLogger logger;
 	protected MetricProviderContext context;
 	public GitHubImporterProvider()
@@ -91,23 +89,25 @@ public class GitHubImporterProvider implements ITransientMetricProvider{
 	@Override
 	public void measure(Project project, ProjectDelta delta, PongoDB db) {
 		GitHubRepository ep = null;
-		Mongo mongo;
-		try {
-			GitHubImporter epi = new GitHubImporter();
-			mongo = new Mongo();
-			PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
-			Platform platform = new Platform(mongo);
+
+		
+		GitHubImporter epi = new GitHubImporter();
+		Platform platform = Platform.getInstance();
+		try{
 			ep = epi.importRepository( ((GitHubRepository)project).getFull_name(), platform);
-			if (ep.getExecutionInformation().getInErrorState() )
-				project.getExecutionInformation().setInErrorState(true);
-			mongo.close();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			logger.error("GitHub metric provider exception:" + e.getMessage());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			logger.error("GitHub metric provider exception:" + e.getMessage());
+			if (ep == null)
+			{
+				if(project.getExecutionInformation() == null)
+					project.setExecutionInformation(new ProjectExecutionInformation());
+				project.getExecutionInformation().setInErrorState(false);
+			}
+		}catch(WrongUrlException e)
+		{
+			if(project.getExecutionInformation() == null)
+				project.setExecutionInformation(new ProjectExecutionInformation());
+			project.getExecutionInformation().setInErrorState(true);
 		}
+		
 	}
 
 //	@Override

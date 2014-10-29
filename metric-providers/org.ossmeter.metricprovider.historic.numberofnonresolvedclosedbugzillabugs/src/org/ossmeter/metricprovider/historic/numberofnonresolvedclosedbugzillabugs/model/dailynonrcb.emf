@@ -1,5 +1,0 @@
-package org.ossmeter.metricprovider.historic.numberofnonresolvedclosedbugzillabugs.model;
-
-class DailyNonrcb {
-	attr int numberOfNonResolvedClosedBugs;
-}

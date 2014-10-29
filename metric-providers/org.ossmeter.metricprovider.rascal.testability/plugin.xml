@@ -4,5 +4,23 @@
    <extension
          point="ossmeter.rascal.metricprovider">
    </extension>
+   <extension
+         point="org.ossmeter.platform.visualisation.metric">
+      <visualisation
+            json="vis/testCoverageHistoric.json">
+      </visualisation>
+   </extension>
+   <extension
+         point="org.ossmeter.platform.visualisation.metric">
+      <visualisation
+            json="vis/testCoveragePublicHistoric.json">
+      </visualisation>
+   </extension>
+   <extension
+         point="org.ossmeter.platform.visualisation.metric">
+      <visualisation
+            json="vis/numTestsHistoric.json">
+      </visualisation>
+   </extension>
 
 </plugin>

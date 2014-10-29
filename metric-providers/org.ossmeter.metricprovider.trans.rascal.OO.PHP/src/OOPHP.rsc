@@ -59,6 +59,7 @@ private rel[loc, loc] packageTypes(M3 m3) = { <p, t> | <p, t> <- m3@containment,
 @doc{Abstractness (PHP)}
 @friendlyName{Abstractness (PHP)}
 @appliesTo{php()}
+@historic
 real A_PHP(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
 	
@@ -73,6 +74,7 @@ real A_PHP(rel[Language, loc, M3] m3s = {}) {
 @doc{Reuse ratio (PHP)}
 @friendlyName{Reuse ratio (PHP)}
 @appliesTo{php()}
+@historic
 real RR_PHP(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
 
@@ -83,6 +85,7 @@ real RR_PHP(rel[Language, loc, M3] m3s = {}) {
 @doc{Specialization ratio (PHP)}
 @friendlyName{Specialization ratio (PHP)}
 @appliesTo{php()}
+@historic
 real SR_PHP(rel[Language, loc, M3] m3s = {}) {
 	return SR(superTypes(systemM3(m3s)));
 }
@@ -155,6 +158,7 @@ map[loc, int] MPC_PHP(rel[Language, loc, AST] asts = {}) {
 @doc{Coupling factor (PHP)}
 @friendlyName{Coupling factor (PHP)}
 @appliesTo{php()}
+@historic
 real CF_PHP(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
 	return CF(typeDependencies(m3), superTypes(m3), allTypes(m3));
@@ -252,6 +256,7 @@ private real hidingFactor(M3 m3, rel[loc, loc] members) {
 @doc{Method hiding factor (PHP)}
 @friendlyName{Method hiding factor (PHP)}
 @appliesTo{php()}
+@historic
 real MHF_PHP(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
 	return hidingFactor(m3, allMethods(m3));
@@ -261,6 +266,7 @@ real MHF_PHP(rel[Language, loc, M3] m3s = {}) {
 @doc{Attribute hiding factor (PHP)}
 @friendlyName{Attribute hiding factor (PHP)}
 @appliesTo{php()}
+@historic
 real AHF_PHP(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
 	return hidingFactor(m3, allFields(m3));
@@ -270,6 +276,7 @@ real AHF_PHP(rel[Language, loc, M3] m3s = {}) {
 @doc{Polymorphism factor (PHP)}
 @friendlyName{Polymorphism factor (PHP)}
 @appliesTo{php()}
+@historic
 real PF_PHP(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
 
@@ -329,16 +336,6 @@ map[loc, int] NOM_PHP(rel[Language, loc, M3] m3s = {}) {
 map[loc, int] NOA_PHP(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
 	return NOA(allFields(m3), allTypes(m3));
-}
-
-
-@metric{OOComplexity-PHP}
-@doc{PHP OO complexity}
-@friendlyName{PHP OO complexity}
-@appliesTo{php()}
-@uses{("DIT-PHP": "dit")}
-Factoid OOComplexity_PHP(map[loc, int] dit = ()) {
-	return Complexity("PHP", dit);
 }
 
 

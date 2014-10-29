@@ -4,5 +4,40 @@
    <extension
          point="ossmeter.rascal.metricprovider">
    </extension>
-
+   <extension
+         point="org.ossmeter.platform.visualisation.metric">
+      <visualisation
+            json="vis/commitsPerDeveloper.json">
+      </visualisation>
+   </extension>
+   <extension
+         point="org.ossmeter.platform.visualisation.metric">
+      <visualisation
+            json="vis/committersAge.json">
+      </visualisation>
+   </extension>
+   <extension
+         point="org.ossmeter.platform.visualisation.metric">
+      <visualisation
+            json="vis/numberOfActiveCommitters.json">
+      </visualisation>
+   </extension>
+   <extension
+         point="org.ossmeter.platform.visualisation.metric">
+      <visualisation
+            json="vis/numberOfActiveCommittersLongTerm.json">
+      </visualisation>
+   </extension>
+   <extension
+         point="org.ossmeter.platform.visualisation.metric">
+      <visualisation
+            json="vis/commitsPerWeekDay.json">
+      </visualisation>
+   </extension>
+   <extension
+         point="org.ossmeter.platform.visualisation.metric">
+      <visualisation
+            json="vis/percentageOfWeekendCommits.json">
+      </visualisation>
+   </extension>
 </plugin>

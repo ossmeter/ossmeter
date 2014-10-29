@@ -99,6 +99,7 @@ private alias Block = list[str];
 @doc{Lines of code in Type I clones larger than 6 lines, per language}
 @friendlyName{Lines of code in Type I clones larger than 6 lines, per language}
 @appliesTo{generic()}
+@historic
 map[str, int] cloneLOCPerLanguage(rel[Language, loc, AST] asts = {}) {
 
   map[str, int] result = ();
@@ -166,12 +167,19 @@ Factoid cloneCode(map[str, int] locPerLanguage = (), map[str, int] cloneLOCPerLa
 
   totalClonePercentage = (100.0 * totalCloneLOC) / totalLOC;
 
+  // Kapser, C.; Godfrey, M.W., ""Cloning Considered Harmful" Considered Harmful," 13th Working Conference on Reverse Engineering (WCRE), pp. 19-28, Oct. 2006:
+  // clone code is not necessarily bad
+
+  // Chen, X., Wang, A. Y., & Tempero, E. D. (2014). A Replication and Reproduction of Code Clone Detection Studies. In ACSC (pp. 105-114).
+  // 43 java projects, 50% had more than 14% code in clones.
+
   stars = \one();
-  if (totalClonePercentage < 1.0) {
+
+  if (totalClonePercentage < 10.0) {
   	stars = four();
-  } else if (totalClonePercentage < 2.5) {
+  } else if (totalClonePercentage < 15.0) {
     stars = three();
-  } else if (totalClonePercentage < 5.0) {
+  } else if (totalClonePercentage < 20.0) {
     stars = two();
   }
 

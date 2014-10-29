@@ -12,4 +12,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.repository.model.sourceforge.importer,
  org.ossmeter.repository.model.cc.wiki,
  org.ossmeter.repository.model.sourceforge,
- com.googlecode.pongo.runtime.osgi
+ com.googlecode.pongo.runtime.osgi,
+ org.ossmeter.repository.model.importer.exception
+Export-Package: org.ossmeter.metricprovider.trans.importer.sourceforge

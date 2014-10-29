@@ -1,16 +1,20 @@
 module ActiveCommitters
 
 import org::ossmeter::metricprovider::MetricProvider;
-
+import org::ossmeter::metricprovider::ProjectDelta;
 import ValueIO;
 import IO;
 import Map;
 import Set;
+import Relation;
 import List;
 import DateTime;
 import String;
 import util::Math;
 import analysis::statistics::SimpleRegression;
+import analysis::statistics::Descriptive;
+import analysis::statistics::Frequency;
+import analysis::statistics::Inference;
  
 @metric{committersToday}
 @doc{activeCommitters}
@@ -30,7 +34,9 @@ map[str, tuple[datetime, datetime]] firstLastCommitDates(ProjectDelta delta = \e
   map[str, tuple[datetime, datetime]] developerCommitDates = ();
   for (author <- committersToday) {
     if (author in prev) {
-      developerCommitDates[author] = <prev[author].first, delta.date>;
+      // don't assume the dates in delta are newer than in prev.
+      // for instance, then can get mixed up during conversion from svn to git
+      developerCommitDates[author] = <min([delta.date, prev[author].first]), max([delta.date, prev[author].last])>;
     } else {
       developerCommitDates[author] = <delta.date, delta.date>;
     }
@@ -38,8 +44,23 @@ map[str, tuple[datetime, datetime]] firstLastCommitDates(ProjectDelta delta = \e
   return developerCommitDates;
 }
 
+@metric{commitsPerDeveloper}
+@doc{commitsPerDeveloper}
+@friendlyName{Number of commits per developer}
+@appliesTo{generic()}
+@historic
+map[str, int] commitsPerDeveloper(ProjectDelta delta = \empty(), map[str, int] prev = ()) {
+  map[str, int] result = prev;
+  
+  for (/VcsCommit co := delta) {
+    result[co.author]?0 += 1;
+  }
+  
+  return result;
+}
+
 @metric{committersAge}
-@doc{Age of committers}
+@doc{Age of committers in days}
 @friendlyName{Age of committers}
 @uses = ("firstLastCommitDatesPerDeveloper" : "commitDates")
 @appliesTo{generic()}
@@ -77,8 +98,8 @@ rel[datetime, set[str]] activeCommitters(ProjectDelta delta = \empty(), rel[date
 }
 
 @metric{longerTermActiveCommitters}
-@doc{Committers who have been active the last 6 months}
-@friendlyName{committersLastTwoWeeks}
+@doc{Committers who have been active the last 12 months}
+@friendlyName{committersLastYear}
 @uses = ("committersToday":"committersToday")
 @appliesTo{generic()}
 rel[datetime, set[str]] longerTermActiveCommitters(ProjectDelta delta = \empty(), rel[datetime,set[str]] prev = {}, set[str] committersToday = {}) {
@@ -89,7 +110,7 @@ rel[datetime, set[str]] longerTermActiveCommitters(ProjectDelta delta = \empty()
 
 
 @metric{numberOfActiveCommitters}
-@doc{Number of active committers over time}
+@doc{Number of active committers over time (active in last two weeks)}
 @friendlyName{numberOfActiveCommitters}
 @uses = ("activeCommitters" :"activeCommitters")
 @appliesTo{generic()}
@@ -98,10 +119,11 @@ int numberOfActiveCommitters(rel[datetime, set[str]] activeCommitters = {})
   = size({c | /str c := activeCommitters});
     
 @metric{numberOfActiveCommittersLongTerm}
-@doc{Number of active committers over time}
+@doc{Number of long time active committers over time (active in last year)}
 @friendlyName{numberOfActiveCommittersLongTerm}
 @uses = ("longerTermActiveCommitters" :"activeCommitters")
 @appliesTo{generic()}
+@historic
 int numberOfActiveCommittersLongTerm(rel[datetime, set[str]] activeCommitters = {}) 
   = size({c | /str c := activeCommitters});
 
@@ -158,3 +180,197 @@ Factoid developmentTeamStability(rel[datetime day, int active] history = {}, int
   return factoid(txt, stability);
 }
 
+@metric{projectAge}
+@doc{Age of the project (nr of days between first and last commit)}
+@friendlyName{Age of the project (nr of days between first and last commit)}
+@uses = ("firstLastCommitDatesPerDeveloper":"firstLastCommitDatesPerDeveloper")
+@appliesTo{generic()}
+int projectAge(map[str, tuple[datetime first, datetime last]] firstLastCommitDates = ()) {
+  if (firstLastCommitDates == ()) {
+    throw undefined("No commit dates available", |tmp:///|);
+  }
+
+  firstDate = min([ firstLastCommitDates[name][0] | name <- firstLastCommitDates]);
+  lastDate = max([ firstLastCommitDates[name][1] | name <- firstLastCommitDates]);
+  
+  return daysDiff(lastDate, firstDate) + 1;
+}
+
+@metric{developmentTeamExperience}
+@doc{Based on committer activity, how experienced is the current team?}
+@friendlyName{Development team experience}
+@uses = ("firstLastCommitDatesPerDeveloper": "firstLastCommitDatesPerDeveloper", "commitsPerDeveloper": "commitsPerDeveloper")
+@appliesTo{generic()}
+Factoid developmentTeamExperience(
+  ProjectDelta delta = \empty(),
+  map[str, tuple[datetime first, datetime last]] firstLastCommitDates = (),
+  map[str, int] commitsPerDeveloper = ())
+{
+  if (delta == \empty() || commitsPerDeveloper == ()) {
+    throw undefined("No delta available", |tmp:///|);
+  }
+  
+  today = delta.date;
+  sixMonthsAgo = decrementMonths(today, 6);
+  
+  committersInLastHalfYear = { name | name <- firstLastCommitDates, firstLastCommitDates[name].last > sixMonthsAgo };
+  
+  experiencedCommittersInLastHalfYear = { name | name <- committersInLastHalfYear,
+    firstLastCommitDates[name].last > decrementMonths(firstLastCommitDates[name].first, 6),
+    (commitsPerDeveloper[name]?0) > 24 }; // at least 1 commit per week on average
+  
+  numExperiencedCommitters = size(experiencedCommittersInLastHalfYear);
+  
+  stars = numExperiencedCommitters + 1;
+  
+  if (stars > 4) {
+    stars = 4;
+  }
+  
+  txt = "";
+  
+  if (stars == 1) {
+    txt = "There were no experienced committers working for the project in the last 6 months.";
+  }
+  else if (stars == 2) {
+    txt = "There was only one experienced committer working for the project in the last 6 months.";
+    txt += " Overall, he/she contributed <commitsPerDeveloper[getOneFrom(experiencedCommittersInLastHalfYear)]> commits.";
+  }
+  else {
+    txt = "The number of experienced committers working for the project in the last 6 months is <numExperiencedCommitters>.";
+    txt += " Their average overall number of commits is <mean([commitsPerDeveloper[d] | d <- experiencedCommittersInLastHalfYear])>.";
+  }
+
+  if (size(committersInLastHalfYear) == numExperiencedCommitters) {
+    txt += " There were no other committers active in the last 6 months."; 
+  }
+  else {
+    txt += " In total, <size(committersInLastHalfYear)> committers have worked on the project in the last six months.";
+  }
+
+  return factoid(txt, starLookup[stars]);
+}
+
+@metric{committersoverfile}
+@doc{Calculates the gini coefficient of committeroverfile}
+@friendlyName{committersoverfile}
+@appliesTo{generic()}
+@uses=("countCommittersPerFile": "perFile")
+@historic{}
+real giniCommittersOverFile(ProjectDelta delta = \empty(), map[loc,int] perFile = ()) {
+  map[loc, int] committersOverFile = distribution({<perFile[l], l> | l <- perFile});
+  map[int, int] distCommitterOverFile = distribution(committersOverFile);
+  
+  if (size(distCommitterOverFile) > 1) {
+    return gini([<x, distCommitterOverFile[x]> | x <- distCommitterOverFile]);
+  }
+
+  throw undefined("not enough data to compute committer over file spread", |project://<delta.project.name>|);
+}
+
+@metric{countCommittersPerFile}
+@doc{Count the number of committers that have touched a file.}
+@friendlyName{Number of Committers per file}
+@appliesTo{generic()}
+@uses= ("committersPerFile": "perFile")
+@historic{}
+map[loc file, int numberOfCommitters] countCommittersPerFile(ProjectDelta delta = \empty(), rel[loc file, str person] perFile = {}) {
+  return (f : size(perFile[f]) | f <- domain(perFile));
+}
+
+@metric{committersPerFile}
+@doc{Register which committers have contributed to which files}
+@friendlyName{Committers per file}
+@appliesTo{generic()}
+rel[loc, str] committersPerFile(ProjectDelta delta = \empty(), rel[loc, str] prev = {}) 
+  = prev + { <vcrd.repository.url + vci.path, vc.author> 
+           | /VcsRepositoryDelta vcrd <- delta
+           , /VcsCommit vc <- delta
+           , vc.author != "null", vc.author != ""
+           , VcsCommitItem vci <- vc.items
+           }; 
+
+
+@metric{developmentTeamExperienceSpread}
+@doc{How specialized is the development team? Or are people working on different parts of the project?}
+@friendlyName{Development team experience spread}
+@uses = ("committersoverfile": "developmentTeamExperienceSpread", "countCommittersPerFile": "perFile")
+@appliesTo{generic()}
+Factoid developmentTeamExperienceSpread(real developmentTeamExperienceSpread = 0.0, map[loc,int] perFile = ()) {
+  list[int] amounts = [ perFile[i] | i <- perFile];
+  if (amounts == []) {
+    throw undefined("No commit data available.", |tmp:///|);
+  }
+  
+  med = median(amounts);
+  maxi = List::max(amounts);
+  
+  if (developmentTeamExperienceSpread >= 0.5) {
+    if (med >= 2) {
+      return factoid(\four(), "Developers are spreading out over the entire project and it can be expected that most files have more than one contributor.");
+    }
+    else {
+        return factoid(\three(), "Developers are spreading out over the entire project but most files will have only one contributor.");
+    }
+  }
+  else {
+    if (maxi > 1) {
+      return factoid(\two(), "Developers are mostly focusing on their own files in the project, but there is definitely some collaboration going on.");
+    }
+    else {
+      return factoid(\one(), "Developers are mostly focused on their own files in the project.");
+    }
+  }
+}
+
+@metric{commitsPerWeekDay}
+@doc{On which day of the week do commits take place?}
+@friendlyName{commitsPerWeekDay}
+@appliesTo{generic()}
+map[str, int] commitsPerWeekDay(ProjectDelta delta = \empty(), map[str, int] prev = ()) {
+  dayOfWeek = printDate(delta.date, "EEE");
+  return prev + ( dayOfWeek : (prev[dayOfWeek]?0) + (0 | it + 1 | /VcsCommit vcsCommit <- delta));
+}
+
+@metric{percentageOfWeekendCommits}
+@doc{Number of commits during the weekend}
+@friendlyName{percentageOfWeekendCommits}
+@appliesTo{generic()}
+@uses=("commitsPerWeekDay":"commitsPerWeekDay")
+@historic{}
+int percentageOfWeekendCommits(map[str,int] commitsPerWeekDay = ()) {
+  total = sum([commitsPerWeekDay[d] | d <- commitsPerWeekDay]);
+  weekend = (commitsPerWeekDay["Sat"]?0) + (commitsPerWeekDay["Sun"]?0);
+
+  if (total > 0 && weekend > 0) {
+    return percent(weekend, total);
+  }
+  
+  return 0;  
+}
+
+private Factoid factoid(StarRating stars, str msg) = factoid(msg, stars);
+
+@metric{weekendProject}
+@doc{Is this a weekend project or not?}
+@friendlyName{weekendProject}
+@appliesTo{generic()}
+@uses=("percentageOfWeekendCommits": "percentageOfWeekendCommits")
+Factoid weekendProject(int percentageOfWeekendCommits = -1) {
+  if (percentageOfWeekendCommits == -1) {
+    throw undefined("No weekend commit data available.", |tmp:///|);
+  }
+
+  if (percentageOfWeekendCommits > 75) {
+    return factoid(\one(), "Over the entire lifetime of this project, commits have been done usually over the weekend.");
+  }
+  else if (percentageOfWeekendCommits > 50) {
+    return factoid(\two(), "Over the entire lifetime of this project, commits are done mostly over the weekend, but also significantly during the week.");
+  }
+  else if (percentageOfWeekendCommits > 25) {
+    return factoid(\three(), "Over the entire lifetime of this project, commits are done mostly during the week, but also significantly during the weekend.");
+  }
+  else {
+    return factoid(\four(), "Over the entire lifetime of this project, commits are done usually during the week, and hardly during the weekend.");
+  }
+}

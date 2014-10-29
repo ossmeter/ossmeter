@@ -62,6 +62,8 @@ public class ProjectMetricAnalysis extends ServerResource {
 					}
 				}
 				
+				mongo.close();
+				
 				return results.toString();
 				
 			} catch (UnknownHostException e1) {

@@ -3,7 +3,6 @@ module LOC
 import analysis::m3::Core;
 import analysis::m3::AST;
 import analysis::graphs::Graph;
-import org::ossmeter::metricprovider::ProjectDelta;
 import org::ossmeter::metricprovider::MetricProvider;
 
 import analysis::statistics::Frequency;
@@ -23,16 +22,17 @@ map[loc, int] countLoc(rel[Language, loc, AST] asts = {}) {
 
 real giniLOC(map[loc, int] locs) {
   dist = distribution(locs);
-  if (size(dist) < 1) {
-  	return -1.0; // TODO how can we return no result at all?
+  if (size(dist) < 2) {
+  	throw undefined("Not enough LOC data available.", |tmp:///|);
   }
-  return gini([<0,0>] + [<x, dist[x]> | x <- dist]);
+  return gini([<x, dist[x]> | x <- dist]);
 }
 
 @metric{genericLOCoverFiles}
 @doc{Language independent physical lines of code over files}
 @friendlyName{Language independent physical lines of code over files}
 @appliesTo{generic()}
+@historic
 real giniLOCOverFiles(rel[Language, loc, AST] asts = {}) {
   return giniLOC(countLoc(asts=asts));
 }
@@ -43,6 +43,7 @@ real giniLOCOverFiles(rel[Language, loc, AST] asts = {}) {
 @friendlyName{Physical lines of code per language}
 @appliesTo{generic()}
 @uses{("genericLOC" :"genericLoc")}
+@historic
 map[str, int] locPerLanguage(rel[Language, loc, AST] asts = {}, map[loc, int] genericLoc = ()) {
   map[str, int] result = ();
   set[loc] filesWithLanguageDetected = {};
@@ -69,8 +70,14 @@ map[str, int] locPerLanguage(rel[Language, loc, AST] asts = {}, map[loc, int] ge
 @doc{The size of the project's code base}
 @friendlyName{Code Size}
 @appliesTo{generic()}
-@uses{("locPerLanguage" :"locPerLanguage")}
-Factoid codeSize(map[str, int] locPerLanguage = ()) {
+@uses{("locPerLanguage": "locPerLanguage",
+       "org.ossmeter.metricprovider.trans.rascal.activecommitters.projectAge": "projectAge",
+       "org.ossmeter.metricprovider.trans.rascal.activecommitters.numberOfActiveCommittersLongTerm": "numberOfActiveCommittersLongTerm")}
+Factoid codeSize(
+	map[str, int] locPerLanguage = (),
+	int projectAge = -1,
+	int numberOfActiveCommittersLongTerm = -1
+) {
   if (isEmpty(locPerLanguage)) {
     throw undefined("No LOC data available", |unknown:///|);
   }
@@ -90,7 +97,15 @@ Factoid codeSize(map[str, int] locPerLanguage = ()) {
     otherTxt = intercalate(", ", ["<l[0]> (<l[1]>)" | l <- sorted[1..]]);
   
     txt += " The following <size(sorted) - 1> other languages were recognized: <otherTxt>.";
-  } 
+  }
+  
+  if (projectAge > 0) {
+  	txt += " The age of the code base is <projectAge> days.";
+  }
+
+  if (numberOfActiveCommittersLongTerm > 0) {
+    txt += " In the last 12 months there have been <numberOfActiveCommittersLongTerm> people working on this project.";
+  }
 
   stars = 1;
   

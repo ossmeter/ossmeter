@@ -8,7 +8,7 @@ import com.googlecode.pongo.runtime.querying.*;
 
 public class RedmineIssue extends Pongo {
 	
-	protected List<RedminIssueRelation> relations = null;
+	protected List<RedmineIssueRelation> relations = null;
 	protected RedmineCategory category = null;
 	protected RedmineFeature feature = null;
 	protected RedmineUser author = null;
@@ -105,9 +105,9 @@ public class RedmineIssue extends Pongo {
 	}
 	
 	
-	public List<RedminIssueRelation> getRelations() {
+	public List<RedmineIssueRelation> getRelations() {
 		if (relations == null) {
-			relations = new PongoList<RedminIssueRelation>(this, "relations", true);
+			relations = new PongoList<RedmineIssueRelation>(this, "relations", true);
 		}
 		return relations;
 	}

@@ -291,7 +291,7 @@ public class PongoToRascal {
 		}
 
 		private static IValue toDatetimeValue(DatetimeMeasurement e) {
-			return VF.datetime(e.getValue());
+			return VF.datetime(e.getValue(), e.getTimezoneHours(), e.getTimezoneMinutes());
 		}
 
 		private static IValue toTupleValue(TupleMeasurement e) {

@@ -5,7 +5,6 @@ import org.ossmeter.repository.model.ProjectRepository;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.restlet.engine.header.Header;
-import org.restlet.ext.jackson.JacksonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
@@ -48,6 +47,7 @@ public class ProjectResource extends ServerResource {
 		// How can we auto-expand and DBRefs when serialising?
 		ex.put("licenses", 0);
 		ex.put("persons", 0);
+		ex.put("companies", 0);
 		
 		BasicDBObject query = new BasicDBObject("shortName", projectId);
 		
@@ -74,7 +74,7 @@ public class ProjectResource extends ServerResource {
 	 * @param entity
 	 */
 	@Put("json")
-	public void updateProject(JacksonRepresentation<ObjectNode> entity) {
+	public void updateProject(Representation entity) {
 		
 	}
 	

@@ -4,5 +4,23 @@
    <extension
          point="ossmeter.rascal.metricprovider">
    </extension>
+   <extension
+         point="org.ossmeter.platform.visualisation.metric">
+      <visualisation
+            json="vis/commentedOutCodePerLanguage.json">
+      </visualisation>
+   </extension>
+   <extension
+         point="org.ossmeter.platform.visualisation.metric">
+      <visualisation
+            json="vis/commentLinesPerLanguage.json">
+      </visualisation>
+   </extension>
+   <extension
+         point="org.ossmeter.platform.visualisation.metric">
+      <visualisation
+            json="vis/headerPercentage.json">
+      </visualisation>
+   </extension>
 
 </plugin>

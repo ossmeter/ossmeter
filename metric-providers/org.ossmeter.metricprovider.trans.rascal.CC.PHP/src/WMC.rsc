@@ -2,14 +2,14 @@ module WMC
 
 import lang::php::m3::AST;
 import lang::php::m3::Core;
+import lang::php::ast::AbstractSyntax;
+
 import Prelude;
 import List;
-
-import analysis::statistics::Frequency;
-import analysis::statistics::Inference;
 import util::Math;
 
-import lang::php::ast::AbstractSyntax;
+import CC;
+import org::ossmeter::metricprovider::Factoid;
 
 
 @metric{WMCPHP}
@@ -69,17 +69,17 @@ int countCC(list[Stmt] stats) {
 @doc{Calculates the gini coefficient of CC over PHP methods}
 @friendlyName{The gini coefficient of CC over PHP methods}
 @appliesTo{php()}
+@uses = ("CCPHP": "methodCC")
+real giniCCOverMethodsPHP(map[loc, int] methodCC = ()) {
+  return giniCCOverMethods(methodCC);
+}
+
+
+@metric{CCPHPFactoid}
+@doc{The cyclometic complexity of the project's PHP code}
+@friendlyName{CCPHPFactoid}
+@appliesTo{php()}
 @uses = ("CCPHP" : "methodCC")
-real giniCCOverMethods(map[loc, int] methodCC = ()) {
-  if (isEmpty(methodCC)) {
-    return -1.0;
-  }
-  
-  distCCOverMethods = distribution(methodCC);
-  
-  if (size(distCCOverMethods) < 2) {
-    return -1.0;
-  }
-  
-  return gini([<0,0>]+[<x, distCCOverMethods[x]> | x <- distCCOverMethods]);
+Factoid CC(map[loc, int] methodCC = ()) {
+  return CCFactoid(methodCC, "PHP");
 }

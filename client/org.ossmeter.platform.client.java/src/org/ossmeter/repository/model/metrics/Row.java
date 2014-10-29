@@ -11,6 +11,7 @@ import org.ossmeter.repository.model.vcs.git.*;
 import org.ossmeter.repository.model.sourceforge.*;
 import org.ossmeter.repository.model.github.*;
 import org.ossmeter.repository.model.*;
+import org.ossmeter.repository.model.cc.wiki.*;
 import org.ossmeter.repository.model.metrics.*;
 import org.ossmeter.platform.factoids.*;
 public class Row extends java.util.HashMap {

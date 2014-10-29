@@ -135,6 +135,9 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 //		Article article = NntpUtil.getArticleInfo(nntpClient, articleId);
 		nntpClient.disconnect();
 //		String date = article.getDate();
+		
+		
+		
 		return new Date(NntpUtil.parseDate(articleHeader.getDate().trim()));
 	}
 

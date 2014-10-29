@@ -1,5 +1,8 @@
 package org.ossmeter.metricprovider.trans.importer.eclipse;
 
+
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 import java.util.List;
 
@@ -10,8 +13,10 @@ import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.ProjectExecutionInformation;
 import org.ossmeter.repository.model.eclipse.EclipseProject;
 import org.ossmeter.repository.model.eclipse.importer.EclipseProjectImporter;
+import org.ossmeter.repository.model.importer.exception.ProjectUnknownException;
 
 import com.googlecode.pongo.runtime.PongoDB;
 import com.googlecode.pongo.runtime.PongoFactory;
@@ -20,9 +25,10 @@ import com.mongodb.DB;
 import com.mongodb.Mongo;
 
 
+
 public class EclipseImporterProvider implements ITransientMetricProvider{
 	public final static String IDENTIFIER = 
-			"org.ossmeter.metricprovider.historic.eclipseimporter";
+			"org.ossmeter.metricprovider.trans.eclipseimporter";
 	
 	protected MetricProviderContext context;
 	OssmeterLogger logger;
@@ -93,21 +99,22 @@ public class EclipseImporterProvider implements ITransientMetricProvider{
 	public void measure(Project project, ProjectDelta delta, PongoDB db) {
 		// TODO Auto-generated method stub
 		EclipseProject ep = null;
-		Mongo mongo;
-		try {
-			EclipseProjectImporter epi = new EclipseProjectImporter();
-			mongo = new Mongo();
-			PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
-
-			Platform platform = new Platform(mongo);
+		EclipseProjectImporter epi = new EclipseProjectImporter();
+		try 
+		{
+			Platform platform = Platform.getInstance();
 			ep = epi.importProject(project.getShortName(), platform);
-			if (ep.getExecutionInformation().getInErrorState() )
+			if (ep==null )
+			{	
+				if(project.getExecutionInformation() == null)
+					project.setExecutionInformation(new ProjectExecutionInformation());
 				project.getExecutionInformation().setInErrorState(true);
-			mongo.close();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			logger.error("Error launch EclipseImporterProvider " + e.getMessage());
+			}
+		} catch (ProjectUnknownException e) {
+			logger.error("Error launch Eclipse importer: WreongUrl");
+			if(project.getExecutionInformation() == null)
+				project.setExecutionInformation(new ProjectExecutionInformation());
+			project.getExecutionInformation().setInErrorState(true);
 		}
-		
 	}
 }

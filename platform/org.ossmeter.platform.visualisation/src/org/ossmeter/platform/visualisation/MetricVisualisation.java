@@ -1,9 +1,11 @@
 package org.ossmeter.platform.visualisation;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -11,6 +13,7 @@ import java.util.List;
 import sparkle.Sparkle;
 import sparkle.dimensions.DateDimension;
 import sparkle.dimensions.LinearDimension;
+import sparkle.dimensions.SparkDimension;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -66,12 +69,13 @@ public class MetricVisualisation {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode visualisation = mapper.createObjectNode();
 		
-		DBCollection collection = db.getCollection(metricId); // TODO metric ID won't always be the correct identififer
+		DBCollection collection = getCollection(db);
 		ArrayNode datatable = chart.createDatatable(vis.get("datatable"), collection, query);
 		
+		visualisation.put("id", vis.path("id").textValue());
 		visualisation.put("name", vis.path("name").textValue());
-		visualisation.put("type", vis.path("type").textValue());
 		visualisation.put("description", vis.path("description").textValue());
+		visualisation.put("type", vis.path("type").textValue());
 		visualisation.put("datatable", datatable);
 		visualisation.put("timeSeries", vis.path("timeSeries").asBoolean());
 		visualisation.put("ordinal", vis.path("ordinal").asBoolean());
@@ -81,45 +85,47 @@ public class MetricVisualisation {
 		return visualisation;
 	}
 	
-	public byte[] getSparky(DB db, BasicDBObject query) throws IOException {
+	public byte[] getSparky(DB db, BasicDBObject query) throws IOException, ParseException, UnsparkableVisualisationException {
+		
+		if (!vis.get("timeSeries").asBoolean()) {
+			throw new UnsparkableVisualisationException();
+		}
+		
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode visualisation = mapper.createObjectNode();
 		chart.completeFields(visualisation, vis);
 		
 		String xColName = vis.get("x").asText();
 		String yColName = vis.get("y").asText();
+		yColName = yColName.replace("\"", "");
 		
-		DBCollection collection = db.getCollection(metricId); // TODO metric ID won't always be the correct identififer
+		DBCollection collection = getCollection(db); 
 		
 		ArrayNode datatable = chart.createDatatable(vis.get("datatable"), collection, query);
 		Iterator<JsonNode> it = datatable.iterator();
 		
-		// FIXME: This is hardcoded to Dates and Doubles
 		List<Date> xdata = new ArrayList<>();
-		List<Double> ydata = new ArrayList<>();
+		List<Double> ydata = new ArrayList<>(); // FIXME: This is hardcoded to Doubles
 		
 		SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
 		
 		while (it.hasNext()) {
 			JsonNode obj = it.next();
 			
-			Date x = null;
-			try {
-				x = format.parse(obj.get(xColName).asText());
-			} catch (ParseException e) {
-				e.printStackTrace(); // FIXME handle
-			}
-			yColName = yColName.replace("\"", "");
-			Double y = obj.path(yColName).asDouble();
-			
+			Date x = format.parse(obj.get(xColName).asText());
 			xdata.add(x);
+
+			Double y = obj.path(yColName).asDouble();
 			ydata.add(y);
 		}
-		
+			
+		// Spark config
 		int height = 60;
 		int width = 300;
 		int padding = 12;
 		
+		// FIXME: Actually, for OSSMETER sparklines, they HAVE to have 
+		// Date as the X-axis! 
 		DateDimension xdim = new DateDimension(xdata, width-padding, padding);
 		LinearDimension ydim = new LinearDimension(ydata, height-padding, padding);
 		
@@ -128,15 +134,33 @@ public class MetricVisualisation {
 
 		byte[] bytes = sparkle.renderToByteArray(xdim, ydim);
 		
+		DateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		
 		// Set the spark data
 		sparkData = mapper.createObjectNode();
-		sparkData.put("name", vis.path("nicename").textValue());
+		sparkData.put("id", vis.path("id").textValue());
+		sparkData.put("name", vis.path("name").textValue());
+		sparkData.put("description", vis.path("description").textValue());
 		sparkData.put("low", ydim.getMinValue());
 		sparkData.put("high", ydim.getMaxValue());
 		sparkData.put("first", ydata.get(0));
 		sparkData.put("last", ydata.get(ydata.size()-1));
+		sparkData.put("firstDate", outputDateFormat.format(xdata.get(0)));
+		sparkData.put("lastDate", outputDateFormat.format(xdata.get(xdata.size()-1)));
+		sparkData.put("months", (int)((xdata.get(xdata.size()-1).getTime() - xdata.get(0).getTime())/(365.24 * 24 * 60 * 60 * 1000 / 12)));
 		
 		return bytes;
+	}
+
+	private DBCollection getCollection(DB db) {
+		// TODO metric ID might not always be the correct identififer??
+		
+		if (!db.collectionExists(metricId)) {
+			System.err.println("ERROR: Could not find collection: " + metricId);
+		}
+		
+		DBCollection collection = db.getCollection(metricId);
+		return collection;
 	}
 	
 	public ObjectNode getSparkData() {

@@ -13,8 +13,7 @@
    </visualisation>
 </extension>
 
-
-
+<!--
 <extension point="org.ossmeter.platform.visualisation.metric">
    <visualisation json="vis/articlesrequestsreplies.json">
    </visualisation>
@@ -23,5 +22,5 @@
 
 <extension point="com.googlecode.pongo.runtime.osgi">
     <class name="org.ossmeter.metricprovider.historic.newsgroups.requestsreplies.average.model.NewsgroupsRequestsRepliesHistoricMetric"/>
-  </extension>
+  </extension>-->
 </plugin>

@@ -10,7 +10,11 @@ import org.ossmeter.platform.ITransientMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.delta.ProjectDelta;
+import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.ProjectExecutionInformation;
+import org.ossmeter.repository.model.importer.exception.WrongUrlException;
+import org.ossmeter.repository.model.sourceforge.SourceForgeBugTrackingSystem;
 import org.ossmeter.repository.model.sourceforge.SourceForgeProject;
 import org.ossmeter.repository.model.sourceforge.importer.SourceforgeProjectImporter;
 
@@ -23,12 +27,19 @@ import com.mongodb.Mongo;
 public class SourceForgeImporterProvider  implements ITransientMetricProvider {
 
 	public final static String IDENTIFIER = 
-			"org.ossmeter.metricprovider.historic.sourceforgeimporter";
+			"org.ossmeter.metricprovider.trans.sourceforgeimporter";
 	
 	protected MetricProviderContext context;
 	
 	protected List<IMetricProvider> uses;
+
+	private OssmeterLogger logger;
 	
+	public SourceForgeImporterProvider()
+	{
+		logger = (OssmeterLogger) OssmeterLogger.getLogger("metricprovider.importer.sourceforge");
+		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
+	}
 	@Override
 	public String getIdentifier() {
 		// TODO Auto-generated method stub
@@ -43,13 +54,11 @@ public class SourceForgeImporterProvider  implements ITransientMetricProvider {
 
 	@Override
 	public String getFriendlyName() {
-		// TODO Auto-generated method stub
 		return "SourceForge importer";
 	}
 
 	@Override
 	public String getSummaryInformation() {
-		// TODO Auto-generated method stub
 		return "This provider enable to update a projects calling a importProject from sourceforge importer";
 	}
 
@@ -66,7 +75,6 @@ public class SourceForgeImporterProvider  implements ITransientMetricProvider {
 
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -78,32 +86,28 @@ public class SourceForgeImporterProvider  implements ITransientMetricProvider {
 
 	@Override
 	public PongoDB adapt(DB db) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void measure(Project project, ProjectDelta delta, PongoDB db) {
 		SourceForgeProject ep = null;
-		Mongo mongo;
+		SourceforgeProjectImporter epi = new SourceforgeProjectImporter();
+		Platform platform = Platform.getInstance();
 		try {
-			SourceforgeProjectImporter epi = new SourceforgeProjectImporter();
-			mongo = new Mongo();
-			PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
-			Platform platform = new Platform(mongo);
 			ep = epi.importProject(project.getShortName(), platform);
-			if (ep.getExecutionInformation().getInErrorState() )
+			if(ep == null)
+			{
+				if(project.getExecutionInformation() == null)
+					project.setExecutionInformation(new ProjectExecutionInformation());
 				project.getExecutionInformation().setInErrorState(true);
-			mongo.close();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			}
+		} catch (WrongUrlException e) {
+			logger.error("Error launch sourceforge importer: Wrong Url or ProjectId");
+			if(project.getExecutionInformation() == null)
+				project.setExecutionInformation(new ProjectExecutionInformation());
+			project.getExecutionInformation().setInErrorState(true);
 		}
-		
-		
 	}
 
 }

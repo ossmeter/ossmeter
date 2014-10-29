@@ -54,7 +54,7 @@ public class RascalToPongo {
 			@Override
 			public Void visitDateTime(IDateTime o) throws RuntimeException {
 				DatetimeMeasurement m = new DatetimeMeasurement();
-				m.setValue(o.getInstant());
+				m.setValue(o.getInstant(), o.getTimezoneOffsetHours(), o.getTimezoneOffsetMinutes());
 				measurements.add(m);
 				return null;
 			}
@@ -145,7 +145,7 @@ public class RascalToPongo {
 			@Override
 			public Void visitDateTime(IDateTime o) throws RuntimeException {
 				DatetimeMeasurement m = new DatetimeMeasurement();
-				m.setValue(o.getInstant());
+				m.setValue(o.getInstant(), o.getTimezoneOffsetHours(), o.getTimezoneOffsetMinutes());
 				measurements.add(m);
 				return null;
 			}

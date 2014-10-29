@@ -39,6 +39,8 @@ public class ProjectListAnalysis extends ServerResource {
 				results.add(p.toString());
 			}
 			
+			mongo.close();
+			
 			return results.toString();
 			
 		} catch (UnknownHostException e1) {

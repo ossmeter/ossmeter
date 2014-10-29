@@ -10,8 +10,10 @@ import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.ProjectExecutionInformation;
 import org.ossmeter.repository.model.googlecode.GoogleCodeProject;
 import org.ossmeter.repository.model.googlecode.importer.GoogleCodeImporter;
+import org.ossmeter.repository.model.importer.exception.WrongUrlException;
 
 import com.googlecode.pongo.runtime.Pongo;
 import com.googlecode.pongo.runtime.PongoDB;
@@ -23,7 +25,7 @@ import com.mongodb.Mongo;
 public class GoogleCodeImporterProvider implements ITransientMetricProvider{
 
 	public final static String IDENTIFIER = 
-			"org.ossmeter.metricprovider.historic.googlecodeimporter";
+			"org.ossmeter.metricprovider.trans.googlecodeimporter";
 	
 	protected MetricProviderContext context;
 	
@@ -88,25 +90,26 @@ public class GoogleCodeImporterProvider implements ITransientMetricProvider{
 	@Override
 	public void measure(Project project, ProjectDelta delta, PongoDB db) {
 		GoogleCodeProject ep = null;
-		Mongo mongo;
-		try {
-			GoogleCodeImporter epi = new GoogleCodeImporter();
-			mongo = new Mongo();
-			PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
-			
-			Platform platform = new Platform(mongo);
+		
+		GoogleCodeImporter epi = new GoogleCodeImporter();
+		Platform platform = Platform.getInstance();
+		try
+		{
 			ep = epi.importProject(project.getShortName(), platform);
-			if (ep.getExecutionInformation().getInErrorState() )
-				project.getExecutionInformation().setInErrorState(true);
-			mongo.close();
+			if (ep == null)
+			{
+				if(project.getExecutionInformation() == null)
+					project.setExecutionInformation(new ProjectExecutionInformation());
+				project.getExecutionInformation().setInErrorState(false);
+			}
 			
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		}catch (WrongUrlException e){
+			if(project.getExecutionInformation() == null)
+				project.setExecutionInformation(new ProjectExecutionInformation());
+			project.getExecutionInformation().setInErrorState(false);
 		}
+			
+		
 		
 	}
 }

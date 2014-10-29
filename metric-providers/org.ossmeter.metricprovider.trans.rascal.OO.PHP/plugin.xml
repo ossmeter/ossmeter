@@ -4,5 +4,46 @@
    <extension
          point="ossmeter.rascal.metricprovider">
    </extension>
-
+   <extension
+         point="org.ossmeter.platform.visualisation.metric">
+      <visualisation
+            json="vis/RRPHPHistoric.json">
+      </visualisation>
+   </extension>
+   <extension
+         point="org.ossmeter.platform.visualisation.metric">
+      <visualisation
+            json="vis/APHPHistoric.json">
+      </visualisation>
+   </extension>
+   <extension
+         point="org.ossmeter.platform.visualisation.metric">
+      <visualisation
+            json="vis/CFPHPHistoric.json">
+      </visualisation>
+   </extension>
+   <extension
+         point="org.ossmeter.platform.visualisation.metric">
+      <visualisation
+            json="vis/MHFPHPHistoric.json">
+      </visualisation>
+   </extension>
+   <extension
+         point="org.ossmeter.platform.visualisation.metric">
+      <visualisation
+            json="vis/PFPHPHistoric.json">
+      </visualisation>
+   </extension>
+   <extension
+         point="org.ossmeter.platform.visualisation.metric">
+      <visualisation
+            json="vis/AHFPHPHistoric.json">
+      </visualisation>
+   </extension>
+   <extension
+         point="org.ossmeter.platform.visualisation.metric">
+      <visualisation
+            json="vis/SRPHPHistoric.json">
+      </visualisation>
+   </extension>
 </plugin>

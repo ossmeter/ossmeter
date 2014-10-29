@@ -22,6 +22,7 @@ public class Project extends NamedElement {
 	public Project() { 
 		super();
 		dbObject.put("parent", new BasicDBObject());
+		dbObject.put("executionInformation", new ProjectExecutionInformation().getDbObject());
 		dbObject.put("vcsRepositories", new BasicDBList());
 		dbObject.put("communicationChannels", new BasicDBList());
 		dbObject.put("bugTrackingSystems", new BasicDBList());
@@ -29,7 +30,6 @@ public class Project extends NamedElement {
 		dbObject.put("licenses", new BasicDBList());
 		dbObject.put("metricProviderData", new BasicDBList());
 		dbObject.put("companies", new BasicDBList());
-		dbObject.put("executionInformation", new ProjectExecutionInformation().getDbObject());
 		super.setSuperTypes("org.ossmeter.repository.model.NamedElement");
 		NAME.setOwningType("org.ossmeter.repository.model.Project");
 		SHORTNAME.setOwningType("org.ossmeter.repository.model.Project");
@@ -47,6 +47,7 @@ public class Project extends NamedElement {
 	public static StringQueryProducer ACTIVE = new StringQueryProducer("active"); 
 	public static StringQueryProducer LASTEXECUTED = new StringQueryProducer("lastExecuted"); 
 	public static StringQueryProducer HOMEPAGE = new StringQueryProducer("homePage"); 
+	
 	
 	public String getShortName() {
 		return parseString(dbObject.get("shortName")+"", "");
@@ -103,6 +104,7 @@ public class Project extends NamedElement {
 		return this;
 	}
 	
+	
 	public List<VcsRepository> getVcsRepositories() {
 		if (vcsRepositories == null) {
 			vcsRepositories = new PongoList<VcsRepository>(this, "vcsRepositories", true);
@@ -141,7 +143,7 @@ public class Project extends NamedElement {
 	}
 	public List<Company> getCompanies() {
 		if (companies == null) {
-			companies = new PongoList<Company>(this, "companies", true);
+			companies = new PongoList<Company>(this, "companies", false);
 		}
 		return companies;
 	}
