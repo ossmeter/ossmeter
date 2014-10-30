@@ -114,6 +114,7 @@ map[str, real] quartiles(map[&T, num] m) {
   
   numValues = size(values);
   
+  result["Min"] = toReal(values[0]);
   result["Q1"] = toReal(values[round(numValues * 0.25)]);
   result["Q2"] = toReal(values[round(numValues * 0.5)]);
   result["Q3"] = toReal(values[round(numValues * 0.75)]);
