@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Importerdependencies
-Bundle-SymbolicName: org.ossmeter.repository.model.importerdependencies
+Bundle-SymbolicName: org.ossmeter.repository.model.importerdependencies;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: importerdependencies.jar,
  lib/gson-2.2.2.jar,

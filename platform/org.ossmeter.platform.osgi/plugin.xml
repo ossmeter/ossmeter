@@ -13,5 +13,17 @@
          </run>
       </application>
    </extension>
+   <extension
+         id="ossmeter"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="ossmeter.workerservice"
+            name="OSSMETER">
+         <property
+               name="appName"
+               value="OSSMETER">
+         </property>
+      </product>
+   </extension>
 
 </plugin>

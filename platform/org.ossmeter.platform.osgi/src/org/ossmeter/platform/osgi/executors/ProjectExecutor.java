@@ -122,7 +122,7 @@ public class ProjectExecutor implements Runnable {
 			}
 			
 			for (List<IMetricProvider> branch : metricBranches) {
-				MetricListExecutor mExe = new MetricListExecutor(platform, project, delta, date);
+				MetricListExecutor mExe = new MetricListExecutor(project.getShortName(), delta, date);
 				mExe.setMetricList(branch);
 				
 				executorService.execute(mExe);
@@ -141,7 +141,7 @@ public class ProjectExecutor implements Runnable {
 			// TODO: Should check if in error state before and after factoids
 			if (factoids.size() > 0) {
 				logger.info("Executing factoids.");
-				MetricListExecutor mExe = new MetricListExecutor(platform, project, delta, date);
+				MetricListExecutor mExe = new MetricListExecutor(project.getShortName(), delta, date);
 				mExe.setMetricList(factoids);
 				mExe.run(); // TODO Blocking (as desired). But should it have its own thread?
 			}
