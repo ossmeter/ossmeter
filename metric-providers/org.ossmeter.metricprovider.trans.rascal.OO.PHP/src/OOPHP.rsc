@@ -297,7 +297,7 @@ map[loc, int] LCOM_PHP(rel[Language, loc, M3] m3s = {}) {
 @doc{Lack of cohesion in methods 4 (PHP)}
 @friendlyName{Lack of cohesion in methods 4 (PHP)}
 @appliesTo{php()}
-map[loc, int] LCOM_PHP(rel[Language, loc, M3] m3s = {}) {
+map[loc, int] LCOM4_PHP(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
 	return LCOM4(m3@calls, m3@accesses, allMethods(m3), allFields(m3), allTypes(m3));
 }
