@@ -383,6 +383,9 @@ map[loc, int] NOA_Java(rel[Language, loc, M3] m3s = {}) {
 }
 
 
+// -------- factoids
+
+
 @metric{Coupling-Java}
 @doc{Java coupling}
 @friendlyName{Java coupling}
@@ -400,4 +403,181 @@ Factoid Coupling_Java(map[loc, int] cbo = ()) {
 @uses{("LCOM4-Java": "lcom4")}
 Factoid Cohesion_Java(map[loc, int] lcom4 = ()) {
 	return Cohesion("Java", lcom4);
+}
+
+
+//------ derived metrics for visualisation
+
+
+@metric{DIT-Java-Quartiles}
+@doc{Depth of inheritance tree quartiles (Java)}
+@friendlyName{Depth of inheritance tree quartiles (Java)}
+@appliesTo{java()}
+@historic
+@uses{("DIT-Java":"val")}
+map[str, real] DIT_Java_Q(map[loc, int] val = ()) {
+	return quartiles(val);
+}
+
+@metric{NOC-Java-Quartiles}
+@doc{Number of children quartiles (Java)}
+@friendlyName{Number of children quartiles (Java)}
+@appliesTo{java()}
+@historic
+@uses{("NOC-Java":"val")}
+map[str, real] NOC_Java_Q(map[loc, int] val = ()) {
+	return quartiles(val);
+}
+
+@metric{CBO-Java-Quartiles}
+@doc{Coupling between objects quartiles (Java)}
+@friendlyName{Coupling between objects quartiles (Java)}
+@appliesTo{java()}
+@historic
+@uses{("CBO-Java":"val")}
+map[str, real] CBO_Java_Q(map[loc, int] val = ()) {
+	return quartiles(val);
+}
+
+
+@metric{DAC-Java-Quartiles}
+@doc{Data abstraction coupling quartiles (Java)}
+@friendlyName{Data abstraction coupling quartiles (Java)}
+@appliesTo{java()}
+@historic
+@uses{("DAC-Java":"val")}
+map[str, real] DAC_Java_Q(map[loc, int] val = ()) {
+	return quartiles(val);
+}
+
+@metric{MPC-Java-Quartiles}
+@doc{Message passing coupling quartiles (Java)}
+@friendlyName{Message passing coupling quartiles (Java)}
+@appliesTo{java()}
+@historic
+@uses{("MPC-Java":"val")}
+map[str, real] MPC_Java_Q(map[loc, int] val = ()) {
+	return quartiles(val);
+}
+
+@metric{Ca-Java-Quartiles}
+@doc{Afferent coupling quartiles (Java)}
+@friendlyName{Afferent coupling quartiles (Java)}
+@appliesTo{java()}
+@historic
+@uses{("Ca-Java":"val")}
+map[str, real] Ca_Java_Q(map[loc, int] val = ()) {
+	return quartiles(val);
+}
+
+@metric{Ce-Java-Quartiles}
+@doc{Efferent coupling quartiles (Java)}
+@friendlyName{Efferent coupling quartiles (Java)}
+@appliesTo{java()}
+@historic
+@uses{("Ce-Java":"val")}
+map[str, real] Ce_Java_Q(map[loc, int] val = ()) {
+	return quartiles(val);
+}
+
+@metric{I-Java-Quartiles}
+@doc{Instability quartiles (Java)}
+@friendlyName{Instability quartiles (Java)}
+@appliesTo{java()}
+@historic
+@uses{("I-Java":"val")}
+map[loc, real] I_Java_Q(map[loc, real] val = ()) {
+	return quartiles(val);
+}
+
+@metric{RFC-Java-Quartiles}
+@doc{Response for class quartiles (Java)}
+@friendlyName{Response for class quartiles (Java)}
+@appliesTo{java()}
+@historic
+@uses{("RFC-Java":"val")}
+map[str, real] RFC_Java_Q(map[loc, int] val = ()) {
+	return quartiles(val);
+}
+
+@metric{MIF-Java-Quartiles}
+@doc{Method inheritance factor quartiles (Java)}
+@friendlyName{Method inheritance factor quartiles (Java)}
+@appliesTo{java()}
+@historic
+@uses{("MIF-Java":"val")}
+map[loc, real] MIF_Java_Q(map[loc, real] val = ()) {
+	return quartiles(val);
+}
+
+@metric{AIF-Java-Quartiles}
+@doc{Attribute inheritance factor quartiles (Java)}
+@friendlyName{Attribute inheritance factor quartiles (Java)}
+@appliesTo{java()}
+@historic
+@uses{("AIF-Java":"val")}
+map[loc, real] AIF_Java_Q(map[loc, real] val = ()) {
+	return quartiles(val);
+}
+
+
+@metric{LCOM-Java-Quartiles}
+@doc{Lack of cohesion in methods quartiles (Java)}
+@friendlyName{Lack of cohesion in methods quartiles (Java)}
+@appliesTo{java()}
+@historic
+@uses{("LCOM-Java":"val")}
+map[str, real] LCOM_Java_Q(map[loc, int] val = ()) {
+	return quartiles(val);
+}
+
+
+@metric{LCOM4-Java-Quartiles}
+@doc{Lack of cohesion in methods 4 quartiles (Java)}
+@friendlyName{Lack of cohesion in methods 4 quartiles (Java)}
+@appliesTo{java()}
+@historic
+@uses{("LCOM4-Java":"val")}
+map[str, real] LCOM4_Java_Q(map[loc, int] val = ()) {
+	return quartiles(val);
+}
+
+@metric{TCC-Java-Quartiles}
+@doc{Tight class cohesion quartiles (Java)}
+@friendlyName{Tight class cohesion quartiles (Java)}
+@appliesTo{java()}
+@historic
+@uses{("TCC-Java":"val")}
+map[loc, real] TCC_Java_Q(map[loc, real] val = ()) {
+	return quartiles(val);
+}
+
+@metric{LCC-Java-Quartiles}
+@doc{Loose class cohesion quartiles (Java)}
+@friendlyName{Loose class cohesion quartiles (Java)}
+@appliesTo{java()}
+@historic
+@uses{("LCC-Java":"val")}
+map[loc, real] LCC_Java_Q(map[loc, real] val = ()) {
+	return quartiles(val);
+}
+
+@metric{NOM-Java-Quartiles}
+@doc{Number of methods quartiles (Java)}
+@friendlyName{Number of methods quartiles (Java)}
+@appliesTo{java()}
+@historic
+@uses{("NOM-Java":"val")}
+map[str, real] NOM_Java_Q(map[loc, int] val = ()) {
+	return quartiles(val);
+}
+
+@metric{NOA-Java-Quartiles}
+@doc{Number of attributes quartiles (Java)}
+@friendlyName{Number of attributes quartiles (Java)}
+@appliesTo{java()}
+@historic
+@uses{("NOA-Java":"val")}
+map[str, real] NOA_Java_Q(map[loc, int] val = ()) {
+	return quartiles(val);
 }
