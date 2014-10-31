@@ -38,13 +38,13 @@ public map[loc file, int count] countUsesOfAdvancedLanguageFeatures(rel[Language
 	return result;
 }
 
-@metric{AdvancedLanguageFeaturesJavaQuantiles}
-@doc{Quantiles of counts of advanced Java features (wildcards, union types and anonymous classes)}
-@friendlyName{Usage of advanced Java features quantiles}
+@metric{AdvancedLanguageFeaturesJavaQuartiles}
+@doc{Quartiles of counts of advanced Java features (wildcards, union types and anonymous classes)}
+@friendlyName{Usage of advanced Java features quartiles}
 @appliesTo{java()}
 @historic
 @uses{("AdvancedLanguageFeaturesJava": "v")}
 public map[str, real] countUsesOfAdvancedLanguageFeaturesQ(map[loc, int] v = ()) {
-	return quantiles(v);
+	return quartiles(v);
 }
 

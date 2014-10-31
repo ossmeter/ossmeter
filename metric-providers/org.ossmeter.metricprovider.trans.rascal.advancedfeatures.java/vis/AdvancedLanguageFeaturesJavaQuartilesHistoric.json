@@ -1,5 +1,5 @@
 {
-	"metricid" : "org.ossmeter.metricprovider.trans.rascal.advancedfeatures.java.AdvancedLanguageFeaturesJavaQuantiles.historic",
+	"metricid" : "org.ossmeter.metricprovider.trans.rascal.advancedfeatures.java.AdvancedLanguageFeaturesJavaQuartiles.historic",
 	"vis" : [ 
 		{
 			"name" : "AdvancedLanguageFeaturesJavaQuartilesHistoric",
