@@ -208,90 +208,88 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 				return null;
 			}
 			
-			synchronized (RascalMetricProvider.class) {
-				if (lastRevision == null) {
-					// the very first time, this will still be null, so we need to check for null below as well
-					lastRevision = repoDeltas.get(repoDeltas.size()-1).getLatestRevision();
-				}
-
-				if (needCacheClearance(delta)) {
-					//logger.info("\tclearing caches");
-					workingCopyFolders.clear();
-					scratchFolders.clear();
-					rascalDelta = null;
-				}
-
-				if (needsScratch || needsWc || needsM3 || needsAsts || needsDelta) {
-					if (workingCopyFolders.isEmpty() || scratchFolders.isEmpty()) {
-						//logger.info("creating working copies");
-						computeFolders(project, delta, workingCopyFolders, scratchFolders);
-					}
-
-					if (needsWc) {
-						params.put(WORKING_COPIES_PARAM, makeMap(workingCopyFolders));
-					}
-
-					if (needsScratch) {
-						params.put(SCRATCH_FOLDERS_PARAM, makeMap(scratchFolders));
-					}
-				}
-
-				if (needsDelta) {
-					//logger.info("computing delta model");
-					params.put(DELTA_PARAM, computeDelta(project, delta, manager, logger));
-				}
-
-				if (needsAsts) {
-					//logger.info("parsing to asts");
-					params.put(ASTS_PARAM, computeAsts(project, delta, manager, logger));
-				}
-
-				if (needsPrev) {
-					//logger.info("retrieving current result");
-					params.put(PREVIOUS_PARAM, getMetricResult(project, this, manager));
-				}
-				
-				if (needsM3) {
-					//logger.info("extracting M3 models");
-					params.put(M3S_PARAM, computeM3(project, delta, manager, logger));
-				}
-
-				for (String use : uses.keySet()) {
-					IMetricProvider provider = providers.get(use);
-					
-					if (provider != null) {
-						String label = uses.get(use);
-						IValue val = getMetricResult(project, provider, manager);
-						if (val == null) {
-							logger.error("Trying to use results from " + use + " but no result was found. Ignoring parameter " + label);
-						}
-						else {
-							params.put(label, val);
-						}
-					} else {
-						logger.error("Used metric provider " + use + " was not found! " + use);
-							// name mismatch!
-						logger.info("Select from:");
-						for (IMetricProvider imp : manager.getMetricProviders()) {
-							logger.info("\t" + imp.getIdentifier());
-						}
-						return null;
-					}
-					
-				}
-				
-				filterNullParameters(params);
-				
-				// measurement is included in the sync block to avoid sharing evaluators between metrics
-				//logger.info("calling measurement function");
-				//logger.info("with parameters: " + params);
-				Result<IValue> result = function.call(new Type[] { }, new IValue[] { }, params);
-
-				logResult(result);
-				
-				lastRevision = getLastRevision(delta);
-				return result.getValue();
+			if (lastRevision == null) {
+				// the very first time, this will still be null, so we need to check for null below as well
+				lastRevision = repoDeltas.get(repoDeltas.size()-1).getLatestRevision();
 			}
+
+			if (needCacheClearance(delta)) {
+				//logger.info("\tclearing caches");
+				workingCopyFolders.clear();
+				scratchFolders.clear();
+				rascalDelta = null;
+			}
+
+			if (needsScratch || needsWc || needsM3 || needsAsts || needsDelta) {
+				if (workingCopyFolders.isEmpty() || scratchFolders.isEmpty()) {
+					//logger.info("creating working copies");
+					computeFolders(project, delta, workingCopyFolders, scratchFolders);
+				}
+
+				if (needsWc) {
+					params.put(WORKING_COPIES_PARAM, makeMap(workingCopyFolders));
+				}
+
+				if (needsScratch) {
+					params.put(SCRATCH_FOLDERS_PARAM, makeMap(scratchFolders));
+				}
+			}
+
+			if (needsDelta) {
+				//logger.info("computing delta model");
+				params.put(DELTA_PARAM, computeDelta(project, delta, manager, logger));
+			}
+
+			if (needsAsts) {
+				//logger.info("parsing to asts");
+				params.put(ASTS_PARAM, computeAsts(project, delta, manager, logger));
+			}
+
+			if (needsPrev) {
+				//logger.info("retrieving current result");
+				params.put(PREVIOUS_PARAM, getMetricResult(project, this, manager));
+			}
+
+			if (needsM3) {
+				//logger.info("extracting M3 models");
+				params.put(M3S_PARAM, computeM3(project, delta, manager, logger));
+			}
+
+			for (String use : uses.keySet()) {
+				IMetricProvider provider = providers.get(use);
+
+				if (provider != null) {
+					String label = uses.get(use);
+					IValue val = getMetricResult(project, provider, manager);
+					if (val == null) {
+						logger.error("Trying to use results from " + use + " but no result was found. Ignoring parameter " + label);
+					}
+					else {
+						params.put(label, val);
+					}
+				} else {
+					logger.error("Used metric provider " + use + " was not found! " + use);
+					// name mismatch!
+					logger.info("Select from:");
+					for (IMetricProvider imp : manager.getMetricProviders()) {
+						logger.info("\t" + imp.getIdentifier());
+					}
+					return null;
+				}
+
+			}
+
+			filterNullParameters(params);
+
+			// measurement is included in the sync block to avoid sharing evaluators between metrics
+			//logger.info("calling measurement function");
+			//logger.info("with parameters: " + params);
+			Result<IValue> result = function.call(new Type[] { }, new IValue[] { }, params);
+
+			logResult(result);
+
+			lastRevision = getLastRevision(delta);
+			return result.getValue();
 		} catch (Throw e) {
 		    if (!(e.getException() instanceof IConstructor && ((IConstructor) e.getException()).getName().equals("undefined"))) {
 		    	logger.error("metric threw an exception: " + e.getMessage() + " at " + e.getLocation(), e);
@@ -354,11 +352,11 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		return function.getReturnType();
 	}
 
-	private void computeFolders(Project project, ProjectDelta delta, Map<String, File> wc, Map<String, File> scratch) throws WorkingCopyManagerUnavailable, WorkingCopyCheckoutException {
+	private synchronized void computeFolders(Project project, ProjectDelta delta, Map<String, File> wc, Map<String, File> scratch) throws WorkingCopyManagerUnavailable, WorkingCopyCheckoutException {
 		WorkingCopyFactory.getInstance().checkout(project, getLastRevision(delta), wc, scratch);
 	}
 
-	private String getLastRevision(ProjectDelta delta) {
+	private synchronized String getLastRevision(ProjectDelta delta) {
 		List<VcsRepositoryDelta> repoDeltas = delta.getVcsDelta().getRepoDeltas();
 		if (repoDeltas.isEmpty()) {
 			return lastRevision;
@@ -369,7 +367,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		return revision;
 	}
 
-	public static IValue computeAsts(Project project, ProjectDelta delta, RascalManager _instance, OssmeterLogger logger) {
+	public static synchronized IValue computeAsts(Project project, ProjectDelta delta, RascalManager _instance, OssmeterLogger logger) {
 		if (delta == null || workingCopyFolders.isEmpty()) {
 			return _instance.getEvaluator().getValueFactory().setWriter().done();
 		}
@@ -387,7 +385,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		db.sync();
 	}
 	
-	public static IConstructor computeDelta(Project project, ProjectDelta delta,
+	public static synchronized IConstructor computeDelta(Project project, ProjectDelta delta,
 			RascalManager _instance, OssmeterLogger logger) {
 		//logger.info("\tretrieving from VcsProvider");
 		RascalProjectDeltas rpd = new RascalProjectDeltas(_instance.getEvaluator());
@@ -423,7 +421,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		return rascalDelta;
 	}
 
-	private boolean needCacheClearance(ProjectDelta delta) {
+	private synchronized boolean  needCacheClearance(ProjectDelta delta) {
 		if (lastRevision == null) {
 			return true;
 		}
@@ -442,14 +440,14 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 	}
 
 
-	public static IValue computeM3(Project project, ProjectDelta delta, RascalManager man, OssmeterLogger logger) {
+	public static synchronized IValue computeM3(Project project, ProjectDelta delta, RascalManager man, OssmeterLogger logger) {
 		if (delta == null || workingCopyFolders.isEmpty()) {
 			return man.getEvaluator().getValueFactory().setWriter().done();
 		}
 		return callExtractors(project, delta, man, man.getM3Extractors(), logger);
 	}
 	
-	public static IValue callExtractors(Project project, ProjectDelta delta, RascalManager man, Set<RascalManager.Extractor> extractors, OssmeterLogger logger) {
+	public static synchronized IValue callExtractors(Project project, ProjectDelta delta, RascalManager man, Set<RascalManager.Extractor> extractors, OssmeterLogger logger) {
 		ISetWriter allResults = man.getEvaluator().getValueFactory().setWriter();
 		
 		ISourceLocation projectLoc = makeProjectLoc(project);
