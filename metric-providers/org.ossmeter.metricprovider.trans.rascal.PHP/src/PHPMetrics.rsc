@@ -128,9 +128,9 @@ public int getNumberOfFunctionsWithDynamicFeatures(rel[Language, loc, AST] asts 
 @doc{Histogram counting number of times a PHP include could be resolved to a certain number of files}
 @friendlyName{IncludesResolutionHistogram}
 @appliesTo{php()}
-public map[int, int] getIncludesResolutionHistogram(rel[Language, loc, AST] asts = {})
+public map[int, int] getIncludesResolutionHistogram(rel[Language, loc, M3] m3s = {}, rel[Language, loc, AST] asts = {})
 {
-	systems = { <root, sys> | <php(), root, phpSystem(sys)> <- asts };
+	systems = getSystems(m3s, asts);
 
 	return includeResolutionHistogram(systems);
 }
@@ -140,9 +140,9 @@ public map[int, int] getIncludesResolutionHistogram(rel[Language, loc, AST] asts
 @doc{Estimation of missing PHP libraries of the project}
 @friendlyName{MissingLibrariesPHP}
 @appliesTo{php()}
-public set[str] estimateMissingLibraries(rel[Language, loc, AST] asts = {})
+public set[str] estimateMissingLibraries(rel[Language, loc, M3] m3s = {}, rel[Language, loc, AST] asts = {})
 {
-	systems = { <root, sys> | <php(), root, phpSystem(sys)> <- asts };
+	systems = getSystems(m3s, asts);
 
 	return estimateMissingLibraries(systems);
 }
@@ -258,4 +258,3 @@ Factoid staticNameResolutionFactoid(
 
   return factoid(txt, stars);
 }
-

@@ -13,12 +13,17 @@ import org::ossmeter::metricprovider::MetricProvider;
 import IO;
 import Message;
 import Relation;
+import Map;
 
 @M3Extractor{php()}
 @memo
 public rel[Language, loc, M3] extractM3sPHP(loc project, ProjectDelta delta, map[loc repos, loc folders] checkouts, map[loc, loc] scratch)
 {
-	return { <php(), file, createM3forScript(file, script)> | <php(), file, phpAST(script)> <- extractASTsPHP(project, delta, checkouts, scratch) };
+	m3s = { <php(), file, createM3forScript(file, script)> | <php(), file, phpAST(script)> <- extractASTsPHP(project, delta, checkouts, scratch) };
+	
+	m3s += { <php(), root, getSystemStructureM3(root)> | root <- checkouts<folders> };
+	
+	return m3s;
 }
 
 @ASTExtractor{php()}
@@ -29,13 +34,55 @@ public rel[Language, loc, AST] extractASTsPHP(loc project, ProjectDelta delta, m
 	
 	for (root <- checkouts<folders>)
 	{
-		System sys = loadPHPFiles(root);
+		System sys = getSystem(root);
 		result += { <php(), file, (errscript(m) := sys[file]) ? noAST(error(m, file)) : phpAST(sys[file])> | file <- sys };
-		result += { <php(), root, phpSystem(sys)> };
 	}
 	
 	return result;
 }
+
+
+@memo
+private System getSystem(loc root) {
+	return loadPHPFiles(root);
+}
+
+
+private M3 getSystemStructureM3(loc root) {
+	M3 m3 = createEmptyM3(|php+system://<root.path>|);
+	
+	for (file <- getSystem(root)) {
+		m3@containment[root] += file;
+	}
+	
+	return m3;
+}
+
+
+// recover Systems from m3s and asts
+@memo
+public rel[loc, System] getSystems(rel[Language, loc, M3] m3s, rel[Language, loc, AST] asts) {
+	map[loc, System] result = ();
+	
+	map[loc, loc] roots = ();
+	
+	for (<php(), root, m3> <- m3s, m3.id.scheme == "php+system") {
+		for (file <- m3@containment[root]) {
+			roots[file] = root;
+		}
+		
+		result[root] = ();
+	}
+	
+	for (<php(), file, phpAST(script)> <- asts) {
+		if (file in roots) {
+			result[roots[file]][file] = script;
+		}
+	}
+	
+	return toRel(result);
+}
+
 
 @memo
 public M3 composeM3s(rel[Language, loc, M3] m3s) {

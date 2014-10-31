@@ -157,6 +157,9 @@ public set[str] estimateMissingLibraries(rel[loc, System] systems) {
 		
 	for (s <- ur) {
 		parts = split("/", cleanPath(s));
+		
+		while (["..", _, _*] := parts) parts = parts[1..]; 
+		
 		if (size(parts) > 1) {
 			result += { intercalate("/", parts[..-1]) };
 		}

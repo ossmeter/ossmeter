@@ -297,7 +297,7 @@ map[loc, int] LCOM_PHP(rel[Language, loc, M3] m3s = {}) {
 @doc{Lack of cohesion in methods 4 (PHP)}
 @friendlyName{Lack of cohesion in methods 4 (PHP)}
 @appliesTo{php()}
-map[loc, int] LCOM_PHP(rel[Language, loc, M3] m3s = {}) {
+map[loc, int] LCOM4_PHP(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
 	return LCOM4(m3@calls, m3@accesses, allMethods(m3), allFields(m3), allTypes(m3));
 }
@@ -339,6 +339,9 @@ map[loc, int] NOA_PHP(rel[Language, loc, M3] m3s = {}) {
 }
 
 
+//------ factoids
+
+
 @metric{Coupling-PHP}
 @doc{PHP coupling}
 @friendlyName{PHP coupling}
@@ -356,4 +359,181 @@ Factoid Coupling_PHP(map[loc, int] cbo = ()) {
 @uses{("LCOM4-PHP": "lcom4")}
 Factoid Cohesion_PHP(map[loc, int] lcom4 = ()) {
 	return Cohesion("PHP", lcom4);
+}
+
+
+//------ derived metrics for visualisation
+
+
+@metric{DIT-PHP-Quartiles}
+@doc{Depth of inheritance tree quartiles (PHP)}
+@friendlyName{Depth of inheritance tree quartiles (PHP)}
+@appliesTo{php()}
+@historic
+@uses{("DIT-PHP":"val")}
+map[str, real] DIT_PHP_Q(map[loc, int] val = ()) {
+	return quartiles(val);
+}
+
+@metric{NOC-PHP-Quartiles}
+@doc{Number of children quartiles (PHP)}
+@friendlyName{Number of children quartiles (PHP)}
+@appliesTo{php()}
+@historic
+@uses{("NOC-PHP":"val")}
+map[str, real] NOC_PHP_Q(map[loc, int] val = ()) {
+	return quartiles(val);
+}
+
+@metric{CBO-PHP-Quartiles}
+@doc{Coupling between objects quartiles (PHP)}
+@friendlyName{Coupling between objects quartiles (PHP)}
+@appliesTo{php()}
+@historic
+@uses{("CBO-PHP":"val")}
+map[str, real] CBO_PHP_Q(map[loc, int] val = ()) {
+	return quartiles(val);
+}
+
+
+@metric{DAC-PHP-Quartiles}
+@doc{Data abstraction coupling quartiles (PHP)}
+@friendlyName{Data abstraction coupling quartiles (PHP)}
+@appliesTo{php()}
+@historic
+@uses{("DAC-PHP":"val")}
+map[str, real] DAC_PHP_Q(map[loc, int] val = ()) {
+	return quartiles(val);
+}
+
+@metric{MPC-PHP-Quartiles}
+@doc{Message passing coupling quartiles (PHP)}
+@friendlyName{Message passing coupling quartiles (PHP)}
+@appliesTo{php()}
+@historic
+@uses{("MPC-PHP":"val")}
+map[str, real] MPC_PHP_Q(map[loc, int] val = ()) {
+	return quartiles(val);
+}
+
+@metric{Ca-PHP-Quartiles}
+@doc{Afferent coupling quartiles (PHP)}
+@friendlyName{Afferent coupling quartiles (PHP)}
+@appliesTo{php()}
+@historic
+@uses{("Ca-PHP":"val")}
+map[str, real] Ca_PHP_Q(map[loc, int] val = ()) {
+	return quartiles(val);
+}
+
+@metric{Ce-PHP-Quartiles}
+@doc{Efferent coupling quartiles (PHP)}
+@friendlyName{Efferent coupling quartiles (PHP)}
+@appliesTo{php()}
+@historic
+@uses{("Ce-PHP":"val")}
+map[str, real] Ce_PHP_Q(map[loc, int] val = ()) {
+	return quartiles(val);
+}
+
+@metric{I-PHP-Quartiles}
+@doc{Instability quartiles (PHP)}
+@friendlyName{Instability quartiles (PHP)}
+@appliesTo{php()}
+@historic
+@uses{("I-PHP":"val")}
+map[loc, real] I_PHP_Q(map[loc, real] val = ()) {
+	return quartiles(val);
+}
+
+@metric{RFC-PHP-Quartiles}
+@doc{Response for class quartiles (PHP)}
+@friendlyName{Response for class quartiles (PHP)}
+@appliesTo{php()}
+@historic
+@uses{("RFC-PHP":"val")}
+map[str, real] RFC_PHP_Q(map[loc, int] val = ()) {
+	return quartiles(val);
+}
+
+@metric{MIF-PHP-Quartiles}
+@doc{Method inheritance factor quartiles (PHP)}
+@friendlyName{Method inheritance factor quartiles (PHP)}
+@appliesTo{php()}
+@historic
+@uses{("MIF-PHP":"val")}
+map[loc, real] MIF_PHP_Q(map[loc, real] val = ()) {
+	return quartiles(val);
+}
+
+@metric{AIF-PHP-Quartiles}
+@doc{Attribute inheritance factor quartiles (PHP)}
+@friendlyName{Attribute inheritance factor quartiles (PHP)}
+@appliesTo{php()}
+@historic
+@uses{("AIF-PHP":"val")}
+map[loc, real] AIF_PHP_Q(map[loc, real] val = ()) {
+	return quartiles(val);
+}
+
+
+@metric{LCOM-PHP-Quartiles}
+@doc{Lack of cohesion in methods quartiles (PHP)}
+@friendlyName{Lack of cohesion in methods quartiles (PHP)}
+@appliesTo{php()}
+@historic
+@uses{("LCOM-PHP":"val")}
+map[str, real] LCOM_PHP_Q(map[loc, int] val = ()) {
+	return quartiles(val);
+}
+
+
+@metric{LCOM4-PHP-Quartiles}
+@doc{Lack of cohesion in methods 4 quartiles (PHP)}
+@friendlyName{Lack of cohesion in methods 4 quartiles (PHP)}
+@appliesTo{php()}
+@historic
+@uses{("LCOM4-PHP":"val")}
+map[str, real] LCOM4_PHP_Q(map[loc, int] val = ()) {
+	return quartiles(val);
+}
+
+@metric{TCC-PHP-Quartiles}
+@doc{Tight class cohesion quartiles (PHP)}
+@friendlyName{Tight class cohesion quartiles (PHP)}
+@appliesTo{php()}
+@historic
+@uses{("TCC-PHP":"val")}
+map[loc, real] TCC_PHP_Q(map[loc, real] val = ()) {
+	return quartiles(val);
+}
+
+@metric{LCC-PHP-Quartiles}
+@doc{Loose class cohesion quartiles (PHP)}
+@friendlyName{Loose class cohesion quartiles (PHP)}
+@appliesTo{php()}
+@historic
+@uses{("LCC-PHP":"val")}
+map[loc, real] LCC_PHP_Q(map[loc, real] val = ()) {
+	return quartiles(val);
+}
+
+@metric{NOM-PHP-Quartiles}
+@doc{Number of methods quartiles (PHP)}
+@friendlyName{Number of methods quartiles (PHP)}
+@appliesTo{php()}
+@historic
+@uses{("NOM-PHP":"val")}
+map[str, real] NOM_PHP_Q(map[loc, int] val = ()) {
+	return quartiles(val);
+}
+
+@metric{NOA-PHP-Quartiles}
+@doc{Number of attributes quartiles (PHP)}
+@friendlyName{Number of attributes quartiles (PHP)}
+@appliesTo{php()}
+@historic
+@uses{("NOA-PHP":"val")}
+map[str, real] NOA_PHP_Q(map[loc, int] val = ()) {
+	return quartiles(val);
 }

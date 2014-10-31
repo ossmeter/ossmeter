@@ -52,6 +52,7 @@ import util::Math;
 import Set;
 import List;
 import Relation;
+import Map;
 
 data MetricException
  = 
@@ -101,4 +102,23 @@ real spreadOverItems(map[value item, int amount] d) {
   dist = distribution(d);
   return gini([<0,0>] + [<x, dist[x]> | x <- dist]);
 }
+
+map[str, real] quartiles(map[&T, num] m) {
+  if (size(m) < 4) {
+    return undefined("Not enough data available", |tmp:///|);
+  }
+
+  map[str, real] result = ();
   
+  values = sort([ m[i] | i <- m ]);
+  
+  numValues = size(values);
+  
+  result["Min"] = toReal(values[0]);
+  result["Q1"] = toReal(values[round(numValues * 0.25)]);
+  result["Q2"] = toReal(values[round(numValues * 0.5)]);
+  result["Q3"] = toReal(values[round(numValues * 0.75)]);
+  result["Max"] = toReal(values[-1]);
+  
+  return result;
+}

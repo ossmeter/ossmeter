@@ -94,9 +94,20 @@ int countCC(Declaration ast) {
 @doc{Calculates the gini coefficient of cc over methods}
 @friendlyName{ccovermethodsJava}
 @appliesTo{java()}
-@uses = ("CCJava" : "methodCC")
+@uses{("CCJava" : "methodCC")}
 real giniCCOverMethodsJava(map[loc, int] methodCC = ()) {
   return giniCCOverMethods(methodCC);
+}
+
+
+@metric{CCHistogramJava}
+@doc{Number of Java methods per CC risk factor}
+@friendlyName{Number of Java methods per CC risk factor}
+@appliesTo{java()}
+@uses{("CCJava" : "methodCC")}
+@historic
+map[str, int] CCHistogramJava(map[loc, int] methodCC = ()) {
+  return CCHistogram(methodCC);
 }
 
 
@@ -104,8 +115,8 @@ real giniCCOverMethodsJava(map[loc, int] methodCC = ()) {
 @doc{The cyclometic complexity of the project's Java code}
 @friendlyName{CCJavaFactoid}
 @appliesTo{java()}
-@uses = ("CCJava" : "methodCC")
-Factoid CC(map[loc, int] methodCC = ()) {
-  return CCFactoid(methodCC, "Java");
+@uses{("CCHistogramJava" : "hist")}
+Factoid CC(map[str, int] hist = ()) {
+  return CCFactoid(hist, "Java");
 }
 

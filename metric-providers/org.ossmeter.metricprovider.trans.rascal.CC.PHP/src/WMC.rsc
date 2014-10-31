@@ -35,11 +35,14 @@ map[loc class, num wmcCount] getWMC(rel[Language, loc, M3] m3s = {}, map[loc, in
 map[loc, int] getCC(rel[Language, loc, AST] asts = {}) 
 {
   map[loc method, int cc] result = ();
-
-  for (<php(), _, phpAST(a)> <- asts) {
-    result += ( m@decl : countCC(body) | /m:method(_, _, _, _, body) <- a );
-  }
   
+  for (<php(), _, phpAST(a)> <- asts) {
+    top-down-break visit (a) {
+      case m:method(_, _, _, _, body): result[m@decl] = countCC(body);
+      case f:function(_, _, _, body): result[f@decl] = countCC(body);
+    }
+  }
+
   return result;
 }
 
@@ -69,9 +72,20 @@ int countCC(list[Stmt] stats) {
 @doc{Calculates the gini coefficient of CC over PHP methods}
 @friendlyName{The gini coefficient of CC over PHP methods}
 @appliesTo{php()}
-@uses = ("CCPHP": "methodCC")
+@uses{("CCPHP": "methodCC")}
 real giniCCOverMethodsPHP(map[loc, int] methodCC = ()) {
   return giniCCOverMethods(methodCC);
+}
+
+
+@metric{CCHistogramPHP}
+@doc{Number of PHP methods per CC risk factor}
+@friendlyName{Number of PHP methods per CC risk factor}
+@appliesTo{php()}
+@uses{("CCPHP" : "methodCC")}
+@historic
+map[str, int] CCHistogramPHP(map[loc, int] methodCC = ()) {
+  return CCHistogram(methodCC);
 }
 
 
@@ -79,7 +93,7 @@ real giniCCOverMethodsPHP(map[loc, int] methodCC = ()) {
 @doc{The cyclometic complexity of the project's PHP code}
 @friendlyName{CCPHPFactoid}
 @appliesTo{php()}
-@uses = ("CCPHP" : "methodCC")
-Factoid CC(map[loc, int] methodCC = ()) {
-  return CCFactoid(methodCC, "PHP");
+@uses{("CCHistogramPHP" : "hist")}
+Factoid CC(map[str, int] hist = ()) {
+  return CCFactoid(hist, "PHP");
 }

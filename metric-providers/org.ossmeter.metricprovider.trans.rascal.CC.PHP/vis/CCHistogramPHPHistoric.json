@@ -1,0 +1,23 @@
+{
+	"metricid" : "org.ossmeter.metricprovider.trans.rascal.CC.PHP.CCHistogramPHP.historic",
+	"vis" : [ 
+		{
+			"name" : "CCHistogramPHPTimeLine",
+			"nicename" : "CCHistogramPHP",
+			"description" : "This metric shows the number of PHP methods per CC risk factor over time.",
+			"type" : "LineChart",
+			"datatable" : {
+				"rows" : "$value",
+				"cols" : [  { "name" : "Date", 			"field" : "$__date" }, 
+							{ "name" : "Factor", 		"field" : "$value[0].value" }, 
+							{ "name" : "Count", 		"field" : "$value[1].value" } ]
+			},
+			"x" : "Date",
+			"y" : "Count", 
+			"series" : "Factor",
+			"x-label" : "Date",		
+			"y-label" : "Number of methods",
+			"timeseries" : "true"
+		}
+	]
+}

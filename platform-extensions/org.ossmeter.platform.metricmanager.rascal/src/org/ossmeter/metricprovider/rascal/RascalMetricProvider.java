@@ -204,7 +204,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 			
 			// don't continue if there isn't anything to do
 			if (repoDeltas.isEmpty()) {
-			    logger.error("Didn't find any delta. Skipping metric calculations for " + metricId);
+			    //logger.error("Didn't find any delta. Skipping metric calculations for " + metricId);
 				return null;
 			}
 			
