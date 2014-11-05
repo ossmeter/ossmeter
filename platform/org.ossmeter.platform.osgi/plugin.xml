@@ -18,10 +18,22 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="ossmeter.workerservice"
-            name="OSSMETER">
+            name="Ossmeter platform product">
          <property
                name="appName"
-               value="OSSMETER">
+               value="Ossmeter platform product">
+         </property>
+      </product>
+   </extension>
+   <extension
+         id="testproduct"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="ossmeter.workerservice"
+            name="Test">
+         <property
+               name="appName"
+               value="Test">
          </property>
       </product>
    </extension>

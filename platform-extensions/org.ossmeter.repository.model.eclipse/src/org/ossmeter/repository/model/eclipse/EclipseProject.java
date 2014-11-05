@@ -1,9 +1,10 @@
 package org.ossmeter.repository.model.eclipse;
 
-import com.mongodb.*;
-import java.util.*;
-import com.googlecode.pongo.runtime.*;
-import com.googlecode.pongo.runtime.querying.*;
+import java.util.List;
+
+import com.googlecode.pongo.runtime.PongoList;
+import com.googlecode.pongo.runtime.querying.StringQueryProducer;
+import com.mongodb.BasicDBList;
 
 
 public class EclipseProject extends org.ossmeter.repository.model.Project {

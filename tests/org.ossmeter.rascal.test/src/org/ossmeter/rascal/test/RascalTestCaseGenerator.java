@@ -144,7 +144,7 @@ public class RascalTestCaseGenerator implements IApplication  {
 							File dir = new File(testDataDir, project.getName() + "/" + encode(repoURL) + "/" + date.toString());
 							dir.mkdirs();
 							
-							MetricListExecutor ex = new MetricListExecutor(platform, project, delta, date);
+							MetricListExecutor ex = new MetricListExecutor(project.getShortName(), delta, date);
 							ex.setMetricList(metricProviders);
 							ex.run();
 							

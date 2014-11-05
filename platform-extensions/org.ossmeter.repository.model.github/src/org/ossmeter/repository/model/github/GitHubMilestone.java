@@ -1,9 +1,14 @@
 package org.ossmeter.repository.model.github;
 
-import com.mongodb.*;
-import java.util.*;
-import com.googlecode.pongo.runtime.*;
-import com.googlecode.pongo.runtime.querying.*;
+import java.util.List;
+
+import com.googlecode.pongo.runtime.Pongo;
+import com.googlecode.pongo.runtime.PongoFactory;
+import com.googlecode.pongo.runtime.PongoList;
+import com.googlecode.pongo.runtime.querying.NumericalQueryProducer;
+import com.googlecode.pongo.runtime.querying.StringQueryProducer;
+import com.mongodb.BasicDBList;
+import com.mongodb.DBObject;
 
 
 public class GitHubMilestone extends Pongo {

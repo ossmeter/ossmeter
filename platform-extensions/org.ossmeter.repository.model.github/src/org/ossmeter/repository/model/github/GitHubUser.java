@@ -1,9 +1,6 @@
 package org.ossmeter.repository.model.github;
 
-import com.mongodb.*;
-import java.util.*;
-import com.googlecode.pongo.runtime.*;
-import com.googlecode.pongo.runtime.querying.*;
+import com.googlecode.pongo.runtime.querying.StringQueryProducer;
 
 
 public class GitHubUser extends org.ossmeter.repository.model.Person {

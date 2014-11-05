@@ -3,9 +3,16 @@ Bundle-ManifestVersion: 2
 Bundle-Name: org.ossmeter.repository.model.eclipseproject
 Bundle-SymbolicName: org.ossmeter.repository.model.eclipse;singleton:=true
 Bundle-Version: 0.1.0
-Require-Bundle: org.eclipse.emf.ecore,
- com.googlecode.pongo.runtime.dependencies,
+Bundle-ClassPath: .
+Bundle-Vendor: %providerName
+Require-Bundle: com.googlecode.pongo.runtime.dependencies,
  com.googlecode.pongo.runtime,
- org.ossmeter.repository.model;visibility:=reexport,
+ org.ossmeter.repository.model,
  org.ossmeter.repository.model.cc.nntp
-Export-Package: org.ossmeter.repository.model.eclipse
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: org.ossmeter.repository.model.eclipse;
+  uses:="com.googlecode.pongo.runtime,
+   com.googlecode.pongo.runtime.querying,
+   org.ossmeter.repository.model.cc.nntp,
+   org.ossmeter.repository.model"

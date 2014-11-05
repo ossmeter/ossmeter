@@ -1,9 +1,6 @@
 package org.ossmeter.repository.model.eclipse;
 
-import com.mongodb.*;
-import java.util.*;
-import com.googlecode.pongo.runtime.*;
-import com.googlecode.pongo.runtime.querying.*;
+import com.googlecode.pongo.runtime.querying.StringQueryProducer;
 
 
 public class EclipseNewsGroup extends org.ossmeter.repository.model.cc.nntp.NntpNewsGroup {

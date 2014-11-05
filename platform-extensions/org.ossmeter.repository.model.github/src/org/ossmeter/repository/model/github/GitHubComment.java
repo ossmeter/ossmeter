@@ -1,9 +1,10 @@
 package org.ossmeter.repository.model.github;
 
-import com.mongodb.*;
-import java.util.*;
-import com.googlecode.pongo.runtime.*;
-import com.googlecode.pongo.runtime.querying.*;
+import com.googlecode.pongo.runtime.Pongo;
+import com.googlecode.pongo.runtime.PongoFactory;
+import com.googlecode.pongo.runtime.querying.NumericalQueryProducer;
+import com.googlecode.pongo.runtime.querying.StringQueryProducer;
+import com.mongodb.DBObject;
 
 
 public class GitHubComment extends Pongo {
