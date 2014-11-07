@@ -4,8 +4,7 @@ Bundle-Name: Github
 Bundle-SymbolicName: org.ossmeter.metricprovider.downloadcounter.github;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.metricprovider.downloadcounter.github.Activator
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.platform,
  com.googlecode.pongo.runtime,
  org.ossmeter.metricprovider.downloadcounter.github.dependencies,

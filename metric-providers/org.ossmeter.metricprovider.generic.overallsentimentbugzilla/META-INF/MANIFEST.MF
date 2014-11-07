@@ -4,8 +4,7 @@ Bundle-Name: Overallsentimentbugzilla
 Bundle-SymbolicName: org.ossmeter.metricprovider.historic.bugs.sentiment;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.metricprovider.historic.bugs.sentiment.Activator
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.repository.model.bts.bugzilla,
  org.ossmeter.platform,
  org.ossmeter.platform.client.api,

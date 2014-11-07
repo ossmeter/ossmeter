@@ -4,8 +4,7 @@ Bundle-Name: Svn
 Bundle-SymbolicName: org.ossmeter.platform.vcs.svn;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.platform.vcs.svn.Activator
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.platform;visibility:=reexport,
  com.googlecode.pongo.runtime;visibility:=reexport,
  org.ossmeter.repository.model,

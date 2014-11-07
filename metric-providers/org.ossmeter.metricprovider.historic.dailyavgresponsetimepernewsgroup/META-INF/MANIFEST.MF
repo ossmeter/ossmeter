@@ -4,8 +4,7 @@ Bundle-Name: Dailyavgresponsetimepernewsgroup
 Bundle-SymbolicName: org.ossmeter.metricprovider.historic.newsgroups.responsetime;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.metricprovider.historic.newsgroups.responsetime.Activator
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.platform,
  org.ossmeter.repository.model.cc.nntp,
  org.ossmeter.platform.client.api,

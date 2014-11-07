@@ -4,8 +4,7 @@ Bundle-Name: Bitbucket
 Bundle-SymbolicName: org.ossmeter.platform.bugtrackingsystem.bitbucket;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.platform.bugtrackingsystem.bitbucket.Activator
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.core.runtime,
  com.googlecode.pongo.runtime,
  org.ossmeter.platform,
  org.ossmeter.repository.model,

@@ -4,8 +4,7 @@ Bundle-Name: Numberofactiveusersperdaypernewsgroup
 Bundle-SymbolicName: org.ossmeter.metricprovider.historic.newsgroups.users;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.metricprovider.historic.newsgroups.users.Activator
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.platform,
  org.ossmeter.metricprovider.trans.newsgroups.activeusers,
  org.ossmeter.repository.model.cc.nntp,
