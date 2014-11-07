@@ -56,7 +56,7 @@ private rel[loc, loc] methodFieldAccesses(M3 m) = domainR(m@fieldAccess, methods
 private rel[loc, loc] methodMethodCalls(M3 m) = domainR(m@methodInvocation, methods(m));
 
 @memo
-private rel[loc, loc] packageTypes(M3 m3) = { <p, t> | <p, t> <- m3@containment, isPackage(p), isClass(t) || isInterface(t) || t.scheme == "java+enum" };
+private rel[loc, loc] packageTypes(M3 m3) = { <p, t> | <p, t> <- m3@containment+, isPackage(p), isClass(t) || isInterface(t) || t.scheme == "java+enum" };
 
 @memo
 private rel[loc, loc] overridableMethods(M3 m3) = { <p, m> | <p, m> <- allMethods(m3), \private() notin m3@modifiers[m] };
@@ -154,7 +154,7 @@ private tuple[map[loc, int], map[loc, int]] dac_mpc(rel[Language, loc, AST] asts
 	map[loc, int] dac = ();
 	map[loc, int] mpc = ();
 
-	for (/c:class(_, _, _, _, _) <- asts[\java()]) {
+	for (/Declaration c <- asts[\java()], \class(_,_,_,_) := c || \class(_) := c) {
 		dac[c@decl] = 0;
 		mpc[c@decl] = 0;
 	
