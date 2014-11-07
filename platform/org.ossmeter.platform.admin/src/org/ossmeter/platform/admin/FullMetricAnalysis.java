@@ -3,6 +3,7 @@ package org.ossmeter.platform.admin;
 import java.net.UnknownHostException;
 import java.util.Date;
 
+import org.ossmeter.platform.Configuration;
 import org.restlet.engine.header.Header;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
@@ -33,7 +34,7 @@ public class FullMetricAnalysis extends ServerResource {
 			try {
 				String metricId = (String) getRequest().getAttributes().get("metricId");
 				
-				Mongo mongo = new Mongo();
+				Mongo mongo = Configuration.getInstance().getMongoConnection();
 				
 				DB db = mongo.getDB("ossmeter");
 				DBCollection col = db.getCollection("metricAnalysis");

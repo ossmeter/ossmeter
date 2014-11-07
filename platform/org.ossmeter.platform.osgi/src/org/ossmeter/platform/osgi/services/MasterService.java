@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ossmeter.platform.Configuration;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.platform.osgi.executors.SchedulerStatus;
@@ -34,7 +35,7 @@ public class MasterService implements IMasterService {
 	public void start() throws Exception {
 		logger.info("Master service started.");
 		
-		mongo = new Mongo(); //FIXME: should use replica set / conf
+		mongo = Configuration.getInstance().getMongoConnection(); 
 		platform = new Platform(mongo);
 	
 //		SchedulingInformationCollection schedCol = platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation();

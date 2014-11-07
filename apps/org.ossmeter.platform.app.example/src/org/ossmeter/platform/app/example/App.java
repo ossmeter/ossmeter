@@ -24,7 +24,7 @@ public class App implements IApplication {
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
 		// Add projects to the DB here 
-		Mongo mongo = new Mongo(); // FIXME: this needs to connect to the replica set
+		Mongo mongo = new Mongo(); 
 		PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
 		Platform platform = new Platform(mongo);
 		

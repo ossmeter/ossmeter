@@ -2,7 +2,6 @@ package org.ossmeter.platform.osgi;
 
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.List;
 import java.util.Properties;
 
@@ -12,19 +11,17 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
-import org.ossmeter.platform.admin.AdminApplication;
+import org.ossmeter.platform.Configuration;
 import org.ossmeter.platform.admin.ProjectListAnalysis;
 import org.ossmeter.platform.client.api.ProjectResource;
 import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.platform.osgi.executors.SlaveScheduler;
 import org.ossmeter.platform.osgi.services.IWorkerService;
 import org.ossmeter.platform.osgi.services.MasterService;
-import org.ossmeter.platform.osgi.services.WorkerService;
 
 import com.googlecode.pongo.runtime.PongoFactory;
 import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
 import com.mongodb.Mongo;
-import com.mongodb.ServerAddress;
 
 public class OssmeterApplication implements IApplication, ServiceTrackerCustomizer<IWorkerService, IWorkerService> {
 	
@@ -32,13 +29,9 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 	protected boolean apiServer = false;
 	protected boolean master = false; 
 	
-	private static final String MAVEN_EXECUTABLE = "MAVEN_EXECUTABLE";
 	protected OssmeterLogger logger;
 	protected boolean done = false;
 	protected Object appLock = new Object();
-	
-	protected Properties configuration;
-	protected List<ServerAddress> mongoHostAddresses;
 	
 	protected Mongo mongo;
 	
@@ -52,35 +45,21 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 		workers = new ArrayList<IWorkerService>();
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes", "restriction" })// FIXME !!! (I just hate yellow squiggles...)
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
-		// Setup platform
-		processArguments(context);
-		loadConfiguration();
-
+		// Initialise logger
 		logger = (OssmeterLogger)OssmeterLogger.getLogger("OssmeterApplication");
 		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 		logger.info("Application initialising.");
+
+		// Setup platform
+		processArguments(context);
 		
 		// Connect to Mongo - single instance per node
-		mongo = new Mongo(mongoHostAddresses);
+		mongo = Configuration.getInstance().getMongoConnection();
 		
 		// Ensure OSGi contributors are active
 		PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
-		
-		// TODO: Pass the service any configuration details it needs
-//		WorkerService worker = new WorkerService(mongo);
-//		workerRegistration = Activator.getContext().registerService(IWorkerService.class, worker, props);		
-//		
-//		// Detect other workers
-//		workerServiceTracker = new ServiceTracker<IWorkerService, IWorkerService>(Activator.getContext(), IWorkerService.class, this);	
-//		workerServiceTracker.open();
-		
-		if (System.getProperty(MAVEN_EXECUTABLE) == null) {
-			// FIXME: take from configuration file
-			System.setProperty(MAVEN_EXECUTABLE, "/Applications/apache-maven-3.2.3/bin/mvn");
-		}
 		
 		// If master, start
 		if (master) {
@@ -93,7 +72,7 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 			slave.run();
 		}
 		
-		// Start web server
+		// Start web servers
 		if (apiServer) {
 			new ProjectResource();
 			new ProjectListAnalysis();
@@ -104,19 +83,25 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 		return IApplication.EXIT_OK;
 	}
 
-	protected void processArguments(IApplicationContext context) throws Exception {
+	protected void processArguments(IApplicationContext context) {
 		String[] args = (String[])context.getArguments().get("application.args");
 		if (args == null) return;
 		
 		for (int i = 0; i < args.length; i++) {
 			if ("-ossmeterConfig".equals(args[i])) {
-				configuration = new Properties();
+				Properties configuration = new Properties();
+				try {
 				configuration.load(new FileReader(args[i+1]));
+				} catch (Exception e) {
+					logger.error("Unable to read the specified platform configuration file. Using defaults.", e);
+				}
+				// Update the configuraiton instance
+				Configuration.getInstance().setConfigurationProperties(configuration);
 				
-				// Maven
-				String maven = configuration.getProperty("maven_executable", "");
-				if (!maven.equals("")) {
-					System.setProperty(MAVEN_EXECUTABLE, maven);
+				// Ensure maven is configured
+				if (System.getProperty("MAVEN_EXECUTABLE") == null) {
+					String mvn = configuration.getProperty(Configuration.MAVEN_EXECUTABLE, "/Applications/apache-maven-3.2.3/bin/mvn");
+					System.setProperty("MAVEN_EXECUTABLE", mvn);
 				}
 				
 				i++;
@@ -128,23 +113,6 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 				apiServer = true;
 			}
 		}
-	}
-
-	protected void loadConfiguration() throws Exception {
-		if (configuration == null) {
-			// TODO Create default configuration. Maybe a config class?
-			configuration = new Properties();
-		}
-
-		// Mongo
-		String[] hosts = configuration.getProperty("mongohosts", "localhost:27017").split(",");
-		mongoHostAddresses = new ArrayList<>();
-		for (String host : hosts) {
-			mongoHostAddresses.add(new ServerAddress(host));
-		}
-		
-		// Storage
-		// TODO
 	}
 
 	@Override

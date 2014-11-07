@@ -2,6 +2,7 @@ package org.ossmeter.platform.admin;
 
 import java.net.UnknownHostException;
 
+import org.ossmeter.platform.Configuration;
 import org.restlet.engine.header.Header;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
@@ -27,7 +28,7 @@ public class ProjectListAnalysis extends ServerResource {
 		responseHeaders.add(new Header("Access-Control-Allow-Methods", "GET"));
 		
 		try {
-			Mongo mongo = new Mongo();
+			Mongo mongo = Configuration.getInstance().getMongoConnection();
 			
 			DB db = mongo.getDB("ossmeter");
 			DBCollection col = db.getCollection("metricAnalysis");
