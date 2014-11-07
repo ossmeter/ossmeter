@@ -63,7 +63,7 @@ public Factoid CCFactoid(map[str, int] riskCounts, str language) {
     throw undefined("No methods", |tmp:///|);
   }
   
-  percentages = [ 100.0 * c / numMethods | c <- riskCounts[1..] ]; // drop low risk counts
+  percentages = [ 100.0 * riskCounts[c] / numMethods | c <- riskCounts, c != "low" ]; // drop low risk counts
   
   rankings = [ [25, 0, 0], [30, 5, 0], [40, 10, 0] ];
   
