@@ -442,7 +442,7 @@ map[str, real] Ce_PHP_Q(map[loc, int] val = ()) {
 @appliesTo{php()}
 @historic
 @uses{("I-PHP":"val")}
-map[loc, real] I_PHP_Q(map[loc, real] val = ()) {
+map[str, real] I_PHP_Q(map[loc, real] val = ()) {
 	return quartiles(val);
 }
 
@@ -462,7 +462,7 @@ map[str, real] RFC_PHP_Q(map[loc, int] val = ()) {
 @appliesTo{php()}
 @historic
 @uses{("MIF-PHP":"val")}
-map[loc, real] MIF_PHP_Q(map[loc, real] val = ()) {
+map[str, real] MIF_PHP_Q(map[loc, real] val = ()) {
 	return quartiles(val);
 }
 
@@ -472,7 +472,7 @@ map[loc, real] MIF_PHP_Q(map[loc, real] val = ()) {
 @appliesTo{php()}
 @historic
 @uses{("AIF-PHP":"val")}
-map[loc, real] AIF_PHP_Q(map[loc, real] val = ()) {
+map[str, real] AIF_PHP_Q(map[loc, real] val = ()) {
 	return quartiles(val);
 }
 
@@ -504,7 +504,7 @@ map[str, real] LCOM4_PHP_Q(map[loc, int] val = ()) {
 @appliesTo{php()}
 @historic
 @uses{("TCC-PHP":"val")}
-map[loc, real] TCC_PHP_Q(map[loc, real] val = ()) {
+map[str, real] TCC_PHP_Q(map[loc, real] val = ()) {
 	return quartiles(val);
 }
 
@@ -514,7 +514,7 @@ map[loc, real] TCC_PHP_Q(map[loc, real] val = ()) {
 @appliesTo{php()}
 @historic
 @uses{("LCC-PHP":"val")}
-map[loc, real] LCC_PHP_Q(map[loc, real] val = ()) {
+map[str, real] LCC_PHP_Q(map[loc, real] val = ()) {
 	return quartiles(val);
 }
 

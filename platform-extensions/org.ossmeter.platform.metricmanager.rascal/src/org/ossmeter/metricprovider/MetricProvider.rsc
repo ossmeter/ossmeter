@@ -105,7 +105,7 @@ real spreadOverItems(map[value item, int amount] d) {
 
 map[str, real] quartiles(map[&T, num] m) {
   if (size(m) < 4) {
-    return undefined("Not enough data available", |tmp:///|);
+    throw undefined("Not enough data available", |tmp:///|);
   }
 
   map[str, real] result = ();

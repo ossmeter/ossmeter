@@ -117,6 +117,7 @@ public class RascalManager {
 	private final Set<Extractor> astExtractors = new HashSet<>();
 	
 	public static final String MODULE = "org::ossmeter::metricprovider::Manager";
+	private List<IMetricProvider> metricProviders;
 
 	public void configureRascalMetricProviders(Set<Bundle> providers) {
 		assert eval != null;
@@ -409,7 +410,11 @@ public class RascalManager {
 	}
 
 	public synchronized List<IMetricProvider> getMetricProviders() {
-		List<IMetricProvider> providers = new LinkedList<>();
+		if (metricProviders != null) {
+			return metricProviders;
+		}
+		
+		metricProviders = new LinkedList<>();
 		
 		Set<Bundle> extractorBundles = new HashSet<>();
 		IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint("ossmeter.rascal.extractor");
@@ -447,10 +452,10 @@ public class RascalManager {
 		}
 
 		for (Bundle bundle : metricBundles) {
-			addMetricProviders(bundle, providers, extractedLanguages);
+			addMetricProviders(bundle, metricProviders, extractedLanguages);
 		}
 
-		return providers;
+		return metricProviders;
 	}
 
 	public void initialize(IValue... parameters) {

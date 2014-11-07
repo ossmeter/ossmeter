@@ -486,7 +486,7 @@ map[str, real] Ce_Java_Q(map[loc, int] val = ()) {
 @appliesTo{java()}
 @historic
 @uses{("I-Java":"val")}
-map[loc, real] I_Java_Q(map[loc, real] val = ()) {
+map[str, real] I_Java_Q(map[loc, real] val = ()) {
 	return quartiles(val);
 }
 
@@ -506,7 +506,7 @@ map[str, real] RFC_Java_Q(map[loc, int] val = ()) {
 @appliesTo{java()}
 @historic
 @uses{("MIF-Java":"val")}
-map[loc, real] MIF_Java_Q(map[loc, real] val = ()) {
+map[str, real] MIF_Java_Q(map[loc, real] val = ()) {
 	return quartiles(val);
 }
 
@@ -516,7 +516,7 @@ map[loc, real] MIF_Java_Q(map[loc, real] val = ()) {
 @appliesTo{java()}
 @historic
 @uses{("AIF-Java":"val")}
-map[loc, real] AIF_Java_Q(map[loc, real] val = ()) {
+map[str, real] AIF_Java_Q(map[loc, real] val = ()) {
 	return quartiles(val);
 }
 
@@ -548,7 +548,7 @@ map[str, real] LCOM4_Java_Q(map[loc, int] val = ()) {
 @appliesTo{java()}
 @historic
 @uses{("TCC-Java":"val")}
-map[loc, real] TCC_Java_Q(map[loc, real] val = ()) {
+map[str, real] TCC_Java_Q(map[loc, real] val = ()) {
 	return quartiles(val);
 }
 
@@ -558,7 +558,7 @@ map[loc, real] TCC_Java_Q(map[loc, real] val = ()) {
 @appliesTo{java()}
 @historic
 @uses{("LCC-Java":"val")}
-map[loc, real] LCC_Java_Q(map[loc, real] val = ()) {
+map[str, real] LCC_Java_Q(map[loc, real] val = ()) {
 	return quartiles(val);
 }
 

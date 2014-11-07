@@ -81,6 +81,16 @@ map[loc, real] fileReadability(rel[Language, loc, AST] asts = {}) {
          , f.extension == "java" || f.extension == "php");
 }
 
+@metric{fileReadabilityQuartiles}
+@doc{Quartiles of code readability per file, measured by use of whitespace}
+@friendlyName{FileReadabilityQuartiles}
+@appliesTo{generic()}
+@historic
+@uses{("fileReadability": "val")}
+map[str, real] fileReadabilityQ(map[loc, real] val = ()) {
+  return quartiles(val);
+}
+
 @metric{ReadabilityFactoid}
 @doc{Check for proper use of whitespace}
 @friendlyName{Use of whitespace}
