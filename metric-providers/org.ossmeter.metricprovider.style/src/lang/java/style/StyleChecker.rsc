@@ -391,7 +391,7 @@ list[Message] checkAll(node ast, M3 model){
 	registerCheckState("methodCount", {"class4", "interface4", "enum4"}, 			0, updateMethodCount, finalizeMethodCount);
 	registerCheckState("fieldCount",  {"class4", "interface4", "enum4"},			0, updateFieldCount, finalizeFieldCount);
 	registerCheckState("publicCount",  {"class4", "interface4", "enum4"},			0, updatePublicCount, finalizePublicCount);
-	registerCheckState("classDataAbstractionCoupling", {"class4", "enum4"}, 		{}, updateClassDataAbstractionCoupling, finalizeClassDataAbstractionCoupling);
+	registerCheckState("classDataAbstractionCoupling", {"class4", "interface4", "enum4"}, 		{}, updateClassDataAbstractionCoupling, finalizeClassDataAbstractionCoupling);
 	
 	return  checkAll(ast, model, [], [], []);
 }	
