@@ -10,6 +10,7 @@ import Map;
 import ValueIO;
 
 import org::ossmeter::metricprovider::MetricProvider;
+import org::ossmeter::metricprovider::ProjectDelta;
 import CC;
 
 

@@ -158,10 +158,10 @@ map[loc author, int churn] churnPerCommitter(ProjectDelta delta = \empty())
   = sumPerItem([<|author:///| + co.author, churn(co)> | /VcsCommit co := delta])
   ;
   
-private map[loc item, int val] sumPerItem(lrel[loc item, int val] input)
-  = (x : s | x <- { * input<item> }, int s := sum(filt(input, x)));  
+private map[loc, int] sumPerItem(lrel[loc item, int val] input)
+  = (x : s | x <- { * input<item> }, int s := filt(input, x));  
  
-private list[int] filt(lrel[loc, int] input, loc i) = [n | <i, n> <- input];
+private int filt(lrel[loc, int] input, loc i) = (0 | it + nu | nu <- [n | <i, n> <- input]);
   
 @metric{churnPerFile}
 @doc{Count churn}

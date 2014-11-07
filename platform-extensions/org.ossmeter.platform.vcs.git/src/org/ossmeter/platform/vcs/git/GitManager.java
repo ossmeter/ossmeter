@@ -126,14 +126,18 @@ public class GitManager extends AbstractVcsManager {
 						VcsChangeType change = convertChangeType(diff.getChangeType());
 						if (change == null) continue;
 						VcsCommitItem item = new VcsCommitItem();
-			    		item.setPath(diff.getNewPath());
+						String path = diff.getNewPath();
+						if (change.equals(VcsChangeType.DELETED)) {
+							path = diff.getOldPath();
+						}
+			    		item.setPath(path);
 			    		item.setChangeType(change);
 			    		item.setCommit(vcsCommit);
 			    		vcsCommit.getItems().add(item);
 					}
 			    } else {
 			    	// First commit: everything is ADDED
-			    	vcsCommit = new VcsCommit();
+//			    	vcsCommit = new VcsCommit();
 			    	TreeWalk treeWalk = new TreeWalk(repo);
 				    treeWalk.addTree(commit.getTree());
 				    while(treeWalk.next()) {
@@ -301,7 +305,7 @@ public class GitManager extends AbstractVcsManager {
 
 	protected Git getGit(GitRepository repository) throws Exception {
 		String localPath = localBaseDirectory + makeSafe(repository.getUrl()); // FIXME local stora1ge
-
+		
 		Git git;
 		File gitDir = new File(localPath);
 		if (gitDir.exists()) {
