@@ -1,4 +1,4 @@
-package org.ossmeter.metricprovider.trans.sentimentclassification;
+package org.ossmeter.repository.app;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;

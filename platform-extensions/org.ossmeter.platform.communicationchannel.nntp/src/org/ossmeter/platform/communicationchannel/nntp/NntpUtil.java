@@ -47,7 +47,7 @@ public class NntpUtil {
 	}
 	
 	public static NewsgroupInfo selectNewsgroup(NNTPClient client, NntpNewsGroup newsgroup) {
-		String newsgroupName = newsgroup.getUrl().substring(newsgroup.getUrl().lastIndexOf("/") + 1);
+		String newsgroupName = newsgroup.getNewsGroupName();//newsgroup.getUrl().substring(newsgroup.getUrl().lastIndexOf("/") + 1);
 		NewsgroupInfo newsgroupInfo = new NewsgroupInfo();
 		try {
 			client.selectNewsgroup(newsgroupName, newsgroupInfo);

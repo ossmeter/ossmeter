@@ -131,6 +131,8 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 			if (firstArticleNumber >= newsgroupInfo.getLastArticle()) break;
 		}
 		
+		
+		
 		ArticleHeader articleHeader = new ArticleHeader(reader);
 //		Article article = NntpUtil.getArticleInfo(nntpClient, articleId);
 		nntpClient.disconnect();

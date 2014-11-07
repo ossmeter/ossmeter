@@ -14,10 +14,10 @@ public class CommunicationChannelProjectDelta {
 	
 	protected List<CommunicationChannelDelta> communicationChannelDeltas = new ArrayList<CommunicationChannelDelta>();
 	
-	public CommunicationChannelProjectDelta(DB db, Project project, Date date, 
-			ICommunicationChannelManager communicationChannelManager) throws Exception {
+	public CommunicationChannelProjectDelta(DB db, Project project, Date date, ICommunicationChannelManager communicationChannelManager) throws Exception {
 		for (CommunicationChannel communicationChannel: project.getCommunicationChannels()) {
-			communicationChannelDeltas.add(communicationChannelManager.getDelta(db, communicationChannel, date));
+			CommunicationChannelDelta delta = communicationChannelManager.getDelta(db, communicationChannel, date);
+			if (delta != null) communicationChannelDeltas.add(delta);
 		}
 	}
 	

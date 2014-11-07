@@ -49,7 +49,7 @@ public class ProjectExecutor implements Runnable {
 		}
 		
 		try{	
-			Path projectLocalStoragePath = Paths.get(platform.getLocalStorageHomeDirectory().toString(), project.getName());		
+			Path projectLocalStoragePath = Paths.get(platform.getLocalStorageHomeDirectory().toString(), project.getShortName());		
 			if (Files.notExists(projectLocalStoragePath)) {
 				Files.createDirectory(projectLocalStoragePath);
 			}

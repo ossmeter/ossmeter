@@ -34,6 +34,8 @@ public class Platform {
 	protected PlatformCommunicationChannelManager communicationChannelManager = null;
 	protected PlatformBugTrackingSystemManager bugTrackingSystemManager = null;
 	protected Mongo mongo;
+	
+	// FIXME: Take from config
 	protected final Path localStorageHomeDirectory = get(System.getProperty("user.home"), "ossmeter");
 
 	public Platform(Mongo mongo) {

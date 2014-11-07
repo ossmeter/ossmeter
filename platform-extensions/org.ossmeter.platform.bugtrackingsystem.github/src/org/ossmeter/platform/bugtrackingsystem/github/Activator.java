@@ -1,4 +1,4 @@
-package org.ossmeter.metricprovider.trans.sentimentclassification;
+package org.ossmeter.platform.bugtrackingsystem.github;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
