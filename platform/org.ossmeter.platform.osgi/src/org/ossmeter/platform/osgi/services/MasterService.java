@@ -58,13 +58,14 @@ public class MasterService implements IMasterService {
 				// FIXME: Oh God, so many while loops.
 				while (true) { // TODO: while alive
 					Iterator<Project> it = platform.getProjectRepositoryManager().getProjectRepository().getProjects().iterator();
+					List<String> currentlyExecuting = getCurrentlyExecutingProjects();
 					
 					while (it.hasNext()) {
 						List<String> projects = new ArrayList<String>();
 						
 						while (it.hasNext()) {
 							Project next = it.next();
-							if (next.getExecutionInformation().getMonitor()) {
+							if (next.getExecutionInformation().getMonitor() && !currentlyExecuting.contains(next.getShortName())) {
 								projects.add(next.getShortName());
 							}
 							if (projects.size() >= 3) break;
@@ -101,22 +102,39 @@ public class MasterService implements IMasterService {
 		};
 		master.start();
 	}
+	
+	protected List<String> getCurrentlyExecutingProjects() {
+		List<String> projects = new ArrayList<>();
+		Iterator<SchedulingInformation> it = platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().iterator();
+		
+		while (it.hasNext()) {
+			SchedulingInformation job = it.next();
+
+			// Ensure that we only count slaves who are still running 
+			if (System.currentTimeMillis() - job.getHeartbeat() < 30000) {
+				
+				for (String p : job.getCurrentLoad()) { // Currently can't do addAll as Pongo hasn't implemented toArray
+					projects.add(p);
+				}
+			}
+		}
+		
+		return projects;
+	}
 
 	protected SchedulingInformation nextFreeWorker() {
 		Iterator<SchedulingInformation> it = platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().iterator();
 		
 		while (it.hasNext()) {
 			SchedulingInformation job = it.next();
-			if (job.getCurrentLoad() == null || job.getCurrentLoad().size() == 0) {
-				return job;
+
+			// Ensure that we only use slaves who are still running 
+			if (System.currentTimeMillis() - job.getHeartbeat() < 30000) {
+				if (job.getCurrentLoad() == null || job.getCurrentLoad().size() == 0) {
+					return job;
+				}
 			}
 		}
-		
-//		for (IWorkerService worker : workers) {
-//			if (worker.getStatus().equals(SchedulerStatus.AVAILABLE)){
-//				return worker;
-//			}
-//		}
 		return null;
 	}
 	
@@ -146,7 +164,6 @@ public class MasterService implements IMasterService {
 		}
 		
 		mongo.close();
-		
 	}
 
 	class MasterRunner implements Runnable {
