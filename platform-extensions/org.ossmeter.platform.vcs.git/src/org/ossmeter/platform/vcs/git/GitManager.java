@@ -301,7 +301,6 @@ public class GitManager extends AbstractVcsManager {
 		
 		return date;
 	}
-	
 
 	protected Git getGit(GitRepository repository) throws Exception {
 		String localPath = localBaseDirectory + makeSafe(repository.getUrl()); // FIXME local stora1ge
@@ -318,6 +317,18 @@ public class GitManager extends AbstractVcsManager {
 					.call();
 		}
 		return git;
+	}
+
+	@Override
+	public boolean validRepository(VcsRepository repository) throws Exception {
+		
+		try {
+			Git.lsRemoteRepository().setRemote(repository.getUrl()).call();
+		} catch (Exception e) {
+			return false;
+		}
+		
+		return true;
 	}
 	
 }

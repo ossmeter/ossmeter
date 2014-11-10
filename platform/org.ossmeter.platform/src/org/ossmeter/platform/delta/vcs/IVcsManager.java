@@ -23,4 +23,6 @@ public interface IVcsManager {
 	
 	public String getContents(VcsCommitItem file) throws Exception;
 	
+	public boolean validRepository(VcsRepository repository) throws Exception;
+	
 }
