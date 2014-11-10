@@ -23,10 +23,10 @@ public class ExtensionPointVcsManager extends PlatformVcsManager {
 					e.printStackTrace();
 				}
 			}
-			System.err.println("Registered VCS Managers: ");
-			for (IVcsManager man : vcsManagers) {
-				System.err.println("\t" + man.getClass());
-			}
+//			System.err.println("Registered VCS Managers: ");
+//			for (IVcsManager man : vcsManagers) {
+//				System.err.println("\t" + man.getClass());
+//			}
 		}
 		
 		return vcsManagers;
