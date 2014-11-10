@@ -227,4 +227,9 @@ public class SvnManager extends AbstractVcsManager {
 		}
 		return result.toString();
 	}
+
+	@Override
+	public boolean validRepository(VcsRepository repository) throws Exception {
+		return getSVNRepository((SvnRepository)repository) != null;
+	}
 }
