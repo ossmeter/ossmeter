@@ -127,4 +127,13 @@ public abstract class PlatformVcsManager extends AbstractVcsManager {
 		}
 		return deltaCache;		
 	}
+	
+	@Override
+	public boolean validRepository(VcsRepository repository) throws Exception {
+		IVcsManager vcsManager = getVcsManager(repository);
+		if (vcsManager != null) {
+			return vcsManager.validRepository(repository);
+		}
+		return false;
+	}
 }
