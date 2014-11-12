@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.Mongo;
 
 public class ProjectListAnalysis extends ServerResource {
@@ -35,9 +36,15 @@ public class ProjectListAnalysis extends ServerResource {
 			ObjectMapper mapper = new ObjectMapper();
 			ArrayNode results = mapper.createArrayNode();
 			
-			for (Object p : col.distinct("projectId")) {
-				results.add(p.toString());
+			DBCursor cursor = col.find();
+			try {
+			   while(cursor.hasNext()) {
+			       results.add(cursor.next().toString());
+			   }
+			} finally {
+			   cursor.close();
 			}
+			
 			
 			mongo.close();
 			
