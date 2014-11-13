@@ -91,7 +91,7 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 			if ("-ossmeterConfig".equals(args[i])) {
 				Properties configuration = new Properties();
 				try {
-				configuration.load(new FileReader(args[i+1]));
+					configuration.load(new FileReader(args[i+1]));
 				} catch (Exception e) {
 					logger.error("Unable to read the specified platform configuration file. Using defaults.", e);
 				}

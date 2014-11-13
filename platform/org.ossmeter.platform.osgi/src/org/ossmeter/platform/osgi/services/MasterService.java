@@ -83,10 +83,9 @@ public class MasterService implements IMasterService {
 								}
 							} else {
 								logger.info("Queuing " + projects.size() + " on worker ");
-								
+
 								for (String p : projects)
 									worker.getCurrentLoad().add(p);
-								
 								platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().sync();
 							}
 						}

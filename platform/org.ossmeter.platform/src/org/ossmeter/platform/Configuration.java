@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Properties;
 
 import com.mongodb.Mongo;
+import com.mongodb.MongoOptions;
 import com.mongodb.ServerAddress;
 
 public class Configuration {
@@ -35,13 +36,17 @@ public class Configuration {
 	}
 	
 	public Mongo getMongoConnection() throws UnknownHostException {
-		
+		System.out.println("Mongo hosts: " + properties.getProperty(MONGO_HOSTS, "localhost:27017"));
 		String[] hosts = properties.getProperty(MONGO_HOSTS, "localhost:27017").split(",");
 		List<ServerAddress> mongoHostAddresses = new ArrayList<>();
 		for (String host : hosts) {
-			mongoHostAddresses.add(new ServerAddress(host));
+			String[] s = host.split(":");
+			mongoHostAddresses.add(new ServerAddress(s[0], Integer.valueOf(s[1])));
 		}
 		
-		return new Mongo(mongoHostAddresses);
+		MongoOptions options = new MongoOptions();
+		options.connectTimeout = 1000;
+		
+ 		return new Mongo(mongoHostAddresses,options);
 	}
 }
