@@ -1,25 +1,30 @@
 package org.ossmeter.platform.admin;
 
+import org.ossmeter.platform.Platform;
+
+import java.io.IOException;
 import java.net.UnknownHostException;
 
-import org.ossmeter.platform.Configuration;
 import org.restlet.engine.header.Header;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 import org.restlet.util.Series;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 
-public class ProjectListAnalysis extends ServerResource {
-
-	// FIXME: This is pretty horrible, but I'm tired and want something working
+public class LoggingInformation extends ServerResource{
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Get("json")
 	public String represent() {
+		@SuppressWarnings("unchecked")
 		Series<Header> responseHeaders = (Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers");
 		if (responseHeaders == null) {
 		    responseHeaders = new Series(Header.class);
@@ -28,11 +33,12 @@ public class ProjectListAnalysis extends ServerResource {
 		responseHeaders.add(new Header("Access-Control-Allow-Origin", "*"));
 		responseHeaders.add(new Header("Access-Control-Allow-Methods", "GET"));
 		
+		
 		try {
-			Mongo mongo = Configuration.getInstance().getMongoConnection();
+			Mongo mongo = new Mongo();
 			
-			DB db = mongo.getDB("ossmeter");
-			DBCollection col = db.getCollection("metricAnalysis");
+			DB db = mongo.getDB("logging");
+			DBCollection col = db.getCollection("log");
 			
 			ObjectMapper mapper = new ObjectMapper();
 			ArrayNode results = mapper.createArrayNode();
@@ -40,15 +46,23 @@ public class ProjectListAnalysis extends ServerResource {
 			DBCursor cursor = col.find();
 			try {
 			   while(cursor.hasNext()) {
-			       results.add(cursor.next().toString());
+				   DBObject p = cursor.next();
+				   p.removeField("_id");
+				   p.removeField("thread");
+				   p.removeField("host");
+				   p.removeField("class");
+			      results.add(mapper.readTree(p.toString()));
 			   }
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
 			} finally {
 			   cursor.close();
 			}
 			
-			
 			mongo.close();
-			
+					
 			return results.toString();
 			
 		} catch (UnknownHostException e1) {

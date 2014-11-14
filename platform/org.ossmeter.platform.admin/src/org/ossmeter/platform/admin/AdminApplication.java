@@ -19,6 +19,7 @@ public class AdminApplication extends Application {
 		router.attach("/performance/metrics", MetricListAnalysis.class);
 		router.attach("/performance/projects/{projectId}/m/{metricId}", ProjectMetricAnalysis.class);
 		router.attach("/performance/metrics/{metricId}", FullMetricAnalysis.class);
+		//router.attach("/logger", LoggingInformation.class);
 		router.attach("/home", directory); 
 		return router;
 	}

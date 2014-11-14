@@ -705,12 +705,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.apache.log4j.1.2.17"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.ossmeter.metricprovider.historic.bugs.status"
          download-size="0"
          install-size="0"
@@ -1504,6 +1498,19 @@
 
    <plugin
          id="javaewah"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.log4mongo"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.apache.log4j"
          download-size="0"
          install-size="0"
          version="0.0.0"

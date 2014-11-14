@@ -1,5 +1,6 @@
 package org.ossmeter.platform.osgi;
 
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 	protected Object appLock = new Object();
 	
 	protected Mongo mongo;
+	protected Properties prop;
 	
 	protected ServiceTracker<IWorkerService, IWorkerService> workerServiceTracker;
 	protected ServiceRegistration<IWorkerService> workerRegistration;
@@ -47,14 +49,17 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 	
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
-		// Initialise logger
-		logger = (OssmeterLogger)OssmeterLogger.getLogger("OssmeterApplication");
-		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
-		logger.info("Application initialising.");
-
 		// Setup platform
 		processArguments(context);
 		
+		prop = new Properties();
+		prop.load(this.getClass().getResourceAsStream("/config/log4j.properties"));
+		
+		logger = (OssmeterLogger)OssmeterLogger.getLogger("OssmeterApplication");
+		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
+		logger.addMongoDBAppender(prop);
+		logger.info("Application initialising.");
+
 		// Connect to Mongo - single instance per node
 		mongo = Configuration.getInstance().getMongoConnection();
 		
