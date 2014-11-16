@@ -153,13 +153,15 @@ public class MetricVisualisation {
 	}
 
 	private DBCollection getCollection(DB db) {
-		// TODO metric ID might not always be the correct identififer??
+		// TODO: Look up metric provider and get collection name from there.
+		// 		 If we're visualising transients, this may need amending 
 		
-		if (!db.collectionExists(metricId)) {
+		String id = metricId.replace("org.ossmeter.metricprovider.", "");
+		if (!db.collectionExists(id)) {
 			System.err.println("ERROR: Could not find collection: " + metricId);
 		}
 		
-		DBCollection collection = db.getCollection(metricId);
+		DBCollection collection = db.getCollection(id);
 		return collection;
 	}
 	
