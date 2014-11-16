@@ -1,0 +1,55 @@
+package org.ossmeter.metricprovider.historic.bugs.topics.model;
+
+import com.googlecode.pongo.runtime.Pongo;
+import com.googlecode.pongo.runtime.querying.NumericalQueryProducer;
+import com.googlecode.pongo.runtime.querying.StringQueryProducer;
+
+
+public class BugTopic extends Pongo {
+	
+	
+	
+	public BugTopic() { 
+		super();
+		BUGTRACKERID.setOwningType("org.ossmeter.metricprovider.historic.bugs.topics.model.BugTopic");
+		LABEL.setOwningType("org.ossmeter.metricprovider.historic.bugs.topics.model.BugTopic");
+		NUMBEROFDOCUMENTS.setOwningType("org.ossmeter.metricprovider.historic.bugs.topics.model.BugTopic");
+	}
+	
+	public static StringQueryProducer BUGTRACKERID = new StringQueryProducer("bugTrackerId"); 
+	public static StringQueryProducer LABEL = new StringQueryProducer("label"); 
+	public static NumericalQueryProducer NUMBEROFDOCUMENTS = new NumericalQueryProducer("numberOfDocuments");
+	
+	
+	public String getBugTrackerId() {
+		return parseString(dbObject.get("bugTrackerId")+"", "");
+	}
+	
+	public BugTopic setBugTrackerId(String bugTrackerId) {
+		dbObject.put("bugTrackerId", bugTrackerId);
+		notifyChanged();
+		return this;
+	}
+	public String getLabel() {
+		return parseString(dbObject.get("label")+"", "");
+	}
+	
+	public BugTopic setLabel(String label) {
+		dbObject.put("label", label);
+		notifyChanged();
+		return this;
+	}
+	public int getNumberOfDocuments() {
+		return parseInteger(dbObject.get("numberOfDocuments")+"", 0);
+	}
+	
+	public BugTopic setNumberOfDocuments(int numberOfDocuments) {
+		dbObject.put("numberOfDocuments", numberOfDocuments);
+		notifyChanged();
+		return this;
+	}
+	
+	
+	
+	
+}

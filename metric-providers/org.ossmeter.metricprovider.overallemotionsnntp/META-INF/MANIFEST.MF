@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Overallemotionsnntp
 Bundle-SymbolicName: org.ossmeter.metricprovider.trans.newsgroups.emotions;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.ossmeter.metricprovider.trans.overallemotionsnntp.Activator
+Bundle-Activator: org.ossmeter.metricprovider.trans.newsgroups.emotions.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.ossmeter.repository.model.cc.nntp,
@@ -13,4 +13,5 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.platform.visualisation
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.trans.overallemotionsnntp
+Export-Package: org.ossmeter.metricprovider.trans.newsgroups.emotions,
+ org.ossmeter.metricprovider.trans.newsgroups.emotions.model

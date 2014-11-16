@@ -5,10 +5,10 @@
       <details key="qualifiedCollectionNames" value="true"/>
     </eAnnotations>
     <eAnnotations source="customize"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="bugTrackerData" upperBound="-1" eType="//BugTrackerData" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="bugData" upperBound="-1" eType="//BugData" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="comments" upperBound="-1" eType="//CommentData" containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="BugTrackerData">
+  <eClassifiers xsi:type="ecore:EClass" name="BugData">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="bugTrackerId">
       <eAnnotations source="searchable"/>
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -62,6 +62,9 @@
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="contentClass">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="requestReplyPrediction">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
   </eClassifiers>

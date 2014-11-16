@@ -3,11 +3,11 @@ package org.ossmeter.metricprovider.trans.requestreplyclassification.model;
 @db(qualifiedCollectionNames="true")
 @customize
 class RequestReplyClassificationTransMetric {
-	val BugTrackerCommentsData[*] bugTrackerComments;
-	val NewsgroupArticlesData[*] newsgroupArticles;
+	val BugTrackerComments[*] bugTrackerComments;
+	val NewsgroupArticles[*] newsgroupArticles;
 }
 
-class BugTrackerCommentsData {
+class BugTrackerComments {
 	@searchable
    	attr String bugTrackerId;
    	attr String bugId;
@@ -16,7 +16,7 @@ class BugTrackerCommentsData {
    	attr String date;
 }
 
-class NewsgroupArticlesData {
+class NewsgroupArticles {
 	@searchable
    	attr String url;
    	attr int articleNumber;

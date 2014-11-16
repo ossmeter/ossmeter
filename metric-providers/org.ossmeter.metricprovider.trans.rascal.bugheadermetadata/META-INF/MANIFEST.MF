@@ -13,7 +13,8 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.platform,
  org.ossmeter.contentclassifier.opennlptartarus.libsvm,
  org.ossmeter.metricprovider.trans.sentimentclassification,
- org.ossmeter.platform.visualisation
+ org.ossmeter.platform.visualisation,
+ org.ossmeter.metricprovider.trans.requestreplyclassification
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.metricprovider.trans.bugs.bugmetadata,

@@ -17,7 +17,7 @@ import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 
 import com.googlecode.pongo.runtime.Pongo;
 
-public class ArticlesHistoricMetricProvider extends AbstractHistoricalMetricProvider{
+public class ArticlesHistoricMetricProvider extends AbstractHistoricalMetricProvider {
 
 	public final static String IDENTIFIER = "org.ossmeter.metricprovider.historic.newsgroups.articles";
 

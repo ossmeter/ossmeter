@@ -1,0 +1,207 @@
+package org.ossmeter.metricprovider.historic.bugs.severitysentiment;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.ossmeter.metricprovider.historic.bugs.severitysentiment.model.BugsSeveritySentimentHistoricMetric;
+import org.ossmeter.metricprovider.historic.bugs.severitysentiment.model.SeverityLevel;
+import org.ossmeter.metricprovider.trans.bugs.bugmetadata.BugMetadataTransMetricProvider;
+import org.ossmeter.metricprovider.trans.bugs.bugmetadata.model.BugData;
+import org.ossmeter.metricprovider.trans.bugs.bugmetadata.model.BugsBugMetadataTransMetric;
+import org.ossmeter.metricprovider.trans.severityclassification.SeverityClassificationTransMetricProvider;
+import org.ossmeter.metricprovider.trans.severityclassification.model.BugTrackerBugsData;
+import org.ossmeter.metricprovider.trans.severityclassification.model.SeverityClassificationTransMetric;
+import org.ossmeter.platform.AbstractHistoricalMetricProvider;
+import org.ossmeter.platform.IMetricProvider;
+import org.ossmeter.platform.MetricProviderContext;
+import org.ossmeter.repository.model.Project;
+
+import com.googlecode.pongo.runtime.Pongo;
+
+public class SeveritySentimentHistoricMetricProvider extends AbstractHistoricalMetricProvider{
+
+	public final static String IDENTIFIER = "org.ossmeter.metricprovider.historic.bugs.severitysentiment";
+
+	protected MetricProviderContext context;
+	
+	/**
+	 * List of MPs that are used by this MP. These are MPs who have specified that 
+	 * they 'provide' data for this MP.
+	 */
+	protected List<IMetricProvider> uses;
+	
+	@Override
+	public String getIdentifier() {
+		return IDENTIFIER;
+	}
+	
+	@Override
+	public boolean appliesTo(Project project) {
+	    return !project.getBugTrackingSystems().isEmpty();	   
+	}
+
+	@Override
+	public Pongo measure(Project project) {
+		BugsSeveritySentimentHistoricMetric metric = new BugsSeveritySentimentHistoricMetric();
+		
+		if (uses.size()==2) {
+
+			SeverityClassificationTransMetric severityClassifier = 
+					 ((SeverityClassificationTransMetricProvider)uses.get(0)).adapt(context.getProjectDB(project));
+			 
+			BugsBugMetadataTransMetric bugMetadata = 
+					 ((BugMetadataTransMetricProvider)uses.get(1)).adapt(context.getProjectDB(project));
+			 
+			 Map<String, Map<String, Integer>> sentimentAtBeginning = new HashMap<String, Map<String, Integer>>(),
+					 			  			   sentimentAtEnd = new HashMap<String, Map<String, Integer>>();
+			 Map<String, Map<String, Float>> sentimentAverage = new HashMap<String, Map<String, Float>>();
+		 			  
+			 Map<String, Map<String, Integer>> severitiesPerTracker = new HashMap<String, Map<String, Integer>>();
+			 
+			 for (BugTrackerBugsData bugTrackerBugsData: severityClassifier.getBugTrackerBugs()) {
+				 
+				 String trackerId = bugTrackerBugsData.getBugTrackerId();
+				 
+				 String severity = bugTrackerBugsData.getSeverity();
+				 Map<String, Integer> severityMap;
+				 if (severitiesPerTracker.containsKey(trackerId))
+					 severityMap = severitiesPerTracker.get(trackerId);
+				 else {
+					 severityMap = new HashMap<String, Integer>();
+					 severitiesPerTracker.put(trackerId, severityMap);
+				 }
+				 
+				 if (severityMap.containsKey(severity))
+					 severityMap.put(severity, severityMap.get(severity) + 1);
+				 else
+					 severityMap.put(severity, + 1);
+			 
+				 BugData bugData = null;
+				 Iterable<BugData> bugDataIt = bugMetadata.getBugData().find(BugData.BUGTRACKERID.eq(trackerId),
+						 													 BugData.BUGID.eq(bugTrackerBugsData.getBugId()));
+				 for (BugData bd: bugDataIt) bugData = bd;
+
+				 float averageSentiment = bugData.getAverageSentiment();
+				 Map<String, Float> sentAverage = retrieveOrAddFloat(sentimentAverage, trackerId);
+				 addOrIncreaseFloat(sentAverage, severity, averageSentiment);
+				 
+				 int startSentiment = transformSentimentToInteger(bugData.getStartSentiment());
+				 Map<String, Integer> sentBeginning = retrieveOrAdd(sentimentAtBeginning, trackerId);
+				 addOrIncrease(sentBeginning, severity, startSentiment);
+				 
+				 int endSentiment = transformSentimentToInteger(bugData.getEndSentiment());
+				 Map<String, Integer> sentEnd = retrieveOrAdd(sentimentAtEnd, trackerId);
+				 addOrIncrease(sentEnd, severity, endSentiment);
+
+			 }
+			 
+			 for (String bugTrackerId: severitiesPerTracker.keySet()) {
+			 
+				 Map<String, Integer> severityMap = severitiesPerTracker.get(bugTrackerId);
+				 
+				 for (String severity: severityMap.keySet()) {
+					 int numberOfSeverityBugs = severityMap.get(severity);
+					 SeverityLevel severityLevel = new SeverityLevel();
+					 severityLevel.setBugTrackerId(bugTrackerId);
+					 severityLevel.setSeverityLevel(severity);
+					 severityLevel.setNumberOfBugs(numberOfSeverityBugs);
+					 float averageSentiment = sentimentAverage.get(bugTrackerId).get(severity) / numberOfSeverityBugs;
+					 severityLevel.setAverageSentiment(averageSentiment);
+					 float sentimentAtThreadBeggining = 
+							 ((float) sentimentAtBeginning.get(bugTrackerId).get(severity)) / numberOfSeverityBugs;
+					 severityLevel.setSentimentAtThreadBeggining(sentimentAtThreadBeggining);
+					 float sentimentAtThreadEnd = 
+							 ((float) sentimentAtEnd.get(bugTrackerId).get(severity)) / numberOfSeverityBugs;
+					 severityLevel.setSentimentAtThreadEnd(sentimentAtThreadEnd);
+					 metric.getSeverityLevels().add(severityLevel);
+				 }
+			 
+			 }
+			 
+		}
+		return metric;
+	
+	}
+	
+	private int transformSentimentToInteger(String sentimentString) {
+		 if (sentimentString.equals("Negative"))
+			 return -1;
+		 else if (sentimentString.equals("Positive"))
+			 return 1;
+		 else
+			 return 0;
+	}
+
+	private Map<String, Integer> retrieveOrAdd(
+			 Map<String, Map<String, Integer>> map, String trackerId) {
+		Map<String, Integer> component;
+		if (map.containsKey(trackerId))
+			component = map.get(trackerId);
+		else {
+			component = new HashMap<String, Integer>();
+			map.put(trackerId, component);
+		}
+		return component;
+	}
+	
+	private Map<String, Float> retrieveOrAddFloat(
+			 Map<String, Map<String, Float>> map, String trackerId) {
+		Map<String, Float> component;
+		if (map.containsKey(trackerId))
+			component = map.get(trackerId);
+		else {
+			component = new HashMap<String, Float>();
+			map.put(trackerId, component);
+		}
+		return component;
+	}
+	
+	private void addOrIncrease(Map<String, Integer> map, String item, int increment) {
+		if (map.containsKey(item))
+			map.put(item, map.get(item) + increment);
+		else
+			map.put(item, + increment);
+	}
+	
+	private void addOrIncreaseFloat(Map<String, Float> map, String item, float increment) {
+		if (map.containsKey(item))
+			map.put(item, map.get(item) + increment);
+		else
+			map.put(item, + increment);
+	}
+	
+	@Override
+	public void setUses(List<IMetricProvider> uses) {
+		this.uses = uses;
+	}
+	
+	@Override
+	public List<String> getIdentifiersOfUses() {
+		return Arrays.asList(SeverityClassificationTransMetricProvider.class.getCanonicalName(),
+							 BugMetadataTransMetricProvider.class.getCanonicalName());
+	}
+
+	@Override
+	public void setMetricProviderContext(MetricProviderContext context) {
+		this.context = context;
+	}
+
+	@Override
+	public String getShortIdentifier() {
+		return "bugseveritysentiment";
+	}
+
+	@Override
+	public String getFriendlyName() {
+		return "Sentiment Per Bug Severity Levels Per Day";
+	}
+
+	@Override
+	public String getSummaryInformation() {
+		return "This metric computes the average sentiment, the sentiment at " +
+			   "the beginning of threads and the sentiment at the end of threads " +
+			   "per severity level, in bugs submitted every day.";
+	}
+}

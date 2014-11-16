@@ -1,7 +1,6 @@
 package org.ossmeter.metricprovider.trans.newsgroups.activeusers.model;
 
 @db(qualifiedCollectionNames="true")
-@customize
 class NewsgroupsActiveUsersTransMetric {
 	val NewsgroupData[*] newsgroups;
     val User[*] users;

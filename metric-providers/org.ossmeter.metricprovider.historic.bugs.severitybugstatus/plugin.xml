@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<plugin>
+  
+
+
+<extension point="org.ossmeter.platform.visualisation.metric">
+   <visualisation json="vis/historic.bugs.severitybugstatus.json">
+   </visualisation>
+</extension>
+<extension point="org.ossmeter.platform.metricprovider">
+   <metricProvider provider="org.ossmeter.metricprovider.historic.bugs.severitybugstatus.SeverityBugStatusHistoricMetricProvider">
+   </metricProvider>
+</extension>
+<extension point="com.googlecode.pongo.runtime.osgi">
+    <class name="org.ossmeter.metricprovider.historic.bugs.severitybugstatus.model.BugsSeverityBugStatusHistoricMetric"/>
+    <class name="org.ossmeter.metricprovider.historic.bugs.severitybugstatus.model.SeverityLevel"/>
+  </extension>
+</plugin>

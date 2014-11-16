@@ -14,4 +14,5 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.platform.visualisation
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.historic.newsgroups.users
+Export-Package: org.ossmeter.metricprovider.historic.newsgroups.users,
+ org.ossmeter.metricprovider.historic.newsgroups.users.model

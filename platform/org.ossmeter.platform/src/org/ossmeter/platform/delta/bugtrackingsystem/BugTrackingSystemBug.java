@@ -17,8 +17,9 @@ public class BugTrackingSystemBug implements Serializable {
 	protected String operatingSystem;
 	protected String priority;
 	protected String resolution;
+	protected String severity;
 	protected Date creationTime;
-//	protected String summary;
+	protected String summary;
 	transient protected BugTrackingSystem bugTrackingSystem;	
 	protected List<BugTrackingSystemComment> comments = new ArrayList<BugTrackingSystemComment>();
 
@@ -54,13 +55,13 @@ public class BugTrackingSystemBug implements Serializable {
 		this.creationTime = creationTime;
 	}
 	
-//	public String getSummary() {
-//		return summary;
-//	}
+	public String getSummary() {
+		return summary;
+	}
 
-//	public void setSummary(String summary) {
-//		this.summary = summary;
-//	}
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
 
 	public BugTrackingSystem getBugTrackingSystem() {
 		return bugTrackingSystem;
@@ -88,6 +89,14 @@ public class BugTrackingSystemBug implements Serializable {
 
 	public void setResolution(String resolution) {
 		this.resolution = resolution;
+	}
+
+	public String getSeverity() {
+		return severity;
+	}
+
+	public void setSeverity(String severity) {
+		this.severity = severity;
 	}
 
 	public void setBugTrackingSystem(BugTrackingSystem bugTrackingSystem) {

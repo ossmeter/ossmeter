@@ -10,9 +10,12 @@ import java.util.Map;
 
 import org.ossmeter.contentclassifier.opennlptartarus.libsvm.ClassificationInstance;
 import org.ossmeter.contentclassifier.opennlptartarus.libsvm.Classifier;
-import org.ossmeter.metricprovider.trans.bugs.bugmetadata.model.BugTrackerData;
+import org.ossmeter.metricprovider.trans.bugs.bugmetadata.model.BugData;
 import org.ossmeter.metricprovider.trans.bugs.bugmetadata.model.BugsBugMetadataTransMetric;
 import org.ossmeter.metricprovider.trans.bugs.bugmetadata.model.CommentData;
+import org.ossmeter.metricprovider.trans.requestreplyclassification.RequestReplyClassificationTransMetricProvider;
+import org.ossmeter.metricprovider.trans.requestreplyclassification.model.BugTrackerComments;
+import org.ossmeter.metricprovider.trans.requestreplyclassification.model.RequestReplyClassificationTransMetric;
 import org.ossmeter.metricprovider.trans.sentimentclassification.SentimentClassificationTransMetricProvider;
 import org.ossmeter.metricprovider.trans.sentimentclassification.model.BugTrackerCommentsData;
 import org.ossmeter.metricprovider.trans.sentimentclassification.model.SentimentClassificationTransMetric;
@@ -56,7 +59,8 @@ public class BugMetadataTransMetricProvider implements ITransientMetricProvider<
 
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return Arrays.asList(SentimentClassificationTransMetricProvider.class.getCanonicalName());
+		return Arrays.asList(SentimentClassificationTransMetricProvider.class.getCanonicalName(),
+							 RequestReplyClassificationTransMetricProvider.class.getCanonicalName());
 	}
 
 	@Override
@@ -78,25 +82,31 @@ public class BugMetadataTransMetricProvider implements ITransientMetricProvider<
 		//---------------------------------------
 		
 		
-		if (uses.size()!=1) {
+		if (uses.size()!=2) {
 			System.err.println("Metric: " + getIdentifier() + " failed to retrieve " + 
-								"the transient metric it needs!");
+								"the transient metrics it needs!");
 			System.exit(-1);
+		}
+
+		RequestReplyClassificationTransMetric usedClassifier = 
+				((RequestReplyClassificationTransMetricProvider)uses.get(1)).adapt(context.getProjectDB(project));
+
+		Map<String, String> commentReplyRequest = new HashMap<String, String>();
+		for (BugTrackerComments comment: usedClassifier.getBugTrackerComments()) {
+			commentReplyRequest.put( comment.getBugTrackerId() + comment.getBugId() + comment.getCommentId(), 
+									 comment.getClassificationResult());
+			System.err.println("A| comment.getBugTrackerId(): " + comment.getBugTrackerId() + 
+					"\tcomment.getBugId(): " + comment.getBugId() +
+					"\tcomment.getCommentId(): " + comment.getCommentId() +
+					"\tcomment.getClassificationResult(): " + comment.getClassificationResult());
 		}
 
 		SentimentClassificationTransMetric sentimentClassifier = 
 				((SentimentClassificationTransMetricProvider)uses.get(0)).adapt(context.getProjectDB(project));
 
-		//---------------------------------------
 		for (BugTrackingSystemDelta delta: systemDelta.getBugTrackingSystemDeltas()) {
-//		for (BugTrackingSystemDelta delta: systemDelta.getBugTrackingSystemDeltas()) {
-		//---------------------------------------
-		//---------------------------------------
-			BugTrackingSystem bugTracker = delta.getBugTrackingSystem();
-//			BugTrackingSystem bugTracker = delta.getBugTrackingSystem();
-//			String bugTrackerId = bugTracker.getOSSMeterId();
-		//---------------------------------------
 
+			BugTrackingSystem bugTracker = delta.getBugTrackingSystem();
 			
 			Map<String, List<String>> newBugsComments = new HashMap<String, List<String>>();
 			for (BugTrackingSystemComment comment: delta.getComments()) {
@@ -135,7 +145,7 @@ public class BugMetadataTransMetricProvider implements ITransientMetricProvider<
 			
 			classifier.classify();
 
-			storeComments(db, classifier, bugTracker, delta, classificationInstanceIndex);
+			storeComments(db, classifier, bugTracker, delta, classificationInstanceIndex, commentReplyRequest);
 			db.sync(); 
 
 			for (BugTrackingSystemBug bug: delta.getNewBugs()) {
@@ -162,20 +172,20 @@ public class BugMetadataTransMetricProvider implements ITransientMetricProvider<
 		return instance;
 	}
 
-	private BugTrackerData storeBug(SentimentClassificationTransMetric sentimentClassifier, 
+	private BugData storeBug(SentimentClassificationTransMetric sentimentClassifier, 
 								BugsBugMetadataTransMetric db, BugTrackingSystem bugTracker, 
 								BugTrackingSystemBug bug) {
-		Iterable<BugTrackerData> bugDataIt = 
-				db.getBugTrackerData().find(BugTrackerData.BUGTRACKERID.eq(bugTracker.getBugTrackerType()), 
-											BugTrackerData.BUGID.eq(bug.getBugId()));
-		BugTrackerData bugData = null;
-		for (BugTrackerData bd:  bugDataIt) bugData = bd;
+		Iterable<BugData> bugDataIt = 
+				db.getBugData().find(BugData.BUGTRACKERID.eq(bugTracker.getOSSMeterId()), 
+											BugData.BUGID.eq(bug.getBugId()));
+		BugData bugData = null;
+		for (BugData bd:  bugDataIt) bugData = bd;
 		if (bugData == null) {
-			bugData = new BugTrackerData();
+			bugData = new BugData();
 			bugData.setBugTrackerId(bugTracker.getOSSMeterId());
 			bugData.setBugId(bug.getBugId());
 			bugData.setCreationTime(bug.getCreationTime().toString());
-			db.getBugTrackerData().add(bugData);
+			db.getBugData().add(bugData);
 		}
 		bugData.setOperatingSystem(bug.getOperatingSystem());
 		bugData.setPriority(bug.getPriority());
@@ -185,13 +195,15 @@ public class BugMetadataTransMetricProvider implements ITransientMetricProvider<
 			BugzillaBug bugzillaBug = (BugzillaBug) bug; 
 			if (bugzillaBug.getLastClosed()!=null)
 				bugData.setLastClosedTime(bugzillaBug.getLastClosed().toString());
+		} else {
+			System.err.println("Error! Bug is not covered!");
 		}
 		updateSentimentPerThread(sentimentClassifier, db, bugData);
 		return bugData;
 	}
 
 	private void updateSentimentPerThread(SentimentClassificationTransMetric sentimentClassifier, 
-											BugsBugMetadataTransMetric db, BugTrackerData bugData) {
+											BugsBugMetadataTransMetric db, BugData bugData) {
 		Iterable<BugTrackerCommentsData> commentIt = 
 				sentimentClassifier.getBugTrackerComments().find(
 										BugTrackerCommentsData.BUGTRACKERID.eq(bugData.getBugTrackerId()), 
@@ -233,7 +245,8 @@ public class BugMetadataTransMetricProvider implements ITransientMetricProvider<
 
 	private void storeComments(BugsBugMetadataTransMetric db, Classifier classifier, BugTrackingSystem bugTracker, 
 							   BugTrackingSystemDelta bugTrackingSystemDelta, 
-							   Map<String, ClassificationInstance> classificationInstanceIndex) {
+							   Map<String, ClassificationInstance> classificationInstanceIndex,
+							   Map<String, String> commentReplyRequest) {
 		for (BugTrackingSystemComment comment: bugTrackingSystemDelta.getComments()) {
 			Iterable<CommentData> commentIt = 
 					db.getComments().find(CommentData.BUGTRACKERID.eq(bugTracker.getOSSMeterId()), 
@@ -252,6 +265,10 @@ public class BugMetadataTransMetricProvider implements ITransientMetricProvider<
 				ClassificationInstance classificationInstance = 
 						classificationInstanceIndex.get(comment.getBugId()+"_"+comment.getCommentId());
 				commentData.setContentClass(classifier.getClassificationResult(classificationInstance));
+				String requestReplyPrediction = 
+						commentReplyRequest.get(bugTracker.getOSSMeterId() + comment.getBugId() + comment.getCommentId());
+				commentData.setRequestReplyPrediction(requestReplyPrediction);
+				
 				db.getComments().add(commentData);
 				db.sync();
 			}

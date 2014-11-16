@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.ossmeter.metricprovider.historic.bugs.status.model.BugsStatusHistoricMetric;
 import org.ossmeter.metricprovider.trans.bugs.bugmetadata.BugMetadataTransMetricProvider;
-import org.ossmeter.metricprovider.trans.bugs.bugmetadata.model.BugTrackerData;
+import org.ossmeter.metricprovider.trans.bugs.bugmetadata.model.BugData;
 import org.ossmeter.metricprovider.trans.bugs.bugmetadata.model.BugsBugMetadataTransMetric;
 import org.ossmeter.platform.AbstractHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
@@ -48,30 +48,32 @@ public class StatusHistoricMetricProvider extends AbstractHistoricalMetricProvid
 				 numberOfInvalidBugs = 0,
 				 numberOfFixedBugs = 0,
 				 numberOfDuplicateBugs = 0;
-			 for (BugTrackerData bugTrackerData: usedBhm.getBugTrackerData()) {
-				 if (bugTrackerData.getStatus().toLowerCase().equals("resolved")||
-						 (bugTrackerData.getStatus().toLowerCase().equals("closed")))
+			 for (BugData bugData: usedBhm.getBugData()) {
+				 if (bugData.getStatus().toLowerCase().equals("resolved")||
+						 (bugData.getStatus().toLowerCase().equals("closed")))
 					 numberOfResolvedClosedBugs++;
-				 if (bugTrackerData.getResolution().toLowerCase().equals("wontfix")
-						 ||(bugTrackerData.getResolution().toLowerCase().equals("cantfix")))
+				 if (bugData.getResolution().toLowerCase().equals("wontfix")
+						 ||(bugData.getResolution().toLowerCase().equals("cantfix")))
 						 	numberOfWontFixBugs++;
-				 if (bugTrackerData.getResolution().toLowerCase().equals("worksforme"))
+				 if (bugData.getResolution().toLowerCase().equals("worksforme"))
 					 numberOfWorksForMeBugs++;
-				 if (!bugTrackerData.getStatus().toLowerCase().equals("resolved")
-						 &&(!bugTrackerData.getStatus().toLowerCase().equals("closed")))
+				 if (!bugData.getStatus().toLowerCase().equals("resolved")
+						 &&(!bugData.getStatus().toLowerCase().equals("closed")))
 					 numberOfNonResolvedClosedBugs++;
-				 if (bugTrackerData.getResolution().toLowerCase().equals("invalid")
-						 ||(bugTrackerData.getResolution().toLowerCase().equals("notabug")))
+				 if (bugData.getResolution().toLowerCase().equals("invalid")
+						 ||(bugData.getResolution().toLowerCase().equals("notabug")))
 					 numberOfInvalidBugs++;
-				 if ((bugTrackerData.getResolution().toLowerCase().equals("fixed"))
-						 ||(bugTrackerData.getResolution().toLowerCase().equals("upstream"))
-						 ||(bugTrackerData.getResolution().toLowerCase().equals("currentrelease"))
-						 ||(bugTrackerData.getResolution().toLowerCase().equals("nextrelease"))
-						 ||(bugTrackerData.getResolution().toLowerCase().equals("rawhide")))
+				 if ((bugData.getResolution().toLowerCase().equals("fixed"))
+						 ||(bugData.getResolution().toLowerCase().equals("upstream"))
+						 ||(bugData.getResolution().toLowerCase().equals("currentrelease"))
+						 ||(bugData.getResolution().toLowerCase().equals("nextrelease"))
+						 ||(bugData.getResolution().toLowerCase().equals("rawhide")))
 						 	numberOfFixedBugs++;
-				 if (bugTrackerData.getResolution().toLowerCase().equals("duplicate"))
+				 if (bugData.getResolution().toLowerCase().equals("duplicate"))
 					 numberOfDuplicateBugs++;
 			 }
+			 if (usedBhm.getBugData().size() > 0)
+				 bugStatus.setNumberOfBugs(usedBhm.getBugData().size());
 			 if (numberOfResolvedClosedBugs > 0)
 				 bugStatus.setNumberOfResolvedClosedBugs(numberOfResolvedClosedBugs);
 			 if (numberOfWontFixBugs > 0)

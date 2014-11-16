@@ -7,7 +7,7 @@ import java.util.List;
 import org.ossmeter.metricprovider.trans.newsgroups.dailyrequestsreplies.model.DayArticles;
 import org.ossmeter.metricprovider.trans.newsgroups.dailyrequestsreplies.model.NewsgroupsDailyRequestsRepliesTransMetric;
 import org.ossmeter.metricprovider.trans.requestreplyclassification.RequestReplyClassificationTransMetricProvider;
-import org.ossmeter.metricprovider.trans.requestreplyclassification.model.NewsgroupArticlesData;
+import org.ossmeter.metricprovider.trans.requestreplyclassification.model.NewsgroupArticles;
 import org.ossmeter.metricprovider.trans.requestreplyclassification.model.RequestReplyClassificationTransMetric;
 import org.ossmeter.platform.Date;
 import org.ossmeter.platform.IMetricProvider;
@@ -114,19 +114,56 @@ NewsgroupsDailyRequestsRepliesTransMetric>{
 				db.sync();
 			}
 		}
+
+		int sumOfArticles = 0,
+			sumOfRequests = 0,
+			sumOfReplies = 0;
+
+		for (DayArticles dayArticles: db.getDayArticles()) {
+			sumOfArticles += dayArticles.getNumberOfArticles();
+			sumOfRequests += dayArticles.getNumberOfRequests();
+			sumOfReplies += dayArticles.getNumberOfReplies();
+		}
+
+		for (DayArticles dayArticles: db.getDayArticles()) {
+			
+			float percentageOfComments;
+			if (sumOfArticles == 0)
+				percentageOfComments = ( (float) 100 ) / 7;
+			else
+				percentageOfComments = ( (float) 100 * dayArticles.getNumberOfArticles() ) / sumOfArticles;
+			dayArticles.setPercentageOfArticles(percentageOfComments);
+			
+			float percentageOfRequests;
+			if (sumOfRequests == 0)
+				percentageOfRequests = ( (float) 100 ) / 7;
+			else
+				percentageOfRequests = ( (float) 100 * dayArticles.getNumberOfRequests() ) / sumOfRequests;
+			dayArticles.setPercentageOfRequests(percentageOfRequests);
+			
+			float percentageOfReplies;
+			if (sumOfReplies == 0)
+				percentageOfReplies = ( (float) 100 ) / 7;
+			else
+				percentageOfReplies = ( (float) 100 * dayArticles.getNumberOfReplies() ) / sumOfReplies;
+			dayArticles.setPercentageOfReplies(percentageOfReplies);
+		}
+		
+		db.sync();
+
 	}
 
 	private String getRequestReplyClass(RequestReplyClassificationTransMetric usedClassifier, 
 											NntpNewsGroup newsgroup, CommunicationChannelArticle article) {
-		Iterable<NewsgroupArticlesData> newsgroupArticlesDataIt = usedClassifier.getNewsgroupArticles().
-				find(NewsgroupArticlesData.URL.eq(newsgroup.getUrl()), 
-						NewsgroupArticlesData.ARTICLENUMBER.eq(article.getArticleNumber()));
-		NewsgroupArticlesData newsgroupArticleData = null;
-		for (NewsgroupArticlesData art:  newsgroupArticlesDataIt) {
+		Iterable<NewsgroupArticles> newsgroupArticlesIt = usedClassifier.getNewsgroupArticles().
+				find(NewsgroupArticles.URL.eq(newsgroup.getUrl()), 
+						NewsgroupArticles.ARTICLENUMBER.eq(article.getArticleNumber()));
+		NewsgroupArticles newsgroupArticleData = null;
+		for (NewsgroupArticles art:  newsgroupArticlesIt) {
 			newsgroupArticleData = art;
 		}
 		if (newsgroupArticleData == null) {
-			System.err.println("Active users metric -\t" + 
+			System.err.println("Newsgroups - Daily Requests Replies -\t" + 
 					"there is no classification for article: " + article.getArticleNumber() +
 					"\t of newsgroup: " + newsgroup.getUrl());
 			System.exit(-1);

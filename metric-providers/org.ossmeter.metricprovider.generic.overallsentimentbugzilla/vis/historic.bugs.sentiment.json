@@ -2,6 +2,20 @@
 	"metricid" : "org.ossmeter.metricprovider.historic.bugs.sentiment",
 	"vis" : [ 
 		{
+			"id" : "bugs.sentiment",
+			"name" : "Average Sentiment: Overall, at Thread Beginning and at Thread End.",
+			"description" : "The average sentiment per bug repository up to and including the processing date." ,
+			"type" : "LineChart",
+			"datatable" : {
+				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
+					{ "name" : "Average Sentiment", "field" : "$overallAverageSentiment" },
+					{ "name" : "Average Sentiment at Thread Beginning", "field" : "$overallSentimentAtThreadBeggining" },
+					{ "name" : "Average Sentiment at Thread End", "field" : "$overallSentimentAtThreadEnd" } ]
+			},
+			"x" : "Date",
+			"y" : ["Average Sentiment", "Average Sentiment at Thread Beginning", "Average Sentiment at Thread End"],
+			"timeSeries" : true
+		},{
 			"id" : "bugs.averageSentiment",
 			"name" : "Average Sentiment",
 			"description" : "The average sentiment per bug repository up to and including the processing date." ,

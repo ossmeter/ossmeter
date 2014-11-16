@@ -25,6 +25,11 @@ public class ResetApp {
 		mongo.dropDatabase("eclipsePlatform");
 		mongo.dropDatabase("pdb_values");
 		mongo.dropDatabase("pongo");
+		mongo.dropDatabase("modelinggmt");
+		mongo.dropDatabase("eclipse");
+		mongo.dropDatabase("modelinggmtamw");
+		mongo.dropDatabase("Log4J");
+		mongo.dropDatabase("BIRT");
 	}
 	
 }
