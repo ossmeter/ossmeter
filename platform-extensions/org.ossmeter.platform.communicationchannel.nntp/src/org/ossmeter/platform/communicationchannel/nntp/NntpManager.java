@@ -85,6 +85,7 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 						newNewsgroup.setAuthenticationRequired(newsgroup.getAuthenticationRequired());
 						newNewsgroup.setUsername(newsgroup.getUsername());
 						newNewsgroup.setPassword(newsgroup.getPassword());
+						newNewsgroup.setNewsGroupName(newsgroup.getNewsGroupName());
 						newNewsgroup.setPort(newsgroup.getPort());
 						newNewsgroup.setInterval(newsgroup.getInterval());
 						communicationChannelArticle.setNewsgroup(newNewsgroup);
