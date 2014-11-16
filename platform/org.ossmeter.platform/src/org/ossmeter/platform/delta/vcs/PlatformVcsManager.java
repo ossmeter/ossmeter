@@ -79,7 +79,8 @@ public abstract class PlatformVcsManager extends AbstractVcsManager {
 				return vcsManager;
 			}
 		}
-		throw new NoManagerFoundException("No vcs manager found for repository " + repository);
+		return null;
+//		throw new NoManagerFoundException("No vcs manager found for repository " + repository);
 	}
 	
 	@Override
