@@ -14,8 +14,4 @@ class ThreadStatistics {
    attr boolean answered;
    attr long responseDurationSec;
    attr String responseDate;
-   
-   attr float averageSentiment;
-   attr String startSentiment; 
-   attr String endSentiment; 
 }

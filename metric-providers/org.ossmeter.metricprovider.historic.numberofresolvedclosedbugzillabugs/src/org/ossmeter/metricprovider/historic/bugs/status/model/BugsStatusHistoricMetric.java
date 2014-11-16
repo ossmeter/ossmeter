@@ -10,6 +10,7 @@ public class BugsStatusHistoricMetric extends Pongo {
 	
 	public BugsStatusHistoricMetric() { 
 		super();
+		NUMBEROFBUGS.setOwningType("org.ossmeter.metricprovider.historic.bugs.status.model.BugsStatusHistoricMetric");
 		NUMBEROFRESOLVEDCLOSEDBUGS.setOwningType("org.ossmeter.metricprovider.historic.bugs.status.model.BugsStatusHistoricMetric");
 		NUMBEROFWONTFIXBUGS.setOwningType("org.ossmeter.metricprovider.historic.bugs.status.model.BugsStatusHistoricMetric");
 		NUMBEROFWORKSFORMEBUGS.setOwningType("org.ossmeter.metricprovider.historic.bugs.status.model.BugsStatusHistoricMetric");
@@ -19,6 +20,7 @@ public class BugsStatusHistoricMetric extends Pongo {
 		NUMBEROFDUPLICATEBUGS.setOwningType("org.ossmeter.metricprovider.historic.bugs.status.model.BugsStatusHistoricMetric");
 	}
 	
+	public static NumericalQueryProducer NUMBEROFBUGS = new NumericalQueryProducer("numberOfBugs");
 	public static NumericalQueryProducer NUMBEROFRESOLVEDCLOSEDBUGS = new NumericalQueryProducer("numberOfResolvedClosedBugs");
 	public static NumericalQueryProducer NUMBEROFWONTFIXBUGS = new NumericalQueryProducer("numberOfWontFixBugs");
 	public static NumericalQueryProducer NUMBEROFWORKSFORMEBUGS = new NumericalQueryProducer("numberOfWorksForMeBugs");
@@ -28,6 +30,15 @@ public class BugsStatusHistoricMetric extends Pongo {
 	public static NumericalQueryProducer NUMBEROFDUPLICATEBUGS = new NumericalQueryProducer("numberOfDuplicateBugs");
 	
 	
+	public long getNumberOfBugs() {
+		return parseLong(dbObject.get("numberOfBugs")+"", 0);
+	}
+	
+	public BugsStatusHistoricMetric setNumberOfBugs(long numberOfBugs) {
+		dbObject.put("numberOfBugs", numberOfBugs);
+		notifyChanged();
+		return this;
+	}
 	public int getNumberOfResolvedClosedBugs() {
 		return parseInteger(dbObject.get("numberOfResolvedClosedBugs")+"", 0);
 	}

@@ -13,15 +13,15 @@ public class BugsBugMetadataTransMetric extends PongoDB {
 		setDb(db);
 	}
 	
-	protected BugTrackerDataCollection bugTrackerData = null;
+	protected BugDataCollection bugData = null;
 	protected CommentDataCollection comments = null;
 	
 	// protected region custom-fields-and-methods on begin
 	// protected region custom-fields-and-methods end
 	
 	
-	public BugTrackerDataCollection getBugTrackerData() {
-		return bugTrackerData;
+	public BugDataCollection getBugData() {
+		return bugData;
 	}
 	
 	public CommentDataCollection getComments() {
@@ -32,8 +32,8 @@ public class BugsBugMetadataTransMetric extends PongoDB {
 	@Override
 	public void setDb(DB db) {
 		super.setDb(db);
-		bugTrackerData = new BugTrackerDataCollection(db.getCollection("BugsBugMetadataTransMetric.bugTrackerData"));
-		pongoCollections.add(bugTrackerData);
+		bugData = new BugDataCollection(db.getCollection("BugsBugMetadataTransMetric.bugData"));
+		pongoCollections.add(bugData);
 		comments = new CommentDataCollection(db.getCollection("BugsBugMetadataTransMetric.comments"));
 		pongoCollections.add(comments);
 	}

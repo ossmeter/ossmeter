@@ -7,7 +7,7 @@ import org.ossmeter.metricprovider.trans.newsgroups.activeusers.model.NewsgroupD
 import org.ossmeter.metricprovider.trans.newsgroups.activeusers.model.NewsgroupsActiveUsersTransMetric;
 import org.ossmeter.metricprovider.trans.newsgroups.activeusers.model.User;
 import org.ossmeter.metricprovider.trans.requestreplyclassification.RequestReplyClassificationTransMetricProvider;
-import org.ossmeter.metricprovider.trans.requestreplyclassification.model.NewsgroupArticlesData;
+import org.ossmeter.metricprovider.trans.requestreplyclassification.model.NewsgroupArticles;
 import org.ossmeter.metricprovider.trans.requestreplyclassification.model.RequestReplyClassificationTransMetric;
 import org.ossmeter.platform.Date;
 import org.ossmeter.platform.IMetricProvider;
@@ -80,7 +80,7 @@ public class ActiveUsersTransMetricProvider implements ITransientMetricProvider<
 			CommunicationChannel communicationChannel = communicationChannelDelta.getCommunicationChannel();
 			if (!(communicationChannel instanceof NntpNewsGroup)) continue;
 			NntpNewsGroup newsgroup = (NntpNewsGroup) communicationChannel;
-			NewsgroupData newsgroupData = db.getNewsgroups().findOneByUrl_name(newsgroup.getUrl());
+			 NewsgroupData newsgroupData = db.getNewsgroups().findOneByUrl_name(newsgroup.getUrl());
 			if (newsgroupData == null) {
 				newsgroupData = new NewsgroupData();
 				newsgroupData.setUrl_name(newsgroup.getUrl());
@@ -156,11 +156,11 @@ public class ActiveUsersTransMetricProvider implements ITransientMetricProvider<
 
 	private String getRequestReplyClass(RequestReplyClassificationTransMetric usedClassifier, 
 			NntpNewsGroup newsgroup, CommunicationChannelArticle article) {
-		Iterable<NewsgroupArticlesData> newsgroupArticlesDataIt = usedClassifier.getNewsgroupArticles().
-				find(NewsgroupArticlesData.URL.eq(newsgroup.getUrl()), 
-						NewsgroupArticlesData.ARTICLENUMBER.eq(article.getArticleNumber()));
-		NewsgroupArticlesData newsgroupArticleData = null;
-		for (NewsgroupArticlesData art:  newsgroupArticlesDataIt) {
+		Iterable<NewsgroupArticles> newsgroupArticlesIt = usedClassifier.getNewsgroupArticles().
+				find(NewsgroupArticles.URL.eq(newsgroup.getUrl()), 
+						NewsgroupArticles.ARTICLENUMBER.eq(article.getArticleNumber()));
+		NewsgroupArticles newsgroupArticleData = null;
+		for (NewsgroupArticles art:  newsgroupArticlesIt) {
 			newsgroupArticleData = art;
 		}
 		if (newsgroupArticleData == null) {

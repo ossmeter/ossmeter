@@ -71,13 +71,12 @@ public class ThreadsHistoricMetricProvider extends AbstractHistoricalMetricProvi
 		
 
 		int sumOfThreads = 0;
-		int numberOfUsers = 0,
-			numberOfArticles = 0,
+		int numberOfArticles = 0,
 			numberOfRequests = 0,
 			numberOfReplies = 0;
 
 		for (NewsgroupData newsgroups: usedThreads.getNewsgroups()) {
-			sumOfThreads = newsgroups.getThreads();
+			sumOfThreads += newsgroups.getThreads();
 			DailyNewsgroupData newsgroupData = new DailyNewsgroupData();
 			newsgroupData.setUrl_name(newsgroups.getUrl_name());
 			newsgroupData.setNumberOfThreads(newsgroups.getThreads());
@@ -100,9 +99,9 @@ public class ThreadsHistoricMetricProvider extends AbstractHistoricalMetricProvi
 		dailyThreads.setAverageRepliesPerThread(avgReplies);
 		dailyThreads.setAverageRequestsPerThread(avgRequests);
 		
-		avgArticles = ((float) numberOfArticles) / numberOfUsers;
-		avgReplies = ((float) numberOfReplies) / numberOfUsers;
-		avgRequests = ((float) numberOfRequests) / numberOfUsers;
+		avgArticles = ((float) numberOfArticles) / usedUsers.getUsers().size();
+		avgReplies = ((float) numberOfReplies) / usedUsers.getUsers().size();
+		avgRequests = ((float) numberOfRequests) / usedUsers.getUsers().size();
 
 		dailyThreads.setAverageArticlesPerUser(avgArticles);
 		dailyThreads.setAverageRepliesPerUser(avgReplies);

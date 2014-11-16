@@ -5,21 +5,24 @@ package org.ossmeter.metricprovider.trans.bugs.emotions.model;
 class BugsEmotionsTransMetric {
 	@series
 	val BugTrackerData[*] bugTrackerData;
-	val Emotion[*] dimensions;
+	val EmotionDimension[*] dimensions;
 }
 
 class BugTrackerData {
 	@searchable
 	attr String bugTrackerId;
 	attr int numberOfComments;
+	attr int cumulativeNumberOfComments;
 }
 
 
-class Emotion {
+class EmotionDimension {
 	@searchable
 	attr String bugTrackerId;
 	attr String emotionLabel;
 	attr int numberOfComments;
+	attr int cumulativeNumberOfComments;
 	attr float percentage;
+	attr float cumulativePercentage;
 }
 

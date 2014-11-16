@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?eclipse version="3.4"?><plugin>
+
+<extension point="com.googlecode.pongo.runtime.osgi">
+    <class name="org.ossmeter.metricprovider.historic.bugs.users.model.BugsUsersHistoricMetric"/>
+    <class name="org.ossmeter.metricprovider.historic.bugs.users.model.DailyBugTrackingData"/>
+  </extension>
+<extension
+      point="org.ossmeter.platform.metricprovider">
+   <metricProvider
+         provider="org.ossmeter.metricprovider.historic.bugs.users.UsersHistoricMetricProvider">
+   </metricProvider>
+</extension>
+<extension
+      point="org.ossmeter.platform.visualisation.metric">
+   <visualisation
+         json="vis/historic.bugs.users.json"></visualisation>
+</extension>
+</plugin>

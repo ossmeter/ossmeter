@@ -8,7 +8,7 @@
 
 
 <extension point="org.ossmeter.platform.visualisation.metric">
-   <visualisation json="vis/historic.bugs.opendtime.json">
+   <visualisation json="vis/historic.bugs.opentime.json">
    </visualisation>
 </extension>
 

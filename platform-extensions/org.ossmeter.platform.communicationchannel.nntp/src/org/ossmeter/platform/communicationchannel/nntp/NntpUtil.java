@@ -209,7 +209,8 @@ public class NntpUtil {
 			new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss"),
 			new SimpleDateFormat("dd MMM yyyy HH:mm:ss"),
 			new SimpleDateFormat("EEE, dd MMM yyyy hh:mm:ss Z"),
-			new SimpleDateFormat("EEE MMM d HH:mm:ss zzz yyyy")
+			new SimpleDateFormat("EEE MMM d HH:mm:ss zzz yyyy"),
+			new SimpleDateFormat("yyyyMMdd")
 		};
 	
     public static Date parseDate(String dateString) {

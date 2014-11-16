@@ -14,7 +14,7 @@ public class BugsEmotionsTransMetric extends PongoDB {
 	}
 	
 	protected BugTrackerDataCollection bugTrackerData = null;
-	protected EmotionCollection dimensions = null;
+	protected EmotionDimensionCollection dimensions = null;
 	
 	// protected region custom-fields-and-methods on begin
 	// protected region custom-fields-and-methods end
@@ -24,7 +24,7 @@ public class BugsEmotionsTransMetric extends PongoDB {
 		return bugTrackerData;
 	}
 	
-	public EmotionCollection getDimensions() {
+	public EmotionDimensionCollection getDimensions() {
 		return dimensions;
 	}
 	
@@ -34,7 +34,7 @@ public class BugsEmotionsTransMetric extends PongoDB {
 		super.setDb(db);
 		bugTrackerData = new BugTrackerDataCollection(db.getCollection("BugsEmotionsTransMetric.bugTrackerData"));
 		pongoCollections.add(bugTrackerData);
-		dimensions = new EmotionCollection(db.getCollection("BugsEmotionsTransMetric.dimensions"));
+		dimensions = new EmotionDimensionCollection(db.getCollection("BugsEmotionsTransMetric.dimensions"));
 		pongoCollections.add(dimensions);
 	}
 }

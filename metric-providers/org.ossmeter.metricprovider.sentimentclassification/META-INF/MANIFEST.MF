@@ -9,7 +9,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.repository.model.cc.nntp,
  org.ossmeter.repository.model.bts.bugzilla,
  com.googlecode.pongo.runtime.osgi,
- org.ossmeter.sentimentclassifier.opennlptartarus.libsvm;bundle-version="1.0.0",
+ org.ossmeter.sentimentclassifier.opennlptartarus.libsvm,
  org.apache.commons.lang3,
  org.ossmeter.platform.visualisation
 Bundle-ActivationPolicy: lazy

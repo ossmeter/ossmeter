@@ -50,7 +50,7 @@ public class AbstractHistoricalMetricProviderTest {
 		Date end = new Date("20140119");
 		
 		List<Pongo> plist = mp.getHistoricalMeasurements(context, p, start, end);
-		
+
 		assertEquals(5, plist.size());
 		
 		// Clean up

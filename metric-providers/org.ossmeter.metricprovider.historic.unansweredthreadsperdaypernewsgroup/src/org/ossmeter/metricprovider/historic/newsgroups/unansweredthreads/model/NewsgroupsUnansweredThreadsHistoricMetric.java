@@ -1,15 +1,19 @@
 package org.ossmeter.metricprovider.historic.newsgroups.unansweredthreads.model;
 
-import com.googlecode.pongo.runtime.Pongo;
-import com.googlecode.pongo.runtime.querying.NumericalQueryProducer;
+import com.mongodb.*;
+import java.util.*;
+import com.googlecode.pongo.runtime.*;
+import com.googlecode.pongo.runtime.querying.*;
 
 
 public class NewsgroupsUnansweredThreadsHistoricMetric extends Pongo {
 	
+	protected List<DailyNewsgroupData> newsgroups = null;
 	
 	
 	public NewsgroupsUnansweredThreadsHistoricMetric() { 
 		super();
+		dbObject.put("newsgroups", new BasicDBList());
 		NUMBEROFUNANSWEREDTHREADS.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.unansweredthreads.model.NewsgroupsUnansweredThreadsHistoricMetric");
 	}
 	
@@ -27,6 +31,12 @@ public class NewsgroupsUnansweredThreadsHistoricMetric extends Pongo {
 	}
 	
 	
+	public List<DailyNewsgroupData> getNewsgroups() {
+		if (newsgroups == null) {
+			newsgroups = new PongoList<DailyNewsgroupData>(this, "newsgroups", true);
+		}
+		return newsgroups;
+	}
 	
 	
 }

@@ -383,7 +383,7 @@ public class BugzillaManager implements IBugTrackingSystemManager<Bugzilla> {
 			bugzillaBug.setCreationTime(session.getCreationTime(bug));
 			bugzillaBug.setCreator(session.getCreator(bug));
 			bugzillaBug.setStatus(bug.getStatus());
-//			bugzillaBug.setSummary(bug.getSummary());
+			bugzillaBug.setSummary(bug.getSummary());
 			bugzillaBug.setAssignedTo(session.getAssignedTo(bug));
 			bugzillaBug.setCategory(session.getCategory(bug));
 			bugzillaBug.setClassification(session.getClassification(bug));
