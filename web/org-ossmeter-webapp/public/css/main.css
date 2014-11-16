@@ -1,0 +1,258 @@
+
+/* TODO: Edit the image size, don't use CSS */
+.logo{
+    width:50%;
+    margin:20px;
+}
+
+
+
+body {
+    font: 14px/1.8em 'Open Sans', Helvetica, Arial, Helvetica, sans-serif;
+    /*padding-top: 60px;  60px to make the container go all the way to the bottom of the topbar */
+    margin: auto;
+    background-color: #f9f9f6;
+}
+
+.box {
+    background-color: #ffffff;
+    border : 1px solid #ddd;
+    /*box-shadow: 0px 1px 1px #888888;*/
+}
+
+.blank {
+    background-color:inherit;
+    border:0;
+    box-shadow: none;
+}
+
+section {
+    margin:10px;
+}
+
+section .container {
+    padding:20px;
+}
+
+h1 {
+    font-size: 4em;
+    font-weight: 800;
+
+}
+
+h2 {
+    font-size : 28px;
+}
+
+h1,h2,h3,h4 {
+    font-family:'Bree Serif', Georgia, serif;
+    color:#023E73;  
+}
+
+.marginless {
+    margin:0;
+}
+
+form .error input {
+    background-color: #F2DEDE;
+    border-color: #EED3D7;
+    color: #B94A48;
+}
+
+form .error .help-inline {
+    color: #B94A48;
+}
+
+.providers {
+    margin: 5px 0;
+    list-style: none;
+}
+
+.providers li {
+    display: inline;
+}
+
+.help-block {
+    margin: -10px 0 10px 0;
+    font-size: 10px;
+    color: #ccc !important;
+}
+
+h1 {
+    /*margin-bottom: 20px !important;*/
+    margin:0;
+    margin-bottom:5px;
+}
+
+.row {
+	margin-left: 0px;
+}
+
+.nopadding {
+   padding: 0 ;
+   margin: 0 ;
+}
+
+.span4 {
+	width: 360px;
+}
+
+.center {
+    text-align: center;
+}
+
+
+.projectbreadcrumb {
+    font-size:8pt;
+    background-color:#fff;
+    margin:0;
+}
+
+.projectbreadcrumb li + li::before {
+    content : "|";
+}
+
+ol.projectbreadcrumb {
+    padding:0;
+}
+
+.section-heading h2 {
+    margin: 0;
+}
+.section-heading {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 2px;
+    margin-bottom: 10px;
+}
+
+div.checkbox {
+    margin-left:20px;
+}
+
+.quote {
+    font-size:2em;
+}
+
+.banner {
+    background-color: #0073b4;
+    padding:20px;
+    color:white;
+    text-align:center;
+    margin-top:20px;
+    margin-bottom:20px;
+}
+
+.banner h2 {
+    color:#ff9400;
+
+}
+
+.banner img {
+    height:100px;
+    margin:5px;
+}
+.search {
+    font-size:1.5em;
+    height:1.5em;
+}
+
+img.spark {
+    width:100%;
+    max-width : 150px;
+}
+
+footer {
+    background: #ffffff; /*#0073b4;*/
+    padding: 10px;
+    /*margin-top: 80px;*/
+    color: #C0C0C0;
+    font-size:0.9em;
+    border-top: 1px solid #ddd;
+}
+footer a { color: #ddd; }
+footer a:hover { color: #fff; }
+
+th {
+    font-weight: normal;
+}
+
+.gridster {
+    position:relative;
+}
+
+.gridster ul {
+    list-style:none;
+    margin:0;
+}
+
+ul.projects{
+    list-style: none;
+    margin:0;
+    padding:0;
+}
+ul.projects li {
+    border-bottom: 1px solid #ddd;
+    padding:10px;
+}
+ul.projects img {
+    margin-top:10px;
+}
+
+li.gridentry {
+    box-shadow: 0px 1px 1px #888888;
+    padding:5px;
+    overflow:hidden;
+}
+li.gridentry h3 {
+    margin:0;
+}
+
+.spark-table {
+    font-size:0.8em;
+    margin-bottom:0;
+}
+.spark-table>thead>tr>th, .spark-table>tbody>tr>td{
+    margin:0;
+    padding: 0;
+}
+
+.glyphicon.dash {
+    font-size:1.2em;
+    color:#023E73;
+}
+
+.glyphicon.dash {
+    font-size:1.2em;
+    color:#023E73;
+}
+
+.glyphicon.dash.edit  {
+    color : #aaa;
+}
+
+.glyphicon.dash.edit:hover  {
+    color : #ff9400;
+}
+
+.no-overflow {
+    overflow:hidden;
+    white-space : nowrap;
+    text-overflow: ellipsis;
+}
+
+span.spark-watch {
+    color : #aaa;
+}
+span.spark-watch.active {
+    color : #000;
+}
+.comparison {
+    opacity: 0.9;
+    border-top:1px solid #ddd;
+}
+
+.panel-body.metric-list {
+    height:200px;
+    overflow:scroll;
+    margin-left: 0;
+}

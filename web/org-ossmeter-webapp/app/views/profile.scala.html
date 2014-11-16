@@ -1,0 +1,290 @@
+@(localUser: model.User = null)
+
+@import model._
+@import com.feth.play.module.pa.views.html._
+
+@main(Messages("ossmeter.profile.title"),"profile") {
+
+<section>
+<div class="container box">
+    <h1>@Messages("ossmeter.profile.title")</h1>
+    <p>
+    Email: @localUser.getEmail()
+	    <i>
+	    @if(!localUser.getEmailValidated() && localUser.getEmail()) {
+	      (<a href="@routes.Account.verifyEmail">unverified - click to verify</a>)
+	    } else {
+	      (verified)
+	    }</i>
+    <br/><a href="@routes.Account.changePassword">Change password</a>
+    <br />
+    @* @defining(localUser.getProviders()) { providers =>
+        @if(providers.size() > 0) {
+            @if(providers.size() ==1) {
+                @Messages("ossmeter.profile.providers_one")
+            } else {
+                @Messages("ossmeter.profile.providers_many",providers.size().toString())
+            }
+            @for(p <- providers) {
+                @_providerIcon(p)
+            }
+        <br/>
+        }
+    }*@
+    @*@currentAuth() { auth =>
+        @Messages("ossmeter.profile.logged") @_providerIcon(auth.getProvider())<br/>
+        @if(auth.expires() != -1){
+            @Messages("ossmeter.profile.session", auth.getId(), Application.formatTimestamp(auth.expires()))
+        } else {
+            @Messages("ossmeter.profile.session_endless", auth.getId())
+        }
+    }*@
+    </p>
+</div>
+</section>
+<section>
+<div class="container box">
+    <div class="row">
+        <div class="col-md-6">
+        <h2>Dashboard</h2>
+        
+        <a href="@routes.Application.profileEventGroup" class="btn btn-primary">Create Event Group</a>
+        <a href="@routes.Application.profileEventGroup" class="btn btn-primary">Create Notification</a>
+       @* @if(localUser.getNotifications().size() > 0) {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Project</th>
+                        <th>Metric</th>
+                        <th>Threshold</th>
+                        <th>Trigger</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+            @for(n <- localUser.getNotifications()) {
+                <tr> <!-- TODO: Will want to present the project and metric name, not ID. -->
+                    <td>@n.getProject().getId()</td>
+                    <td>@n.getMetric().getId</td>
+                    <td>@n.getThreshold()</td>
+                    <td>
+                    @if(n.getAboveThreshold()) {
+                        ABOVE
+                    } else {
+                        BELOW
+                    }
+                    </td>
+                    <td>
+                        Edit &nbsp; Delete
+                    </td>
+                </tr>
+            }
+                </tbody>
+            </table>
+        } else {
+            @Messages("ossmeter.profile.notifications.empty") <a href="@routes.Application.profileNotification">Click here to add one</a>
+        }*@
+        </div>
+        <div class="col-md-6 box">
+
+@*        <h2>Configure EventGroups</h2>
+        @if(localUser.eventGroups.size() > 0) {
+            <a href="@routes.Application.profileEventGroup">Create</a>
+            <ul>
+            @for(gr <- localUser.eventGroups) {
+                <li><p>
+                <label class="form-label" name="eventGroup" value=@gr>@gr.name</label> 
+                @if(gr.events.size() > 0) {
+                    @for(ev <- gr.events) {
+                        <span>Events: @ev.name, @ev.date</span>
+                    }
+                } else {
+                    <span>No events yet</span>
+                }
+
+                @helper.form(routes.Account.createEvent, 'class->"form-project") {
+                    <span><input type="submit">Add Event</input> &nbsp; Edit &nbsp; Delete</span>
+                }
+                    </p>
+                </li> 
+            }
+            </ul>
+        } else {
+            @Messages("ossmeter.profile.eventgroup.empty") <a href="@routes.Application.profileEventGroup">Click here to add one</a>
+        }
+        </div>*@
+    </div>
+
+</div>
+
+<div class="gridster">
+    <ul>
+    @for(g <- localUser.getGrid()) {
+        <li class="box gridentry" data-row="@g.getRow()" data-col="@g.getCol()" data-sizex="@g.getSizeX()" data-sizey="@g.getSizeY()">
+            @g match {
+                case m : Message => {
+                    <div class="clearfix">
+                        <h3 class="pull-left">Messages</h3>
+                        <span class="glyphicon glyphicon-comment dash pull-right"></span>
+                        <!-- <div class="pull-right"><button class="btn btn-primary">M</button></div> -->
+                    </div>
+                    <p>Welcome to your Dashboard! You can drag these widgets about to organise them as you like!</p>
+                }
+                case n : Notification => {
+                    <div class="row nopadding">
+                    <span class="glyphicon glyphicon-bell dash pull-right"></span><a href="#"><span class="glyphicon glyphicon-cog dash edit pull-right"></span></a>
+                        <div class="col-md-9 nopadding" style="line-height:1em">
+                            <span style="font-size:0.6em">Project:</span><br/>
+                            <span class="no-overflow" style="font-size:0.8em"><a href="@routes.Projects.view(n.getProject().getId())">@n.getProject().getName()</a></span><br/>
+                            <span style="font-size:0.6em">Metric:</span><br/>
+                            <span class="nowrap" style="font-size:0.8em">@n.getMetric().getName()</span>
+                        </div>
+                        <div class="col-md-3 nopadding" style="line-height:1em">
+                            
+                            <!-- <div class="pull-right"><img src="@routes.Assets.at("icons/notification.png")" alt="Edit Notifications"/></div> -->
+                        </div>
+                    </div>
+                    <div class="row nopadding center" style="margin-top:10px">
+                        <div class="col-md-6 nopadding">@if(n.getAboveThreshold()){<span class="glyphicon glyphicon-arrow-up"></span>}else{<span class="glyphicon glyphicon-arrow-down"></span>}</div>
+                        <div class="col-md-6 nopadding" id="not-@n.getProject().getId()-@n.getMetric().getId()-threshold">abbreviateNumber(@n.getThreshold())</div>
+                    </div>
+                    <script type="text/javascript">
+                        $(function(){ 
+                            $("#not-@n.getProject().getId()-@n.getMetric().getId()-threshold").text(abbreviateNumber(@n.getThreshold()));
+                        });
+                    </script>
+
+                }
+                case n : PlotGridEntry => {
+                        <span class="glyphicon glyphicon-stats dash pull-right"></span><a href="#"><span class="glyphicon glyphicon-cog dash edit pull-right" data-toggle="tooltip" data-placement="bottom" title="Edit plot"></span></a>
+                    <div class="clearfix">
+                        <div class="row nopadding">
+                            <div class="col-md-6 nopadding" style="line-height:1em">
+                                <span style="font-size:0.6em">Project:</span><br/>
+                                <span style="font-size:0.8em">@n.getProject().getName()</span><br/>
+                            </div>
+                            <div class="col-md-5 nopadding" style="line-height:1em">
+                                <span style="font-size:0.6em">Metric:</span><br/>
+                                <span style="font-size:0.8em">@n.getMetric().getName()</span>
+                            </div>
+                            <!-- <div class="col-md-1 nopadding" style="line-height:1em">
+                                <span class="glyphicon glyphicon-stats dash pull-right"></span>
+                            </div> -->
+                        </div>
+                    </div>
+                    <div id="plot-@n.getProject().getId()-@n.getMetric().getId()"></div>
+                    <script type="text/javascript">
+                    $(function(){ 
+                        $.getJSON("http://localhost:8182/projects/p/@n.getProject().getId()/m/@n.getMetric().getId()", function(vis) {
+                            var chart = new ossplots.Chart("#plot-@n.getProject().getId()-@n.getMetric().getId()", vis);
+                            chart.height = 100;
+                            chart.margin.left = 30;
+                            chart.margin.top = 10;
+                            chart.draw();
+                        });
+                    });
+                    </script>
+                }
+                case n : SparkGridEntry => {
+                    <div class="clearfix">
+                        <!-- <div class="pull-right"><button class="btn btn-primary">S</button></div> -->
+                        <span class="glyphicon glyphicon-flash dash pull-right"></span>
+                        <div class="row pull-left nopadding">
+                            <div class="col-md-12 nopadding" style="line-height:1em">
+                                <span style="font-size:0.6em">Project:</span><br/>
+                                <span style="font-size:0.8em">@n.getProject().getName()</span><br/>
+                                <span style="font-size:0.6em">Metric:</span><br/>
+                                <span style="font-size:0.8em">@n.getMetric().getName()</span>
+                            </div>
+                        </div>
+                        <table class="table spark-table" id="spark-@n.getProject().getId()-@n.getMetric().getId()-table">
+                            <thead>
+                                <th>low</th>
+                                <th>high</th>
+                                <th>curr</th>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+
+                        <div id="spark-@n.getProject().getId()-@n.getMetric().getId()"></div>
+                    </div>
+                    <script type="text/javascript">
+                    $(function() {
+                        $.get("http://localhost:8182/projects/p/@n.getProject().getId()/s/@n.getMetric().getId()", function (data) {
+                            $("#spark-@n.getProject().getId()-@n.getMetric().getId()").html("<img class=\"spark\" src=\"http://localhost:8182" + data.spark + "\" />");
+                            $("#spark-@n.getProject().getId()-@n.getMetric().getId()-table > tbody:last").append("<tr><td>" + abbreviateNumber(data.low) + 
+                                "</td><td>" + abbreviateNumber(data.high) + 
+                                "</td><td>" + abbreviateNumber(data.last) + "</td></tr>");
+
+                        });
+                    });
+                    </script>
+                }
+                case n : EventGroup => {
+                    <div class="">
+                        <!-- <div class="pull-right"><img src="@routes.Assets.at("icons/events.png")" alt="Edit Event Group"/></div> -->
+                        <span class="glyphicon glyphicon-calendar dash pull-right"></span>
+                        <h3 class="pull-left">@n.getName()</h3>
+                        <div class="clearfix"></div>
+                        @if(n.getEvents().size() >0){
+                            <div class="">
+                                <table class="table spark-table">
+                                    <tbody>
+                                        @for(e <- n.getEvents()) {
+                                        <tr><td>@e.getName()</td><td>@e.getDate().format("dd/MM/yyyy")</td></tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        } else {
+                        <div style="overflow-y:scroll">
+                            <span style="font-size:0.8em; line-height:1em">Use the button above to add some events to this group. For example:</span>
+                            <table class="table spark-table">
+                                <tbody>
+                                    <tr><td>My birthday</td><td>12/08/1986</td></tr>
+                                    <tr><td>My mum's birthday</td><td>23/08/1986</td></tr>
+                                </tbody>
+                            </table>
+                            </div>
+                        }
+                    </div>
+                }
+            }
+        </li>
+    }
+
+       <!--  <li class="box" data-row="1" data-col="1" data-sizex="1" data-sizey="1">A</li>
+        <li class="box" data-row="2" data-col="1" data-sizex="1" data-sizey="1">B</li>
+        <li class="box" data-row="3" data-col="1" data-sizex="1" data-sizey="1">C</li>
+ 
+        <li class="box" data-row="1" data-col="2" data-sizex="2" data-sizey="1"></li>
+        <li class="box" data-row="2" data-col="2" data-sizex="2" data-sizey="2"></li>
+ 
+        <li class="box" data-row="1" data-col="4" data-sizex="1" data-sizey="1"></li>
+        <li class="box" data-row="2" data-col="4" data-sizex="2" data-sizey="1"></li>
+        <li class="box" data-row="3" data-col="4" data-sizex="1" data-sizey="1"></li>
+ 
+        <li class="box" data-row="1" data-col="5" data-sizex="1" data-sizey="1"></li>
+        <li class="box" data-row="3" data-col="5" data-sizex="1" data-sizey="1"></li>
+ 
+        <li class="box" data-row="1" data-col="6" data-sizex="1" data-sizey="1"></li>
+        <li class="box" data-row="2" data-col="6" data-sizex="1" data-sizey="2"></li> -->
+    </ul>
+</div>
+
+<script type="text/javascript">
+    var grid;
+    $(function(){ 
+        grid = $(".gridster ul").gridster({
+            widget_margins: [10, 10],
+            widget_base_dimensions: [140, 140]
+        }).data("gridster");
+    });
+</script>
+
+    </div>
+</section>
+<script type="text/javascript" src="@routes.Assets.at("js/ossplots2.js")"></script>
+<script type="text/javascript" src="@routes.Assets.at("js/d3.v3.min.js")"></script>
+}
