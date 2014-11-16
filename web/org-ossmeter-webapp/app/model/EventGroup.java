@@ -19,22 +19,16 @@ public class EventGroup extends GridEntry {
 		ROW.setOwningType("model.EventGroup");
 		SIZEX.setOwningType("model.EventGroup");
 		SIZEY.setOwningType("model.EventGroup");
+		NAME.setOwningType("model.EventGroup");
 	}
 	
 	public static NumericalQueryProducer COL = new NumericalQueryProducer("col");
 	public static NumericalQueryProducer ROW = new NumericalQueryProducer("row");
 	public static NumericalQueryProducer SIZEX = new NumericalQueryProducer("sizeX");
 	public static NumericalQueryProducer SIZEY = new NumericalQueryProducer("sizeY");
+	public static StringQueryProducer NAME = new StringQueryProducer("name"); 
 	
 	
-	
-	
-	public List<Event> getEvents() {
-		if (events == null) {
-			events = new PongoList<Event>(this, "events", true);
-		}
-		return events;
-	}
 	public String getName() {
 		return parseString(dbObject.get("name")+"", "");
 	}
@@ -43,6 +37,14 @@ public class EventGroup extends GridEntry {
 		dbObject.put("name", name);
 		notifyChanged();
 		return this;
+	}
+	
+	
+	public List<Event> getEvents() {
+		if (events == null) {
+			events = new PongoList<Event>(this, "events", true);
+		}
+		return events;
 	}
 	
 	

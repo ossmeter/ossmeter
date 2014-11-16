@@ -5,17 +5,16 @@ import java.util.*;
 import com.googlecode.pongo.runtime.*;
 import com.googlecode.pongo.runtime.querying.*;
 
-// protected region custom-imports on begin
-public class Role extends Pongo implements be.objectify.deadbolt.core.models.Role {
-// protected region custom-imports end
 
+public class Tag extends Pongo {
 	
-	// protected region custom-fields-and-methods on begin
-	// protected region custom-fields-and-methods end
+	protected List<Project> projects = null;
 	
-	public Role() { 
+	
+	public Tag() { 
 		super();
-		NAME.setOwningType("model.Role");
+		dbObject.put("projects", new BasicDBList());
+		NAME.setOwningType("model.Tag");
 	}
 	
 	public static StringQueryProducer NAME = new StringQueryProducer("name"); 
@@ -25,13 +24,19 @@ public class Role extends Pongo implements be.objectify.deadbolt.core.models.Rol
 		return parseString(dbObject.get("name")+"", "");
 	}
 	
-	public Role setName(String name) {
+	public Tag setName(String name) {
 		dbObject.put("name", name);
 		notifyChanged();
 		return this;
 	}
 	
 	
+	public List<Project> getProjects() {
+		if (projects == null) {
+			projects = new PongoList<Project>(this, "projects", true);
+		}
+		return projects;
+	}
 	
 	
 }

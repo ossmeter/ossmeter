@@ -34,7 +34,7 @@ case s : SparkGridEntry => {@if(s.getProject().getId()) {app.grid.sparks.push("@
     	<div class="project-detail" data-project="@project.getName()">
 
     		<div class="row">
-    			<div class="col-md-12">
+    			<div class="col-md-12"><img src="@routes.Assets.at("img/osslogo.png")" style="width:60px;" alt="OSSMETER" />
     		        <h1 class="name">@project.getName()</h1>
     	        </div>
     		</div>
@@ -104,12 +104,11 @@ case s : SparkGridEntry => {@if(s.getProject().getId()) {app.grid.sparks.push("@
         <div class="col-md-8">
 			<div class="tab-content">
 		        <div class="tab-pane fade in active" id="factoids-sourcecode">	
-    				<p>has had 2,470 commits made by 4 contributors representing 2,480,383 lines of code</p>
-    				<p>is mostly written in Java with an average number of source code comments</p>
-    				<p>has a well established, mature codebase maintained by a average size development team with stable Y-O-Y commits</p>
-    				<p>took an estimated 719 years of effort (COCOMO model) starting with its first commit in September, 2008 ending with its most recent commit 6 days ago</p>
-    				<p>is mostly written in Java with an average number of source code comments</p>
-    				<p>has a well established, mature codebase maintained by a average size development team with stable Y-O-Y commits</p>
+    				 <p>The total size of the code base is 5020 physical lines of code. The main development language is Java with 3288 physical lines of code. The following 2 other languages: HTML (1566), XML (166). In the last size months there have been 2 people working on this project.</p>
+                    <p>The percentage of lines containing comments is 31.8%.</p>
+                    <p>The percentage of commented out code is 2.7%.</p>
+                    <p>The percentage of Java classes with problematic coupling is 4.5%.</p>
+                    <p>Currently, inefficient string usage code practices are widely spread throughout the project but the situation is improving over the last six months.</p>
 			    </div>
 			    <div class="tab-pane fade" id="sparklines-sourcecode">
     			  	<table class="table" id="sparklines-table-sourcecode">
@@ -212,12 +211,9 @@ case s : SparkGridEntry => {@if(s.getProject().getId()) {app.grid.sparks.push("@
             <div class="col-md-8">
     			<div class="tab-content">
     			    <div class="tab-pane fade in active" id="factoids-comms">	
-        				<p>has had 2,470 commits made by 4 contributors representing 2,480,383 lines of code</p>
-        				<p>is mostly written in Java with an average number of source code comments</p>
-        				<p>has a well established, mature codebase maintained by a average size development team with stable Y-O-Y commits</p>
-        				<p>took an estimated 719 years of effort (COCOMO model) starting with its first commit in September, 2008 ending with its most recent commit 6 days ago</p>
-        				<p>is mostly written in Java with an average number of source code comments</p>
-        				<p>has a well established, mature codebase maintained by a average size development team with stable Y-O-Y commits</p>
+        				<p>The project is associated with 1 communication channel.</p>
+                        <p>In the last year, it has received high attention. 256 requests and 322 replies have been posted, in total.</p>
+                        <p>In the last month, 23 requests and 39 replies have been posted.</p>
     			    </div>
     			    <div class="tab-pane fade" id="sparklines-comms">
         			  	<table class="table">
@@ -332,13 +328,11 @@ case s : SparkGridEntry => {@if(s.getProject().getId()) {app.grid.sparks.push("@
             </div>
             <div class="col-md-8">
     			<div class="tab-content">
-    			  <div class="tab-pane fade in active" id="factoids-bts">	
-    				<p>has had 2,470 commits made by 4 contributors representing 2,480,383 lines of code</p>
-    				<p>is mostly written in Java with an average number of source code comments</p>
-    				<p>has a well established, mature codebase maintained by a average size development team with stable Y-O-Y commits</p>
-    				<p>took an estimated 719 years of effort (COCOMO model) starting with its first commit in September, 2008 ending with its most recent commit 6 days ago</p>
-    				<p>is mostly written in Java with an average number of source code comments</p>
-    				<p>has a well established, mature codebase maintained by a average size development team with stable Y-O-Y commits</p>
+    			  <div class="tab-pane fade in active" id="factoids-bts">
+    				<p>The project is associated with 1 bug tracking system.</p>
+                    <p>In the last year, it has received high attention.
+                    59 new bugs, 265 new comments and 46 new patches have been posted, in total.</p>
+                    <p>In the last month, 3 new bugs, 11 new comments and 1 new patches have been posted to the bug trackers of the project.</p>
     			  </div>
     			  <div class="tab-pane fade" id="sparklines-bts">
                     <table class="table" id="sparklines-table-bts">
@@ -396,9 +390,30 @@ case s : SparkGridEntry => {@if(s.getProject().getId()) {app.grid.sparks.push("@
     		{ name : "Buzz", stars : Math.floor(Math.random() * (6 - 1) + 1)},
     	];
 
-        drawSpiderChart("#spider-sourcecode", factoids);
-        drawSpiderChart("#spider-comms", factoids);
-        drawSpiderChart("#spider-bts", factoids);
+        var srcfactoids = [
+            { name : "Code Size", stars : 3},
+            { name : "Comments (%)", stars : 3},
+            { name : "Cohesion", stars : 1},
+            { name : "Code Style", stars : 1},
+            { name : "Clones", stars : 4},
+            { name : "Team Stability", stars : 3},
+        ];
+
+        var ccfactoids = [
+            { name : "Last Year Activity", stars : 3},
+            { name : "Last 3 Months Activity", stars : 2},
+            { name : "Communication Channels", stars : 5}
+        ];
+
+        var btsfactoids = [
+            { name : "Last Year Activity", stars : 4},
+            { name : "Last 3 Months Activity", stars : 3},
+            { name : "Bug Trackers", stars : 5}
+        ];
+
+        drawSpiderChart("#spider-sourcecode", srcfactoids);
+        drawSpiderChart("#spider-comms", ccfactoids);
+        drawSpiderChart("#spider-bts", btsfactoids);
     });
 </script>
 

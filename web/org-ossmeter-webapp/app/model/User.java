@@ -10,7 +10,7 @@ import be.objectify.deadbolt.core.models.Subject;
 
 public class User extends Pongo implements Subject {
 // protected region custom-imports end
-	
+
 	protected List<Role> roles = null;
 	protected List<Permission> permissions = null;
 	protected List<LinkedAccount> linkedAccounts = null;
@@ -19,27 +19,27 @@ public class User extends Pongo implements Subject {
 	protected List<GridEntry> grid = null;
 	
 	// protected region custom-fields-and-methods on begin
-	public Date getLastLogin() {
-		Object d = dbObject.get("lastLogin");
-		if (d == null) return null;
-		else return (Date)d;
-	}
-	public User setLastLogin(Date lastLogin) {
-		dbObject.put("lastLogin", lastLogin);
-		notifyChanged();
-		return this;
-	}
-	public Date getJoinDate() {
-		Object d = dbObject.get("lastLogin");
-		if (d == null) return null;
-		else return (Date)d;
-	}
+	// public Date getLastLogin() {
+	// 	Object d = dbObject.get("lastLogin");
+	// 	if (d == null) return null;
+	// 	else return (Date)d;
+	// }
+	// public User setLastLogin(Date lastLogin) {
+	// 	dbObject.put("lastLogin", lastLogin);
+	// 	notifyChanged();
+	// 	return this;
+	// }
+	// public Date getJoinDate() {
+	// 	Object d = dbObject.get("lastLogin");
+	// 	if (d == null) return null;
+	// 	else return (Date)d;
+	// }
 	
-	public User setJoinDate(Date joinDate) {
-		dbObject.put("joinDate", joinDate);
-		notifyChanged();
-		return this;
-	}
+	// public User setJoinDate(Date joinDate) {
+	// 	dbObject.put("joinDate", joinDate);
+	// 	notifyChanged();
+	// 	return this;
+	// }
 
 	@Override
 	public String getIdentifier() {
@@ -117,7 +117,26 @@ public class User extends Pongo implements Subject {
 		dbObject.put("emailValidated", emailValidated);
 		notifyChanged();
 		return this;
-	}	
+	}
+	public Date getLastLogin() {
+		return parseDate(dbObject.get("lastLogin")+"", null);
+	}
+	
+	public User setLastLogin(Date lastLogin) {
+		dbObject.put("lastLogin", lastLogin);
+		notifyChanged();
+		return this;
+	}
+	public Date getJoinDate() {
+		return parseDate(dbObject.get("joinDate")+"", null);
+	}
+	
+	public User setJoinDate(Date joinDate) {
+		dbObject.put("joinDate", joinDate);
+		notifyChanged();
+		return this;
+	}
+	
 	
 	public List<Role> getRoles() {
 		if (roles == null) {

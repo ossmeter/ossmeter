@@ -12,17 +12,17 @@ public class Event extends Pongo {
 	
 	
 	// protected region custom-fields-and-methods on begin
-	public Date getDate() {
-		Object d = dbObject.get("date");
-		if (d == null) return null;
-		else return (Date)d;
-	}
+	// public Date getDate() {
+	// 	Object d = dbObject.get("date");
+	// 	if (d == null) return null;
+	// 	else return (Date)d;
+	// }
 	
-	public Event setDate(Date date) {
-		dbObject.put("date", date);
-		notifyChanged();
-		return this;
-	}
+	// public Event setDate(Date date) {
+	// 	dbObject.put("date", date);
+	// 	notifyChanged();
+	// 	return this;
+	// }
 	// protected region custom-fields-and-methods end
 	
 	public Event() { 
@@ -44,6 +44,16 @@ public class Event extends Pongo {
 		notifyChanged();
 		return this;
 	}
+	public Date getDate() {
+		return parseDate(dbObject.get("date")+"", null);
+	}
+	
+	public Event setDate(Date date) {
+		dbObject.put("date", date);
+		notifyChanged();
+		return this;
+	}
+	
 	
 	
 	

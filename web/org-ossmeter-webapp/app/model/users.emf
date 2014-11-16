@@ -4,6 +4,45 @@ package model;
 class Users {
 	val User[*] users;
 	val Token[*] tokens;
+	val Project[*] projects;
+	val Statistics[*] statistics;
+	val Tag[*] tags;
+}
+
+class Project {
+	@searchable
+	attr String ~id;
+	@searchable
+	attr String name;
+	val Tag[*] tags;
+}
+
+class Tag {
+	attr String name;
+	val Project[*] projects;
+}
+
+class Statistics {
+	attr Date date;
+	attr int numberOfProjects;
+	attr int numberOfUsers;
+	attr int numberOfVcsRepositories;
+	attr int numberOfBugTrackers;
+	attr int numberOfCommunicationChannels;
+	attr int numberOfBugs;
+	attr int numberOfMessages;
+	attr int numberOfCodeLines;
+	val Demographic[*] demographics;
+}
+
+class Demographic {
+	attr String name;
+	val DemographicEntry[*] entries;
+}
+
+class DemographicEntry {
+	attr String name;
+	attr double value;
 }
 
 @customize
@@ -55,11 +94,6 @@ class Role {
 @customize
 class Permission {
 	attr String value;
-}
-
-class Project {
-	attr String ~id;
-	attr String name;
 }
 
 class Metric {

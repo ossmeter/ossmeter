@@ -1,5 +1,8 @@
 package com.googlecode.pongo.runtime;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 import com.mongodb.BasicDBObject;
@@ -138,6 +141,22 @@ public class Pongo {
 				return def;
 			}
 		}
+	}
+	
+	protected Date parseDate(Object date, Date def) {
+		if (date == null) return null;
+		if (date instanceof Date) {
+			return (Date)date;
+		} else if(date instanceof String) {
+			SimpleDateFormat f = new SimpleDateFormat("EEE MMM dd kk:mm:ss z yyyy");
+			
+			try {
+				return f.parse((String) date);
+			} catch (ParseException e) {
+				return null;
+			}
+		}
+		else return null;
 	}
 	
 	protected float parseFloat(String str, float def) {

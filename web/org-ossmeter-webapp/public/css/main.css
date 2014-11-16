@@ -125,6 +125,10 @@ ol.projectbreadcrumb {
     margin-bottom: 10px;
 }
 
+div.checkbox {
+    margin-left:20px;
+}
+
 .quote {
     font-size:2em;
 }
@@ -179,6 +183,19 @@ th {
 .gridster ul {
     list-style:none;
     margin:0;
+}
+
+ul.projects{
+    list-style: none;
+    margin:0;
+    padding:0;
+}
+ul.projects li {
+    border-bottom: 1px solid #ddd;
+    padding:10px;
+}
+ul.projects img {
+    margin-top:10px;
 }
 
 li.gridentry {

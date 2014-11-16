@@ -8,10 +8,12 @@ import com.googlecode.pongo.runtime.querying.*;
 
 public class Project extends Pongo {
 	
+	protected List<Tag> tags = null;
 	
 	
 	public Project() { 
 		super();
+		dbObject.put("tags", new BasicDBList());
 		ID.setOwningType("model.Project");
 		NAME.setOwningType("model.Project");
 	}
@@ -40,6 +42,12 @@ public class Project extends Pongo {
 	}
 	
 	
+	public List<Tag> getTags() {
+		if (tags == null) {
+			tags = new PongoList<Tag>(this, "tags", true);
+		}
+		return tags;
+	}
 	
 	
 }

@@ -1,31 +1,36 @@
 
 @main(Messages("ossmeter.index.title")) {
 <section>
-    <div class="container box">
-        <h1>Compare</h1>
-        <p>Filler text</p>
-	</div>
-</section>
-<section>
-    <div class="container box">
-	    <h2>Select Projects</h2>
-        <p>Choose the projects you wish to compare your selected projects on. Start typing into the text boxes to search for a project.</p>
-        <div class="row"  data-bind="foreach: projects">
-        	<div class="col-md-4">
-			    <div class="input-group" data-bind="css: css()">
-				    <input type="text" class="form-control" id="project0" placeholder="Search..." data-bind="value: name">
-				    <div class="input-group-addon" data-bind="click: $parent.removeProject">
-				    	<span class="glyphicon glyphicon-remove"></span>
+  <div class="container box">
+    
+     <div class="row">
+     	<div class="col-md-3">
+     		<h1>Compare</h1>
+     	</div>
+     	<div class="col-md-6">
+     		<div class="row">
+			    <div class="col-md-12 center">
+			    	<h2 style="margin:5px">Discover, <span style="color:#ff9400">Compare</span>, Adopt, Monitor</h2>
+			    </div>
+		    </div>
+          	<div class="row"  data-bind="foreach: projects">
+	        	<div class="col-md-4">
+				    <div class="input-group" data-bind="css: css()">
+					    <input type="text" class="form-control" id="project0" placeholder="Search..." data-bind="value: name">
+					    <div class="input-group-addon" data-bind="click: $parent.removeProject">
+					    	<span class="glyphicon glyphicon-remove"></span>
+					    </div>
 				    </div>
 			    </div>
 		    </div>
-	    </div>
-	    <div class="row">
-	    	<div class="col-md-12 center">
-			    <button class="btn btn-default" data-bind="click: addProject, enable: projects().length < 3"><span class="glyphicon glyphicon-plus"></span> Add Project</button>
+		    <div class="row">
+		    	<div class="col-md-12 center">
+				    <button class="btn btn-default" data-bind="click: addProject, enable: projects().length < 3"><span class="glyphicon glyphicon-plus"></span> Add Project</button>
+			    </div>
 		    </div>
-	    </div>
-    </div>
+          </div>
+      </div>
+   	</div>
 </section>
 
 <section>
@@ -39,13 +44,30 @@
                         <div class="panel-heading">
                             <h3 class="marginless">Source Code</h3>
                         </div>
-                         <div class="form-group panel-body metric-list" data-bind="foreach: metrics">
+                        <div class="form-group panel-body metric-list">
+		                    <div class="checkbox">
+	                        	<input type="checkbox"> <span> Lines of code</span>
+                        	</div>
+                        	<div class="checkbox">
+	                        	<input type="checkbox"> <span> Number of committers</span>
+                        	</div>
+                        	<div class="checkbox">
+	                        	<input type="checkbox"> <span> Comments</span>
+                        	</div>
+                        	<div class="checkbox">
+	                        	<input type="checkbox"> <span> Churn</span>
+                        	</div>
+                        	<div class="checkbox">
+	                        	<input type="checkbox"> <span> Methods per class</span>
+                        	</div>
+                        </div>
+                         <!-- <div class="form-group panel-body metric-list" data-bind="foreach: srcMetrics">
                             <div class="checkbox">
                                   <input type="checkbox" value="id" data-bind="checked: selected">
                                   <span data-bind="text: name"></span>
 
                               </div>
-                          </div>
+                          </div> -->
                       </div>
                 </div>
                 <div class="col-md-4">
@@ -53,49 +75,63 @@
                         <div class="panel-heading">
                             <h3 class="marginless">Communication Channels</h3>
                         </div>
-                         <div class="form-group panel-body metric-list">
+                        <div class="form-group panel-body metric-list">
+		                    <div class="checkbox">
+		                    	<input type="checkbox"> <span> Number of requests</span>
+		                    	</div>
+		                    	<div class="checkbox">
+		                        	<input type="checkbox"> <span> Number of replies</span>
+		                    	</div>
+		                    	<div class="checkbox">
+		                        	<input type="checkbox"> <span> Averate reply time</span>
+		                    	</div>
+		                    	<div class="checkbox">
+		                        	<input type="checkbox"> <span> New threads</span>
+		                    	</div>
+		                    	<div class="checkbox">
+		                        	<input type="checkbox"> <span> New users</span>
+		                    	</div>
+		                    </div>
+                        </div>
+                         <!-- <div class="form-group panel-body metric-list" data-bind="foreach: ccMetrics">
                             <div class="checkbox">
-                                <label>
-                                  <input type="checkbox"> Lines of code
-                                </label>
+                                  <input type="checkbox" value="id" data-bind="checked: selected">
+                                  <span data-bind="text: name"></span>
+
                               </div>
-                              <div class="checkbox">
-                                <label>
-                                  <input type="checkbox"> Lines of code
-                                </label>
-                              </div>
-                              <div class="checkbox">
-                                <label>
-                                  <input type="checkbox"> Lines of code
-                                </label>
-                              </div>
-                          </div>
-                      </div>
-                </div>
+                          </div> -->
+                  </div>
                 <div class="col-md-4">
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h3 class="marginless">Bug Tracking</h3>
                         </div>
                          <div class="form-group panel-body metric-list">
+		                    <div class="checkbox">
+		                    	<input type="checkbox"> <span> Bug open time</span>
+		                    	</div>
+		                    	<div class="checkbox">
+		                        	<input type="checkbox"> <span> Average sentiment</span>
+		                    	</div>
+		                    	<div class="checkbox">
+		                        	<input type="checkbox"> <span> Cumulative comments</span>
+		                    	</div>
+		                    	<div class="checkbox">
+		                        	<input type="checkbox"> <span> Cumulative bugs</span>
+		                    	</div>
+		                    	<div class="checkbox">
+		                        	<input type="checkbox"> <span> Fixed bugs</span>
+		                    	</div>
+		                    </div>
+                        </div>
+                        <!--  <div class="form-group panel-body metric-list" data-bind="foreach: btsMetrics">
                             <div class="checkbox">
-                                <label>
-                                  <input type="checkbox"> Lines of code
-                                </label>
+                                  <input type="checkbox" value="id" data-bind="checked: selected">
+                                  <span data-bind="text: name"></span>
+
                               </div>
-                              <div class="checkbox">
-                                <label>
-                                  <input type="checkbox"> Lines of code
-                                </label>
-                              </div>
-                              <div class="checkbox">
-                                <label>
-                                  <input type="checkbox"> Lines of code
-                                </label>
-                              </div>
-                          </div>
+                          </div> -->
                       </div>
-                </div>
             </div>
         </form>
     </div>
@@ -114,7 +150,7 @@
 <section>
     <div class="container box">
         <div class="row" id="parcoods-plot">
-        	parallel coordinates
+        	&nbsp;
         </div>
         <div class="row" id="parcoods-table"></div>
     </div>
@@ -135,7 +171,40 @@
             </div>
             <div class="col-md-2">
                 <div id="metricplot-metrics">
+	                <h3>Legend</h3>
+	                <div>
+	                    <div class="row">
+	                        <div class="col-md-2">
+	                            <div class="legend-box" style="background-color:red" ></div> 
+	                        </div>
+	                        <div class="col-md-8">Epsilon</div>
+	                    </div>
+	                    <div class="row">
+	                        <div class="col-md-2">
+	                            <div class="legend-box" style="background-color:red" ></div> 
+	                        </div>
+	                        <div class="col-md-8">ATL</div>
+	                    </div>
+	                </div>
                     <h3>Metrics</h3>
+                    <div class="form-group panel-body metric-list">
+	                    <div class="checkbox">
+	                    	<input type="checkbox"> <span> Bug open time</span>
+	                    	</div>
+	                    	<div class="checkbox">
+	                        	<input type="checkbox"> <span> Average sentiment</span>
+	                    	</div>
+	                    	<div class="checkbox">
+	                        	<input type="checkbox"> <span> Cumulative comments</span>
+	                    	</div>
+	                    	<div class="checkbox">
+	                        	<input type="checkbox" checked> <span> Cumulative bugs</span>
+	                    	</div>
+	                    	<div class="checkbox">
+	                        	<input type="checkbox"> <span> Fixed bugs</span>
+	                    	</div>
+	                    </div>
+                    </div>
                     <div class="radio" data-bind="foreach: selectedMetrics">
                       
                         <input type="radio" name="metricplot-metrics-radios" id="metricplot-metrics-radios" data-bind="id: id, value: name" checked>
@@ -200,6 +269,20 @@ $(function() {
 	var chart = new ossplots.Chart("#metricplot-plot", vis);
 	chart.height = 400;
     chart.draw();
+
+    $.getJSON("http://localhost:8182/projects/p/modelingepsilon/m/cumulativeBugs", function(vis) {
+
+    	var chart = new ossplots.Chart("#metricplot-plot", vis);
+		chart.height = 400;
+	    chart.draw();
+
+
+    	$.getJSON("http://localhost:8182/projects/p/modelingmmtatl/m/cumulativeBugs", function(vis2) {
+    		chart.addVis(vis2);
+	    });
+    });
+
+
 });
 // END DEBUG ONLY
 </script> 
@@ -236,9 +319,10 @@ $(function(){
 		}
 	}
 
-	var Metric = function(id, name, selected) {
+	var Metric = function(id, name, kind, selected) {
 		this.id = id;
 		this.name = name;
+		this.kind = kind;
 		this.selected = ko.observable(selected);
 	}
 
@@ -268,6 +352,40 @@ $(function(){
 			return val;
 		});
 
+		self.srcMetrics = ko.computed(function() {
+			var val = [];
+			ko.utils.arrayForEach(self.metrics(), function(m) {
+				if (m.kind === "src") {
+					val.push(m);
+				}
+			});
+			return val;
+		});
+
+		self.ccMetrics = ko.computed(function() {
+			var val = [];
+			ko.utils.arrayForEach(self.metrics(), function(m) {
+				if (m.kind === "cc") {
+					val.push(m);
+				}
+			});
+			return val;
+		});
+
+		self.btsMetrics = ko.computed(function() {
+			var val = [];
+			ko.utils.arrayForEach(self.metrics(), function(m) {
+				if (m.kind === "bts") {
+					val.push(m);
+				}
+			});
+			return val;
+		});
+
+		self.getMetricsOfKind = function(kind) {
+
+		}.bind(self);
+
 		self.removeProject = function(project) {
 			self.projects.remove(project);
 		}.bind(self);
@@ -282,14 +400,14 @@ $(function(){
 
 	$.getJSON("http://localhost:8182/metrics", function (data) {
 		for (d in data) {
-			var m = new Metric(data[d].name, data[d].name, false); //FIXME ID/NAME
+			var m = new Metric(data[d].name, data[d].name, "bts",  false); //FIXME ID/NAME
 			vm.metrics.push(m);
 		}
 	});
 	ko.applyBindings(vm);
 
 	// Load projects from cookies
-	var comp = JSON.parse($.cookie("compare"));
+	var comp = JSON.parse($.cookie("cccc"));
 	if (comp) {
 		for (c in comp) {
 			// Bind

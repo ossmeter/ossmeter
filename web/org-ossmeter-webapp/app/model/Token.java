@@ -13,26 +13,26 @@ public class Token extends Pongo {
 	protected User user = null;
 	
 	// protected region custom-fields-and-methods on begin
-	public Date getCreated() {
-		Object d = dbObject.get("created");
-		if (d == null) return null;
-		else return (Date)d;
-	}
-	public Date getExpires() {
-		Object d = dbObject.get("expires");
-		if (d == null) return null;
-		else return (Date)d;
-	}
-	public Token setCreated(Date created) {
-		dbObject.put("created", created);
-		notifyChanged();
-		return this;
-	}
-	public Token setExpires(Date expires) {
-		dbObject.put("expires", expires);
-		notifyChanged();
-		return this;
-	}
+	// public Date getCreated() {
+	// 	Object d = dbObject.get("created");
+	// 	if (d == null) return null;
+	// 	else return (Date)d;
+	// }
+	// public Date getExpires() {
+	// 	Object d = dbObject.get("expires");
+	// 	if (d == null) return null;
+	// 	else return (Date)d;
+	// }
+	// public Token setCreated(Date created) {
+	// 	dbObject.put("created", created);
+	// 	notifyChanged();
+	// 	return this;
+	// }
+	// public Token setExpires(Date expires) {
+	// 	dbObject.put("expires", expires);
+	// 	notifyChanged();
+	// 	return this;
+	// }
 	// protected region custom-fields-and-methods end
 	
 	public Token() { 
@@ -73,6 +73,26 @@ public class Token extends Pongo {
 		notifyChanged();
 		return this;
 	}
+	public Date getCreated() {
+		return parseDate(dbObject.get("created")+"", null);
+	}
+	
+	public Token setCreated(Date created) {
+		dbObject.put("created", created);
+		notifyChanged();
+		return this;
+	}
+	public Date getExpires() {
+		return parseDate(dbObject.get("expires")+"", null);
+	}
+	
+	public Token setExpires(Date expires) {
+		dbObject.put("expires", expires);
+		notifyChanged();
+		return this;
+	}
+	
+	
 	
 	public Token setUser(User user) {
 		if (this.user != user) {

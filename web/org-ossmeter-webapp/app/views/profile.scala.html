@@ -176,7 +176,8 @@
                     <script type="text/javascript">
                     $(function(){ 
                         $.getJSON("http://localhost:8182/projects/p/@n.getProject().getId()/m/@n.getMetric().getId()", function(vis) {
-                            var chart = new ossplots.Chart("#plot-@n.getProject().getId()-@n.getMetric().getId()", vis, 100);
+                            var chart = new ossplots.Chart("#plot-@n.getProject().getId()-@n.getMetric().getId()", vis);
+                            chart.height = 100;
                             chart.margin.left = 30;
                             chart.margin.top = 10;
                             chart.draw();

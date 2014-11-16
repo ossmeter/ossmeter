@@ -59,15 +59,21 @@ function toggleSpark(elem, projectid, projectname, metricid, metricname) {
 }
 
 function addProjectToComparison(projectid, projectname) {
+	"use strict";
+	var projects = $.cookie("cccc");
 
-	var ids = $.map(app.compare, function(a) { return a.id; });
+	if (!projects) {
+		projects = [];
+	}
+
+	var ids = $.map(projects, function(a) { return a.id; });
 
 	if ($.inArray(projectid, ids) == -1) {
-		app.compare.projects.push({
+		projects.push({
 			id:projectid,
 			name:projectname
 		});
-		$.cookie("compare", app.compare.projects, { expires: 7, path: '/' });
+		$.cookie("cccc", projects);
 	}
 	$("#compare-bar").fadeIn(500);
 	drawCompareBar();
@@ -78,10 +84,12 @@ function closeCompareBar() {
 }
 
 function drawCompareBar(warn) {
+	"use strict";
 	$("#compare-bar-projects").empty();
-	for (p in app.compare.projects) {
+	var projects = $.cookie("cccc");
+	for (var p in projects) {
 		$("#compare-bar-projects").append(
-			'<div class="col-md-3"><h3>' + app.compare.projects[p].name + '</h3></div>'
+			'<div class="col-md-3"><h3>' + projects[p].name + '</h3></div>'
 			);
 	}
 }
