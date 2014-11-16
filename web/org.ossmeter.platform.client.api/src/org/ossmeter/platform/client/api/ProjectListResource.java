@@ -1,8 +1,10 @@
 package org.ossmeter.platform.client.api;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.Iterator;
 
+import org.ossmeter.platform.Configuration;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectRepository;
@@ -49,12 +51,22 @@ public class ProjectListResource extends ServerResource {
         	pageSize = Integer.valueOf(_size); 
         }
         
-        Platform platform = Platform.getInstance();
+        ObjectMapper mapper = new ObjectMapper();
+        Platform platform = null;
+        
+        try {
+			platform = new Platform(Configuration.getInstance().getMongoConnection());
+		} catch (UnknownHostException e1) {
+			e1.printStackTrace();
+			ObjectNode m = mapper.createObjectNode();
+			m.put("apicall", "list-all-projects");
+			return Util.generateErrorMessageRepresentation(m, e1.getMessage());
+		}
+        
         ProjectRepository projectRepo = platform.getProjectRepositoryManager().getProjectRepository();
         
         DBCursor cursor = projectRepo.getProjects().getDbCollection().find().skip(page*pageSize).limit(pageSize);
         
-        ObjectMapper mapper = new ObjectMapper();
         ArrayNode projects = mapper.createArrayNode();
         
         

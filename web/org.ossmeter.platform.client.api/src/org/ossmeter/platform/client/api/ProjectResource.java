@@ -1,5 +1,8 @@
 package org.ossmeter.platform.client.api;
 
+import java.net.UnknownHostException;
+
+import org.ossmeter.platform.Configuration;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.repository.model.ProjectRepository;
 import org.restlet.data.MediaType;
@@ -17,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import com.mongodb.Mongo;
 
 public class ProjectResource extends ServerResource {
 	@Get("json")
@@ -29,12 +33,20 @@ public class ProjectResource extends ServerResource {
 		responseHeaders.add(new Header("Access-Control-Allow-Origin", "*"));
 		responseHeaders.add(new Header("Access-Control-Allow-Methods", "GET"));
 		
+		ObjectMapper mapper = new ObjectMapper();
 		String projectId = (String) getRequest().getAttributes().get("projectid");
 		
-		Platform platform = Platform.getInstance();
+		Mongo mongo;
+		try {
+			mongo = Configuration.getInstance().getMongoConnection();
+		} catch (UnknownHostException e1) {
+			e1.printStackTrace();
+			getResponse().setStatus(Status.SERVER_ERROR_INTERNAL);
+			return Util.generateErrorMessageRepresentation(generateRequestJson(mapper, projectId), "The API was unable to connect to the database.");
+		}
+		Platform platform = new Platform(mongo);
 		ProjectRepository projectRepo = platform.getProjectRepositoryManager().getProjectRepository();
 		
-		ObjectMapper mapper = new ObjectMapper();
 		
 		// FIXME: This exclusion list needs to be somewhere... 
 		BasicDBObject ex = new BasicDBObject("executionInformation", 0);
