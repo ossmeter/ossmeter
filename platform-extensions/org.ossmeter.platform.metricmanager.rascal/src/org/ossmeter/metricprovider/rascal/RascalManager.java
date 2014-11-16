@@ -318,7 +318,7 @@ public class RascalManager {
 				if (f.hasTag("metric")) {
 					try {
 						String metricName = getTag(f, "metric");
-						String metricId = bundle.getSymbolicName() + "." + metricName;
+						String metricId = bundle.getSymbolicName().replace("org.ossmeter.metricprovider.", "") + metricName;
 						String friendlyName = getTag(f, "friendlyName");
 						String description = getTag(f, "doc");
 						IValue language = f.getTag("appliesTo");

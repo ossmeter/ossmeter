@@ -18,7 +18,9 @@ public class MetricHistoryManager {
 	
 	public void store(Project project, Date date, IHistoricalMetricProvider provider) {
 		DB db = platform.getMetricsRepository(project).getDb();
-		DBCollection collection = db.getCollection(provider.getIdentifier());
+		
+		String id = provider.getIdentifier().replace("org.ossmeter.metricprovider.", "");
+		DBCollection collection = db.getCollection(id);
 
 		MetricProviderContext context = new MetricProviderContext(platform, new OssmeterLoggerFactory().makeNewLoggerInstance(provider.getIdentifier()));
 		context.setDate(date);
