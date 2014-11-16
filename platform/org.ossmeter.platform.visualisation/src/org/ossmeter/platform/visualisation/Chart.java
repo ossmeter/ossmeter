@@ -121,8 +121,26 @@ public class Chart {
 					
 					field = field.replace("$", "");
 					Object value = null;
-					value = dbobj.get(field);
-					mapper.valueToTree(value);
+					if (field.equals("__date")) {
+						value = dbobj.get(field);
+					} else {
+						// U.G.L.Y. FIXME
+						if (field.contains("[")) {
+							String[] _ = field.split("\\[");
+							String[] __ = _[1].split("\\]");
+							int _index = Integer.valueOf(__[0]);
+							String _field = __[1].replace(".","");
+							BasicDBList _row = (BasicDBList)dbobj.get(_[0]);
+							
+							BasicDBObject _entry = (BasicDBObject) _row.get(_index);
+							value = _entry.get(_field);
+						} else {
+							value = dbobj.get(field);
+						}
+					}
+//					Object value = null;
+//					value = dbobj.get(field);
+//					mapper.valueToTree(value);
 					r.put(name, mapper.valueToTree(value));
 				}
 				results.add(r);
