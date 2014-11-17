@@ -78,6 +78,8 @@ public class Chart {
 				while (rowsIt.hasNext()) {
 					BasicDBObject row = (BasicDBObject) rowsIt.next();
 					ObjectNode r = mapper.createObjectNode();
+					
+					boolean validRow = true;
 
 					for (int i = 0; i < colNames.size(); i++) {
 						JsonNode col = colNames.get(i);
@@ -104,9 +106,20 @@ public class Chart {
 							}
 						}
 						
+						// Fix invalid data: 
+						// 	- If value is null, then we ignore row.
+						//	- If value is NaN, then we set to 0.
+						if (value == null) {
+							value = 0;
+						}
+						if (value.toString().equals("NaN")) {
+							validRow = false;
+							break;
+						}
+						
 						r.put(name, mapper.valueToTree(value));
 					}
-					results.add(r);
+					if (validRow) results.add(r);
 				}
 			}
 		} else {
@@ -114,6 +127,9 @@ public class Chart {
 			while(it.hasNext()) {
 				DBObject dbobj = it.next();
 				ObjectNode r = mapper.createObjectNode();
+				
+				boolean validRow = true;
+				
 				for (int i = 0; i < colNames.size(); i++) {
 					JsonNode col = colNames.get(i);
 					String name  = col.get("name").asText();
@@ -136,14 +152,31 @@ public class Chart {
 							value = _entry.get(_field);
 						} else {
 							value = dbobj.get(field);
+							
+//							if (value.toString().equals("NaN")) {
+//								System.out.println(value);
+//							}
 						}
 					}
 //					Object value = null;
 //					value = dbobj.get(field);
 //					mapper.valueToTree(value);
+					
+					
+					// Fix invalid data: 
+					// 	- If value is null, then we ignore row.
+					//	- If value is NaN, then we set to 0.
+					if (value == null) {
+						validRow = false;
+						break;
+					}
+					if (value.toString().equals("NaN")) {
+						value = 0;
+					}
+					
 					r.put(name, mapper.valueToTree(value));
 				}
-				results.add(r);
+				if (validRow) results.add(r);
 			}
 		}
 		return results;
