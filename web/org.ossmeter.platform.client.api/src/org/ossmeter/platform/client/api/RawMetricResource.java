@@ -4,18 +4,12 @@ import java.io.IOException;
 import java.text.ParseException;
 
 import org.ossmeter.platform.Date;
-import org.ossmeter.platform.IMetricProvider;
-import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.visualisation.MetricVisualisation;
 import org.ossmeter.platform.visualisation.MetricVisualisationExtensionPointManager;
-import org.ossmeter.repository.model.MetricProviderExecution;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectRepository;
 import org.restlet.data.Status;
-import org.restlet.engine.header.Header;
-import org.restlet.resource.Get;
-import org.restlet.resource.ServerResource;
-import org.restlet.util.Series;
+import org.restlet.representation.Representation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -24,26 +18,16 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
-import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.QueryBuilder;
 
-public class RawMetricResource extends ServerResource {
+public class RawMetricResource extends AbstractApiResource {
 
 	/**
 	 * TODO: Incomplete. [12th Sept, 2013]
 	 * @return
 	 */
-	@Get
-	public String represent() {
-		Series<Header> responseHeaders = (Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers");
-		if (responseHeaders == null) {
-		    responseHeaders = new Series(Header.class);
-		    getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders);
-		}
-		responseHeaders.add(new Header("Access-Control-Allow-Origin", "*"));
-		responseHeaders.add(new Header("Access-Control-Allow-Methods", "GET"));
-		
+	public Representation doRepresent() {
 		String projectId = (String) getRequest().getAttributes().get("projectid");
 		String metricId = (String) getRequest().getAttributes().get("metricid");
 		
@@ -64,18 +48,17 @@ public class RawMetricResource extends ServerResource {
 				builder.and("__datetime").lessThanEquals(new Date(end).toJavaDate());
 			}
 		} catch (ParseException e) {
-			return Util.generateErrorMessage(generateRequestJson(projectId, metricId), "Invalid date. Format must be YYYYMMDD.").toString();
+			return Util.generateErrorMessageRepresentation(generateRequestJson(projectId, metricId), "Invalid date. Format must be YYYYMMDD.");
 		}
 		
 		BasicDBObject query = (BasicDBObject) builder.get(); 
 		
-		Platform platform = Platform.getInstance();
 		ProjectRepository projectRepo = platform.getProjectRepositoryManager().getProjectRepository();
 		
 		Project project = projectRepo.getProjects().findOneByShortName(projectId);
 		if (project == null) {
 			getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			return Util.generateErrorMessage(generateRequestJson(projectId, metricId), "No project was found with the requested name.").toString();
+			return Util.generateErrorMessageRepresentation(generateRequestJson(projectId, metricId), "No project was found with the requested name.");
 		}
 
 		// Get collection from DB
@@ -86,7 +69,7 @@ public class RawMetricResource extends ServerResource {
 		MetricVisualisation vis = manager.findVisualisationById(metricId);
 		
 		if (vis == null) {
-			return Util.generateErrorMessage(generateRequestJson(projectId, metricId), "No visualiser found with specified ID.").toString();
+			return Util.generateErrorMessageRepresentation(generateRequestJson(projectId, metricId), "No visualiser found with specified ID.");
 		}
 		
 		// TODO: okay, so we only allow people to get raw HISTORIC metrics? How would we
@@ -94,7 +77,6 @@ public class RawMetricResource extends ServerResource {
 		// TODO: Can we stream it? Page it? Filter and agg?
 		
 		DBCursor cursor = projectDB.getCollection(vis.getMetricId()).find(query);
-		ObjectMapper mapper = new ObjectMapper();
 		ArrayNode results = mapper.createArrayNode();
 		
 		while (cursor.hasNext()) {
@@ -109,7 +91,7 @@ public class RawMetricResource extends ServerResource {
 		
 		cursor.close();
 		
-		return results.toString();
+		return Util.createJsonRepresentation(results);
 	}
 	
 	

@@ -2,19 +2,14 @@ package org.ossmeter.platform.client.api;
 
 import java.util.Iterator;
 
-import org.ossmeter.platform.Platform;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectRepository;
-import org.restlet.data.Status;
 import org.restlet.representation.Representation;
-import org.restlet.resource.Get;
-import org.restlet.resource.ServerResource;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-public class SearchProjectResource extends ServerResource {
+public class SearchProjectResource extends AbstractApiResource {
 	
 	/**
 	 * Query: 
@@ -22,9 +17,8 @@ public class SearchProjectResource extends ServerResource {
 	 * TODO: Implement soundex?
 	 * @return
 	 */
-	@Get
-	public Representation represent() {
-		ObjectMapper mapper = new ObjectMapper();
+	@Override
+	public Representation doRepresent() {
 		String query = getQueryValue("q");
 		
 		if (query == null || "".equals(query)){
@@ -35,7 +29,7 @@ public class SearchProjectResource extends ServerResource {
 		// TODO: need to escape the query
 		query = "/^" + query + "$/i";
 		
-		ProjectRepository repo = Platform.getInstance().getProjectRepositoryManager().getProjectRepository();
+		ProjectRepository repo = platform.getProjectRepositoryManager().getProjectRepository();
 		Iterator<Project> it = repo.getProjects().findByName(query).iterator();
 		
 		if (it.hasNext()) {
