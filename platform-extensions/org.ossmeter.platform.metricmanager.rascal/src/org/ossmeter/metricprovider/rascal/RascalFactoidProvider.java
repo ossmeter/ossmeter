@@ -55,7 +55,7 @@ public class RascalFactoidProvider extends AbstractFactoidMetricProvider {
 
 	@Override
 	public String getSummaryInformation() {
-		return getSummaryInformation();
+		return metric.getSummaryInformation();
 	}
 
 	@Override
