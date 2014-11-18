@@ -426,12 +426,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.ossmeter.metricprovider.trans.importer.redmine"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="jackson-mapper-asl"
          download-size="0"
          install-size="0"
@@ -589,12 +583,6 @@
          fragment="true"/>
 
    <plugin
-         id="org.ossmeter.metricprovider.trans.importer.sourceforge"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="com.fasterxml.jackson"
          download-size="0"
          install-size="0"
@@ -658,12 +646,6 @@
 
    <plugin
          id="javax.ws.rs"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.ossmeter.metricprovider.trans.importer.googlecode"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
@@ -1108,12 +1090,6 @@
 
    <plugin
          id="org.eclipse.epsilon.emc.plainxml"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.ossmeter.metricprovider.trans.importer.github"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
@@ -1847,13 +1823,6 @@
 
    <plugin
          id="org.ossmeter.metricprovider.trans.bugs.requestsreplies"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.ossmeter.metricprovider.trans.importer.eclipse"
          download-size="0"
          install-size="0"
          version="0.0.0"
