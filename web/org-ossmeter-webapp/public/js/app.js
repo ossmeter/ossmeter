@@ -163,15 +163,25 @@ function drawSpiderChart(container, factoids) {
 	var d = [];
 
 	for (var f in factoids) {
-		var ax = { axis: factoids[f].name, value: factoids[f].stars } ;
+		var stars = 1;
+
+		switch (factoids[f].stars) {
+			case "FOUR": stars = 4; break;
+			case "THREE": stars = 3; break;
+			case "TWO": stars = 2; break;
+		}
+
+		var ax = { axis: factoids[f].name, value: stars } ;
 		d.push(ax);
 	}
+
+	console.log(d);
 
 	var config = {
 		w: 200,
 		h: 200,
-		maxValue: 5,
-		levels: 5,
+		maxValue: 4,
+		levels: 4,
 		ExtraWidthX:200
 	};
 
