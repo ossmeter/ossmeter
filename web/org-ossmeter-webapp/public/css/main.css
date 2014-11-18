@@ -5,6 +5,30 @@
     margin:20px;
 }
 
+    a.adjust{
+        padding:10px;
+        display:block;
+        font-weight:bold;
+        background:#eee;
+        color:#333;
+        border-radius:12px;
+        -webkit-border-radius:12px;
+        -moz-border-radius:12px;
+        width:80px;
+        text-align:center;
+        text-decoration:none;
+    }
+    a.adjust:hover{
+        background:#333;
+        color:#FFF;
+        -webkit-transition: all 400ms; /*safari and chrome */
+        -moz-transition: all 400ms ease; /* firefox */
+        -o-transition: all 400ms ease; /* opera */
+        transition: all 400ms ease;
+    }
+    p.continued{
+        margin-top:0;
+    }
 
 
 body {

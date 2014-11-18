@@ -67,7 +67,7 @@
                     </table>
                     <script type="text/javascript">
                         $('#sparklines-@attributeId-tab').one('click', function(e) {
-                            $.getJSON("http://localhost:8182/projects/p/@project.getShortName()/s/@attribute.metrics.mkString("+")", function (result) {
+                            $.getJSON("http://localhost:8182/projects/p/@project.getShortName()/s/@attribute.metrics.take(10).mkString("+")", function (result) {
 
                                 console.log(Object.prototype.toString.call( result ));
 

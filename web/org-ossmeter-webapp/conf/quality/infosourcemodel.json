@@ -5,16 +5,36 @@
 	"attributes" : [
 		{
 			"name" : "Source Code",
-			"factoids" : [ "cocomo", "cocomo" ],
-			"metrics" : [ "CCHistogramPHP" ]
+			"factoids" : [ "rascal.generic.churn.commitSize", "trans.rascal.readability.ReadabilityFactoid", "rascal.generic.churn.churnVolume",
+						   "trans.rascal.activecommitters.developmentTeamExperience", "trans.rascal.activecommitters.weekendProject", "trans.rascal.activecommitters.developmentTeamExperienceSpread",
+						   "trans.rascal.activecommitters.developmentTeamStability", "trans.rascal.comments.headerUse", "trans.rascal.OO.java.Cohesion-Java",
+						   "trans.rascal.OO.java.Coupling-Java", "rascal.testability.java.JavaUnitTestCoverage" ],
+			"metrics" : [ "commitsovertimeline" ],
+			"detail" : "src"
 		}, {
 			"name" : "Communication Channels",
 			"factoids" : [ "cocomo", "cocomo" ],
-			"metrics" : [ "newsgroups.cumulativeNewUsers", "newsgroups.averageSentiment" ]
+			"metrics" : [ "newsgroups.activeusers", "newsgroups.newUsers", "newsgroups.cumulativeNewUsers", "newsgroups.articles", "newsgroups.cumulativeArticles", 
+						  "newsgroups.requests", "newsgroups.cumulativerequests", "newsgroups.replies", "newsgroups.cumulativereplies", 
+						  "newsgroups.averageSentiment", "newsgroups.sentimentAtThreadBeggining", 
+						  "newsgroups.requests-useraverage", "newsgroups.cumulativeNewThreads",
+						  "newsgroups.requestsreplies-threadaverage", "newsgroups.requestsreplies-useraverage", "newsgroups.threads",
+						  "newsgroups.newThreads", "newsgroups.replies-threadaverage",  "newsgroups.users",
+						  "newsgroups.replies-useraverage", 
+						  "newsgroups.requests-threadaverage", "newsgroups.inactiveusers", "newsgroups.averageResponseTime-threads", 
+						  "newsgroups.averageResponseTime", "newsgroups.cumulativerequestsreplies", "newsgroups.sentimentAtThreadEnd",
+						  "newsgroups.unansweredThreads", "newsgroups.activeinactiveusers", "newsgroups.cumulativeAverageResponseTime",
+						   "newsgroups.requestsreplies", "newsgroups.cumulativeAverageResponseTime-threads", "newsgroups.articles-threadaverage" ],
+			"detail" : "cc"
 		}, {
 			"name" : "Bug Tracking Systems",
-			"factoids" : [ "cocomo", "cocomo" ],
-			"metrics" : [ "bugs.wontFixBugs", "bugs.averageSentiment" ]
+			"factoids" : [ "org.ossmeter.factoid.bugs.channelusage.BugsChannelUsageFactoid", "cocomo" ],
+			"metrics" : [ "bugs.bugs", "bugs.cumulativeBugs", "bugs.fixedBugs", "bugs.resolvedClosedBugs", "bugs.nonResolvedClosedBugs", 
+						  "bugs.comments", "bugs.cumulativeComments", "bugs.patches", "bugs.cumulativePatches", "bugs.averageSentiment", 
+						  "bugs.wontFixBugs", "bugs.bugOpenTime-bugs", "bugs.worksForMeBugs", "bugs.worksForMeBugs",  "bugs.sentimentAtThreadBeggining",
+						  "bugs.bugOpenTime", "bugs.sentimentAtThreadEnd", "bugs.invalidBugs"
+						    ],
+			"detail" : "bts"
 		}
 	]
 }

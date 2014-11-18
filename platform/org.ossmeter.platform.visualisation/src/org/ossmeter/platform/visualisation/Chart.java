@@ -108,13 +108,15 @@ public class Chart {
 						
 						// Fix invalid data: 
 						// 	- If value is null, then we ignore row.
-						//	- If value is NaN, then we set to 0.
+						//	- If value is NaN or Infinity, then we set to 0.
 						if (value == null) {
-							value = 0;
-						}
-						if (value.toString().equals("NaN")) {
 							validRow = false;
 							break;
+						}
+						if (value.toString().equals("NaN")) {
+							value = 0;
+						} else if (value.toString().equals("Infinity")) {
+							value = -1;
 						}
 						
 						r.put(name, mapper.valueToTree(value));
@@ -172,6 +174,8 @@ public class Chart {
 					}
 					if (value.toString().equals("NaN")) {
 						value = 0;
+					} else if (value.toString().equals("Infinity")) {
+						value = -1;
 					}
 					
 					r.put(name, mapper.valueToTree(value));

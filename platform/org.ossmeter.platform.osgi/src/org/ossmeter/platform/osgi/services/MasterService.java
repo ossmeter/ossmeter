@@ -58,13 +58,13 @@ public class MasterService implements IMasterService {
 				// FIXME: Oh God, so many while loops.
 				while (true) { // TODO: while alive
 					Iterator<Project> it = platform.getProjectRepositoryManager().getProjectRepository().getProjects().iterator();
-					List<String> currentlyExecuting = getCurrentlyExecutingProjects();
 					
 					while (it.hasNext()) {
 						List<String> projects = new ArrayList<String>();
 						
 						while (it.hasNext()) {
 							Project next = it.next();
+							List<String> currentlyExecuting = getCurrentlyExecutingProjects();
 							if (next.getExecutionInformation().getMonitor() && !currentlyExecuting.contains(next.getShortName())) {
 								projects.add(next.getShortName());
 							}
@@ -110,7 +110,7 @@ public class MasterService implements IMasterService {
 			SchedulingInformation job = it.next();
 
 			// Ensure that we only count slaves who are still running 
-			if (System.currentTimeMillis() - job.getHeartbeat() < 30000) {
+			if (System.currentTimeMillis() - job.getHeartbeat() < 70000) {
 				
 				for (String p : job.getCurrentLoad()) { // Currently can't do addAll as Pongo hasn't implemented toArray
 					projects.add(p);
@@ -128,7 +128,7 @@ public class MasterService implements IMasterService {
 			SchedulingInformation job = it.next();
 
 			// Ensure that we only use slaves who are still running 
-			if (System.currentTimeMillis() - job.getHeartbeat() < 30000) {
+			if (System.currentTimeMillis() - job.getHeartbeat() < 70000) {
 				if (job.getCurrentLoad() == null || job.getCurrentLoad().size() == 0) {
 					return job;
 				}
