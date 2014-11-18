@@ -86,7 +86,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 	
 	
 	public RascalMetricProvider(String bundleId, String metricName, String shortMetricId, String friendlyName, String description, AbstractFunction function, Map<String,String> uses) {
-		this.bundleId = bundleId.replace("org.ossmeter.metricprovider.", "");
+		this.bundleId = trimIdForMongo(bundleId);
 		this.metricId = this.bundleId + "." + metricName;
 		this.shortMetricId =  shortMetricId;
 		this.friendlyName = friendlyName;
@@ -112,7 +112,7 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		Map<String,String> output = new HashMap<>();
 		
 		for (String use : uses.keySet()) {
-			String qualifiedUse = use.trim();
+			String qualifiedUse = trimIdForMongo(use.trim());
 
 			if (!use.replaceAll("\\.historic","").contains(".")) {
 				qualifiedUse = bundleId + "." + use;
@@ -122,6 +122,11 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		}
 		
 		return output;
+	}
+	
+	// Removes org.ossmeter.metricprovider. qualifier from an id to accomodate mongo db collection name limit of 120 bytes. 
+	private String trimIdForMongo(String fullId) {
+		return fullId.replace("org.ossmeter.metricprovider.", "");
 	}
 
 	private boolean hasParameter(String param) {
