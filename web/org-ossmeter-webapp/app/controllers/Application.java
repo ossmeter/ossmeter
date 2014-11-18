@@ -2,8 +2,10 @@ package controllers;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.io.File;
 
 import model.*;
+import models.*;
 import play.Routes;
 import play.data.Form;
 import play.mvc.*;
@@ -13,6 +15,8 @@ import play.mvc.Result;
 import providers.MyUsernamePasswordAuthProvider;
 import providers.MyUsernamePasswordAuthProvider.MyLogin;
 import providers.MyUsernamePasswordAuthProvider.MySignup;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import views.html.*;
 import be.objectify.deadbolt.java.actions.Group;
@@ -31,7 +35,6 @@ public class Application extends Controller {
 	public static final String FLASH_MESSAGE_KEY = "message";
 	public static final String FLASH_ERROR_KEY = "danger";
 	
-	
 	public static Result index() {
 		return ok(index.render());
 	}
@@ -48,6 +51,36 @@ public class Application extends Controller {
 						)
 				)
 				.as("text/javascript");
+	}
+
+	public static QualityModel getInformationSourceModel() {
+		return getQualityModel("conf/quality/infosourcemodel.json");
+	}
+
+	public static QualityModel getPlatformQualityModel() {
+		return getQualityModel("conf/quality/qualitymodel.json");
+	}
+
+	// FIXME: Consider caching
+	public static QualityModel getQualityModelById(String id) {
+		if (id.equals("channels")) return getInformationSourceModel();
+		else return getPlatformQualityModel();
+	}
+
+	protected static QualityModel getQualityModel(String modelPath) {
+		File qm = play.Play.application().getFile(modelPath);
+
+		ObjectMapper mapper = new ObjectMapper();
+		
+		QualityModel model = null;
+
+		try {
+			model = mapper.readValue(qm, QualityModel.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return model;
 	}
 
 	public static User getLocalUser(final Session session) {

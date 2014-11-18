@@ -1,0 +1,28 @@
+@(project: org.ossmeter.repository.model.Project, qualityModel : QualityModel, aspect : QualityAspect, summary : Boolean)
+
+@if(summary) {
+    @for(attribute <- aspect.attributes) {
+        @_attributeSummaryView(project, qualityModel, attribute)
+    }
+} else {
+    
+<section>
+    <div class="container box">
+        <div class="row">
+            <div class="col-md-12 center" id="metricplot-legend">
+                hi
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="container box">
+        <div class="row">
+    @for(attribute <- aspect.attributes) {
+        @_attributeDetailView(project, qualityModel, attribute)
+    }
+        </div>
+    </div>
+</section>
+}

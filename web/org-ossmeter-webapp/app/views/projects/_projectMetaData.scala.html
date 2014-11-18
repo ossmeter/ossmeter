@@ -1,0 +1,68 @@
+@(project: org.ossmeter.repository.model.Project)
+
+@import org.ossmeter.repository.model._
+@import org.ossmeter.repository.model.bts.bugzilla._
+@import org.ossmeter.repository.model.cc.forum._
+@import org.ossmeter.repository.model.cc.nntp._
+@import org.ossmeter.repository.model.cc.wiki._
+@import org.ossmeter.repository.model.vcs.svn._
+@import org.ossmeter.repository.model.vcs.git._
+@import org.ossmeter.repository.model.eclipse._
+
+<section>
+    <div class="container box">
+    	<div class="project-detail" data-project="@project.getName()">
+
+    		<div class="row">
+    			<div class="col-md-12">
+    		        <h1 class="name">@project.getName()</h1>
+    	        </div>
+    		</div>
+    		<div class="row section-heading">
+    	        <div class="col-md-6">
+    		        <ol class="breadcrumb projectbreadcrumb">
+    		            <li>@if(project.getActive()) {Active}else{Inactive} (2007-present)</li>
+                        @if(project.getLicenses() ne null) {
+                            @project.getLicenses().foreach(lic =>{
+    		            <li><a href="#">lic.getName()</a></li>
+                            })
+                        }
+    		            <li><a href="@project.getHomePage()">Project Website</a></li>
+    		            <li><a href="javascript:addProjectToComparison('@project.getShortName()','@project.getName()')">Add to comparison</a></li>
+    		        </ol>
+    	        </div>
+    	        <div class="col-md-6" style="text-align:right">
+    	           	<ol class="breadcrumb projectbreadcrumb">
+    	           		<li class="active">
+    	           			<a href="#"><button type="button" class="btn btn-primary btn-xs">Star <span class="badge">42</span></button></a>
+    				  	</li>
+    		            <li><a href="#">Settings</a></li>
+    		        </ol>
+    	        </div>
+    	    </div>	
+    		<div class="row">
+    	        <div class="col-md-6">
+    	            @Html(project.getDescription())
+    	        </div>
+    	        <div class="col-md-6">
+    	        @project match {
+    	        	case proj : EclipseProject => {
+                        <p>Forge: Eclipse</p>
+    	        		@if(proj.getPlatforms().length > 0) {
+                        <p>Platforms: @proj.getPlatforms()</p>
+                        }
+                        @if(proj.getReleases().length > 0) {
+                        <p>Releases: @proj.getReleases()</p>
+                        }
+                        <p>State: @proj.getState()</p>
+    	        	}
+    	        	case proj : Project => {
+    	        		<p><!-- I am a project --></p>
+    	        	}
+    	        }
+    	        </div>        
+    	    </div>
+        </div>
+    </div>
+</section>
+

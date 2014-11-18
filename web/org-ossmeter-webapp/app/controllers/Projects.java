@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
 
+import models.QualityAspect;
+import models.QualityModel;
 import models.ProjectImport;
 import org.ossmeter.repository.model.Project;
 import play.*;
@@ -93,45 +95,40 @@ public class Projects extends Controller {
 	}
 	
 	public static Result view(String id) {
-		Project project  = getProject(id);
+		return viewAspect(id, "channels", "channels", true);
+	}
+	
+	public static Result viewAspect(String projectId, String qmId, String aspectId, boolean summary) {
+		if (aspectId.equals("null")) aspectId = qmId; // Workaround for routing issue
 
-		// TODO: Grab Factoids as well
+		Project project = getProject(projectId);
 
 		if (project == null) {
 			flash(Application.FLASH_ERROR_KEY, "An unexpected error has occurred. We are looking into it.");//TODO move to Messages.
 			return ok(views.html.index.render());
 		}
-		return ok(views.html.projects.view_project.render(project));
+
+		QualityModel qm = Application.getQualityModelById(qmId);
+		if (qm == null) qm = Application.getInformationSourceModel();
+
+		// Lookup aspect
+		QualityAspect aspect = findAspect(qm, aspectId);
+
+		return ok(views.html.projects.view_project.render(project, qm, aspect, summary));
 	}
 
-	public static Result viewCode(String id) {
-		Project project  = getProject(id);
+	protected static QualityAspect findAspect(QualityAspect aspect, String aspectId) {
 
-		if (project == null) {
-			flash(Application.FLASH_ERROR_KEY, "An unexpected error has occurred. We are looking into it.");//TODO move to Messages.
-			return ok(views.html.index.render());
+		if (aspect.id.equals(aspectId)) {
+			return aspect;
 		}
-		return ok(views.html.projects.view_project_code.render(project));
-	}
 
-	public static Result viewComms(String id) {
-		Project project  = getProject(id);
-
-		if (project == null) {
-			flash(Application.FLASH_ERROR_KEY, "An unexpected error has occurred. We are looking into it.");//TODO move to Messages.
-			return ok(views.html.index.render());
+		for (QualityAspect a : aspect.aspects) {
+			QualityAspect as = findAspect(a, aspectId);
+			if (as != null) return as;
 		}
-		return ok(views.html.projects.view_project_code.render(project));
-	}
 
-	public static Result viewBts(String id) {
-		Project project  = getProject(id);
-
-		if (project == null) {
-			flash(Application.FLASH_ERROR_KEY, "An unexpected error has occurred. We are looking into it.");//TODO move to Messages.
-			return ok(views.html.index.render());
-		}
-		return ok(views.html.projects.view_project_code.render(project));
+		return null;
 	}
 	
 	public static Result create() {

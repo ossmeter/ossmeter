@@ -1,0 +1,42 @@
+@(project: org.ossmeter.repository.model.Project, qualityModel : QualityModel, selected : QualityElement, summary : Boolean)
+
+@drawAspect(aspect: QualityAspect) = {
+	<li>
+	@if(selected == aspect) { 
+		<strong>@aspect.name</strong> 
+	} else {
+		<a href="@routes.Projects.viewAspect(project.getShortName(), qualityModel.id, aspect.id, summary)">@aspect.name</a>
+	}
+		<ul>
+	@for(a <- aspect.aspects) {
+		@drawAspect(a)
+	}
+	@for(a <- aspect.attributes) {
+		@drawAttribute(a)
+	}
+		</ul>
+	</li>
+}
+
+@drawAttribute(attribute : QualityAttribute) = {
+	<li>@attribute.name <span class="label label-info">@attribute.factoids.size() factoids</span> <span class="label label-info">@attribute.metrics.size() metrics</span> 
+		<ul>
+@*	@for(f <- attribute.factoids) {
+		<li><span class="label label-info">@attribute.factoids.size() factoids</span> @f</li>
+	}
+	@for(m <- attribute.metrics) {
+		<li><span class="label label-info">Metric</span> @m</li>
+	}
+*@
+		</ul>
+	</li>
+}
+
+<section>
+    <div class="container box">
+  		<div class="row">
+  		<h2 class="marginless">Quality Model</h2>
+  		@drawAspect(qualityModel)
+  		</div>
+    </div>    
+</section>
