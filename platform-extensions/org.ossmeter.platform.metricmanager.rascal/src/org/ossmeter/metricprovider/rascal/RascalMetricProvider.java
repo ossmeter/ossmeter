@@ -85,14 +85,14 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 	private static IConstructor rascalDelta;
 	
 	
-	public RascalMetricProvider(String bundleId, String metricId, String shortMetricId, String friendlyName, String description, AbstractFunction function, Map<String,String> uses) {
-		this.bundleId = bundleId;
-		this.metricId = metricId;
+	public RascalMetricProvider(String bundleId, String metricName, String shortMetricId, String friendlyName, String description, AbstractFunction function, Map<String,String> uses) {
+		this.bundleId = bundleId.replace("org.ossmeter.metricprovider.", "");
+		this.metricId = this.bundleId + "." + metricName;
 		this.shortMetricId =  shortMetricId;
 		this.friendlyName = friendlyName;
 		this.description = description;
 		this.function = function;
-		this.uses = qualifyNames(bundleId, uses);
+		this.uses = qualifyNames(this.bundleId, uses);
 		this.providers = new HashMap<String,IMetricProvider>();
 		
 		this.needsM3 = hasParameter(M3S_PARAM);

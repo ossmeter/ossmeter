@@ -318,7 +318,6 @@ public class RascalManager {
 				if (f.hasTag("metric")) {
 					try {
 						String metricName = getTag(f, "metric");
-						String metricId = bundle.getSymbolicName().replace("org.ossmeter.metricprovider.", "") + metricName;
 						String friendlyName = getTag(f, "friendlyName");
 						String description = getTag(f, "doc");
 						IValue language = f.getTag("appliesTo");
@@ -330,10 +329,10 @@ public class RascalManager {
 						}
 	
 						if (f.getReturnType().toString().equals("Factoid")) {
-							providers.add(new RascalFactoidProvider(bundle.getSymbolicName(), metricId, funcName, friendlyName, description, f, uses));
+							providers.add(new RascalFactoidProvider(bundle.getSymbolicName(), metricName, funcName, friendlyName, description, f, uses));
 						}
 						else { 
-							RascalMetricProvider m = new RascalMetricProvider(bundle.getSymbolicName(), metricId, funcName, friendlyName, description, f, uses); 
+							RascalMetricProvider m = new RascalMetricProvider(bundle.getSymbolicName(), metricName, funcName, friendlyName, description, f, uses); 
 						
 							providers.add(m);
 	
