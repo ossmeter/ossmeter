@@ -1,0 +1,32 @@
+{
+	"id" : "quality",
+	"name" : "Test",
+	"attributes" : [],
+	"aspects" : [
+		{
+			"id": "codequality",
+			"name" : "Code Quality",
+			"attributes" : [],
+			"aspects" : [
+				{
+					"id" : "maintainability",
+					"name" : "Maintainability",
+					"aspects": [],
+					"attributes": [
+						{
+							"name" : "Analysability",
+							"description" : "Foo bar",
+							"factoids" : [ "foo", "bar" ],
+							"metrics" : [ "whizz", "buzz" ]
+						},{
+							"name" : "Changeability",
+							"description" : "Foo bar",
+							"factoids" : [ "foo", "bar" ],
+							"metrics" : [ "whizz", "buzz" ]
+						}
+					]
+				}
+			]
+		}
+	]
+}

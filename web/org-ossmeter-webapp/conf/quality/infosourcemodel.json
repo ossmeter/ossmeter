@@ -1,0 +1,20 @@
+{
+	"id" : "channels",
+	"name" : "Channels",
+	"aspects":[],
+	"attributes" : [
+		{
+			"name" : "Source Code",
+			"factoids" : [ "cocomo", "cocomo" ],
+			"metrics" : [ "CCHistogramPHP" ]
+		}, {
+			"name" : "Communication Channels",
+			"factoids" : [ "cocomo", "cocomo" ],
+			"metrics" : [ "newsgroups.cumulativeNewUsers", "newsgroups.averageSentiment" ]
+		}, {
+			"name" : "Bug Tracking Systems",
+			"factoids" : [ "cocomo", "cocomo" ],
+			"metrics" : [ "bugs.wontFixBugs", "bugs.averageSentiment" ]
+		}
+	]
+}
