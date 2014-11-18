@@ -3,6 +3,7 @@ package org.ossmeter.platform.client.api;
 import org.ossmeter.platform.factoids.Factoid;
 import org.ossmeter.platform.factoids.FactoidCategory;
 import org.ossmeter.platform.factoids.Factoids;
+import org.ossmeter.platform.factoids.StarRating;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectRepository;
 import org.restlet.data.Status;
@@ -32,6 +33,8 @@ public class FactoidResource extends AbstractApiResource {
 		}
 	
 		Factoids factoids = new Factoids(platform.getMetricsRepository(project).getDb());
+		
+		// If they didn't provide an id.
 		if (id == null || id.equals("")) {
 			String filter = getQueryValue("cat"); // filter by category --unimplemented
 			
@@ -54,39 +57,47 @@ public class FactoidResource extends AbstractApiResource {
 			ArrayNode arr = mapper.createArrayNode();
 			
 			for (Factoid f : fs) {
-				ObjectNode factoid = mapper.createObjectNode();
-				factoid.put("id", f.getMetricId());
-				factoid.put("factoid", f.getFactoid());
-				factoid.put("stars", f.getStars().toString());
-				factoid.put("category", f.getCategory().toString());
-				arr.add(factoid);
+				// TODO: Inefficient as it looks up twice
+				arr.add(getFactoidById(factoids, f.getMetricId()));
 			}
 			getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 			return Util.createJsonRepresentation(arr);
+		} else {// If an id (or a list of ids) was provided
+			String[] i = id.split("\\+");
 			
-			
-		} else {		
-			Factoid f = factoids.getFactoids().findOneByMetricId(id);
-			
-			if (f == null) {
-				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-				ObjectNode node = mapper.createObjectNode();
-				node.put("status", "error");
-				node.put("msg", "No factoid was found with the requested identifier.");
-				node.put("request", generateRequestJson(projectName, id));
-				return Util.createJsonRepresentation(node);
+			if (i.length == 1) {
+				return Util.createJsonRepresentation(getFactoidById(factoids, id));
 			} else {
-				ObjectNode factoid = mapper.createObjectNode();
-				factoid.put("id", f.getMetricId());
-				factoid.put("factoid", f.getFactoid());
-				factoid.put("stars", f.getStars().toString());
-				factoid.put("category", f.getCategory().toString());
+				ArrayNode result = mapper.createArrayNode();
 				
-				getResponse().setStatus(Status.SUCCESS_OK);
-				return Util.createJsonRepresentation(factoid);
+				for (String fId : i) {
+					result.add(getFactoidById(factoids, fId));
+				}
+				return Util.createJsonRepresentation(result);
 			}
 		}
 	}
+    
+    protected ObjectNode getFactoidById(Factoids factoids, String factoidId) {
+    	Factoid f = factoids.getFactoids().findOneByMetricId(factoidId);
+		
+		if (f == null) {
+			ObjectNode factoid = mapper.createObjectNode();
+			factoid.put("id", factoidId);
+			factoid.put("status", "error");
+			factoid.put("msg", "Unable to find factoid with given ID.");
+			return factoid;
+		} else {
+			ObjectNode factoid = mapper.createObjectNode();
+			factoid.put("id", f.getMetricId());
+			factoid.put("factoid", f.getFactoid());
+			factoid.put("name", f.getName());
+			if (f.getStars() != null) factoid.put("stars", f.getStars().toString());
+			else factoid.put("stars", StarRating.ONE.toString());
+			if (f.getCategory() != null) factoid.put("category", f.getCategory().toString());
+			return factoid;
+		}
+    }
 	
 	private JsonNode generateRequestJson(String projectName, String factoidid) {
 		ObjectMapper mapper = new ObjectMapper();

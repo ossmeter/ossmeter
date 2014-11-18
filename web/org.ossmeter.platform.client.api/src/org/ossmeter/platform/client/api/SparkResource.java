@@ -104,11 +104,13 @@ public class SparkResource extends AbstractApiResource {
 			byte[] sparky;
 			try {
 				sparky = vis.getSparky(db, query);
-				String uuid = UUID.randomUUID().toString();
-				SparkCache.getSparkCache().putSpark(uuid, sparky);
-				
 				ObjectNode sparkData = vis.getSparkData();
-				sparkData.put("spark", "/spark/"+uuid);
+
+				if (sparky != null) {
+					String uuid = UUID.randomUUID().toString();
+					SparkCache.getSparkCache().putSpark(uuid, sparky);
+					sparkData.put("spark", "/spark/"+uuid);
+				}
 				sparkData.put("metricId", metricId);
 				sparkData.put("projectId", projectId);
 				

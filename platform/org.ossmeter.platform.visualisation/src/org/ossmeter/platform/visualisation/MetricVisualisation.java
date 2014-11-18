@@ -118,6 +118,16 @@ public class MetricVisualisation {
 			Double y = obj.path(yColName).asDouble();
 			ydata.add(y);
 		}
+		
+		if (xdata.isEmpty()) {
+			sparkData = mapper.createObjectNode();
+			sparkData.put("id", vis.path("id").textValue());
+			sparkData.put("name", vis.path("name").textValue());
+			sparkData.put("description", vis.path("description").textValue());
+			sparkData.put("status", "error");
+			sparkData.put("msg", "No data for metric.");
+			return null;
+		}
 			
 		// Spark config
 		int height = 60;
@@ -138,6 +148,7 @@ public class MetricVisualisation {
 		
 		// Set the spark data
 		sparkData = mapper.createObjectNode();
+		sparkData.put("status", "ok");
 		sparkData.put("id", vis.path("id").textValue());
 		sparkData.put("name", vis.path("name").textValue());
 		sparkData.put("description", vis.path("description").textValue());
