@@ -280,3 +280,7 @@ span.spark-watch.active {
     overflow:scroll;
     margin-left: 0;
 }
+
+table.spark-table {
+    font-size : 10pt;
+}
