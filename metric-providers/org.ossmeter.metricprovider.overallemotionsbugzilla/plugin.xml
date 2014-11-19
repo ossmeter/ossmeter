@@ -21,6 +21,8 @@
 
 
 
+
+
 <extension point="com.googlecode.pongo.runtime.osgi">
     <class name="org.ossmeter.metricprovider.trans.bugs.emotions.model.BugsEmotionsTransMetric"/>
     <class name="org.ossmeter.metricprovider.trans.bugs.emotions.model.BugTrackerData"/>

@@ -57,7 +57,6 @@ public class App implements IApplication {
 //		addSampleProjectWithBugTrackingSystem("TMF-Xtext", "https://bugs.eclipse.org/bugs/xmlrpc.cgi", "TMF", "Xtext", platform);
 
 		
-		
 //		Project pdb = ProjectCreationUtil.createProjectWithBugTrackingSystem("epsilon", "https://bugs.eclipse.org/bugs/xmlrpc.cgi", "epsilon", null);
 //		Project pdb = ProjectCreationUtil.createGitProject("rascal", "file:///Users/jurgenv/Workspaces/Rascal/rascal");
 
