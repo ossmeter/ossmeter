@@ -35,7 +35,7 @@ public class App implements IApplication {
 //		Project pdb = ProjectCreationUtil.createProjectWithNewsGroup("epsilon", "news.eclipse.org", "eclipse.epsilon", true, "exquisitus", "flinder1f7", 80, 10000);
 //		Project pdb = ProjectCreationUtil.createProjectWithNewsGroup("thunderbird", "news.mozilla.org", "mozilla.support.thunderbird", false, null, null, 80, 10000);
 //		Project pdb = ProjectCreationUtil.createProjectWithNewsGroup("eclipsePlatform", "news.eclipse.org", "eclipse.platform", true, "exquisitus", "flinder1f7", 80, 10000);
-  		Project pdb = ProjectCreationUtil.createProjectWithNewsGroup("BIRT", "news.eclipse.org", "eclipse.birt", true, "exquisitus", "flinder1f7", 80, 10000);
+//  		Project pdb = ProjectCreationUtil.createProjectWithNewsGroup("BIRT", "news.eclipse.org", "eclipse.birt", true, "exquisitus", "flinder1f7", 80, 10000);
 //		Project pdb = ProjectCreationUtil.createProjectWithNewsGroup("toolsEmf", "news.eclipse.org", "eclipse.tools.emf", true, "exquisitus", "flinder1f7", 80, 10000);
 //		Project pdb = ProjectCreationUtil.createProjectWithNewsGroup("Log4J", "news.gmane.org", "gmane.comp.jakarta.log4j.user", false, null, null, 119, 10000);
 //		Project pdb = ProjectCreationUtil.createProjectWithNewsGroup("tomcat-user", "news.gmane.org", "gmane.comp.jakarta.tomcat.user", false, null, null, 119, 10000);
@@ -44,7 +44,7 @@ public class App implements IApplication {
 //		Project pdb = ProjectCreationUtil.createProjectWithBugTrackingSystem("epsilon", "https://bugs.eclipse.org/bugs/xmlrpc.cgi", "epsilon", null);
 //		Project pdb = ProjectCreationUtil.createProjectWithBugTrackingSystem("eclipse", "https://bugs.eclipse.org/bugs/xmlrpc.cgi", "platform", null);
 //		Project pdb = ProjectCreationUtil.createProjectWithBugTrackingSystem("modelinggmtamw", "https://bugs.eclipse.org/bugs/xmlrpc.cgi", "GMT", "AMW");
-//		Project pdb = ProjectCreationUtil.createProjectWithBugTrackingSystem("modelinggmt", "https://bugs.eclipse.org/bugs/xmlrpc.cgi", "GMT", null);
+		Project pdb = ProjectCreationUtil.createProjectWithBugTrackingSystem("modelinggmt", "https://bugs.eclipse.org/bugs/xmlrpc.cgi", "GMT", null);
 //		Project pdb = ProjectCreationUtil.createProjectWithBugTrackingSystem("fedora", "https://bugzilla.redhat.com/xmlrpc.cgi", "Fedora", "acpi");
 //		Project pdb = ProjectCreationUtil.createProjectWithBugTrackingSystem("bugzilla", "https://bugzilla.redhat.com/xmlrpc.cgi", "Bugzilla", null);
 
