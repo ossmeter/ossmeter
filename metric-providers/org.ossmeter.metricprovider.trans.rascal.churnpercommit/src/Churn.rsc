@@ -201,7 +201,7 @@ map[loc, int] numberOfFilesPerCommit(ProjectDelta delta = \empty()) {
 @doc{Find out if commits are usually local to a file or widespread over the system}
 @friendlyName{Commit locality}
 @appliesTo{generic()}
-@uses=("filesPerCommit":"filesPerCommit.historic")
+@uses=("filesPerCommit.historic":"filesPerCommit")
 Factoid commitLocality(rel[datetime day, map[loc, int] files] filesPerCommit = {}) {
    counts = [ d[f] | <_, map[loc, int] d> <- filesPerCommit, loc f <- d];
    if (counts == []) {
