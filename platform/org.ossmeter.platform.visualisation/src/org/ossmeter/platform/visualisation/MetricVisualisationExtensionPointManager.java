@@ -74,6 +74,11 @@ public class MetricVisualisationExtensionPointManager {
 							String chartType = vis.path("type").textValue();
 							String visName = vis.path("id").textValue();
 							
+							// Legacy support
+							if (visName == null && vis.path("nicename").textValue() != null) {
+								visName = vis.path("nicename").textValue();
+							}
+							
 							if (visMap.containsKey(visName)) {
 								// FIXME: Use logger.
 								System.err.println("Visualisation already defined for id '" + visName + "'. \nAttempted to add: " + vis + "\nPreviously registered: " + visMap.get(visName));
