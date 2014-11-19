@@ -22,8 +22,6 @@
     attribute.name.replaceAll(" ", "");
 }
 
-<section>
-<div class="container box">
     <div class="row">
         <ul class="nav nav-tabs" role="tablist">
             <li class="disabled col-md-4"><h2 class="marginless">@attribute.name</h2></li>
@@ -45,7 +43,7 @@
                 </div>
                 <script type="text/javascript">
                     $(function() {
-                        $.getJSON("http://localhost:8182/projects/p/@project.getShortName()/f/@attribute.factoids.mkString("+")", function (result) {
+                        $.getJSON("http://localhost:8182/projects/p/@project.getShortName()/f/@attribute.factoids.take(5).mkString("+")", function (result) {
                             $("#factoids-@attributeId").empty();
 
                             for (var r in result) {
@@ -216,7 +214,6 @@
                 }
                 </div>
             </div>
-            <!-- <a class="btn btn-default form-control" href="@routes.Projects.viewAspect(project.getShortName(), qualityModel.id, attributeId, true)">View in depth @attribute.name.toLowerCase() metrics</a> -->
+            <!-- @*<a class="btn btn-default form-control" href="@routes.Projects.viewAspect(project.getShortName(), qualityModel.id, attributeId, true)">View in depth @attribute.name.toLowerCase() metrics</a>*@ -->
         </div>  
     </div>    
-</section>

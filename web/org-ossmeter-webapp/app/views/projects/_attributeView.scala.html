@@ -1,0 +1,22 @@
+
+@(project: org.ossmeter.repository.model.Project, qualityModel : QualityModel, attribute : QualityAttribute, parents : List[QualityAspect], summary : Boolean)
+
+@import scala._
+
+<section>
+    <div class="container box">
+        <div class="row">    
+            <ol class="breadcrumb projectbreadcrumb">
+            @for(p <- parents) {
+                <li>@p.name</li>
+            }
+            </ol>
+        </div>
+        @if(summary) {
+            @_attributeSummaryView(project, qualityModel, attribute)
+        } else {
+            @_attributeDetailView(project, qualityModel, attribute)
+        }
+    </div>
+</section>
+   

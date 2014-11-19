@@ -26,65 +26,23 @@
         <h2 class="marginless">@attribute.name</h2>
     </div>
     <div class="row">
-        <div class="col-md-12">
-            <table class="table" id="sparklines-table-@attributeId">
+        <div class="col-md-6">
+            <table class="table" id="sparklines-table-12months-@attributeId">
                 <thead></thead>
                 <tbody></tbody>
             </table>
+        </div>
+        <div class="col-md-6">
+            <table class="table" id="sparklines-table-alltime-@attributeId">
+                <thead></thead>
+                <tbody></tbody>
+            </table>
+        </div>
             <script type="text/javascript">
                 $(function() {
-                    $.getJSON("http://localhost:8182/projects/p/@project.getShortName()/s/@attribute.metrics.mkString("+")", function (result) {
-
-                        console.log(Object.prototype.toString.call( result ));
-
-                        // Convert into an array if only one spark was requested
-                        if( Object.prototype.toString.call( result ) === '[object Object]' ) {
-                            result = [result];
-                        }
-
-                        for (var r in result) {
-                            var data = result[r];
-
-                            // FIXME: If the first sparkle is in error, this won't work.
-                            if (r == 0) { // Set up the header
-                                $("#sparklines-table-@attributeId > thead:last").append(
-                                    "<tr><th></th><th>metric</th>" +
-                                    "<th>" + data.firstDate + "</th>" +
-                                    "<th>" + data.months + " months</th>" +
-                                    "<th>" + data.lastDate + "</th>" +
-                                    "<th>low</th>" +
-                                    "<th>high</th></tr>");
-                            }
-
-                            if (data.status === "error") {
-                                console.log("Unable to load sparky '" + data.metricId + "': " + data.msg);
-                                continue;
-                            }
-
-                            var a = ""; 
-                            if ($.inArray(data.name, app.grid.sparks) != -1){
-                                a = "active";
-                            }
-                            var toAppend = "<tr><td>";
-
-                            if (app.loggedIn) {
-                                var id = "watch-spark-@project.getShortName()-" + data.name;
-                                toAppend = toAppend + '<a href="javascript:toggleSpark(\'#'+id+'\',\'@project.getShortName()\',\'@project.getName()\',\''+ data.name + '\', \''+data.name+'\')"><span id="' + id + '" class="glyphicon glyphicon-eye-open spark-watch tip ' + a + '" data-toggle="tooltip" data-placement="left" title="Watch/unwatch on dashboard"></span></a>';
-                            }
-                           toAppend = toAppend + "</td>" +
-                                "<td>" + data.name + 
-                                "</td><td>" + Math.round(data.first * 100) / 100  +
-                                "</td><td><img class=\"spark\" src=\"http://localhost:8182" + data.spark + "\" />" +  
-                                "</td><td>" + Math.round(data.last * 100) / 100  + 
-                                "</td><td>" + Math.round(data.low * 100) / 100 + 
-                                "</td><td>" + Math.round(data.high * 100) / 100 + "</td></tr>";
-
-                            $("#sparklines-table-@attributeId > tbody:last").append(toAppend);
-                        }
-                        $(".tip").tooltip(app.tooltipOptions);
-                    });
+                    drawSparkTable("sparklines-table-12months-@attributeId", "@project.getShortName()", "@attribute.metrics.mkString("+")", "startDate="+getOneYearAgoDateString(), true)
+                    drawSparkTable("sparklines-table-alltime-@attributeId", "@project.getShortName()", "@attribute.metrics.mkString("+")", "", false)
                 });
-
             </script>
         </div>
     </div>    
