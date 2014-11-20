@@ -94,8 +94,24 @@ public class Projects extends Controller {
 		}
 	}
 	
+	public static Result viewTmp(String id, String qm, boolean summary) {
+
+		System.err.println("selected qm:" + qm);
+
+		Project project = getProject(id);
+		if (project == null) {
+			flash(Application.FLASH_ERROR_KEY, "An unexpected error has occurred. We are looking into it.");//TODO move to Messages.
+			return ok(views.html.index.render());
+		}
+
+		QualityModel qualityModel = Application.getQualityModelById(qm);
+		if (qualityModel == null) qualityModel = Application.getInformationSourceModel();
+
+		return ok(views.html.projects.view_project.render(project, qualityModel, summary));
+	}
+
 	public static Result view(String id) {
-		return viewAspect(id, "channels", "channels", true);
+		return viewAspect(id, Application.INFO_SOURCE_MODEL, Application.INFO_SOURCE_MODEL, true);
 	}
 	
 	public static Result viewAspect(String projectId, String qmId, String aspectId, boolean summary) {
@@ -114,7 +130,7 @@ public class Projects extends Controller {
 		// Lookup aspect
 		QualityAspect aspect = findAspect(qm, aspectId);
 
-		return ok(views.html.projects.view_project.render(project, qm, aspect, summary));
+		return ok(views.html.projects.view_project.render(project, qm, summary));
 	}
 
 	protected static QualityAspect findAspect(QualityAspect aspect, String aspectId) {

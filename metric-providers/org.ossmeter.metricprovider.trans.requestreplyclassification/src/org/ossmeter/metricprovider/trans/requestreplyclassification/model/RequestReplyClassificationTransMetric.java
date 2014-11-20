@@ -13,18 +13,18 @@ public class RequestReplyClassificationTransMetric extends PongoDB {
 		setDb(db);
 	}
 	
-	protected BugTrackerCommentsDataCollection bugTrackerComments = null;
-	protected NewsgroupArticlesDataCollection newsgroupArticles = null;
+	protected BugTrackerCommentsCollection bugTrackerComments = null;
+	protected NewsgroupArticlesCollection newsgroupArticles = null;
 	
 	// protected region custom-fields-and-methods on begin
 	// protected region custom-fields-and-methods end
 	
 	
-	public BugTrackerCommentsDataCollection getBugTrackerComments() {
+	public BugTrackerCommentsCollection getBugTrackerComments() {
 		return bugTrackerComments;
 	}
 	
-	public NewsgroupArticlesDataCollection getNewsgroupArticles() {
+	public NewsgroupArticlesCollection getNewsgroupArticles() {
 		return newsgroupArticles;
 	}
 	
@@ -32,9 +32,9 @@ public class RequestReplyClassificationTransMetric extends PongoDB {
 	@Override
 	public void setDb(DB db) {
 		super.setDb(db);
-		bugTrackerComments = new BugTrackerCommentsDataCollection(db.getCollection("RequestReplyClassificationTransMetric.bugTrackerComments"));
+		bugTrackerComments = new BugTrackerCommentsCollection(db.getCollection("RequestReplyClassificationTransMetric.bugTrackerComments"));
 		pongoCollections.add(bugTrackerComments);
-		newsgroupArticles = new NewsgroupArticlesDataCollection(db.getCollection("RequestReplyClassificationTransMetric.newsgroupArticles"));
+		newsgroupArticles = new NewsgroupArticlesCollection(db.getCollection("RequestReplyClassificationTransMetric.newsgroupArticles"));
 		pongoCollections.add(newsgroupArticles);
 	}
 }

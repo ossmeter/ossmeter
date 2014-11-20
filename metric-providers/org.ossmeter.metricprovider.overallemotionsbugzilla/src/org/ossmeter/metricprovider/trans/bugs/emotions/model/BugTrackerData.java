@@ -13,10 +13,12 @@ public class BugTrackerData extends Pongo {
 		super();
 		BUGTRACKERID.setOwningType("org.ossmeter.metricprovider.trans.bugs.emotions.model.BugTrackerData");
 		NUMBEROFCOMMENTS.setOwningType("org.ossmeter.metricprovider.trans.bugs.emotions.model.BugTrackerData");
+		CUMULATIVENUMBEROFCOMMENTS.setOwningType("org.ossmeter.metricprovider.trans.bugs.emotions.model.BugTrackerData");
 	}
 	
 	public static StringQueryProducer BUGTRACKERID = new StringQueryProducer("bugTrackerId"); 
 	public static NumericalQueryProducer NUMBEROFCOMMENTS = new NumericalQueryProducer("numberOfComments");
+	public static NumericalQueryProducer CUMULATIVENUMBEROFCOMMENTS = new NumericalQueryProducer("cumulativeNumberOfComments");
 	
 	
 	public String getBugTrackerId() {
@@ -34,6 +36,15 @@ public class BugTrackerData extends Pongo {
 	
 	public BugTrackerData setNumberOfComments(int numberOfComments) {
 		dbObject.put("numberOfComments", numberOfComments);
+		notifyChanged();
+		return this;
+	}
+	public int getCumulativeNumberOfComments() {
+		return parseInteger(dbObject.get("cumulativeNumberOfComments")+"", 0);
+	}
+	
+	public BugTrackerData setCumulativeNumberOfComments(int cumulativeNumberOfComments) {
+		dbObject.put("cumulativeNumberOfComments", cumulativeNumberOfComments);
 		notifyChanged();
 		return this;
 	}

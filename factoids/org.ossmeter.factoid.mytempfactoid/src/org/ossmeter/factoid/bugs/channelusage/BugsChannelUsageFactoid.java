@@ -64,7 +64,6 @@ public class BugsChannelUsageFactoid extends AbstractFactoidMetricProvider{
 	@Override
 	public void measureImpl(Project project, ProjectDelta delta, Factoid factoid) {
 //		factoid.setCategory(FactoidCategory.BUGS);
-		factoid.setName("");
 		factoid.setName("Bug Channel Usage Factoid");
 
 		NewBugsHistoricMetricProvider newBugsProvider = new NewBugsHistoricMetricProvider();
@@ -197,10 +196,11 @@ public class BugsChannelUsageFactoid extends AbstractFactoidMetricProvider{
 			BugsNewBugsHistoricMetric newBugsPongo = (BugsNewBugsHistoricMetric) pongo;
 			numberOfBugs += newBugsPongo.getNumberOfBugs();
 			for (DailyBugData bugData: newBugsPongo.getBugs()) {
-				if (trackerBugs.containsKey(bugData.getBugTrackerId())) {
+				if (trackerBugs.containsKey(bugData.getBugTrackerId()))
 					trackerBugs.put(bugData.getBugTrackerId(), 
 							trackerBugs.get(bugData.getBugTrackerId()) + 1);
-				}
+				else
+					trackerBugs.put(bugData.getBugTrackerId(), 1);
 			}
 		}
 		return numberOfBugs;
@@ -213,10 +213,11 @@ public class BugsChannelUsageFactoid extends AbstractFactoidMetricProvider{
 			numberOfComments += commentsPongo.getNumberOfComments();
 			for (org.ossmeter.metricprovider.historic.bugs.comments.model.DailyBugData 
 					bugData: commentsPongo.getBugs()) {
-				if (trackerComments.containsKey(bugData.getBugTrackerId())) {
+				if (trackerComments.containsKey(bugData.getBugTrackerId()))
 					trackerComments.put(bugData.getBugTrackerId(), 
 										trackerComments.get(bugData.getBugTrackerId()) + 1);
-				}
+				else
+					trackerComments.put(bugData.getBugTrackerId(), 1);
 			}
 		}
 		return numberOfComments;
@@ -229,10 +230,11 @@ public class BugsChannelUsageFactoid extends AbstractFactoidMetricProvider{
 			numberOfPatches += patchesPongo.getNumberOfPatches();
 			for (org.ossmeter.metricprovider.historic.bugs.patches.model.DailyBugData 
 					bugData: patchesPongo.getBugs()) {
-				if (trackerPatches.containsKey(bugData.getBugTrackerId())) {
+				if (trackerPatches.containsKey(bugData.getBugTrackerId()))
 					trackerPatches.put(bugData.getBugTrackerId(), 
 							trackerPatches.get(bugData.getBugTrackerId()) + 1);
-				}
+				else
+					trackerPatches.put(bugData.getBugTrackerId(), 1);
 			}
 		}
 		return numberOfPatches;

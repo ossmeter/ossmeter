@@ -44,7 +44,9 @@ public class CommentsHistoricMetricProvider extends AbstractHistoricalMetricProv
 			 BugsCommentsTransMetric usedNobc = ((CommentsTransMetricProvider)uses.get(0)).adapt(context.getProjectDB(project));
 			 int sumOfComments = 0,
 				 cumulativeSumOfComments = 0;
+			 System.err.println("\tusedNobc.getBugTrackerData().size(): " + usedNobc.getBugTrackerData().size());
 			 for (BugTrackerData bugTrackerData: usedNobc.getBugTrackerData()) {
+				 System.err.println("\tusedNobc.getBugTrackerData().size(): " + usedNobc.getBugTrackerData().size());
 				 int numberOfComments = bugTrackerData.getNumberOfComments(),
 					 cumulativeNumberOfComments = bugTrackerData.getCumulativeNumberOfComments();
 				 sumOfComments += numberOfComments;

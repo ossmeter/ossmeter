@@ -8,7 +8,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="bugTrackerData" upperBound="-1" eType="//BugTrackerData" containment="true">
       <eAnnotations source="series"/>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="dimensions" upperBound="-1" eType="//Emotion" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dimensions" upperBound="-1" eType="//EmotionDimension" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BugTrackerData">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="bugTrackerId">
@@ -18,8 +18,11 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="numberOfComments">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cumulativeNumberOfComments">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Emotion">
+  <eClassifiers xsi:type="ecore:EClass" name="EmotionDimension">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="bugTrackerId">
       <eAnnotations source="searchable"/>
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -30,7 +33,13 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="numberOfComments">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cumulativeNumberOfComments">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="percentage">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EFloat"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cumulativePercentage">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EFloat"/>
     </eStructuralFeatures>
   </eClassifiers>

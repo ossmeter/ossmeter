@@ -1,0 +1,23 @@
+package org.ossmeter.metricprovider.historic.newsgroups.emotions.model;
+
+class NewsgroupsEmotionsHistoricMetric {
+	val Newsgroups[*] newsgroups;
+	val Emotion[*] emotions;
+}
+
+class Newsgroups {
+   	attr String url_name;
+   	attr int numberOfArticles;
+	attr int cumulativeNumberOfArticles;
+}
+
+
+class Emotion {
+   	attr String url_name;
+   	attr String emotionLabel;
+	attr int numberOfArticles;
+	attr int cumulativeNumberOfArticles;
+	attr float percentage;
+	attr float cumulativePercentage;
+}
+

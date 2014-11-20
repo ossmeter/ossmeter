@@ -16,6 +16,11 @@ import providers.MyUsernamePasswordAuthProvider;
 import providers.MyUsernamePasswordAuthProvider.MyLogin;
 import providers.MyUsernamePasswordAuthProvider.MySignup;
 
+import play.libs.ws.*;
+import play.libs.F.Function;
+import play.libs.F.Promise;
+import com.fasterxml.jackson.databind.JsonNode;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import views.html.*;
@@ -35,6 +40,9 @@ public class Application extends Controller {
 	public static final String FLASH_MESSAGE_KEY = "message";
 	public static final String FLASH_ERROR_KEY = "danger";
 	
+	public static final String INFO_SOURCE_MODEL = "channels";
+	public static final String QUALITY_MODEL = "quality";
+
 	public static Result index() {
 		return ok(index.render());
 	}
@@ -63,8 +71,9 @@ public class Application extends Controller {
 
 	// FIXME: Consider caching
 	public static QualityModel getQualityModelById(String id) {
-		if (id.equals("channels")) return getInformationSourceModel();
-		else return getPlatformQualityModel();
+		if (id.equals(INFO_SOURCE_MODEL)) return getInformationSourceModel();
+		else if (id.equals(QUALITY_MODEL)) return getPlatformQualityModel();
+		else return null;
 	}
 
 	protected static QualityModel getQualityModel(String modelPath) {
@@ -81,6 +90,21 @@ public class Application extends Controller {
 		}
 
 		return model;
+	}
+
+	public static Result api(String path) {
+		String url = "http://localhost:8182/" + path; //FIXME: Put the API path in the config file
+
+		Promise<Result> promise = WS.url(url).get().map(
+		    new Function<WSResponse, Result>() {
+		        public Result apply(WSResponse response) {
+		            JsonNode json = response.asJson();
+		            return ok(json);
+		        }
+		    }
+		);
+
+		return promise.get(120000);
 	}
 
 	public static User getLocalUser(final Session session) {

@@ -1,8 +1,22 @@
-@(project: org.ossmeter.repository.model.Project, qualityModel : QualityModel, aspect : QualityAspect, summary : Boolean)
+@(project: org.ossmeter.repository.model.Project, qualityModel : QualityModel, aspect : QualityAspect, summary : Boolean, parents : List[QualityAspect])
+
+@import scala._
+
+@for(attribute <- aspect.attributes) {
+    @_attributeView(project, qualityModel, attribute, parents, summary)
+}
+
+
+
+@*
+ COMMENTED OUT FOR NEW DESIGN
 
 @if(summary) {
     @for(attribute <- aspect.attributes) {
-        @_attributeSummaryView(project, qualityModel, attribute)
+        @_attributeSummaryView(project, qualityModel, attribute, parents)
+    }
+    @for(a <- aspect.aspects) {
+        @_aspectView(project, qualityModel, a, parents)
     }
 } else {
     
@@ -25,4 +39,6 @@
         </div>
     </div>
 </section>
+
 }
+*@

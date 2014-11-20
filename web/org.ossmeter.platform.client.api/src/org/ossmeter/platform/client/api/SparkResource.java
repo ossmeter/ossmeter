@@ -32,6 +32,7 @@ public class SparkResource extends AbstractApiResource {
 		if (sd != null) {
 			JsonNode obj;
 			try {
+				System.out.println(sd);
 				obj = mapper.readTree(sd);
 				return Util.createJsonRepresentation(obj);
 			} catch (Exception e) {
@@ -117,16 +118,16 @@ public class SparkResource extends AbstractApiResource {
 				// And add to the return list
 				sparks.add(sparkData);		
 			} catch (ParseException e) {
-				getResponse().setStatus(Status.SERVER_ERROR_INTERNAL);
+//				getResponse().setStatus(Status.SERVER_ERROR_INTERNAL);
 				// TODO Log this as series - needs investigating by admin
-				return Util.createJsonRepresentation(generateErrorMessage(mapper, "Error whilst generating sparkle. Unable to parse data.", projectId, metricId));
+				sparks.add(generateErrorMessage(mapper, "Error whilst generating sparkle. Unable to parse data.", projectId, metricId));
 			} catch (UnsparkableVisualisationException e) {
-				getResponse().setStatus(Status.SERVER_ERROR_INTERNAL);
-				return Util.createJsonRepresentation(generateErrorMessage(mapper, "Visualisation not sparkable. Metrics must be time series in order to be sparkable.", projectId, metricId));
+//				getResponse().setStatus(Status.SERVER_ERROR_INTERNAL);
+				sparks.add(generateErrorMessage(mapper, "Visualisation not sparkable. Metrics must be time series in order to be sparkable.", projectId, metricId));
 			} catch (IOException e) {
 				e.printStackTrace(); // FIXME
-				getResponse().setStatus(Status.SERVER_ERROR_INTERNAL);
-				return Util.createJsonRepresentation(generateErrorMessage(mapper, "Error whilst generating sparkle.", projectId, metricId));
+//				getResponse().setStatus(Status.SERVER_ERROR_INTERNAL);
+				sparks.add(generateErrorMessage(mapper, "Error whilst generating sparkle.", projectId, metricId));
 			}
 		}
 

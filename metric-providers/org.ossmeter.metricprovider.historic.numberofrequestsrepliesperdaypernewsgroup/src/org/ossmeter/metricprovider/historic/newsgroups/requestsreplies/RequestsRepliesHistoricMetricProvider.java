@@ -11,7 +11,7 @@ import java.util.Set;
 import org.ossmeter.metricprovider.historic.newsgroups.requestsreplies.model.DailyNewsgroupData;
 import org.ossmeter.metricprovider.historic.newsgroups.requestsreplies.model.NewsgroupsRequestsRepliesHistoricMetric;
 import org.ossmeter.metricprovider.trans.requestreplyclassification.RequestReplyClassificationTransMetricProvider;
-import org.ossmeter.metricprovider.trans.requestreplyclassification.model.NewsgroupArticlesData;
+import org.ossmeter.metricprovider.trans.requestreplyclassification.model.NewsgroupArticles;
 import org.ossmeter.metricprovider.trans.requestreplyclassification.model.RequestReplyClassificationTransMetric;
 import org.ossmeter.platform.AbstractHistoricalMetricProvider;
 import org.ossmeter.platform.Date;
@@ -63,7 +63,7 @@ public class RequestsRepliesHistoricMetricProvider extends AbstractHistoricalMet
 								 cumulativeReplies = new HashMap<String, Integer>(),
 								 requests = new HashMap<String, Integer>(), 
 								 replies = new HashMap<String, Integer>();
-			for (NewsgroupArticlesData naData: usedRrc.getNewsgroupArticles()) {
+			for (NewsgroupArticles naData: usedRrc.getNewsgroupArticles()) {
 				Map<String, Integer> crr = null, rr = null;
 				Date naDate = null;
 				try {
@@ -120,11 +120,11 @@ public class RequestsRepliesHistoricMetricProvider extends AbstractHistoricalMet
 			}
 			if (cumulativeRequestSum > 0)
 				dailyNorr.setCumulativeNumberOfRequests(cumulativeRequestSum);
-			if (cumulativeRequestSum > 0)
+			if (cumulativeReplySum > 0)
 				dailyNorr.setCumulativeNumberOfReplies(cumulativeReplySum);
-			if (cumulativeRequestSum > 0)
+			if (requestSum > 0)
 				dailyNorr.setNumberOfRequests(requestSum);
-			if (cumulativeRequestSum > 0)
+			if (replySum > 0)
 				dailyNorr.setNumberOfReplies(replySum);
 		}
 		

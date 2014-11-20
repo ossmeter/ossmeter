@@ -3,11 +3,11 @@ package org.ossmeter.metricprovider.trans.bugs.bugmetadata.model;
 @db(qualifiedCollectionNames="true")
 @customize
 class BugsBugMetadataTransMetric {
-	val BugTrackerData[*] bugTrackerData;
+	val BugData[*] bugData;
 	val CommentData[*] comments;
 }
 
-class BugTrackerData {
+class BugData {
 	@searchable
 	attr String bugTrackerId;
 	attr String bugId;
@@ -30,5 +30,6 @@ class CommentData {
 	attr String creationTime;
 	attr String creator;
 	attr String contentClass;
+	attr String requestReplyPrediction;
 	
 }

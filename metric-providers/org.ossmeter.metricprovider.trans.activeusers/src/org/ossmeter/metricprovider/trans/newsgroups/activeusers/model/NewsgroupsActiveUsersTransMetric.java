@@ -2,8 +2,6 @@ package org.ossmeter.metricprovider.trans.newsgroups.activeusers.model;
 
 import com.googlecode.pongo.runtime.*;
 import com.mongodb.*;
-// protected region custom-imports on begin
-// protected region custom-imports end
 
 public class NewsgroupsActiveUsersTransMetric extends PongoDB {
 	
@@ -16,8 +14,6 @@ public class NewsgroupsActiveUsersTransMetric extends PongoDB {
 	protected NewsgroupDataCollection newsgroups = null;
 	protected UserCollection users = null;
 	
-	// protected region custom-fields-and-methods on begin
-	// protected region custom-fields-and-methods end
 	
 	
 	public NewsgroupDataCollection getNewsgroups() {

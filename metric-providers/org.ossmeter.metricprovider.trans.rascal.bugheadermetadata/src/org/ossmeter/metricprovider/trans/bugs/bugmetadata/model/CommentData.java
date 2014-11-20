@@ -16,6 +16,7 @@ public class CommentData extends Pongo {
 		CREATIONTIME.setOwningType("org.ossmeter.metricprovider.trans.bugs.bugmetadata.model.CommentData");
 		CREATOR.setOwningType("org.ossmeter.metricprovider.trans.bugs.bugmetadata.model.CommentData");
 		CONTENTCLASS.setOwningType("org.ossmeter.metricprovider.trans.bugs.bugmetadata.model.CommentData");
+		REQUESTREPLYPREDICTION.setOwningType("org.ossmeter.metricprovider.trans.bugs.bugmetadata.model.CommentData");
 	}
 	
 	public static StringQueryProducer BUGTRACKERID = new StringQueryProducer("bugTrackerId"); 
@@ -24,6 +25,7 @@ public class CommentData extends Pongo {
 	public static StringQueryProducer CREATIONTIME = new StringQueryProducer("creationTime"); 
 	public static StringQueryProducer CREATOR = new StringQueryProducer("creator"); 
 	public static StringQueryProducer CONTENTCLASS = new StringQueryProducer("contentClass"); 
+	public static StringQueryProducer REQUESTREPLYPREDICTION = new StringQueryProducer("requestReplyPrediction"); 
 	
 	
 	public String getBugTrackerId() {
@@ -77,6 +79,15 @@ public class CommentData extends Pongo {
 	
 	public CommentData setContentClass(String contentClass) {
 		dbObject.put("contentClass", contentClass);
+		notifyChanged();
+		return this;
+	}
+	public String getRequestReplyPrediction() {
+		return parseString(dbObject.get("requestReplyPrediction")+"", "");
+	}
+	
+	public CommentData setRequestReplyPrediction(String requestReplyPrediction) {
+		dbObject.put("requestReplyPrediction", requestReplyPrediction);
 		notifyChanged();
 		return this;
 	}

@@ -39,7 +39,39 @@ $(function() {
 	$(".pop").popover(app.popoverOptions);
 	$.cookie.json = true;
 	$.cookie.defaults.path = "/";
+
+	// TODO: not working correctly
+	//applyMoreLessDescription();
 });
+
+// Credit: http://shakenandstirredweb.com/240/jquery-moreless-text
+function applyMoreLessDescription() {
+// The height of the content block when it's not expanded
+var adjustheight = 100;
+// The "more" link text
+var moreText = "+  More";
+// The "less" link text
+var lessText = "- Less";
+
+// Sets the .more-block div to the specified height and hides any content that overflows
+$(".more-less .more-block").css('height', adjustheight).css('overflow', 'hidden');
+
+// The section added to the bottom of the "more-less" div
+$(".more-less").append('<p class="continued">[&hellip;]</p><a href="#" class="adjust"></a>');
+
+$("a.adjust").text(moreText);
+
+$(".adjust").toggle(function() {
+		$(this).parents("div:first").find(".more-block").css('height', adjustheight).css('overflow', 'hidden');
+		$(this).parents("div:first").find("p.continued").css('display', 'block');
+		$(this).text(moreText);
+		$(this).parents("div:first").find(".more-block").css('height', 'auto').css('overflow', 'visible');
+		// Hide the [...] when expanded
+		$(this).parents("div:first").find("p.continued").css('display', 'none');
+		$(this).text(lessText);
+	}, function() {
+});
+}
 
 function toggleSpark(elem, projectid, projectname, metricid, metricname) {
 	
@@ -56,6 +88,59 @@ function toggleSpark(elem, projectid, projectname, metricid, metricname) {
 		}).error(function(result) {
 			console.log("Error, unable to toggle spark watch.");
 		});
+}
+
+function drawSparkTable(tableId, projectId, metrics, querystring, drawWatches) {
+    $.getJSON("http://localhost:8182/projects/p/" + projectId + "/s/" + metrics + "?" + querystring, function (result) {
+        // Convert into an array if only one spark was requested
+        if( Object.prototype.toString.call( result ) === '[object Object]' ) {
+            result = [result];
+        }
+
+        // Draw a new row for each spark
+        for (var r in result) {
+                var data = result[r];
+
+                // FIXME: If the first sparkle is in error, this won't work.
+                if (r == 0) { // Set up the header
+                    $("#" + tableId + " > thead:last").append(
+                        "<tr><th></th><th>metric</th>" +
+                        "<th>" + data.firstDate + "</th>" +
+                        "<th>" + data.months + " months</th>" +
+                        "<th>" + data.lastDate + "</th>" +
+                        "<th>low</th>" +
+                        "<th>high</th></tr>");
+                }
+
+                if (data.status === "error") {
+                    console.log("Unable to load sparky '" + data.metricId + "': " + data.msg);
+                    continue;
+                }
+
+                console.log("drawing " + data.metricId)
+
+                var a = ""; 
+                if ($.inArray(data.name, app.grid.sparks) != -1){
+                    a = "active";
+                }
+                var toAppend = "<tr><td>";
+
+                if (drawWatches && app.loggedIn) {
+                    var id = "watch-spark-@project.getShortName()-" + data.name;
+                    toAppend = toAppend + '<a href="javascript:toggleSpark(\'#'+id+'\',\'@project.getShortName()\',\'@project.getName()\',\''+ data.name + '\', \''+data.name+'\')"><span id="' + id + '" class="glyphicon glyphicon-eye-open spark-watch tip ' + a + '" data-toggle="tooltip" data-placement="left" title="Watch/unwatch on dashboard"></span></a>';
+                }
+               toAppend = toAppend + "</td>" +
+                    "<td>" + data.name + 
+                    "</td><td>" + Math.round(data.first * 100) / 100  +
+                    "</td><td><img class=\"spark\" src=\"http://localhost:8182" + data.spark + "\" />" +  
+                    "</td><td>" + Math.round(data.last * 100) / 100  + 
+                    "</td><td>" + Math.round(data.low * 100) / 100 + 
+                    "</td><td>" + Math.round(data.high * 100) / 100 + "</td></tr>";
+
+                $("#" + tableId + " > tbody:last").append(toAppend);
+            }
+            $(".tip").tooltip(app.tooltipOptions);
+    });
 }
 
 function addProjectToComparison(projectid, projectname) {

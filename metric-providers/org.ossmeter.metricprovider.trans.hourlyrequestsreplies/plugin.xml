@@ -9,6 +9,7 @@
 
 
 
+
 <extension point="com.googlecode.pongo.runtime.osgi">
     <class name="org.ossmeter.metricprovider.trans.newsgroups.hourlyrequestsreplies.model.NewsgroupsHourlyRequestsRepliesTransMetric"/>
     <class name="org.ossmeter.metricprovider.trans.newsgroups.hourlyrequestsreplies.model.HourArticles"/>

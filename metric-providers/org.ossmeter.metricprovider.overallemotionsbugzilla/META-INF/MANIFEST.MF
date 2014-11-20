@@ -8,8 +8,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.repository.model.bts.bugzilla,
  org.ossmeter.platform,
  com.googlecode.pongo.runtime.osgi,
- org.ossmeter.sentimentclassifier.opennlptartarus.libsvm;bundle-version="1.0.0",
+ org.ossmeter.sentimentclassifier.opennlptartarus.libsvm,
  org.ossmeter.platform.visualisation
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.trans.bugs.emotions
+Export-Package: org.ossmeter.metricprovider.trans.bugs.emotions,
+ org.ossmeter.metricprovider.trans.bugs.emotions.model

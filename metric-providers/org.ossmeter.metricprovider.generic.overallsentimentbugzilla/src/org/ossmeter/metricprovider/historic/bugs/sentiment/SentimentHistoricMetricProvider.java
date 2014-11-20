@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.ossmeter.metricprovider.historic.bugs.sentiment.model.BugsSentimentHistoricMetric;
 import org.ossmeter.metricprovider.trans.bugs.bugmetadata.BugMetadataTransMetricProvider;
-import org.ossmeter.metricprovider.trans.bugs.bugmetadata.model.BugTrackerData;
+import org.ossmeter.metricprovider.trans.bugs.bugmetadata.model.BugData;
 import org.ossmeter.metricprovider.trans.bugs.bugmetadata.model.BugsBugMetadataTransMetric;
 import org.ossmeter.platform.AbstractHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
@@ -44,20 +44,20 @@ public class SentimentHistoricMetricProvider extends AbstractHistoricalMetricPro
 			 float overallSentiment = 0,
 				   startSentiment = 0,
 				   endSentiment = 0;
-			 for (BugTrackerData bugTrackerData: usedBhm.getBugTrackerData()) {
-				 overallSentiment += bugTrackerData.getAverageSentiment();
-				 String start = bugTrackerData.getStartSentiment();
+			 for (BugData bugData: usedBhm.getBugData()) {
+				 overallSentiment += bugData.getAverageSentiment();
+				 String start = bugData.getStartSentiment();
 				 if (start.equals("Positive"))
 					 startSentiment+=1;
 				 else if (start.equals("Negative"))
 					 startSentiment-=1;
-				 String end = bugTrackerData.getEndSentiment();
+				 String end = bugData.getEndSentiment();
 				 if (end.equals("Positive"))
 					 endSentiment+=1;
 				 else if (end.equals("Negative"))
 					 endSentiment-=1;
 			 }
-			 long size = usedBhm.getBugTrackerData().size();
+			 long size = usedBhm.getBugData().size();
 			 if (size>0) {
 				 overallSentiment /= size;
 				 startSentiment /= size;
