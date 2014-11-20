@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.java.CF-Java.historic",
 	"vis" : [ 
 		{
-			"name" : "CFJavaHistoric",
-			"nicename" : "CFJavaHistoric",
+			"id" : "CFJavaHistoric",
+			"name" : "Coupling Factor",
 			"description" : "This metric shows the Coupling Factor for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

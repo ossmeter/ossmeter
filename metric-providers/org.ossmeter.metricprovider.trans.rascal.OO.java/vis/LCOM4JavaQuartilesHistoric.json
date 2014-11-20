@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.java.LCOM4-Java-Quartiles.historic",
 	"vis" : [ 
 		{
-			"name" : "LCOM4JavaQuartilesHistoric",
-			"nicename" : "LCOM4JavaQuartilesHistoric",
+			"id" : "LCOM4JavaQuartilesHistoric",
+			"name" : "Lack of Cohesion in Methods (variant 4)",
 			"description" : "This metric shows the quartiles of Lack of cohesion in methods 4 for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

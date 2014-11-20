@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.java.I-Java-Quartiles.historic",
 	"vis" : [ 
 		{
-			"name" : "IJavaQuartilesHistoric",
-			"nicename" : "IJavaQuartilesHistoric",
+			"id" : "IJavaQuartilesHistoric",
+			"name" : "Instability",
 			"description" : "This metric shows the quartiles of Instability for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.java.DIT-Java-Quartiles.historic",
 	"vis" : [ 
 		{
-			"name" : "DITJavaQuartilesHistoric",
-			"nicename" : "DITJavaQuartilesHistoric",
+			"id" : "DITJavaQuartilesHistoric",
+			"name" : "Depth of Inheritance Tree",
 			"description" : "This metric shows the quartiles of Depth of inheritance tree for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

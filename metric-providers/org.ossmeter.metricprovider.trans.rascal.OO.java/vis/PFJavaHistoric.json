@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.java.PF-Java.historic",
 	"vis" : [ 
 		{
-			"name" : "PFJavaHistoric",
-			"nicename" : "PFJavaHistoric",
+			"id" : "PFJavaHistoric",
+			"name" : "Polymorphism Factor",
 			"description" : "This metric shows the Polymorphism Factor for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

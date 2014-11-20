@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.PHP.Ce-PHP-Quartiles.historic",
 	"vis" : [ 
 		{
-			"name" : "CePHPQuartilesHistoric",
-			"nicename" : "CePHPQuartilesHistoric",
+			"id" : "CePHPQuartilesHistoric",
+			"name" : "Efferent Coupling",
 			"description" : "This metric shows the quartiles of Efferent coupling for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.PHP.CBO-PHP-Quartiles.historic",
 	"vis" : [ 
 		{
-			"name" : "CBOPHPQuartilesHistoric",
-			"nicename" : "CBOPHPQuartilesHistoric",
+			"id" : "CBOPHPQuartilesHistoric",
+			"name" : "Coupling Between Objects",
 			"description" : "This metric shows the quartiles of Coupling between objects for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

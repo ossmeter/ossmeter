@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.PHP.DIT-PHP-Quartiles.historic",
 	"vis" : [ 
 		{
-			"name" : "DITPHPQuartilesHistoric",
-			"nicename" : "DITPHPQuartilesHistoric",
+			"id" : "DITPHPQuartilesHistoric",
+			"name" : "Depth of Inheritance Tree",
 			"description" : "This metric shows the quartiles of Depth of inheritance tree for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

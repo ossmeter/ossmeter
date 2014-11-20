@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.PHP.RR-PHP.historic",
 	"vis" : [ 
 		{
-			"name" : "RRPHPHistoric",
-			"nicename" : "RRPHPHistoric",
+			"id" : "RRPHPHistoric",
+			"name" : "Reuse Ratio",
 			"description" : "This metric shows the Reuse Ratio for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

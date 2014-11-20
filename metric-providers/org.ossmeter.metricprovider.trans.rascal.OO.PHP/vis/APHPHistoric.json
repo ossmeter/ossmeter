@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.PHP.A-PHP.historic",
 	"vis" : [ 
 		{
-			"name" : "APHPHistoric",
-			"nicename" : "APHPHistoric",
+			"id" : "APHPHistoric",
+			"name" : "Abstractness",
 			"description" : "This metric shows the Abstractness for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

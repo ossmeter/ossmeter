@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.style.filesWithErrorProneness.historic",
 	"vis" : [ 
 		{
-			"name" : "filesWithErrorPronenessTimeLine",
-			"nicename" : "filesWithErrorPronenessTimeLine",
+			"id" : "filesWithErrorPronenessTimeLine",
+			"name" : "Percentage of file that are error prone",
 			"description" : "This metric shows the percentage of files with style violations which make the code error prone, over time.",
 			"type" : "LineChart",
 			"datatable" : {

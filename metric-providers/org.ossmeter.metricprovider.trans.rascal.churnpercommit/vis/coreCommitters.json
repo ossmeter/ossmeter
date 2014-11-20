@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.rascal.generic.churn.coreCommittersChurn",
 	"vis" : [ 
 		{
-			"name" : "coreCommittersChurnBar",
-			"nicename" : "coreCommittersChurnBar",
+			"id" : "coreCommittersChurnBar",
+			"name" : "Core committers",
 			"description" : "This metric shows the total accumulated churn per committer.",
 			"type" : "BarChart",
 			"datatable" : {

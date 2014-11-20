@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.PHP.DAC-PHP-Quartiles.historic",
 	"vis" : [ 
 		{
-			"name" : "DACPHPQuartilesHistoric",
-			"nicename" : "DACPHPQuartilesHistoric",
+			"id" : "DACPHPQuartilesHistoric",
+			"name" : "Data Abstraction Coupling",
 			"description" : "This metric shows the quartiles of Data abstraction coupling for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

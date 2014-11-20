@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.readability.fileReadabilityQuartiles.historic",
 	"vis" : [ 
 		{
-			"name" : "fileReadabilityQuartilesHistoric",
-			"nicename" : "fileReadabilityQuartilesHistoric",
+			"id" : "fileReadabilityQuartilesHistoric",
+			"name" : "Measure of readability (per file)",
 			"description" : "This metric shows the quartiles of code readability per file, measured by use of whitespace, over time.",
 			"type" : "LineChart",
 			"datatable" : {

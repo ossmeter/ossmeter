@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.PHP.SR-PHP.historic",
 	"vis" : [ 
 		{
-			"name" : "SRPHPHistoric",
-			"nicename" : "SRPHPHistoric",
+			"id" : "SRPHPHistoric",
+			"name" : "Specialization Ratio",
 			"description" : "This metric shows the Specialization Ratio for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

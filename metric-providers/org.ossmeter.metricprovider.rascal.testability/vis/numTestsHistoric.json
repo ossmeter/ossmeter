@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.rascal.testability.java.NumberOfTestMethods.historic",
 	"vis" : [ 
 		{
-			"name" : "numTestsHistoric",
-			"nicename" : "numTestsHistoric",
+			"id" : "numTestsHistoric",
+			"name" : "Number of test methods",
 			"description" : "This metric shows the number of JUnit test methods over time.",
 			"type" : "LineChart",
 			"datatable" : {

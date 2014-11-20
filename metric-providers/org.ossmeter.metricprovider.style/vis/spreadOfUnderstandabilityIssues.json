@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.style.spreadOfUnderstandabilityIssues.historic",
 	"vis" : [ 
 		{
-			"name" : "spreadOfUnderstandabilityIssuesTimeLine",
-			"nicename" : "spreadOfUnderstandabilityIssuesTimeLine",
+			"id" : "spreadOfUnderstandabilityIssuesTimeLine",
+			"name" : "Spread of files with understandability issues over the system",
 			"description" : "This metric shows the spread over the project's files of style violations which indicate understandability issues, over time.",
 			"type" : "LineChart",
 			"datatable" : {

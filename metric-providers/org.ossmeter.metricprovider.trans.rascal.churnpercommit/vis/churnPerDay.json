@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.rascal.generic.churn.churnToday.historic",
 	"vis" : [ 
 		{
-			"name" : "churnPerDayTimeLine",
-			"nicename" : "churnPerDayTimeLine",
+			"id" : "churnPerDayTimeLine",
+			"name" : "Churn (per day) ",
 			"description" : "This metric shows the churn per day over time.",
 			"type" : "LineChart",
 			"datatable" : {

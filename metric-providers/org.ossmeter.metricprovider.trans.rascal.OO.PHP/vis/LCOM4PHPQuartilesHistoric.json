@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.PHP.LCOM4-PHP-Quartiles.historic",
 	"vis" : [ 
 		{
-			"name" : "LCOM4PHPQuartilesHistoric",
-			"nicename" : "LCOM4PHPQuartilesHistoric",
+			"id" : "LCOM4PHPQuartilesHistoric",
+			"name" : "Lack of Cohesion in Methods (variant 4)",
 			"description" : "This metric shows the quartiles of Lack of cohesion in methods 4 for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.style.spreadOfInefficiencies.historic",
 	"vis" : [ 
 		{
-			"name" : "spreadOfInefficienciesTimeLine",
-			"nicename" : "spreadOfInefficienciesTimeLine",
+			"id" : "spreadOfInefficienciesTimeLine",
+			"name" : "Spread of files with inefficiencies over the system",
 			"description" : "This metric shows the spread over the project's files of style violations which indicate inefficiencies, over time.",
 			"type" : "LineChart",
 			"datatable" : {

@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.java.NOC-Java-Quartiles.historic",
 	"vis" : [ 
 		{
-			"name" : "NOCJavaQuartilesHistoric",
-			"nicename" : "NOCJavaQuartilesHistoric",
+			"id" : "NOCJavaQuartilesHistoric",
+			"name" : "Number of Children",
 			"description" : "This metric shows the quartiles of Number of children for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

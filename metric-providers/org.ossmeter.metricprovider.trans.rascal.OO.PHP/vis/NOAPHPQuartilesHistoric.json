@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.PHP.NOA-PHP-Quartiles.historic",
 	"vis" : [ 
 		{
-			"name" : "NOAPHPQuartilesHistoric",
-			"nicename" : "NOAPHPQuartilesHistoric",
+			"id" : "NOAPHPQuartilesHistoric",
+			"name" : "Number of Attributes",
 			"description" : "This metric shows the quartiles of Number of attributes for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

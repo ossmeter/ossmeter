@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.java.RFC-Java-Quartiles.historic",
 	"vis" : [ 
 		{
-			"name" : "RFCJavaQuartilesHistoric",
-			"nicename" : "RFCJavaQuartilesHistoric",
+			"id" : "RFCJavaQuartilesHistoric",
+			"name" : "Response For Class",
 			"description" : "This metric shows the quartiles of Response for class for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

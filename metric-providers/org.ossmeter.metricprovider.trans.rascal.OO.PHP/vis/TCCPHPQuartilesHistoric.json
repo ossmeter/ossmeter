@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.PHP.TCC-PHP-Quartiles.historic",
 	"vis" : [ 
 		{
-			"name" : "TCCPHPQuartilesHistoric",
-			"nicename" : "TCCPHPQuartilesHistoric",
+			"id" : "TCCPHPQuartilesHistoric",
+			"name" : "Tight CLass Cohesion",
 			"description" : "This metric shows the quartiles of Tight class cohesion for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {
