@@ -2,11 +2,13 @@ module JUnit3
 
 import lang::java::m3::Core;
 
-loc jUnit3BaseClass = |java+class:///junit/framework/TestCase|;
+set[loc] jUnit3BaseClass = { |java+class:///junit/framework/TestCase|,
+                             |java+class:///TestCase| // failsafe
+                           };
 
 @memo
 private set[loc] getTestClasses(M3 m) {
-  return { candidate | <candidate, baseClass> <- m@extends+, baseClass == jUnit3BaseClass };
+  return { candidate | <candidate, baseClass> <- m@extends+, baseClass in jUnit3BaseClass };
 }
 
 @memo
