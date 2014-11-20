@@ -13,7 +13,10 @@ import org::ossmeter::metricprovider::MetricProvider;
 
 
 @metric{TestCoverage}
-@doc{Static Estimation of test coverage}
+@doc{This is a static over-estimation of test coverage: which code is executed in the system when all JUnit test cases are executed? We approximate
+this by using the static call graphs and assuming every method which can be called, will be called. This leads to an over-approximation,
+as compared to a dynamic code coverage analysis, but the static analysis does follow the trend and a low code coverage here is an good indicator
+for a lack in testing effort for the project.}
 @friendlyName{Static Estimation of test coverage}
 @appliesTo{java()}
 @historic{}
@@ -92,7 +95,8 @@ private rel[loc, loc] getImplicitContainment(M3 m) {
 }
 
 @metric{TestOverPublicMethods}
-@doc{Number of JUnit tests averaged over the total number of public methods}
+@doc{Number of JUnit tests averaged over the total number of public methods. Ideally all public methods are tested. With this number we
+compute how far from the ideal situation the project is.}
 @friendlyName{Number of JUnit tests averaged over the total number of public methods}
 @appliesTo{java()}
 @historic{}
@@ -109,7 +113,7 @@ real percentageOfTestedPublicMethods(rel[Language, loc, M3] m3s = {}) {
 
 @metric{NumberOfTestMethods}
 @doc{Number of JUnit test methods}
-@friendlyName{Number of JUnit test methods}
+@friendlyName{{Number of JUnit test methods. This is an intermediate absolute metric used to compute others. The bare metric is hard to compare between projects.}
 @appliesTo{java()}
 @historic
 int numberOfTestMethods(rel[Language, loc, M3] m3s = {}) {
