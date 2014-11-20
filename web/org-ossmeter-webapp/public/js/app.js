@@ -90,7 +90,7 @@ function toggleSpark(elem, projectid, projectname, metricid, metricname) {
 		});
 }
 
-function drawSparkTable(tableId, projectId, metrics, querystring, drawWatches) {
+function drawSparkTable(tableId, projectId, metrics, querystring, drawWatches, drawAddToPlot) {
     $.getJSON("http://localhost:8182/projects/p/" + projectId + "/s/" + metrics + "?" + querystring, function (result) {
         // Convert into an array if only one spark was requested
         if( Object.prototype.toString.call( result ) === '[object Object]' ) {
@@ -104,7 +104,7 @@ function drawSparkTable(tableId, projectId, metrics, querystring, drawWatches) {
                 // FIXME: If the first sparkle is in error, this won't work.
                 if (r == 0) { // Set up the header
                     $("#" + tableId + " > thead:last").append(
-                        "<tr><th></th><th>metric</th>" +
+                        "<tr><th>metric</th>" +
                         "<th>" + data.firstDate + "</th>" +
                         "<th>" + data.months + " months</th>" +
                         "<th>" + data.lastDate + "</th>" +
@@ -117,20 +117,23 @@ function drawSparkTable(tableId, projectId, metrics, querystring, drawWatches) {
                     continue;
                 }
 
-                console.log("drawing " + data.metricId)
-
                 var a = ""; 
                 if ($.inArray(data.name, app.grid.sparks) != -1){
                     a = "active";
                 }
-                var toAppend = "<tr><td>";
+                var toAppend = '<tr><td>';
 
                 if (drawWatches && app.loggedIn) {
-                    var id = "watch-spark-@project.getShortName()-" + data.name;
+                    var id = "watch-spark-" + projectId + "-" + data.name;
                     toAppend = toAppend + '<a href="javascript:toggleSpark(\'#'+id+'\',\'@project.getShortName()\',\'@project.getName()\',\''+ data.name + '\', \''+data.name+'\')"><span id="' + id + '" class="glyphicon glyphicon-eye-open spark-watch tip ' + a + '" data-toggle="tooltip" data-placement="left" title="Watch/unwatch on dashboard"></span></a>';
                 }
-               toAppend = toAppend + "</td>" +
-                    "<td>" + data.name + 
+
+                if (drawAddToPlot) {
+                    toAppend = toAppend + '</span><a href="javascript:grabMetricData(\''+projectId+'\', \''+data.id+'\')">' + data.name + '</a>';
+                } else {
+                	toAppend = toAppend + data.name;
+                }
+               	toAppend = toAppend +
                     "</td><td>" + Math.round(data.first * 100) / 100  +
                     "</td><td><img class=\"spark\" src=\"http://localhost:8182" + data.spark + "\" />" +  
                     "</td><td>" + Math.round(data.last * 100) / 100  + 

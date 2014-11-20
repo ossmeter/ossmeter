@@ -281,6 +281,11 @@ span.spark-watch.active {
     margin-left: 0;
 }
 
-table.spark-table {
-    font-size : 10pt;
+table.spark {
+    font-size : 0.9em;
+}
+
+.slip-left a {
+    margin-left : -40px;
+    /*margin-right: 30px;*/
 }

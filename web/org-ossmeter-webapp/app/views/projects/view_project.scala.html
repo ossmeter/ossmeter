@@ -32,7 +32,13 @@ case s : SparkGridEntry => {@if(s.getProject().getId()) {app.grid.sparks.push("@
 </script>
 
 @_projectMetaData(project)
+
 @* @_qualityModelView(project, qualityModel, selectedAspect, isSummary) *@
+
+@if(!isSummary) {
+    @_largePlot()
+}
+
 @_aspectView(project, qualityModel, qualityModel, isSummary, List(qualityModel))
 
 <script type="text/javascript" src="@routes.Assets.at("js/d3.v3.min.js")"></script>
