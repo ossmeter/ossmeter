@@ -198,7 +198,8 @@ map[loc, int] numberOfFilesPerCommit(ProjectDelta delta = \empty()) {
 }
 
 @metric{commitLocality}
-@doc{Find out if commits are usually local to a file or widespread over the system}
+@doc{Find out if commits are usually local to a file or widespread over the system. If the commits are widespread this can mean either a problem with 
+separation of concerns in the architecture of the system, or that the developers are not concentrating on one task at the same time.} 
 @friendlyName{Commit locality}
 @appliesTo{generic()}
 @uses=("filesPerCommit.historic":"filesPerCommit")

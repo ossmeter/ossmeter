@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.java.MPC-Java-Quartiles.historic",
 	"vis" : [ 
 		{
-			"name" : "MPCJavaQuartilesHistoric",
-			"nicename" : "MPCJavaQuartilesHistoric",
+			"id" : "MPCJavaQuartilesHistoric",
+			"name" : "Message Passing Coupling (Java)",
 			"description" : "This metric shows the quartiles of Message passing coupling for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

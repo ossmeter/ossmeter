@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.PHP.LCC-PHP-Quartiles.historic",
 	"vis" : [ 
 		{
-			"name" : "LCCPHPQuartilesHistoric",
-			"nicename" : "LCCPHPQuartilesHistoric",
+			"id" : "LCCPHPQuartilesHistoric",
+			"name" : "Loose Class Cohesion (PHP)",
 			"description" : "This metric shows the quartiles of Loose class cohesion for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {
