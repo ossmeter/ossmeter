@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "AJavaHistoric",
-			"name" : "Abstractness",
+			"name" : "Abstractness (Java)",
 			"description" : "This metric shows the Abstractness for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

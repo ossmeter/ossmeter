@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "APHPHistoric",
-			"name" : "Abstractness",
+			"name" : "Abstractness (PHP)",
 			"description" : "This metric shows the Abstractness for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "PFPHPHistoric",
-			"name" : "Polymorphism Factor",
+			"name" : "Polymorphism Factor (PHP)",
 			"description" : "This metric shows the Polymorphism Factor for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

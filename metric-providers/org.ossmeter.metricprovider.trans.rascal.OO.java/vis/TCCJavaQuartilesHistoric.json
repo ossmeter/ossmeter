@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "TCCJavaQuartilesHistoric",
-			"name" : "Tight Class Cohesion",
+			"name" : "Tight Class Cohesion (Java)",
 			"description" : "This metric shows the quartiles of Tight class cohesion for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

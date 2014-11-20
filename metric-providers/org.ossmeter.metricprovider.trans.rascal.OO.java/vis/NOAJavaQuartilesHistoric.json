@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "NOAJavaQuartilesHistoric",
-			"name" : "Number of Attributes",
+			"name" : "Number of Attributes (Java)",
 			"description" : "This metric shows the quartiles of Number of attributes for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

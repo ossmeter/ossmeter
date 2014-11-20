@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "SRPHPHistoric",
-			"name" : "Specialization Ratio",
+			"name" : "Specialization Ratio (PHP)",
 			"description" : "This metric shows the Specialization Ratio for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

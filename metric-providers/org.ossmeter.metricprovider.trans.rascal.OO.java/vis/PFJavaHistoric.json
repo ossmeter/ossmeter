@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "PFJavaHistoric",
-			"name" : "Polymorphism Factor",
+			"name" : "Polymorphism Factor (Java)",
 			"description" : "This metric shows the Polymorphism Factor for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

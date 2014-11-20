@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "NOCJavaQuartilesHistoric",
-			"name" : "Number of Children",
+			"name" : "Number of Children (Java)",
 			"description" : "This metric shows the quartiles of Number of children for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

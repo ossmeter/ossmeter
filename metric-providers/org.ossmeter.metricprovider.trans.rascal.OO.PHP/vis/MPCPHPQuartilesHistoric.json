@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "MPCPHPQuartilesHistoric",
-			"name" : "Message Passing Coupling",
+			"name" : "Message Passing Coupling (PHP)",
 			"description" : "This metric shows the quartiles of Message passing coupling for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

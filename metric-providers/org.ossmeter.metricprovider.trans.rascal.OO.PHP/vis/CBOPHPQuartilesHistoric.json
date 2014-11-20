@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "CBOPHPQuartilesHistoric",
-			"name" : "Coupling Between Objects",
+			"name" : "Coupling Between Objects (PHP)",
 			"description" : "This metric shows the quartiles of Coupling between objects for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

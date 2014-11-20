@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "AIFPHPQuartilesHistoric",
-			"name" : "Attribute Inheritance Factor",
+			"name" : "Attribute Inheritance Factor (PHP)",
 			"description" : "This metric shows the quartiles of Attribute inheritance factor for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

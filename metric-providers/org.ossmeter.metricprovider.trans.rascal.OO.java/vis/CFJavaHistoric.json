@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "CFJavaHistoric",
-			"name" : "Coupling Factor",
+			"name" : "Coupling Factor (Java)",
 			"description" : "This metric shows the Coupling Factor for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

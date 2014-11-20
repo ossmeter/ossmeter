@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "RRPHPHistoric",
-			"name" : "Reuse Ratio",
+			"name" : "Reuse Ratio (PHP)",
 			"description" : "This metric shows the Reuse Ratio for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

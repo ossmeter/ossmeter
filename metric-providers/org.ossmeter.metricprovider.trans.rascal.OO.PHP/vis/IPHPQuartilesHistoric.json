@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "IPHPQuartilesHistoric",
-			"name" : "Instability",
+			"name" : "Instability (PHP)",
 			"description" : "This metric shows the quartiles of Instability for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

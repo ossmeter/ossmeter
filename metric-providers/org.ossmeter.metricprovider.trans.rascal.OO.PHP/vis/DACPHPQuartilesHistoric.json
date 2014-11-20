@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "DACPHPQuartilesHistoric",
-			"name" : "Data Abstraction Coupling",
+			"name" : "Data Abstraction Coupling (PHP)",
 			"description" : "This metric shows the quartiles of Data abstraction coupling for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "AHFJavaHistoric",
-			"name" : "Attribute Hiding Factor",
+			"name" : "Attribute Hiding Factor (Java)",
 			"description" : "This metric shows the Attribute Hiding Factor for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

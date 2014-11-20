@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "RFCPHPQuartilesHistoric",
-			"name" : "Response For Class",
+			"name" : "Response For Class (PHP)",
 			"description" : "This metric shows the quartiles of Response for class for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

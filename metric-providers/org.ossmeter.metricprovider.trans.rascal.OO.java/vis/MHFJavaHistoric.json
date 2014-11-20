@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "MHFJavaHistoric",
-			"name" : "Method Hiding Factor",
+			"name" : "Method Hiding Factor (Java)",
 			"description" : "This metric shows the Method Hiding Factor for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

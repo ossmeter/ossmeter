@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "AHFPHPHistoric",
-			"name" : "Attribute Hiding Factor",
+			"name" : "Attribute Hiding Factor (PHP)",
 			"description" : "This metric shows the Attribute Hiding Factor for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "CeJavaQuartilesHistoric",
-			"name" : "Efferent coupling",
+			"name" : "Efferent coupling (Java)",
 			"description" : "This metric shows the quartiles of Efferent coupling for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

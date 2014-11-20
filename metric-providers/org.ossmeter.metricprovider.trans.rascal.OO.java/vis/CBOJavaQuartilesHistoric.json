@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "CBOJavaQuartilesHistoric",
-			"name" : "Coupling Between Objects",
+			"name" : "Coupling Between Objects (Java)",
 			"description" : "This metric shows the quartiles of Coupling between objects for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

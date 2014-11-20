@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "DITPHPQuartilesHistoric",
-			"name" : "Depth of Inheritance Tree",
+			"name" : "Depth of Inheritance Tree (PHP)",
 			"description" : "This metric shows the quartiles of Depth of inheritance tree for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

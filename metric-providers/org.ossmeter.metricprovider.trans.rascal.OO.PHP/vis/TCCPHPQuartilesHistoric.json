@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "TCCPHPQuartilesHistoric",
-			"name" : "Tight CLass Cohesion",
+			"name" : "Tight CLass Cohesion (PHP)",
 			"description" : "This metric shows the quartiles of Tight class cohesion for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

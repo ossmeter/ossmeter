@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "NOAPHPQuartilesHistoric",
-			"name" : "Number of Attributes",
+			"name" : "Number of Attributes (PHP)",
 			"description" : "This metric shows the quartiles of Number of attributes for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

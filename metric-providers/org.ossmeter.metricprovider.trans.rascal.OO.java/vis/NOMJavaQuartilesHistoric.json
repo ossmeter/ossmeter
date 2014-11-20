@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "NOMJavaQuartilesHistoric",
-			"name" : "Number of methods",
+			"name" : "Number of methods (Java)",
 			"description" : "This metric shows the quartiles of Number of methods for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

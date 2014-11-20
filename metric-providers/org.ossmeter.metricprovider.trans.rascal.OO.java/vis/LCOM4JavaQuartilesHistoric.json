@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "LCOM4JavaQuartilesHistoric",
-			"name" : "Lack of Cohesion in Methods (variant 4)",
+			"name" : "Lack of Cohesion in Methods (variant 4) (Java)",
 			"description" : "This metric shows the quartiles of Lack of cohesion in methods 4 for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

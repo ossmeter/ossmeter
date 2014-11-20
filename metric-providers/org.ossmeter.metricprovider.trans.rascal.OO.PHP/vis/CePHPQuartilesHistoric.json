@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "CePHPQuartilesHistoric",
-			"name" : "Efferent Coupling",
+			"name" : "Efferent Coupling (PHP)",
 			"description" : "This metric shows the quartiles of Efferent coupling for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

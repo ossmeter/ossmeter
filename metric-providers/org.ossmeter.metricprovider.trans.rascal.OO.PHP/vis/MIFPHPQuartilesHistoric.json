@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "MIFPHPQuartilesHistoric",
-			"name" : "Method Inheritance Factor",
+			"name" : "Method Inheritance Factor (PHP)",
 			"description" : "This metric shows the quartiles of Method inheritance factor for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

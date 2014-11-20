@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "LCCPHPQuartilesHistoric",
-			"name" : "Loose Class Cohesion",
+			"name" : "Loose Class Cohesion (PHP)",
 			"description" : "This metric shows the quartiles of Loose class cohesion for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

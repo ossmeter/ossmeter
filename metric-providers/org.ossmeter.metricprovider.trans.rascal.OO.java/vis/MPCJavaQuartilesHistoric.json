@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "MPCJavaQuartilesHistoric",
-			"name" : "Message Passing Coupling",
+			"name" : "Message Passing Coupling (Java)",
 			"description" : "This metric shows the quartiles of Message passing coupling for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

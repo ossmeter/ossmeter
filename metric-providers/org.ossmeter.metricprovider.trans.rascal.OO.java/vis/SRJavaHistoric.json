@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "SRJavaHistoric",
-			"name" : "Specialization Ratio",
+			"name" : "Specialization Ratio (Java)",
 			"description" : "This metric shows the Specialization Ratio for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

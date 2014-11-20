@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "DACJavaQuartilesHistoric",
-			"name" : "Data Abstraction Coupling",
+			"name" : "Data Abstraction Coupling (Java)",
 			"description" : "This metric shows the quartiles of Data abstraction coupling for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

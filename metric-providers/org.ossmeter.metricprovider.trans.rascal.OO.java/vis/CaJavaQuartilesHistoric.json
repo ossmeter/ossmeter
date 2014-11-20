@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "CaJavaQuartilesHistoric",
-			"name" : "Afferent Coupling",
+			"name" : "Afferent Coupling (Java)",
 			"description" : "This metric shows the quartiles of Afferent coupling for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

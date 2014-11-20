@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "DITJavaQuartilesHistoric",
-			"name" : "Depth of Inheritance Tree",
+			"name" : "Depth of Inheritance Tree (Java)",
 			"description" : "This metric shows the quartiles of Depth of inheritance tree for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

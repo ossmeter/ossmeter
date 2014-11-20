@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "CFPHPHistoric",
-			"name" : "Coupling Factor",
+			"name" : "Coupling Factor (PHP)",
 			"description" : "This metric shows the Coupling Factor for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

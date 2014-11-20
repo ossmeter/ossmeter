@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "RRJavaHistoric",
-			"name" : "Reuse Ratio",
+			"name" : "Reuse Ratio (Java)",
 			"description" : "This metric shows the Reuse Ratio for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

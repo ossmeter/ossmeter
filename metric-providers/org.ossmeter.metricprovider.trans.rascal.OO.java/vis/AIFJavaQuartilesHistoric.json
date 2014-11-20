@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "AIFJavaQuartilesHistoric",
-			"name" : "Attribute Inheritance Factor",
+			"name" : "Attribute Inheritance Factor (Java)",
 			"description" : "This metric shows the quartiles of Attribute inheritance factor for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

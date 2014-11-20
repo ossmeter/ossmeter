@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "CaPHPQuartilesHistoric",
-			"name" : "Afferent Coupling",
+			"name" : "Afferent Coupling (PHP)",
 			"description" : "This metric shows the quartiles of Afferent coupling for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

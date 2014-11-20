@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "LCOM4PHPQuartilesHistoric",
-			"name" : "Lack of Cohesion in Methods (variant 4)",
+			"name" : "Lack of Cohesion in Methods (variant 4) (PHP)",
 			"description" : "This metric shows the quartiles of Lack of cohesion in methods 4 for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

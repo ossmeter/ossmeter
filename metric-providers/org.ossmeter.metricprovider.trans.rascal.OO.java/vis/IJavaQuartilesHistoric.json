@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "IJavaQuartilesHistoric",
-			"name" : "Instability",
+			"name" : "Instability (Java)",
 			"description" : "This metric shows the quartiles of Instability for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "MHFPHPHistoric",
-			"name" : "Method Hiding Factor",
+			"name" : "Method Hiding Factor (PHP)",
 			"description" : "This metric shows the Method Hiding Factor for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

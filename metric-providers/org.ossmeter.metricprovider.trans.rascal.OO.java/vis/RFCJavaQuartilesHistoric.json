@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "RFCJavaQuartilesHistoric",
-			"name" : "Response For Class",
+			"name" : "Response For Class (Java)",
 			"description" : "This metric shows the quartiles of Response for class for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

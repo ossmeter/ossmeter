@@ -3,7 +3,7 @@
 	"vis" : [ 
 		{
 			"id" : "NOCPHPQuartilesHistoric",
-			"name" : "Number of children",
+			"name" : "Number of children (PHP)",
 			"description" : "This metric shows the quartiles of Number of children for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {
