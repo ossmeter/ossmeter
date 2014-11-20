@@ -17,7 +17,7 @@ import analysis::statistics::Frequency;
 import analysis::statistics::Inference;
  
 @metric{committersToday}
-@doc{activeCommitters}
+@doc{Who have been active today?}
 @friendlyName{activeCommitters}
 @appliesTo{generic()}
 set[str] committersToday(ProjectDelta delta = \empty()) {
@@ -25,7 +25,8 @@ set[str] committersToday(ProjectDelta delta = \empty()) {
 }
 
 @metric{firstLastCommitDatesPerDeveloper}
-@doc{firstLastCommitDatesPerDeveloper}
+@doc{Collects per developer the first and last dates on which he or she contributed code. This basic metric is used downstream for other metrics, but
+it is also used to drill down on the membership of specific individuals of the development team.} 
 @friendlyName{First and last commit dates per developer}
 @uses = ("committersToday":"committersToday")
 @appliesTo{generic()}
@@ -45,7 +46,8 @@ map[str, tuple[datetime, datetime]] firstLastCommitDates(ProjectDelta delta = \e
 }
 
 @metric{commitsPerDeveloper}
-@doc{commitsPerDeveloper}
+@doc{The number of commits per developer indicates not only the volume of the contribution of an individual but also the style in which he or she commits,
+when combined with other metrics such as churn. Few and big commits are different from many small commits. This metric is used downstream by other metrics as well.}
 @friendlyName{Number of commits per developer}
 @appliesTo{generic()}
 @historic
@@ -60,8 +62,8 @@ map[str, int] commitsPerDeveloper(ProjectDelta delta = \empty(), map[str, int] p
 }
 
 @metric{committersAge}
-@doc{Age of committers in days}
-@friendlyName{Age of committers}
+@doc{Measures in days the amount of time between the first and last contribution of each developer.}
+@friendlyName{Developer experience in project}
 @uses = ("firstLastCommitDatesPerDeveloper" : "commitDates")
 @appliesTo{generic()}
 rel[str, int] ageOfCommitters(map[str, tuple[datetime first, datetime last]] commitDates = ()) {
@@ -69,7 +71,7 @@ rel[str, int] ageOfCommitters(map[str, tuple[datetime first, datetime last]] com
 }
 
 @metric{developmentTeam}
-@doc{Development team}
+@doc{Lists the names of people who have been contributing code at least once in the history of the project.}
 @friendlyName{Development team}
 @uses = ("committersToday" : "committersToday")
 @appliesTo{generic()}
@@ -78,7 +80,7 @@ set[str] developmentTeam(set[str] prev = {}, set[str] committersToday = {}) {
 }
 
 @metric{sizeOfDevelopmentTeam}
-@doc{Size of development team}
+@doc{How many people have ever contributed code to this project?}
 @friendlyName{Size of development team}
 @uses = ("developmentTeam" : "team")
 @appliesTo{generic()}
@@ -87,7 +89,7 @@ int sizeOfDevelopmentTeam(set[str] team = {}) {
 }
 
 @metric{activeCommitters}
-@doc{Committers who have been active the last two weeks}
+@doc{A list of committers who have been active the last two weeks. This metric is meant for downstream processing.}
 @friendlyName{committersLastTwoWeeks}
 @uses = ("committersToday":"committersToday")
 @appliesTo{generic()}
@@ -98,7 +100,7 @@ rel[datetime, set[str]] activeCommitters(ProjectDelta delta = \empty(), rel[date
 }
 
 @metric{longerTermActiveCommitters}
-@doc{Committers who have been active the last 12 months}
+@doc{Committers who have been active the last 12 months. This metric is meant for downstream processing.}
 @friendlyName{committersLastYear}
 @uses = ("committersToday":"committersToday")
 @appliesTo{generic()}
@@ -110,7 +112,7 @@ rel[datetime, set[str]] longerTermActiveCommitters(ProjectDelta delta = \empty()
 
 
 @metric{numberOfActiveCommitters}
-@doc{Number of active committers over time (active in last two weeks)}
+@doc{Number of active committers over time (active in last two weeks). This measures a smooth window of two weeks, where every day we report the number of developers in the previous 14 days.}
 @friendlyName{numberOfActiveCommitters}
 @uses = ("activeCommitters" :"activeCommitters")
 @appliesTo{generic()}
@@ -119,7 +121,7 @@ int numberOfActiveCommitters(rel[datetime, set[str]] activeCommitters = {})
   = size({c | /str c := activeCommitters});
     
 @metric{numberOfActiveCommittersLongTerm}
-@doc{Number of long time active committers over time (active in last year)}
+@doc{Number of long time active committers over time (active in last year). This measures a smooth window of one year, where every day we report the number of developers active in the previous 365 days.}
 @friendlyName{numberOfActiveCommittersLongTerm}
 @uses = ("longerTermActiveCommitters" :"activeCommitters")
 @appliesTo{generic()}
