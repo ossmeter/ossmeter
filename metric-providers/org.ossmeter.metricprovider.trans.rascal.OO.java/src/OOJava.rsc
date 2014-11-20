@@ -387,7 +387,7 @@ map[loc, int] NOA_Java(rel[Language, loc, M3] m3s = {}) {
 
 
 @metric{Coupling-Java}
-@doc{Java coupling}
+@doc{Coupling between Java classes counts dependencies between class definitions. The higher the coupling between classes, the harder a system is to test and to maintain.}
 @friendlyName{Java coupling}
 @appliesTo{java()}
 @uses{("CBO-Java": "cbo")}
