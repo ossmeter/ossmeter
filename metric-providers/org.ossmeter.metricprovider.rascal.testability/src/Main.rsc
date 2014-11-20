@@ -113,7 +113,7 @@ real percentageOfTestedPublicMethods(rel[Language, loc, M3] m3s = {}) {
 
 @metric{NumberOfTestMethods}
 @doc{Number of JUnit test methods}
-@friendlyName{{Number of JUnit test methods. This is an intermediate absolute metric used to compute others. The bare metric is hard to compare between projects.}
+@friendlyName{Number of JUnit test methods. This is an intermediate absolute metric used to compute others. The bare metric is hard to compare between projects.}
 @appliesTo{java()}
 @historic
 int numberOfTestMethods(rel[Language, loc, M3] m3s = {}) {
