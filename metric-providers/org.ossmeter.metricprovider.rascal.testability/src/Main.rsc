@@ -118,7 +118,8 @@ int numberOfTestMethods(rel[Language, loc, M3] m3s = {}) {
 
 
 @metric{JavaUnitTestCoverage}
-@doc{How well do the project's unit tests cover its code (Java)}
+@doc{How well do the project's unit tests cover its code? A static approximation is done, measuring the code which would be executed if all JUnit tests are run. 
+This analysis may produce a higher number than a dynamic analysis would (due to dynamic dispatch and overriding) but it indicates bad coverage easily and it follows the trend.}
 @friendlyName{Java unit test coverage}
 @uses{("TestOverPublicMethods": "testOverPublicMethods", "TestCoverage": "testCoverage", "TestCoverage.historic": "history")}
 @appliesTo{java()}

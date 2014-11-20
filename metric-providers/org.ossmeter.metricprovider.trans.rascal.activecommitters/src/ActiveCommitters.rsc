@@ -140,7 +140,8 @@ int maximumActiveCommittersEver(rel[datetime d, int n] history = {}) {
 }
 
 @metric{developmentTeamStability}
-@doc{based on committer activity, what is the health of the community?}
+@doc{We measured the activity of individual development team members to infer the size of the development team and possibly a trend.}
+the growth or shrinkage of the team
 @friendlyName{Development team stability}
 @uses = ("numberOfActiveCommitters.historic" :"history"
       ,"maximumActiveCommittersEver":"maxDevs"
