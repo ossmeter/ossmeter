@@ -6,6 +6,10 @@
     @_attributeView(project, qualityModel, attribute, parents, summary)
 }
 
+@for(a <- aspect.aspects) {
+    @_aspectView(project, qualityModel, a, summary, parents)
+}
+
 
 
 @*

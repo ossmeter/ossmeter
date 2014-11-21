@@ -48,7 +48,7 @@ public class Application extends Controller {
 	}
 
 	public static Result compare() {
-		return ok(compare.render()); //FIXME
+		return ok(compare.render(getInformationSourceModel()));
 	}
 
 	public static Result jsRoutes() {

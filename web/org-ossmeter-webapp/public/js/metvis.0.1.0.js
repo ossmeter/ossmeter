@@ -422,16 +422,18 @@ var metvis = {
 				self.vises.splice(ind, 1);
 				self._updateScales();
 
-				var toRemove = -1;
+				var toRemove = [];
 				for (var s in self.series) {
 					if (self.series[s].vis === vis) {
-						toRemove = s;
+						toRemove.push(s);
 						break;
 					}
 				}
 
-				if (toRemove != -1) {
-					self.series.splice(toRemove, 1);
+				if (toRemove.length != 0) {
+					for (var r in toRemove) {
+						self.series.splice(toRemove[r], 1);
+					}
 				}
 
 			}
@@ -444,7 +446,7 @@ var metvis = {
 
 			var parseDate = d3.time.format(self.dateFormat).parse;
 			vis.datatable.forEach(function(d) { 
-	            if (vis.timeSeries === true && typeof d[vis.x] != 'object') {
+	            if (vis.timeSeries === true && typeof d[vis.x] == 'string') { // The type check avoids re-parsing data (as the assignment is destructive)
 	                d[vis.x] = parseDate(d[vis.x]);
 	            } else if (!vis.categorical === true) {
 	                d[vis.x] = +d[vis.x];            

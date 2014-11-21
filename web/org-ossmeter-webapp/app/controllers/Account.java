@@ -29,8 +29,6 @@ public class Account extends Controller {
 	@SubjectPresent
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result watchSpark(String projectid, String metricid, String projectName, String metricName) {
-		System.out.println();
-
 		User user = Application.getLocalUser(session());
 
 		if (user == null) {
@@ -43,6 +41,21 @@ public class Account extends Controller {
 		System.out.println("Looks like it worked!" + request().getQueryString("projectid") + " " + request().getQueryString("metricid"));
 		
 		return ok("");
+	}
+
+	@SubjectPresent
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
+	public static Result updateNotification(String projectid, String metricid, double value, boolean aboveThreshold) {
+		User user = Application.getLocalUser(session());
+
+		if (user == null) {
+			// Not logged in
+			return ok("Sorry, you need to be logged in to do that.");
+		}
+
+		MongoAuthenticator.updateNotification(user, projectid, metricid, value, aboveThreshold);
+		
+		return ok(""); // TODO?
 	}
 
 	public static class Accept {

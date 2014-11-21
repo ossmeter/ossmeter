@@ -1,3 +1,19 @@
+@(qualityModel : QualityModel)
+
+
+@printAttributes(aspect : QualityAspect) = {
+	@for(attr <- qualityModel.attributes) {
+		{
+			"name" : "@attr.name",
+			"metrics" : [
+			@for(m <- attr.metrics) {"@m",}
+			]
+		},
+	}
+	@for(asp <- aspect.aspects) {
+		@printAttributes(asp)
+	}
+}
 
 @main(Messages("ossmeter.index.title")) {
 <section>
@@ -33,109 +49,7 @@
    	</div>
 </section>
 
-<section>
-    <div class="container box">
-        <h2>Select Metrics</h2>
-        <p>Choose the metrics you wish to compare your selected projects on.</p>
-        <form class="form-horizontal" role="form">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="marginless">Source Code</h3>
-                        </div>
-                        <div class="form-group panel-body metric-list">
-		                    <div class="checkbox">
-	                        	<input type="checkbox"> <span> Lines of code</span>
-                        	</div>
-                        	<div class="checkbox">
-	                        	<input type="checkbox"> <span> Number of committers</span>
-                        	</div>
-                        	<div class="checkbox">
-	                        	<input type="checkbox"> <span> Comments</span>
-                        	</div>
-                        	<div class="checkbox">
-	                        	<input type="checkbox"> <span> Churn</span>
-                        	</div>
-                        	<div class="checkbox">
-	                        	<input type="checkbox"> <span> Methods per class</span>
-                        	</div>
-                        </div>
-                         <!-- <div class="form-group panel-body metric-list" data-bind="foreach: srcMetrics">
-                            <div class="checkbox">
-                                  <input type="checkbox" value="id" data-bind="checked: selected">
-                                  <span data-bind="text: name"></span>
 
-                              </div>
-                          </div> -->
-                      </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="marginless">Communication Channels</h3>
-                        </div>
-                        <div class="form-group panel-body metric-list">
-		                    <div class="checkbox">
-		                    	<input type="checkbox"> <span> Number of requests</span>
-		                    	</div>
-		                    	<div class="checkbox">
-		                        	<input type="checkbox"> <span> Number of replies</span>
-		                    	</div>
-		                    	<div class="checkbox">
-		                        	<input type="checkbox"> <span> Averate reply time</span>
-		                    	</div>
-		                    	<div class="checkbox">
-		                        	<input type="checkbox"> <span> New threads</span>
-		                    	</div>
-		                    	<div class="checkbox">
-		                        	<input type="checkbox"> <span> New users</span>
-		                    	</div>
-		                    </div>
-                        </div>
-                         <!-- <div class="form-group panel-body metric-list" data-bind="foreach: ccMetrics">
-                            <div class="checkbox">
-                                  <input type="checkbox" value="id" data-bind="checked: selected">
-                                  <span data-bind="text: name"></span>
-
-                              </div>
-                          </div> -->
-                  </div>
-                <div class="col-md-4">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="marginless">Bug Tracking</h3>
-                        </div>
-                         <div class="form-group panel-body metric-list">
-		                    <div class="checkbox">
-		                    	<input type="checkbox"> <span> Bug open time</span>
-		                    	</div>
-		                    	<div class="checkbox">
-		                        	<input type="checkbox"> <span> Average sentiment</span>
-		                    	</div>
-		                    	<div class="checkbox">
-		                        	<input type="checkbox"> <span> Cumulative comments</span>
-		                    	</div>
-		                    	<div class="checkbox">
-		                        	<input type="checkbox"> <span> Cumulative bugs</span>
-		                    	</div>
-		                    	<div class="checkbox">
-		                        	<input type="checkbox"> <span> Fixed bugs</span>
-		                    	</div>
-		                    </div>
-                        </div>
-                        <!--  <div class="form-group panel-body metric-list" data-bind="foreach: btsMetrics">
-                            <div class="checkbox">
-                                  <input type="checkbox" value="id" data-bind="checked: selected">
-                                  <span data-bind="text: name"></span>
-
-                              </div>
-                          </div> -->
-                      </div>
-            </div>
-        </form>
-    </div>
-</section>
 
 <section>
     <div class="container box">
@@ -148,147 +62,132 @@
 </section>
 
 <section>
-    <div class="container box">
-        <div class="row" id="parcoods-plot">
-        	&nbsp;
-        </div>
-        <div class="row" id="parcoods-table"></div>
-    </div>
-</section>
-
-<section>
-    <div class="container box">
-	    <div class="row">
-		    <div class="col-md-12 center" id="metricplot-legend">
-		    	
-		    </div>
+	<div class="container box">
+		<div class="row">
+			<div class="col-md-12" id="legend">
+			</div>
+		</div>
+		<div class="row">
+			<!-- ko foreach: selectedMetrics --> 
+		    <div class="col-md-6">
+		    	<span data-bind="text:name"></span><span data-bind="attr:{id: 'legend-'+id}"></span>
+				<div class="box" data-bind="compPlot: { metric: $data, projects: $parent.projects}, attr : {id: 'plot-' + id}">
+				loading
+				</div>
+			</div>
+			<!--  /ko -->
 	    </div>
-        <div class="row">
-            <div class="col-md-10">
-                <div id="metricplot-plot">
-                    
-                </div>    
-            </div>
-            <div class="col-md-2">
-                <div id="metricplot-metrics">
-	                <h3>Legend</h3>
-	                <div>
-	                    <div class="row">
-	                        <div class="col-md-2">
-	                            <div class="legend-box" style="background-color:red" ></div> 
-	                        </div>
-	                        <div class="col-md-8">Epsilon</div>
-	                    </div>
-	                    <div class="row">
-	                        <div class="col-md-2">
-	                            <div class="legend-box" style="background-color:red" ></div> 
-	                        </div>
-	                        <div class="col-md-8">ATL</div>
-	                    </div>
-	                </div>
-                    <h3>Metrics</h3>
-                    <div class="form-group panel-body metric-list">
-	                    <div class="checkbox">
-	                    	<input type="checkbox"> <span> Bug open time</span>
-	                    	</div>
-	                    	<div class="checkbox">
-	                        	<input type="checkbox"> <span> Average sentiment</span>
-	                    	</div>
-	                    	<div class="checkbox">
-	                        	<input type="checkbox"> <span> Cumulative comments</span>
-	                    	</div>
-	                    	<div class="checkbox">
-	                        	<input type="checkbox" checked> <span> Cumulative bugs</span>
-	                    	</div>
-	                    	<div class="checkbox">
-	                        	<input type="checkbox"> <span> Fixed bugs</span>
-	                    	</div>
-	                    </div>
-                    </div>
-                    <div class="radio" data-bind="foreach: selectedMetrics">
-                      
-                        <input type="radio" name="metricplot-metrics-radios" id="metricplot-metrics-radios" data-bind="id: id, value: name" checked>
-                        <span data-bind="text: name">
-                    </div>
-                </div>    
-            </div>
-        </div>
-        <div class="row" id="parcoods-table"></div>
     </div>
 </section>
 
+
+<!-- ko foreach: qualityAttributes --> 
 <section>
     <div class="container box">
-        <table class="table">
-        	<thead>
-        		<th></th>
-        		<th>Metric</th>
-        		<!-- ko foreach: validProjects --> 
-        		<th data-bind="text: name"></th>
-        		<!-- /ko -->
-        	</thead>
-        	<tbody data-bind="foreach: metrics">
-        		<tr>
-        			<td>
-        				<a href="#"><span class="glyphicon glyphicon-eye-open tip" data-toggle="tooltip" data-placement="left" title="Add sparkline to dashboard"></span></a>
-						<a href="#"><span class="glyphicon glyphicon-plus tip" data-toggle="tooltip" data-placement="left" title="Add metric to plot above"></span></a>
-					</td>
-					<td data-bind="text: name"></td>
-					<!-- ko foreach: $parent.validProjects --> 
-	        		<td>
-	        			<span data-bind="sparkplot: { project: $data, metric: $parent }"></span>
-	        		</td>
+	    <div class="row" data-toggle="collapse" aria-expanded="true" data-bind="attr : { 'aria-controls' : 'div-attr-' + id, 'data-target' : '#div-attr-' + id }">
+	        <h2 class="marginless" data-bind="text:name"></h2>
+	    </div>
+	    <div class="row collapse" data-bind="attr :{id : 'div-attr-' + id }">
+	        <table class="table">
+	        	<thead>
+	        		<th>toolkit</th>
+	        		<th>metric</th>
+	        		<!-- ko foreach: $parent.projects --> 
+	        		<th data-bind="text: name"></th>
 	        		<!-- /ko -->
-        		</tr>
-        		
-        	</tbody>
-        </table>
+	        	</thead>
+	        	<tbody data-bind="foreach: metrics">
+	        		<tr>
+	        			<td>
+	        				<div class="checkbox">
+                                <input type="checkbox" value="id" data-bind="checked: selected">
+							</div>
+						</td>
+						<td data-bind="text: name"></td>
+						<!-- ko foreach: $root.projects --> 
+		        		<td>
+		        			<span data-bind="sparkplot: { project: $data, metric: $parent }"></span>
+		        		</td>
+		        		<!-- /ko -->
+	        		</tr>
+	        		
+	        	</tbody>
+	        </table>
+        </div>
     </div>
 </section>
- 
-<script type="text/javascript" src="@routes.Assets.at("js/ossplots2.js")"></script>
-<script type="text/javascript" src="@routes.Assets.at("js/generators.js")"></script>
+<!-- /ko -->
+
+<script type="text/javascript" src="@routes.Assets.at("js/metvis.0.1.0.js")"></script>
 <script type="text/javascript" src="@routes.Assets.at("js/d3.v3.min.js")"></script>
 
-<script type="text/javascript">// DEBUG ONLY
-$(function() {
-	var vis = {
-            "name" : "avgnumberofarticlesrequestsreplies",
-            "type" : "LineChart",
-            "datatable" : {
-                "cols" : [  { "name" : "Date", "field" : "$__date" },
-                    { "name" : "Articles", "field" : "$averageArticles" },
-                    { "name" : "Requests", "field" : "$averageRequests" },
-                    { "name" : "Replies", "field" : "$averageReplies" } ]
-            },
-            "x" : "Date",
-            "y" : ["Articles", "Requests", "Replies"],
-            "timeSeries" : true
-        };
-    vis.datatable = generateTestData(vis, 500);
-	var chart = new ossplots.Chart("#metricplot-plot", vis);
-	chart.height = 400;
-    chart.draw();
-
-    $.getJSON("http://localhost:8182/projects/p/modelingepsilon/m/cumulativeBugs", function(vis) {
-
-    	var chart = new ossplots.Chart("#metricplot-plot", vis);
-		chart.height = 400;
-	    chart.draw();
-
-
-    	$.getJSON("http://localhost:8182/projects/p/modelingmmtatl/m/cumulativeBugs", function(vis2) {
-    		chart.addVis(vis2);
-	    });
-    });
-
-
-});
-// END DEBUG ONLY
-</script> 
 
 <script type="text/javascript">
+function addVisToChart(vis, chart) {
+	chart.draw();
+	chart.addVis(vis);
+}
+
+function drawLegend(chart, container) {
+    var l = $(container);
+    l.empty();
+        l.append("<ul>");
+        for (var s in chart.series) {
+            l.append('<li><div class="legend-box" style="background-color:' + chart.colors(s) + '"></div>' + chart.series[s].vis.projectName + '</li>');
+        }
+        l.append("</ul>");
+}
+
 $(function(){
+
+	chartmap = {}
+
+	ko.bindingHandlers.compPlot = {
+		init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+
+			// destroy any references to the chart when disposed
+			ko.utils.domNodeDisposal.addDisposeCallback(element, function() {
+				var metricid = valueAccessor().metric.id;
+				if (chartmap[metricid]) {
+					delete chartmap[metricid];
+				}
+			});
+
+		},
+		update: function(element, valueAccessor, allBindingsAccessor) {
+			var vacc = valueAccessor();
+			var metric = vacc.metric;
+			var projects = vacc.projects();
+
+			var chart;//= new metvis.Chart(element, {}); //FIXME
+
+			// $(element).empty();
+
+			$.getJSON("http://localhost:8182/projects/p/" + projects[0].id() + "/m/" + metric.id, function(vis) {
+				var chart = new metvis.Chart("#plot-" + metric.id, vis);
+				chart.height = 200;
+				chart.draw();
+				chartmap[metric.id] = chart;
+
+				for (var p = 1; p < projects.length; p++) {
+					if (projects[p].metricmap[metric.id]) {
+						chartmap[metric.id].addVis(projects[p].metricmap[metric.id]);
+						return;
+					}
+					(function(proj) {
+						$.getJSON("http://localhost:8182/projects/p/" + proj.id() + "/m/" + metric.id, function(vis) {
+
+							vis.projectName = proj.name();
+
+							chartmap[metric.id].addVis(vis);
+							proj.metricmap[metric.id] = vis;
+							drawLegend(chartmap[metric.id], "#legend-"+metric.id)
+						});
+					})(projects[p]);
+				}
+			});
+		}
+	}
 
 	ko.bindingHandlers.sparkplot = {
 		init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
@@ -296,9 +195,9 @@ $(function(){
 		},
 		update: function(element, valueAccessor, allBindingsAccessor) {
 	        // Extract info
-	        var value = valueAccessor();
-	        var project = value.project;
-	        var metric = value.metric;
+	        var vacc = valueAccessor();
+	        var project = vacc.project;
+	        var metric = vacc.metric;
 
 	        // TODO keep the sparks in memory (in the view model)
 	        // then check the VM before invoking the API
@@ -313,34 +212,30 @@ $(function(){
 		this.id = ko.observable(id);
 		this.name = ko.observable(name);
 		this.valid = ko.observable(valid);
-		
+		this.metricmap = ko.observable();
+
 		this.css = function() {
 			return this.valid() ? "has-success" : "";
 		}
 	}
 
-	var Metric = function(id, name, kind, selected) {
+	var QualityAttribute = function(id, name, metrics) {
 		this.id = id;
 		this.name = name;
-		this.kind = kind;
+		this.metrics = metrics;
+	}
+
+	var Metric = function(id, name, selected) {
+		this.id = id;
+		this.name = name;
 		this.selected = ko.observable(selected);
 	}
 
 	var ComparisonModel = function() {
 		"use strict";
 		var self = this;
-		self.metrics = ko.observableArray();
+		self.qualityAttributes = ko.observableArray();
 		self.projects = ko.observableArray();
-
-		self.selectedMetrics = ko.computed(function() {
-			var sel = [];
-			ko.utils.arrayForEach(self.metrics(), function(m){
-				if (m.selected()) {
-					sel.push(m);
-				}
-			});
-			return sel;
-		});
 
 		self.validProjects = ko.computed(function() {
 			var val = [];
@@ -352,39 +247,17 @@ $(function(){
 			return val;
 		});
 
-		self.srcMetrics = ko.computed(function() {
-			var val = [];
-			ko.utils.arrayForEach(self.metrics(), function(m) {
-				if (m.kind === "src") {
-					val.push(m);
-				}
-			});
-			return val;
-		});
-
-		self.ccMetrics = ko.computed(function() {
-			var val = [];
-			ko.utils.arrayForEach(self.metrics(), function(m) {
-				if (m.kind === "cc") {
-					val.push(m);
-				}
-			});
-			return val;
-		});
-
-		self.btsMetrics = ko.computed(function() {
-			var val = [];
-			ko.utils.arrayForEach(self.metrics(), function(m) {
-				if (m.kind === "bts") {
-					val.push(m);
-				}
-			});
-			return val;
-		});
-
-		self.getMetricsOfKind = function(kind) {
-
-		}.bind(self);
+		self.selectedMetrics = ko.computed(function() {
+           	var sel = [];
+           	ko.utils.arrayForEach(self.qualityAttributes(), function(attr){
+           		ko.utils.arrayForEach(attr.metrics, function(m){
+                   	if (m.selected()) {
+                           sel.push(m);
+                    }
+                });
+            });
+            return sel;
+       	});
 
 		self.removeProject = function(project) {
 			self.projects.remove(project);
@@ -393,36 +266,62 @@ $(function(){
 		self.addProject = function() {
 			self.projects.push(new Project("", "", false));
 		}.bind(self);
-
 	}
 
 	vm = new ComparisonModel();
 
-	$.getJSON("http://localhost:8182/metrics", function (data) {
-		for (d in data) {
-			var m = new Metric(data[d].name, data[d].name, "bts",  false); //FIXME ID/NAME
-			vm.metrics.push(m);
-		}
-	});
+	// DEBUG
+	var qa = new QualityAttribute("foo", "Foo", [
+		new Metric("commitsovertimeline", "Commits", false)
+		]);
+	var qa2 = new QualityAttribute("bar", "Bar", [
+			new Metric("commitsPerDayTimeLine", "Commits 2", true)
+			]);
+
+	vm.qualityAttributes.push(qa);
+	vm.qualityAttributes.push(qa2);
+	// END DEBUG
+@*
+	var qualityModel = {
+		attributes : [
+			@printAttributes(qualityModel)
+		]
+	}*@
+
+
+	var p = new Project("modeling=mmt-atl-bkp", "ATL 1", true);
+	var p2 = new Project("modeling-mmt-atl", "ATL 2", true);
+	var p3 = new Project("modeling-acceleo", "Acceleo", true);
+	vm.projects.push(p);
+	vm.projects.push(p2);
+	vm.projects.push(p3);
+
+
 	ko.applyBindings(vm);
 
 	// Load projects from cookies
-	var comp = JSON.parse($.cookie("cccc"));
-	if (comp) {
-		for (c in comp) {
-			// Bind
-			var p = new Project(comp[c].id, comp[c].name, true);
-			vm.projects.push(p);
+	// var comp = JSON.parse($.cookie("cccc"));
+	// if (comp) {
+	// 	for (c in comp) {
+	// 		// Bind
+	// 		var p = new Project(comp[c].id, comp[c].name, true);
+	// 		vm.projects.push(p);
 
-			// And populate the text boxes
-			$("#project"+c).val(comp[c].name);
-		}
-	}
+	// 		// And populate the text boxes
+	// 		$("#project"+c).val(comp[c].name);
+	// 	}
+	// }
 
 });
 
 
 </script>
+
+<script type="text/javascript">
+	
+</script>
+
+
 <script type="text/javascript" src="@routes.Assets.at("js/knockout-2.3.0.js")"></script>
 
 }

@@ -24,15 +24,18 @@
 // is literally that. A template.
     var vislist = []; //{"id":"bugs.cumulativeAverageResponseTime","name":"Average Response Time (Cumulative) (ms)","description":"The average response time of bugs addressed up to and including the current date.","type":"LineChart","datatable":[{"Date":"20050309","Response Time":0},{"Date":"20050310","Response Time":0},{"Date":"20050311","Response Time":0},{"Date":"20050312","Response Time":0},{"Date":"20050313","Response Time":0},{"Date":"20050314","Response Time":0},{"Date":"20050315","Response Time":0},{"Date":"20050316","Response Time":0},{"Date":"20050317","Response Time":0},{"Date":"20050318","Response Time":0},{"Date":"20060224","Response Time":3925581},{"Date":"20060225","Response Time":3925581},{"Date":"20060226","Response Time":3925581}],"timeSeries":true,"ordinal":false,"x":"Date","y":"Response Time"}
 
-    var metricmap = {};
+    v
     var chart;
 
     function grabMetricData(projectid, metricid) {
         // Check cache
         if (metricid in metricmap) {
+            // Only add and redraw if it isn't already on the chart
             if (!$.inArray(metricmap[metricid]), vislist) {
                 vislist.push(metricmap[metricid]);
+                addVisToChart(metricmap[metricid]);
             }
+            return;
         }
 
         // Grab via API
@@ -40,17 +43,27 @@
             metricmap[metricid] = vis;
             vislist.push(vis);
             
-
-            if (chart) {
-                chart.addVis(vis);
-            } else {
-                chart = new metvis.Chart("#plot", vis)
-                chart.height = 300;
-                chart.draw();
-            }
-
-            drawLegend();
+            addVisToChart(vis); 
         });
+    }
+
+    function showJustOneMetric(projectid, metricid) {
+        if (chart) {
+            removeAllFromPlot();
+        }
+        grabMetricData(projectid, metricid);
+    }
+
+    function addVisToChart(vis) {
+        if (chart) {
+            chart.addVis(vis);
+        } else {
+            chart = new metvis.Chart("#plot", vis)
+            chart.height = 300;
+            chart.draw();
+        }
+
+        drawLegend();
     }
 
     function drawLegend() {
@@ -58,7 +71,7 @@
         l.empty();
         l.append("<ul>");
         for (var s in chart.series) {
-            l.append('<li><div class="legend-box" style="background-color:' + chart.colors(s) + '"></div>' + chart.series[s].vis.name + ' <a href="javascript:removeFromPlot(\''+chart.series[s].vis.id+'\')">DEL</a></li>');
+            l.append('<li><div class="legend-box" style="background-color:' + chart.colors(s) + '"></div>' + chart.series[s].vis.projectName + '</li>');
         }
         l.append("</ul>");
     }

@@ -377,6 +377,53 @@ public class MongoAuthenticator {
 		db.getMongo().close();
  	} 
 
+ 	public static void updateNotification(User u, String projectId, String metricId, double threshold, boolean aboveThreshold) {
+ 		DB db = getUsersDb();
+		Users users = new Users(db);
+
+		User user = users.getUsers().findOneByEmail(u.getEmail());
+
+		Notification noti = null;
+
+		for (GridEntry g : user.getGrid()) {
+			if (g instanceof Notification) {
+				Notification gg = (Notification)g;
+				if (gg.getMetric().getId().equals(metricId)
+					&& gg.getProject().getId().equals(projectId)) {
+					noti = gg;
+					break;
+				}
+			}
+		}
+
+		if (noti == null) { // Create new
+			noti = new Notification();
+			noti.setSizeX(1);
+			noti.setSizeY(1);
+			noti.setRow(1);
+			noti.setCol(1);
+
+			Project p = new Project();
+			p.setId(projectId);
+			// p.setName("epsilon"); // TODO
+			noti.setProject(p);
+			Metric m = new Metric();
+			m.setId(metricId);
+			// m.setName("bugs"); //TODO
+			noti.setMetric(m);
+
+			noti.setThreshold(threshold);
+			noti.setAboveThreshold(aboveThreshold);
+			user.getGrid().add(noti);
+		} else { // Edit existing - only support one notification per project metric
+			noti.setThreshold(threshold);
+			noti.setAboveThreshold(aboveThreshold);
+		}
+
+		users.getUsers().sync();
+		db.getMongo().close();
+ 	}
+
  	public static void toggleSparkGrid(User u, String projectid, String projectName, String metricid, String metricName) {
  		DB db = getUsersDb();
 		Users users = new Users(db);

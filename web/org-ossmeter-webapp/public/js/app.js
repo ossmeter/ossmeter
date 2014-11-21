@@ -9,7 +9,10 @@ var app = {
 	},
 	popoverOptions : { 
 		delay: { "show": 100, "hide": 1000 },
-		template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+		template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>',
+		content: function() {
+			return $("#notification_popover_content").html();
+		}
 	},
 	compare : {
 		projects : [],
@@ -39,7 +42,7 @@ $(function() {
 	$(".pop").popover(app.popoverOptions);
 	$.cookie.json = true;
 	$.cookie.defaults.path = "/";
-
+	$('.collapse').collapse()
 	// TODO: not working correctly
 	//applyMoreLessDescription();
 });
@@ -73,6 +76,24 @@ $(".adjust").toggle(function() {
 });
 }
 
+function updateNotification(id) {
+	console.log(id)
+}
+
+function updateNotification(elem, projectid, metricid, value) {
+	var id = "#" + elem;
+	var value = $(id + "-value");
+	var aboveThreshold = $(id + "-aboveThreshold");
+
+
+	jsRoutes.controllers.Account.updateNotification(projectid, metricid, value, aboveThreshold
+		).ajax().success(function(result) {
+			console.log("Created notification!")
+	}).error(function(result){
+		console.log("Error, unable to create notification.");
+	});
+}
+
 function toggleSpark(elem, projectid, projectname, metricid, metricname) {
 	
 	jsRoutes.controllers.Account.watchSpark(projectid, metricid, projectname, metricname
@@ -90,8 +111,15 @@ function toggleSpark(elem, projectid, projectname, metricid, metricname) {
 		});
 }
 
-function drawSparkTable(tableId, projectId, metrics, querystring, drawWatches, drawAddToPlot) {
-    $.getJSON("http://localhost:8182/projects/p/" + projectId + "/s/" + metrics + "?" + querystring, function (result) {
+function drawSparkTable(config) {
+	"use strict";
+
+	var url = "http://localhost:8182/projects/p/" + config.projectid + "/s/" + config.metriclist;
+	if (config.querystring) {
+		url = url + "?" + config.querystring;
+	}
+
+    $.getJSON(url, function (result) {
         // Convert into an array if only one spark was requested
         if( Object.prototype.toString.call( result ) === '[object Object]' ) {
             result = [result];
@@ -101,48 +129,69 @@ function drawSparkTable(tableId, projectId, metrics, querystring, drawWatches, d
         for (var r in result) {
                 var data = result[r];
 
-                // FIXME: If the first sparkle is in error, this won't work.
-                if (r == 0) { // Set up the header
-                    $("#" + tableId + " > thead:last").append(
-                        "<tr><th>metric</th>" +
-                        "<th>" + data.firstDate + "</th>" +
-                        "<th>" + data.months + " months</th>" +
-                        "<th>" + data.lastDate + "</th>" +
-                        "<th>low</th>" +
-                        "<th>high</th></tr>");
-                }
+                // header row
+                if (r == 0) { 
+	                var hdr = "<tr>";
+	                if (config.drawName) {
+	                	hdr = hdr + "<th>metric</th>";
+	                }
+	                hdr = hdr + "<th>" + data.firstDate + "</th>" +
+		                        "<th style=\"min-width:120px;max-width:120px\">" + data.months + " months</th>" +
+		                        "<th>" + data.lastDate + "</th>" +
+		                        "<th>low</th>" +
+		                        "<th>high</th>"
 
+	                hdr = hdr + "</tr>"
+	                $("#" + config.sparktable + " > thead:last").append(hdr);
+
+	                if (config.toolkittable) {
+                		$("#" + config.toolkittable + " > thead:last").append("<tr><th>toolkit</th></tr>");
+                	}
+	            }
+                
+	            // Check for errors - TODO: handle better
                 if (data.status === "error") {
                     console.log("Unable to load sparky '" + data.metricId + "': " + data.msg);
                     continue;
                 }
 
-                var a = ""; 
-                if ($.inArray(data.name, app.grid.sparks) != -1){
-                    a = "active";
-                }
-                var toAppend = '<tr><td>';
+                if (config.toolkittable) {
+                	var tools = '<a href="javascript:grabMetricData(\''+config.projectid+'\',\''+data.metricId+'\')"><span class="glyphicon glyphicon-plus tip" data-toggle="tooltip" data-placement="bottom" title="Add metric to plot"></span></a>';
+                	tools = tools + ' <a href="javascript:showJustOneMetric(\''+config.projectid+'\',\''+data.metricId+'\')"><span class="glyphicon glyphicon-stats tip" data-toggle="tooltip" data-placement="bottom" title="View metric"></span></a>';
+                	if (app.loggedIn) {
+                		var watchId = "watch-spark-" + config.projectid + "-" + data.metricId;
 
-                if (drawWatches && app.loggedIn) {
-                    var id = "watch-spark-" + projectId + "-" + data.name;
-                    toAppend = toAppend + '<a href="javascript:toggleSpark(\'#'+id+'\',\'@project.getShortName()\',\'@project.getName()\',\''+ data.name + '\', \''+data.name+'\')"><span id="' + id + '" class="glyphicon glyphicon-eye-open spark-watch tip ' + a + '" data-toggle="tooltip" data-placement="left" title="Watch/unwatch on dashboard"></span></a>';
+                		tools = tools + ' <a href="javascript:toggleSpark(\''+watchId+'\',\''+config.projectid+'\', \'\', \''+data.name+'\')"><span class="glyphicon glyphicon-eye-open tip" data-toggle="tooltip" data-placement="bottom" title="Add spark to dashboard"></span></a>';
+                		tools = tools + ' <a  href="#"><span class="glyphicon glyphicon-bell tip" data-toggle="tooltip" data-placement="bottom" title="Create/edit notification"></span></a>';
+                	}
+
+                	$("#" + config.toolkittable + " > tbody:last").append("<tr><td>" + tools + "</td></tr>");
                 }
 
-                if (drawAddToPlot) {
-                    toAppend = toAppend + '</span><a href="javascript:grabMetricData(\''+projectId+'\', \''+data.id+'\')">' + data.name + '</a>';
-                } else {
-                	toAppend = toAppend + data.name;
+                var bdy = "<tr>";
+
+                if (config.drawName) {
+					bdy = bdy + "<td>" + data.name + "</td>";                	
                 }
-               	toAppend = toAppend +
-                    "</td><td>" + Math.round(data.first * 100) / 100  +
+
+				bdy = bdy + "<td>" + Math.round(data.first * 100) / 100  +
                     "</td><td><img class=\"spark\" src=\"http://localhost:8182" + data.spark + "\" />" +  
                     "</td><td>" + Math.round(data.last * 100) / 100  + 
                     "</td><td>" + Math.round(data.low * 100) / 100 + 
-                    "</td><td>" + Math.round(data.high * 100) / 100 + "</td></tr>";
+                    "</td><td>" + Math.round(data.high * 100) / 100 + "</td>";
 
-                $("#" + tableId + " > tbody:last").append(toAppend);
+                bdy = bdy + "</tr>";
+                $("#" + config.sparktable + " > tbody:last").append(bdy);
             }
             $(".tip").tooltip(app.tooltipOptions);
+            $(".pop").popover(app.popoverOptions);
+    });
+}
+
+function fixHeights(table1, table2) {
+    $("#" +table1+ " > tbody > tr").each(function(index, value) {
+        var h = $(this).height();
+        $("#" + table2 + " > tbody > tr:eq("+index+")").css('height', h+'px');
     });
 }
 
