@@ -1,0 +1,45 @@
+package com.googlecode.pongo.tests.propogen.model;
+
+@collection
+class Project {
+   attr String name;
+   attr int duration;
+   attr String title;
+   val WP[*] wps;
+   val Partner[*] partners;
+}
+
+class WP {
+   val Task[*] tasks;
+   attr String title;
+   ref Partner leader;
+   attr String type;
+   val Effort[*] effort;
+   val Deliverable[*] deliverables;
+}
+
+class Task {
+   attr String title;
+   attr int start;
+   attr int end;
+   ref Partner[*] partners;
+}
+
+class Deliverable {
+   attr String title;
+   attr int due;
+   attr String nature;
+   attr String dissemination;
+   ref Partner partner;
+}
+
+class Effort {
+   ref Partner partner;
+   attr float months;
+}
+
+class Partner {
+   id attr String ~id;
+   attr String name;
+   attr String country;
+}

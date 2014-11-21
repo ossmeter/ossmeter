@@ -10,14 +10,14 @@ class NewsgroupsContentClassesTransMetric {
 
 class NewsgroupData {
 	@searchable
-   	attr String url_name;
+   	attr String newsgroupName;
    	attr int numberOfArticles;
 }
 
 
 class ContentClass {
 	@searchable
-   	attr String url_name;
+   	attr String newsgroupName;
    	attr String classLabel;
 	attr int numberOfArticles;
 	attr float percentage;

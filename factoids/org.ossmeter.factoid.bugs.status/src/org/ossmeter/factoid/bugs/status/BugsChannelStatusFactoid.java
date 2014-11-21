@@ -1,11 +1,9 @@
 package org.ossmeter.factoid.bugs.status;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import org.ossmeter.metricprovider.historic.bugs.status.StatusHistoricMetricProvider;
 import org.ossmeter.metricprovider.historic.bugs.status.model.BugsStatusHistoricMetric;
@@ -46,7 +44,7 @@ public class BugsChannelStatusFactoid extends AbstractFactoidMetricProvider{
 
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return Arrays.asList(BugsStatusHistoricMetric.class.getCanonicalName());
+		return Arrays.asList(StatusHistoricMetricProvider.IDENTIFIER);
 	}
 
 	@Override
@@ -59,10 +57,25 @@ public class BugsChannelStatusFactoid extends AbstractFactoidMetricProvider{
 //		factoid.setCategory(FactoidCategory.BUGS);
 		factoid.setName("Bug Channel Status Factoid");
 
-		StatusHistoricMetricProvider bugStatusProvider = new StatusHistoricMetricProvider();
+		StatusHistoricMetricProvider bugStatusProvider = null;
+
+		for (IMetricProvider m : this.uses) {
+			if (m instanceof StatusHistoricMetricProvider) {
+				bugStatusProvider = (StatusHistoricMetricProvider) m;
+				continue;
+			}
+		}
 
 		Date end = new Date();
 		Date start = new Date();
+//		Date start=null, end=null;
+//		try {
+//			start = new Date("20050301");
+//			end = new Date("20060301");
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		List<Pongo> bugStatusList = bugStatusProvider.getHistoricalMeasurements(context, project, start, end);
 		
 		StringBuffer stringBuffer = new StringBuffer();
@@ -115,7 +128,7 @@ public class BugsChannelStatusFactoid extends AbstractFactoidMetricProvider{
 		stringBuffer.append(numberOfNonResolvedBugs);
 		stringBuffer.append(" are non-resolved (");
 		stringBuffer.append(decimalFormat.format(percentageOfNonResolvedBugs));
-		stringBuffer.append(" %).\n);");
+		stringBuffer.append(" %).\n");
 		
 		stringBuffer.append(numberOfFixedBugs);
 		stringBuffer.append(" bugs are closed as fixed (");
@@ -212,11 +225,6 @@ public class BugsChannelStatusFactoid extends AbstractFactoidMetricProvider{
 			return bugStatusPongo.getNumberOfWorksForMeBugs();
 		}
 		return 0;
-	}
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private SortedSet<String> sortByKeys(Map<String, ?> map) {
-		return new TreeSet(map.keySet());
 	}
 
 }

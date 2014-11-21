@@ -11,24 +11,24 @@ public class ContentClass extends Pongo {
 	
 	public ContentClass() { 
 		super();
-		URL_NAME.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.contentclasses.model.ContentClass");
+		NEWSGROUPNAME.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.contentclasses.model.ContentClass");
 		CLASSLABEL.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.contentclasses.model.ContentClass");
 		NUMBEROFARTICLES.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.contentclasses.model.ContentClass");
 		PERCENTAGE.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.contentclasses.model.ContentClass");
 	}
 	
-	public static StringQueryProducer URL_NAME = new StringQueryProducer("url_name"); 
+	public static StringQueryProducer NEWSGROUPNAME = new StringQueryProducer("newsgroupName"); 
 	public static StringQueryProducer CLASSLABEL = new StringQueryProducer("classLabel"); 
 	public static NumericalQueryProducer NUMBEROFARTICLES = new NumericalQueryProducer("numberOfArticles");
 	public static NumericalQueryProducer PERCENTAGE = new NumericalQueryProducer("percentage");
 	
 	
-	public String getUrl_name() {
-		return parseString(dbObject.get("url_name")+"", "");
+	public String getNewsgroupName() {
+		return parseString(dbObject.get("newsgroupName")+"", "");
 	}
 	
-	public ContentClass setUrl_name(String url_name) {
-		dbObject.put("url_name", url_name);
+	public ContentClass setNewsgroupName(String newsgroupName) {
+		dbObject.put("newsgroupName", newsgroupName);
 		notifyChanged();
 		return this;
 	}

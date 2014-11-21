@@ -96,13 +96,13 @@ public class SentimentTransMetricProvider  implements
 		Map<String, String> articleSentiment = new HashMap<String, String>();
 		for (org.ossmeter.metricprovider.trans.sentimentclassification.model.NewsgroupArticlesData 
 				article: sentimentClassifier.getNewsgroupArticles())
-			articleSentiment.put(article.getUrl()+article.getArticleNumber(), 
+			articleSentiment.put(article.getNewsGroupName()+article.getArticleNumber(), 
 										article.getClassificationResult());
 
 		Map<String, String> articleEmotionalDimensions = new HashMap<String, String>();
 		for (org.ossmeter.metricprovider.trans.sentimentclassification.model.NewsgroupArticlesData 
 				article: sentimentClassifier.getNewsgroupArticles())
-			articleEmotionalDimensions.put(article.getUrl()+article.getArticleNumber(), 
+			articleEmotionalDimensions.put(article.getNewsGroupName()+article.getArticleNumber(), 
 										article.getEmotionalDimensions());
 
 		for (ThreadData thread: usedThreads.getThreads()) {
@@ -118,10 +118,10 @@ public class SentimentTransMetricProvider  implements
 			db.getThreads().add(threadStats);
 			while (iterator.hasNext()) {
 				ArticleData article = iterator.next();
-				String url_name = article.getUrl_name();
-				String sentiment = articleSentiment.get(article.getUrl_name()+article.getArticleNumber());
+				String newsgroupName = article.getNewsgroupName();
+				String sentiment = articleSentiment.get(article.getNewsgroupName()+article.getArticleNumber());
 
-				threadStats.setUrl_name(url_name);
+				threadStats.setNewsgroupName(newsgroupName);
 				threadStats.setThreadId(thread.getThreadId());
 				if (first) {
 					threadStats.setStartSentiment(sentiment);

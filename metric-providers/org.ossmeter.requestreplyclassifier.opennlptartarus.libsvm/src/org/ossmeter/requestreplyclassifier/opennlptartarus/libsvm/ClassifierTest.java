@@ -7,7 +7,7 @@ public class ClassifierTest {
 
     public static void main(String[] args) throws Exception {
 
-    	String url  = "url";
+    	String newsgroupName  = "newsgroupName";
     	int doc1 = 1001;
     	int doc2 = 1002;
     	int doc3 = 1003;
@@ -35,28 +35,28 @@ public class ClassifierTest {
     	Classifier classifier = new Classifier();
 
     	ClassificationInstance classificationInstance1 = new ClassificationInstance();
-        classificationInstance1.setUrl(url);
+        classificationInstance1.setNewsgroupName(newsgroupName);
         classificationInstance1.setArticleNumber(doc1);
         classificationInstance1.setSubject(sub1);
         classificationInstance1.setText(text1);
         classifier.add(classificationInstance1);
         
         ClassificationInstance classificationInstance2 = new ClassificationInstance();
-        classificationInstance2.setUrl(url);
+        classificationInstance2.setNewsgroupName(newsgroupName);
         classificationInstance2.setArticleNumber(doc2);
         classificationInstance2.setSubject(sub2);
         classificationInstance2.setText(text2);
         classifier.add(classificationInstance2);
 
         ClassificationInstance classificationInstance3 = new ClassificationInstance();
-        classificationInstance3.setUrl(url);
+        classificationInstance3.setNewsgroupName(newsgroupName);
         classificationInstance3.setArticleNumber(doc3);
         classificationInstance3.setSubject(sub1);
         classificationInstance3.setText(text2);
         classifier.add(classificationInstance3);
         
         ClassificationInstance classificationInstance4 = new ClassificationInstance();
-        classificationInstance4.setUrl(url);
+        classificationInstance4.setNewsgroupName(newsgroupName);
         classificationInstance4.setArticleNumber(doc4);
         classificationInstance4.setSubject(sub2);
         classificationInstance4.setText(text1);

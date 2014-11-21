@@ -1,0 +1,371 @@
+package com.googlecode.pongo.tests.ossmeter.model;
+
+@db
+class Ossmeter {
+	val Project[*] projects;
+}
+
+abstract class NamedElement {
+  @key
+  attr String name;
+}
+
+class Project extends NamedElement {
+  attr String description;
+  attr int year;
+  attr boolean active;
+  val VCSRepository[*] vcsRepositories;
+  val SizeFact sizeFact;
+  val ActivityFact activityFact;
+}
+
+class SizeFact {
+  attr int downloads;
+  val MonthDownload downloadPerMonth;
+}
+
+class MonthDownload {
+  attr int month;
+  attr int year;
+  attr int value;
+}
+
+class ActivityFact {
+  attr int month;
+  attr int addedCode;
+  attr int removedCode;
+  attr int addedComments;
+  attr int removedComments;
+  attr int addedBlanks;
+  attr int removedBlanks;
+  attr int commits;
+  attr int contributors;
+}
+
+abstract class VCSRepository {
+  attr String created_at;
+  attr String updated_at;
+  attr String url;
+}
+
+abstract class CommunicationChannel {
+}
+
+class SVNRepository extends VCSRepository {
+  attr String browse;
+}
+
+class MercurialRepository extends VCSRepository {
+}
+
+class License {
+  attr String url;
+  attr LicenseType type;
+}
+
+enum LicenseType {
+  ApacheTwo = 1;
+  GPL = 2;
+  EPL = 3;
+  GPL2 = 4;
+  GPL3 = 5;
+  LGPL = 6;
+  MIT = 7;
+  Mozilla = 8;
+  BSD = 9;
+  Other = 10;
+}
+
+class GITRepository extends VCSRepository {
+
+  @key
+  val GITUser owner;
+  attr String full_name;
+  attr Boolean private;
+  attr Boolean fork;
+  attr String html_url;
+  attr String clone_url;
+  attr String git_url;
+  attr String ssh_url;
+  attr String svn_url;
+  attr String mirror_url;
+  attr String homepage;
+  attr String language;
+  attr Integer size;
+  attr String master_branch;
+  val GITUser[*] stargazers;
+  val GITUser[*] collaborators;
+  val GITComment[*] comments;
+  val GITCommit[*] commits;
+  val GITContent[*] contens;
+  val GITDownload[*] downloads;
+  val GITRepository[*] forks;
+  val GITUser[*] watchers;
+  val GITIssue[*] open_issues;
+}
+
+class GITContent {
+  attr String type;
+  attr String envoding;
+  attr Integer size;
+  attr String name;
+  attr String path;
+  attr String sha;
+}
+
+class GITDownload {
+
+  @key
+  attr String url;
+  attr String html_url;
+  attr String name;
+  attr String description;
+  attr Integer size;
+  attr Integer download_count;
+  attr String content_type;
+}
+
+class GITCommit {
+  attr String url;
+  attr String sha;
+  val GITUser author;
+  attr String message;
+  val GITCommit[*] parents;
+}
+
+class GITIssue {
+  attr String url;
+  attr String html_url;
+  attr Integer number;
+  attr String state;
+  attr String title;
+  attr String body;
+  val GITUser user;
+  val IssueLabel[*] labels;
+  val GITUser assignee;
+  val IssueMilestone milestone;
+  val GITComment[*] comments;
+  attr String created_at;
+  attr String updated_at;
+  attr String closed_at;
+}
+
+class GITComment {
+  attr String url;
+  attr String body;
+  val GITUser user;
+  attr String created_at;
+  attr String updated_at;
+}
+
+class IssueLabel extends NamedElement {
+  attr String url;
+}
+
+class IssueMilestone {
+  attr String url;
+  attr Integer number;
+  attr String state;
+  attr String title;
+  attr String description;
+  val GITUser[1] creator;
+  val GITIssue[*] open_issues;
+  val GITIssue[*] closed_issues;
+  attr String created_at;
+  attr String due_on;
+}
+
+class GITUser {
+
+  @key
+  attr String login;
+  attr String url;
+  val GITUser[*] followers;
+}
+
+class EclipseForgeProject extends Project {
+}
+
+class GoogleForgeProject extends Project {
+  val GoogleIssue[*] issues;
+  val GoogleWiki wiki;
+  val GoogleUser[*] owners;
+  val GoogleUser[*] committers;
+  val GoogleUser[*] contributors;
+  val License license;
+  val GoogleDownload[*] downloads;
+  attr Integer stars = 0;
+}
+
+class GoogleWiki {
+  attr String url;
+}
+
+class GoogleIssue {
+  val GoogleUser[1] owner;
+  attr String created_at;
+  attr String updated_at;
+  attr GoogleIssuePriority priority;
+  attr GoogleIssueType type;
+  attr String component;
+  attr GoogleIssueStatus status;
+  val GoogleIssueComment[*] comments;
+  val GoogleLabel[*] labels;
+  attr Integer stars;
+  attr String summary;
+}
+
+enum GoogleIssuePriority {
+  Low = 1;
+  Medium = 2;
+  High = 2;
+}
+
+enum GoogleIssueType {
+  Defect = 1;
+  Enhancement = 2;
+}
+
+enum GoogleIssueStatus {
+  New = 1;
+  Started = 2;
+  Accepted = 3;
+  Reviewed = 4;
+  Acknowledged = 5;
+}
+
+class GoogleIssueComment {
+  attr String text;
+}
+
+class GoogleLabel extends NamedElement {
+}
+
+class GoogleDownload {
+  attr Boolean starred;
+  attr String fileName;
+  val GoogleLabel[*] labels;
+  attr String uploaded_at;
+  attr String updated_at;
+  attr Integer size;
+  attr Integer downloadCounts;
+}
+
+class GoogleUser {
+  attr String email;
+}
+
+class SourceForgeProject extends Project {
+  attr String created;
+  attr int createdTimestamp;
+  attr int projectId;
+  attr int private;
+  attr int type;
+  attr String shortDesc;
+  attr float percentile;
+  attr int ranking;
+  attr String downloadPage;
+  attr String supportPage;
+  attr String summaryPage;
+  attr String homePage;
+  attr String baseUrl;
+  val License[*] license;
+  val OS[*] os;
+  val Topic[*] topics;
+  val ProgrammingLanguage[*] programminLanguages;
+  val Audience[*] audiences;
+  val Translation[*] translations;
+  val Environment[*] environments;
+  val Category[*] categories;
+  val Tracker[*] trackers;
+  val Maintainer[*] maintainers;
+  val Developer[*] developers;
+  val Donation donation;
+}
+
+class OS extends NamedElement {
+}
+
+class Topic extends NamedElement {
+}
+
+class ProgrammingLanguage extends NamedElement {
+}
+
+class Audience extends NamedElement {
+}
+
+class Translation extends NamedElement {
+}
+
+class Environment extends NamedElement {
+}
+
+class Category extends NamedElement {
+}
+
+abstract class Person extends NamedElement {
+  attr String homePage;
+}
+
+class Maintainer extends Person {
+}
+
+class Developer extends Person {
+}
+
+class Donation {
+  attr String comment;
+  attr DonationStatus status;
+  attr String[*] charities;
+}
+
+enum DonationStatus {
+  NotAccepting = 1;
+  Accepting = 2;
+}
+
+abstract class Tracker extends NamedElement {
+  attr String location;
+}
+
+abstract class BugTrackingSystem extends Tracker {
+  val Bug[*] bugs;
+}
+
+class Bug {
+
+  @key
+  attr String description;
+  attr BugStatus status;
+  attr String assignee;
+  attr String sumitted;
+  attr int priority;
+  attr ResolutionStatus resolutionStatus;
+  attr BugVisibility bugVisibility;
+}
+
+enum BugVisibility {
+  Public = 1;
+  Private = 2;
+}
+
+enum ResolutionStatus {
+  None = 1;
+  Fixed = 2;
+}
+
+enum BugStatus {
+  Open = 1;
+  Closed = 2;
+}
+
+abstract class FeatureRequest extends Tracker {
+}
+
+abstract class Patch extends Tracker {
+}
+
+abstract class SupportRequest extends Tracker {
+}
+

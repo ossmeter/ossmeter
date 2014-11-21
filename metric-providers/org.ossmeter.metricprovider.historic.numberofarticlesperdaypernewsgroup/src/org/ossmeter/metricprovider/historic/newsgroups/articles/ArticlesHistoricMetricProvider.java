@@ -57,7 +57,7 @@ public class ArticlesHistoricMetricProvider extends AbstractHistoricalMetricProv
 				sumOfCumulativeArticles += cumulativeArticles;
 				if ( (articles > 0) || (cumulativeArticles > 0) ) {
 					DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
-					dailyNewsgroupData.setUrl_name(newsgroup.getUrl_name());
+					dailyNewsgroupData.setNewsgroupName(newsgroup.getNewsgroupName());
 					dailyNewsgroupData.setNumberOfArticles(articles);
 					dailyNewsgroupData.setCumulativeNumberOfArticles(cumulativeArticles);
 					dailyNoa.getNewsgroups().add(dailyNewsgroupData);

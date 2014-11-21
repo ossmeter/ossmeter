@@ -80,10 +80,10 @@ public class ActiveUsersTransMetricProvider implements ITransientMetricProvider<
 			CommunicationChannel communicationChannel = communicationChannelDelta.getCommunicationChannel();
 			if (!(communicationChannel instanceof NntpNewsGroup)) continue;
 			NntpNewsGroup newsgroup = (NntpNewsGroup) communicationChannel;
-			 NewsgroupData newsgroupData = db.getNewsgroups().findOneByUrl_name(newsgroup.getUrl());
+			 NewsgroupData newsgroupData = db.getNewsgroups().findOneByNewsgroupName(newsgroup.getNewsGroupName());
 			if (newsgroupData == null) {
 				newsgroupData = new NewsgroupData();
-				newsgroupData.setUrl_name(newsgroup.getUrl());
+				newsgroupData.setNewsgroupName(newsgroup.getNewsGroupName());
 				newsgroupData.setPreviousUsers(0);
 				newsgroupData.setDays(1);
 				db.getNewsgroups().add(newsgroupData);
@@ -95,7 +95,7 @@ public class ActiveUsersTransMetricProvider implements ITransientMetricProvider<
 			List<CommunicationChannelArticle> articles = communicationChannelDelta.getArticles();
 			for (CommunicationChannelArticle article: articles) {
 				Iterable<User> usersIt = db.getUsers().
-						find(User.URL_NAME.eq(newsgroup.getUrl()), 
+						find(User.NEWSGROUPNAME.eq(newsgroup.getNewsGroupName()), 
 								User.USERID.eq(article.getUser()));
 				User user = null;
 				for (User u:  usersIt) {
@@ -103,7 +103,7 @@ public class ActiveUsersTransMetricProvider implements ITransientMetricProvider<
 				}
 				if (user == null) {
 					user = new User();
-					user.setUrl_name(newsgroup.getUrl());
+					user.setNewsgroupName(newsgroup.getNewsGroupName());
 					user.setUserId(article.getUser());
 					user.setLastActivityDate(article.getDate().toString());
 					user.setArticles(1);
@@ -129,7 +129,7 @@ public class ActiveUsersTransMetricProvider implements ITransientMetricProvider<
 				db.sync();
 			}
 			
-			Iterable<User> usersIt = db.getUsers().findByUrl_name(newsgroup.getUrl());
+			Iterable<User> usersIt = db.getUsers().findByNewsgroupName(newsgroup.getNewsGroupName());
 			int users = 0,
 				activeUsers = 0,
 				inactiveUsers = 0;
@@ -157,7 +157,7 @@ public class ActiveUsersTransMetricProvider implements ITransientMetricProvider<
 	private String getRequestReplyClass(RequestReplyClassificationTransMetric usedClassifier, 
 			NntpNewsGroup newsgroup, CommunicationChannelArticle article) {
 		Iterable<NewsgroupArticles> newsgroupArticlesIt = usedClassifier.getNewsgroupArticles().
-				find(NewsgroupArticles.URL.eq(newsgroup.getUrl()), 
+				find(NewsgroupArticles.NEWSGROUPNAME.eq(newsgroup.getNewsGroupName()), 
 						NewsgroupArticles.ARTICLENUMBER.eq(article.getArticleNumber()));
 		NewsgroupArticles newsgroupArticleData = null;
 		for (NewsgroupArticles art:  newsgroupArticlesIt) {
@@ -166,7 +166,7 @@ public class ActiveUsersTransMetricProvider implements ITransientMetricProvider<
 		if (newsgroupArticleData == null) {
 			System.err.println("Active users metric -\t" + 
 					"there is no classification for article: " + article.getArticleNumber() +
-					"\t of newsgroup: " + newsgroup.getUrl());
+					"\t of newsgroup: " + newsgroup.getNewsGroupName());
 //			System.exit(-1);
 		} else
 			return newsgroupArticleData.getClassificationResult();

@@ -56,7 +56,7 @@ public class NewUsersHistoricMetricProvider extends AbstractHistoricalMetricProv
 				cumulativeNewUsersSum += cumulativeNewUsers;
 				if ( (newUsers > 0) || (cumulativeNewUsers > 0) ) {
 					DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
-					dailyNewsgroupData.setUrl_name(newsgroup.getUrl_name());
+					dailyNewsgroupData.setNewsgroupName(newsgroup.getNewsgroupName());
 					dailyNewsgroupData.setNumberOfNewUsers(newUsers);
 					dailyNewsgroupData.setCumulativeNumberOfNewUsers(cumulativeNewUsers);
 					dailyNewUsers.getNewsgroups().add(dailyNewsgroupData);

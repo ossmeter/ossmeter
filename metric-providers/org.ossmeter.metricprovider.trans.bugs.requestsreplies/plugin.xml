@@ -5,10 +5,6 @@
      <metricProvider provider="org.ossmeter.metricprovider.trans.bugs.requestsreplies.BugsRequestsRepliesTransMetricProvider">
      </metricProvider>
   </extension>
-  <extension point="org.ossmeter.platform.visualisation.metric">
-     <visualisation json="vis/trans.bugs.bugsrequestsreplies.json">
-     </visualisation>
-  </extension>
 
 
 

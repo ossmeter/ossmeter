@@ -40,8 +40,7 @@
 			"x" : "Date",
 			"y" : "ActiveUsers",
 			"timeSeries" : true
-		}
-		{
+		},{
 			"id" : "bugs.inactiveusers",
 			"name" : "Inactive Users",
 			"description" : "The number of inactive users per day, up to and including the current date." ,

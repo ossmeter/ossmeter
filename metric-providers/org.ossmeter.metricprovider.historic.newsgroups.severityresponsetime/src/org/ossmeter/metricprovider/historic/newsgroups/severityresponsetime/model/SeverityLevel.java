@@ -1,9 +1,8 @@
 package org.ossmeter.metricprovider.historic.newsgroups.severityresponsetime.model;
 
-import com.mongodb.*;
-import java.util.*;
-import com.googlecode.pongo.runtime.*;
-import com.googlecode.pongo.runtime.querying.*;
+import com.googlecode.pongo.runtime.Pongo;
+import com.googlecode.pongo.runtime.querying.NumericalQueryProducer;
+import com.googlecode.pongo.runtime.querying.StringQueryProducer;
 
 
 public class SeverityLevel extends Pongo {
@@ -12,29 +11,18 @@ public class SeverityLevel extends Pongo {
 	
 	public SeverityLevel() { 
 		super();
-		URL.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.severityresponsetime.model.SeverityLevel");
 		SEVERITYLEVEL.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.severityresponsetime.model.SeverityLevel");
 		NUMBEROFTHREADS.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.severityresponsetime.model.SeverityLevel");
 		AVGRESPONSETIME.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.severityresponsetime.model.SeverityLevel");
 		AVGRESPONSETIMEFORMATTED.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.severityresponsetime.model.SeverityLevel");
 	}
 	
-	public static StringQueryProducer URL = new StringQueryProducer("url"); 
 	public static StringQueryProducer SEVERITYLEVEL = new StringQueryProducer("severityLevel"); 
 	public static NumericalQueryProducer NUMBEROFTHREADS = new NumericalQueryProducer("numberOfThreads");
 	public static NumericalQueryProducer AVGRESPONSETIME = new NumericalQueryProducer("avgResponseTime");
 	public static StringQueryProducer AVGRESPONSETIMEFORMATTED = new StringQueryProducer("avgResponseTimeFormatted"); 
 	
 	
-	public String getUrl() {
-		return parseString(dbObject.get("url")+"", "");
-	}
-	
-	public SeverityLevel setUrl(String url) {
-		dbObject.put("url", url);
-		notifyChanged();
-		return this;
-	}
 	public String getSeverityLevel() {
 		return parseString(dbObject.get("severityLevel")+"", "");
 	}

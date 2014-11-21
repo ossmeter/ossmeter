@@ -1,6 +1,7 @@
 package org.ossmeter.factoid.newsgroups.threadlength;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class NewsgroupsChannelThreadLengthFactoid extends AbstractFactoidMetricP
 
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return Arrays.asList(NewsgroupsThreadsHistoricMetric.class.getCanonicalName());
+		return Arrays.asList(ThreadsHistoricMetricProvider.IDENTIFIER);
 	}
 
 	@Override
@@ -61,10 +62,25 @@ public class NewsgroupsChannelThreadLengthFactoid extends AbstractFactoidMetricP
 //		factoid.setCategory(FactoidCategory.BUGS);
 		factoid.setName("Newsgroup Channel Thread Length");
 
-		ThreadsHistoricMetricProvider threadsProvider = new ThreadsHistoricMetricProvider();
+		ThreadsHistoricMetricProvider threadsProvider = null;
 		
+		for (IMetricProvider m : this.uses) {
+			if (m instanceof ThreadsHistoricMetricProvider) {
+				threadsProvider = (ThreadsHistoricMetricProvider) m;
+				continue;
+			}
+		}
+
 		Date end = new Date();
 		Date start = new Date();
+//		Date start=null, end=null;
+//		try {
+//			start = new Date("20040801");
+//			end = new Date("20050801");
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		List<Pongo> threadsList = threadsProvider.getHistoricalMeasurements(context, project, start, end);
 		
 		float averageComments = 0,
@@ -102,7 +118,7 @@ public class NewsgroupsChannelThreadLengthFactoid extends AbstractFactoidMetricP
 		} else {
 			stringBuffer.append("long");
 		}
-		stringBuffer.append(" , approximately ");
+		stringBuffer.append(", approximately ");
 		stringBuffer.append( decimalFormat.format(averageComments));
 		stringBuffer.append(" articles.\nIn particular, a thread contains approximately ");
 		stringBuffer.append( decimalFormat.format(averageRequests));

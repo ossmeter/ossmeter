@@ -96,17 +96,29 @@ public class BugsHistoricMetricProvider extends AbstractHistoricalMetricProvider
 		
 		dailyBugs.setNumberOfBugs(totalBugs);
 		
-		float avgArticles = ((float) numberOfComments) / bugIdSet.size();
-		float avgReplies = ((float) numberOfReplies) / bugIdSet.size();
-		float avgRequests = ((float) numberOfRequests) / bugIdSet.size();
+		float avgArticles = 0,
+			  avgReplies = 0,
+			  avgRequests = 0;
+		
+		if (bugIdSet.size()>0) {
+			avgArticles = ((float) numberOfComments) / bugIdSet.size();
+			avgReplies = ((float) numberOfReplies) / bugIdSet.size();
+			avgRequests = ((float) numberOfRequests) / bugIdSet.size();
+		}
 		
 		dailyBugs.setAverageCommentsPerBug(avgArticles);
 		dailyBugs.setAverageRepliesPerBug(avgReplies);
 		dailyBugs.setAverageRequestsPerBug(avgRequests);
 		
-		avgArticles = ((float) numberOfComments) / usedUsers.getUsers().size();
-		avgReplies = ((float) numberOfReplies) / usedUsers.getUsers().size();
-		avgRequests = ((float) numberOfRequests) / usedUsers.getUsers().size();
+		avgArticles = 0;
+		avgReplies = 0;
+		avgRequests = 0;
+			
+		if (usedUsers.getUsers().size()>0) {
+			avgArticles = ((float) numberOfComments) / usedUsers.getUsers().size();
+			avgReplies = ((float) numberOfReplies) / usedUsers.getUsers().size();
+			avgRequests = ((float) numberOfRequests) / usedUsers.getUsers().size();
+		}
 
 		dailyBugs.setAverageCommentsPerUser(avgArticles);
 		dailyBugs.setAverageRepliesPerUser(avgReplies);

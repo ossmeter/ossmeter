@@ -7,7 +7,7 @@ public class ClassifierMessage {
 	private String bugId;
 	private String commentId;
 	
-	private String url;
+	private String newsgroupName;
 	private int threadId;
 	private int articleNumber;
 	private String subject;
@@ -26,8 +26,8 @@ public class ClassifierMessage {
 	private void setComposedId() {
 		if ((bugTrackerId!=null)&&(bugId!=null))
 			composedId = bugTrackerId+"#"+bugId;
-		else if ((url!=null)&&(threadId!=0)) 
-			composedId = url+"#"+threadId;
+		else if ((newsgroupName!=null)&&(threadId!=0)) 
+			composedId = newsgroupName+"#"+threadId;
 		else {
 			System.err.println("Unable to compose ID");
 		}
@@ -43,12 +43,12 @@ public class ClassifierMessage {
 		if (composedId!=null) setComposedId();
 	}
 	
-	public String getUrl() {
-		return url;
+	public String getNewsgroupName() {
+		return newsgroupName;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setNewsgroupName(String newsgroupName) {
+		this.newsgroupName = newsgroupName;
 		if (composedId!=null) setComposedId();
 	}
 
@@ -106,8 +106,8 @@ public class ClassifierMessage {
 
 	@Override
 	public String toString() {
-		if (url!=null)
-			return "ClassifierMessage " + "[url=" + url + ", threadId=" + threadId + 
+		if (newsgroupName!=null)
+			return "ClassifierMessage " + "[newsgroupName=" + newsgroupName + ", threadId=" + threadId + 
 					", articleNumber=" + articleNumber + ", subject=" + subject + "]";
 		else
 			return "ClassifierMessage "+ "[bugTrackerId=" + bugTrackerId + 

@@ -65,11 +65,11 @@ public class UnansweredThreadsHistoricMetricProvider extends AbstractHistoricalM
 		Map<String, Integer> newsgroupsUnansweredThreads = new HashMap<String, Integer>();
 		for (ThreadStatistics thread: usedThreads.getThreads()) {
 			if ((!thread.getAnswered())&&(thread.getFirstRequest())) {
-				if (newsgroupsUnansweredThreads.containsKey(thread.getUrl_name()))
-					newsgroupsUnansweredThreads.put(thread.getUrl_name(), 
-									newsgroupsUnansweredThreads.get(thread.getUrl_name()) + 1);
+				if (newsgroupsUnansweredThreads.containsKey(thread.getNewsgroupName()))
+					newsgroupsUnansweredThreads.put(thread.getNewsgroupName(), 
+									newsgroupsUnansweredThreads.get(thread.getNewsgroupName()) + 1);
 				else
-					newsgroupsUnansweredThreads.put(thread.getUrl_name(), 1);
+					newsgroupsUnansweredThreads.put(thread.getNewsgroupName(), 1);
 			}
 		}
 		
@@ -77,11 +77,11 @@ public class UnansweredThreadsHistoricMetricProvider extends AbstractHistoricalM
 									new NewsgroupsUnansweredThreadsHistoricMetric();
 
 		int unansweredThreadsSum = 0;
-		for (String newsgroupUrl: newsgroupsUnansweredThreads.keySet()) {
+		for (String newsgroupName: newsgroupsUnansweredThreads.keySet()) {
 			DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
 			dailyUnansweredThreads.getNewsgroups().add(dailyNewsgroupData);
-			dailyNewsgroupData.setUrl_name(newsgroupUrl);
-			int unansweredThreads = newsgroupsUnansweredThreads.get(newsgroupUrl);
+			dailyNewsgroupData.setNewsgroupName(newsgroupName);
+			int unansweredThreads = newsgroupsUnansweredThreads.get(newsgroupName);
 			dailyNewsgroupData.setNumberOfUnansweredThreads(unansweredThreads);
 			unansweredThreadsSum += unansweredThreads;
 		}

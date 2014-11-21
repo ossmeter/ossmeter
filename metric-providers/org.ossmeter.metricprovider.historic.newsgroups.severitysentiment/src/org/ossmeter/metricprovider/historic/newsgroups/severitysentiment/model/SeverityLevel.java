@@ -11,7 +11,6 @@ public class SeverityLevel extends Pongo {
 	
 	public SeverityLevel() { 
 		super();
-		URL.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.severitysentiment.model.SeverityLevel");
 		SEVERITYLEVEL.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.severitysentiment.model.SeverityLevel");
 		NUMBEROFTHREADS.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.severitysentiment.model.SeverityLevel");
 		AVERAGESENTIMENT.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.severitysentiment.model.SeverityLevel");
@@ -19,7 +18,6 @@ public class SeverityLevel extends Pongo {
 		SENTIMENTATTHREADEND.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.severitysentiment.model.SeverityLevel");
 	}
 	
-	public static StringQueryProducer URL = new StringQueryProducer("url"); 
 	public static StringQueryProducer SEVERITYLEVEL = new StringQueryProducer("severityLevel"); 
 	public static NumericalQueryProducer NUMBEROFTHREADS = new NumericalQueryProducer("numberOfThreads");
 	public static NumericalQueryProducer AVERAGESENTIMENT = new NumericalQueryProducer("averageSentiment");
@@ -27,15 +25,6 @@ public class SeverityLevel extends Pongo {
 	public static NumericalQueryProducer SENTIMENTATTHREADEND = new NumericalQueryProducer("sentimentAtThreadEnd");
 	
 	
-	public String getUrl() {
-		return parseString(dbObject.get("url")+"", "");
-	}
-	
-	public SeverityLevel setUrl(String url) {
-		dbObject.put("url", url);
-		notifyChanged();
-		return this;
-	}
 	public String getSeverityLevel() {
 		return parseString(dbObject.get("severityLevel")+"", "");
 	}

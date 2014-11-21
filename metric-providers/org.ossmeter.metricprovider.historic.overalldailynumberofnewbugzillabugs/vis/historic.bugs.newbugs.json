@@ -2,7 +2,7 @@
 	"metricid" : "org.ossmeter.metricprovider.historic.bugs.newbugs",
 	"vis" : [ 
 		{
-			"id" : "bugs.bugs",
+			"id" : "bugs.newbugs",
 			"name" : "Bugs",
 			"description" : "The number of bugs submitted every day." ,
 			"type" : "LineChart",
@@ -14,7 +14,7 @@
 			"y" : "Bugs",
 			"timeSeries" : true
 		},{
-			"id" : "bugs.cumulativeBugs",
+			"id" : "bugs.cumulativeNewBugs",
 			"name" : "Bugs (Cumulative)",
 			"description" : "The number of bugs submitted up to and including the current date." ,
 			"type" : "LineChart",

@@ -4,9 +4,6 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="severityLevels" upperBound="-1" eType="//SeverityLevel" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SeverityLevel">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bugTrackerId">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="severityLevel">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>

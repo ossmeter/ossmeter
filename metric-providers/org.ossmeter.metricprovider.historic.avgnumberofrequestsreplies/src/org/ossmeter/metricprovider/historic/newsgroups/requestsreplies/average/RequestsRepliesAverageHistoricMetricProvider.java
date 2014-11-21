@@ -67,9 +67,15 @@ public class RequestsRepliesAverageHistoricMetricProvider extends AbstractHistor
 				days = newsgroup.getDays();
 		}
 		
-		float avgArticlesPerDay = ((float) numberOfArticles) / days;
-		float avgRepliesPerDay = ((float) numberOrReplies) / days;
-		float avgRequestsPerDay = ((float) numberOrRequests) / days;
+		float avgArticlesPerDay = 0,
+			  avgRepliesPerDay = 0,
+			  avgRequestsPerDay = 0;
+		
+		if (days>0) {
+			avgArticlesPerDay = ((float) numberOfArticles) / days;
+			avgRepliesPerDay = ((float) numberOrReplies) / days;
+			avgRequestsPerDay = ((float) numberOrRequests) / days;
+		}
 
 		NewsgroupsRequestsRepliesAverageHistoricMetric avgRRThread = new NewsgroupsRequestsRepliesAverageHistoricMetric();
 		avgRRThread.setAverageArticlesPerDay(avgArticlesPerDay);

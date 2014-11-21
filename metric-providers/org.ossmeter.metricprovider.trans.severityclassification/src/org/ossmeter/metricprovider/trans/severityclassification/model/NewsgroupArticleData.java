@@ -26,7 +26,7 @@ public class NewsgroupArticleData extends Pongo {
 		dbObject.put("charTrigrams", new BasicDBList());
 		dbObject.put("charQuadgrams", new BasicDBList());
 		dbObject.put("charFivegrams", new BasicDBList());
-		URL.setOwningType("org.ossmeter.metricprovider.trans.severityclassification.model.NewsgroupArticleData");
+		NEWSGROUPNAME.setOwningType("org.ossmeter.metricprovider.trans.severityclassification.model.NewsgroupArticleData");
 		ARTICLENUMBER.setOwningType("org.ossmeter.metricprovider.trans.severityclassification.model.NewsgroupArticleData");
 		UNIGRAMS.setOwningType("org.ossmeter.metricprovider.trans.severityclassification.model.NewsgroupArticleData");
 		BIGRAMS.setOwningType("org.ossmeter.metricprovider.trans.severityclassification.model.NewsgroupArticleData");
@@ -37,7 +37,7 @@ public class NewsgroupArticleData extends Pongo {
 		CHARFIVEGRAMS.setOwningType("org.ossmeter.metricprovider.trans.severityclassification.model.NewsgroupArticleData");
 	}
 	
-	public static StringQueryProducer URL = new StringQueryProducer("url"); 
+	public static StringQueryProducer NEWSGROUPNAME = new StringQueryProducer("NewsGroupName"); 
 	public static NumericalQueryProducer ARTICLENUMBER = new NumericalQueryProducer("articleNumber");
 	public static ArrayQueryProducer UNIGRAMS = new ArrayQueryProducer("unigrams");
 	public static ArrayQueryProducer BIGRAMS = new ArrayQueryProducer("bigrams");
@@ -48,12 +48,12 @@ public class NewsgroupArticleData extends Pongo {
 	public static ArrayQueryProducer CHARFIVEGRAMS = new ArrayQueryProducer("charFivegrams");
 	
 	
-	public String getUrl() {
-		return parseString(dbObject.get("url")+"", "");
+	public String getNewsGroupName() {
+		return parseString(dbObject.get("NewsGroupName")+"", "");
 	}
 	
-	public NewsgroupArticleData setUrl(String url) {
-		dbObject.put("url", url);
+	public NewsgroupArticleData setNewsGroupName(String NewsGroupName) {
+		dbObject.put("NewsGroupName", NewsGroupName);
 		notifyChanged();
 		return this;
 	}

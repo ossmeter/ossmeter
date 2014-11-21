@@ -1,6 +1,7 @@
 package org.ossmeter.factoid.bugs.severity;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -51,10 +52,10 @@ public class BugsChannelSeverityFactoid extends AbstractFactoidMetricProvider{
 
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return Arrays.asList(BugsSeveritiesHistoricMetric.class.getCanonicalName(),
-							 BugsSeverityBugStatusHistoricMetric.class.getCanonicalName(),
-							 BugsSeverityResponseTimeHistoricMetric.class.getCanonicalName(),
-							 BugsSeveritySentimentHistoricMetric.class.getCanonicalName());
+		return Arrays.asList(SeverityHistoricMetricProvider.IDENTIFIER,
+							 SeverityBugStatusHistoricMetricProvider.IDENTIFIER,
+							 SeverityResponseTimeHistoricMetricProvider.IDENTIFIER,
+							 SeveritySentimentHistoricMetricProvider.IDENTIFIER);
 	}
 
 	@Override
@@ -67,17 +68,40 @@ public class BugsChannelSeverityFactoid extends AbstractFactoidMetricProvider{
 //		factoid.setCategory(FactoidCategory.BUGS);
 		factoid.setName("Bug Channel Severity Factoid");
 	
-		SeverityHistoricMetricProvider severityProvider = 
-					new SeverityHistoricMetricProvider();
-		SeverityBugStatusHistoricMetricProvider severityBugStatusProvider = 
-					new SeverityBugStatusHistoricMetricProvider();
-		SeverityResponseTimeHistoricMetricProvider severityResponseTimeProvider = 
-					new SeverityResponseTimeHistoricMetricProvider();
-		SeveritySentimentHistoricMetricProvider severitySentimentProvider = 
-					new SeveritySentimentHistoricMetricProvider();
+		SeverityHistoricMetricProvider severityProvider = null;
+		SeverityBugStatusHistoricMetricProvider severityBugStatusProvider = null;
+		SeverityResponseTimeHistoricMetricProvider severityResponseTimeProvider = null;
+		SeveritySentimentHistoricMetricProvider severitySentimentProvider = null;
 
+		for (IMetricProvider m : this.uses) {
+			if (m instanceof SeverityHistoricMetricProvider) {
+				severityProvider = (SeverityHistoricMetricProvider) m;
+				continue;
+			}
+			if (m instanceof SeverityBugStatusHistoricMetricProvider) {
+				severityBugStatusProvider = (SeverityBugStatusHistoricMetricProvider) m;
+				continue;
+			}
+			if (m instanceof SeverityResponseTimeHistoricMetricProvider) {
+				severityResponseTimeProvider = (SeverityResponseTimeHistoricMetricProvider) m;
+				continue;
+			}
+			if (m instanceof SeveritySentimentHistoricMetricProvider) {
+				severitySentimentProvider = (SeveritySentimentHistoricMetricProvider) m;
+				continue;
+			}
+		}
+		
 		Date end = new Date();
 		Date start = new Date();
+//		Date start=null, end=null;
+//		try {
+//			start = new Date("20050301");
+//			end = new Date("20060301");
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		List<Pongo> severityList = 
 						severityProvider.getHistoricalMeasurements(context, project, start, end),
 					severityStatusList = 
@@ -157,25 +181,25 @@ public class BugsChannelSeverityFactoid extends AbstractFactoidMetricProvider{
 			dayMilliSeconds = 3 * eightHoursMilliSeconds,
 			weekMilliSeconds = 7 * dayMilliSeconds;
 		
-		stringBuffer.append("The response time for these bugs is ");
+		stringBuffer.append("These bugs receive a response ");
 		if ( responseTimeSeriousBugs < eightHoursMilliSeconds )
-			stringBuffer.append("very quick");
+			stringBuffer.append("very quickly");
 		else if ( responseTimeSeriousBugs < dayMilliSeconds )
-			stringBuffer.append("quick");
+			stringBuffer.append("quickly");
 		else if ( responseTimeSeriousBugs < weekMilliSeconds )
-			stringBuffer.append("not so quick");
+			stringBuffer.append("not so quickly");
 		else
-			stringBuffer.append("quite slow");
+			stringBuffer.append("quite slowly");
 		stringBuffer.append(".\n");
 
-		stringBuffer.append("On average bugs about serious issues are addressed ");
+		stringBuffer.append("On average, bugs about serious issues are addressed ");
 		if ( Math.abs( responseTimeSeriousBugs - responseTimeNonSeriousBugs ) < eightHoursMilliSeconds )
 			stringBuffer.append("equally");
 		else if ( responseTimeSeriousBugs > responseTimeNonSeriousBugs )
 			stringBuffer.append("more");
 		else 
 			stringBuffer.append("less");
-		stringBuffer.append("quickly ");
+		stringBuffer.append(" quickly ");
 		if ( Math.abs( responseTimeSeriousBugs - responseTimeNonSeriousBugs ) < eightHoursMilliSeconds )
 			stringBuffer.append("to");
 		else
@@ -244,7 +268,7 @@ public class BugsChannelSeverityFactoid extends AbstractFactoidMetricProvider{
 			stringBuffer.append("more positive");
 		else
 			stringBuffer.append("more negative");
-		stringBuffer.append("sentiments about how serious issues are being resolved " +
+		stringBuffer.append(" sentiments about how serious issues are being resolved " +
 							"than how all other issues are being resolved.\n");
 		stringBuffer.append(decimalFormat.format(percentageOfStatusSeriousFixedBugs));
 		stringBuffer.append(" % of important bugs were fixed.\n");
@@ -258,10 +282,10 @@ public class BugsChannelSeverityFactoid extends AbstractFactoidMetricProvider{
 			stringBuffer.append("few");
 		else
 			stringBuffer.append("very few");
-		stringBuffer.append(" bugs that propose or ask for new features. ");
+		stringBuffer.append(" bugs that propose or ask for new features, of which ");
 		
 		stringBuffer.append(decimalFormat.format(percentageOfStatusEnhancementFixedBugs));
-		stringBuffer.append(" % of enhancement bugs were fixed.\n");
+		stringBuffer.append(" % were fixed.\n");
 
 		factoid.setFactoid(stringBuffer.toString());
 
@@ -388,7 +412,10 @@ public class BugsChannelSeverityFactoid extends AbstractFactoidMetricProvider{
 					long responseTime = severityLevel.getAvgResponseTime();
 					bugsResponseTimeProduct += ( bugs * responseTime );
 				}
-			return bugsResponseTimeProduct / numberOfBugs;
+			if (numberOfBugs>0)
+				return bugsResponseTimeProduct / numberOfBugs;
+			else
+				return 0;
 		}
 		return 0;
 	}

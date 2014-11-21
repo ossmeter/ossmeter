@@ -1,9 +1,8 @@
 package org.ossmeter.metricprovider.historic.newsgroups.severity.model;
 
-import com.mongodb.*;
-import java.util.*;
-import com.googlecode.pongo.runtime.*;
-import com.googlecode.pongo.runtime.querying.*;
+import com.googlecode.pongo.runtime.Pongo;
+import com.googlecode.pongo.runtime.querying.NumericalQueryProducer;
+import com.googlecode.pongo.runtime.querying.StringQueryProducer;
 
 
 public class NewsgroupData extends Pongo {
@@ -12,20 +11,20 @@ public class NewsgroupData extends Pongo {
 	
 	public NewsgroupData() { 
 		super();
-		URL.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.severity.model.NewsgroupData");
+		NEWSGROUPNAME.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.severity.model.NewsgroupData");
 		NUMBEROFTHREADS.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.severity.model.NewsgroupData");
 	}
 	
-	public static StringQueryProducer URL = new StringQueryProducer("url"); 
+	public static StringQueryProducer NEWSGROUPNAME = new StringQueryProducer("newsgroupName"); 
 	public static NumericalQueryProducer NUMBEROFTHREADS = new NumericalQueryProducer("numberOfThreads");
 	
 	
-	public String getUrl() {
-		return parseString(dbObject.get("url")+"", "");
+	public String getNewsgroupName() {
+		return parseString(dbObject.get("newsgroupName")+"", "");
 	}
 	
-	public NewsgroupData setUrl(String url) {
-		dbObject.put("url", url);
+	public NewsgroupData setNewsgroupName(String newsgroupName) {
+		dbObject.put("newsgroupName", newsgroupName);
 		notifyChanged();
 		return this;
 	}

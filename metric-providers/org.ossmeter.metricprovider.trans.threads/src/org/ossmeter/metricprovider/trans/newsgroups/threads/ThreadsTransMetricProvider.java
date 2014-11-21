@@ -103,11 +103,11 @@ public class ThreadsTransMetricProvider implements ITransientMetricProvider<News
 						previousClassAssignments.put(articleData.getArticleNumber(), articleData.getContentClass());
 						articles.add(prepareArticle(articleData));
 						Set<Integer> articleIds = null;
-						if (articleIdsPerNewsgroup.containsKey(articleData.getUrl_name()))
-							articleIds = articleIdsPerNewsgroup.get(articleData.getUrl_name());
+						if (articleIdsPerNewsgroup.containsKey(articleData.getNewsgroupName()))
+							articleIds = articleIdsPerNewsgroup.get(articleData.getNewsgroupName());
 						else {
 							articleIds = new HashSet<Integer>();
-							articleIdsPerNewsgroup.put(articleData.getUrl_name(), articleIds);
+							articleIdsPerNewsgroup.put(articleData.getNewsgroupName(), articleIds);
 						}
 						articleIds.add(articleData.getArticleNumber());
 					}
@@ -165,11 +165,11 @@ public class ThreadsTransMetricProvider implements ITransientMetricProvider<News
 												   previousClassAssignments, instanceIndex));
 						
 						if (threadsPerNewsgroup.containsKey(newsgroup.getUrl()))
-							threadsPerNewsgroup.get(newsgroup.getUrl()).add(index);
+							threadsPerNewsgroup.get(newsgroup.getNewsGroupName()).add(index);
 						else {
 							Set<Integer> threadSet = new HashSet<Integer>();
 							threadSet.add(index);
-							threadsPerNewsgroup.put(newsgroup.getUrl(), threadSet);
+							threadsPerNewsgroup.put(newsgroup.getNewsGroupName(), threadSet);
 						}
 					}
 					db.getThreads().add(threadData);
@@ -177,19 +177,19 @@ public class ThreadsTransMetricProvider implements ITransientMetricProvider<News
 				db.sync();
 			}
 		}
-		for (String urlNewsgroup: threadsPerNewsgroup.keySet()) {
+		for (String newsgroupName: threadsPerNewsgroup.keySet()) {
 			Iterable<NewsgroupData> newsgroupDataIt = 
-					db.getNewsgroups().find(NewsgroupData.URL_NAME.eq(urlNewsgroup));
+					db.getNewsgroups().find(NewsgroupData.NEWSGROUPNAME.eq(newsgroupName));
 			NewsgroupData newsgroupData = null;
 			for (NewsgroupData ngd:  newsgroupDataIt)
 				newsgroupData = ngd;
 			if (newsgroupData!=null) {
-				newsgroupData.setThreads(threadsPerNewsgroup.get(urlNewsgroup).size());
+				newsgroupData.setThreads(threadsPerNewsgroup.get(newsgroupName).size());
 			} else {
 				newsgroupData = new NewsgroupData();
-				newsgroupData.setUrl_name(urlNewsgroup);
+				newsgroupData.setNewsgroupName(newsgroupName);
 				newsgroupData.setPreviousThreads(0);
-				newsgroupData.setThreads(threadsPerNewsgroup.get(urlNewsgroup).size());
+				newsgroupData.setThreads(threadsPerNewsgroup.get(newsgroupName).size());
 				db.getNewsgroups().add(newsgroupData);
 			}
 		}
@@ -224,7 +224,7 @@ public class ThreadsTransMetricProvider implements ITransientMetricProvider<News
 	private ArticleData prepareArticleData(Article article, NntpNewsGroup newsgroup, Classifier classifier, 
 					Map<Integer, String> previousClassAssignments, Map<Integer, ClassificationInstance> instanceIndex) {
 		ArticleData articleData = new ArticleData();
-		articleData.setUrl_name(newsgroup.getUrl());
+		articleData.setNewsgroupName(newsgroup.getNewsGroupName());
 		articleData.setArticleId(article.getArticleId());
 		articleData.setArticleNumber(article.getArticleNumber());
 		articleData.setDate(article.getDate());

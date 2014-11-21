@@ -11,7 +11,7 @@ public class NewsgroupsResponseTimeHistoricMetric extends Pongo {
 	
 	public NewsgroupsResponseTimeHistoricMetric() { 
 		super();
-		URL_NAME.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.responsetime.model.NewsgroupsResponseTimeHistoricMetric");
+		NEWSGROUPNAME.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.responsetime.model.NewsgroupsResponseTimeHistoricMetric");
 		AVGRESPONSETIME.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.responsetime.model.NewsgroupsResponseTimeHistoricMetric");
 		AVGRESPONSETIMEFORMATTED.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.responsetime.model.NewsgroupsResponseTimeHistoricMetric");
 		THREADSCONSIDERED.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.responsetime.model.NewsgroupsResponseTimeHistoricMetric");
@@ -20,7 +20,7 @@ public class NewsgroupsResponseTimeHistoricMetric extends Pongo {
 		CUMULATIVETHREADSCONSIDERED.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.responsetime.model.NewsgroupsResponseTimeHistoricMetric");
 	}
 	
-	public static StringQueryProducer URL_NAME = new StringQueryProducer("url_name"); 
+	public static StringQueryProducer NEWSGROUPNAME = new StringQueryProducer("newsgroupName"); 
 	public static NumericalQueryProducer AVGRESPONSETIME = new NumericalQueryProducer("avgResponseTime");
 	public static StringQueryProducer AVGRESPONSETIMEFORMATTED = new StringQueryProducer("avgResponseTimeFormatted"); 
 	public static NumericalQueryProducer THREADSCONSIDERED = new NumericalQueryProducer("threadsConsidered");
@@ -29,12 +29,12 @@ public class NewsgroupsResponseTimeHistoricMetric extends Pongo {
 	public static NumericalQueryProducer CUMULATIVETHREADSCONSIDERED = new NumericalQueryProducer("cumulativeThreadsConsidered");
 	
 	
-	public String getUrl_name() {
-		return parseString(dbObject.get("url_name")+"", "");
+	public String getNewsgroupName() {
+		return parseString(dbObject.get("newsgroupName")+"", "");
 	}
 	
-	public NewsgroupsResponseTimeHistoricMetric setUrl_name(String url_name) {
-		dbObject.put("url_name", url_name);
+	public NewsgroupsResponseTimeHistoricMetric setNewsgroupName(String newsgroupName) {
+		dbObject.put("newsgroupName", newsgroupName);
 		notifyChanged();
 		return this;
 	}
