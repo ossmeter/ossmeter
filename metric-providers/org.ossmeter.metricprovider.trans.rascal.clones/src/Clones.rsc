@@ -96,7 +96,7 @@ private alias Block = list[str];
 
 
 @metric{cloneLOCPerLanguage}
-@doc{Lines of code in Type I clones larger than 6 lines, per language}
+@doc{Lines of code in Type I clones larger than 6 lines, per language. A Type I clone is a literal clone. A large number of literal clones is considered to be bad. This metric is not easily compared between systems because it is not size normalized yet. We use it for further processing downstream. You can analyze the trend over time using this metric.}
 @friendlyName{Lines of code in Type I clones larger than 6 lines, per language}
 @appliesTo{generic()}
 @historic
@@ -143,8 +143,9 @@ map[str, int] cloneLOCPerLanguage(rel[Language, loc, AST] asts = {}) {
 
 
 @metric{cloneCode}
-@doc{The amount of code in the project in Type I clones larger than 6 lines}
-@friendlyName{The amount of clone in the project in Type I clones larger than 6 lines}
+@doc{The amount of code in the project in Type I clones larger than 6 lines. A Type I clone is a literal clone. If a considerable part of a large project 
+consists of cloned code there may be maintainability risks.}
+@friendlyName{Code Cloning}
 @appliesTo{generic()}
 @uses{("org.ossmeter.metricprovider.trans.rascal.LOC.locPerLanguage": "locPerLanguage", "cloneLOCPerLanguage": "cloneLOCPerLanguage")}
 Factoid cloneCode(map[str, int] locPerLanguage = (), map[str, int] cloneLOCPerLanguage = ()) {

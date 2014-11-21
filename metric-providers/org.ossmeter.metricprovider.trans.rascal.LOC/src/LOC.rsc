@@ -13,7 +13,8 @@ import Prelude;
 import Generic;
  
 @metric{genericLOC}
-@doc{loc}
+@doc{Physical lines of code simply counts the number of newline characters (OS independent) in a source code file. 
+The metric can be used to compare the volume between two systems.}
 @friendlyName{Language independent physical lines of code}
 @appliesTo{generic()}
 map[loc, int] countLoc(rel[Language, loc, AST] asts = {}) {
@@ -29,8 +30,8 @@ real giniLOC(map[loc, int] locs) {
 }
 
 @metric{genericLOCoverFiles}
-@doc{Language independent physical lines of code over files}
-@friendlyName{Language independent physical lines of code over files}
+@doc{We find out how evenly the code is spread over files. The number should be quite stable over time. A jump in this metric indicates a large change in the code base. If the code is focused in only a few very large files then this may be a contra-indicator for quality.}
+@friendlyName{Spread of code over files}
 @appliesTo{generic()}
 @historic
 real giniLOCOverFiles(rel[Language, loc, AST] asts = {}) {
@@ -39,7 +40,8 @@ real giniLOCOverFiles(rel[Language, loc, AST] asts = {}) {
 
 
 @metric{locPerLanguage}
-@doc{physical lines of code per language}
+@doc{Physical lines of code simply counts the number of newline characters (OS independent) in a source code file. We accumulate this number per programming language. 
+The metric can be used to compare the volume between two systems and to assess in which programming language the bulk of the code is written.}
 @friendlyName{Physical lines of code per language}
 @appliesTo{generic()}
 @uses{("genericLOC" :"genericLoc")}
@@ -67,7 +69,9 @@ map[str, int] locPerLanguage(rel[Language, loc, AST] asts = {}, map[loc, int] ge
 
 
 @metric{codeSize}
-@doc{The size of the project's code base}
+@doc{The size/volume of a system is telling for the expected complexity and cost of ownership. The type and number of programming languages used also indicate
+complexity and the kind of expertise needed to maintain the system. We combine this information with the number of people working on the project because a large
+project is expected to be supported by a large community.}
 @friendlyName{Code Size}
 @appliesTo{generic()}
 @uses{("locPerLanguage": "locPerLanguage",
