@@ -72,7 +72,7 @@ int countCC(list[Stmt] stats) {
 }
 
 @metric{CCOverPHPMethods}
-@doc{{Calculates how cyclomatic complexity is spread over the methods of a system. If high CC is localized, then this may be easily fixed but if many methods have high complexity, then the project may be at risk. This metric is good to compare between projects.}
+@doc{Calculates how cyclomatic complexity is spread over the methods of a system. If high CC is localized, then this may be easily fixed but if many methods have high complexity, then the project may be at risk. This metric is good to compare between projects.}
 @friendlyName{Spread of CC over methods}
 @appliesTo{php()}
 @uses{("CCPHP": "methodCC")}
