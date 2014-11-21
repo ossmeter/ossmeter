@@ -38,7 +38,7 @@ map[int, int] getTypeNameResolutionHistogram(rel[Language, loc, M3] m3s = {})
 }
 
 @metric{StaticMethodNameResolutionHistogram}
-@doc{This histogram shows to how many method definitions a call can point in PHP code. The more declarations a single name can point to the more "dynamic" the code is and the harder it is to predict what happens at run-time. A low precision for static name resolution indicates the project is hard to change and perhaps also hard to understand.
+@doc{This histogram shows to how many method definitions a call can point in PHP code. The more declarations a single name can point to the more "dynamic" the code is and the harder it is to predict what happens at run-time. A low precision for static name resolution indicates the project is hard to change and perhaps also hard to understand.}
 @friendlyName{Static method name resolution histogram}
 @appliesTo{php()}
 map[int, int] getMethodNameResolutionHistogram(rel[Language, loc, M3] m3s = {})
