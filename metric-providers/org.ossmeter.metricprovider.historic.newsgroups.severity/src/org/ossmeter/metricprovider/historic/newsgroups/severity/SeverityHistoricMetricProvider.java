@@ -59,20 +59,20 @@ public class SeverityHistoricMetricProvider extends AbstractHistoricalMetricProv
 			 
 			 for (NewsgroupThreadData newsgroupThreadData: severityClassifier.getNewsgroupThreads()) {
 				 
-				 String newsgroupUrl = newsgroupThreadData.getUrl();
+				 String newsgroupName = newsgroupThreadData.getNewsgroupName();
 				 
-				 if (threadsPerNewsgroup.containsKey(newsgroupUrl))
-					 threadsPerNewsgroup.put(newsgroupUrl, threadsPerNewsgroup.get(newsgroupUrl) + 1);
+				 if (threadsPerNewsgroup.containsKey(newsgroupName))
+					 threadsPerNewsgroup.put(newsgroupName, threadsPerNewsgroup.get(newsgroupName) + 1);
 				 else 
-					 threadsPerNewsgroup.put(newsgroupUrl, 1);
+					 threadsPerNewsgroup.put(newsgroupName, 1);
 				 
 				 String severity = newsgroupThreadData.getSeverity();
 				  Map<String, Integer> severityMap;
-				 if (severitiesPerNewsgroup.containsKey(newsgroupUrl))
-					 severityMap = severitiesPerNewsgroup.get(newsgroupUrl);
+				 if (severitiesPerNewsgroup.containsKey(newsgroupName))
+					 severityMap = severitiesPerNewsgroup.get(newsgroupName);
 				 else {
 					 severityMap = new HashMap<String, Integer>();
-					 severitiesPerNewsgroup.put(newsgroupUrl, severityMap);
+					 severitiesPerNewsgroup.put(newsgroupName, severityMap);
 				 }
 				 
 				 if (severityMap.containsKey(severity))
@@ -82,19 +82,19 @@ public class SeverityHistoricMetricProvider extends AbstractHistoricalMetricProv
 			 
 			 }
 			 
-			 for (String newsgroupUrl: threadsPerNewsgroup.keySet()) {
+			 for (String newsgroupName: threadsPerNewsgroup.keySet()) {
 				 NewsgroupData newsgroupData = new NewsgroupData();
-				 int numberOfThreads = threadsPerNewsgroup.get(newsgroupUrl);
-				 newsgroupData.setUrl(newsgroupUrl);
+				 int numberOfThreads = threadsPerNewsgroup.get(newsgroupName);
+				 newsgroupData.setNewsgroupName(newsgroupName);
 				 newsgroupData.setNumberOfThreads(numberOfThreads);
 				 metric.getNewsgroupData().add(newsgroupData);
 			 
-				 Map<String, Integer> severityMap = severitiesPerNewsgroup.get(newsgroupUrl);
+				 Map<String, Integer> severityMap = severitiesPerNewsgroup.get(newsgroupName);
 				 
 				 for (String severity: severityMap.keySet()) {
 					 int numberOfSeverityThreads = severityMap.get(severity);
 					 SeverityLevel severityLevel = new SeverityLevel();
-					 severityLevel.setUrl(newsgroupUrl);
+					 severityLevel.setNewsgroupName(newsgroupName);
 					 severityLevel.setSeverityLevel(severity);
 					 severityLevel.setNumberOfThreads(numberOfSeverityThreads);
 					 if ( numberOfThreads > 0 )

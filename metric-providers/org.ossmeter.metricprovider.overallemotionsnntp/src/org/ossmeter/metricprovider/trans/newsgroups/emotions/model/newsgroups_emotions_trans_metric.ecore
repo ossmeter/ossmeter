@@ -8,7 +8,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="dimensions" upperBound="-1" eType="//EmotionDimension" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NewsgroupData">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url_name">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="newsgroupName">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="numberOfArticles">
@@ -19,7 +19,7 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EmotionDimension">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url_name">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="newsgroupName">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="emotionLabel">

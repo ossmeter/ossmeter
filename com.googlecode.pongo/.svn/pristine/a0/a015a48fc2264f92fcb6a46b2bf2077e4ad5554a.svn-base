@@ -1,0 +1,51 @@
+import "ecoreutil.eol";
+
+operation EClass getChartType() : String {
+	var vizAnno = self.eAnnotations.selectOne(a|a.source = "viz");
+	
+	var charts = vizAnno.details.selectOne(d|d.key = "chart");
+	var chart = "line";
+	if (charts.isDefined()) 
+		chart = charts.value;
+		
+	switch (chart) {
+		case "line":
+			return "LineChart";
+		case "bar":
+			return "BarChart";
+		default:
+			return "LineChart"; // Defaults to line. Should handle error better here
+	}
+}
+
+operation EClass getTargets() : Sequence {
+	var vizAnno = self.getAnnotationValue("viz","target"); 
+	
+	if (vizAnno.isDefined()) 
+		return vizAnno.split(",").asSequence();
+	return "gcharts".asSequence(); // Defaults to gcharts. Maybe should handle error better here
+}
+
+operation getYAxisTitle() : String {
+	var sf = EStructuralFeature.all.selectOne(sf | sf.isAnnotatedAs("yaxis"));
+	if (sf.isUndefined()) return "";
+	else return sf.getAnnotationValue("yaxis","title");
+}
+
+operation getYAxis() : String {
+	var sf = EStructuralFeature.all.selectOne(sf | sf.isAnnotatedAs("yaxis"));
+	if (sf.isUndefined()) return "";
+	else return sf.name;
+}
+
+operation getSeries() : String {
+	var sf = EStructuralFeature.all.selectOne(sf | sf.isAnnotatedAs("series"));
+	if (sf.isUndefined()) return "";
+	else return sf.name;
+}
+
+operation getSeriesLabel() : String {
+	var sf = EStructuralFeature.all.selectOne(sf | sf.isAnnotatedAs("series"));
+	if (sf.isUndefined()) return "";
+	else return sf.getAnnotationValue("series","label");
+}

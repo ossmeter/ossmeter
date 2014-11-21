@@ -49,13 +49,11 @@ public class PatchesHistoricMetricProvider extends AbstractHistoricalMetricProvi
 					cumulativeNumberOfPatches = bugTrackerData.getCumulativeNumberOfPatches();
 				totalNumberOfPatches += numberOfPatches;
 				totalCumulativeNumberOfPatches += cumulativeNumberOfPatches;
-				if ( (numberOfPatches>0) || (cumulativeNumberOfPatches>0) ) {
-					DailyBugData bugData = new DailyBugData();
-					bugData.setBugTrackerId(bugTrackerData.getBugTrackerId());
-					bugData.setNumberOfPatches(numberOfPatches);
-					bugData.setCumulativeNumberOfPatches(cumulativeNumberOfPatches);
-					dailyNobp.getBugs().add(bugData);
-				}
+				DailyBugData bugData = new DailyBugData();
+				bugData.setBugTrackerId(bugTrackerData.getBugTrackerId());
+				bugData.setNumberOfPatches(numberOfPatches);
+				bugData.setCumulativeNumberOfPatches(cumulativeNumberOfPatches);
+				dailyNobp.getBugs().add(bugData);
 			}
 			dailyNobp.setNumberOfPatches(totalNumberOfPatches);
 			dailyNobp.setCumulativeNumberOfPatches(totalCumulativeNumberOfPatches);

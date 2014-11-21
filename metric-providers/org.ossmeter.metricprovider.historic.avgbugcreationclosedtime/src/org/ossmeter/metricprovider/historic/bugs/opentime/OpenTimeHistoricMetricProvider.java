@@ -56,17 +56,17 @@ public class OpenTimeHistoricMetricProvider extends AbstractHistoricalMetricProv
 					durations++;
 				}
 			}
-			if (durations>0) {
-				long avgDuration = seconds/durations;
-				double daysReal = avgDuration / SECONDS_DAY;
-				avgBugOpenTime.setAvgBugOpenTimeInDays(daysReal);
-				int days = (int) daysReal;
-				long lessThanDay = (avgDuration % SECONDS_DAY);
-				String formatted = DurationFormatUtils.formatDuration(lessThanDay*1000, "HH:mm:ss:SS");
-				avgBugOpenTime.setAvgBugOpenTime(days+":"+formatted);
-//				System.out.println(days + ":" + formatted);
-				avgBugOpenTime.setBugsConsidered(durations);
-			}
+			long avgDuration = 0;
+			if (durations>0)
+				avgDuration = seconds / durations;
+			double daysReal = ( (double) avgDuration ) / SECONDS_DAY;
+			avgBugOpenTime.setAvgBugOpenTimeInDays(daysReal);
+			int days = (int) daysReal;
+			long lessThanDay = (avgDuration % SECONDS_DAY);
+			String formatted = DurationFormatUtils.formatDuration(lessThanDay*1000, "HH:mm:ss:SS");
+			avgBugOpenTime.setAvgBugOpenTime(days+":"+formatted);
+//			System.out.println(days + ":" + formatted);
+			avgBugOpenTime.setBugsConsidered(durations);
 
 		}
 		return avgBugOpenTime;

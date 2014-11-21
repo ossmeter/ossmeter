@@ -1,11 +1,11 @@
 package org.ossmeter.factoid.newsgroups.responsetime;
 
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 
 import org.ossmeter.metricprovider.historic.newsgroups.responsetime.ResponseTimeHistoricMetricProvider;
 import org.ossmeter.metricprovider.historic.newsgroups.responsetime.model.NewsgroupsResponseTimeHistoricMetric;
-import org.ossmeter.metricprovider.historic.newsgroups.severityresponsetime.model.BugsSeverityResponseTimeHistoricMetric;
 import org.ossmeter.platform.AbstractFactoidMetricProvider;
 import org.ossmeter.platform.Date;
 import org.ossmeter.platform.IMetricProvider;
@@ -48,8 +48,7 @@ public class NewsgroupsChannelResponseTimeFactoid extends AbstractFactoidMetricP
 
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return Arrays.asList(NewsgroupsResponseTimeHistoricMetric.class.getCanonicalName(),
-							 BugsSeverityResponseTimeHistoricMetric.class.getCanonicalName());
+		return Arrays.asList(ResponseTimeHistoricMetricProvider.IDENTIFIER);
 	}
 
 	@Override
@@ -62,8 +61,14 @@ public class NewsgroupsChannelResponseTimeFactoid extends AbstractFactoidMetricP
 //		factoid.setCategory(FactoidCategory.BUGS);
 		factoid.setName("Newsgroup Response Time Factoid");
 
-		ResponseTimeHistoricMetricProvider responseTimeProvider = new ResponseTimeHistoricMetricProvider();
-//		SeverityResponseTimeHistoricMetricProvider severityResponseTimeProvider = new SeverityResponseTimeHistoricMetricProvider();
+		ResponseTimeHistoricMetricProvider responseTimeProvider = null;
+
+		for (IMetricProvider m : this.uses) {
+			if (m instanceof ResponseTimeHistoricMetricProvider) {
+				responseTimeProvider = (ResponseTimeHistoricMetricProvider) m;
+				continue;
+			}
+		}
 		
 		int eightHoursMilliSeconds = 8 * 60 * 60 * 1000, 
 			dayMilliSeconds = 3 * eightHoursMilliSeconds,
@@ -71,6 +76,14 @@ public class NewsgroupsChannelResponseTimeFactoid extends AbstractFactoidMetricP
 		
 		Date end = new Date();
 		Date start = (new Date()).addDays(-365);
+//		Date start=null, end=null;
+//		try {
+//			start = new Date("20040801");
+//			end = new Date("20050801");
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		List<Pongo> responseTimeList = responseTimeProvider.getHistoricalMeasurements(context, project, start, end);
 //					severityResponseTimeList = severityResponseTimeProvider.getHistoricalMeasurements(context, project, start, end);
 		
@@ -141,7 +154,10 @@ public class NewsgroupsChannelResponseTimeFactoid extends AbstractFactoidMetricP
 			totalThreadsConsidered += responseTimePongo.getThreadsConsidered();
 			totalResponseTime += responseTimePongo.getAvgResponseTime();
 		}
-		return totalResponseTime / totalThreadsConsidered;
+		if (totalThreadsConsidered>0)
+			return totalResponseTime / totalThreadsConsidered;
+		else
+			return 0;
 	}
 
 }

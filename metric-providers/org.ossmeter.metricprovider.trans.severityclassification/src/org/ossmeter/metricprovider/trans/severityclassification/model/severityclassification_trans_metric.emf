@@ -24,7 +24,7 @@ class BugTrackerBugsData {
 
 class NewsgroupArticleData {
 	@searchable
-   	attr String url;
+   	attr String NewsGroupName;
    	attr int articleNumber;
 	attr int[*] unigrams;
 	attr int[*] bigrams;
@@ -37,7 +37,7 @@ class NewsgroupArticleData {
 
 class NewsgroupThreadData {
 	@searchable
-   	attr String url;
+   	attr String newsgroupName;
    	attr int threadId;
    	attr String severity;
 }

@@ -20,7 +20,7 @@ class CurrentDate {
 
 class ArticleData {
    @searchable
-   attr String url_name;
+   attr String newsgroupName;
    @searchable
    attr int articleNumber;
    attr String articleId;
@@ -33,7 +33,7 @@ class ArticleData {
 
 class NewsgroupData {
 	@searchable
-	attr String url_name;
+	attr String newsgroupName;
 	attr int threads;
 	attr int previousThreads;
 }

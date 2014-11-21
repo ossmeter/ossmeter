@@ -1,0 +1,24 @@
+package com.googlecode.pongo.tests.inheritance.model;
+
+@db
+class InheritanceDB {
+	val Parent[*] classes;
+}
+
+abstract class Parent {
+	@searchable
+	attr String name;
+	attr int age;
+}
+
+class ChildOne extends Parent {
+	
+}
+
+class ChildTwo extends Parent {
+	
+}
+
+class Grandchild extends ChildTwo {
+	
+}

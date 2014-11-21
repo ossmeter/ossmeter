@@ -77,10 +77,10 @@ public class ArticlesTransMetricProvider implements ITransientMetricProvider<New
 			CommunicationChannel communicationChannel = communicationChannelDelta.getCommunicationChannel();
 			if (!(communicationChannel instanceof NntpNewsGroup)) continue;
 			NntpNewsGroup newsgroup = (NntpNewsGroup) communicationChannel;
-			NewsgroupData newsgroupData = db.getNewsgroups().findOneByUrl_name(newsgroup.getUrl());
+			NewsgroupData newsgroupData = db.getNewsgroups().findOneByNewsgroupName(newsgroup.getNewsGroupName());
 			if (newsgroupData == null) {
 				newsgroupData = new NewsgroupData();
-				newsgroupData.setUrl_name(newsgroup.getUrl());
+				newsgroupData.setNewsgroupName(newsgroup.getNewsGroupName());
 				db.getNewsgroups().add(newsgroupData);
 			} 
 			int articles = communicationChannelDelta.getArticles().size();

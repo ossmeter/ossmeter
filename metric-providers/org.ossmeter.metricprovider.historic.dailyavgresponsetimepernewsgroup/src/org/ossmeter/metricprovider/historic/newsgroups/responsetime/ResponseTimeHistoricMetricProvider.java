@@ -64,10 +64,10 @@ public class ResponseTimeHistoricMetricProvider extends AbstractHistoricalMetric
 			 cumulativeSumOfDurations = 0;
 		int threadsConsidered = 0,
 			cumulativeThreadsConsidered = 0;
-		String lastUrl_name = "";
+		String lastNewsgroupName = "";
 		
 		for (ThreadStatistics thread: usedThreads.getThreads()) {
-			lastUrl_name = thread.getUrl_name();
+			lastNewsgroupName = thread.getNewsgroupName();
 			if (thread.getAnswered()) {
 				cumulativeSumOfDurations += thread.getResponseDurationSec();
 				cumulativeThreadsConsidered++;
@@ -81,21 +81,26 @@ public class ResponseTimeHistoricMetricProvider extends AbstractHistoricalMetric
 		
 		NewsgroupsResponseTimeHistoricMetric dailyAverageThreadResponseTime = new NewsgroupsResponseTimeHistoricMetric();
 
+		dailyAverageThreadResponseTime.setNewsgroupName(lastNewsgroupName);
+		dailyAverageThreadResponseTime.setThreadsConsidered(threadsConsidered);
+		dailyAverageThreadResponseTime.setCumulativeThreadsConsidered(cumulativeThreadsConsidered);
+
+		long avgResponseTime = 0;
+		if (threadsConsidered>0)
+			avgResponseTime = computeAverageDuration(sumOfDurations, threadsConsidered);
+		dailyAverageThreadResponseTime.setAvgResponseTime(avgResponseTime);
+		String avgResponseTimeFormatted = format(avgResponseTime);
+		dailyAverageThreadResponseTime.setAvgResponseTimeFormatted(avgResponseTimeFormatted);
+
+		long cumulativeAvgResponseTime = 0;
+		if (cumulativeThreadsConsidered>0)
+			cumulativeAvgResponseTime = computeAverageDuration(cumulativeSumOfDurations, cumulativeThreadsConsidered);
+		dailyAverageThreadResponseTime.setCumulativeAvgResponseTime(cumulativeAvgResponseTime);
+		String cumulativeAvgResponseTimeFormatted = format(cumulativeAvgResponseTime);
+		dailyAverageThreadResponseTime.setCumulativeAvgResponseTimeFormatted(cumulativeAvgResponseTimeFormatted);
+		
 		if ( (threadsConsidered>0) || (cumulativeThreadsConsidered>0) ) {
 			
-			dailyAverageThreadResponseTime.setUrl_name(lastUrl_name);
-			dailyAverageThreadResponseTime.setThreadsConsidered(threadsConsidered);
-			dailyAverageThreadResponseTime.setCumulativeThreadsConsidered(cumulativeThreadsConsidered);
-			
-			long avgResponseTime = computeAverageDuration(sumOfDurations, threadsConsidered);
-			dailyAverageThreadResponseTime.setAvgResponseTime(avgResponseTime);
-			String avgResponseTimeFormatted = format(avgResponseTime);
-			dailyAverageThreadResponseTime.setAvgResponseTimeFormatted(avgResponseTimeFormatted);
-			
-			long cumulativeAvgResponseTime = computeAverageDuration(cumulativeSumOfDurations, cumulativeThreadsConsidered);
-			dailyAverageThreadResponseTime.setCumulativeAvgResponseTime(cumulativeAvgResponseTime);
-			String cumulativeAvgResponseTimeFormatted = format(cumulativeAvgResponseTime);
-			dailyAverageThreadResponseTime.setCumulativeAvgResponseTimeFormatted(cumulativeAvgResponseTimeFormatted);
 		}
 
 //		System.err.println(time(System.currentTimeMillis() - startTime) + "\tdaily_new");

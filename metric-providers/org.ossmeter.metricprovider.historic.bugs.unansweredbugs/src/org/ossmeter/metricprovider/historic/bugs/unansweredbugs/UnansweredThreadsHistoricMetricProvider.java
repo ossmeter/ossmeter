@@ -63,9 +63,7 @@ public class UnansweredThreadsHistoricMetricProvider extends AbstractHistoricalM
 		BugsUnansweredBugsHistoricMetric dailyUnansweredBugs = 
 									new BugsUnansweredBugsHistoricMetric();
 
-		if (sumOfUnansweredBugs > 0) {
-			dailyUnansweredBugs.setNumberOfUnansweredBugs(sumOfUnansweredBugs);
-		}
+		dailyUnansweredBugs.setNumberOfUnansweredBugs(sumOfUnansweredBugs);
 		
 //		System.err.println(time(System.currentTimeMillis() - startTime) + "\tunanswered_new");
 		return dailyUnansweredBugs;

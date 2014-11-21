@@ -54,7 +54,7 @@ public class UsersHistoricMetricProvider extends AbstractHistoricalMetricProvide
 			for (NewsgroupData newsgroup: activeUsers.getNewsgroups()) {
 				if ((newsgroup.getUsers() > 0) || (newsgroup.getActiveUsers() > 0) || (newsgroup.getInactiveUsers() > 0)) {
 					DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
-					dailyNewsgroupData.setUrl_name(newsgroup.getUrl_name());
+					dailyNewsgroupData.setNewsgroupName(newsgroup.getNewsgroupName());
 					if (newsgroup.getUsers() > 0) {
 						dailyNewsgroupData.setNumberOfUsers(newsgroup.getUsers());
 						numberOfUsers += newsgroup.getUsers();
@@ -70,12 +70,9 @@ public class UsersHistoricMetricProvider extends AbstractHistoricalMetricProvide
 					users.getNewsgroups().add(dailyNewsgroupData);
 				}
 			}
-			if (numberOfUsers > 0)
-				users.setNumberOfUsers(numberOfUsers);
-			if (numberOfActiveUsers > 0)
-				users.setNumberOfActiveUsers(numberOfActiveUsers);
-			if (numberOfInactiveUsers > 0)
-				users.setNumberOfInactiveUsers(numberOfInactiveUsers);
+			users.setNumberOfUsers(numberOfUsers);
+			users.setNumberOfActiveUsers(numberOfActiveUsers);
+			users.setNumberOfInactiveUsers(numberOfInactiveUsers);
 		}
 		return users;
 	}

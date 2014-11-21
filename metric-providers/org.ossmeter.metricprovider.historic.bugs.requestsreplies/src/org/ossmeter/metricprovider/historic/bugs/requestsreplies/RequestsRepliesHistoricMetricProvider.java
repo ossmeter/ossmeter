@@ -113,14 +113,10 @@ public class RequestsRepliesHistoricMetricProvider extends AbstractHistoricalMet
 					dailyBugTrackerData.setNumberOfReplies(replies.get(bugTrackerId));
 				dailyNorr.getBugs().add(dailyBugTrackerData);
 			}
-			if (cumulativeRequestSum > 0)
-				dailyNorr.setCumulativeNumberOfRequests(cumulativeRequestSum);
-			if (cumulativeReplySum > 0)
-				dailyNorr.setCumulativeNumberOfReplies(cumulativeReplySum);
-			if (requestSum > 0)
-				dailyNorr.setNumberOfRequests(requestSum);
-			if (replySum > 0)
-				dailyNorr.setNumberOfReplies(replySum);
+			dailyNorr.setCumulativeNumberOfRequests(cumulativeRequestSum);
+			dailyNorr.setCumulativeNumberOfReplies(cumulativeReplySum);
+			dailyNorr.setNumberOfRequests(requestSum);
+			dailyNorr.setNumberOfReplies(replySum);
 		}
 		
 		return dailyNorr;

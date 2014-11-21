@@ -1,0 +1,34 @@
+[%import "chart-templates.egl";
+import "chart-util.eol";
+import "ecoreutil.eol";%] 
+package [%=c.ePackage.name%];
+
+import com.googlecode.pongo.runtime.viz.PongoViz;
+import com.mongodb.DBCollection;
+
+public class [%=c.name%]Viz extends PongoViz {
+
+	public [%=c.name%]Viz() {
+		super();
+	}
+	
+	public [%=c.name%]Viz(DBCollection collection) {
+		super(collection);
+	}
+
+	@Override
+	public String getViz(String type) {
+		switch (type) {
+		[%for (target in c.getTargets()) { %]
+			case "[%=target%]": 
+				[%
+				switch (target) {
+					case "gcharts":%][%=c.toGoogleChart()%][%
+					case "d3":%][%=c.toD3()%][%
+				}
+				%]
+		[%}%]
+		}
+		return null;
+	}
+}

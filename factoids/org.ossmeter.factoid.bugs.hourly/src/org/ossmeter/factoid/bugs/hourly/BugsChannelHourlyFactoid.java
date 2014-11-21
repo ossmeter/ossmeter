@@ -94,12 +94,12 @@ public class BugsChannelHourlyFactoid extends AbstractFactoidMetricProvider{
 			stringBuffer.append("does not depend");
 		else
 			stringBuffer.append("largely depends");
-		stringBuffer.append(" on the hour of the day.\nThere is ");
+		stringBuffer.append(" on the hour of the day.\nThere is");
 		if ( Math.abs( ( workingHoursSum / 9 ) - ( ourOfWorkingHoursSum / 15 ) ) < uniformPercentageOfComments ) 
-			stringBuffer.append("no");
+			stringBuffer.append(" no ");
 		else
-			stringBuffer.append("");
-		stringBuffer.append(" significant difference between the number of comments" +
+			stringBuffer.append(" ");
+		stringBuffer.append("significant difference between the number of comments" +
 							" within as opposed to out of working hours.\n");
 
 		factoid.setFactoid(stringBuffer.toString());

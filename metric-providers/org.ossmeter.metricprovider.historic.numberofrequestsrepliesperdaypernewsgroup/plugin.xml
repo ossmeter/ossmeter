@@ -22,6 +22,7 @@
 
 
 
+
 <extension point="com.googlecode.pongo.runtime.osgi">
     <class name="org.ossmeter.metricprovider.historic.newsgroups.requestsreplies.model.NewsgroupsRequestsRepliesHistoricMetric"/>
     <class name="org.ossmeter.metricprovider.historic.newsgroups.requestsreplies.model.DailyNewsgroupData"/>

@@ -54,29 +54,21 @@ public class SeveritySentimentHistoricMetricProvider extends AbstractHistoricalM
 			BugsBugMetadataTransMetric bugMetadata = 
 					 ((BugMetadataTransMetricProvider)uses.get(1)).adapt(context.getProjectDB(project));
 			 
-			 Map<String, Map<String, Integer>> sentimentAtBeginning = new HashMap<String, Map<String, Integer>>(),
-					 			  			   sentimentAtEnd = new HashMap<String, Map<String, Integer>>();
-			 Map<String, Map<String, Float>> sentimentAverage = new HashMap<String, Map<String, Float>>();
+			 Map<String, Integer> sentimentAtBeginning = new HashMap<String, Integer>(),
+					 			  sentimentAtEnd = new HashMap<String, Integer>();
+			 Map<String, Float> sentimentAverage = new HashMap<String, Float>();
 		 			  
-			 Map<String, Map<String, Integer>> severitiesPerTracker = new HashMap<String, Map<String, Integer>>();
+			 Map<String, Integer> severities = new HashMap<String, Integer>();
 			 
 			 for (BugTrackerBugsData bugTrackerBugsData: severityClassifier.getBugTrackerBugs()) {
 				 
 				 String trackerId = bugTrackerBugsData.getBugTrackerId();
 				 
 				 String severity = bugTrackerBugsData.getSeverity();
-				 Map<String, Integer> severityMap;
-				 if (severitiesPerTracker.containsKey(trackerId))
-					 severityMap = severitiesPerTracker.get(trackerId);
-				 else {
-					 severityMap = new HashMap<String, Integer>();
-					 severitiesPerTracker.put(trackerId, severityMap);
-				 }
-				 
-				 if (severityMap.containsKey(severity))
-					 severityMap.put(severity, severityMap.get(severity) + 1);
+				 if (severities.containsKey(severity))
+					 severities.put(severity, severities.get(severity) + 1);
 				 else
-					 severityMap.put(severity, + 1);
+					 severities.put(severity, 1);
 			 
 				 BugData bugData = null;
 				 Iterable<BugData> bugDataIt = bugMetadata.getBugData().find(BugData.BUGTRACKERID.eq(trackerId),
@@ -84,41 +76,38 @@ public class SeveritySentimentHistoricMetricProvider extends AbstractHistoricalM
 				 for (BugData bd: bugDataIt) bugData = bd;
 
 				 float averageSentiment = bugData.getAverageSentiment();
-				 Map<String, Float> sentAverage = retrieveOrAddFloat(sentimentAverage, trackerId);
-				 addOrIncreaseFloat(sentAverage, severity, averageSentiment);
+//				 Map<String, Float> sentAverage = retrieveOrAddFloat(sentimentAverage, trackerId);
+				 addOrIncreaseFloat(sentimentAverage, severity, averageSentiment);
 				 
 				 int startSentiment = transformSentimentToInteger(bugData.getStartSentiment());
-				 Map<String, Integer> sentBeginning = retrieveOrAdd(sentimentAtBeginning, trackerId);
-				 addOrIncrease(sentBeginning, severity, startSentiment);
+//				 Map<String, Integer> sentBeginning = retrieveOrAdd(sentimentAtBeginning, trackerId);
+				 addOrIncrease(sentimentAtBeginning, severity, startSentiment);
 				 
 				 int endSentiment = transformSentimentToInteger(bugData.getEndSentiment());
-				 Map<String, Integer> sentEnd = retrieveOrAdd(sentimentAtEnd, trackerId);
-				 addOrIncrease(sentEnd, severity, endSentiment);
+//				 Map<String, Integer> sentEnd = retrieveOrAdd(sentimentAtEnd, trackerId);
+				 addOrIncrease(sentimentAtEnd, severity, endSentiment);
 
 			 }
 			 
-			 for (String bugTrackerId: severitiesPerTracker.keySet()) {
-			 
-				 Map<String, Integer> severityMap = severitiesPerTracker.get(bugTrackerId);
-				 
-				 for (String severity: severityMap.keySet()) {
-					 int numberOfSeverityBugs = severityMap.get(severity);
-					 SeverityLevel severityLevel = new SeverityLevel();
-					 severityLevel.setBugTrackerId(bugTrackerId);
-					 severityLevel.setSeverityLevel(severity);
-					 severityLevel.setNumberOfBugs(numberOfSeverityBugs);
-					 float averageSentiment = sentimentAverage.get(bugTrackerId).get(severity) / numberOfSeverityBugs;
-					 severityLevel.setAverageSentiment(averageSentiment);
-					 float sentimentAtThreadBeggining = 
-							 ((float) sentimentAtBeginning.get(bugTrackerId).get(severity)) / numberOfSeverityBugs;
-					 severityLevel.setSentimentAtThreadBeggining(sentimentAtThreadBeggining);
-					 float sentimentAtThreadEnd = 
-							 ((float) sentimentAtEnd.get(bugTrackerId).get(severity)) / numberOfSeverityBugs;
-					 severityLevel.setSentimentAtThreadEnd(sentimentAtThreadEnd);
-					 metric.getSeverityLevels().add(severityLevel);
-				 }
-			 
+			 for (String severity: severities.keySet()) {
+				 int numberOfSeverityBugs = severities.get(severity);
+				 SeverityLevel severityLevel = new SeverityLevel();
+				 severityLevel.setSeverityLevel(severity);
+				 severityLevel.setNumberOfBugs(numberOfSeverityBugs);
+				 float averageSentiment = sentimentAverage.get(severity) / numberOfSeverityBugs;
+				 severityLevel.setAverageSentiment(averageSentiment);
+				 float sentimentAtThreadBeggining = 
+						 ((float) sentimentAtBeginning.get(severity)) / numberOfSeverityBugs;
+				 severityLevel.setSentimentAtThreadBeggining(sentimentAtThreadBeggining);
+				 float sentimentAtThreadEnd = 
+						 ((float) sentimentAtEnd.get(severity)) / numberOfSeverityBugs;
+				 severityLevel.setSentimentAtThreadEnd(sentimentAtThreadEnd);
+				 metric.getSeverityLevels().add(severityLevel);
 			 }
+			 
+//			 for (String bugTrackerId: severitiesPerTracker.keySet()) {
+//				 Map<String, Integer> severityMap = severitiesPerTracker.get(bugTrackerId);
+//			 }
 			 
 		}
 		return metric;
@@ -134,29 +123,29 @@ public class SeveritySentimentHistoricMetricProvider extends AbstractHistoricalM
 			 return 0;
 	}
 
-	private Map<String, Integer> retrieveOrAdd(
-			 Map<String, Map<String, Integer>> map, String trackerId) {
-		Map<String, Integer> component;
-		if (map.containsKey(trackerId))
-			component = map.get(trackerId);
-		else {
-			component = new HashMap<String, Integer>();
-			map.put(trackerId, component);
-		}
-		return component;
-	}
+//	private Map<String, Integer> retrieveOrAdd(
+//			 Map<String, Map<String, Integer>> map, String trackerId) {
+//		Map<String, Integer> component;
+//		if (map.containsKey(trackerId))
+//			component = map.get(trackerId);
+//		else {
+//			component = new HashMap<String, Integer>();
+//			map.put(trackerId, component);
+//		}
+//		return component;
+//	}
 	
-	private Map<String, Float> retrieveOrAddFloat(
-			 Map<String, Map<String, Float>> map, String trackerId) {
-		Map<String, Float> component;
-		if (map.containsKey(trackerId))
-			component = map.get(trackerId);
-		else {
-			component = new HashMap<String, Float>();
-			map.put(trackerId, component);
-		}
-		return component;
-	}
+//	private Map<String, Float> retrieveOrAddFloat(
+//			 Map<String, Map<String, Float>> map, String trackerId) {
+//		Map<String, Float> component;
+//		if (map.containsKey(trackerId))
+//			component = map.get(trackerId);
+//		else {
+//			component = new HashMap<String, Float>();
+//			map.put(trackerId, component);
+//		}
+//		return component;
+//	}
 	
 	private void addOrIncrease(Map<String, Integer> map, String item, int increment) {
 		if (map.containsKey(item))

@@ -11,7 +11,6 @@ public class SeverityLevel extends Pongo {
 	
 	public SeverityLevel() { 
 		super();
-		BUGTRACKERID.setOwningType("org.ossmeter.metricprovider.historic.bugs.severitybugstatus.model.SeverityLevel");
 		SEVERITYLEVEL.setOwningType("org.ossmeter.metricprovider.historic.bugs.severitybugstatus.model.SeverityLevel");
 		NUMBEROFBUGS.setOwningType("org.ossmeter.metricprovider.historic.bugs.severitybugstatus.model.SeverityLevel");
 		NUMBEROFRESOLVEDCLOSEDBUGS.setOwningType("org.ossmeter.metricprovider.historic.bugs.severitybugstatus.model.SeverityLevel");
@@ -30,7 +29,6 @@ public class SeverityLevel extends Pongo {
 		PERCENTAGEOFDUPLICATEBUGS.setOwningType("org.ossmeter.metricprovider.historic.bugs.severitybugstatus.model.SeverityLevel");
 	}
 	
-	public static StringQueryProducer BUGTRACKERID = new StringQueryProducer("bugTrackerId"); 
 	public static StringQueryProducer SEVERITYLEVEL = new StringQueryProducer("severityLevel"); 
 	public static NumericalQueryProducer NUMBEROFBUGS = new NumericalQueryProducer("numberOfBugs");
 	public static NumericalQueryProducer NUMBEROFRESOLVEDCLOSEDBUGS = new NumericalQueryProducer("numberOfResolvedClosedBugs");
@@ -49,15 +47,6 @@ public class SeverityLevel extends Pongo {
 	public static NumericalQueryProducer PERCENTAGEOFDUPLICATEBUGS = new NumericalQueryProducer("percentageOfDuplicateBugs");
 	
 	
-	public String getBugTrackerId() {
-		return parseString(dbObject.get("bugTrackerId")+"", "");
-	}
-	
-	public SeverityLevel setBugTrackerId(String bugTrackerId) {
-		dbObject.put("bugTrackerId", bugTrackerId);
-		notifyChanged();
-		return this;
-	}
 	public String getSeverityLevel() {
 		return parseString(dbObject.get("severityLevel")+"", "");
 	}
