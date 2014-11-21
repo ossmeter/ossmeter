@@ -1,6 +1,7 @@
 package org.ossmeter.factoid.newsgroups.users;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -51,8 +52,8 @@ public class NewsgroupsChannelUsersFactoid extends AbstractFactoidMetricProvider
 
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return Arrays.asList(NewsgroupsUsersHistoricMetric.class.getCanonicalName(),
-							 NewsgroupsThreadsHistoricMetric.class.getCanonicalName());
+		return Arrays.asList(UsersHistoricMetricProvider.IDENTIFIER,
+							 ThreadsHistoricMetricProvider.IDENTIFIER);
 	}
 
 	@Override
@@ -65,11 +66,30 @@ public class NewsgroupsChannelUsersFactoid extends AbstractFactoidMetricProvider
 //		factoid.setCategory(FactoidCategory.BUGS);
 		factoid.setName("Newsgroup Channel Users Factoid");
 
-		UsersHistoricMetricProvider usersProvider = new UsersHistoricMetricProvider();
-		ThreadsHistoricMetricProvider threadsProvider = new ThreadsHistoricMetricProvider();
+		UsersHistoricMetricProvider usersProvider = null;
+		ThreadsHistoricMetricProvider threadsProvider = null;
+
+		for (IMetricProvider m : this.uses) {
+			if (m instanceof UsersHistoricMetricProvider) {
+				usersProvider = (UsersHistoricMetricProvider) m;
+				continue;
+			}
+			if (m instanceof ThreadsHistoricMetricProvider) {
+				threadsProvider = (ThreadsHistoricMetricProvider) m;
+				continue;
+			}
+		}
 
 		Date end = new Date();
 		Date start = new Date();
+//		Date start=null, end=null;
+//		try {
+//			start = new Date("20040801");
+//			end = new Date("20050801");
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		List<Pongo> threadList = threadsProvider.getHistoricalMeasurements(context, project, start, end);
 
 		start = (new Date()).addDays(-30);
@@ -83,7 +103,9 @@ public class NewsgroupsChannelUsersFactoid extends AbstractFactoidMetricProvider
 		
 		int currentUsers = getCurrentNumberOfUsers(usersMonthList),
 			currentActiveUsers = getCurrentNumberOfActiveUsers(usersMonthList);
-		float currentActivePercentage = ( (float) 100 * currentActiveUsers ) / currentUsers; 
+		float currentActivePercentage = 0;
+		if (currentUsers>0)
+			currentActivePercentage = ( (float) 100 * currentActiveUsers ) / currentUsers; 
 
 		stringBuffer.append("The community of the project contains ");
 		stringBuffer.append(currentUsers);
@@ -93,11 +115,11 @@ public class NewsgroupsChannelUsersFactoid extends AbstractFactoidMetricProvider
 		stringBuffer.append(decimalFormat.format(currentActivePercentage));
 		stringBuffer.append(" %).\n");
 		stringBuffer.append("Each user has contributed approximately ");
-		stringBuffer.append(getMessagesPerUser(threadList));
+		stringBuffer.append(decimalFormat.format(getMessagesPerUser(threadList)));
 		stringBuffer.append(" messages, "); 
-		stringBuffer.append(getMessagesPerRequests(threadList));
+		stringBuffer.append(decimalFormat.format(getMessagesPerRequests(threadList)));
 		stringBuffer.append(" requests and ");
-		stringBuffer.append(getMessagesPerReplies(threadList));
+		stringBuffer.append(decimalFormat.format(getMessagesPerReplies(threadList)));
 		stringBuffer.append(" replies.\n");
 
 		float dailyNumberOfNewUsersInTheLastMonth = getDailyNumberOfNewUsersInDuration(usersMonthList),
@@ -112,7 +134,7 @@ public class NewsgroupsChannelUsersFactoid extends AbstractFactoidMetricProvider
 		stringBuffer.append(" users are active.\n");
 		stringBuffer.append("In the last year, there are "); 
 		stringBuffer.append(decimalFormat.format(dailyNumberOfNewUsersInTheLastYear));
-		stringBuffer.append(" new users per day in the last month, ");
+		stringBuffer.append(" new users per day, ");
 		stringBuffer.append(decimalFormat.format(dailyNumberOfActiveUsersInTheLastYear));
 		stringBuffer.append(" of which are active.\n"); 
 		
@@ -146,7 +168,7 @@ public class NewsgroupsChannelUsersFactoid extends AbstractFactoidMetricProvider
 					numberOfActiveUsers = dailyNewsgroupData.getNumberOfActiveUsers();
 				float percentageOfActiveUsers = ( (float) 100 * numberOfActiveUsers ) / numberOfUsers;
 				stringBuffer.append("Newsgroup ");
-				stringBuffer.append(dailyNewsgroupData.getUrl_name());
+				stringBuffer.append(dailyNewsgroupData.getNewsgroupName());
 				stringBuffer.append(" hosts ");
 				stringBuffer.append(numberOfUsers);
 				stringBuffer.append(" users, of which ");
@@ -185,7 +207,7 @@ public class NewsgroupsChannelUsersFactoid extends AbstractFactoidMetricProvider
 		int numberOfNewUsers = 0;
 		if ( usersList.size() > 0 ) {
 			NewsgroupsUsersHistoricMetric firstUsersPongo = 
-					(NewsgroupsUsersHistoricMetric) usersList.get(1);
+					(NewsgroupsUsersHistoricMetric) usersList.get(0);
 			NewsgroupsUsersHistoricMetric lastUsersPongo = 
 					(NewsgroupsUsersHistoricMetric) usersList.get(usersList.size()-1);
 			int firstNumberOfUsers = firstUsersPongo.getNumberOfUsers();

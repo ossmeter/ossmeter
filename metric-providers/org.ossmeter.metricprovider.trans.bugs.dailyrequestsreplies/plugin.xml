@@ -2,9 +2,6 @@
 <plugin>
   
 
-<extension point="org.ossmeter.platform.visualisation.metric">
-	<visualisation json="vis/trans.bugs.dailyrequestsreplies.json"/>
-</extension>
 <extension point="org.ossmeter.platform.metricprovider">
    <metricProvider provider="org.ossmeter.metricprovider.trans.bugs.dailyrequestsreplies.DailyRequestsRepliesTransMetricProvider">
    </metricProvider>

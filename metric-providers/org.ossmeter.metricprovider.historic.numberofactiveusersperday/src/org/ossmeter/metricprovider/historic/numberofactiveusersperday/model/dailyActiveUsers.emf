@@ -1,6 +1,0 @@
-package org.ossmeter.metricprovider.historic.numberofactiveusersperday.model;
-
-class DailyActiveUsers {
-	attr int numberOfActiveUsers;
-}
-

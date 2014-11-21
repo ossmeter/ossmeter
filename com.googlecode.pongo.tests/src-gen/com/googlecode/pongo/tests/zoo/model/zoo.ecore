@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="ASCII"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="com.googlecode.pongo.tests.zoo.model">
+  <eClassifiers xsi:type="ecore:EClass" name="Zoo">
+    <eAnnotations source="db"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="animals" upperBound="-1" eType="//Animal" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="buildings" upperBound="-1" eType="//Building" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="staff" upperBound="-1" eType="//Staff" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Animal" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="species">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name">
+      <eAnnotations source="searchable"/>
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="weight">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="height">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="age">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="origin">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Mammal" abstract="true" eSuperTypes="//Animal"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Amphibian" abstract="true" eSuperTypes="//Animal"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Reptile" abstract="true" eSuperTypes="//Animal"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Bird" abstract="true" eSuperTypes="//Animal"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Fish" abstract="true" eSuperTypes="//Animal"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Monkey" eSuperTypes="//Mammal"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Tiger" eSuperTypes="//Mammal"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Zebra" eSuperTypes="//Mammal"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Shark" eSuperTypes="//Fish"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Building" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Cafe" eSuperTypes="//Building"/>
+  <eClassifiers xsi:type="ecore:EClass" name="TicketOffice" eSuperTypes="//Building"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Enclosure" eSuperTypes="//Building"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Staff" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="address">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="age">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Keeper" eSuperTypes="//Staff">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="animals" upperBound="-1" eType="//Animal"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GeneralStaff" eSuperTypes="//Staff">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="buildings" upperBound="-1" eType="//Building"/>
+  </eClassifiers>
+</ecore:EPackage>

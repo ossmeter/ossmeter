@@ -5,7 +5,6 @@ class NewsgroupsSeveritySentimentHistoricMetric {
 }
 
 class SeverityLevel {
-	attr String url;
 	attr String severityLevel;
 	attr int numberOfThreads;
 	attr float averageSentiment;

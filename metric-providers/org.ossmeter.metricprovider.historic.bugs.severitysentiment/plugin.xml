@@ -2,12 +2,13 @@
 <plugin>
   
   <extension point="org.ossmeter.platform.visualisation.metric">
-     <visualisation/>
+     <visualisation json="vis/historic.bugs.severitysentiment.json"/>
   </extension>
   <extension point="org.ossmeter.platform.metricprovider">
      <metricProvider provider="org.ossmeter.metricprovider.historic.bugs.severitysentiment.SeveritySentimentHistoricMetricProvider">
      </metricProvider>
   </extension>
+
 
 
 <extension point="com.googlecode.pongo.runtime.osgi">

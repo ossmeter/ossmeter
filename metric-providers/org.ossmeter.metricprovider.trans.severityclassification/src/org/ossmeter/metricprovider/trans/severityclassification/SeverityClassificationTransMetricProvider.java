@@ -182,7 +182,7 @@ public class SeverityClassificationTransMetricProvider  implements ITransientMet
 					} else {
 						CommunicationChannelArticle deltaArticle = 
 								articlesDeltaArticles.get(articleData.getArticleNumber());
-						classifier.add(newsgroup.getUrl(), deltaArticle, threadId);
+						classifier.add(newsgroup.getNewsGroupName(), deltaArticle, threadId);
 						
 						NewsgroupArticleData newsgroupArticleData = 
 								prepareNewsgroupArticleData(classifier, newsgroup, deltaArticle, threadId);
@@ -243,13 +243,13 @@ public class SeverityClassificationTransMetricProvider  implements ITransientMet
 			
 			for (ThreadData threadData: usedClassifier.getThreads()) {
 				
-				String url = threadData.getArticles().get(0).getUrl_name();
+				String newsgroupName = threadData.getArticles().get(0).getNewsgroupName();
 				int threadId = threadData.getThreadId();
-				ClassifierMessage classifierMessage =  prepareNewsgroupClassifierMessage(url, threadId);
+				ClassifierMessage classifierMessage =  prepareNewsgroupClassifierMessage(newsgroupName, threadId);
 				String severity = classifier.getClassificationResult(classifierMessage);
 				
 				NewsgroupThreadData newsgroupThreadData = new NewsgroupThreadData();
-				newsgroupThreadData.setUrl(url);
+				newsgroupThreadData.setNewsgroupName(newsgroupName);
 				newsgroupThreadData.setThreadId(threadId);
 				newsgroupThreadData.setSeverity(severity);
 				db.getNewsgroupThreads().add(newsgroupThreadData);
@@ -304,10 +304,10 @@ public class SeverityClassificationTransMetricProvider  implements ITransientMet
 	private NewsgroupArticleData prepareNewsgroupArticleData(Classifier classifier, NntpNewsGroup newsgroup,
 															 CommunicationChannelArticle deltaArticle, int threadId) {
 		ClassificationInstance instanceToStore = 
-							new ClassificationInstance(newsgroup.getUrl(), deltaArticle, threadId);
+							new ClassificationInstance(newsgroup.getNewsGroupName(), deltaArticle, threadId);
 		
 		NewsgroupArticleData newsgroupArticleData = new NewsgroupArticleData();
-		newsgroupArticleData.setUrl(newsgroup.getUrl());
+		newsgroupArticleData.setNewsGroupName(newsgroup.getNewsGroupName());
 		newsgroupArticleData.setArticleNumber(deltaArticle.getArticleNumber());
 
 		for (int unigramId: classifier.getUnigramOrders(instanceToStore.getUnigrams()))
@@ -365,9 +365,9 @@ public class SeverityClassificationTransMetricProvider  implements ITransientMet
         return classifierMessage;
 	}
 	
-	private ClassifierMessage prepareNewsgroupClassifierMessage(String url, int threadId) {
+	private ClassifierMessage prepareNewsgroupClassifierMessage(String newsgroupName, int threadId) {
 		ClassifierMessage classifierMessage = new ClassifierMessage();
-		classifierMessage.setUrl(url);
+		classifierMessage.setNewsgroupName(newsgroupName);
 		classifierMessage.setThreadId(threadId);
         return classifierMessage;
 	}
@@ -406,7 +406,7 @@ public class SeverityClassificationTransMetricProvider  implements ITransientMet
 							SeverityClassificationTransMetric db, NntpNewsGroup newsgroup) {
 		Map<Integer, FeatureIdCollection> articlesFeatureIdCollections = new HashMap<Integer, FeatureIdCollection>();
 		Iterable<NewsgroupArticleData> newsgroupArticleDataIt = 
-						db.getNewsgroupArticles().find(NewsgroupArticleData.URL.eq(newsgroup.getUrl()));
+						db.getNewsgroupArticles().find(NewsgroupArticleData.NEWSGROUPNAME.eq(newsgroup.getNewsGroupName()));
 		for (NewsgroupArticleData newsgroupArticleData:  newsgroupArticleDataIt) {
 			FeatureIdCollection featureIdCollection = new FeatureIdCollection();
 			if (newsgroupArticleData!=null) {

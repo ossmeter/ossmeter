@@ -26,7 +26,7 @@ public class NntpUtil {
 
 		NNTPClient client = new NNTPClient();
 		client.setDefaultPort(newsgroup.getPort());
-		String serverUrl = newsgroup.getUrl().substring(0, newsgroup.getUrl().lastIndexOf("/"));		
+		String serverUrl = newsgroup.getUrl();		
 		try {
 			client.connect(serverUrl);
 			if (newsgroup.getAuthenticationRequired()) {

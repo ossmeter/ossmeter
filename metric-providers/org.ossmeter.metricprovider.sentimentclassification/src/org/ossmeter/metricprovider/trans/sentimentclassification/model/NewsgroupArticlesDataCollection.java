@@ -8,19 +8,19 @@ public class NewsgroupArticlesDataCollection extends PongoCollection<NewsgroupAr
 	
 	public NewsgroupArticlesDataCollection(DBCollection dbCollection) {
 		super(dbCollection);
-		createIndex("url");
+		createIndex("newsGroupName");
 	}
 	
 	public Iterable<NewsgroupArticlesData> findById(String id) {
 		return new IteratorIterable<NewsgroupArticlesData>(new PongoCursorIterator<NewsgroupArticlesData>(this, dbCollection.find(new BasicDBObject("_id", id))));
 	}
 	
-	public Iterable<NewsgroupArticlesData> findByUrl(String q) {
-		return new IteratorIterable<NewsgroupArticlesData>(new PongoCursorIterator<NewsgroupArticlesData>(this, dbCollection.find(new BasicDBObject("url", q + ""))));
+	public Iterable<NewsgroupArticlesData> findByNewsGroupName(String q) {
+		return new IteratorIterable<NewsgroupArticlesData>(new PongoCursorIterator<NewsgroupArticlesData>(this, dbCollection.find(new BasicDBObject("newsGroupName", q + ""))));
 	}
 	
-	public NewsgroupArticlesData findOneByUrl(String q) {
-		NewsgroupArticlesData newsgroupArticlesData = (NewsgroupArticlesData) PongoFactory.getInstance().createPongo(dbCollection.findOne(new BasicDBObject("url", q + "")));
+	public NewsgroupArticlesData findOneByNewsGroupName(String q) {
+		NewsgroupArticlesData newsgroupArticlesData = (NewsgroupArticlesData) PongoFactory.getInstance().createPongo(dbCollection.findOne(new BasicDBObject("newsGroupName", q + "")));
 		if (newsgroupArticlesData != null) {
 			newsgroupArticlesData.setPongoCollection(this);
 		}
@@ -28,8 +28,8 @@ public class NewsgroupArticlesDataCollection extends PongoCollection<NewsgroupAr
 	}
 	
 
-	public long countByUrl(String q) {
-		return dbCollection.count(new BasicDBObject("url", q + ""));
+	public long countByNewsGroupName(String q) {
+		return dbCollection.count(new BasicDBObject("newsGroupName", q + ""));
 	}
 	
 	@Override

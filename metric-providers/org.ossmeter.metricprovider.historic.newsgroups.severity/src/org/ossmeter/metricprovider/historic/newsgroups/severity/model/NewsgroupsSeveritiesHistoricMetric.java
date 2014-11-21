@@ -1,9 +1,10 @@
 package org.ossmeter.metricprovider.historic.newsgroups.severity.model;
 
-import com.mongodb.*;
-import java.util.*;
-import com.googlecode.pongo.runtime.*;
-import com.googlecode.pongo.runtime.querying.*;
+import java.util.List;
+
+import com.googlecode.pongo.runtime.Pongo;
+import com.googlecode.pongo.runtime.PongoList;
+import com.mongodb.BasicDBList;
 
 
 public class NewsgroupsSeveritiesHistoricMetric extends Pongo {

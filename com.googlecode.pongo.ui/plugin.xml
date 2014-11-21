@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="com.googlecode.pongo.ui.emfatic"
+            nameFilter="*.*"
+            objectClass="org.eclipse.core.resources.IFile">
+         <menu
+               label="Pongo"
+               path="additions"
+               id="com.googlecode.pongo.menu1">
+            <separator
+                  name="group1">
+            </separator>
+         </menu>
+         <action
+               class="com.googlecode.pongo.ui.PongoObjectActionDelegate"
+               enablesFor="1"
+               icon="icons/generateall.png"
+               id="com.googlecode.pongo.generatepongos"
+               label="Generate Pongos"
+               menubarPath="com.googlecode.pongo.menu1/group1">
+         </action>
+         <action
+               class="com.googlecode.pongo.ui.PongoObjectActionDelegate"
+               enablesFor="1"
+               icon="icons/generateall.png"
+               id="com.googlecode.pongo.generatepongosandpluginxml"
+               label="Generate Pongos and plugin.xml"
+               menubarPath="com.googlecode.pongo.menu1/group1">
+         </action>
+         <visibility>
+            <or>
+               <objectState
+                     name="name"
+                     value="*.emf">
+               </objectState>
+               <objectState
+                     name="name"
+                     value="*.ecore">
+               </objectState>
+            </or>
+         </visibility>
+      </objectContribution>
+
+   </extension>
+
+</plugin>

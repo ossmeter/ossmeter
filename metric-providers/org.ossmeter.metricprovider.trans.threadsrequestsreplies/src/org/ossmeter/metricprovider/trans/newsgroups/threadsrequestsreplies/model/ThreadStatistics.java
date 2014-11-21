@@ -11,7 +11,7 @@ public class ThreadStatistics extends Pongo {
 	
 	public ThreadStatistics() { 
 		super();
-		URL_NAME.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.model.ThreadStatistics");
+		NEWSGROUPNAME.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.model.ThreadStatistics");
 		THREADID.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.model.ThreadStatistics");
 		FIRSTREQUEST.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.model.ThreadStatistics");
 		ANSWERED.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.model.ThreadStatistics");
@@ -19,7 +19,7 @@ public class ThreadStatistics extends Pongo {
 		RESPONSEDATE.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.model.ThreadStatistics");
 	}
 	
-	public static StringQueryProducer URL_NAME = new StringQueryProducer("url_name"); 
+	public static StringQueryProducer NEWSGROUPNAME = new StringQueryProducer("newsgroupName"); 
 	public static NumericalQueryProducer THREADID = new NumericalQueryProducer("threadId");
 	public static StringQueryProducer FIRSTREQUEST = new StringQueryProducer("firstRequest"); 
 	public static StringQueryProducer ANSWERED = new StringQueryProducer("answered"); 
@@ -27,12 +27,12 @@ public class ThreadStatistics extends Pongo {
 	public static StringQueryProducer RESPONSEDATE = new StringQueryProducer("responseDate"); 
 	
 	
-	public String getUrl_name() {
-		return parseString(dbObject.get("url_name")+"", "");
+	public String getNewsgroupName() {
+		return parseString(dbObject.get("newsgroupName")+"", "");
 	}
 	
-	public ThreadStatistics setUrl_name(String url_name) {
-		dbObject.put("url_name", url_name);
+	public ThreadStatistics setNewsgroupName(String newsgroupName) {
+		dbObject.put("newsgroupName", newsgroupName);
 		notifyChanged();
 		return this;
 	}

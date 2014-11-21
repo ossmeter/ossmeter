@@ -27,7 +27,7 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NewsgroupArticles">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="newsgroupName">
       <eAnnotations source="searchable"/>
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>

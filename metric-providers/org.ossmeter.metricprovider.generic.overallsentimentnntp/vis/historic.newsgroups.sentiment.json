@@ -2,7 +2,7 @@
 	"metricid" : "org.ossmeter.metricprovider.historic.newsgroups.sentiment",
 	"vis" : [ 
 		{
-			"id" : "bugs.sentiment",
+			"id" : "newsgroups.sentiment",
 			"name" : "Average Sentiment: Overall, at Thread Beginning and at Thread End.",
 			"description" : "The average sentiment per newsgroup up to and including the processing date." ,
 			"type" : "LineChart",

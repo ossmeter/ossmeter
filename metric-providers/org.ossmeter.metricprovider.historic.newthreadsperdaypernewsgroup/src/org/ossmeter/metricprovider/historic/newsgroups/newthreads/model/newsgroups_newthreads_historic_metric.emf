@@ -7,7 +7,7 @@ class NewsgroupsNewThreadsHistoricMetric {
 }
 
 class DailyNewsgroupData {
-   attr String url_name;
+   attr String newsgroupName;
    attr int numberOfNewThreads;
    attr int cumulativeNumberOfNewThreads;
 }

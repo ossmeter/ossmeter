@@ -49,7 +49,8 @@ public class ProjectCreationUtil {
 		project.setShortName(name);
 		
 		NntpNewsGroup newsGroup = new NntpNewsGroup();
-		newsGroup.setUrl(url+'/' + newsGroupName);
+		newsGroup.setUrl(url);
+		newsGroup.setNewsGroupName(newsGroupName);
 		newsGroup.setAuthenticationRequired(authenticationRequired);
 		newsGroup.setUsername(username);
 		newsGroup.setPassword(password);

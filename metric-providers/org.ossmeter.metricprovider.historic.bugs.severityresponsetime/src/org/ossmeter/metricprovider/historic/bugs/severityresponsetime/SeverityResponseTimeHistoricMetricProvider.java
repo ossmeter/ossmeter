@@ -55,16 +55,15 @@ public class SeverityResponseTimeHistoricMetricProvider extends AbstractHistoric
 			BugsRequestsRepliesTransMetric bugsRequestsReplies = 
 					((BugsRequestsRepliesTransMetricProvider)uses.get(1)).adapt(context.getProjectDB(project));
 
-			Map<String, Map<String, Integer>> severitiesPerTracker = new HashMap<String, Map<String, Integer>>();
-			Map<String, Map<String, Long>> durations = new HashMap<String, Map<String, Long>>();
+			Map<String, Integer> severities = new HashMap<String, Integer>();
+			Map<String, Long> durations = new HashMap<String, Long>();
 			 
 			 for (BugTrackerBugsData bugTrackerBugsData: severityClassifier.getBugTrackerBugs()) {
 				 
 				 String trackerId = bugTrackerBugsData.getBugTrackerId();
 				 
 				 String severity = bugTrackerBugsData.getSeverity();
-				 Map<String, Integer> severityMap = retrieveOrAdd(severitiesPerTracker, trackerId);
-				 addOrIncrease(severityMap, severity);
+				 addOrIncrease(severities, severity);
 			 
 				 BugStatistics bugStatistics = null;
 				 Iterable<BugStatistics> bugStatisticsIt = bugsRequestsReplies.getBugs().
@@ -72,35 +71,26 @@ public class SeverityResponseTimeHistoricMetricProvider extends AbstractHistoric
 						 							 			BugStatistics.BUGID.eq(bugTrackerBugsData.getBugId()));
 				 for (BugStatistics bd: bugStatisticsIt) bugStatistics = bd;
 
-				 if ((bugStatistics!=null) && bugStatistics.getAnswered()) {
-					 Map<String, Long> sevMap = retrieveOrAddLong(durations, trackerId);
-					 addOrIncrease(sevMap, severity, bugStatistics.getResponseDurationSec());
-				 }
+				 if ((bugStatistics!=null) && bugStatistics.getAnswered())
+					 addOrIncrease(durations, severity, bugStatistics.getResponseDurationSec());
 
 			 }
 			 
-			 for (String bugTrackerId: severitiesPerTracker.keySet()) {
-			 
-				 Map<String, Integer> severityMap = severitiesPerTracker.get(bugTrackerId);
+			 for (String severity: severities.keySet()) {
+				 int numberOfSeverityBugs = severities.get(severity);
+				 SeverityLevel severityLevel = new SeverityLevel();
+				 severityLevel.setSeverityLevel(severity);
+				 severityLevel.setNumberOfBugs(numberOfSeverityBugs);
 				 
-				 for (String severity: severityMap.keySet()) {
-					 int numberOfSeverityBugs = severityMap.get(severity);
-					 SeverityLevel severityLevel = new SeverityLevel();
-					 severityLevel.setBugTrackerId(bugTrackerId);
-					 severityLevel.setSeverityLevel(severity);
-					 severityLevel.setNumberOfBugs(numberOfSeverityBugs);
-					 
-					 long duration = getValueLong(durations, bugTrackerId, severity);
-					 if (duration > 0) {
-						 long avgResponseTime = computeAverageDuration(duration, numberOfSeverityBugs);
-						 severityLevel.setAvgResponseTime(avgResponseTime);
-						 String avgResponseTimeFormatted = format(avgResponseTime);
-						 severityLevel.setAvgResponseTimeFormatted(avgResponseTimeFormatted);
-					 }
-
-					 metric.getSeverityLevels().add(severityLevel);
-				 }
-			 
+				 long duration = getValueLong(durations, severity);
+				 long avgResponseTime = 0;
+				 if (duration > 0)
+					 avgResponseTime = computeAverageDuration(duration, numberOfSeverityBugs);
+				 severityLevel.setAvgResponseTime(avgResponseTime);
+				 String avgResponseTimeFormatted = format(avgResponseTime);
+				 severityLevel.setAvgResponseTimeFormatted(avgResponseTimeFormatted);
+				 
+				 metric.getSeverityLevels().add(severityLevel);
 			 }
 			 
 		}
@@ -130,30 +120,6 @@ public class SeverityResponseTimeHistoricMetricProvider extends AbstractHistoric
 		return formatted;
 	}
 			
-	private Map<String, Integer> retrieveOrAdd(
-								 Map<String, Map<String, Integer>> map, String trackerId) {
-		 Map<String, Integer> component;
-		 if (map.containsKey(trackerId))
-			 component = map.get(trackerId);
-		 else {
-			 component = new HashMap<String, Integer>();
-			 map.put(trackerId, component);
-		 }
-		return component;
-	}
-
-	private Map<String, Long> retrieveOrAddLong(
-								Map<String, Map<String, Long>> map, String trackerId) {
-		Map<String, Long> component;
-		if (map.containsKey(trackerId))
-			component = map.get(trackerId);
-		else {
-			component = new HashMap<String, Long>();
-			map.put(trackerId, component);
-		}
-		return component;
-	}
-	
 	private void addOrIncrease(Map<String, Integer> map, String item) {
 		if (map.containsKey(item))
 			map.put(item, map.get(item) + 1);
@@ -168,12 +134,10 @@ public class SeverityResponseTimeHistoricMetricProvider extends AbstractHistoric
 			map.put(item, increment);
 	}
 
-	private long getValueLong(Map<String, Map<String, Long>> map,	String item, String component) {
-		if (!map.containsKey(item))
+	private long getValueLong(Map<String, Long> map, String component) {
+		if (!map.containsKey(component))
 			return 0;
-		if (!map.get(item).containsKey(component))
-			return 0;
-		return map.get(item).get(component);
+		return map.get(component);
 	}
 	
 	@Override

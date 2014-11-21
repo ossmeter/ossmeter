@@ -18,7 +18,7 @@ class BugTrackerCommentsData {
 
 class NewsgroupArticlesData {
 	@searchable
-   	attr String url;
+   	attr String newsGroupName;
    	attr int articleNumber;
    	attr String classificationResult;
    	attr String emotionalDimensions;

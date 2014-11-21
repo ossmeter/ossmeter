@@ -6,6 +6,6 @@ class NewsgroupsUnansweredThreadsHistoricMetric {
 }
 
 class DailyNewsgroupData {
-	attr String url_name;
+	attr String newsgroupName;
 	attr int numberOfUnansweredThreads;
 }

@@ -1,6 +1,7 @@
 package org.ossmeter.factoid.newsgroups.status;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -52,9 +53,9 @@ public class NewsgroupsChannelStatusFactoid extends AbstractFactoidMetricProvide
 
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return Arrays.asList(NewsgroupsUnansweredThreadsHistoricMetric.class.getCanonicalName(),
-							 NewsgroupsRequestsRepliesHistoricMetric.class.getCanonicalName(),
-							 NewsgroupsRequestsRepliesAverageHistoricMetric.class.getCanonicalName());
+		return Arrays.asList(UnansweredThreadsHistoricMetricProvider.IDENTIFIER,
+							 RequestsRepliesHistoricMetricProvider.IDENTIFIER,
+							 RequestsRepliesAverageHistoricMetricProvider.IDENTIFIER);
 	}
 
 	@Override
@@ -68,15 +69,35 @@ public class NewsgroupsChannelStatusFactoid extends AbstractFactoidMetricProvide
 		factoid.setName("");
 		factoid.setName("Newsgroup Channel Status Factoid");
 
-		UnansweredThreadsHistoricMetricProvider unansweredThreadsProvider = 
-				new UnansweredThreadsHistoricMetricProvider();
-		RequestsRepliesHistoricMetricProvider requestsRepliesProvider = 
-				new RequestsRepliesHistoricMetricProvider();
-		RequestsRepliesAverageHistoricMetricProvider requestsRepliesAverageProvider = 
-				new RequestsRepliesAverageHistoricMetricProvider();
+		UnansweredThreadsHistoricMetricProvider unansweredThreadsProvider = null;
+		RequestsRepliesHistoricMetricProvider requestsRepliesProvider = null;
+		RequestsRepliesAverageHistoricMetricProvider requestsRepliesAverageProvider = null; 
 		
+		for (IMetricProvider m : this.uses) {
+			if (m instanceof UnansweredThreadsHistoricMetricProvider) {
+				unansweredThreadsProvider = (UnansweredThreadsHistoricMetricProvider) m;
+				continue;
+			}
+			if (m instanceof RequestsRepliesHistoricMetricProvider) {
+				requestsRepliesProvider = (RequestsRepliesHistoricMetricProvider) m;
+				continue;
+			}
+			if (m instanceof RequestsRepliesAverageHistoricMetricProvider) {
+				requestsRepliesAverageProvider = (RequestsRepliesAverageHistoricMetricProvider) m;
+				continue;
+			}
+		}
+
 		Date end = new Date();
 		Date start = new Date();
+//		Date start=null, end=null;
+//		try {
+//			start = new Date("20040801");
+//			end = new Date("20050801");
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		List<Pongo> unansweredThreadsList = 
 						unansweredThreadsProvider.getHistoricalMeasurements(context, project, start, end),
 					requestsRepliesList = 
@@ -92,33 +113,42 @@ public class NewsgroupsChannelStatusFactoid extends AbstractFactoidMetricProvide
 			numberOfArticles = numberOfReplies + numberOfRequests,
 			numberOfUnsweredThreads = getNumberOfUnansweredThreads(unansweredThreadsList);
 				
-		float percentageOfRequests = ( (float) 100 * numberOfRequests ) / numberOfArticles,
-			  percentageOfReplies = ( (float) 100 * numberOfReplies ) / numberOfArticles,
+		float percentageOfRequests = 0,
+			  percentageOfReplies = 0,
 			  numberOfRequestsPerDay = getNumberOfRequestsPerDay(averageRequestsRepliesList),
 			  numberOfRepliesPerDay = getNumberOfRepliesPerDay(averageRequestsRepliesList),
 			  numberOfArticlesPerDay = numberOfRequestsPerDay + numberOfRepliesPerDay,
-			  percentageOfRequestsPerDay = ( (float) 100 * numberOfRequestsPerDay ) / numberOfArticlesPerDay,
-			  percentageOfRepliesPerDay = ( (float) 100 * numberOfRepliesPerDay ) / numberOfArticlesPerDay;
+			  percentageOfRequestsPerDay = 0,
+			  percentageOfRepliesPerDay = 0;
 
-		stringBuffer.append("The project's newsgroup ");
-		stringBuffer.append(" hosts ");
+		if (numberOfArticles>0) {
+			percentageOfRequests = ( (float) 100 * numberOfRequests ) / numberOfArticles;
+			percentageOfReplies = ( (float) 100 * numberOfReplies ) / numberOfArticles;
+		}
+		
+		if (numberOfArticlesPerDay>0) {
+			percentageOfRequestsPerDay = ( (float) 100 * numberOfRequestsPerDay ) / numberOfArticlesPerDay;
+			percentageOfRepliesPerDay = ( (float) 100 * numberOfRepliesPerDay ) / numberOfArticlesPerDay;
+		}
+
+		stringBuffer.append("The project's newsgroup hosts ");
 		stringBuffer.append(numberOfRequests);
 		stringBuffer.append(" requests (");
-		stringBuffer.append(percentageOfRequests);
+		stringBuffer.append(decimalFormat.format(percentageOfRequests));
 		stringBuffer.append(" %) and ");
 		stringBuffer.append(numberOfReplies);
 		stringBuffer.append(" replies (");
-		stringBuffer.append(percentageOfReplies);
+		stringBuffer.append(decimalFormat.format(percentageOfReplies));
 		stringBuffer.append(" %), showing that requests are on average replied ");
-		if ( numberOfReplies > 75 ) {
+		if ( percentageOfReplies > 75 ) {
 			stringBuffer.append("excellent");
 			factoid.setStars(StarRating.FOUR);
 		}
-		else if ( numberOfReplies > 50 ) {
+		else if ( percentageOfReplies > 50 ) {
 			stringBuffer.append("well");
 			factoid.setStars(StarRating.THREE);
 		}
-		else if ( numberOfReplies > 25 ) {
+		else if ( percentageOfReplies > 25 ) {
 			stringBuffer.append("fairly well");
 			factoid.setStars(StarRating.TWO);
 		}
@@ -174,7 +204,7 @@ public class NewsgroupsChannelStatusFactoid extends AbstractFactoidMetricProvide
 			NewsgroupsRequestsRepliesHistoricMetric threadsPongo = 
 					(NewsgroupsRequestsRepliesHistoricMetric) 
 							requestsRepliesList.get(requestsRepliesList.size() - 1);
-			return threadsPongo.getNumberOfRequests();
+			return threadsPongo.getCumulativeNumberOfRequests();
 		}
 		return 0;
 	}
@@ -184,7 +214,7 @@ public class NewsgroupsChannelStatusFactoid extends AbstractFactoidMetricProvide
 			NewsgroupsRequestsRepliesHistoricMetric threadsPongo = 
 					(NewsgroupsRequestsRepliesHistoricMetric) 
 							requestsRepliesList.get(requestsRepliesList.size() - 1);
-			return threadsPongo.getNumberOfReplies();
+			return threadsPongo.getCumulativeNumberOfReplies();
 		}
 		return 0;
 	}

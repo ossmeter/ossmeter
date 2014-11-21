@@ -72,22 +72,14 @@ public class StatusHistoricMetricProvider extends AbstractHistoricalMetricProvid
 				 if (bugData.getResolution().toLowerCase().equals("duplicate"))
 					 numberOfDuplicateBugs++;
 			 }
-			 if (usedBhm.getBugData().size() > 0)
-				 bugStatus.setNumberOfBugs(usedBhm.getBugData().size());
-			 if (numberOfResolvedClosedBugs > 0)
-				 bugStatus.setNumberOfResolvedClosedBugs(numberOfResolvedClosedBugs);
-			 if (numberOfWontFixBugs > 0)
-				 bugStatus.setNumberOfWontFixBugs(numberOfWontFixBugs);
-			 if (numberOfWorksForMeBugs > 0)
-				 bugStatus.setNumberOfWorksForMeBugs(numberOfWorksForMeBugs);
-			 if (numberOfNonResolvedClosedBugs > 0)
-				 bugStatus.setNumberOfNonResolvedClosedBugs(numberOfNonResolvedClosedBugs);
-			 if (numberOfInvalidBugs > 0)
-				 bugStatus.setNumberOfInvalidBugs(numberOfInvalidBugs);
-			 if (numberOfFixedBugs > 0)
-				 bugStatus.setNumberOfFixedBugs(numberOfFixedBugs);
-			 if (numberOfDuplicateBugs > 0)
-				 bugStatus.setNumberOfDuplicateBugs(numberOfDuplicateBugs);
+			 bugStatus.setNumberOfBugs(usedBhm.getBugData().size());
+			 bugStatus.setNumberOfResolvedClosedBugs(numberOfResolvedClosedBugs);
+			 bugStatus.setNumberOfWontFixBugs(numberOfWontFixBugs);
+			 bugStatus.setNumberOfWorksForMeBugs(numberOfWorksForMeBugs);
+			 bugStatus.setNumberOfNonResolvedClosedBugs(numberOfNonResolvedClosedBugs);
+			 bugStatus.setNumberOfInvalidBugs(numberOfInvalidBugs);
+			 bugStatus.setNumberOfFixedBugs(numberOfFixedBugs);
+			 bugStatus.setNumberOfDuplicateBugs(numberOfDuplicateBugs);
 		}
 		return bugStatus;
 	}

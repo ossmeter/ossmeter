@@ -1,11 +1,11 @@
 package org.ossmeter.factoid.bugs.responsetime;
 
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 
 import org.ossmeter.metricprovider.historic.bugs.responsetime.ResponseTimeHistoricMetricProvider;
 import org.ossmeter.metricprovider.historic.bugs.responsetime.model.BugsResponseTimeHistoricMetric;
-import org.ossmeter.metricprovider.historic.bugs.severityresponsetime.model.BugsSeverityResponseTimeHistoricMetric;
 import org.ossmeter.platform.AbstractFactoidMetricProvider;
 import org.ossmeter.platform.Date;
 import org.ossmeter.platform.IMetricProvider;
@@ -43,8 +43,7 @@ public class BugsChannelResponseTimeFactoid extends AbstractFactoidMetricProvide
 
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return Arrays.asList(BugsResponseTimeHistoricMetric.class.getCanonicalName(),
-							 BugsSeverityResponseTimeHistoricMetric.class.getCanonicalName());
+		return Arrays.asList(ResponseTimeHistoricMetricProvider.IDENTIFIER);
 	}
 
 	@Override
@@ -57,17 +56,30 @@ public class BugsChannelResponseTimeFactoid extends AbstractFactoidMetricProvide
 //		factoid.setCategory(FactoidCategory.BUGS);
 		factoid.setName("Bug Channel Response Time Factoid");
 
-		ResponseTimeHistoricMetricProvider responseTimeProvider = new ResponseTimeHistoricMetricProvider();
-//		SeverityResponseTimeHistoricMetricProvider severityResponseTimeProvider = new SeverityResponseTimeHistoricMetricProvider();
-		
+		ResponseTimeHistoricMetricProvider responseTimeProvider = null;
+
+		for (IMetricProvider m : this.uses) {
+			if (m instanceof ResponseTimeHistoricMetricProvider) {
+				responseTimeProvider = (ResponseTimeHistoricMetricProvider) m;
+				continue;
+			}
+		}
+
 		int eightHoursMilliSeconds = 8 * 60 * 60 * 1000, 
 			dayMilliSeconds = 3 * eightHoursMilliSeconds,
 			weekMilliSeconds = 7 * dayMilliSeconds;
 		
 		Date end = new Date();
 		Date start = (new Date()).addDays(-365);
+//		Date start=null, end=null;
+//		try {
+//			start = new Date("20050301");
+//			end = new Date("20060301");
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		List<Pongo> responseTimeList = responseTimeProvider.getHistoricalMeasurements(context, project, start, end);
-//					severityResponseTimeList = severityResponseTimeProvider.getHistoricalMeasurements(context, project, start, end);
 		
 		long cumulativeAvgResponseTime = 0,
 			 yearlyAvgResponseTime = 0;
@@ -135,7 +147,10 @@ public class BugsChannelResponseTimeFactoid extends AbstractFactoidMetricProvide
 			totalBugsConsidered += responseTimePongo.getBugsConsidered();
 			totalResponseTime += responseTimePongo.getAvgResponseTime();
 		}
-		return totalResponseTime / totalBugsConsidered;
+		if (totalBugsConsidered > 0)
+			return totalResponseTime / totalBugsConsidered;
+		else
+			return 0;
 	}
 
 }

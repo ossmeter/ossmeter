@@ -5,7 +5,6 @@ class NewsgroupsSeverityResponseTimeHistoricMetric {
 }
 
 class SeverityLevel {
-	attr String url;
 	attr String severityLevel;
 	attr int numberOfThreads;
    	attr long avgResponseTime;

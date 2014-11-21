@@ -60,20 +60,18 @@ public class NewThreadsHistoricMetricProvider extends AbstractHistoricalMetricPr
 			int newThreads = newsgroups.getThreads() - newsgroups.getPreviousThreads(),
 				cumulativenewThreads = newsgroups.getThreads();
 			dailyNewThreads.getNewsgroups().add(
-					prepareNewsgroupData(newsgroups.getUrl_name(), newThreads, cumulativenewThreads));
+					prepareNewsgroupData(newsgroups.getNewsgroupName(), newThreads, cumulativenewThreads));
 			numberOfNewThreads += newThreads;
 			cumulativeNumberOfNewThreads += cumulativenewThreads;
 		}
-		if ( (numberOfNewThreads>0) || (cumulativeNumberOfNewThreads>0) ) {
-			dailyNewThreads.setNumberOfNewThreads(numberOfNewThreads);
-			dailyNewThreads.setCumulativeNumberOfNewThreads(cumulativeNumberOfNewThreads);
-		}
+		dailyNewThreads.setNumberOfNewThreads(numberOfNewThreads);
+		dailyNewThreads.setCumulativeNumberOfNewThreads(cumulativeNumberOfNewThreads);
 		return dailyNewThreads;
 	}
 			
-	private DailyNewsgroupData prepareNewsgroupData(String url_name, int newThreads, int cumulativeNewThreads) {
+	private DailyNewsgroupData prepareNewsgroupData(String newsgroupName, int newThreads, int cumulativeNewThreads) {
 		DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
-		dailyNewsgroupData.setUrl_name(url_name);
+		dailyNewsgroupData.setNewsgroupName(newsgroupName);
 		dailyNewsgroupData.setNumberOfNewThreads(newThreads);
 		dailyNewsgroupData.setCumulativeNumberOfNewThreads(cumulativeNewThreads);
 		return dailyNewsgroupData;

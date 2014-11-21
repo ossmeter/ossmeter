@@ -1,0 +1,58 @@
+package com.googlecode.pongo.tests.blog.model;
+
+@db
+class Blog {
+	val Post[*] posts;
+	val Member[*] members;
+	val Author[*] authors;
+}
+
+@customize
+class Post {
+	@searchable
+	attr String title;
+	attr String[*] tags;
+	attr int[*] ratings;
+	val Comment[*] comments;
+	ref Author author;
+	val Stats stats;
+	attr PostType type;
+}
+
+enum PostType {
+	Regular;
+	Sticky;
+}
+
+class Stats {
+	attr int pageloads;
+	attr int visitors;
+}
+
+class Comment {
+	attr String text;
+	ref Author author;
+	val Comment[*] replies;
+	ref Member[*] liked;
+	ref Member[*] disliked;
+	attr Flag[*] flags;
+}
+
+enum Flag {
+	Helpful;
+	Offensive;
+	Spam;
+}
+
+class Person {
+	@searchable
+	attr String name;
+}
+
+class Author extends Person {
+
+}
+
+class Member extends Person {
+	
+}
