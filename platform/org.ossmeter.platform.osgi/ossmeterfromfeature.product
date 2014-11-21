@@ -8,7 +8,7 @@
 
    <launcherArgs>
       <programArgs>-slave</programArgs>
-      <vmArgs>-Xmx1g</vmArgs>
+      <vmArgs>-Xmx4g</vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
    </launcherArgs>
 
