@@ -27,6 +27,11 @@ public class NntpUtil {
 		NNTPClient client = new NNTPClient();
 		client.setDefaultPort(newsgroup.getPort());
 		String serverUrl = newsgroup.getUrl();		
+		
+		if (serverUrl.endsWith("/")) {
+			serverUrl = newsgroup.getUrl().substring(0, newsgroup.getUrl().lastIndexOf("/"));
+		}
+		
 		try {
 			client.connect(serverUrl);
 			if (newsgroup.getAuthenticationRequired()) {
@@ -36,11 +41,13 @@ public class NntpUtil {
 			// TODO Auto-generated catch block
 	        System.err.println("SocketException while connecting to NNTP server: '"+ 
 	        		newsgroup.getUrl() + "': " + e.getMessage());
+	        e.printStackTrace();
 //	        System.exit(1);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 	        System.err.println("IOException while connecting to NNTP server: '"+ 
 	        		newsgroup.getUrl() + "': " + e.getMessage());
+	        e.printStackTrace();
 //	        System.exit(1);
 		}
 		return client;
@@ -55,6 +62,7 @@ public class NntpUtil {
 			// TODO Auto-generated catch block
 	        System.err.println("IOException while selecting newsgroup: '"+ 
 	        		newsgroupName + "': " + e.getMessage());
+	        e.printStackTrace();
 		}
 		return newsgroupInfo;
 	}
