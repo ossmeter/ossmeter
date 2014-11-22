@@ -11,7 +11,7 @@ public class EmotionDimension extends Pongo {
 	
 	public EmotionDimension() { 
 		super();
-		URL_NAME.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.emotions.model.EmotionDimension");
+		NEWSGROUPNAME.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.emotions.model.EmotionDimension");
 		EMOTIONLABEL.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.emotions.model.EmotionDimension");
 		NUMBEROFARTICLES.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.emotions.model.EmotionDimension");
 		CUMULATIVENUMBEROFARTICLES.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.emotions.model.EmotionDimension");
@@ -19,7 +19,7 @@ public class EmotionDimension extends Pongo {
 		CUMULATIVEPERCENTAGE.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.emotions.model.EmotionDimension");
 	}
 	
-	public static StringQueryProducer URL_NAME = new StringQueryProducer("url_name"); 
+	public static StringQueryProducer NEWSGROUPNAME = new StringQueryProducer("newsgroupName"); 
 	public static StringQueryProducer EMOTIONLABEL = new StringQueryProducer("emotionLabel"); 
 	public static NumericalQueryProducer NUMBEROFARTICLES = new NumericalQueryProducer("numberOfArticles");
 	public static NumericalQueryProducer CUMULATIVENUMBEROFARTICLES = new NumericalQueryProducer("cumulativeNumberOfArticles");
@@ -27,12 +27,12 @@ public class EmotionDimension extends Pongo {
 	public static NumericalQueryProducer CUMULATIVEPERCENTAGE = new NumericalQueryProducer("cumulativePercentage");
 	
 	
-	public String getUrl_name() {
-		return parseString(dbObject.get("url_name")+"", "");
+	public String getNewsgroupName() {
+		return parseString(dbObject.get("newsgroupName")+"", "");
 	}
 	
-	public EmotionDimension setUrl_name(String url_name) {
-		dbObject.put("url_name", url_name);
+	public EmotionDimension setNewsgroupName(String newsgroupName) {
+		dbObject.put("newsgroupName", newsgroupName);
 		notifyChanged();
 		return this;
 	}

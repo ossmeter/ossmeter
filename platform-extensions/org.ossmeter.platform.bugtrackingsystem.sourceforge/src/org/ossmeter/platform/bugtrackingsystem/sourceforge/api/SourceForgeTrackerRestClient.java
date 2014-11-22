@@ -174,8 +174,12 @@ public class SourceForgeTrackerRestClient {
 
 		// Should have 1 attachment and 4 labels
 		SourceForgeTicket ticket = sourceforge.getTicket(663);
+		System.out.println(ticket.getBugId());
+		System.out.println(ticket.getComments().size());
 		System.out.println(ticket.getAttachments().length);
+		System.out.println(ticket.getAttachments().toString());
 		System.out.println(ticket.getLabels().length);
+		System.out.println(ticket.getLabels().toString());
 
 		sourceforge.shutdown();
 

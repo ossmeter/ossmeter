@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?eclipse version="3.4"?><plugin>
+   
+
+<extension point="com.googlecode.pongo.runtime.osgi">
+    <class name="com.googlecode.pongo.tests.ossmeter.model.Ossmeter"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.Project"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.SizeFact"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.MonthDownload"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.ActivityFact"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.SVNRepository"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.MercurialRepository"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.License"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.GITRepository"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.GITContent"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.GITDownload"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.GITCommit"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.GITIssue"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.GITComment"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.IssueLabel"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.IssueMilestone"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.GITUser"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.EclipseForgeProject"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.GoogleForgeProject"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.GoogleWiki"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.GoogleIssue"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.GoogleIssueComment"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.GoogleLabel"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.GoogleDownload"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.GoogleUser"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.SourceForgeProject"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.OS"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.Topic"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.ProgrammingLanguage"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.Audience"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.Translation"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.Environment"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.Category"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.Maintainer"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.Developer"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.Donation"/>
+    <class name="com.googlecode.pongo.tests.ossmeter.model.Bug"/>
+  </extension>
+</plugin>

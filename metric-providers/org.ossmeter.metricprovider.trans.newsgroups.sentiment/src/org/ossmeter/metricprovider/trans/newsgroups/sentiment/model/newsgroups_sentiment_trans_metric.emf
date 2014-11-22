@@ -7,7 +7,7 @@ class NewsgroupsSentimentTransMetric {
 
 class ThreadStatistics {
    @searchable
-   attr String url_name;
+   attr String newsgroupName;
    @searchable
    attr int threadId;
    attr float averageSentiment;

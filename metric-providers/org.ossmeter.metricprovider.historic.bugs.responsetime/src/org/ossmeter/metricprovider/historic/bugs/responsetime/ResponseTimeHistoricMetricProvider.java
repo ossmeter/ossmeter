@@ -83,23 +83,25 @@ public class ResponseTimeHistoricMetricProvider extends AbstractHistoricalMetric
 		
 		BugsResponseTimeHistoricMetric dailyAverageThreadResponseTime = new BugsResponseTimeHistoricMetric();
 
-		if ( (bugsConsidered>0) || (cumulativeBugsConsidered>0) ) {
-			
-			dailyAverageThreadResponseTime.setBugTrackerId(bugTrackerId);
-			dailyAverageThreadResponseTime.setBugsConsidered(bugsConsidered);
-			dailyAverageThreadResponseTime.setCumulativeBugsConsidered(cumulativeBugsConsidered);
-			
-			long avgResponseTime = computeAverageDuration(sumOfDurations, bugsConsidered);
-			dailyAverageThreadResponseTime.setAvgResponseTime(avgResponseTime);
-			String avgResponseTimeFormatted = format(avgResponseTime);
-			dailyAverageThreadResponseTime.setAvgResponseTimeFormatted(avgResponseTimeFormatted);
-			
-			long cumulativeAvgResponseTime = 
-					computeAverageDuration(cumulativeSumOfDurations, cumulativeBugsConsidered);
-			dailyAverageThreadResponseTime.setCumulativeAvgResponseTime(cumulativeAvgResponseTime);
-			String cumulativeAvgResponseTimeFormatted = format(cumulativeAvgResponseTime);
-			dailyAverageThreadResponseTime.setCumulativeAvgResponseTimeFormatted(cumulativeAvgResponseTimeFormatted);
-		}
+		dailyAverageThreadResponseTime.setBugTrackerId(bugTrackerId);
+		dailyAverageThreadResponseTime.setBugsConsidered(bugsConsidered);
+		dailyAverageThreadResponseTime.setCumulativeBugsConsidered(cumulativeBugsConsidered);
+		
+		long avgResponseTime = 0;
+		if (bugsConsidered>0)
+			avgResponseTime = computeAverageDuration(sumOfDurations, bugsConsidered);
+		dailyAverageThreadResponseTime.setAvgResponseTime(avgResponseTime);
+		
+		String avgResponseTimeFormatted = format(avgResponseTime);
+		dailyAverageThreadResponseTime.setAvgResponseTimeFormatted(avgResponseTimeFormatted);
+		
+		long cumulativeAvgResponseTime = 0;
+		if (cumulativeBugsConsidered > 0)
+			cumulativeAvgResponseTime = computeAverageDuration(cumulativeSumOfDurations, cumulativeBugsConsidered);
+		dailyAverageThreadResponseTime.setCumulativeAvgResponseTime(cumulativeAvgResponseTime);
+		
+		String cumulativeAvgResponseTimeFormatted = format(cumulativeAvgResponseTime);
+		dailyAverageThreadResponseTime.setCumulativeAvgResponseTimeFormatted(cumulativeAvgResponseTimeFormatted);
 
 //		System.err.println(time(System.currentTimeMillis() - startTime) + "\tdaily_new");
 		return dailyAverageThreadResponseTime;

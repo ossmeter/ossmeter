@@ -8,19 +8,19 @@ public class ContentClassCollection extends PongoCollection<ContentClass> {
 	
 	public ContentClassCollection(DBCollection dbCollection) {
 		super(dbCollection);
-		createIndex("url_name");
+		createIndex("newsgroupName");
 	}
 	
 	public Iterable<ContentClass> findById(String id) {
 		return new IteratorIterable<ContentClass>(new PongoCursorIterator<ContentClass>(this, dbCollection.find(new BasicDBObject("_id", id))));
 	}
 	
-	public Iterable<ContentClass> findByUrl_name(String q) {
-		return new IteratorIterable<ContentClass>(new PongoCursorIterator<ContentClass>(this, dbCollection.find(new BasicDBObject("url_name", q + ""))));
+	public Iterable<ContentClass> findByNewsgroupName(String q) {
+		return new IteratorIterable<ContentClass>(new PongoCursorIterator<ContentClass>(this, dbCollection.find(new BasicDBObject("newsgroupName", q + ""))));
 	}
 	
-	public ContentClass findOneByUrl_name(String q) {
-		ContentClass contentClass = (ContentClass) PongoFactory.getInstance().createPongo(dbCollection.findOne(new BasicDBObject("url_name", q + "")));
+	public ContentClass findOneByNewsgroupName(String q) {
+		ContentClass contentClass = (ContentClass) PongoFactory.getInstance().createPongo(dbCollection.findOne(new BasicDBObject("newsgroupName", q + "")));
 		if (contentClass != null) {
 			contentClass.setPongoCollection(this);
 		}
@@ -28,8 +28,8 @@ public class ContentClassCollection extends PongoCollection<ContentClass> {
 	}
 	
 
-	public long countByUrl_name(String q) {
-		return dbCollection.count(new BasicDBObject("url_name", q + ""));
+	public long countByNewsgroupName(String q) {
+		return dbCollection.count(new BasicDBObject("newsgroupName", q + ""));
 	}
 	
 	@Override

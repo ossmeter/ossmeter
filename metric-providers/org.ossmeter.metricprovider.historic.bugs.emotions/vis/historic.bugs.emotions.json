@@ -2,7 +2,7 @@
 	"metricid" : "org.ossmeter.metricprovider.historic.bugs.emotions",
 	"vis" : [ 
 		{
-			"id" : "emotionComments",
+			"id" : "bugs.emotions.comments",
 			"name" : "Comment Emotions",
 			"description" : "The number of comments containing each emotion",
 			"type" : "LineChart",
@@ -18,7 +18,7 @@
 			"timeSeries" : true
 		},
 		{
-			"id" : "emotionCommentsCumulative",
+			"id" : "bugs.emotions.cumulativeComments",
 			"name" : "Comment Emotions (Cumulative)",
 			"description" : "The cumulative number of comments containing each emotion",
 			"type" : "LineChart",
@@ -34,7 +34,7 @@
 			"timeSeries" : true
 		},
 		{
-			"id" : "emotionCommentPercentages",
+			"id" : "bugs.emotions.commentPercentages",
 			"name" : "Comment Emotion Percentages",
 			"description" : "The percentages of comments containing each emotion",
 			"type" : "LineChart",
@@ -50,7 +50,7 @@
 			"timeSeries" : true
 		},
 		{
-			"id" : "emotionCommentCumulativePercentages",
+			"id" : "bugs.emotions.cumulativeCommentPercentages",
 			"name" : "Comment Emotion Percentages (Cumulative)",
 			"description" : "The cumulative percentages of comments containing each emotion",
 			"type" : "LineChart",

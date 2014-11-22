@@ -5,7 +5,6 @@ class BugsSeverityBugStatusHistoricMetric {
 }
 
 class SeverityLevel {
-	attr String bugTrackerId;
 	attr String severityLevel;
 	attr int numberOfBugs;
 

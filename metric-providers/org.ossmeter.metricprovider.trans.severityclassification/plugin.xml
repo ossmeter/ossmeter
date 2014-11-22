@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <plugin>
   
-  <extension point="org.ossmeter.platform.visualisation.metric">
-     <visualisation json="vis/trans.severityclassification.json"/>
-  </extension>
   <extension point="org.ossmeter.platform.metricprovider">
      <metricProvider provider="org.ossmeter.metricprovider.trans.severityclassification.SeverityClassificationTransMetricProvider">
      </metricProvider>
   </extension>
+
+
+
 
 
 

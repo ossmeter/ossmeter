@@ -106,7 +106,7 @@ public class RequestReplyClassificationTransMetricProvider  implements ITransien
 				NewsgroupArticles newsgroupArticles = findNewsgroupArticle(db, newsgroup, article);
 				if (newsgroupArticles == null) {
 					newsgroupArticles = new NewsgroupArticles();
-					newsgroupArticles.setUrl(newsgroup.getUrl());
+					newsgroupArticles.setNewsgroupName(newsgroup.getNewsGroupName());
 					newsgroupArticles.setArticleNumber(article.getArticleNumber());
 					newsgroupArticles.setDate(new Date(article.getDate()).toString());
 					db.getNewsgroupArticles().add(newsgroupArticles);
@@ -187,7 +187,7 @@ public class RequestReplyClassificationTransMetricProvider  implements ITransien
 	private void prepareNewsgroupArticleInstance(Classifier classifier, NntpNewsGroup newsgroup, 
 			CommunicationChannelArticle article) {
     	ClassificationInstance classificationInstance = new ClassificationInstance();
-        classificationInstance.setUrl(newsgroup.getUrl());
+        classificationInstance.setNewsgroupName(newsgroup.getNewsGroupName());
         classificationInstance.setArticleNumber(article.getArticleNumber());
         classificationInstance.setSubject(article.getSubject());
         classificationInstance.setText(article.getText());
@@ -197,7 +197,7 @@ public class RequestReplyClassificationTransMetricProvider  implements ITransien
 	private String getNewsgroupArticleClass(Classifier classifier, NntpNewsGroup newsgroup, 
 			CommunicationChannelArticle article) {
     	ClassificationInstance classificationInstance = new ClassificationInstance();
-        classificationInstance.setUrl(newsgroup.getUrl());
+        classificationInstance.setNewsgroupName(newsgroup.getNewsGroupName());
         classificationInstance.setArticleNumber(article.getArticleNumber());
         classificationInstance.setSubject(article.getSubject());
         return classifier.getClassificationResult(classificationInstance);
@@ -223,7 +223,7 @@ public class RequestReplyClassificationTransMetricProvider  implements ITransien
 		NewsgroupArticles newsgroupArticles = null;
 		Iterable<NewsgroupArticles> newsgroupArticlesIt = 
 				db.getNewsgroupArticles().
-						find(NewsgroupArticles.URL.eq(newsgroup.getUrl()), 
+						find(NewsgroupArticles.NEWSGROUPNAME.eq(newsgroup.getNewsGroupName()), 
 								NewsgroupArticles.ARTICLENUMBER.eq(article.getArticleNumber()));
 		for (NewsgroupArticles nad:  newsgroupArticlesIt) {
 			newsgroupArticles = nad;

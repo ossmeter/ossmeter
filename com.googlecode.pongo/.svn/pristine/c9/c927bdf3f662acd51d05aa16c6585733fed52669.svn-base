@@ -1,0 +1,150 @@
+[%import "javautil.eol";%]
+[%import "ecoreutil.eol";%]
+package [%=c.ePackage.name%];
+
+import com.mongodb.*;
+import java.util.*;
+import com.googlecode.pongo.runtime.*;
+import com.googlecode.pongo.runtime.querying.*;
+
+[%if (c.isAnnotatedAs("customize")){%]
+[% out.setContentType("Java"); %]
+// protected region custom-imports on begin
+// protected region custom-imports end
+[%}%]
+
+public[%=c.getAbstractModifier()%] class [%=c.name%] extends [%=c.getJavaExtends()%] {
+	
+	[%for (sf in c.eStructuralFeatures.select(sf|sf.isMany)) { %]
+	protected List<[%=sf.eType.getJavaBoxedName()%]> [%=sf.name%] = null;
+	[%}%]
+	[%for (r in c.eReferences.select(r|not r.isMany)) { %]
+	protected [%=r.eType.getJavaName()%] [%=r.name%] = null;
+	[%}%]
+	
+	[%if (c.isAnnotatedAs("customize")){%]
+	[% out.setContentType("Java"); %]
+	// protected region custom-fields-and-methods on begin
+	// protected region custom-fields-and-methods end
+	[%}%]
+	
+	public [%=c.name%]() { 
+		super();
+		[%for (r in c.eReferences.select(r|not r.isMany and not r.isContainment)) { %]
+		dbObject.put("[%=r.name%]", new BasicDBObject());
+		[%}%]
+		[%for (r in c.eReferences.select(r|r.isContainment and not r.isMany)) { %]
+		dbObject.put("[%=r.name%]", new [%=r.eType.getJavaName()%]().getDbObject());
+		[%}%]
+		[%for (sf in c.eStructuralFeatures.select(sf|sf.isMany)) { %]
+		dbObject.put("[%=sf.name%]", new BasicDBList());
+		[%}%]
+		[%if (c.eSuperTypes.size() > 0) {%]
+		[%var supers = c.getAllSuperTypes();%]
+		super.setSuperTypes([%var f=false;for (scName in supers.collect(sc | sc.ePackage.name + "." + sc.name)) { if(f) {%],[%}%]"[%=scName%]"[%f=true;}%]);
+		[%}%]
+		[%for (a in c.eAllAttributes) { %]
+		[%=a.name.toUpperCase()%].setOwningType("[%=c.ePackage.name%].[%=c.name%]");
+		[%}%]
+	}
+	
+	[%for (a in c.eAllAttributes.select(a|not a.isMany)) { %]
+	[%if (a.eType.isNumeric()) {%]
+	public static NumericalQueryProducer [%=a.name.toUpperCase()%] = new NumericalQueryProducer("[%=a.name%]");
+	[%} else {%]
+	public static StringQueryProducer [%=a.name.toUpperCase()%] = new StringQueryProducer("[%=a.name%]"); 
+	[%}%]
+	[%}%]
+	[%for (a in c.eAllAttributes.select(a|a.isMany)) { %]
+	public static ArrayQueryProducer [%=a.name.toUpperCase()%] = new ArrayQueryProducer("[%=a.name%]");
+	[%}%]
+	
+	
+	[%for (a in c.eAttributes.select(a|not a.isMany)) { %]
+	[%if (a.eType.isTypeOf(EEnum)){%]
+	public [%=a.eType.getJavaName()%] get[%=a.name.ftuc()%]() {
+		[%=a.eType.getJavaName()%] [%=a.name%] = null;
+		try {
+			[%=a.name%] = [%=a.eType.getJavaName()%].valueOf(dbObject.get("[%=a.name%]")+"");
+		}
+		catch (Exception ex) {}
+		return [%=a.name%];
+	}
+	[%}else{%]
+	public [%=a.eType.getJavaName()%] get[%=a.name.ftuc()%]() {
+		return [%=a.eType.getParseMethod()%](dbObject.get("[%=a.name%]")+"", [%=a.getDefaultJavaValue()%]);
+	}
+	[%}%]
+	
+	public [%=c.name%] set[%=a.name.ftuc()%]([%=a.eType.getJavaName()%] [%=a.name%]) {
+		dbObject.put("[%=a.name%]", [%=a.name%][%if(a.eType.isTypeOf(EEnum)){%].toString()[%}%]);
+		notifyChanged();
+		return this;
+	}
+	[%}%]
+	
+	[%for (a in c.eAttributes.select(a|a.isMany)) { %]
+	public List<[%=a.eType.getJavaBoxedName()%]> get[%=a.name.ftuc()%]() {
+		if ([%=a.name%] == null) {
+			[%=a.name%] = new PrimitiveList<[%=a.eType.getJavaBoxedName()%]>(this, (BasicDBList) dbObject.get("[%=a.name%]"));
+		}
+		return [%=a.name%];
+	}
+	[%}%]
+	
+	[%for (r in c.eReferences.select(r|r.isMany)) { %]
+	public List<[%=r.eType.getJavaName()%]> get[%=r.name.ftuc()%]() {
+		if ([%=r.name%] == null) {
+			[%=r.name%] = new PongoList<[%=r.eType.getJavaName()%]>(this, "[%=r.name%]", [%=r.isContainment%]);
+		}
+		return [%=r.name%];
+	}
+	[%}%]
+	
+	[%for (r in c.eReferences.select(r|not r.isContainment and not r.isMany)) { %]
+	public [%=c.name%] set[%=r.name.ftuc()%]([%=r.eType.getJavaName()%] [%=r.name%]) {
+		if (this.[%=r.name%] != [%=r.name%]) {
+			if ([%=r.name%] == null) {
+				dbObject.put("[%=r.name%]", new BasicDBObject());
+			}
+			else {
+				createReference("[%=r.name%]", [%=r.name%]);
+			}
+			this.[%=r.name%] = [%=r.name%];
+			notifyChanged();
+		}
+		return this;
+	}
+	
+	public [%=r.eType.getJavaName()%] get[%=r.name.ftuc()%]() {
+		if ([%=r.name%] == null) {
+			[%=r.name%] = ([%=r.eType.getJavaName()%]) resolveReference("[%=r.name%]");
+		}
+		return [%=r.name%];
+	}
+	[%}%]
+	
+	[%for (r in c.eReferences.select(r|r.isContainment and not r.isMany)) { %]
+	public [%=r.eType.getJavaName()%] get[%=r.name.ftuc()%]() {
+		if ([%=r.name%] == null && dbObject.containsField("[%=r.name%]")) {
+			[%=r.name%] = ([%=r.eType.getJavaName()%]) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("[%=r.name%]"));
+			[%=r.name%].setContainer(this);
+		}
+		return [%=r.name%];
+	}
+	
+	public [%=c.name%] set[%=r.name.ftuc()%]([%=r.eType.getJavaName()%] [%=r.name%]) {
+		if (this.[%=r.name%] != [%=r.name%]) {
+			if ([%=r.name%] == null) {
+				dbObject.removeField("[%=r.name%]");
+			}
+			else {
+				dbObject.put("[%=r.name%]", [%=r.name%].getDbObject());
+			}
+			this.[%=r.name%] = [%=r.name%];
+			notifyChanged();
+		}
+		return this;
+	}
+	[%}%]
+}

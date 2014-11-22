@@ -11,22 +11,22 @@ public class DailyNewsgroupData extends Pongo {
 	
 	public DailyNewsgroupData() { 
 		super();
-		URL_NAME.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.newthreads.model.DailyNewsgroupData");
+		NEWSGROUPNAME.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.newthreads.model.DailyNewsgroupData");
 		NUMBEROFNEWTHREADS.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.newthreads.model.DailyNewsgroupData");
 		CUMULATIVENUMBEROFNEWTHREADS.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.newthreads.model.DailyNewsgroupData");
 	}
 	
-	public static StringQueryProducer URL_NAME = new StringQueryProducer("url_name"); 
+	public static StringQueryProducer NEWSGROUPNAME = new StringQueryProducer("newsgroupName"); 
 	public static NumericalQueryProducer NUMBEROFNEWTHREADS = new NumericalQueryProducer("numberOfNewThreads");
 	public static NumericalQueryProducer CUMULATIVENUMBEROFNEWTHREADS = new NumericalQueryProducer("cumulativeNumberOfNewThreads");
 	
 	
-	public String getUrl_name() {
-		return parseString(dbObject.get("url_name")+"", "");
+	public String getNewsgroupName() {
+		return parseString(dbObject.get("newsgroupName")+"", "");
 	}
 	
-	public DailyNewsgroupData setUrl_name(String url_name) {
-		dbObject.put("url_name", url_name);
+	public DailyNewsgroupData setNewsgroupName(String newsgroupName) {
+		dbObject.put("newsgroupName", newsgroupName);
 		notifyChanged();
 		return this;
 	}

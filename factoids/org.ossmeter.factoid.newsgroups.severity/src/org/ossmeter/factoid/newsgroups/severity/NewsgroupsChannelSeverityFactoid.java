@@ -1,5 +1,6 @@
 package org.ossmeter.factoid.newsgroups.severity;
 
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -8,12 +9,13 @@ import org.ossmeter.metricprovider.historic.newsgroups.severity.model.NewsgroupD
 import org.ossmeter.metricprovider.historic.newsgroups.severity.model.NewsgroupsSeveritiesHistoricMetric;
 import org.ossmeter.metricprovider.historic.newsgroups.severity.model.SeverityLevel;
 import org.ossmeter.metricprovider.historic.newsgroups.severityresponsetime.SeverityResponseTimeHistoricMetricProvider;
-import org.ossmeter.metricprovider.historic.newsgroups.severityresponsetime.model.BugsSeverityResponseTimeHistoricMetric;
+import org.ossmeter.metricprovider.historic.newsgroups.severityresponsetime.model.NewsgroupsSeverityResponseTimeHistoricMetric;
 import org.ossmeter.metricprovider.historic.newsgroups.severitysentiment.SeveritySentimentHistoricMetricProvider;
 import org.ossmeter.metricprovider.historic.newsgroups.severitysentiment.model.NewsgroupsSeveritySentimentHistoricMetric;
 import org.ossmeter.platform.AbstractFactoidMetricProvider;
 import org.ossmeter.platform.Date;
 import org.ossmeter.platform.IMetricProvider;
+import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.platform.factoids.Factoid;
 import org.ossmeter.platform.factoids.StarRating;
@@ -53,9 +55,9 @@ public class NewsgroupsChannelSeverityFactoid extends AbstractFactoidMetricProvi
 
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return Arrays.asList(NewsgroupsSeveritiesHistoricMetric.class.getCanonicalName(),
-							 BugsSeverityResponseTimeHistoricMetric.class.getCanonicalName(),
-							 NewsgroupsSeveritySentimentHistoricMetric.class.getCanonicalName());
+		return Arrays.asList(SeverityResponseTimeHistoricMetricProvider.IDENTIFIER,
+							 SeverityHistoricMetricProvider.IDENTIFIER,
+							 SeveritySentimentHistoricMetricProvider.IDENTIFIER);
 	}
 
 	@Override
@@ -64,20 +66,45 @@ public class NewsgroupsChannelSeverityFactoid extends AbstractFactoidMetricProvi
 	}
 
 	@Override
+	public void setMetricProviderContext(MetricProviderContext context) {
+		this.context = context;
+	}
+
+	@Override
 	public void measureImpl(Project project, ProjectDelta delta, Factoid factoid) {
 //		factoid.setCategory(FactoidCategory.BUGS);
 		factoid.setName("");
 		factoid.setName("Newsgroup Channel Severity Factoid");
 
-		SeverityHistoricMetricProvider severityProvider = 
-						new SeverityHistoricMetricProvider();
-		SeverityResponseTimeHistoricMetricProvider severityResponseTimeProvider = 
-						new SeverityResponseTimeHistoricMetricProvider();
-		SeveritySentimentHistoricMetricProvider severitySentimentProvider = 
-						new SeveritySentimentHistoricMetricProvider();
-		
+		SeverityHistoricMetricProvider severityProvider = null;
+		SeverityResponseTimeHistoricMetricProvider severityResponseTimeProvider = null;
+		SeveritySentimentHistoricMetricProvider severitySentimentProvider = null;
+
+		for (IMetricProvider m : this.uses) {
+			if (m instanceof SeverityHistoricMetricProvider) {
+				severityProvider = (SeverityHistoricMetricProvider) m;
+				continue;
+			}
+			if (m instanceof SeverityResponseTimeHistoricMetricProvider) {
+				severityResponseTimeProvider = (SeverityResponseTimeHistoricMetricProvider) m;
+				continue;
+			}
+			if (m instanceof SeveritySentimentHistoricMetricProvider) {
+				severitySentimentProvider = (SeveritySentimentHistoricMetricProvider) m;
+				continue;
+			}
+		}
+
 		Date end = new Date();
 		Date start = new Date();
+//		Date start=null, end=null;
+//		try {
+//			start = new Date("20040801");
+//			end = new Date("20050801");
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		List<Pongo> severityList = 
 						severityProvider.getHistoricalMeasurements(context, project, start, end),
 					severityResponseTimeList = 
@@ -96,8 +123,13 @@ public class NewsgroupsChannelSeverityFactoid extends AbstractFactoidMetricProvi
 //			numberOfNonSeriousBugs = numberOfNormalBugs + numberOfMinorBugs+ numberOfTrivialBugs,
 			numberOfSeriousBugs = numberOfBlockerBugs + numberOfCriticalBugs + numberOfMajorBugs;
 		
-		float seriousBugsPercentage = ( (float) 100 * (numberOfSeriousBugs) ) / numberOfBugs,
-			  enhancementBugsPercentage = ( (float) 100 * (numberOfEnhancementBugs) ) / numberOfBugs;
+		float seriousBugsPercentage = 0,
+			  enhancementBugsPercentage = 0;
+		
+		if (numberOfBugs>0) {
+			enhancementBugsPercentage = ( (float) 100 * (numberOfEnhancementBugs) ) / numberOfBugs;
+			seriousBugsPercentage = 	  ( (float) 100 * (numberOfSeriousBugs) ) / numberOfBugs;
+		}
 		
 		StringBuffer stringBuffer = new StringBuffer();
 		
@@ -171,7 +203,7 @@ public class NewsgroupsChannelSeverityFactoid extends AbstractFactoidMetricProvi
 			stringBuffer.append("more");
 		else 
 			stringBuffer.append("less");
-		stringBuffer.append("quickly ");
+		stringBuffer.append(" quickly ");
 		if ( Math.abs( responseTimeSeriousBugs - responseTimeNonSeriousBugs ) < eightHoursMilliSeconds )
 			stringBuffer.append("to");
 		else
@@ -218,7 +250,7 @@ public class NewsgroupsChannelSeverityFactoid extends AbstractFactoidMetricProvi
 			stringBuffer.append("more positive");
 		else
 			stringBuffer.append("more negative");
-		stringBuffer.append("sentiments about how serious issues are being resolved " +
+		stringBuffer.append(" sentiments about how serious issues are being resolved " +
 							"than how all other issues are being resolved.\n");
 		
 		stringBuffer.append("There are ");
@@ -302,45 +334,13 @@ public class NewsgroupsChannelSeverityFactoid extends AbstractFactoidMetricProvi
 	private int getNumberOfSeverityResponseTimeBugs(List<Pongo> severityResponseTimeList, String severityType) {
 		if ( severityResponseTimeList.size() > 0 ) {
 			int numberOfThreads = 0;
-			BugsSeverityResponseTimeHistoricMetric severityPongo = 
-					(BugsSeverityResponseTimeHistoricMetric) 
+			NewsgroupsSeverityResponseTimeHistoricMetric severityPongo = 
+					(NewsgroupsSeverityResponseTimeHistoricMetric) 
 							severityResponseTimeList.get(severityResponseTimeList.size()-1);
 			for (org.ossmeter.metricprovider.historic.newsgroups.severityresponsetime.model.SeverityLevel 
-						severityLevel: severityPongo.getSeverityLevels())
+					severityLevel: severityPongo.getSeverityLevels())
 				if (severityLevel.getSeverityLevel().equals(severityType))
 					numberOfThreads += severityLevel.getNumberOfThreads();
-			return numberOfThreads;
-		}
-		return 0;
-	}
-
-	private long getResponseTimeOfSeverityBugs(List<Pongo> severityResponseTimeList, String severityType) {
-		if ( severityResponseTimeList.size() > 0 ) {
-			int numberOfThreads = 0;
-			long threadsResponseTimeProduct = 0;
-			BugsSeverityResponseTimeHistoricMetric severityPongo = 
-					(BugsSeverityResponseTimeHistoricMetric) 
-							severityResponseTimeList.get(severityResponseTimeList.size()-1);
-			for (org.ossmeter.metricprovider.historic.newsgroups.severityresponsetime.model.SeverityLevel 
-						severityLevel: severityPongo.getSeverityLevels())
-				if (severityLevel.getSeverityLevel().equals(severityType)) {
-					int threads = severityLevel.getNumberOfThreads();
-					numberOfThreads += threads;
-					long responseTime = severityLevel.getAvgResponseTime();
-					threadsResponseTimeProduct += ( threads * responseTime );
-				}
-			return threadsResponseTimeProduct / numberOfThreads;
-		}
-		return 0;
-	}
-
-	private int getNumberOfBugs(List<Pongo> severityList) {
-		if ( severityList.size() > 0 ) {
-			int numberOfThreads = 0;
-			NewsgroupsSeveritiesHistoricMetric severityPongo = 
-					(NewsgroupsSeveritiesHistoricMetric) severityList.get(severityList.size()-1);
-			for (NewsgroupData newsgroupData: severityPongo.getNewsgroupData())
-				numberOfThreads += newsgroupData.getNumberOfThreads();
 			return numberOfThreads;
 		}
 		return 0;
@@ -354,6 +354,42 @@ public class NewsgroupsChannelSeverityFactoid extends AbstractFactoidMetricProvi
 			for (SeverityLevel severityLevel: severityPongo.getSeverityLevels())
 				if (severityLevel.getSeverityLevel().equals(severityType))
 					numberOfThreads += severityLevel.getNumberOfThreads();
+			return numberOfThreads;
+		}
+		return 0;
+	}
+
+	private long getResponseTimeOfSeverityBugs(List<Pongo> severityResponseTimeList, String severityType) {
+		if ( severityResponseTimeList.size() > 0 ) {
+			int numberOfThreads = 0;
+			long threadsResponseTimeProduct = 0;
+			NewsgroupsSeverityResponseTimeHistoricMetric severityPongo = 
+					(NewsgroupsSeverityResponseTimeHistoricMetric) 
+							severityResponseTimeList.get(severityResponseTimeList.size()-1);
+			
+			for (org.ossmeter.metricprovider.historic.newsgroups.severityresponsetime.model.SeverityLevel 
+						severityLevel: severityPongo.getSeverityLevels())
+				if (severityLevel.getSeverityLevel().equals(severityType)) {
+					int threads = severityLevel.getNumberOfThreads();
+					numberOfThreads += threads;
+					long responseTime = severityLevel.getAvgResponseTime();
+					threadsResponseTimeProduct += ( threads * responseTime );
+				}
+			if (numberOfThreads>0)
+				return threadsResponseTimeProduct / numberOfThreads;
+			else
+				return 0;
+		}
+		return 0;
+	}
+
+	private int getNumberOfBugs(List<Pongo> severityList) {
+		if ( severityList.size() > 0 ) {
+			int numberOfThreads = 0;
+			NewsgroupsSeveritiesHistoricMetric severityPongo = 
+					(NewsgroupsSeveritiesHistoricMetric) severityList.get(severityList.size()-1);
+			for (NewsgroupData newsgroupData: severityPongo.getNewsgroupData())
+				numberOfThreads += newsgroupData.getNumberOfThreads();
 			return numberOfThreads;
 		}
 		return 0;

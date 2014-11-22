@@ -50,7 +50,7 @@ public class TopicsHistoricMetricProvider extends AbstractHistoricalMetricProvid
 			 for (NewsgroupTopic newsgroupTopic: usedTopics.getNewsgroupTopics()) {
 				 NewsgrpTopic topic = new NewsgrpTopic();
 				 topics.getNewsgrpTopics().add(topic);
-				 topic.setUrl(newsgroupTopic.getUrl());
+				 topic.setNewsgroupName(newsgroupTopic.getNewsgroupName());
 				 topic.setLabel(newsgroupTopic.getLabel());
 				 topic.setNumberOfDocuments(newsgroupTopic.getNumberOfDocuments());
 			 }

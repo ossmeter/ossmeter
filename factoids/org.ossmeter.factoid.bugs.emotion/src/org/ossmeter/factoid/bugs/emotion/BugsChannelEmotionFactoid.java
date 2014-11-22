@@ -150,6 +150,7 @@ public class BugsChannelEmotionFactoid extends AbstractFactoidMetricProvider{
 		stringBuffer.append(decimalFormat.format(leastCommonPositivePercentage));
 		stringBuffer.append(" %).\n");
 		
+		factoid.setFactoid(stringBuffer.toString());
 	}
 
 }

@@ -11,22 +11,22 @@ public class NewsgroupThreadData extends Pongo {
 	
 	public NewsgroupThreadData() { 
 		super();
-		URL.setOwningType("org.ossmeter.metricprovider.trans.severityclassification.model.NewsgroupThreadData");
+		NEWSGROUPNAME.setOwningType("org.ossmeter.metricprovider.trans.severityclassification.model.NewsgroupThreadData");
 		THREADID.setOwningType("org.ossmeter.metricprovider.trans.severityclassification.model.NewsgroupThreadData");
 		SEVERITY.setOwningType("org.ossmeter.metricprovider.trans.severityclassification.model.NewsgroupThreadData");
 	}
 	
-	public static StringQueryProducer URL = new StringQueryProducer("url"); 
+	public static StringQueryProducer NEWSGROUPNAME = new StringQueryProducer("newsgroupName"); 
 	public static NumericalQueryProducer THREADID = new NumericalQueryProducer("threadId");
 	public static StringQueryProducer SEVERITY = new StringQueryProducer("severity"); 
 	
 	
-	public String getUrl() {
-		return parseString(dbObject.get("url")+"", "");
+	public String getNewsgroupName() {
+		return parseString(dbObject.get("newsgroupName")+"", "");
 	}
 	
-	public NewsgroupThreadData setUrl(String url) {
-		dbObject.put("url", url);
+	public NewsgroupThreadData setNewsgroupName(String newsgroupName) {
+		dbObject.put("newsgroupName", newsgroupName);
 		notifyChanged();
 		return this;
 	}

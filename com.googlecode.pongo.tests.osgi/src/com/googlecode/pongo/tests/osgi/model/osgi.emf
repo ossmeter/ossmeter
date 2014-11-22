@@ -1,0 +1,5 @@
+package com.googlecode.pongo.tests.osgi.model;
+
+class Osgi {
+	
+}

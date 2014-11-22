@@ -1,0 +1,100 @@
+import "javautil.eol";
+import "ecoreutil.eol";
+
+pre {
+
+	var keywords = List{"abstract", "volatile", "transient", 
+		"interface", "container", "private", "public"};
+	
+	for (e in EStructuralFeature.all.includingAll(EEnumLiteral.all)) {
+		if (keywords.includes(e.name)) {
+			e.name = "_" + e.name;
+		}
+	}
+}
+
+post {
+
+	// Update plugin.xml instead of overwriting it
+	
+	if (generatePluginXml) {
+	
+		var p = EPackage.all.first();
+		
+		var plugin = PluginXml!Element.all.first();
+		if (plugin.isUndefined()) {
+			plugin = new PluginXml!t_plugin;
+			PluginXml.root = plugin;
+		}
+		var extensions = plugin.c_extension.select(e|e.a_point = "com.googlecode.pongo.runtime.osgi");
+		delete extensions;
+		
+		var extension = new PluginXml!t_extension;
+		extension.a_point = "com.googlecode.pongo.runtime.osgi";
+		plugin.appendChild(extension);
+		
+		for (c in EClass.all.select(c|(not c.abstract) and (not c.isAnnotatedAs("stub")))) { 
+			var class = new PluginXml!t_class;
+			class.a_name = p.name + "." + c.name;
+			extension.appendChild(class);
+		}
+	}
+	
+}
+
+rule EClass2Class 
+	transform c : EClass {
+	
+	guard : not c.isAnnotatedAs("db") and not c.isAnnotatedAs("stub")
+	
+	template : "eclass2class.egl"
+	
+	target : c.name + ".java"
+	
+}
+
+rule EClass2DBClass
+	transform c : EClass {
+	
+	guard : c.isAnnotatedAs("db")
+	
+	template : "eclass2dbclass.egl"
+	
+	target : c.name + ".java"
+	
+}
+
+rule EClass2CollectionClass 
+	transform c : EClass {
+	
+	guard : c.isAnnotatedAs("collection") or 
+		EClass.all.select(e|e.isAnnotatedAs("db")).
+			exists(e|e.eAllStructuralFeatures.exists(sf|sf.eType = c and sf.getAnnotationValue("collection", "fromstub") <> "true"))
+	
+	template : "eclass2collectionclass.egl"
+	
+	target : c.name + "Collection.java"
+	
+}
+
+rule EEnum2Enumeration 
+	transform e : EEnum {
+	
+	guard: not e.isAnnotatedAs("stub")
+	
+	template : "eenum2enumeration.egl"
+	
+	target : e.name + ".java"
+	
+}
+
+rule EClass2VizClass 
+	transform c : EClass {
+	
+	guard : c.isAnnotatedAs("viz")
+	
+	template : "eclass2vizclass.egl"
+	
+	target : c.name + "Viz.java"		
+}
+

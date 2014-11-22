@@ -1,6 +1,7 @@
 package org.ossmeter.factoid.newsgroups.sentiment;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class NewsgroupsChannelSentimentFactoid extends AbstractFactoidMetricProv
 
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return Arrays.asList(NewsgroupsSentimentHistoricMetric.class.getCanonicalName());
+		return Arrays.asList(SentimentHistoricMetricProvider.IDENTIFIER);
 	}
 
 	@Override
@@ -61,10 +62,25 @@ public class NewsgroupsChannelSentimentFactoid extends AbstractFactoidMetricProv
 //		factoid.setCategory(FactoidCategory.BUGS);
 		factoid.setName("Newsgroup Channel Sentiment Factoid");
 
-		SentimentHistoricMetricProvider sentimentProvider = new SentimentHistoricMetricProvider();
+		SentimentHistoricMetricProvider sentimentProvider = null;
+
+		for (IMetricProvider m : this.uses) {
+			if (m instanceof SentimentHistoricMetricProvider) {
+				sentimentProvider = (SentimentHistoricMetricProvider) m;
+				continue;
+			}
+		}
 
 		Date end = new Date();
 		Date start = new Date();
+//		Date start=null, end=null;
+//		try {
+//			start = new Date("20040801");
+//			end = new Date("20050801");
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		List<Pongo> sentimentList = sentimentProvider.getHistoricalMeasurements(context, project, start, end);
 		
 		float averageSentiment = getAverageSentiment(sentimentList),
@@ -122,7 +138,7 @@ public class NewsgroupsChannelSentimentFactoid extends AbstractFactoidMetricProv
 			stringBuffer.append("happier");
 		else
 			stringBuffer.append("unhappier");
-		stringBuffer.append("at the end of a discussion ");
+		stringBuffer.append(" at the end of a discussion ");
 		if ( Math.abs( sentimentAtThreadBeggining - sentimentAtThreadEnd ) < 0.15 )
 			stringBuffer.append("as");
 		else

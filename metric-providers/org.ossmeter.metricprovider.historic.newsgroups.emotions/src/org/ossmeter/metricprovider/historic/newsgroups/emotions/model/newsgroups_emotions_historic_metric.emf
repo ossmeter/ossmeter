@@ -6,14 +6,14 @@ class NewsgroupsEmotionsHistoricMetric {
 }
 
 class Newsgroups {
-   	attr String url_name;
+   	attr String newsgroupName;
    	attr int numberOfArticles;
 	attr int cumulativeNumberOfArticles;
 }
 
 
 class Emotion {
-   	attr String url_name;
+   	attr String newsgroupName;
    	attr String emotionLabel;
 	attr int numberOfArticles;
 	attr int cumulativeNumberOfArticles;

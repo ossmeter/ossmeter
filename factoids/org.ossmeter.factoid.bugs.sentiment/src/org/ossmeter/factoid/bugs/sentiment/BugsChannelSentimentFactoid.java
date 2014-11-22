@@ -1,6 +1,7 @@
 package org.ossmeter.factoid.bugs.sentiment;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class BugsChannelSentimentFactoid extends AbstractFactoidMetricProvider{
 
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return Arrays.asList(BugsSentimentHistoricMetric.class.getCanonicalName());
+		return Arrays.asList(SentimentHistoricMetricProvider.IDENTIFIER);
 	}
 
 	@Override
@@ -56,10 +57,25 @@ public class BugsChannelSentimentFactoid extends AbstractFactoidMetricProvider{
 //		factoid.setCategory(FactoidCategory.BUGS);
 		factoid.setName("Bug Channel Sentiment Factoid");
 
-		SentimentHistoricMetricProvider sentimentProvider = new SentimentHistoricMetricProvider();
-		
+		SentimentHistoricMetricProvider sentimentProvider = null;
+
+		for (IMetricProvider m : this.uses) {
+			if (m instanceof SentimentHistoricMetricProvider) {
+				sentimentProvider = (SentimentHistoricMetricProvider) m;
+				continue;
+			}
+		}
+
 		Date end = new Date();
 		Date start = new Date();
+//		Date start=null, end=null;
+//		try {
+//			start = new Date("20050301");
+//			end = new Date("20060301");
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		List<Pongo> sentimentList = sentimentProvider.getHistoricalMeasurements(context, project, start, end);
 		
 		float averageSentiment = getAverageSentiment(sentimentList),
@@ -100,7 +116,7 @@ public class BugsChannelSentimentFactoid extends AbstractFactoidMetricProvider{
 			stringBuffer.append("weakly positive");
 		else if ( averageSentiment > -0.15 )
 			stringBuffer.append("neutral");
-		if ( averageSentiment < -0.3 )
+		if ( averageSentiment > -0.3 )
 			stringBuffer.append("weakly negative");
 		else 
 			stringBuffer.append("negative");
@@ -110,13 +126,13 @@ public class BugsChannelSentimentFactoid extends AbstractFactoidMetricProvider{
 		stringBuffer.append(decimalFormat.format(sentimentAtThreadBeggining));
 		stringBuffer.append(", while at the end of threads it is ");
 		stringBuffer.append(decimalFormat.format(sentimentAtThreadEnd));
-		stringBuffer.append(", showing that users are ");
+		stringBuffer.append(", showing that users ");
 		if ( Math.abs( sentimentAtThreadBeggining - sentimentAtThreadEnd ) < 0.15 ) 
-			stringBuffer.append("equally happy");
+			stringBuffer.append("have similar feelings");
 		else if ( sentimentAtThreadBeggining < sentimentAtThreadEnd )
-			stringBuffer.append("happier");
+			stringBuffer.append("are happier");
 		else
-			stringBuffer.append("unhappier");
+			stringBuffer.append("are unhappier");
 		stringBuffer.append("at the end of a discussion ");
 		if ( Math.abs( sentimentAtThreadBeggining - sentimentAtThreadEnd ) < 0.15 )
 			stringBuffer.append("as");

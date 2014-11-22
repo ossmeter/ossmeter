@@ -90,12 +90,12 @@ public class BugsChannelWeeklyFactoid extends AbstractFactoidMetricProvider{
 			stringBuffer.append("does not depend");
 		else
 			stringBuffer.append("largely depends");
-		stringBuffer.append(" on the day of the week.\nThere is ");
+		stringBuffer.append(" on the day of the week.\nThere is");
 		if ( Math.abs( ( weekDaysSum / 5 ) - ( weekEndSum / 2 ) ) < uniformPercentageOfComments ) 
-			stringBuffer.append("no");
+			stringBuffer.append(" no ");
 		else
-			stringBuffer.append("");
-		stringBuffer.append(" significant difference between the number of comments during working days and weekends.\n");
+			stringBuffer.append(" ");
+		stringBuffer.append("significant difference between the number of comments during working days and weekends.\n");
 
 		factoid.setFactoid(stringBuffer.toString());
 

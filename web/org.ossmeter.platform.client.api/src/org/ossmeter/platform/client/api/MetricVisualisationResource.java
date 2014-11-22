@@ -55,6 +55,7 @@ public class MetricVisualisationResource extends AbstractApiResource {
 		
 		MetricVisualisationExtensionPointManager manager = MetricVisualisationExtensionPointManager.getInstance();
 		manager.getRegisteredVisualisations();
+
 		MetricVisualisation vis = manager.findVisualisationById(metricId);
 		
 		if (vis == null) {

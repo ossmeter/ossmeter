@@ -1,6 +1,7 @@
 package org.ossmeter.factoid.bugs.users;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,8 +47,8 @@ public class BugsChannelUsersFactoid extends AbstractFactoidMetricProvider{
 
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return Arrays.asList(BugsUsersHistoricMetric.class.getCanonicalName(),
-							 BugsBugsHistoricMetric.class.getCanonicalName());
+		return Arrays.asList(UsersHistoricMetricProvider.IDENTIFIER,
+							 BugsHistoricMetricProvider.IDENTIFIER);
 	}
 
 	@Override
@@ -60,11 +61,30 @@ public class BugsChannelUsersFactoid extends AbstractFactoidMetricProvider{
 //		factoid.setCategory(FactoidCategory.BUGS);
 		factoid.setName("Bug Channel Users Factoid");
 
-		UsersHistoricMetricProvider usersProvider = new UsersHistoricMetricProvider();
-		BugsHistoricMetricProvider bugsProvider = new BugsHistoricMetricProvider();
+		UsersHistoricMetricProvider usersProvider = null;
+		BugsHistoricMetricProvider bugsProvider = null;
 		
+		for (IMetricProvider m : this.uses) {
+			if (m instanceof UsersHistoricMetricProvider) {
+				usersProvider = (UsersHistoricMetricProvider) m;
+				continue;
+			}
+			if (m instanceof BugsHistoricMetricProvider) {
+				bugsProvider = (BugsHistoricMetricProvider) m;
+				continue;
+			}
+		}
+
 		Date end = new Date();
 		Date start = new Date();
+//		Date start=null, end=null;
+//		try {
+//			start = new Date("20050301");
+//			end = new Date("20060301");
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		List<Pongo> bugList = bugsProvider.getHistoricalMeasurements(context, project, start, end);
 
 		start = (new Date()).addDays(-30);
@@ -107,7 +127,7 @@ public class BugsChannelUsersFactoid extends AbstractFactoidMetricProvider{
 		stringBuffer.append(" users are active.\n");
 		stringBuffer.append("In the last year, there are "); 
 		stringBuffer.append(decimalFormat.format(dailyNumberOfNewUsersInTheLastYear));
-		stringBuffer.append(" new users per day in the last month, ");
+		stringBuffer.append(" new users per day, ");
 		stringBuffer.append(decimalFormat.format(dailyNumberOfActiveUsersInTheLastYear));
 		stringBuffer.append(" of which are active.\n"); 
 		
