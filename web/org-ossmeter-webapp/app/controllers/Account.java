@@ -20,6 +20,11 @@ import providers.MyUsernamePasswordAuthProvider;
 import providers.MyUsernamePasswordAuthUser;
 import views.html.account.*;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import static play.data.Form.form;
 
 import auth.MongoAuthenticator;
@@ -57,6 +62,28 @@ public class Account extends Controller {
 		
 		return ok(""); // TODO?
 	}
+
+	@SubjectPresent
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
+	public static Result updateGridLocations(String serializedLocations) {
+		try {
+			User user = Application.getLocalUser(session());
+
+			if (user == null) {
+				// Not logged in
+				return ok("Sorry, you need to be logged in to do that.");
+			}
+
+			ObjectMapper mapper = new ObjectMapper();
+			ArrayNode loc = (ArrayNode)mapper.readTree(serializedLocations);
+
+			MongoAuthenticator.updateGridLocations(user, loc);
+
+			return ok();
+		} catch (Exception e) {
+			return badRequest();
+		}
+	}	
 
 	public static class Accept {
 

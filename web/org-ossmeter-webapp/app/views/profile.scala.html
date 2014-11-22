@@ -7,30 +7,44 @@
 
 <section>
 <div class="container box">
-    <h1>@Messages("ossmeter.profile.title")</h1>
-    <p>
-    Email: @localUser.getEmail()
-	    <i>
-	    @if(!localUser.getEmailValidated() && localUser.getEmail()) {
-	      (<a href="@routes.Account.verifyEmail">unverified - click to verify</a>)
-	    } else {
-	      (verified)
-	    }</i>
-    <br/><a href="@routes.Account.changePassword">Change password</a>
-    <br />
-    @* @defining(localUser.getProviders()) { providers =>
-        @if(providers.size() > 0) {
-            @if(providers.size() ==1) {
-                @Messages("ossmeter.profile.providers_one")
-            } else {
-                @Messages("ossmeter.profile.providers_many",providers.size().toString())
+    <div class="row">
+        <div class="col-md-3">
+            <h1>Account</h1>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                    <div class="col-md-12 center">
+                    <h2 style="margin:5px">Discover, Compare</span>, Adopt, <span style="color:#ff9400">Monitor</span></h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <p>
+            @localUser.getEmail()
+                <i>
+                @if(!localUser.getEmailValidated() && localUser.getEmail()) {
+                  (<a href="@routes.Account.verifyEmail">unverified - click to verify</a>)
+                } else {
+                  (verified)
+                }</i>
+            <br/><a href="@routes.Account.changePassword">Change password</a>
+            <br />
+            @* @defining(localUser.getProviders()) { providers =>
+                @if(providers.size() > 0) {
+                    @if(providers.size() ==1) {
+                        @Messages("ossmeter.profile.providers_one")
+                    } else {
+                        @Messages("ossmeter.profile.providers_many",providers.size().toString())
+                    }
+                    @for(p <- providers) {
+                        @_providerIcon(p)
+                    }
+                <br/>
+                }
             }
-            @for(p <- providers) {
-                @_providerIcon(p)
-            }
-        <br/>
-        }
-    }*@
+        </div>
+    </div>
+    *@
     @*@currentAuth() { auth =>
         @Messages("ossmeter.profile.logged") @_providerIcon(auth.getProvider())<br/>
         @if(auth.expires() != -1){
@@ -85,7 +99,7 @@
             @Messages("ossmeter.profile.notifications.empty") <a href="@routes.Application.profileNotification">Click here to add one</a>
         }*@
         </div>
-        <div class="col-md-6 box">
+        <div class="col-md-6">
 
 @*        <h2>Configure EventGroups</h2>
         @if(localUser.eventGroups.size() > 0) {
@@ -120,7 +134,7 @@
 <div class="gridster">
     <ul>
     @for(g <- localUser.getGrid()) {
-        <li class="box gridentry" data-row="@g.getRow()" data-col="@g.getCol()" data-sizex="@g.getSizeX()" data-sizey="@g.getSizeY()">
+        <li class="box gridentry" data-row="@g.getRow()" data-col="@g.getCol()" data-sizex="@g.getSizeX()" data-sizey="@g.getSizeY()" id="@g.getId()">
             @g match {
                 case m : Message => {
                     <div class="clearfix">
@@ -146,17 +160,17 @@
                     </div>
                     <div class="row nopadding center" style="margin-top:10px">
                         <div class="col-md-6 nopadding">@if(n.getAboveThreshold()){<span class="glyphicon glyphicon-arrow-up"></span>}else{<span class="glyphicon glyphicon-arrow-down"></span>}</div>
-                        <div class="col-md-6 nopadding" id="not-@n.getProject().getId()-@n.getMetric().getId()-threshold">abbreviateNumber(@n.getThreshold())</div>
+                        <div class="col-md-6 nopadding" id="not-@n.getProject().getId()-@n.getMetric().getId()-threshold"></div>
                     </div>
                     <script type="text/javascript">
                         $(function(){ 
-                            $("#not-@n.getProject().getId()-@n.getMetric().getId()-threshold").text(abbreviateNumber(@n.getThreshold()));
+                            $(jq("not-@n.getProject().getId()-@n.getMetric().getId()-threshold")).text(abbreviateNumber(@n.getThreshold()));
                         });
                     </script>
 
                 }
                 case n : PlotGridEntry => {
-                        <span class="glyphicon glyphicon-stats dash pull-right"></span><a href="#"><span class="glyphicon glyphicon-cog dash edit pull-right" data-toggle="tooltip" data-placement="bottom" title="Edit plot"></span></a>
+                    <span class="glyphicon glyphicon-stats dash pull-right"></span>
                     <div class="clearfix">
                         <div class="row nopadding">
                             <div class="col-md-6 nopadding" style="line-height:1em">
@@ -176,7 +190,7 @@
                     <script type="text/javascript">
                     $(function(){ 
                         $.getJSON("http://localhost:8182/projects/p/@n.getProject().getId()/m/@n.getMetric().getId()", function(vis) {
-                            var chart = new ossplots.Chart("#plot-@n.getProject().getId()-@n.getMetric().getId()", vis);
+                            var chart = new ossplots.Chart(jq("plot-@n.getProject().getId()-@n.getMetric().getId()"), vis);
                             chart.height = 100;
                             chart.margin.left = 30;
                             chart.margin.top = 10;
@@ -212,8 +226,9 @@
                     <script type="text/javascript">
                     $(function() {
                         $.get("http://localhost:8182/projects/p/@n.getProject().getId()/s/@n.getMetric().getId()", function (data) {
-                            $("#spark-@n.getProject().getId()-@n.getMetric().getId()").html("<img class=\"spark\" src=\"http://localhost:8182" + data.spark + "\" />");
-                            $("#spark-@n.getProject().getId()-@n.getMetric().getId()-table > tbody:last").append("<tr><td>" + abbreviateNumber(data.low) + 
+                            $(jq("spark-@n.getProject().getId()-@n.getMetric().getId()")).html("<img class=\"spark\" src=\"http://localhost:8182" + data.spark + "\" />");
+                            
+                            $(jq("spark-@n.getProject().getId()-@n.getMetric().getId()")+"-table > tbody:last").append("<tr><td>" + abbreviateNumber(data.low) + 
                                 "</td><td>" + abbreviateNumber(data.high) + 
                                 "</td><td>" + abbreviateNumber(data.last) + "</td></tr>");
 
@@ -278,7 +293,29 @@
     $(function(){ 
         grid = $(".gridster ul").gridster({
             widget_margins: [10, 10],
-            widget_base_dimensions: [140, 140]
+            widget_base_dimensions: [140, 140],
+            serialize_params: function($w, wgd) {
+                return {
+                    id: $($w).attr("id"),
+                    col: wgd.col,
+                    row:wgd.row
+                }
+            },
+            draggable: {
+                stop: function(e, ui, $widget) {
+                    console.log('STOP position: ' + ui.position.top +' '+ ui.position.left)
+                    console.log(grid.serialize());
+                    jsRoutes.controllers.Account.updateGridLocations(JSON.stringify(grid.serialize())).ajax()
+                        .success(function(result) {
+                            console.log("success!");
+                            console.log(result);
+                        }).error(function(result) {
+                            console.log("Error");
+                            console.log(result);
+                        });
+                }
+            }
+
         }).data("gridster");
     });
 </script>

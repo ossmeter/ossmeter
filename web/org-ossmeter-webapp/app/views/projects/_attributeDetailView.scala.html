@@ -51,7 +51,7 @@
                     var twelveMth = {
                         sparktable : "sparklines-table-12months-@attributeId",
                         projectid : "@project.getShortName()",
-                        metriclist : "@attribute.metrics.mkString("+")",
+                        metriclist : "@attribute.metrics.map(x=>x.id).mkString("+")",
                         querystring : "startDate=" + getOneYearAgoDateString(),
                         toolkittable : "sparklines-table-toolkit-@attributeId",
                         drawName : true
@@ -60,7 +60,7 @@
                     var allTime = {
                         sparktable : "sparklines-table-alltime-@attributeId",
                         projectid : "@project.getShortName()",
-                        metriclist : "@attribute.metrics.mkString("+")",
+                        metriclist : "@attribute.metrics.map(x=>x.id).mkString("+")",
                     };
 
                     drawSparkTable(twelveMth);

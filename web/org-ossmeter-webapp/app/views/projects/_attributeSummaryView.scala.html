@@ -22,6 +22,10 @@
     attribute.name.replaceAll(" ", "");
 }
 
+@metricIds = {
+    attribute.metrics.take(10).map(x=> x.id)
+}
+
     <div class="row">
         <ul class="nav nav-tabs" role="tablist">
             <li class="disabled col-md-4"><h2 class="marginless">@attribute.name</h2></li>
@@ -35,6 +39,8 @@
     <div class="row">
         <div class="col-md-4">
             <div id="spider-@attributeId"></div>
+
+                <a class="btn btn-default form-control" href="@routes.Projects.viewTmp(project.getShortName(), qualityModel.id, false)">View metrics in depth</a>
         </div>
         <div class="col-md-8">
             <div class="tab-content">
@@ -65,7 +71,7 @@
                     </table>
                     <script type="text/javascript">
                         $('#sparklines-@attributeId-tab').one('click', function(e) {
-                            $.getJSON("http://localhost:8182/projects/p/@project.getShortName()/s/@attribute.metrics.take(10).mkString("+")", function (result) {
+                            $.getJSON("http://localhost:8182/projects/p/@project.getShortName()/s/@attribute.metrics.take(10).map(x=> x.id).mkString("+")", function (result) {
 
                                 console.log(Object.prototype.toString.call( result ));
 

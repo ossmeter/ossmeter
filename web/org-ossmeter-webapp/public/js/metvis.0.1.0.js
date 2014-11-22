@@ -353,6 +353,7 @@ var metvis = {
 			if (typeof vis.y === 'string') {
         		var l = (function(vi, value) {
 	                    return d3.svg.line()
+		                    .interpolate("basis")   
 	                        .x(function(d) { return self.xScale(d[vi.x]) })
 	                        .y(function(d) { return self.yScale(d[vi.y]) });
 	                })(vis, ys);
@@ -369,6 +370,7 @@ var metvis = {
         		for (var ys in vis.y) {
         			var l = (function(vi, value) {
 	                    return d3.svg.line()
+		                    .interpolate("monotone")   
 	                        .x(function(d) { return self.xScale(d[vi.x]) })
 	                        .y(function(d) { return self.yScale(d[vi.y[value]]) });
 	                })(vis, ys);

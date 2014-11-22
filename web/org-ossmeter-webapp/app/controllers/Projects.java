@@ -23,6 +23,8 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 
 import java.net.ConnectException;
 
+import auth.MongoAuthenticator;
+
 import static play.data.Form.*;
 
 public class Projects extends Controller {
@@ -82,7 +84,7 @@ public class Projects extends Controller {
 	public static Result projects() {
 		try {
 		    List<Project> projectList = getProjects();
-		    return ok(views.html.projects.projects.render(projectList));
+		    return ok(views.html.projects.projects.render(projectList, MongoAuthenticator.getStatistics()));
 		} catch (ConnectException e) {
 			e.printStackTrace();
 			flash(Application.FLASH_ERROR_KEY, "Unable to connect to the OSSMETER API."); //TODO move to Messages.

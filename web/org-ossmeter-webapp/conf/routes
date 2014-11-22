@@ -4,8 +4,15 @@
 
 POST    /profile/spark                   	controllers.Account.watchSpark(projectid:String, metricid:String, projectName:String, metricName:String)
 
+POST    /profile/updategrid                   	controllers.Account.updateGridLocations(loc : String)
+
+
 # Client API proxy
 GET		/api/*path					controllers.Application.api(path : String)
+
+# Search
+GET 	/search 					controllers.Application.search(query : String)
+GET		/autocomplete				controllers.Application.autocomplete(query : String)
 
 # Home page
 GET     /                           controllers.Application.index

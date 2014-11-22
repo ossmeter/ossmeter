@@ -5,31 +5,20 @@
     margin:20px;
 }
 
-    a.adjust{
-        padding:10px;
-        display:block;
-        font-weight:bold;
-        background:#eee;
-        color:#333;
-        border-radius:12px;
-        -webkit-border-radius:12px;
-        -moz-border-radius:12px;
-        width:80px;
-        text-align:center;
-        text-decoration:none;
-    }
-    a.adjust:hover{
-        background:#333;
-        color:#FFF;
-        -webkit-transition: all 400ms; /*safari and chrome */
-        -moz-transition: all 400ms ease; /* firefox */
-        -o-transition: all 400ms ease; /* opera */
-        transition: all 400ms ease;
-    }
-    p.continued{
-        margin-top:0;
-    }
+.ui-autocomplete {
+    background: #fff;
+    border-radius: 1px;
+    border: 1px solid #ccc
+}
+.ui-autocomplete.source:hover {
+    background: #ccc;
+}
 
+.ui-menu .ui-menu-item a{
+    background:red;
+    height:10px;
+    font-size:8px;
+}
 
 body {
     font: 14px/1.8em 'Open Sans', Helvetica, Arial, Helvetica, sans-serif;
@@ -223,7 +212,7 @@ ul.projects img {
 }
 
 li.gridentry {
-    box-shadow: 0px 1px 1px #888888;
+    box-shadow: 0px 1px 1px #ddd;
     padding:5px;
     overflow:hidden;
 }
@@ -288,4 +277,25 @@ table.spark {
 .slip-left a {
     margin-left : -40px;
     /*margin-right: 30px;*/
+}
+
+#returnToTop {
+    height: 100px;
+    width: 100px;
+    position: fixed;
+    top: 287px;
+    right: 5px;
+    display: none;
+    text-align: center;
+    color: rgb(102, 102, 102);
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.0470588);
+    cursor : pointer;
+}
+#returnToTop > span.glyphicon {
+    font-size: 50px;
 }

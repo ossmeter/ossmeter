@@ -29,8 +29,15 @@ import model.Metric;
 import model.EventGroup;
 import model.Event;
 import model.GridEntry;
+import model.Statistics;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.googlecode.pongo.runtime.querying.*;
+import com.googlecode.pongo.runtime.PongoFactory;
 
 public class MongoAuthenticator {
 
@@ -38,6 +45,40 @@ public class MongoAuthenticator {
 	public static final String ADMIN_ROLE = "admin";
 
 	private final static long VERIFICATION_TIME = 7 * 24 * 3600;
+
+	public static Statistics getStatistics() {
+		DB db = getUsersDb();
+		DBCollection col = db.getCollection("statistics");
+		
+		DBCursor cursor = col.find().sort(new BasicDBObject("date", -1));
+
+		Statistics stats = null;
+		if (cursor.hasNext()) {
+			stats = (Statistics)PongoFactory.getInstance().createPongo(cursor.next());
+		}
+		db.getMongo().close();
+		return stats;
+	}
+
+	public static List<Project> autocomplete(String query) {
+		// Turn query into regex
+		String regex = "^" + query + ".*";
+		BasicDBObject obj = new BasicDBObject("name", java.util.regex.Pattern.compile(regex, java.util.regex.Pattern.CASE_INSENSITIVE));
+
+		// Pongo doesn't support regexs yet, so we're using the Java driver
+		DB db = getUsersDb();
+		DBCollection col = db.getCollection("projects");
+		DBCursor cursor = col.find(obj).sort(new BasicDBObject("name", 1));
+
+		List<Project> projects = new ArrayList<>();
+
+		while (cursor.hasNext()) {
+			projects.add((Project)PongoFactory.getInstance().createPongo(cursor.next()));
+		}
+
+		db.getMongo().close();
+		return projects;
+	}
 
 	public static User createUser(final AuthUser identity) {
 		final User user = new User();
@@ -362,6 +403,34 @@ public class MongoAuthenticator {
 
 		users.getUsers().sync();
 
+		db.getMongo().close();
+ 	}
+
+
+ 	public static void updateGridLocations(final User user, final ArrayNode loc) {
+ 		DB db = getUsersDb();
+		Users users = new Users(db);
+
+		User u = users.getUsers().findOneByEmail(user.getEmail());
+
+		for (GridEntry ge : u.getGrid()) {
+			for (JsonNode gloc : loc) {
+				if (ge.getId().equals(gloc.get("id").textValue())) {
+					ge.setCol(gloc.get("col").asInt());
+					ge.setRow(gloc.get("row").asInt());
+
+					System.out.println("row" + gloc.get("row").asInt());
+					System.out.println("col" + gloc.get("col").asInt());
+					break;
+				}
+			}			
+		}
+
+		// This is needed due to a bug in Pongo - modifying the GridEntries isn't
+		// enough to dirty the collection into syncing.
+		u.setEmail(u.getEmail()); 
+
+		users.getUsers().sync();
 		db.getMongo().close();
  	}
 

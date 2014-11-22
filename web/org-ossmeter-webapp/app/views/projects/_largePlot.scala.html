@@ -24,7 +24,7 @@
 // is literally that. A template.
     var vislist = []; //{"id":"bugs.cumulativeAverageResponseTime","name":"Average Response Time (Cumulative) (ms)","description":"The average response time of bugs addressed up to and including the current date.","type":"LineChart","datatable":[{"Date":"20050309","Response Time":0},{"Date":"20050310","Response Time":0},{"Date":"20050311","Response Time":0},{"Date":"20050312","Response Time":0},{"Date":"20050313","Response Time":0},{"Date":"20050314","Response Time":0},{"Date":"20050315","Response Time":0},{"Date":"20050316","Response Time":0},{"Date":"20050317","Response Time":0},{"Date":"20050318","Response Time":0},{"Date":"20060224","Response Time":3925581},{"Date":"20060225","Response Time":3925581},{"Date":"20060226","Response Time":3925581}],"timeSeries":true,"ordinal":false,"x":"Date","y":"Response Time"}
 
-    v
+    var metricmap = {};
     var chart;
 
     function grabMetricData(projectid, metricid) {
@@ -71,7 +71,7 @@
         l.empty();
         l.append("<ul>");
         for (var s in chart.series) {
-            l.append('<li><div class="legend-box" style="background-color:' + chart.colors(s) + '"></div>' + chart.series[s].vis.projectName + '</li>');
+            l.append('<li><div class="legend-box" style="background-color:' + chart.colors(s) + '"></div>' + chart.series[s].name + '</li>');
         }
         l.append("</ul>");
     }
@@ -93,25 +93,22 @@
 
     $(function() {
         $(window).scroll(function() {
-            if ($(window).scrollTop() > 100) {
-                // > 100px from top - show div
-                // $("#foo").show();
-            }
-            else {
-                // <= 100px from top - hide div
-                // $("#foo").hide();
-            }
-
             if ($("#plot").offset().top + $("#plot").height() > $(window).scrollTop() &&
                 $("#plot").offset().top + $("#plot").height() < $(window).scrollTop() + $(window).height()) {
-                $("#foo").hide();
+                $("#returnToTop").hide();
             } else {
-                $("#foo").show();
+                $("#returnToTop").css("top", $(window).height()/2);
+                $("#returnToTop").show();
             }
         });
+
+        $("#returnToTop").click(function() {
+            $("html, body").animate({ scrollTop: ($("#plot").offset().top - 20) }, "slow");
+        });
     });
-
-
 </script>
 
-<div id="foo" style="height:100px; width:100px; background-color:red; position:fixed; top:0; display:none;"></div>
+<div id="returnToTop">
+    <span class="glyphicon glyphicon-arrow-up"></span>
+    <p><small>Scroll to plot</small></p>
+</div>

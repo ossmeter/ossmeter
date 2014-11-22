@@ -3,6 +3,7 @@ package controllers;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.io.File;
+import java.util.List;
 
 import model.*;
 import models.*;
@@ -20,7 +21,8 @@ import play.libs.ws.*;
 import play.libs.F.Function;
 import play.libs.F.Promise;
 import com.fasterxml.jackson.databind.JsonNode;
-
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import views.html.*;
@@ -47,6 +49,27 @@ public class Application extends Controller {
 		return ok(index.render());
 	}
 
+	public static Result autocomplete(String query) {
+		List<model.Project> projects = MongoAuthenticator.autocomplete(query);
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		ArrayNode arr = mapper.createArrayNode();
+
+		for (model.Project p : projects) {
+			ObjectNode o = mapper.createObjectNode();
+			o.put("id", p.getId());
+			o.put("name", p.getName());
+			arr.add(o);
+		}
+
+		return ok(arr);
+	}
+
+	public static Result search(String query) {
+		return null;
+	}
+
 	public static Result compare() {
 		return ok(compare.render(getInformationSourceModel()));
 	}
@@ -55,7 +78,9 @@ public class Application extends Controller {
 		return ok(
 				Routes.javascriptRouter("jsRoutes",
 						controllers.routes.javascript.Signup.forgotPassword(),
-						controllers.routes.javascript.Account.watchSpark()
+						controllers.routes.javascript.Account.watchSpark(),
+						controllers.routes.javascript.Application.autocomplete(),
+						controllers.routes.javascript.Account.updateGridLocations()
 						)
 				)
 				.as("text/javascript");
