@@ -202,7 +202,7 @@ int projectAge(map[str, tuple[datetime first, datetime last]] firstLastCommitDat
 @metric{developmentTeamExperience}
 @doc{Based on committer activity, how experienced is the current team?}
 @friendlyName{Development team experience}
-@uses = ("firstLastCommitDatesPerDeveloper": "firstLastCommitDatesPerDeveloper", "commitsPerDeveloper": "commitsPerDeveloper")
+@uses = ("firstLastCommitDatesPerDeveloper": "firstLastCommitDates", "commitsPerDeveloper": "commitsPerDeveloper")
 @appliesTo{generic()}
 Factoid developmentTeamExperience(
   ProjectDelta delta = \empty(),
