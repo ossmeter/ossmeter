@@ -106,7 +106,7 @@ public class Global extends GlobalSettings {
 						final Users users = new Users(db);
 
 						// Iterate all projects TODO:Paging
-						Promise<List<Project>> projects = WS.url("http://localhost:8182/projects").get().map( 
+						Promise<List<Project>> projects = WS.url("http://localhost:8182/projects?size=300").get().map( 
 							new Function<WSResponse, List<Project>>() {
 
 								public List<Project> apply(WSResponse response) {

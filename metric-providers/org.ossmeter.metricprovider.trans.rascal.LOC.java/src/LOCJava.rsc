@@ -18,8 +18,8 @@ real giniLOCOverClass(set[M3] m3s, bool(loc) isClass) {
 }
 
 @metric{LOCoverJavaClass}
-@doc{Physical lines of code over Java classes, interfaces and enums}
-@friendlyName{Physical lines of code over Java classes, interfaces and enums}
+@doc{The distribution of physical lines of code over Java classes, interfaces and enums explains how complexity is distributed over the design elements of a system.}
+@friendlyName{Distribution of physical lines of code over Java classes, interfaces and enums}
 @appliesTo{java()}
 real giniLOCOverClassJava(rel[Language, loc, M3] m3s = {}) {
   return giniLOCOverClass({m3 | <java(), _, m3> <- m3s}, 

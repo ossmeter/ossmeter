@@ -8,7 +8,7 @@ public class ThreadStatisticsCollection extends PongoCollection<ThreadStatistics
 	
 	public ThreadStatisticsCollection(DBCollection dbCollection) {
 		super(dbCollection);
-		createIndex("url_name");
+		createIndex("newsgroupName");
 		createIndex("threadId");
 	}
 	
@@ -16,12 +16,12 @@ public class ThreadStatisticsCollection extends PongoCollection<ThreadStatistics
 		return new IteratorIterable<ThreadStatistics>(new PongoCursorIterator<ThreadStatistics>(this, dbCollection.find(new BasicDBObject("_id", id))));
 	}
 	
-	public Iterable<ThreadStatistics> findByUrl_name(String q) {
-		return new IteratorIterable<ThreadStatistics>(new PongoCursorIterator<ThreadStatistics>(this, dbCollection.find(new BasicDBObject("url_name", q + ""))));
+	public Iterable<ThreadStatistics> findByNewsgroupName(String q) {
+		return new IteratorIterable<ThreadStatistics>(new PongoCursorIterator<ThreadStatistics>(this, dbCollection.find(new BasicDBObject("newsgroupName", q + ""))));
 	}
 	
-	public ThreadStatistics findOneByUrl_name(String q) {
-		ThreadStatistics threadStatistics = (ThreadStatistics) PongoFactory.getInstance().createPongo(dbCollection.findOne(new BasicDBObject("url_name", q + "")));
+	public ThreadStatistics findOneByNewsgroupName(String q) {
+		ThreadStatistics threadStatistics = (ThreadStatistics) PongoFactory.getInstance().createPongo(dbCollection.findOne(new BasicDBObject("newsgroupName", q + "")));
 		if (threadStatistics != null) {
 			threadStatistics.setPongoCollection(this);
 		}
@@ -29,8 +29,8 @@ public class ThreadStatisticsCollection extends PongoCollection<ThreadStatistics
 	}
 	
 
-	public long countByUrl_name(String q) {
-		return dbCollection.count(new BasicDBObject("url_name", q + ""));
+	public long countByNewsgroupName(String q) {
+		return dbCollection.count(new BasicDBObject("newsgroupName", q + ""));
 	}
 	public Iterable<ThreadStatistics> findByThreadId(int q) {
 		return new IteratorIterable<ThreadStatistics>(new PongoCursorIterator<ThreadStatistics>(this, dbCollection.find(new BasicDBObject("threadId", q + ""))));

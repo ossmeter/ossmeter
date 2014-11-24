@@ -87,9 +87,9 @@ public class ClassificationInstanceCollection {
 	}
 
 	private String getComposedId(ArticleData articleData, int threadId) {
-		if ( ( articleData.getUrl_name()==null ) || ( threadId==0 ) ) 
+		if ( ( articleData.getNewsgroupName()==null ) || ( threadId==0 ) ) 
 			System.err.println("Unable to compose ID");
-		return articleData.getUrl_name() + "#" + threadId;
+		return articleData.getNewsgroupName() + "#" + threadId;
 	}
 
 	public List<ClassificationInstance> getInstanceList() {

@@ -23,7 +23,7 @@ public class CommunicationChannelDeltaCache implements ICommunicationChannelDelt
 	}
 	
 	// TODO: This needs to be bounded
-	synchronized public void putDelta(String communicationChannelUrl, Date date, CommunicationChannelDelta delta) {
+	public void putDelta(String communicationChannelUrl, Date date, CommunicationChannelDelta delta) {
 		map.put(Fun.t2(communicationChannelUrl, date.toString()), delta);
 	}
 	

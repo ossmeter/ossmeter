@@ -78,7 +78,7 @@ public class ThreadsHistoricMetricProvider extends AbstractHistoricalMetricProvi
 		for (NewsgroupData newsgroups: usedThreads.getNewsgroups()) {
 			sumOfThreads += newsgroups.getThreads();
 			DailyNewsgroupData newsgroupData = new DailyNewsgroupData();
-			newsgroupData.setUrl_name(newsgroups.getUrl_name());
+			newsgroupData.setNewsgroupName(newsgroups.getNewsgroupName());
 			newsgroupData.setNumberOfThreads(newsgroups.getThreads());
 			dailyThreads.getNewsgroups().add(newsgroupData);
 		}
@@ -90,18 +90,30 @@ public class ThreadsHistoricMetricProvider extends AbstractHistoricalMetricProvi
 		}
 		
 		dailyThreads.setNumberOfThreads(sumOfThreads);
+
+		float avgArticles = 0,
+			  avgReplies = 0,
+			  avgRequests = 0;
 		
-		float avgArticles = ((float) numberOfArticles) / threadIdSet.size();
-		float avgReplies = ((float) numberOfReplies) / threadIdSet.size();
-		float avgRequests = ((float) numberOfRequests) / threadIdSet.size();
+		if (threadIdSet.size()>0) {
+			avgArticles = ((float) numberOfArticles) / threadIdSet.size();
+			avgReplies = ((float) numberOfReplies) / threadIdSet.size();
+			avgRequests = ((float) numberOfRequests) / threadIdSet.size();
+		}
 		
 		dailyThreads.setAverageArticlesPerThread(avgArticles);
 		dailyThreads.setAverageRepliesPerThread(avgReplies);
 		dailyThreads.setAverageRequestsPerThread(avgRequests);
 		
-		avgArticles = ((float) numberOfArticles) / usedUsers.getUsers().size();
-		avgReplies = ((float) numberOfReplies) / usedUsers.getUsers().size();
-		avgRequests = ((float) numberOfRequests) / usedUsers.getUsers().size();
+		avgArticles = 0;
+		avgReplies = 0;
+		avgRequests = 0;
+
+		if (usedUsers.getUsers().size()>0) {
+			avgArticles = ((float) numberOfArticles) / usedUsers.getUsers().size();
+			avgReplies = ((float) numberOfReplies) / usedUsers.getUsers().size();
+			avgRequests = ((float) numberOfRequests) / usedUsers.getUsers().size();
+		}
 
 		dailyThreads.setAverageArticlesPerUser(avgArticles);
 		dailyThreads.setAverageRepliesPerUser(avgReplies);

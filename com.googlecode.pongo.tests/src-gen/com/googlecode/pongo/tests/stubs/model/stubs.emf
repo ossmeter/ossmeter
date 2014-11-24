@@ -1,0 +1,22 @@
+package com.googlecode.pongo.tests.stubs.model;
+
+@db
+class GoogleCode {
+   val GoogleProject[*] projects;
+   val Developer[*] developers;
+}
+
+class GoogleProject extends Project {
+   attr String name;
+   ref Developer[*] developers;
+}
+
+@stub(javaClass="com.googlecode.pongo.tests.stubs.model.ProjectFromAnotherLibrary")
+class Project {
+   
+}
+
+@stub(javaClass="com.googlecode.pongo.tests.stubs.model.DeveloperFromAnotherLibrary")
+class Developer {
+   
+}

@@ -72,7 +72,8 @@ public real checkSpaces(list[str] lines, set[str] symbolsTwoSides, set[str] symb
 
 
 @metric{fileReadability}
-@doc{Code readability per file, measured by use of whitespace}
+@doc{Code readability per file, measured by use of whitespace measures deviations from common usage of whitespace in source code, such 
+as spaces after commas. This is a basic collection metric which is used further downstream.}
 @friendlyName{FileReadability}
 @appliesTo{generic()}
 map[loc, real] fileReadability(rel[Language, loc, AST] asts = {}) {
@@ -82,7 +83,9 @@ map[loc, real] fileReadability(rel[Language, loc, AST] asts = {}) {
 }
 
 @metric{fileReadabilityQuartiles}
-@doc{Quartiles of code readability per file, measured by use of whitespace}
+@doc{We measure file readability by counting exceptions to common usage of whitespace in source code, such as spaces after commas. The quartiles
+represent how many of the files have how many of these deviations. A few deviations per file is ok, but many files with many deviations indicates a
+lack of attention to readability.}
 @friendlyName{FileReadabilityQuartiles}
 @appliesTo{generic()}
 @historic
@@ -92,7 +95,9 @@ map[str, real] fileReadabilityQ(map[loc, real] val = ()) {
 }
 
 @metric{ReadabilityFactoid}
-@doc{Check for proper use of whitespace}
+@doc{We measure file readability by counting exceptions to common usage of whitespace in source code, such as spaces after commas. We find out  
+how many of the files have how many of these deviations. A few deviations per file is ok, but many files with many deviations indicates a
+lack of attention to readability.}
 @friendlyName{Use of whitespace}
 @appliesTo{generic()}
 @uses=("fileReadability":"fileReadability")

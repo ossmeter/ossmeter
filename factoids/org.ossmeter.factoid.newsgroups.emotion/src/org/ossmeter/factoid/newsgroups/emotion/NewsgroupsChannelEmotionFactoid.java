@@ -124,8 +124,10 @@ public class NewsgroupsChannelEmotionFactoid extends AbstractFactoidMetricProvid
 		else if ( positiveEmotionPercentage > 65 )
 			stringBuffer.append("not so many");
 		else if ( positiveEmotionPercentage > 50 )
-			stringBuffer.append("few");
+			stringBuffer.append("some");
 		else if ( positiveEmotionPercentage > 35 )
+			stringBuffer.append("few");
+		else
 			stringBuffer.append("very few");
 		stringBuffer.append(" articles that express positive emotions, while there are ");
 		if  ( negativeEmotionPercentage > 80 )
@@ -133,8 +135,10 @@ public class NewsgroupsChannelEmotionFactoid extends AbstractFactoidMetricProvid
 		else if ( negativeEmotionPercentage > 65 )
 			stringBuffer.append("not so many");
 		else if ( negativeEmotionPercentage > 50 )
-			stringBuffer.append("few");
+			stringBuffer.append("some");
 		else if ( negativeEmotionPercentage > 35 )
+			stringBuffer.append("few");
+		else
 			stringBuffer.append("very few");
 		stringBuffer.append(" articles that express negative emotions.\n");
 		
@@ -157,6 +161,8 @@ public class NewsgroupsChannelEmotionFactoid extends AbstractFactoidMetricProvid
 		stringBuffer.append(decimalFormat.format(leastCommonPositivePercentage));
 		stringBuffer.append(" %).\n");
 		
+		factoid.setFactoid(stringBuffer.toString());
+
 	}
 	
 }

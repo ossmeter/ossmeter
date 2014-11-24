@@ -1,5 +1,6 @@
 package org.ossmeter.factoid.newsgroups.channelusage;
 
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -54,8 +55,8 @@ public class NewsgroupsChannelUsageFactoid extends AbstractFactoidMetricProvider
 
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return Arrays.asList(ArticlesHistoricMetricProvider.class.getCanonicalName(),
-							 NewsgroupsNewThreadsHistoricMetric.class.getCanonicalName());
+		return Arrays.asList(ArticlesHistoricMetricProvider.IDENTIFIER,
+							 NewThreadsHistoricMetricProvider.IDENTIFIER);
 	}
 
 	@Override
@@ -68,13 +69,30 @@ public class NewsgroupsChannelUsageFactoid extends AbstractFactoidMetricProvider
 //		factoid.setCategory(FactoidCategory.BUGS);
 		factoid.setName("Newsgroup Channel Usage Factoid");
 
-		ArticlesHistoricMetricProvider articlesProvider = new ArticlesHistoricMetricProvider();
-		NewThreadsHistoricMetricProvider threadsProvider = new NewThreadsHistoricMetricProvider();
-		
-//		Date end = new Date(20040830);
-//		Date start = new Date(20041023);
+		ArticlesHistoricMetricProvider articlesProvider = null;
+		NewThreadsHistoricMetricProvider threadsProvider = null;
+
+		for (IMetricProvider m : this.uses) {
+			if (m instanceof ArticlesHistoricMetricProvider) {
+				articlesProvider = (ArticlesHistoricMetricProvider) m;
+				continue;
+			}
+			if (m instanceof NewThreadsHistoricMetricProvider) {
+				threadsProvider = (NewThreadsHistoricMetricProvider) m;
+				continue;
+			}
+		}
+
 		Date end = new Date();
 		Date start = (new Date()).addDays(-365);
+//		Date start=null, end=null;
+//		try {
+//			start = new Date("20040801");
+//			end = new Date("20050801");
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		List<Pongo> articlesList = articlesProvider.getHistoricalMeasurements(context, project, start, end),
 					threadsList = threadsProvider.getHistoricalMeasurements(context, project, start, end);
 		
@@ -131,7 +149,7 @@ public class NewsgroupsChannelUsageFactoid extends AbstractFactoidMetricProvider
 			if (newsgroupThreads.containsKey(tracker))
 				commentFrequency = newsgroupThreads.get(tracker);
 			stringBuffer.append(commentFrequency);
-			stringBuffer.append(" new threads have been posted to communicaiton channel ");
+			stringBuffer.append(" new threads have been posted to communication channel ");
 			stringBuffer.append(tracker);
 			stringBuffer.append(".\n");
 		}
@@ -178,11 +196,11 @@ public class NewsgroupsChannelUsageFactoid extends AbstractFactoidMetricProvider
 			NewsgroupsArticlesHistoricMetric articlesPongo = (NewsgroupsArticlesHistoricMetric) pongo;
 			numberOfArticles += articlesPongo.getNumberOfArticles();
 			for (DailyNewsgroupData newsgroup: articlesPongo.getNewsgroups()) {
-				if (newsgroupArticles.containsKey(newsgroup.getUrl_name()))
-					newsgroupArticles.put(newsgroup.getUrl_name(), 
-										  newsgroupArticles.get(newsgroup.getUrl_name()) + 1);
+				if (newsgroupArticles.containsKey(newsgroup.getNewsgroupName()))
+					newsgroupArticles.put(newsgroup.getNewsgroupName(), 
+										  newsgroupArticles.get(newsgroup.getNewsgroupName()) + 1);
 				else
-					newsgroupArticles.put(newsgroup.getUrl_name(), 1);
+					newsgroupArticles.put(newsgroup.getNewsgroupName(), 1);
 			}
 		}
 		return numberOfArticles;
@@ -195,11 +213,11 @@ public class NewsgroupsChannelUsageFactoid extends AbstractFactoidMetricProvider
 			numberOfThreads += threadsPongo.getNumberOfNewThreads();
 			for ( org.ossmeter.metricprovider.historic.newsgroups.newthreads.model.DailyNewsgroupData 
 					newsgroup: threadsPongo.getNewsgroups()) {
-				if (newsgroupThreads.containsKey(newsgroup.getUrl_name()))
-					newsgroupThreads.put(newsgroup.getUrl_name(), 
-										 newsgroupThreads.get(newsgroup.getUrl_name()) + 1);
+				if (newsgroupThreads.containsKey(newsgroup.getNewsgroupName()))
+					newsgroupThreads.put(newsgroup.getNewsgroupName(), 
+										 newsgroupThreads.get(newsgroup.getNewsgroupName()) + 1);
 				else
-					newsgroupThreads.put(newsgroup.getUrl_name(), 1);
+					newsgroupThreads.put(newsgroup.getNewsgroupName(), 1);
 			}
 		}
 		return numberOfThreads;

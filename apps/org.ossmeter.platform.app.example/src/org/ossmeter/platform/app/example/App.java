@@ -44,7 +44,7 @@ public class App implements IApplication {
 //		Project pdb = ProjectCreationUtil.createProjectWithBugTrackingSystem("epsilon", "https://bugs.eclipse.org/bugs/xmlrpc.cgi", "epsilon", null);
 //		Project pdb = ProjectCreationUtil.createProjectWithBugTrackingSystem("eclipse", "https://bugs.eclipse.org/bugs/xmlrpc.cgi", "platform", null);
 //		Project pdb = ProjectCreationUtil.createProjectWithBugTrackingSystem("modelinggmtamw", "https://bugs.eclipse.org/bugs/xmlrpc.cgi", "GMT", "AMW");
-//		Project pdb = ProjectCreationUtil.createProjectWithBugTrackingSystem("modelinggmt", "https://bugs.eclipse.org/bugs/xmlrpc.cgi", "GMT", null);
+	//	Project pdb = ProjectCreationUtil.createProjectWithBugTrackingSystem("modelinggmt", "https://bugs.eclipse.org/bugs/xmlrpc.cgi", "GMT", null);
 //		Project pdb = ProjectCreationUtil.createProjectWithBugTrackingSystem("fedora", "https://bugzilla.redhat.com/xmlrpc.cgi", "Fedora", "acpi");
 //		Project pdb = ProjectCreationUtil.createProjectWithBugTrackingSystem("bugzilla", "https://bugzilla.redhat.com/xmlrpc.cgi", "Bugzilla", null);
 
@@ -56,7 +56,6 @@ public class App implements IApplication {
 //		addSampleProjectWithBugTrackingSystem("MDT-Papyrus", "https://bugs.eclipse.org/bugs/xmlrpc.cgi", "MDT.Papyrus", "Core", platform);
 //		addSampleProjectWithBugTrackingSystem("TMF-Xtext", "https://bugs.eclipse.org/bugs/xmlrpc.cgi", "TMF", "Xtext", platform);
 
-		
 		
 //		Project pdb = ProjectCreationUtil.createProjectWithBugTrackingSystem("epsilon", "https://bugs.eclipse.org/bugs/xmlrpc.cgi", "epsilon", null);
 //		Project pdb = ProjectCreationUtil.createGitProject("rascal", "file:///Users/jurgenv/Workspaces/Rascal/rascal");
@@ -71,7 +70,8 @@ public class App implements IApplication {
 		mongo.close();
 		
 		// Start the application
-		return  new OssmeterApplication().start(context);
+		return  null;
+//		return  new OssmeterApplication().start(context);
 	}
 
 	protected Date getLastExecutedDate(Platform platform, Project project) {

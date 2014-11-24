@@ -98,7 +98,7 @@ public class ThreadsRequestsRepliesTransMetricProvider  implements
 		
 		Map<String, String> articleReplyRequest = new HashMap<String, String>();
 		for (NewsgroupArticles article: usedClassifier.getNewsgroupArticles())
-			articleReplyRequest.put(article.getUrl()+article.getArticleNumber(), 
+			articleReplyRequest.put(article.getNewsgroupName()+article.getArticleNumber(), 
 										article.getClassificationResult());
 
 		for (ThreadData thread: usedThreads.getThreads()) {
@@ -112,18 +112,18 @@ public class ThreadsRequestsRepliesTransMetricProvider  implements
 					noReplyFound=true,
 					isFirstRequest=true;
 
-			String lastUrl_name = "";
+			String lastNewsgroupName = "";
 			ThreadStatistics threadStats = new ThreadStatistics();
 			while (iterator.hasNext()) {
 				ArticleData article = iterator.next();
-				lastUrl_name = article.getUrl_name();
-				String responseReply = articleReplyRequest.get(article.getUrl_name()+article.getArticleNumber());
+				lastNewsgroupName = article.getNewsgroupName();
+				String responseReply = articleReplyRequest.get(article.getNewsgroupName() + article.getArticleNumber());
 				if (first)
 					firstMessageTime = article.getDate();
 				if ((first)&&(responseReply.equals("Reply"))) isFirstRequest=false;
 				if ((!first)&&(noReplyFound)&&(responseReply.equals("Reply"))) {
 					
-					threadStats.setUrl_name(lastUrl_name);
+					threadStats.setNewsgroupName(lastNewsgroupName);
 					threadStats.setFirstRequest(isFirstRequest);
 					threadStats.setThreadId(thread.getThreadId());
 					threadStats.setAnswered(true);
@@ -142,7 +142,7 @@ public class ThreadsRequestsRepliesTransMetricProvider  implements
 			}
 			if (noReplyFound&&(!first)) {
 				threadStats = new ThreadStatistics();
-				threadStats.setUrl_name(lastUrl_name);
+				threadStats.setNewsgroupName(lastNewsgroupName);
 				threadStats.setFirstRequest(isFirstRequest);
 				threadStats.setThreadId(thread.getThreadId());
 				threadStats.setAnswered(false);

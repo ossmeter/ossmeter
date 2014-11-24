@@ -74,13 +74,13 @@ public class EmotionsTransMetricProvider implements ITransientMetricProvider<New
 			if (!(communicationChannel instanceof NntpNewsGroup)) continue;
 			NntpNewsGroup newsGroup = (NntpNewsGroup) communicationChannel;
 			Iterable<NewsgroupData> newsgroupDataIt = 
-					db.getNewsgroups().find(NewsgroupData.URL_NAME.eq(newsGroup.getUrl()));
+					db.getNewsgroups().find(NewsgroupData.NEWSGROUPNAME.eq(newsGroup.getNewsGroupName()));
 			NewsgroupData newsgroupData = null;
 			for (NewsgroupData ngd:  newsgroupDataIt) 
 				newsgroupData = ngd;
 			if (newsgroupData == null) {
 				newsgroupData = new NewsgroupData();
-				newsgroupData.setUrl_name(newsGroup.getUrl());
+				newsgroupData.setNewsgroupName(newsGroup.getNewsGroupName());
 				newsgroupData.setNumberOfArticles(0);
 				newsgroupData.setCumulativeNumberOfArticles(0);
 				db.getNewsgroups().add(newsgroupData);
@@ -92,7 +92,7 @@ public class EmotionsTransMetricProvider implements ITransientMetricProvider<New
 			db.sync();
 
 			Iterable<EmotionDimension> emotionIt = 
-					db.getDimensions().find(EmotionDimension.URL_NAME.eq(newsGroup.getUrl()));
+					db.getDimensions().find(EmotionDimension.NEWSGROUPNAME.eq(newsGroup.getNewsGroupName()));
 			for (EmotionDimension emotion:  emotionIt) {
 				emotion.setNumberOfArticles(0);
 			}
@@ -101,7 +101,7 @@ public class EmotionsTransMetricProvider implements ITransientMetricProvider<New
 
 				ClassificationInstance instance = new ClassificationInstance();
 				instance.setArticleNumber(article.getArticleNumber());
-				instance.setUrl(newsGroup.getUrl());
+				instance.setNewsgroupName(newsGroup.getNewsGroupName());
 				instance.setText(article.getText());
 				
 				String[] emotionalDimensions = 
@@ -111,14 +111,14 @@ public class EmotionsTransMetricProvider implements ITransientMetricProvider<New
 					dimension = dimension.trim();
 					if (dimension.length()>0) {
 						emotionIt = db.getDimensions().
-												find(EmotionDimension.URL_NAME.eq(newsGroup.getUrl()),
+												find(EmotionDimension.NEWSGROUPNAME.eq(newsGroup.getNewsGroupName()),
 														EmotionDimension.EMOTIONLABEL.eq(dimension));
 						
 						EmotionDimension emotion = null;
 						for (EmotionDimension em: emotionIt) emotion = em;
 						if (emotion == null) {
 							emotion = new EmotionDimension();
-							emotion.setUrl_name(newsGroup.getUrl());
+							emotion.setNewsgroupName(newsGroup.getNewsGroupName());
 							emotion.setEmotionLabel(dimension);
 							emotion.setNumberOfArticles(0);
 							emotion.setCumulativeNumberOfArticles(0);
@@ -133,8 +133,10 @@ public class EmotionsTransMetricProvider implements ITransientMetricProvider<New
 			
 			db.sync();
 
-			emotionIt = db.getDimensions().find(EmotionDimension.URL_NAME.eq(newsGroup.getUrl()));
-			for (EmotionDimension emotion: emotionIt) {
+			emotionIt = db.getDimensions().
+					find(EmotionDimension.NEWSGROUPNAME.eq(newsGroup.getNewsGroupName()));
+
+			for (EmotionDimension emotion: db.getDimensions()) {
 				if ( newsgroupData.getNumberOfArticles() > 0 )
 					emotion.setPercentage( 
 						((float)100*emotion.getNumberOfArticles()) / newsgroupData.getNumberOfArticles());

@@ -13,7 +13,9 @@ import org::ossmeter::metricprovider::Factoid;
 
 
 @metric{WMCPHP}
-@doc{Weighted Method Count for PHP classes}
+@doc{Cyclomatic complexity is a measure of the number of unique control flow paths in the methods of a class and the functions in a file. This indicates how many different test cases
+you would need to test the method. A high number indicates also a lot of work to understand the method. The weighted method count for a class is the sum
+of the cyclomatic complexity measures of all methods in the class. This metric is a basic metric for further processing downstream. It is not easily compared between projects.}
 @friendlyName{Weighted Method Count for PHP classes}
 @appliesTo{php()}
 @uses = ("CCPHP" : "methodCC")
@@ -29,7 +31,8 @@ map[loc class, num wmcCount] getWMC(rel[Language, loc, M3] m3s = {}, map[loc, in
 }
 
 @metric{CCPHP}
-@doc{McCabe's Cyclomatic Complexity for PHP methods}
+@doc{Cyclomatic complexity is a measure of the number of unique control flow paths in the methods of a class. This indicates how many different test cases
+you would need to test the method or function. A high number indicates also a lot of work to understand the method. This basic metric collects data per method and function and is used further downstream.}
 @friendlyName{McCabe's Cyclomatic Complexity for PHP methods}
 @appliesTo{php()}
 map[loc, int] getCC(rel[Language, loc, AST] asts = {}) 
@@ -69,8 +72,8 @@ int countCC(list[Stmt] stats) {
 }
 
 @metric{CCOverPHPMethods}
-@doc{Calculates the gini coefficient of CC over PHP methods}
-@friendlyName{The gini coefficient of CC over PHP methods}
+@doc{Calculates how cyclomatic complexity is spread over the methods of a system. If high CC is localized, then this may be easily fixed but if many methods have high complexity, then the project may be at risk. This metric is good to compare between projects.}
+@friendlyName{Spread of CC over methods}
 @appliesTo{php()}
 @uses{("CCPHP": "methodCC")}
 real giniCCOverMethodsPHP(map[loc, int] methodCC = ()) {
@@ -79,7 +82,7 @@ real giniCCOverMethodsPHP(map[loc, int] methodCC = ()) {
 
 
 @metric{CCHistogramPHP}
-@doc{Number of PHP methods per CC risk factor}
+@doc{Number of PHP methods per CC risk factor, counts the number of methods which are in a low, medium or high risk factor. The histogram can be compared between projects to indicate which is probably easier to maintain on a method-by-method basis.}
 @friendlyName{Number of PHP methods per CC risk factor}
 @appliesTo{php()}
 @uses{("CCPHP" : "methodCC")}
@@ -90,8 +93,8 @@ map[str, int] CCHistogramPHP(map[loc, int] methodCC = ()) {
 
 
 @metric{CCPHPFactoid}
-@doc{The cyclometic complexity of the project's PHP code}
-@friendlyName{CCPHPFactoid}
+@doc{The cyclometic complexity of the project's PHP code indicates on the lowest code level (inside the body of methods) how hard the code to test is and also provides contra indications for underdstandability.}
+@friendlyName{Cyclomatic Complexity for PHP}
 @appliesTo{php()}
 @uses{("CCHistogramPHP" : "hist")}
 Factoid CC(map[str, int] hist = ()) {

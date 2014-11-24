@@ -52,7 +52,7 @@ public class EmotionsHistoricMetricProvider extends AbstractHistoricalMetricProv
 			 for (NewsgroupData newsgroupData: usedEmotions.getNewsgroups()) {
 				 Newsgroups newsgroups = new Newsgroups();
 				 emotions.getNewsgroups().add(newsgroups);
-				 newsgroups.setUrl_name(newsgroupData.getUrl_name());
+				 newsgroups.setNewsgroupName(newsgroupData.getNewsgroupName());
 				 newsgroups.setCumulativeNumberOfArticles(newsgroupData.getCumulativeNumberOfArticles());
 				 newsgroups.setNumberOfArticles(newsgroupData.getNumberOfArticles());
 			 }
@@ -60,7 +60,7 @@ public class EmotionsHistoricMetricProvider extends AbstractHistoricalMetricProv
 			 for (EmotionDimension emotionDimension: usedEmotions.getDimensions()) {
 				 Emotion emotion = new Emotion();
 				 emotions.getEmotions().add(emotion);
-				 emotion.setUrl_name(emotionDimension.getUrl_name());
+				 emotion.setNewsgroupName(emotionDimension.getNewsgroupName());
 				 emotion.setEmotionLabel(emotionDimension.getEmotionLabel());
 				 emotion.setCumulativeNumberOfArticles(emotionDimension.getCumulativeNumberOfArticles());
 				 emotion.setCumulativePercentage(emotionDimension.getCumulativePercentage());

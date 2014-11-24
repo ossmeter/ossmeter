@@ -59,73 +59,57 @@ public class SeveritySentimentHistoricMetricProvider extends AbstractHistoricalM
 			NewsgroupsSentimentTransMetric threadsRequestReplies = 
 					((SentimentTransMetricProvider)uses.get(1)).adapt(context.getProjectDB(project));
 
-			 Map<String, Map<String, Integer>> sentimentAtBeginning = new HashMap<String, Map<String, Integer>>(),
-					 			  			   sentimentAtEnd = new HashMap<String, Map<String, Integer>>();
-			 Map<String, Map<String, Float>> sentimentAverage = new HashMap<String, Map<String, Float>>();
+			 Map<String, Integer> sentimentAtBeginning = new HashMap<String, Integer>(),
+					 			  sentimentAtEnd = new HashMap<String, Integer>();
+			 Map<String, Float> sentimentAverage = new HashMap<String, Float>();
 		 			  
-			 Map<String, Map<String, Integer>> severitiesPerNewsgroup = new HashMap<String, Map<String, Integer>>();
+			 Map<String, Integer> severities = new HashMap<String, Integer>();
 			 
 			 for (NewsgroupThreadData newsgroupThreadData: severityClassifier.getNewsgroupThreads()) {
 				 
-				 String newsgroupUrl = newsgroupThreadData.getUrl();
-				 
 				 String severity = newsgroupThreadData.getSeverity();
-				 Map<String, Integer> severityMap;
-				 if (severitiesPerNewsgroup.containsKey(newsgroupUrl))
-					 severityMap = severitiesPerNewsgroup.get(newsgroupUrl);
-				 else {
-					 severityMap = new HashMap<String, Integer>();
-					 severitiesPerNewsgroup.put(newsgroupUrl, severityMap);
-				 }
-				 
-				 if (severityMap.containsKey(severity))
-					 severityMap.put(severity, severityMap.get(severity) + 1);
+				 if (severities.containsKey(severity))
+					 severities.put(severity, severities.get(severity) + 1);
 				 else
-					 severityMap.put(severity, + 1);
+					 severities.put(severity, + 1);
 			 
 				 ThreadStatistics threadData = null;
 				 Iterable<ThreadStatistics> threadDataIt = threadsRequestReplies.getThreads().
-						 						find(ThreadStatistics.URL_NAME.eq(newsgroupUrl),
+						 						find(ThreadStatistics.NEWSGROUPNAME.eq(newsgroupThreadData.getNewsgroupName()),
 						 							 ThreadStatistics.THREADID.eq(newsgroupThreadData.getThreadId()));
 				 for (ThreadStatistics ts: threadDataIt) threadData = ts;
 		 
 				 float averageSentiment = threadData.getAverageSentiment();
-				 Map<String, Float> sentAverage = retrieveOrAddFloat(sentimentAverage, newsgroupUrl);
-				 addOrIncreaseFloat(sentAverage, severity, averageSentiment);
+				 addOrIncreaseFloat(sentimentAverage, severity, averageSentiment);
 				 
 				 int startSentiment = transformSentimentToInteger(threadData.getStartSentiment());
-				 Map<String, Integer> sentBeginning = retrieveOrAdd(sentimentAtBeginning, newsgroupUrl);
-				 addOrIncrease(sentBeginning, severity, startSentiment);
+				 addOrIncrease(sentimentAtBeginning, severity, startSentiment);
 				 
 				 int endSentiment = transformSentimentToInteger(threadData.getEndSentiment());
-				 Map<String, Integer> sentEnd = retrieveOrAdd(sentimentAtEnd, newsgroupUrl);
-				 addOrIncrease(sentEnd, severity, endSentiment);
+				 addOrIncrease(sentimentAtEnd, severity, endSentiment);
 
 			 }
 			 
-			 for (String newsgroupUrl: severitiesPerNewsgroup.keySet()) {
-			 
-				 Map<String, Integer> severityMap = severitiesPerNewsgroup.get(newsgroupUrl);
+			 for (String severity: severities.keySet()) {
 				 
-				 for (String severity: severityMap.keySet()) {
-					 int numberOfSeverityThreads = severityMap.get(severity);
-					 SeverityLevel severityLevel = new SeverityLevel();
-					 severityLevel.setUrl(newsgroupUrl);
-					 severityLevel.setSeverityLevel(severity);
-					 severityLevel.setNumberOfThreads(numberOfSeverityThreads);
-					 float averageSentiment = sentimentAverage.get(newsgroupUrl).get(severity) / numberOfSeverityThreads;
-					 severityLevel.setAverageSentiment(averageSentiment);
-					 float sentimentAtThreadBeggining = 
-							 ((float) sentimentAtBeginning.get(newsgroupUrl).get(severity)) / numberOfSeverityThreads;
-					 severityLevel.setSentimentAtThreadBeggining(sentimentAtThreadBeggining);
-					 float sentimentAtThreadEnd = 
-							 ((float) sentimentAtEnd.get(newsgroupUrl).get(severity)) / numberOfSeverityThreads;
-					 severityLevel.setSentimentAtThreadEnd(sentimentAtThreadEnd);
-					 metric.getSeverityLevels().add(severityLevel);
-				 }
-			 
+				 SeverityLevel severityLevel = new SeverityLevel();
+				 severityLevel.setSeverityLevel(severity);
+
+				 int numberOfSeverityThreads = severities.get(severity);
+				 severityLevel.setNumberOfThreads(numberOfSeverityThreads);
+				 
+				 float averageSentiment = sentimentAverage.get(severity) / numberOfSeverityThreads;
+				 severityLevel.setAverageSentiment(averageSentiment);
+				 
+				 float sentimentAtThreadBeggining = ((float) sentimentAtBeginning.get(severity)) / numberOfSeverityThreads;
+				 severityLevel.setSentimentAtThreadBeggining(sentimentAtThreadBeggining);
+				 
+				 float sentimentAtThreadEnd = ((float) sentimentAtEnd.get(severity)) / numberOfSeverityThreads;
+				 severityLevel.setSentimentAtThreadEnd(sentimentAtThreadEnd);
+				 
+				 metric.getSeverityLevels().add(severityLevel);
 			 }
-			 
+
 		}
 		return metric;
 	
@@ -138,30 +122,6 @@ public class SeveritySentimentHistoricMetricProvider extends AbstractHistoricalM
 			 return 1;
 		 else
 			 return 0;
-	}
-
-	private Map<String, Integer> retrieveOrAdd(
-			 Map<String, Map<String, Integer>> map, String trackerId) {
-		Map<String, Integer> component;
-		if (map.containsKey(trackerId))
-			component = map.get(trackerId);
-		else {
-			component = new HashMap<String, Integer>();
-			map.put(trackerId, component);
-		}
-		return component;
-	}
-	
-	private Map<String, Float> retrieveOrAddFloat(
-			 Map<String, Map<String, Float>> map, String trackerId) {
-		Map<String, Float> component;
-		if (map.containsKey(trackerId))
-			component = map.get(trackerId);
-		else {
-			component = new HashMap<String, Float>();
-			map.put(trackerId, component);
-		}
-		return component;
 	}
 	
 	private void addOrIncrease(Map<String, Integer> map, String item, int increment) {

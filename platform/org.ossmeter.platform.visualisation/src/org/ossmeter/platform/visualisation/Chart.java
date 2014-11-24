@@ -188,11 +188,11 @@ public class Chart {
 
 	public void completeFields(ObjectNode visualisation, JsonNode vis) {
 		for (String field : requiredFields) {
-			visualisation.put(field, vis.path(field).textValue());
+				visualisation.put(field, vis.path(field));
 		}
 		for (String field : optionalFields) {
 			if (vis.has(field)) {
-				visualisation.put(field, vis.path(field).textValue());
+				visualisation.put(field, vis.path(field));
 			}
 		}
 	}

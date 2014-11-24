@@ -1,0 +1,286 @@
+@namespace(uri="http://www.eclipse.org/emf/2002/Ecore", prefix="ecore")
+package com.googlecode.pongo.tests.ecore.model;
+
+@Ecore(constraints="ConsistentTransient")
+class EAttribute extends EStructuralFeature {
+  attr EBoolean iD;
+  readonly volatile transient derived ref EDataType[1] eAttributeType;
+}
+
+@Ecore(constraints="WellFormedSourceURI")
+class EAnnotation extends EModelElement {
+  attr EString source;
+  !resolve val EStringToStringMapEntry[*] details;
+  transient !resolve ref EModelElement#eAnnotations eModelElement;
+  !resolve val EObject[*] contents;
+  ref EObject[*] references;
+}
+
+@Ecore(constraints="InterfaceIsAbstract AtMostOneID UniqueFeatureNames UniqueOperationSignatures NoCircularSuperTypes WellFormedMapEntryClass ConsistentSuperTypes")
+class EClass extends EClassifier {
+  op EBoolean isSuperTypeOf(EClass someClass);
+  op EInt getFeatureCount();
+  op EStructuralFeature getEStructuralFeature(EInt featureID);
+  op EInt getFeatureID(EStructuralFeature feature);
+  op EStructuralFeature getEStructuralFeature(EString featureName);
+  attr EBoolean ~abstract;
+  attr EBoolean ~interface;
+
+  @GenModel(suppressedIsSetVisibility="true", suppressedUnsetVisibility="true")
+  unsettable ref EClass[*] eSuperTypes;
+  !resolve val EOperation[*]#eContainingClass eOperations;
+  readonly volatile transient derived ref EAttribute[*] eAllAttributes;
+  readonly volatile transient derived ref EReference[*] eAllReferences;
+  readonly volatile transient derived ref EReference[*] eReferences;
+  readonly volatile transient derived ref EAttribute[*] eAttributes;
+  readonly volatile transient derived ref EReference[*] eAllContainments;
+  readonly volatile transient derived ref EOperation[*] eAllOperations;
+  readonly volatile transient derived ref EStructuralFeature[*] eAllStructuralFeatures;
+  readonly volatile transient derived ref EClass[*] eAllSuperTypes;
+  readonly volatile transient derived !resolve ref EAttribute eIDAttribute;
+  !resolve val EStructuralFeature[*]#eContainingClass eStructuralFeatures;
+
+  @GenModel(suppressedIsSetVisibility="true", suppressedUnsetVisibility="true")
+  unsettable !resolve val EGenericType[*] eGenericSuperTypes;
+  readonly volatile transient derived ref EGenericType[*] eAllGenericSuperTypes;
+}
+
+@Ecore(constraints="WellFormedInstanceTypeName UniqueTypeParameterNames")
+abstract class EClassifier extends ENamedElement {
+  op EBoolean isInstance(EJavaObject object);
+  op EInt getClassifierID();
+
+  @GenModel(suppressedIsSetVisibility="true", suppressedUnsetVisibility="true")
+  volatile unsettable attr EString instanceClassName;
+  readonly volatile transient derived attr EJavaClass<?> instanceClass;
+  readonly volatile transient derived attr EJavaObject defaultValue;
+
+  @GenModel(suppressedIsSetVisibility="true", suppressedUnsetVisibility="true")
+  volatile unsettable attr EString instanceTypeName;
+  readonly transient ref EPackage#eClassifiers ePackage;
+  val ETypeParameter[*] eTypeParameters;
+}
+
+class EDataType extends EClassifier {
+  attr EBoolean serializable = true;
+}
+
+@Ecore(constraints="UniqueEnumeratorNames UniqueEnumeratorLiterals")
+class EEnum extends EDataType {
+  op EEnumLiteral getEEnumLiteral(EString name);
+  op EEnumLiteral getEEnumLiteral(EInt value);
+  op EEnumLiteral getEEnumLiteralByLiteral(EString literal);
+  !resolve val EEnumLiteral[*]#eEnum eLiterals;
+}
+
+class EEnumLiteral extends ENamedElement {
+  attr EInt value;
+  transient attr EEnumerator instance;
+  attr EString literal;
+  readonly transient !resolve ref EEnum#eLiterals eEnum;
+}
+
+class EFactory extends EModelElement {
+  op EObject create(EClass eClass);
+  op EJavaObject createFromString(EDataType eDataType, EString literalValue);
+  op EString convertToString(EDataType eDataType, EJavaObject instanceValue);
+  transient !resolve ref EPackage[1]#eFactoryInstance ePackage;
+}
+
+abstract class EModelElement extends EObject {
+  op EAnnotation getEAnnotation(EString source);
+  !resolve val EAnnotation[*]#eModelElement eAnnotations;
+}
+
+@Ecore(constraints="WellFormedName")
+abstract class ENamedElement extends EModelElement {
+  attr EString name;
+}
+
+class EObject {
+  op EClass eClass();
+  op EBoolean eIsProxy();
+  op EResource eResource();
+  op EObject eContainer();
+  op EStructuralFeature eContainingFeature();
+  op EReference eContainmentFeature();
+  op EEList<EObject> eContents();
+  op ETreeIterator<EObject> eAllContents();
+  op EEList<EObject> eCrossReferences();
+  op EJavaObject eGet(EStructuralFeature feature);
+  op EJavaObject eGet(EStructuralFeature feature, EBoolean ~resolve);
+  op void eSet(EStructuralFeature feature, EJavaObject newValue);
+  op EBoolean eIsSet(EStructuralFeature feature);
+  op void eUnset(EStructuralFeature feature);
+}
+
+@Ecore(constraints="UniqueParameterNames UniqueTypeParameterNames NoRepeatingVoid")
+class EOperation extends ETypedElement {
+  readonly transient !resolve ref EClass#eOperations eContainingClass;
+  val ETypeParameter[*] eTypeParameters;
+  !resolve val EParameter[*]#eOperation eParameters;
+
+  @GenModel(suppressedIsSetVisibility="true", suppressedUnsetVisibility="true")
+  unsettable ref EClassifier[*] eExceptions;
+
+  @GenModel(suppressedIsSetVisibility="true", suppressedUnsetVisibility="true")
+  unsettable !resolve val EGenericType[*] eGenericExceptions;
+}
+
+@Ecore(constraints="WellFormedNsURI WellFormedNsPrefix UniqueSubpackageNames UniqueClassifierNames UniqueNsURIs")
+class EPackage extends ENamedElement {
+  op EClassifier getEClassifier(EString name);
+  attr EString nsURI;
+  attr EString nsPrefix;
+  transient !resolve ref EFactory[1]#ePackage eFactoryInstance;
+  val EClassifier[*]#ePackage eClassifiers;
+  val EPackage[*]#eSuperPackage eSubpackages;
+  readonly transient ref EPackage#eSubpackages eSuperPackage;
+}
+
+class EParameter extends ETypedElement {
+  readonly transient !resolve ref EOperation#eParameters eOperation;
+}
+
+@Ecore(constraints="ConsistentOpposite SingleContainer ConsistentKeys")
+class EReference extends EStructuralFeature {
+  attr EBoolean containment;
+  readonly volatile transient derived attr EBoolean container;
+  attr EBoolean resolveProxies = true;
+  ref EReference eOpposite;
+  readonly volatile transient derived ref EClass[1] eReferenceType;
+  ref EAttribute[*] eKeys;
+}
+
+@Ecore(constraints="ValidDefaultValueLiteral")
+abstract class EStructuralFeature extends ETypedElement {
+  op EInt getFeatureID();
+  op EJavaClass<?> getContainerClass();
+  attr EBoolean changeable = true;
+  attr EBoolean ~volatile;
+  attr EBoolean ~transient;
+  attr EString defaultValueLiteral;
+  readonly volatile transient derived attr EJavaObject defaultValue;
+  attr EBoolean ~unsettable;
+  attr EBoolean ~derived;
+  readonly transient !resolve ref EClass#eStructuralFeatures eContainingClass;
+}
+
+@Ecore(constraints="ValidLowerBound ValidUpperBound ConsistentBounds ValidType")
+abstract class ETypedElement extends ENamedElement {
+  attr EBoolean ~ordered = true;
+  attr EBoolean ~unique = true;
+  attr EInt lowerBound;
+  attr EInt upperBound = 1;
+  readonly volatile transient derived attr EBoolean many;
+  readonly volatile transient derived attr EBoolean required;
+
+  @GenModel(suppressedIsSetVisibility="true", suppressedUnsetVisibility="true")
+  volatile unsettable ref EClassifier eType;
+
+  @GenModel(suppressedIsSetVisibility="true", suppressedUnsetVisibility="true")
+  volatile unsettable !resolve val EGenericType eGenericType;
+}
+
+@ExtendedMetaData(baseType="http://www.w3.org/2001/XMLSchema#decimal")
+datatype EBigDecimal : java.math.BigDecimal;
+
+@ExtendedMetaData(baseType="http://www.w3.org/2001/XMLSchema#integer")
+datatype EBigInteger : java.math.BigInteger;
+
+@ExtendedMetaData(baseType="http://www.w3.org/2001/XMLSchema#boolean")
+datatype EBoolean : boolean;
+
+@ExtendedMetaData(baseType="EBoolean", name="EBoolean:Object")
+datatype EBooleanObject : java.lang.Boolean;
+
+@ExtendedMetaData(baseType="http://www.w3.org/2001/XMLSchema#byte")
+datatype EByte : byte;
+
+@ExtendedMetaData(baseType="http://www.w3.org/2001/XMLSchema#hexBinary")
+datatype EByteArray : "byte[]";
+
+@ExtendedMetaData(baseType="EByte", name="EByte:Object")
+datatype EByteObject : java.lang.Byte;
+
+datatype EChar : char;
+
+@ExtendedMetaData(baseType="EChar", name="EChar:Object")
+datatype ECharacterObject : java.lang.Character;
+
+datatype EDate : java.util.Date;
+
+transient datatype EDiagnosticChain : org.eclipse.emf.common.util.DiagnosticChain;
+
+@ExtendedMetaData(baseType="http://www.w3.org/2001/XMLSchema#double")
+datatype EDouble : double;
+
+@ExtendedMetaData(baseType="EDouble", name="EDouble:Object")
+datatype EDoubleObject : java.lang.Double;
+
+transient datatype EEList : org.eclipse.emf.common.util.EList;
+
+transient datatype EEnumerator : org.eclipse.emf.common.util.Enumerator;
+
+transient datatype EFeatureMap : org.eclipse.emf.ecore.util.FeatureMap;
+
+transient datatype EFeatureMapEntry : org.eclipse.emf.ecore.util.FeatureMap$Entry;
+
+@ExtendedMetaData(baseType="http://www.w3.org/2001/XMLSchema#float")
+datatype EFloat : float;
+
+@ExtendedMetaData(baseType="EFloat", name="EFloat:Object")
+datatype EFloatObject : java.lang.Float;
+
+@ExtendedMetaData(baseType="http://www.w3.org/2001/XMLSchema#int")
+datatype EInt : int;
+
+@ExtendedMetaData(baseType="EInt", name="EInt:Object")
+datatype EIntegerObject : java.lang.Integer;
+
+datatype EJavaClass : java.lang.Class;
+
+datatype EJavaObject : java.lang.Object;
+
+@ExtendedMetaData(baseType="http://www.w3.org/2001/XMLSchema#long")
+datatype ELong : long;
+
+@ExtendedMetaData(baseType="ELong", name="ELong:Object")
+datatype ELongObject : java.lang.Long;
+
+transient datatype EMap : java.util.Map;
+
+transient datatype EResource : org.eclipse.emf.ecore.resource.Resource;
+
+transient datatype EResourceSet : org.eclipse.emf.ecore.resource.ResourceSet;
+
+@ExtendedMetaData(baseType="http://www.w3.org/2001/XMLSchema#short")
+datatype EShort : short;
+
+@ExtendedMetaData(baseType="EShort", name="EShort:Object")
+datatype EShortObject : java.lang.Short;
+
+@ExtendedMetaData(baseType="http://www.w3.org/2001/XMLSchema#string")
+datatype EString : java.lang.String;
+
+class EStringToStringMapEntry : java.util.Map$Entry {
+  attr EString key;
+  attr EString value;
+}
+
+transient datatype ETreeIterator : org.eclipse.emf.common.util.TreeIterator;
+
+@Ecore(constraints="ConsistentType ConsistentBounds ConsistentArguments")
+class EGenericType extends EObject {
+  !resolve val EGenericType eUpperBound;
+  !resolve val EGenericType[*] eTypeArguments;
+  readonly transient derived ref EClassifier[1] eRawType;
+  !resolve val EGenericType eLowerBound;
+  !resolve ref ETypeParameter eTypeParameter;
+  ref EClassifier eClassifier;
+}
+
+class ETypeParameter extends ENamedElement {
+  !resolve val EGenericType[*] eBounds;
+}
+

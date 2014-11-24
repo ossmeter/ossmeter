@@ -1,5 +1,6 @@
 package org.ossmeter.factoid.bugs.size;
 
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -51,9 +52,9 @@ public class BugsChannelSizeFactoid extends AbstractFactoidMetricProvider{
 
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return Arrays.asList(BugsNewBugsHistoricMetric.class.getCanonicalName(),
-							 BugsCommentsHistoricMetric.class.getCanonicalName(),
-							 BugsPatchesHistoricMetric.class.getCanonicalName());
+		return Arrays.asList(NewBugsHistoricMetricProvider.IDENTIFIER,
+							 CommentsHistoricMetricProvider.IDENTIFIER,
+							 PatchesHistoricMetricProvider.IDENTIFIER);
 	}
 
 	@Override
@@ -66,12 +67,35 @@ public class BugsChannelSizeFactoid extends AbstractFactoidMetricProvider{
 //		factoid.setCategory(FactoidCategory.BUGS);
 		factoid.setName("Bug Channel Size Factoid");
 
-		NewBugsHistoricMetricProvider newBugsProvider = new NewBugsHistoricMetricProvider();
-		CommentsHistoricMetricProvider commentsProvider = new CommentsHistoricMetricProvider();
-		PatchesHistoricMetricProvider patchesProvider = new PatchesHistoricMetricProvider();
+		NewBugsHistoricMetricProvider newBugsProvider = null;
+		CommentsHistoricMetricProvider commentsProvider = null;
+		PatchesHistoricMetricProvider patchesProvider = null;
+
+		for (IMetricProvider m : this.uses) {
+			if (m instanceof NewBugsHistoricMetricProvider) {
+				newBugsProvider = (NewBugsHistoricMetricProvider) m;
+				continue;
+			}
+			if (m instanceof CommentsHistoricMetricProvider) {
+				commentsProvider = (CommentsHistoricMetricProvider) m;
+				continue;
+			}
+			if (m instanceof PatchesHistoricMetricProvider) {
+				patchesProvider = (PatchesHistoricMetricProvider) m;
+				continue;
+			}
+		}
 		
 		Date end = new Date();
 		Date start = (new Date()).addDays(-1);
+//		Date start=null, end=null;
+//		try {
+//			start = new Date("20050301");
+//			end = new Date("20060301");
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		List<Pongo> newBugsList = newBugsProvider.getHistoricalMeasurements(context, project, start, end),
 					commentsList = commentsProvider.getHistoricalMeasurements(context, project, start, end),
 					patchesList = patchesProvider.getHistoricalMeasurements(context, project, start, end);

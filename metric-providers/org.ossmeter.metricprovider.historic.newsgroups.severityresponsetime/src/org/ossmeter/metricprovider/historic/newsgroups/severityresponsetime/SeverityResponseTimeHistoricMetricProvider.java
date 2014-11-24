@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.time.DurationFormatUtils;
-import org.ossmeter.metricprovider.historic.newsgroups.severityresponsetime.model.BugsSeverityResponseTimeHistoricMetric;
+import org.ossmeter.metricprovider.historic.newsgroups.severityresponsetime.model.NewsgroupsSeverityResponseTimeHistoricMetric;
 import org.ossmeter.metricprovider.historic.newsgroups.severityresponsetime.model.SeverityLevel;
 import org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.ThreadsRequestsRepliesTransMetricProvider;
 import org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.model.NewsgroupsThreadsRequestsRepliesTransMetric;
@@ -50,7 +50,7 @@ public class SeverityResponseTimeHistoricMetricProvider extends AbstractHistoric
 
 	@Override
 	public Pongo measure(Project project) {
-		BugsSeverityResponseTimeHistoricMetric metric = new BugsSeverityResponseTimeHistoricMetric();
+		NewsgroupsSeverityResponseTimeHistoricMetric metric = new NewsgroupsSeverityResponseTimeHistoricMetric();
 		
 		if (uses.size()==2) {
 
@@ -60,53 +60,42 @@ public class SeverityResponseTimeHistoricMetricProvider extends AbstractHistoric
 			NewsgroupsThreadsRequestsRepliesTransMetric threadsRequestsReplies = 
 					((ThreadsRequestsRepliesTransMetricProvider)uses.get(1)).adapt(context.getProjectDB(project));
 
-			Map<String, Map<String, Integer>> severitiesPerNewsgroup = new HashMap<String, Map<String, Integer>>();
-			Map<String, Map<String, Long>> durations = new HashMap<String, Map<String, Long>>();
-			 
-			 for (NewsgroupThreadData newsgroupThreadData: severityClassifier.getNewsgroupThreads()) {
+			Map<String, Integer> severities = new HashMap<String, Integer>();
+			Map<String, Long> durations = new HashMap<String, Long>();
+			
+			for (NewsgroupThreadData newsgroupThreadData: severityClassifier.getNewsgroupThreads()) {
 				 
-				 String trackerId = newsgroupThreadData.getUrl();
+				String newsgroupName = newsgroupThreadData.getNewsgroupName();
 				 
-				 String severity = newsgroupThreadData.getSeverity();
-				 Map<String, Integer> severityMap = retrieveOrAdd(severitiesPerNewsgroup, trackerId);
-				 addOrIncrease(severityMap, severity);
+				String severity = newsgroupThreadData.getSeverity();
+				addOrIncrease(severities, severity);
 			 
-				 ThreadStatistics threadStatistics = null;
-				 Iterable<ThreadStatistics> threadStatisticsIt = threadsRequestsReplies.getThreads().
-						 							 	   find(ThreadStatistics.URL_NAME.eq(trackerId),
+				ThreadStatistics threadStatistics = null;
+				Iterable<ThreadStatistics> threadStatisticsIt = threadsRequestsReplies.getThreads().
+						 							 	   find(ThreadStatistics.NEWSGROUPNAME.eq(newsgroupName),
 						 							 			 ThreadStatistics.THREADID.eq(newsgroupThreadData.getThreadId()));
-				 for (ThreadStatistics ts: threadStatisticsIt) threadStatistics = ts;
+				for (ThreadStatistics ts: threadStatisticsIt) threadStatistics = ts;
 
-				 if ((threadStatistics!=null) && threadStatistics.getAnswered()) {
-					 Map<String, Long> sevMap = retrieveOrAddLong(durations, trackerId);
-					 addOrIncrease(sevMap, severity, threadStatistics.getResponseDurationSec());
-				 }
+				if ((threadStatistics!=null) && threadStatistics.getAnswered()) {
+					addOrIncrease(durations, severity, threadStatistics.getResponseDurationSec());
+				}
 
-			 }
+			}
 			 
-			 for (String newsgroupUrl: severitiesPerNewsgroup.keySet()) {
-			 
-				 Map<String, Integer> severityMap = severitiesPerNewsgroup.get(newsgroupUrl);
+			 for (String severity: severities.keySet()) {
+				 int numberOfSeverityThreads = severities.get(severity);
+				 SeverityLevel severityLevel = new SeverityLevel();
+				 metric.getSeverityLevels().add(severityLevel);
+				 severityLevel.setSeverityLevel(severity);
+				 severityLevel.setNumberOfThreads(numberOfSeverityThreads);
 				 
-				 for (String severity: severityMap.keySet()) {
-					 int numberOfSeverityThreads = severityMap.get(severity);
-					 SeverityLevel severityLevel = new SeverityLevel();
-					 severityLevel.setUrl(newsgroupUrl);
-					 severityLevel.setSeverityLevel(severity);
-					 severityLevel.setNumberOfThreads(numberOfSeverityThreads);
-					 
-					 long duration = getValueLong(durations, newsgroupUrl, severity);
-					 if (duration > 0) {
-						 long avgResponseTime = computeAverageDuration(duration, numberOfSeverityThreads);
-						 severityLevel.setAvgResponseTime(avgResponseTime);
-						 String avgResponseTimeFormatted = format(avgResponseTime);
-						 severityLevel.setAvgResponseTimeFormatted(avgResponseTimeFormatted);
-
-					 }
-
-					 metric.getSeverityLevels().add(severityLevel);
-				 }
-			 
+				 long duration = getValueLong(durations, severity);
+				 long avgResponseTime = 0;
+				 if (duration > 0)
+					 avgResponseTime = computeAverageDuration(duration, numberOfSeverityThreads);
+				 severityLevel.setAvgResponseTime(avgResponseTime);
+				 String avgResponseTimeFormatted = format(avgResponseTime);
+				 severityLevel.setAvgResponseTimeFormatted(avgResponseTimeFormatted);
 			 }
 			 
 		}
@@ -136,30 +125,6 @@ public class SeverityResponseTimeHistoricMetricProvider extends AbstractHistoric
 		return formatted;
 	}
 			
-	private Map<String, Integer> retrieveOrAdd(
-								 Map<String, Map<String, Integer>> map, String trackerId) {
-		 Map<String, Integer> component;
-		 if (map.containsKey(trackerId))
-			 component = map.get(trackerId);
-		 else {
-			 component = new HashMap<String, Integer>();
-			 map.put(trackerId, component);
-		 }
-		return component;
-	}
-
-	private Map<String, Long> retrieveOrAddLong(
-								Map<String, Map<String, Long>> map, String trackerId) {
-		Map<String, Long> component;
-		if (map.containsKey(trackerId))
-			component = map.get(trackerId);
-		else {
-			component = new HashMap<String, Long>();
-			map.put(trackerId, component);
-		}
-		return component;
-	}
-	
 	private void addOrIncrease(Map<String, Integer> map, String item) {
 		if (map.containsKey(item))
 			map.put(item, map.get(item) + 1);
@@ -174,12 +139,10 @@ public class SeverityResponseTimeHistoricMetricProvider extends AbstractHistoric
 			map.put(item, increment);
 	}
 
-	private long getValueLong(Map<String, Map<String, Long>> map,	String item, String component) {
-		if (!map.containsKey(item))
+	private long getValueLong(Map<String, Long> map,	String component) {
+		if (!map.containsKey(component))
 			return 0;
-		if (!map.get(item).containsKey(component))
-			return 0;
-		return map.get(item).get(component);
+		return map.get(component);
 	}
 	
 	@Override

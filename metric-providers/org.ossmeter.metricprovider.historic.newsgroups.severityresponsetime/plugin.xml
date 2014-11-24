@@ -10,6 +10,9 @@
    <visualisation json="vis/historic.newsgroups.severityresponsetime.json"/>
 </extension>
 
+
+
+
 <extension point="com.googlecode.pongo.runtime.osgi">
     <class name="org.ossmeter.metricprovider.historic.newsgroups.severityresponsetime.model.NewsgroupsSeverityResponseTimeHistoricMetric"/>
     <class name="org.ossmeter.metricprovider.historic.newsgroups.severityresponsetime.model.SeverityLevel"/>

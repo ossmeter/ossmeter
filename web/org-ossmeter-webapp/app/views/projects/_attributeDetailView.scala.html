@@ -9,40 +9,69 @@
 
 @import scala._
 
-@import org.ossmeter.repository.model._
-@import org.ossmeter.repository.model.bts.bugzilla._
-@import org.ossmeter.repository.model.cc.forum._
-@import org.ossmeter.repository.model.cc.nntp._
-@import org.ossmeter.repository.model.cc.wiki._
-@import org.ossmeter.repository.model.vcs.svn._
-@import org.ossmeter.repository.model.vcs.git._
-@import org.ossmeter.repository.model.eclipse._
-
 @attributeId = @{ 
     attribute.name.replaceAll(" ", "");
 }
 
-    <div class="row">
+    <div class="row" data-toggle="collapse" data-target="#div-attr-@attributeId" aria-expanded="true" aria-controls="div-attr-@attributeId">
         <h2 class="marginless">@attribute.name</h2>
     </div>
-    <div class="row">
-        <div class="col-md-6">
-            <table class="table" id="sparklines-table-12months-@attributeId">
+    <div class="row collapse" id="div-attr-@attributeId">
+        <div class="col-md-2">
+            <table class="table spark" id="sparklines-table-toolkit-@attributeId">
                 <thead></thead>
                 <tbody></tbody>
             </table>
         </div>
         <div class="col-md-6">
-            <table class="table" id="sparklines-table-alltime-@attributeId">
+            <table class="table spark" id="sparklines-table-12months-@attributeId">
                 <thead></thead>
                 <tbody></tbody>
             </table>
         </div>
+        <div class="col-md-4">
+            <table class="table spark" id="sparklines-table-alltime-@attributeId">
+                <thead></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        
+       <!--  <button class="pop" data-html="true" data-toggle="popover" data-trigger="focus" title="Metric Notification">Notification</button>
+
+        <div id="notification_popover_content">
+            <input type="number"/>
+            <input type="checkbox" />
+            <button id="noti-" onclick="">Go</button>
+        </div> -->
+
             <script type="text/javascript">
                 $(function() {
-                    drawSparkTable("sparklines-table-12months-@attributeId", "@project.getShortName()", "@attribute.metrics.mkString("+")", "startDate="+getOneYearAgoDateString(), true)
-                    drawSparkTable("sparklines-table-alltime-@attributeId", "@project.getShortName()", "@attribute.metrics.mkString("+")", "", false)
+                    "use strict";
+
+                    var twelveMth = {
+                        sparktable : "sparklines-table-12months-@attributeId",
+                        projectid : "@project.getShortName()",
+                        metriclist : "@attribute.metrics.map(x=>x.id).mkString("+")",
+                        querystring : "startDate=" + getOneYearAgoDateString(),
+                        toolkittable : "sparklines-table-toolkit-@attributeId",
+                        drawName : true
+                    };
+
+                    var allTime = {
+                        sparktable : "sparklines-table-alltime-@attributeId",
+                        projectid : "@project.getShortName()",
+                        metriclist : "@attribute.metrics.map(x=>x.id).mkString("+")",
+                    };
+
+                    drawSparkTable(twelveMth);
+                    drawSparkTable(allTime);
+
+                    // Ensure all rows are the same height
+                    setTimeout(function() {
+                        fixHeights("sparklines-table-12months-@attributeId", "sparklines-table-alltime-@attributeId");
+                        fixHeights("sparklines-table-12months-@attributeId", "sparklines-table-toolkit-@attributeId");
+                    }, 2000); 
                 });
             </script>
         </div>
-    </div>    
+    </div>

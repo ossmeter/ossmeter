@@ -1,9 +1,8 @@
 package org.ossmeter.metricprovider.trans.newsgroups.activeusers.model;
 
-import com.mongodb.*;
-import java.util.*;
-import com.googlecode.pongo.runtime.*;
-import com.googlecode.pongo.runtime.querying.*;
+import com.googlecode.pongo.runtime.Pongo;
+import com.googlecode.pongo.runtime.querying.NumericalQueryProducer;
+import com.googlecode.pongo.runtime.querying.StringQueryProducer;
 
 
 public class NewsgroupData extends Pongo {
@@ -12,7 +11,7 @@ public class NewsgroupData extends Pongo {
 	
 	public NewsgroupData() { 
 		super();
-		URL_NAME.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.activeusers.model.NewsgroupData");
+		NEWSGROUPNAME.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.activeusers.model.NewsgroupData");
 		ACTIVEUSERS.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.activeusers.model.NewsgroupData");
 		INACTIVEUSERS.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.activeusers.model.NewsgroupData");
 		PREVIOUSUSERS.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.activeusers.model.NewsgroupData");
@@ -20,7 +19,7 @@ public class NewsgroupData extends Pongo {
 		DAYS.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.activeusers.model.NewsgroupData");
 	}
 	
-	public static StringQueryProducer URL_NAME = new StringQueryProducer("url_name"); 
+	public static StringQueryProducer NEWSGROUPNAME = new StringQueryProducer("newsgroupName"); 
 	public static NumericalQueryProducer ACTIVEUSERS = new NumericalQueryProducer("activeUsers");
 	public static NumericalQueryProducer INACTIVEUSERS = new NumericalQueryProducer("inactiveUsers");
 	public static NumericalQueryProducer PREVIOUSUSERS = new NumericalQueryProducer("previousUsers");
@@ -28,12 +27,12 @@ public class NewsgroupData extends Pongo {
 	public static NumericalQueryProducer DAYS = new NumericalQueryProducer("days");
 	
 	
-	public String getUrl_name() {
-		return parseString(dbObject.get("url_name")+"", "");
+	public String getNewsgroupName() {
+		return parseString(dbObject.get("newsgroupName")+"", "");
 	}
 	
-	public NewsgroupData setUrl_name(String url_name) {
-		dbObject.put("url_name", url_name);
+	public NewsgroupData setNewsgroupName(String newsgroupName) {
+		dbObject.put("newsgroupName", newsgroupName);
 		notifyChanged();
 		return this;
 	}

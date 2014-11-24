@@ -17,7 +17,7 @@ public class ClassificationInstance {
 	private String bugTrackerId;
 	private String bugId;
 	
-	private String url;
+	private String newsgroupName;
 	private int threadId;
 	private String subject;
 	private List<List<Token>> tokenSentences;
@@ -83,21 +83,21 @@ public class ClassificationInstance {
 	private void initialiseMetadata(ClassifierMessage classifierMessage) {
 		setBugTrackerId(classifierMessage.getBugTrackerId());
 		setBugId(classifierMessage.getBugId());
-		setUrl(classifierMessage.getUrl());
+		setNewsgroupName(classifierMessage.getNewsgroupName());
 		setThreadId(classifierMessage.getThreadId());
 		setSubject(classifierMessage.getSubject());
 	}
 
 	private void initialiseMetadata(ArticleData articleData, int threadId) {
-		setUrl(articleData.getUrl_name());
+		setNewsgroupName(articleData.getNewsgroupName());
 		setThreadId(threadId);
 		setSubject(articleData.getSubject());
 	}
 
-	private void initialiseMetadata(String url, 
+	private void initialiseMetadata(String newsgroupName, 
 									CommunicationChannelArticle deltaArticle, 
 									int threadId) {
-		setUrl(url);
+		setNewsgroupName(newsgroupName);
 		setThreadId(threadId);
 		setSubject(deltaArticle.getSubject());
 	}
@@ -131,8 +131,8 @@ public class ClassificationInstance {
 	private void setComposedId() {
 		if ((bugTrackerId!=null)&&(bugId!=null))
 			composedId = bugTrackerId+"#"+bugId;
-		else if ((url!=null)&&(threadId!=0)) 
-			composedId = url+"#"+threadId;
+		else if ((newsgroupName!=null)&&(threadId!=0)) 
+			composedId = newsgroupName+"#"+threadId;
 		else {
 			System.err.println("Unable to compose ID");
 		}
@@ -148,12 +148,12 @@ public class ClassificationInstance {
 		if (composedId!=null) setComposedId();
 	}
 	
-	String getUrl() {
-		return url;
+	String getNewsgroupName() {
+		return newsgroupName;
 	}
 
-	void setUrl(String url) {
-		this.url = url;
+	void setNewsgroupName(String newsgroupName) {
+		this.newsgroupName = newsgroupName;
 		if (composedId!=null) setComposedId();
 	}
 
@@ -399,8 +399,8 @@ public class ClassificationInstance {
 
 	@Override
 	public String toString() {
-		if (url!=null)
-			return "ClassificationInstance " + "[url=" + url + 
+		if (newsgroupName!=null)
+			return "ClassificationInstance " + "[newsgroupName=" + newsgroupName + 
 					", threadId=" + threadId + ", subject=" + subject + "]";
 		else
 			return "ClassificationInstance "+ "[bugTrackerId=" + bugTrackerId + 
