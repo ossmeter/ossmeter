@@ -49,7 +49,7 @@
                 </div>
                 <script type="text/javascript">
                     $(function() {
-                        $.getJSON("http://localhost:8182/projects/p/@project.getShortName()/f/@attribute.factoids.take(5).mkString("+")", function (result) {
+                        $.getJSON(getApi() + "/projects/p/@project.getShortName()/f/@attribute.factoids.take(5).mkString("+")", function (result) {
                             $("#factoids-@attributeId").empty();
 
                             for (var r in result) {
@@ -71,7 +71,7 @@
                     </table>
                     <script type="text/javascript">
                         $('#sparklines-@attributeId-tab').one('click', function(e) {
-                            $.getJSON("http://localhost:8182/projects/p/@project.getShortName()/s/@attribute.metrics.take(10).map(x=> x.id).mkString("+")", function (result) {
+                            $.getJSON(getApi() + "/projects/p/@project.getShortName()/s/@attribute.metrics.take(10).map(x=> x.id).mkString("+")", function (result) {
 
                                 console.log(Object.prototype.toString.call( result ));
 
@@ -112,7 +112,7 @@
                                    toAppend = toAppend + "</td>" +
                                         "<td>" + data.name + 
                                         "</td><td>" + Math.round(data.first * 100) / 100  +
-                                        "</td><td><img class=\"spark\" src=\"http://localhost:8182" + data.spark + "\" />" +  
+                                        "</td><td><img class=\"spark\" src=\"" + getApi() + data.spark + "\" />" +  
                                         "</td><td>" + Math.round(data.last * 100) / 100  + 
                                         "</td><td>" + Math.round(data.low * 100) / 100 + 
                                         "</td><td>" + Math.round(data.high * 100) / 100 + "</td></tr>";

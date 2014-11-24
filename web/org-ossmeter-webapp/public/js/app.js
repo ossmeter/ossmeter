@@ -150,7 +150,7 @@ function toggleSpark(elem, projectid, projectname, metricid, metricname) {
 function drawSparkTable(config) {
 	"use strict";
 
-	var url = "http://localhost:8182/projects/p/" + config.projectid + "/s/" + config.metriclist;
+	var url = getApi() + "/projects/p/" + config.projectid + "/s/" + config.metriclist;
 	if (config.querystring) {
 		url = url + "?" + config.querystring;
 	}
@@ -211,7 +211,7 @@ function drawSparkTable(config) {
                 }
 
 				bdy = bdy + "<td>" + Math.round(data.first * 100) / 100  +
-                    "</td><td><img class=\"spark\" src=\"http://localhost:8182" + data.spark + "\" />" +  
+                    "</td><td><img class=\"spark\" src=\"" + getApi() + data.spark + "\" />" +  
                     "</td><td>" + Math.round(data.last * 100) / 100  + 
                     "</td><td>" + Math.round(data.low * 100) / 100 + 
                     "</td><td>" + Math.round(data.high * 100) / 100 + "</td>";
@@ -268,7 +268,7 @@ function drawCompareBar(warn) {
 }
 
 function drawSparklineTable(projectname, table, metriclist) {
-         $.get("http://localhost:8182/projects/p/"+projectname+"/s/"+metriclist.join("+"), function (result) {
+         $.get(getApi() + "/projects/p/"+projectname+"/s/"+metriclist.join("+"), function (result) {
             for (var r in result) {
                 var data = result[r];
 
@@ -284,7 +284,7 @@ function drawSparklineTable(projectname, table, metriclist) {
 
                 $(table + " > tbody:last").append("<tr><td title=\"" + data.description + "\">" + data.name + 
                     "</td><td>" + Math.round(data.first * 100) / 100  +
-                    "</td><td><img class=\"spark\" src=\"http://localhost:8182" + data.spark + "\" />" +  
+                    "</td><td><img class=\"spark\" src=\"" + getApi() + data.spark + "\" />" +  
                     "</td><td>" + Math.round(data.last * 100) / 100  + 
                     "</td><td>" + Math.round(data.low * 100) / 100 + 
                     "</td><td>" + Math.round(data.high * 100) / 100 + "</td></tr>");
@@ -295,7 +295,7 @@ function drawSparklineTable(projectname, table, metriclist) {
 function compareProjects() {
 	var metrics = app.compare.metrics;
 	// Sparks
-	$.get("http://localhost:8182/projects/p/@project.getShortName()/s/"+metrics.join("+"), function (result) {
+	$.get(getApi() + "/projects/p/@project.getShortName()/s/"+metrics.join("+"), function (result) {
 		for (var r in result) {
             var data = result[r];
 

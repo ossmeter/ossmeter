@@ -39,7 +39,7 @@
         }
 
         // Grab via API
-        $.getJSON("http://localhost:8182/projects/p/" + projectid + "/m/" + metricid, function(vis) {
+        $.getJSON(getApi() + "/projects/p/" + projectid + "/m/" + metricid, function(vis) {
             metricmap[metricid] = vis;
             vislist.push(vis);
             

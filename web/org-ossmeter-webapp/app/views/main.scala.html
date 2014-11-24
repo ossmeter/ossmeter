@@ -146,5 +146,10 @@
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <script type="text/javascript">
+    function getApi() {
+      return "@play.Play.application().configuration().getString("ossmeter.api")";
+    }
+    </script>
   </body>
 </html>

@@ -29,10 +29,10 @@ import static play.data.Form.*;
 
 public class Projects extends Controller {
 	
-	private static final String jsonUrl = "http://localhost:8182/";
+	private static final String jsonUrl = play.Play.application().configuration().getString("ossmeter.api");
 	
 	public static List<Project> getProjects() throws Exception{
-		final Promise<List<Project>> resultPromise = WS.url(jsonUrl+"projects").get().map(
+		final Promise<List<Project>> resultPromise = WS.url(jsonUrl+"/projects").get().map(
 	            new Function<WSResponse, List<Project>>() {
 	                public List<Project> apply(WSResponse response) {
 	                	JsonNode json = response.asJson();
@@ -58,8 +58,8 @@ public class Projects extends Controller {
 	}
 	
 	public static Project getProject(String shortName){
-		System.out.println("requesting: " + jsonUrl+"projects/p/"+shortName);
-		final Promise<Project> resultPromise = WS.url(jsonUrl+"projects/p/"+shortName).get().map(
+		System.out.println("requesting: " + jsonUrl+"/projects/p/"+shortName);
+		final Promise<Project> resultPromise = WS.url(jsonUrl+"/projects/p/"+shortName).get().map(
 	            new Function<WSResponse, Project>() {
 	                public Project apply(WSResponse response) {
 	                	JsonNode json = response.asJson();
@@ -170,7 +170,7 @@ public class Projects extends Controller {
 		node.put("url", imp.url);
 
 
-		final Promise<Result> resultPromise = WS.url("http://localhost:8182/projects/import").post(node)
+		final Promise<Result> resultPromise = WS.url(play.Play.application().configuration().getString("ossmeter.api") + "/projects/import").post(node)
 				.map(new Function<WSResponse, Result>() {
 					public Result apply(WSResponse response) {
 						

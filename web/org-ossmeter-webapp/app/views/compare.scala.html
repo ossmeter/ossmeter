@@ -182,7 +182,7 @@ $(function(){
 
 
 			// This is really bad coding, but I'm tired. Can easily be generalised.
-			$.getJSON("http://localhost:8182/projects/p/" + projects[0].id() + "/m/" + metric.id, function(vis) {
+			$.getJSON(getApi() + "/projects/p/" + projects[0].id() + "/m/" + metric.id, function(vis) {
 				vis.projectName = projects[0].name();
 				projects[0].metricmap[metric.id] = vis;
 
@@ -197,7 +197,7 @@ $(function(){
 						return;
 					}
 					(function(proj) {
-						$.getJSON("http://localhost:8182/projects/p/" + proj.id() + "/m/" + metric.id, function(vis) {
+						$.getJSON(getApi() + "/projects/p/" + proj.id() + "/m/" + metric.id, function(vis) {
 
 							vis.projectName = proj.name();
 
@@ -211,7 +211,7 @@ $(function(){
 									return;
 								}
 								(function(proj2) {
-									$.getJSON("http://localhost:8182/projects/p/" + proj2.id() + "/m/" + metric.id, function(vis) {
+									$.getJSON(getApi() + "/projects/p/" + proj2.id() + "/m/" + metric.id, function(vis) {
 
 										vis.projectName = proj2.name();
 
@@ -243,8 +243,8 @@ $(function(){
 	        // TODO keep the sparks in memory (in the view model)
 	        // then check the VM before invoking the API
 	        // Grab all sparks in single query on "Compare" push
-	        $.getJSON("http://localhost:8182/projects/p/" + project.id() +"/s/" + metric.id, function (data) {
-	        	$(element).html('<img src="http://localhost:8182'+data.spark+'" class="spark" /> ' + abbreviateNumber(data.last));
+	        $.getJSON(getApi() + "/projects/p/" + project.id() +"/s/" + metric.id, function (data) {
+	        	$(element).html('<img src="' + getApi() + data.spark+'" class="spark" /> ' + abbreviateNumber(data.last));
 	        });
 		}
 	};

@@ -542,13 +542,9 @@ public class MongoAuthenticator {
 	public static DB getUsersDb() {
 		try {
 			String host = play.Play.application().configuration().getString("mongo.default.host");
-
-			System.out.println("host: " + host);
 			if (host == null) host = "localhost";
-			Integer port = play.Play.application().configuration().getInt("mongo.default.port");
 			
-			System.out.println("port: " + port);
-
+			Integer port = play.Play.application().configuration().getInt("mongo.default.port");
 			if (port == null) port = 27017;
 
 			Mongo mongo = new Mongo(host, port);	

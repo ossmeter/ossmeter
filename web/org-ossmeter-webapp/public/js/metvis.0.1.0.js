@@ -351,26 +351,67 @@ var metvis = {
 		self._extractSeries = function(vis) {
 			"use strict";
 			if (typeof vis.y === 'string') {
-        		var l = (function(vi, value) {
-	                    return d3.svg.line()
-		                    .interpolate("basis")   
-	                        .x(function(d) { return self.xScale(d[vi.x]) })
-	                        .y(function(d) { return self.yScale(d[vi.y]) });
-	                })(vis, ys);
 
-        		var series = {
-        			line : l,
-        			vis : vis,
-        			name : vis.y
-        		}
+				// if "series" is defined. Filter the data into separate vis specs
+				if (vis.series) {
 
-        		return [series];
+					var vises = {};
+					vis.datatable.forEach(function(d) { 
+						var s = d[vis.series];
+						if (!vises[s]) {
+							vises[s] = [];
+							var newVis = {};
+
+							for (var key in vis) { // Clone the original vis (except for the datatable)
+								if (key != "datatable") {
+									newVis[key] = vis[key];
+								}
+							}
+							newVis.parentVis = vis; // Keep track so it can be removed when parent is removed
+							newVis.datatable = [];
+							vises[s] = newVis;
+						}
+						vises[s].datatable.push(d); 
+					});
+
+					var series = [];
+					for (var key in vises) {
+						var v = vises[key];
+
+						var l = (function(vi, value) {
+			                    return d3.svg.line()
+			                        .x(function(d) { return self.xScale(d[vi.x]) })
+			                        .y(function(d) { return self.yScale(d[vi.y]) });
+			                })(v, ys);
+
+		        		var ser = {
+		        			line : l,
+		        			vis : v,
+		        			name : key
+		        		}
+		        		series.push(ser);
+					}
+					return series;
+				} else {
+	        		var l = (function(vi, value) {
+		                    return d3.svg.line()
+		                        .x(function(d) { return self.xScale(d[vi.x]) })
+		                        .y(function(d) { return self.yScale(d[vi.y]) });
+		                })(vis, ys);
+
+	        		var series = {
+	        			line : l,
+	        			vis : vis,
+	        			name : vis.y
+	        		}
+
+	        		return [series];
+	        	}
         	} else {
         		var ss = [];
         		for (var ys in vis.y) {
         			var l = (function(vi, value) {
 	                    return d3.svg.line()
-		                    .interpolate("monotone")   
 	                        .x(function(d) { return self.xScale(d[vi.x]) })
 	                        .y(function(d) { return self.yScale(d[vi.y[value]]) });
 	                })(vis, ys);
@@ -426,15 +467,14 @@ var metvis = {
 
 				var toRemove = [];
 				for (var s in self.series) {
-					if (self.series[s].vis === vis) {
-						toRemove.push(s);
-						break;
+					if (self.series[s].vis === vis || self.series[s].vis.parentVis === vis) {
+						toRemove.push(self.series[s]);
 					}
 				}
-
 				if (toRemove.length != 0) {
 					for (var r in toRemove) {
-						self.series.splice(toRemove[r], 1);
+						var ind = self.series.indexOf(toRemove[r]);
+						self.series.splice(ind, 1);
 					}
 				}
 

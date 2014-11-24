@@ -90,7 +90,7 @@
                             <td><input type="checkbox" data-bind="checked: $parent.selected"/></td>
                             <td data-bind="text: name"></td>
                             <td data-bind="text: first"></td>
-                            <td><img class="spark" data-bind="attr:{src: 'http://localhost:8182' + spark}"/></td>
+                            <td><img class="spark" data-bind="attr:{src: getApi() + spark}"/></td>
                             <td data-bind="text: last"></td>
                             <td data-bind="text: low"></td>
                             <td data-bind="text: high"></td>
@@ -112,7 +112,7 @@
                         <tr data-bind="with: sparkAllTime">
                             <td data-bind="text: name"></td>
                             <td data-bind="text: first"></td>
-                            <td><img class="spark" data-bind="attr:{src: 'http://localhost:8182' + spark}"/></td>
+                            <td><img class="spark" data-bind="attr:{src: getApi() + spark}"/></td>
                             <td data-bind="text: last"></td>
                             <td data-bind="text: low"></td>
                             <td data-bind="text: high"></td>
@@ -217,10 +217,10 @@
                 self.metrics.push(metric);
 
                 // Grab spark data
-                $.get("http://localhost:8182/projects/p/@project.getShortName()/s/"+metric.id, function (data) {
+                $.get(getApi() + "/projects/p/@project.getShortName()/s/"+metric.id, function (data) {
                     vm.addSparkAllTime(data);
                 });
-                $.get("http://localhost:8182/projects/p/@project.getShortName()/s/"+metric.id+"?startDate="+getOneYearAgoDateString(), function (data) {
+                $.get(getApi() + "/projects/p/@project.getShortName()/s/"+metric.id+"?startDate="+getOneYearAgoDateString(), function (data) {
                     vm.addSpark12Months(data);
                 });
             }.bind(self);
@@ -320,14 +320,14 @@
             // }
         });
 
-         $.getJSON("http://localhost:8182/projects/p/modelingepsilon/m/cumulativeBugs", function(vis) {
+         $.getJSON(getApi() + "/projects/p/modelingepsilon/m/cumulativeBugs", function(vis) {
 
                 var chart = new ossplots.Chart("#plot", vis);
                 chart.height = 400;
                 chart.draw();
 
 
-                $.getJSON("http://localhost:8182/projects/p/modelingepsilon/m/cumulativeComments", function(vis2) {
+                $.getJSON(getApi() + "/projects/p/modelingepsilon/m/cumulativeComments", function(vis2) {
                     chart.addVis(vis2);
 
                     var event = new ossplots.Annotation("X", "20100101", "foo");

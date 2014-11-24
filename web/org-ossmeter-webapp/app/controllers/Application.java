@@ -118,7 +118,7 @@ public class Application extends Controller {
 	}
 
 	public static Result api(String path) {
-		String url = "http://localhost:8182/" + path; //FIXME: Put the API path in the config file
+		String url = play.Play.application().configuration().getString("ossmeter.api") + path; //FIXME: Put the API path in the config file
 
 		Promise<Result> promise = WS.url(url).get().map(
 		    new Function<WSResponse, Result>() {
