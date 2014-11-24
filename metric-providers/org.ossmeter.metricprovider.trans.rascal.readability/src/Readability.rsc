@@ -51,7 +51,7 @@ public real checkSpaces(list[str] lines, set[str] symbolsTwoSides, set[str] symb
 	maxSpacesPossible = spacesFound + spacesMissed;
 	
 	if (maxSpacesPossible > 0) {
-		return spacesFound / toReal(maxSpacesPossible);
+		return round(spacesFound / toReal(maxSpacesPossible), 0.01);
 	}
 	
 	return 1.0;
@@ -116,7 +116,7 @@ Factoid readabilityFactoid(map[loc, real] fileReadability = ()) {
 
   total = size(fileReadability);
 
-  med = 100.0 * ((size(lowPerc) == total) ? median(lowPerc) : median(medPerc + highPerc + veryHighPerc));
+  med = round(100.0 * ((size(lowPerc) == total) ? median(lowPerc) : median(medPerc + highPerc + veryHighPerc)), 0.01);
   
   star = \one();
   

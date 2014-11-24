@@ -72,6 +72,9 @@ GET     /projects                  	controllers.Projects.projects()
 # Create
 GET     /projects/new               controllers.Projects.create()
 POST    /projects/new               controllers.Projects.save()
+GET     /projects/add               controllers.Projects.createProject()
+POST    /projects/add               controllers.Projects.addProject()
+GET     /javascriptRoutes     		controllers.Projects.javascriptRoutes
 # Import
 POST    /projects/import            controllers.Projects.importProject()
 

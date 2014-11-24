@@ -44,4 +44,8 @@ public class SvnRepository extends VcsRepository {
 		return password;
 	}
 	
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	
 }

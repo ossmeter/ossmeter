@@ -157,14 +157,14 @@ Factoid churnVolume(rel[datetime, int] churnHistory = {}, int churn = 0) {
 @friendlyName{Churn per committer}
 @appliesTo{generic()}
 @historic{}
-map[loc author, int churn] churnPerCommitter(ProjectDelta delta = \empty())
-  = sumPerItem([<|author:///| + co.author, churn(co)> | /VcsCommit co := delta])
+map[str author, int churn] churnPerCommitter(ProjectDelta delta = \empty())
+  = sumPerItem([<co.author, churn(co)> | /VcsCommit co := delta])
   ;
   
-private map[loc, int] sumPerItem(lrel[loc item, int val] input)
+private map[&T, int] sumPerItem(lrel[&T item, int val] input)
   = (x : s | x <- { * input<item> }, int s := filt(input, x));  
  
-private int filt(lrel[loc, int] input, loc i) = (0 | it + nu | nu <- [n | <i, n> <- input]);
+private int filt(lrel[&T, int] input, &T i) = (0 | it + nu | nu <- [n | <i, n> <- input]);
   
 @metric{churnPerFile}
 @doc{Churn per file counts the number of files added and deleted for a single file. This is a basic metric to indicate hotspots in the design of the system which is changed often. This metric is used further downstream.}
@@ -233,7 +233,7 @@ Factoid commitLocality(rel[datetime day, map[loc, int] files] filesPerCommit = {
 @friendlyName{Churn per core committer}
 @appliesTo{generic()}
 @uses = ("churnPerCommitter" : "committerChurn")
-map[loc, int] coreCommittersChurn(map[loc, int] prev = (), map[loc, int] committerChurn = ()) 
+map[str, int] coreCommittersChurn(map[str, int] prev = (), map[str, int] committerChurn = ()) 
   = prev + (author : prev[author]?0 + committerChurn[author] | author <- committerChurn);
   
   

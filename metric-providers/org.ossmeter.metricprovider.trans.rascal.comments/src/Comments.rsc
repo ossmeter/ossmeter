@@ -185,7 +185,7 @@ much source code comments are actually commented out code. Commented out code is
 map[str, int] commentedOutCodePerLanguage(rel[Language, loc, AST] asts = {}, map[loc, int] commentedOutCode = ()) {
   map[str, int] result = ();
   for (<l, f, a> <- asts, l != generic(), f in commentedOutCode) {
-    result["<l>"]?0 += commentedOutCode[f];
+    result["<getName(l)>"]?0 += commentedOutCode[f];
   }
   return result;
 }
@@ -208,7 +208,7 @@ Factoid percentageCommentedOutCode(map[str, int] locPerLanguage = (), map[str, i
   totalLines = toReal(sum([ locPerLanguage[l] | l <- languages ]));
   totalCommentedLines = toReal(sum([ commentedOutCodePerLanguage[l] | l <- languages ]));
 
-  totalPercentage = (totalCommentedLines / totalLines) * 100.0;
+  totalPercentage = round((totalCommentedLines / totalLines) * 100.0, 0.01);
   
   stars = four();
   
@@ -222,7 +222,7 @@ Factoid percentageCommentedOutCode(map[str, int] locPerLanguage = (), map[str, i
   
   txt = "The percentage of commented out code over all measured languages is <totalPercentage>%.";
 
-  languagePercentage = ( l : 100 * commentedOutCodePerLanguage[l] / toReal(locPerLanguage[l]) | l <- languages ); 
+  languagePercentage = ( l : round(100 * commentedOutCodePerLanguage[l] / toReal(locPerLanguage[l]), 0.01) | l <- languages ); 
 
   otherTxt = intercalate(", ", ["<l[0]> (<languagePercentage[l]>%)" | l <- languages]);  
   txt += " The percentages per language are <otherTxt>.";
@@ -244,7 +244,7 @@ map[str, int] commentLinesPerLanguage(rel[Language, loc, AST] asts = {},
                                       map[loc, int] commentedOutCode = ()) {
   map[str, int] result = ();
   for (<l, f, a> <- asts, l != generic(), f in commentLOC) {
-    result["<l>"]?0 += commentLOC[f] - (headerLOC[f]?0) - (commentedOutCode[f]?0);
+    result["<getName(l)>"]?0 += commentLOC[f] - (headerLOC[f]?0) - (commentedOutCode[f]?0);
   }
   return result;
 }
@@ -295,7 +295,7 @@ Factoid commentPercentage(map[str, int] locPerLanguage = (), map[str, int] comme
   
   txt = "The percentage of lines containing comments over all measured languages is <totalPercentage>%. Headers and commented out code are not included in this measure.";
 
-  languagePercentage = ( l : 100 * commentLinesPerLanguage[l] / toReal(locPerLanguage[l]) | l <- languages ); 
+  languagePercentage = ( l : round(100 * commentLinesPerLanguage[l] / toReal(locPerLanguage[l]), 0.01) | l <- languages ); 
 
   otherTxt = intercalate(", ", ["<l> (<languagePercentage[l]>%)" | l <- languages]);  
   txt += " The percentages per language are <otherTxt>.";
@@ -315,7 +315,7 @@ real headerPercentage(map[loc, int] headerLOC = ()) {
 	if (measuredFiles == 0) {
 		throw undefined("No headers found", |unknown:///|); 
 	}	
-	return (100.0 * ( 0 | it + 1 | f <- headerLOC, headerLOC[f] > 0 ) ) / measuredFiles;
+	return round((100.0 * ( 0 | it + 1 | f <- headerLOC, headerLOC[f] > 0 ) ) / measuredFiles, 0.01);
 }
 
 private alias Header = set[str];

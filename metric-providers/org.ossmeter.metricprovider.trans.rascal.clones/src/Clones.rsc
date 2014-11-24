@@ -6,6 +6,7 @@ import org::ossmeter::metricprovider::ProjectDelta;
 import org::ossmeter::metricprovider::MetricProvider;
 
 import Prelude;
+import util::Math;
 
 import Generic;
 import Split;
@@ -132,7 +133,7 @@ map[str, int] cloneLOCPerLanguage(rel[Language, loc, AST] asts = {}) {
             }
           }
 
-          result["<lang>"]?0 += size(linesInClones);
+          result["<getName(lang)>"]?0 += size(linesInClones);
         }
       }
     }
@@ -155,7 +156,7 @@ Factoid cloneCode(map[str, int] locPerLanguage = (), map[str, int] cloneLOCPerLa
     throw undefined("No LOC data available", |unknown:///|);
   }
 
-  rel[str, real] clonePercentagePerLanguage = { <"<l>", (100.0 * cloneLOCPerLanguage[l]) / locPerLanguage[l]> | l <- measuredLanguages };  
+  rel[str, real] clonePercentagePerLanguage = { <l, round((100.0 * cloneLOCPerLanguage[l]) / locPerLanguage[l], 0.01)> | l <- measuredLanguages };  
 
   // generic() is already removed in locPerLanguage
   lrel[str, real] sorted = sort(clonePercentagePerLanguage,
@@ -166,7 +167,7 @@ Factoid cloneCode(map[str, int] locPerLanguage = (), map[str, int] cloneLOCPerLa
   totalLOC = sum([ locPerLanguage[l] | l <- measuredLanguages ]);
   totalCloneLOC = sum([ cloneLOCPerLanguage[l] | l <- measuredLanguages ]); 
 
-  totalClonePercentage = (100.0 * totalCloneLOC) / totalLOC;
+  totalClonePercentage = round((100.0 * totalCloneLOC) / totalLOC, 0.01);
 
   // Kapser, C.; Godfrey, M.W., ""Cloning Considered Harmful" Considered Harmful," 13th Working Conference on Reverse Engineering (WCRE), pp. 19-28, Oct. 2006:
   // clone code is not necessarily bad

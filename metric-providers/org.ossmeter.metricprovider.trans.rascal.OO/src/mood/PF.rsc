@@ -16,7 +16,7 @@ public real PF(rel[loc subtype, loc supertype] superTypes,
 	numPossibleOverrides = ( 0 | it + size(overridableMethods[ancestors[c]]) | c <- allTypes );
 	
 	if (numPossibleOverrides > 0) {
-		return size(overrides) / toReal(numPossibleOverrides);
+		return round(size(overrides) / toReal(numPossibleOverrides), 0.01);
 	}
 	
 	return 0.0;
