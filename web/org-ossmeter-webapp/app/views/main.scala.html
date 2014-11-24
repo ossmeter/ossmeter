@@ -70,7 +70,8 @@
                   </li>
                   }
                 }{
-                  <li class="@("active".when(nav == "signup"))"><a href="@routes.Application.signup()">@Messages("ossmeter.navigation.signup")</a></li>
+
+                  <li class="@("active".when(nav == "invitation"))"><a href="@routes.Invitation.requestInvitation()">@Messages("ossmeter.navigation.invitation")</a></li>
                   <li><a href="@routes.Application.login()" class="@("disabled".when(nav == "login"))">@Messages("ossmeter.navigation.login")</a></li>
                 }
               </ul>
