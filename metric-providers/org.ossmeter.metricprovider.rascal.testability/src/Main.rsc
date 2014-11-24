@@ -50,7 +50,7 @@ real estimateTestCoverage(rel[Language, loc, M3] m3s = {}) {
   interfaceMethods = { meth | <entity, meth> <- m@containment, isMethod(meth), isInterface(entity) };
   set[loc] reachableMethods = { meth | meth <- reach(fullCallGraph, allTestMethods), meth in m@declarations<0> } - allTestMethods - interfaceMethods;
   int totalDefinedMethods = (0 | it + 1 | meth <- m@declarations<0> - allTestMethods - interfaceMethods, isMethod(meth));
-  return (100.0 * size(reachableMethods)) / totalDefinedMethods;
+  return round((100.0 * size(reachableMethods)) / totalDefinedMethods, 0.01);
 }
 
 /*  
@@ -108,12 +108,12 @@ real percentageOfTestedPublicMethods(rel[Language, loc, M3] m3s = {}) {
   allPublicMethods = { meth | meth <- m@declarations<0> - interfaceMethods - onlyTestMethods - supportTestMethods, isMethod(meth), \public() in m@modifiers[meth] };
   directlyCalledFromTestMethods = domainR(m@methodInvocation, onlyTestMethods);
   testedPublicMethods = rangeR(directlyCalledFromTestMethods + (directlyCalledFromTestMethods o m@methodOverrides<1,0>), allPublicMethods);
-  return (100.0 * size(range(testedPublicMethods)))/size(allPublicMethods);
+  return round((100.0 * size(range(testedPublicMethods)))/size(allPublicMethods), 0.01);
 }
 
 @metric{NumberOfTestMethods}
 @doc{Number of JUnit test methods}
-@friendlyName{{Number of JUnit test methods. This is an intermediate absolute metric used to compute others. The bare metric is hard to compare between projects.}
+@friendlyName{Number of JUnit test methods. This is an intermediate absolute metric used to compute others. The bare metric is hard to compare between projects.}
 @appliesTo{java()}
 @historic
 int numberOfTestMethods(rel[Language, loc, M3] m3s = {}) {

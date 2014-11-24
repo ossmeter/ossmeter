@@ -3,7 +3,6 @@ package org.ossmeter.metricprovider.trans.topics;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -115,7 +114,13 @@ public class TopicsTransMetricProvider  implements ITransientMetricProvider<Topi
 		for (Cluster cluster: newsgroupTopics) {
 			NewsgroupTopic newsgroupTopic = new NewsgroupTopic();
 			db.getNewsgroupTopics().add(newsgroupTopic);
-			newsgroupTopic.setUrl(ccpDelta.getCommunicationChannel().getUrl());
+			CommunicationChannel communicationChannel = ccpDelta.getCommunicationChannel();
+			if (!(communicationChannel instanceof NntpNewsGroup)) 
+				newsgroupTopic.setNewsgroupName(ccpDelta.getCommunicationChannel().getUrl());
+			else {
+				NntpNewsGroup newsgroup = (NntpNewsGroup) communicationChannel;
+				newsgroupTopic.setNewsgroupName(newsgroup.getNewsGroupName());
+			}
 			newsgroupTopic.setLabel(cluster.getLabel());
 			newsgroupTopic.setNumberOfDocuments(cluster.getAllDocuments().size());
 		}
@@ -181,7 +186,7 @@ public class TopicsTransMetricProvider  implements ITransientMetricProvider<Topi
 				NewsgroupArticlesData newsgroupArticlesData = findNewsgroupArticle(db, newsgroup, article);
 				if (newsgroupArticlesData == null) {
 					newsgroupArticlesData = new NewsgroupArticlesData();
-					newsgroupArticlesData.setUrl(newsgroup.getUrl());
+					newsgroupArticlesData.setNewsgroupName(newsgroup.getNewsGroupName());
 					newsgroupArticlesData.setArticleNumber(article.getArticleNumber());
 					newsgroupArticlesData.setDate(new Date(article.getDate()).toString());
 					newsgroupArticlesData.setSubject(article.getSubject());
@@ -269,7 +274,7 @@ public class TopicsTransMetricProvider  implements ITransientMetricProvider<Topi
 		NewsgroupArticlesData newsgroupArticlesData = null;
 		Iterable<NewsgroupArticlesData> newsgroupArticlesDataIt = 
 				db.getNewsgroupArticles().
-						find(NewsgroupArticlesData.URL.eq(newsgroup.getUrl()), 
+						find(NewsgroupArticlesData.NEWSGROUPNAME.eq(newsgroup.getNewsGroupName()), 
 								NewsgroupArticlesData.ARTICLENUMBER.eq(article.getArticleNumber()));
 		for (NewsgroupArticlesData nad:  newsgroupArticlesDataIt) {
 			newsgroupArticlesData = nad;

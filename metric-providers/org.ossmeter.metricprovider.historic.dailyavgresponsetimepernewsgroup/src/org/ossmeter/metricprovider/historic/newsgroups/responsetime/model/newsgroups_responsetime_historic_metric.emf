@@ -1,7 +1,7 @@
 package org.ossmeter.metricprovider.historic.newsgroups.responsetime.model;
 
 class NewsgroupsResponseTimeHistoricMetric {
-	attr String url_name;
+	attr String newsgroupName;
    	attr long avgResponseTime;
    	attr String avgResponseTimeFormatted;
 	attr int threadsConsidered;

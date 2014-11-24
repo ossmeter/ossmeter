@@ -24,7 +24,7 @@ class BugTrackerCommentsData {
 
 class NewsgroupArticlesData {
 	@searchable
-   	attr String url;
+   	attr String newsgroupName;
    	attr int articleNumber;
    	attr String subject;
    	attr String text;
@@ -40,7 +40,7 @@ class BugTrackerTopic {
 
 class NewsgroupTopic {
 	@searchable
-   	attr String url;
+   	attr String newsgroupName;
    	attr String label;
    	attr int numberOfDocuments;
 }

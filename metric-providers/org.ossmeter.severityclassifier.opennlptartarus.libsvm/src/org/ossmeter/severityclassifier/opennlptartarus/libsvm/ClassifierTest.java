@@ -4,7 +4,7 @@ public class ClassifierTest {
 
     public static void main(String[] args) throws Exception {
 
-    	String url  = "url";
+    	String newsgroupName  = "newsgroupName";
     	int doc1 = 1001;
     	int doc2 = 1002;
     	int doc3 = 1003;
@@ -33,7 +33,7 @@ public class ClassifierTest {
     	Classifier classifier = new Classifier();
 
     	ClassifierMessage classifierMessage1 = new ClassifierMessage();
-        classifierMessage1.setUrl(url);
+        classifierMessage1.setNewsgroupName(newsgroupName);
         classifierMessage1.setThreadId(doc1);
         classifierMessage1.setSubject(sub1);
         classifierMessage1.setText(text1);
@@ -49,21 +49,21 @@ public class ClassifierTest {
         classifier.add(classifierMessage1, featureIdCollection);
         
         ClassifierMessage classifierMessage2 = new ClassifierMessage();
-        classifierMessage2.setUrl(url);
+        classifierMessage2.setNewsgroupName(newsgroupName);
         classifierMessage2.setThreadId(doc2);
         classifierMessage2.setSubject(sub2);
         classifierMessage2.setText(text2);
         classifier.add(classifierMessage2);
 
         ClassifierMessage classifierMessage3 = new ClassifierMessage();
-        classifierMessage3.setUrl(url);
+        classifierMessage3.setNewsgroupName(newsgroupName);
         classifierMessage3.setThreadId(doc3);
         classifierMessage3.setSubject(sub1);
         classifierMessage3.setText(text2);
         classifier.add(classifierMessage3);
         
         ClassifierMessage classifierMessage4 = new ClassifierMessage();
-        classifierMessage4.setUrl(url);
+        classifierMessage4.setNewsgroupName(newsgroupName);
         classifierMessage4.setThreadId(doc3);
         classifierMessage4.setSubject(sub2);
         classifierMessage4.setText(text1);

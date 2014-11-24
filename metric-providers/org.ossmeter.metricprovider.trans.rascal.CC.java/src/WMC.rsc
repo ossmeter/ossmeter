@@ -118,7 +118,7 @@ map[str, int] CCHistogramJava(map[loc, int] methodCC = ()) {
 
 @metric{CCJavaFactoid}
 @doc{The cyclometic complexity of the project's Java code indicates on the lowest code level (inside the body of methods) how hard the code to test is and also provides contra indications for underdstandability.}
-@friendlyName{CCJavaFactoid}
+@friendlyName{Cyclomatic Complexity for Java}
 @appliesTo{java()}
 @uses{("CCHistogramJava" : "hist")}
 Factoid CC(map[str, int] hist = ()) {

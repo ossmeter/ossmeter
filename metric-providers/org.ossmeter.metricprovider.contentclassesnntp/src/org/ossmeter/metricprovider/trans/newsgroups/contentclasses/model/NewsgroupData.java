@@ -11,20 +11,20 @@ public class NewsgroupData extends Pongo {
 	
 	public NewsgroupData() { 
 		super();
-		URL_NAME.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.contentclasses.model.NewsgroupData");
+		NEWSGROUPNAME.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.contentclasses.model.NewsgroupData");
 		NUMBEROFARTICLES.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.contentclasses.model.NewsgroupData");
 	}
 	
-	public static StringQueryProducer URL_NAME = new StringQueryProducer("url_name"); 
+	public static StringQueryProducer NEWSGROUPNAME = new StringQueryProducer("newsgroupName"); 
 	public static NumericalQueryProducer NUMBEROFARTICLES = new NumericalQueryProducer("numberOfArticles");
 	
 	
-	public String getUrl_name() {
-		return parseString(dbObject.get("url_name")+"", "");
+	public String getNewsgroupName() {
+		return parseString(dbObject.get("newsgroupName")+"", "");
 	}
 	
-	public NewsgroupData setUrl_name(String url_name) {
-		dbObject.put("url_name", url_name);
+	public NewsgroupData setNewsgroupName(String newsgroupName) {
+		dbObject.put("newsgroupName", newsgroupName);
 		notifyChanged();
 		return this;
 	}

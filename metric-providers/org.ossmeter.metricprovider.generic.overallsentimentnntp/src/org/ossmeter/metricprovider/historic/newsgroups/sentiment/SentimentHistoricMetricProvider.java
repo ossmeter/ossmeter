@@ -54,8 +54,8 @@ public class SentimentHistoricMetricProvider extends AbstractHistoricalMetricPro
 				 ((SentimentTransMetricProvider)uses.get(0)).adapt(context.getProjectDB(project));
 
 		float overallSentiment = 0,
-				startSentiment = 0,
-				endSentiment = 0;
+			  startSentiment = 0,
+			  endSentiment = 0;
 		for (ThreadStatistics threadStatistics: sentimentTransMetric.getThreads()) {
 			overallSentiment += threadStatistics.getAverageSentiment();
 			String start = threadStatistics.getStartSentiment();

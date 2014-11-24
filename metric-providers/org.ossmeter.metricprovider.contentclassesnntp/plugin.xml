@@ -7,6 +7,7 @@
 	</extension>
 
 
+
 <extension point="com.googlecode.pongo.runtime.osgi">
     <class name="org.ossmeter.metricprovider.trans.newsgroups.contentclasses.model.NewsgroupsContentClassesTransMetric"/>
     <class name="org.ossmeter.metricprovider.trans.newsgroups.contentclasses.model.NewsgroupData"/>

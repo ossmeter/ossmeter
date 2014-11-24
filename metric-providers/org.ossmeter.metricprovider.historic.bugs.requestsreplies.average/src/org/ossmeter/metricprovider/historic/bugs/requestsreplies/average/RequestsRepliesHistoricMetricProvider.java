@@ -62,9 +62,14 @@ public class RequestsRepliesHistoricMetricProvider extends AbstractHistoricalMet
 				days = bugTracker.getDays();
 		}
 		
-		float avgCommentsPerDay = ((float) numberOfArticles) / days;
-		float avgRepliesPerDay = ((float) numberOrReplies) / days;
-		float avgRequestsPerDay = ((float) numberOrRequests) / days;
+		float avgCommentsPerDay = 0,
+			  avgRepliesPerDay = 0,
+			  avgRequestsPerDay = 0;
+		if (days>0) {
+			avgCommentsPerDay = ((float) numberOfArticles) / days;
+			avgRepliesPerDay = ((float) numberOrReplies) / days;
+			avgRequestsPerDay = ((float) numberOrRequests) / days;
+		}
 
 		BugsRequestsRepliesHistoricMetric avgRRThread = new BugsRequestsRepliesHistoricMetric();
 		avgRRThread.setAverageCommentsPerDay(avgCommentsPerDay);

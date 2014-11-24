@@ -11,29 +11,18 @@ public class SeverityLevel extends Pongo {
 	
 	public SeverityLevel() { 
 		super();
-		BUGTRACKERID.setOwningType("org.ossmeter.metricprovider.historic.bugs.severityresponsetime.model.SeverityLevel");
 		SEVERITYLEVEL.setOwningType("org.ossmeter.metricprovider.historic.bugs.severityresponsetime.model.SeverityLevel");
 		NUMBEROFBUGS.setOwningType("org.ossmeter.metricprovider.historic.bugs.severityresponsetime.model.SeverityLevel");
 		AVGRESPONSETIME.setOwningType("org.ossmeter.metricprovider.historic.bugs.severityresponsetime.model.SeverityLevel");
 		AVGRESPONSETIMEFORMATTED.setOwningType("org.ossmeter.metricprovider.historic.bugs.severityresponsetime.model.SeverityLevel");
 	}
 	
-	public static StringQueryProducer BUGTRACKERID = new StringQueryProducer("bugTrackerId"); 
 	public static StringQueryProducer SEVERITYLEVEL = new StringQueryProducer("severityLevel"); 
 	public static NumericalQueryProducer NUMBEROFBUGS = new NumericalQueryProducer("numberOfBugs");
 	public static NumericalQueryProducer AVGRESPONSETIME = new NumericalQueryProducer("avgResponseTime");
 	public static StringQueryProducer AVGRESPONSETIMEFORMATTED = new StringQueryProducer("avgResponseTimeFormatted"); 
 	
 	
-	public String getBugTrackerId() {
-		return parseString(dbObject.get("bugTrackerId")+"", "");
-	}
-	
-	public SeverityLevel setBugTrackerId(String bugTrackerId) {
-		dbObject.put("bugTrackerId", bugTrackerId);
-		notifyChanged();
-		return this;
-	}
 	public String getSeverityLevel() {
 		return parseString(dbObject.get("severityLevel")+"", "");
 	}

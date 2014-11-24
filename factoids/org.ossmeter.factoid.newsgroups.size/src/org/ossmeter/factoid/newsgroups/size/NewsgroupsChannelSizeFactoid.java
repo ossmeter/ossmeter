@@ -1,5 +1,6 @@
 package org.ossmeter.factoid.newsgroups.size;
 
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -54,8 +55,8 @@ public class NewsgroupsChannelSizeFactoid extends AbstractFactoidMetricProvider{
 
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return Arrays.asList(NewsgroupsArticlesHistoricMetric.class.getCanonicalName(),
-							 NewsgroupsNewThreadsHistoricMetric.class.getCanonicalName());
+		return Arrays.asList(ArticlesHistoricMetricProvider.IDENTIFIER,
+							 NewThreadsHistoricMetricProvider.IDENTIFIER);
 	}
 
 	@Override
@@ -70,11 +71,28 @@ public class NewsgroupsChannelSizeFactoid extends AbstractFactoidMetricProvider{
 
 		ArticlesHistoricMetricProvider articlesProvider = new ArticlesHistoricMetricProvider();
 		NewThreadsHistoricMetricProvider newThreadsProvider = new NewThreadsHistoricMetricProvider();
-		
-//		Date end = new Date(20040830);
-//		Date start = new Date(20041023);
+
+		for (IMetricProvider m : this.uses) {
+			if (m instanceof ArticlesHistoricMetricProvider) {
+				articlesProvider = (ArticlesHistoricMetricProvider) m;
+				continue;
+			}
+			if (m instanceof NewThreadsHistoricMetricProvider) {
+				newThreadsProvider = (NewThreadsHistoricMetricProvider) m;
+				continue;
+			}
+		}
+
 		Date end = new Date();
 		Date start = new Date();
+//		Date start=null, end=null;
+//		try {
+//			start = new Date("20040801");
+//			end = new Date("20050801");
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		List<Pongo> articlesList = articlesProvider.getHistoricalMeasurements(context, project, start, end),
 					newThreadsList = newThreadsProvider.getHistoricalMeasurements(context, project, start, end);
 		
@@ -141,7 +159,7 @@ public class NewsgroupsChannelSizeFactoid extends AbstractFactoidMetricProvider{
 			NewsgroupsArticlesHistoricMetric newArticlesPongo = (NewsgroupsArticlesHistoricMetric) pongo;
 			for (DailyNewsgroupData newsgroupData: newArticlesPongo.getNewsgroups()) {
 				int articles = newArticlesPongo.getCumulativeNumberOfArticles();
-				trackerArticles.put(newsgroupData.getUrl_name(), articles);
+				trackerArticles.put(newsgroupData.getNewsgroupName(), articles);
 				sum += articles;
 			}
 		}
@@ -155,7 +173,7 @@ public class NewsgroupsChannelSizeFactoid extends AbstractFactoidMetricProvider{
 			for (org.ossmeter.metricprovider.historic.newsgroups.newthreads.model.DailyNewsgroupData 
 					newsgroupData: commentsPongo.getNewsgroups()) {
 				int comments = commentsPongo.getCumulativeNumberOfNewThreads();
-				trackerNewThreads.put(newsgroupData.getUrl_name(), comments);
+				trackerNewThreads.put(newsgroupData.getNewsgroupName(), comments);
 				sum += comments;
 			}
 		}

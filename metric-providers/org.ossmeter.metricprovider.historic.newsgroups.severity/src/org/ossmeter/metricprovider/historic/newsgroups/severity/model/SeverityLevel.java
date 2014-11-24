@@ -1,9 +1,8 @@
 package org.ossmeter.metricprovider.historic.newsgroups.severity.model;
 
-import com.mongodb.*;
-import java.util.*;
-import com.googlecode.pongo.runtime.*;
-import com.googlecode.pongo.runtime.querying.*;
+import com.googlecode.pongo.runtime.Pongo;
+import com.googlecode.pongo.runtime.querying.NumericalQueryProducer;
+import com.googlecode.pongo.runtime.querying.StringQueryProducer;
 
 
 public class SeverityLevel extends Pongo {
@@ -12,24 +11,24 @@ public class SeverityLevel extends Pongo {
 	
 	public SeverityLevel() { 
 		super();
-		URL.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.severity.model.SeverityLevel");
+		NEWSGROUPNAME.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.severity.model.SeverityLevel");
 		SEVERITYLEVEL.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.severity.model.SeverityLevel");
 		NUMBEROFTHREADS.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.severity.model.SeverityLevel");
 		PERCENTAGE.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.severity.model.SeverityLevel");
 	}
 	
-	public static StringQueryProducer URL = new StringQueryProducer("url"); 
+	public static StringQueryProducer NEWSGROUPNAME = new StringQueryProducer("newsgroupName"); 
 	public static StringQueryProducer SEVERITYLEVEL = new StringQueryProducer("severityLevel"); 
 	public static NumericalQueryProducer NUMBEROFTHREADS = new NumericalQueryProducer("numberOfThreads");
 	public static NumericalQueryProducer PERCENTAGE = new NumericalQueryProducer("percentage");
 	
 	
-	public String getUrl() {
-		return parseString(dbObject.get("url")+"", "");
+	public String getNewsgroupName() {
+		return parseString(dbObject.get("newsgroupName")+"", "");
 	}
 	
-	public SeverityLevel setUrl(String url) {
-		dbObject.put("url", url);
+	public SeverityLevel setNewsgroupName(String newsgroupName) {
+		dbObject.put("newsgroupName", newsgroupName);
 		notifyChanged();
 		return this;
 	}

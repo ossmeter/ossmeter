@@ -22,7 +22,7 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ArticleData">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url_name">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="newsgroupName">
       <eAnnotations source="searchable"/>
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
@@ -50,7 +50,7 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="NewsgroupData">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="url_name">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="newsgroupName">
       <eAnnotations source="searchable"/>
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>

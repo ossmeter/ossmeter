@@ -107,7 +107,7 @@ public class SentimentClassificationTransMetricProvider  implements ITransientMe
 				NewsgroupArticlesData newsgroupArticlesData = findNewsgroupArticle(db, newsgroup, article);
 				if (newsgroupArticlesData == null) {
 					newsgroupArticlesData = new NewsgroupArticlesData();
-					newsgroupArticlesData.setUrl(newsgroup.getUrl());
+					newsgroupArticlesData.setNewsGroupName(newsgroup.getNewsGroupName());
 					newsgroupArticlesData.setArticleNumber(article.getArticleNumber());
 					db.getNewsgroupArticles().add(newsgroupArticlesData);
 				} 
@@ -184,7 +184,7 @@ public class SentimentClassificationTransMetricProvider  implements ITransientMe
 
 	private ClassificationInstance prepareNewsgroupArticleInstance(NntpNewsGroup newsgroup, CommunicationChannelArticle article) {
     	ClassificationInstance classificationInstance = new ClassificationInstance();
-        classificationInstance.setUrl(newsgroup.getUrl());
+        classificationInstance.setNewsgroupName(newsgroup.getNewsGroupName());
         classificationInstance.setArticleNumber(article.getArticleNumber());
         classificationInstance.setSubject(article.getSubject());
         classificationInstance.setText(article.getText());
@@ -211,7 +211,7 @@ public class SentimentClassificationTransMetricProvider  implements ITransientMe
 		NewsgroupArticlesData newsgroupArticlesData = null;
 		Iterable<NewsgroupArticlesData> newsgroupArticlesDataIt = 
 				db.getNewsgroupArticles().
-						find(NewsgroupArticlesData.URL.eq(newsgroup.getUrl()), 
+						find(NewsgroupArticlesData.NEWSGROUPNAME.eq(newsgroup.getNewsGroupName()), 
 								NewsgroupArticlesData.ARTICLENUMBER.eq(article.getArticleNumber()));
 		for (NewsgroupArticlesData nad:  newsgroupArticlesDataIt) {
 			newsgroupArticlesData = nad;

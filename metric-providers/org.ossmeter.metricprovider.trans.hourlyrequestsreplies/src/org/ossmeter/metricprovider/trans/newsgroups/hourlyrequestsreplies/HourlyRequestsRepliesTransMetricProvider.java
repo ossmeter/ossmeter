@@ -148,7 +148,7 @@ public class HourlyRequestsRepliesTransMetricProvider implements ITransientMetri
 	private String getRequestReplyClass(RequestReplyClassificationTransMetric usedClassifier, 
 			NntpNewsGroup newsgroup, CommunicationChannelArticle article) {
 		Iterable<NewsgroupArticles> newsgroupArticlesIt = usedClassifier.getNewsgroupArticles().
-				find(NewsgroupArticles.URL.eq(newsgroup.getUrl()), 
+				find(NewsgroupArticles.NEWSGROUPNAME.eq(newsgroup.getNewsGroupName()), 
 						NewsgroupArticles.ARTICLENUMBER.eq(article.getArticleNumber()));
 		NewsgroupArticles newsgroupArticle = null;
 		for (NewsgroupArticles art:  newsgroupArticlesIt) {
@@ -157,7 +157,7 @@ public class HourlyRequestsRepliesTransMetricProvider implements ITransientMetri
 		if (newsgroupArticle == null) {
 			System.err.println("Newsgroups - Hourly Requests Replies -\t" + 
 					"there is no classification for article: " + article.getArticleNumber() +
-					"\t of newsgroup: " + newsgroup.getUrl());
+					"\t of newsgroup: " + newsgroup.getNewsGroupName());
 			System.exit(-1);
 		} else{
 			return newsgroupArticle.getClassificationResult();

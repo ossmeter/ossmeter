@@ -144,7 +144,7 @@ public class MetricVisualisation {
 
 		byte[] bytes = sparkle.renderToByteArray(xdim, ydim);
 		
-		DateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		DateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yy");
 		
 		// Set the spark data
 		sparkData = mapper.createObjectNode();

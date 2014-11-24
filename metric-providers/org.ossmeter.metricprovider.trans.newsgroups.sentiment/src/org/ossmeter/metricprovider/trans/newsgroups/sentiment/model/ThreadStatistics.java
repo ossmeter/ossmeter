@@ -1,9 +1,8 @@
 package org.ossmeter.metricprovider.trans.newsgroups.sentiment.model;
 
-import com.mongodb.*;
-import java.util.*;
-import com.googlecode.pongo.runtime.*;
-import com.googlecode.pongo.runtime.querying.*;
+import com.googlecode.pongo.runtime.Pongo;
+import com.googlecode.pongo.runtime.querying.NumericalQueryProducer;
+import com.googlecode.pongo.runtime.querying.StringQueryProducer;
 
 
 public class ThreadStatistics extends Pongo {
@@ -12,26 +11,26 @@ public class ThreadStatistics extends Pongo {
 	
 	public ThreadStatistics() { 
 		super();
-		URL_NAME.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.sentiment.model.ThreadStatistics");
+		NEWSGROUPNAME.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.sentiment.model.ThreadStatistics");
 		THREADID.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.sentiment.model.ThreadStatistics");
 		AVERAGESENTIMENT.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.sentiment.model.ThreadStatistics");
 		STARTSENTIMENT.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.sentiment.model.ThreadStatistics");
 		ENDSENTIMENT.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.sentiment.model.ThreadStatistics");
 	}
 	
-	public static StringQueryProducer URL_NAME = new StringQueryProducer("url_name"); 
+	public static StringQueryProducer NEWSGROUPNAME = new StringQueryProducer("newsgroupName"); 
 	public static NumericalQueryProducer THREADID = new NumericalQueryProducer("threadId");
 	public static NumericalQueryProducer AVERAGESENTIMENT = new NumericalQueryProducer("averageSentiment");
 	public static StringQueryProducer STARTSENTIMENT = new StringQueryProducer("startSentiment"); 
 	public static StringQueryProducer ENDSENTIMENT = new StringQueryProducer("endSentiment"); 
 	
 	
-	public String getUrl_name() {
-		return parseString(dbObject.get("url_name")+"", "");
+	public String getNewsgroupName() {
+		return parseString(dbObject.get("newsgroupName")+"", "");
 	}
 	
-	public ThreadStatistics setUrl_name(String url_name) {
-		dbObject.put("url_name", url_name);
+	public ThreadStatistics setNewsgroupName(String newsgroupName) {
+		dbObject.put("newsgroupName", newsgroupName);
 		notifyChanged();
 		return this;
 	}

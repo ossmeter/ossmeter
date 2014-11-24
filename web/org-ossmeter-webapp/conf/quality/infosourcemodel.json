@@ -1,40 +1,246 @@
 {
-	"id" : "channels",
-	"name" : "Channels",
-	"aspects":[],
-	"attributes" : [
+	"id": "channels",
+	"name": "Channels",
+	"aspects": [],
+	"attributes": [
 		{
-			"name" : "Source Code",
-			"factoids" : [ "rascal.generic.churn.commitSize", "trans.rascal.readability.ReadabilityFactoid", "rascal.generic.churn.churnVolume",
-						   "trans.rascal.activecommitters.developmentTeamExperience", "trans.rascal.activecommitters.weekendProject", "trans.rascal.activecommitters.developmentTeamExperienceSpread",
-						   "trans.rascal.activecommitters.developmentTeamStability", "trans.rascal.comments.headerUse", "trans.rascal.OO.java.Cohesion-Java",
-						   "trans.rascal.OO.java.Coupling-Java", "rascal.testability.java.JavaUnitTestCoverage" ],
-			"metrics" : [ "commitsovertimeline" ],
-			"detail" : "src"
-		}, {
-			"name" : "Communication Channels",
-			"factoids" : [ "cocomo", "cocomo" ],
-			"metrics" : [ "newsgroups.activeusers", "newsgroups.newUsers", "newsgroups.cumulativeNewUsers", "newsgroups.articles", "newsgroups.cumulativeArticles", 
-						  "newsgroups.requests", "newsgroups.cumulativerequests", "newsgroups.replies", "newsgroups.cumulativereplies", 
-						  "newsgroups.averageSentiment", "newsgroups.sentimentAtThreadBeggining", 
-						  "newsgroups.requests-useraverage", "newsgroups.cumulativeNewThreads",
-						  "newsgroups.requestsreplies-threadaverage", "newsgroups.requestsreplies-useraverage", "newsgroups.threads",
-						  "newsgroups.newThreads", "newsgroups.replies-threadaverage",  "newsgroups.users",
-						  "newsgroups.replies-useraverage", 
-						  "newsgroups.requests-threadaverage", "newsgroups.inactiveusers", "newsgroups.averageResponseTime-threads", 
-						  "newsgroups.averageResponseTime", "newsgroups.cumulativerequestsreplies", "newsgroups.sentimentAtThreadEnd",
-						  "newsgroups.unansweredThreads", "newsgroups.activeinactiveusers", "newsgroups.cumulativeAverageResponseTime",
-						   "newsgroups.requestsreplies", "newsgroups.cumulativeAverageResponseTime-threads", "newsgroups.articles-threadaverage" ],
-			"detail" : "cc"
-		}, {
-			"name" : "Bug Tracking Systems",
-			"factoids" : [ "org.ossmeter.factoid.bugs.channelusage.BugsChannelUsageFactoid", "cocomo" ],
-			"metrics" : [ "bugs.bugs", "bugs.cumulativeBugs", "bugs.fixedBugs", "bugs.resolvedClosedBugs", "bugs.nonResolvedClosedBugs", 
-						  "bugs.comments", "bugs.cumulativeComments", "bugs.patches", "bugs.cumulativePatches", "bugs.averageSentiment", 
-						  "bugs.wontFixBugs", "bugs.bugOpenTime-bugs", "bugs.worksForMeBugs", "bugs.worksForMeBugs",  "bugs.sentimentAtThreadBeggining",
-						  "bugs.bugOpenTime", "bugs.sentimentAtThreadEnd", "bugs.invalidBugs"
-						    ],
-			"detail" : "bts"
+			"name": "Source Code",
+			"factoids": [
+				"rascal.generic.churn.commitSize",
+				"trans.rascal.readability.ReadabilityFactoid",
+				"rascal.generic.churn.churnVolume",
+				"trans.rascal.activecommitters.developmentTeamExperience",
+				"trans.rascal.activecommitters.weekendProject",
+				"trans.rascal.activecommitters.developmentTeamExperienceSpread",
+				"trans.rascal.activecommitters.developmentTeamStability",
+				"trans.rascal.comments.headerUse",
+				"trans.rascal.OO.java.Cohesion-Java",
+				"trans.rascal.OO.java.Coupling-Java",
+				"rascal.testability.java.JavaUnitTestCoverage"
+			],
+			"metrics": [
+				{
+					"name": "commits",
+					"id": "commitsovertimeline"
+				}
+			],
+			"detail": "src"
+		},
+		{
+			"name": "Communication Channels",
+			"factoids": [
+				"cocomo",
+				"cocomo"
+			],
+			"metrics": [
+				{
+					"name": "Active Users",
+					"id": "newsgroups.activeusers"
+				},
+				{
+					"name": "New Users",
+					"id": "newsgroups.newUsers"
+				},
+				{
+					"name": "New Users (Cumulative)",
+					"id": "newsgroups.cumulativeNewUsers"
+				},
+				{
+					"name": "Articles",
+					"id": "newsgroups.articles"
+				},
+				{
+					"name": "Articles (Cumulative)",
+					"id": "newsgroups.cumulativeArticles"
+				},
+				{
+					"name": "Requests",
+					"id": "newsgroups.requests"
+				},
+				{
+					"name": "Requests (Cumulative)",
+					"id": "newsgroups.cumulativerequests"
+				},
+				{
+					"name": "Replies",
+					"id": "newsgroups.replies"
+				},
+				{
+					"name": "Replies (Cumulative)",
+					"id": "newsgroups.cumulativereplies"
+				},
+				{
+					"name": "Average Sentiment",
+					"id": "newsgroups.averageSentiment"
+				},
+				{
+					"name": "Average Sentiment At the Beginning of Threads",
+					"id": "newsgroups.sentimentAtThreadBeggining"
+				},
+				{
+					"name": "Requests Per User",
+					"id": "newsgroups.requests-useraverage"
+				},
+				{
+					"name": "New Threads (Cumulative)",
+					"id": "newsgroups.cumulativeNewThreads"
+				},
+				{
+					"name": "Articles, Requests and Replies Per Thread",
+					"id": "newsgroups.requestsreplies-threadaverage"
+				},
+				{
+					"name": "Articles, Requests and Replies Per User",
+					"id": "newsgroups.requestsreplies-useraverage"
+				},
+				{
+					"name": "Threads",
+					"id": "newsgroups.threads"
+				},
+				{
+					"name": "New Threads",
+					"id": "newsgroups.newThreads"
+				},
+				{
+					"name": "Replies Per Thread",
+					"id": "newsgroups.replies-threadaverage"
+				},
+				{
+					"name": "Users",
+					"id": "newsgroups.users"
+				},
+				{
+					"name": "Replies Per User",
+					"id": "newsgroups.replies-useraverage"
+				},
+				{
+					"name": "Requests Per Thread",
+					"id": "newsgroups.requests-threadaverage"
+				},
+				{
+					"name": "Inactive Users",
+					"id": "newsgroups.inactiveusers"
+				},
+				{
+					"name": "Average Response Time per Thread (ms)",
+					"id": "newsgroups.averageResponseTime-threads"
+				},
+				{
+					"name": "Average Response Time (ms)",
+					"id": "newsgroups.averageResponseTime"
+				},
+				{
+					"name": "Requests and Replies (Cumulative)",
+					"id": "newsgroups.cumulativerequestsreplies"
+				},
+				{
+					"name": "Average Sentiment At the End of Threads",
+					"id": "newsgroups.sentimentAtThreadEnd"
+				},
+				{
+					"name": "Unanswered Threads",
+					"id": "newsgroups.unansweredThreads"
+				},
+				{
+					"name": "Users, Active Users and Inactive Users",
+					"id": "newsgroups.activeinactiveusers"
+				},
+				{
+					"name": "Average Response Time (Cumulative) (ms)",
+					"id": "newsgroups.cumulativeAverageResponseTime"
+				},
+				{
+					"name": "Requests and Replies",
+					"id": "newsgroups.requestsreplies"
+				},
+				{
+					"name": " Average Response Time per Thread (Cumulative) (ms)",
+					"id": "newsgroups.cumulativeAverageResponseTime-threads"
+				},
+				{
+					"name": "Articles Per Thread",
+					"id": "newsgroups.articles-threadaverage"
+				}
+			],
+			"detail": "cc"
+		},
+		{
+			"name": "Bug Tracking Systems",
+			"factoids": [
+				"org.ossmeter.factoid.bugs.channelusage.BugsChannelUsageFactoid",
+				"cocomo"
+			],
+			"metrics": [
+				{
+					"name": "Bugs",
+					"id": "bugs.bugs"
+				},
+				{
+					"name": "Fixed Bugs",
+					"id": "bugs.fixedBugs"
+				},
+				{
+					"name": "Resolved or Closed Bugs",
+					"id": "bugs.resolvedClosedBugs"
+				},
+				{
+					"name": "Non-Resolved or Closed Bugs",
+					"id": "bugs.nonResolvedClosedBugs"
+				},
+				{
+					"name": "Comments",
+					"id": "bugs.comments"
+				},
+				{
+					"name": "Comments (Cumulative)",
+					"id": "bugs.cumulativeComments"
+				},
+				{
+					"name": "Patches",
+					"id": "bugs.patches"
+				},
+				{
+					"name": "Patches (Cumulative)",
+					"id": "bugs.cumulativePatches"
+				},
+				{
+					"name": "Average Sentiment",
+					"id": "bugs.averageSentiment"
+				},
+				{
+					"name": "Won't-Fix Bugs",
+					"id": "bugs.wontFixBugs"
+				},
+				{
+					"name": "Bug Open Time in relation to the Number of Bugs",
+					"id": "bugs.bugOpenTime-bugs"
+				},
+				{
+					"name": "Works-For-Me Bugs",
+					"id": "bugs.worksForMeBugs"
+				},
+				{
+					"name": "Works-For-Me Bugs",
+					"id": "bugs.worksForMeBugs"
+				},
+				{
+					"name": "Average Sentiment At Thread Beginning",
+					"id": "bugs.sentimentAtThreadBeggining"
+				},
+				{
+					"name": "Bug Open Time",
+					"id": "bugs.bugOpenTime"
+				},
+				{
+					"name": "Average Sentiment At Thread End",
+					"id": "bugs.sentimentAtThreadEnd"
+				},
+				{
+					"name": "Invalid Bugs",
+					"id": "bugs.invalidBugs"
+				}
+			],
+			"detail": "bts"
 		}
 	]
 }

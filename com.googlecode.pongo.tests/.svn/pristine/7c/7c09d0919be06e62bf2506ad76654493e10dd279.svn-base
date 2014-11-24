@@ -1,0 +1,83 @@
+package com.googlecode.pongo.tests.zoo.model;
+
+@db
+class Zoo {
+	val Animal[*] animals;
+	val Building[*] buildings;
+	val Staff[*] staff;
+}
+
+abstract class Animal {
+	attr String species;
+	@searchable
+	attr String name;
+	attr double weight;
+	attr double height;
+	attr int age;
+	attr String origin;
+}
+
+abstract class Mammal extends Animal {
+	
+}
+
+abstract class Amphibian extends Animal {
+	
+}
+
+abstract class Reptile extends Animal {
+	
+}
+
+abstract class Bird extends Animal {
+	
+}
+abstract class Fish extends Animal {
+	
+}
+
+class Monkey extends Mammal {
+	
+}
+
+class Tiger extends Mammal {
+	
+}
+
+class Zebra extends Mammal {
+	
+}
+
+class Shark extends Fish {
+	
+}
+
+abstract class Building {
+	attr String name;
+}
+
+class Cafe extends Building {
+	
+}
+
+class TicketOffice extends Building {
+	
+}
+
+class Enclosure extends Building {
+	
+}
+
+abstract class Staff {
+	attr String name;
+	attr String address;
+	attr int age;
+}
+
+class Keeper extends Staff {
+	ref Animal[*] animals;
+}
+
+class GeneralStaff extends Staff {
+	ref Building[*] buildings;
+}

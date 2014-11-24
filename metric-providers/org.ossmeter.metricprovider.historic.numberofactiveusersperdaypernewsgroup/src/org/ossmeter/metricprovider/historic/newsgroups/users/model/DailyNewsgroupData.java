@@ -11,24 +11,24 @@ public class DailyNewsgroupData extends Pongo {
 	
 	public DailyNewsgroupData() { 
 		super();
-		URL_NAME.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.users.model.DailyNewsgroupData");
+		NEWSGROUPNAME.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.users.model.DailyNewsgroupData");
 		NUMBEROFUSERS.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.users.model.DailyNewsgroupData");
 		NUMBEROFACTIVEUSERS.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.users.model.DailyNewsgroupData");
 		NUMBEROFINACTIVEUSERS.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.users.model.DailyNewsgroupData");
 	}
 	
-	public static StringQueryProducer URL_NAME = new StringQueryProducer("url_name"); 
+	public static StringQueryProducer NEWSGROUPNAME = new StringQueryProducer("newsgroupName"); 
 	public static NumericalQueryProducer NUMBEROFUSERS = new NumericalQueryProducer("numberOfUsers");
 	public static NumericalQueryProducer NUMBEROFACTIVEUSERS = new NumericalQueryProducer("numberOfActiveUsers");
 	public static NumericalQueryProducer NUMBEROFINACTIVEUSERS = new NumericalQueryProducer("numberOfInactiveUsers");
 	
 	
-	public String getUrl_name() {
-		return parseString(dbObject.get("url_name")+"", "");
+	public String getNewsgroupName() {
+		return parseString(dbObject.get("newsgroupName")+"", "");
 	}
 	
-	public DailyNewsgroupData setUrl_name(String url_name) {
-		dbObject.put("url_name", url_name);
+	public DailyNewsgroupData setNewsgroupName(String newsgroupName) {
+		dbObject.put("newsgroupName", newsgroupName);
 		notifyChanged();
 		return this;
 	}

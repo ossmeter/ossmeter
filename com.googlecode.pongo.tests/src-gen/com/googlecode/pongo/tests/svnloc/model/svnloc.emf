@@ -1,0 +1,29 @@
+package com.googlecode.pongo.tests.svnloc.model;
+
+@db
+class SVNMetricDB{
+	val SvnRepositoryMetric[*] svnRepositorymetrics;
+	val LinesOfCodeMetric[*] linesOfCodeMetrics;
+}
+
+
+
+
+class SvnRepositoryMetric {
+   @searchable
+   attr String url;
+   attr long revisionNumber;
+   ref LinesOfCodeMetric[*] linesOfCodeMetrics;
+}
+
+
+class LinesOfCodeMetric {
+   @searchable
+   attr String file;
+   attr int lines;
+   val RevisionNumber revisionNumber;
+}
+
+class RevisionNumber {
+   attr int number;
+}

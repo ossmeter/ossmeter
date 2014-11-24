@@ -1,6 +1,7 @@
 package org.ossmeter.factoid.bugs.threadlength;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class BugsChannelThreadLengthFactoid extends AbstractFactoidMetricProvide
 
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return Arrays.asList(BugsBugsHistoricMetric.class.getCanonicalName());
+		return Arrays.asList(BugsHistoricMetricProvider.IDENTIFIER);
 	}
 
 	@Override
@@ -56,10 +57,25 @@ public class BugsChannelThreadLengthFactoid extends AbstractFactoidMetricProvide
 //		factoid.setCategory(FactoidCategory.BUGS);
 		factoid.setName("Bug Channel Thread Length");
 
-		BugsHistoricMetricProvider bugsProvider = new BugsHistoricMetricProvider();
+		BugsHistoricMetricProvider bugsProvider = null;
 		
+		for (IMetricProvider m : this.uses) {
+			if (m instanceof BugsHistoricMetricProvider) {
+				bugsProvider = (BugsHistoricMetricProvider) m;
+				continue;
+			}
+		}
+
 		Date end = new Date();
 		Date start = new Date();
+//		Date start=null, end=null;
+//		try {
+//			start = new Date("20050301");
+//			end = new Date("20060301");
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		List<Pongo> bugsList = bugsProvider.getHistoricalMeasurements(context, project, start, end);
 		
 		float averageComments = 0,
@@ -97,9 +113,9 @@ public class BugsChannelThreadLengthFactoid extends AbstractFactoidMetricProvide
 		} else {
 			stringBuffer.append("long");
 		}
-		stringBuffer.append(" , approximately ");
+		stringBuffer.append(", approximately ");
 		stringBuffer.append( decimalFormat.format(averageComments));
-		stringBuffer.append(" comments.\nIn particular, a bug contains approximately ");
+		stringBuffer.append(" comments long.\nIn particular, a bug contains approximately ");
 		stringBuffer.append( decimalFormat.format(averageRequests));
 		stringBuffer.append(" requests and ");
 		stringBuffer.append( decimalFormat.format(averageReplies));

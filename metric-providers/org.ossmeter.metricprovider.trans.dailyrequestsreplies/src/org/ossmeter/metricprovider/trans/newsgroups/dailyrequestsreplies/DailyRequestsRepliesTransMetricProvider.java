@@ -156,7 +156,7 @@ NewsgroupsDailyRequestsRepliesTransMetric>{
 	private String getRequestReplyClass(RequestReplyClassificationTransMetric usedClassifier, 
 											NntpNewsGroup newsgroup, CommunicationChannelArticle article) {
 		Iterable<NewsgroupArticles> newsgroupArticlesIt = usedClassifier.getNewsgroupArticles().
-				find(NewsgroupArticles.URL.eq(newsgroup.getUrl()), 
+				find(NewsgroupArticles.NEWSGROUPNAME.eq(newsgroup.getNewsGroupName()), 
 						NewsgroupArticles.ARTICLENUMBER.eq(article.getArticleNumber()));
 		NewsgroupArticles newsgroupArticleData = null;
 		for (NewsgroupArticles art:  newsgroupArticlesIt) {
@@ -165,7 +165,7 @@ NewsgroupsDailyRequestsRepliesTransMetric>{
 		if (newsgroupArticleData == null) {
 			System.err.println("Newsgroups - Daily Requests Replies -\t" + 
 					"there is no classification for article: " + article.getArticleNumber() +
-					"\t of newsgroup: " + newsgroup.getUrl());
+					"\t of newsgroup: " + newsgroup.getNewsGroupName());
 			System.exit(-1);
 		} else
 			return newsgroupArticleData.getClassificationResult();

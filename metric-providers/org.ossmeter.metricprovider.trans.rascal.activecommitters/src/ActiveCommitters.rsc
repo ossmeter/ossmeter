@@ -142,8 +142,8 @@ int maximumActiveCommittersEver(rel[datetime d, int n] history = {}) {
 }
 
 @metric{developmentTeamStability}
-@doc{We measured the activity of individual development team members to infer the size of the development team and possibly a trend.}
-the growth or shrinkage of the team
+@doc{We measured the activity of individual development team members to infer the size of the development team and possibly a trend.
+The growth or shrinkage of the team}
 @friendlyName{Development team stability}
 @uses = ("numberOfActiveCommitters.historic" :"history"
       ,"maximumActiveCommittersEver":"maxDevs"
@@ -202,7 +202,7 @@ int projectAge(map[str, tuple[datetime first, datetime last]] firstLastCommitDat
 @metric{developmentTeamExperience}
 @doc{Based on committer activity, how experienced is the current team?}
 @friendlyName{Development team experience}
-@uses = ("firstLastCommitDatesPerDeveloper": "firstLastCommitDatesPerDeveloper", "commitsPerDeveloper": "commitsPerDeveloper")
+@uses = ("firstLastCommitDatesPerDeveloper": "firstLastCommitDates", "commitsPerDeveloper": "commitsPerDeveloper")
 @appliesTo{generic()}
 Factoid developmentTeamExperience(
   ProjectDelta delta = \empty(),
@@ -265,7 +265,7 @@ real giniCommittersOverFile(ProjectDelta delta = \empty(), map[loc,int] perFile 
   map[int, int] distCommitterOverFile = distribution(committersOverFile);
   
   if (size(distCommitterOverFile) > 0) {
-    return gini([<0,0>]+[<x, distCommitterOverFile[x]> | x <- distCommitterOverFile]);
+    return round(gini([<0,0>]+[<x, distCommitterOverFile[x]> | x <- distCommitterOverFile]), 0.01);
   }
 
   throw undefined("not enough data to compute committer over file spread", |project://<delta.project.name>|);
@@ -355,8 +355,8 @@ int percentageOfWeekendCommits(map[str,int] commitsPerWeekDay = ()) {
 private Factoid factoid(StarRating stars, str msg) = factoid(msg, stars);
 
 @metric{weekendProject}
-@doc{Is this a weekend project or not?}
-@friendlyName{weekendProject}
+@doc{Is this project mainly developed during the week?}
+@friendlyName{Week day project}
 @appliesTo{generic()}
 @uses=("percentageOfWeekendCommits": "percentageOfWeekendCommits")
 Factoid weekendProject(int percentageOfWeekendCommits = -1) {

@@ -1,0 +1,45 @@
+[%import "javautil.eol";%]
+package [%=c.ePackage.name%];
+
+import com.googlecode.pongo.runtime.*;
+import com.mongodb.*;
+[%if (c.isAnnotatedAs("customize")){%]
+[% out.setContentType("Java"); %]
+// protected region custom-imports on begin
+// protected region custom-imports end
+[%}%]
+
+public class [%=c.name%] extends PongoDB {
+	
+	public [%=c.name%]() {}
+	
+	public [%=c.name%](DB db) {
+		setDb(db);
+	}
+	
+	[%for (ref in c.eAllReferences.select(sf|sf.isMany and sf.isContainment)){%]
+	protected [%=ref.getJavaCollectionType()%] [%=ref.name%] = null;
+	[%}%]
+	
+	[%if (c.isAnnotatedAs("customize")){%]
+	[% out.setContentType("Java"); %]
+	// protected region custom-fields-and-methods on begin
+	// protected region custom-fields-and-methods end
+	[%}%]	
+	
+	[%for (ref in c.eAllReferences.select(sf|sf.isMany and sf.isContainment)){%]
+	public [%=ref.getJavaCollectionType()%] get[%=ref.name.ftuc()%]() {
+		return [%=ref.name%];
+	}
+	
+	[%}%]
+	
+	@Override
+	public void setDb(DB db) {
+		super.setDb(db);
+		[%for (ref in c.eAllReferences.select(sf|sf.isMany and sf.isContainment)){%]
+		[%=ref.name%] = new [%=ref.getJavaCollectionType()%](db.getCollection("[%=ref.getMongoCollectionName()%]"));
+		pongoCollections.add([%=ref.name%]);
+		[%}%]
+	}
+}

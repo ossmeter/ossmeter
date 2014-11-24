@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Osgi
+Bundle-SymbolicName: com.googlecode.pongo.tests.osgi;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: com.googlecode.pongo.tests.osgi.Activator
+Bundle-Vendor: GOOGLECODE
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ com.googlecode.pongo.runtime,
+ com.googlecode.pongo.runtime.osgi,
+ org.junit
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
+Export-Package: com.googlecode.pongo.tests.osgi,
+ com.googlecode.pongo.tests.osgi.model

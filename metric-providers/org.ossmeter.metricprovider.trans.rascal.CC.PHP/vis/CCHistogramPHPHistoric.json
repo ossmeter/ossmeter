@@ -17,7 +17,7 @@
 			"series" : "Factor",
 			"x-label" : "Date",		
 			"y-label" : "Number of methods",
-			"timeseries" : "true"
+			"timeSeries" : true
 		}
 	]
 }

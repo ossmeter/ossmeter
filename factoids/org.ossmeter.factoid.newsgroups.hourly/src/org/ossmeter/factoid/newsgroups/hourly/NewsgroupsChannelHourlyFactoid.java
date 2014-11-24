@@ -63,7 +63,7 @@ public class NewsgroupsChannelHourlyFactoid extends AbstractFactoidMetricProvide
 
 		float uniformPercentageOfComments = ( (float) 100 ) / 24;
 		float maxPercentageOfArticles = 0,
-			  minPercentageOfArticles = 0,
+			  minPercentageOfArticles = 100,
 			  workingHoursSum = 0,
 			  ourOfWorkingHoursSum = 0;
 		
@@ -81,7 +81,6 @@ public class NewsgroupsChannelHourlyFactoid extends AbstractFactoidMetricProvide
 			else
 				ourOfWorkingHoursSum += hourArticles.getPercentageOfArticles();
 		}
-		
 		if ( maxPercentageOfArticles < 2 * uniformPercentageOfComments ) {
 			factoid.setStars(StarRating.FOUR);
 		} else if ( maxPercentageOfArticles < 4 * uniformPercentageOfComments ) {
@@ -99,12 +98,12 @@ public class NewsgroupsChannelHourlyFactoid extends AbstractFactoidMetricProvide
 			stringBuffer.append("does not depend");
 		else
 			stringBuffer.append("largely depends");
-		stringBuffer.append(" on the hour of the day.\nThere is ");
+		stringBuffer.append(" on the hour of the day.\nThere is");
 		if ( Math.abs( ( workingHoursSum / 9 ) - ( ourOfWorkingHoursSum / 15 ) ) < uniformPercentageOfComments ) 
-			stringBuffer.append("no");
+			stringBuffer.append(" no ");
 		else
-			stringBuffer.append("");
-		stringBuffer.append(" significant difference between the number of comments" +
+			stringBuffer.append(" ");
+		stringBuffer.append("significant difference between the number of comments" +
 							" within as opposed to out of working hours.\n");
 
 		factoid.setFactoid(stringBuffer.toString());
