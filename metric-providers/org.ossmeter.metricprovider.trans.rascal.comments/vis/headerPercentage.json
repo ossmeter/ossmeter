@@ -15,7 +15,7 @@
 			"y" : "Percentage", 
 			"x-label" : "Date",		
 			"y-label" : "Files with headers (%)",
-			"timeseries" : "true"
+			"timeSeries" : true
 		}
 	]
 }
