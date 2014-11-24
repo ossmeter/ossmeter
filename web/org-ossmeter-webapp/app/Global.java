@@ -8,6 +8,8 @@ import com.feth.play.module.pa.exceptions.AuthException;
 
 import controllers.routes;
 
+import auth.MongoAuthenticator;
+
 import play.Application;
 import play.GlobalSettings;
 import play.mvc.Call;
@@ -101,8 +103,22 @@ public class Global extends GlobalSettings {
 					System.out.println("scheduled task is running :)");
 
 					try {
-						final Mongo mongo = new Mongo();	
-						DB db = mongo.getDB("users");
+						// String host = play.Play.application().configuration().getString("mongo.default.host");
+
+						// System.out.println("host: " + host);
+						// if (host == null) host = "localhost";
+						// Integer port = play.Play.application().configuration().getInt("mongo.default.port");
+						
+						// System.out.println("port: " + port);
+
+						// if (port == null) port = 27017;
+
+						// final Mongo mongo = new Mongo(host, port);
+
+						// DB db = mongo.getDB("users");
+						
+
+						final DB db = MongoAuthenticator.getUsersDb();
 						final Users users = new Users(db);
 
 						// Iterate all projects TODO:Paging
@@ -158,7 +174,7 @@ public class Global extends GlobalSettings {
 									users.getStatistics().add(stats);
 									users.getStatistics().sync();
 
-									mongo.close();
+									db.getMongo().close();
 									return ps;
 								}
 							}

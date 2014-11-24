@@ -539,9 +539,19 @@ public class MongoAuthenticator {
  	}
 
 	// May want to be more public? Or in its own class. This is just auth.
-	private static DB getUsersDb() {
+	public static DB getUsersDb() {
 		try {
-			Mongo mongo = new Mongo();	
+			String host = play.Play.application().configuration().getString("mongo.default.host");
+
+			System.out.println("host: " + host);
+			if (host == null) host = "localhost";
+			Integer port = play.Play.application().configuration().getInt("mongo.default.port");
+			
+			System.out.println("port: " + port);
+
+			if (port == null) port = 27017;
+
+			Mongo mongo = new Mongo(host, port);	
 			return mongo.getDB("users");
 		} catch (Exception e) {
 			e.printStackTrace();
