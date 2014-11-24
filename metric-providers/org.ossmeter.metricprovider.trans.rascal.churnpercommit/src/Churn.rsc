@@ -164,7 +164,7 @@ map[str author, int churn] churnPerCommitter(ProjectDelta delta = \empty())
 private map[&T, int] sumPerItem(lrel[&T item, int val] input)
   = (x : s | x <- { * input<item> }, int s := filt(input, x));  
  
-private int filt(lrel[&T, int] input, loc i) = (0 | it + nu | nu <- [n | <i, n> <- input]);
+private int filt(lrel[&T, int] input, &T i) = (0 | it + nu | nu <- [n | <i, n> <- input]);
   
 @metric{churnPerFile}
 @doc{Churn per file counts the number of files added and deleted for a single file. This is a basic metric to indicate hotspots in the design of the system which is changed often. This metric is used further downstream.}
