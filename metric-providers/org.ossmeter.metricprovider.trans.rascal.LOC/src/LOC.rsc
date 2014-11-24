@@ -9,6 +9,7 @@ import analysis::statistics::Frequency;
 import analysis::statistics::Inference;
 
 import Prelude;
+import util::Math;
 
 import Generic;
  
@@ -26,7 +27,7 @@ real giniLOC(map[loc, int] locs) {
   if (size(dist) < 2) {
   	throw undefined("Not enough LOC data available.", |tmp:///|);
   }
-  return gini([<x, dist[x]> | x <- dist]);
+  return round(gini([<x, dist[x]> | x <- dist]), 0.01);
 }
 
 @metric{genericLOCoverFiles}

@@ -19,7 +19,7 @@ real MHF(rel[loc class, loc method] containment, rel[loc class, loc method] visi
   	MVF = size(visible - containment) / toReal(maxNum); // MHF = num visibility edges / max visibility edges
   }
 
-  return 1 - MVF;
+  return round(1 - MVF, 0.01);
 } 
 
 /*
