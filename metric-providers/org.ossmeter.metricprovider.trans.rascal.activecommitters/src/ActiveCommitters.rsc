@@ -202,7 +202,7 @@ int projectAge(map[str, tuple[datetime first, datetime last]] firstLastCommitDat
 @metric{developmentTeamExperience}
 @doc{Based on committer activity, how experienced is the current team?}
 @friendlyName{Development team experience}
-@uses = ("firstLastCommitDatesPerDeveloper": "firstLastCommitDatesPerDeveloper", "commitsPerDeveloper": "commitsPerDeveloper")
+@uses = ("firstLastCommitDatesPerDeveloper": "firstLastCommitDates", "commitsPerDeveloper": "commitsPerDeveloper")
 @appliesTo{generic()}
 Factoid developmentTeamExperience(
   ProjectDelta delta = \empty(),
@@ -265,7 +265,7 @@ real giniCommittersOverFile(ProjectDelta delta = \empty(), map[loc,int] perFile 
   map[int, int] distCommitterOverFile = distribution(committersOverFile);
   
   if (size(distCommitterOverFile) > 0) {
-    return gini([<0,0>]+[<x, distCommitterOverFile[x]> | x <- distCommitterOverFile]);
+    return round(gini([<0,0>]+[<x, distCommitterOverFile[x]> | x <- distCommitterOverFile]), 0.01);
   }
 
   throw undefined("not enough data to compute committer over file spread", |project://<delta.project.name>|);

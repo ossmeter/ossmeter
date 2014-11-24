@@ -17,7 +17,7 @@
 			"series" : "Language",
 			"x-label" : "Date",		
 			"y-label" : "LOC",
-			"timeseries" : "true"
+			"timeSeries" : true
 		}
 	]
 }

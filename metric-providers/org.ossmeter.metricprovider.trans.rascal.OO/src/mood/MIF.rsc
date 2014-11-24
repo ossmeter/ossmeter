@@ -22,7 +22,7 @@ public map[loc, real] MIF(
 		totalMethods = newMethods + inheritedMethods;
 		
 		if (totalMethods > 0) {
-			mif[t] = inheritedMethods / toReal(totalMethods);
+			mif[t] = round(inheritedMethods / toReal(totalMethods), 0.01);
 		} else {
 			mif[t] = -1.0;
 		}

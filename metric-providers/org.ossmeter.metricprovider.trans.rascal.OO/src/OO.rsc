@@ -16,7 +16,7 @@ import Generic;
 }
 real RR(rel[loc, loc] superTypes, set[loc] allTypes) {
 	if (size(allTypes) > 0) {
-		return size(range(superTypes)) / toReal(size(allTypes));
+		return round(size(range(superTypes)) / toReal(size(allTypes)), 0.01);
 	}
 	return 0.0;
 }
@@ -30,7 +30,7 @@ real SR(rel[loc, loc] superTypes) {
 	nrOfSuperTypes = size(range(superTypes));
 
 	if (nrOfSuperTypes > 0) {
-		return nrOfSubTypes / toReal(nrOfSuperTypes);
+		return round(nrOfSubTypes / toReal(nrOfSuperTypes), 0.01);
 	}
 	return 0.0;
 }
@@ -41,7 +41,7 @@ real SR(rel[loc, loc] superTypes) {
 real A(set[loc] abstractTypes, set[loc] allTypes) {
 	numConcreteTypes = size(allTypes - abstractTypes);
 	if (numConcreteTypes > 0) {
-		return size(abstractTypes) / toReal(numConcreteTypes);
+		return round(size(abstractTypes) / toReal(numConcreteTypes), 0.01);
 	}
 	return 0.0;
 }
@@ -75,7 +75,7 @@ map[loc, int] Ca(rel[loc package, loc \type] packageTypes, rel[loc depender, loc
 real I(int Ca, int Ce) {
 	divisor = Ca + Ce;
 	if (divisor > 0) {
-		return Ce / toReal(divisor);
+		return round(Ce / toReal(divisor), 0.01);
 	}
 	return 0.0;
 }
@@ -112,7 +112,7 @@ public real CF(rel[loc, loc] typeDependencies, rel[loc, loc] superTypes, set[loc
 	numPossibleDependencies = (numTypes * (numTypes - 1) - 2 * size(superTypes+)); // excluding inheritance
 
 	if (numPossibleDependencies > 0) {
-		return numDependencies / toReal(numPossibleDependencies);
+		return round(numDependencies / toReal(numPossibleDependencies), 0.01);
 	}
 	else {
 		return 0.0;
@@ -143,7 +143,7 @@ map[loc, real] TCC(
 		directConnections = methodConnections - ident(methodsOfT);
 
 		if (maxConnections > 0) {
-			tcc[t] = size(directConnections) / toReal(maxConnections);
+			tcc[t] = round(size(directConnections) / toReal(maxConnections), 0.01);
 		} else {
 			tcc[t] = -1.0;
 		}
@@ -176,7 +176,7 @@ map[loc, real] LCC(
 		indirectConnections = (methodConnections+) - ident(methodsOfT);
 		
 		if (maxConnections > 0) {
-			lcc[t] = size(indirectConnections) / toReal(maxConnections);
+			lcc[t] = round(size(indirectConnections) / toReal(maxConnections), 0.01);
 		} else {
 			lcc[t] = -1.0;
 		}
