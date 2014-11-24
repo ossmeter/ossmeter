@@ -355,8 +355,8 @@ int percentageOfWeekendCommits(map[str,int] commitsPerWeekDay = ()) {
 private Factoid factoid(StarRating stars, str msg) = factoid(msg, stars);
 
 @metric{weekendProject}
-@doc{Is this a weekend project or not?}
-@friendlyName{weekendProject}
+@doc{Is this project mainly developed during the week?}
+@friendlyName{Week day project}
 @appliesTo{generic()}
 @uses=("percentageOfWeekendCommits": "percentageOfWeekendCommits")
 Factoid weekendProject(int percentageOfWeekendCommits = -1) {
