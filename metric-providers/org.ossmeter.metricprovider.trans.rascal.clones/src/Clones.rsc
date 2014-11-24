@@ -132,7 +132,7 @@ map[str, int] cloneLOCPerLanguage(rel[Language, loc, AST] asts = {}) {
             }
           }
 
-          result["<lang>"]?0 += size(linesInClones);
+          result["<getName(lang)>"]?0 += size(linesInClones);
         }
       }
     }

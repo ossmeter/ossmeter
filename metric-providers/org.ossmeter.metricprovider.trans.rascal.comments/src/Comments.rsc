@@ -185,7 +185,7 @@ much source code comments are actually commented out code. Commented out code is
 map[str, int] commentedOutCodePerLanguage(rel[Language, loc, AST] asts = {}, map[loc, int] commentedOutCode = ()) {
   map[str, int] result = ();
   for (<l, f, a> <- asts, l != generic(), f in commentedOutCode) {
-    result["<l>"]?0 += commentedOutCode[f];
+    result["<getName(l)>"]?0 += commentedOutCode[f];
   }
   return result;
 }
@@ -244,7 +244,7 @@ map[str, int] commentLinesPerLanguage(rel[Language, loc, AST] asts = {},
                                       map[loc, int] commentedOutCode = ()) {
   map[str, int] result = ();
   for (<l, f, a> <- asts, l != generic(), f in commentLOC) {
-    result["<l>"]?0 += commentLOC[f] - (headerLOC[f]?0) - (commentedOutCode[f]?0);
+    result["<getName(l)>"]?0 += commentLOC[f] - (headerLOC[f]?0) - (commentedOutCode[f]?0);
   }
   return result;
 }

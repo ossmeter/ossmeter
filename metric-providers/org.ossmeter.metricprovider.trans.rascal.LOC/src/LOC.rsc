@@ -52,7 +52,7 @@ map[str, int] locPerLanguage(rel[Language, loc, AST] asts = {}, map[loc, int] ge
   
   // first count LOC of files with extracted ASTs
   for (<l, f, a> <- asts, l != generic(), f in genericLoc) {
-    result["<l>"]?0 += genericLoc[f];
+    result["<getName(l)>"]?0 += genericLoc[f];
     filesWithLanguageDetected += {f};
   }
   
