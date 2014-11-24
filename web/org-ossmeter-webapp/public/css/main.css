@@ -280,3 +280,19 @@ span.spark-watch.active {
     overflow:scroll;
     margin-left: 0;
 }
+
+.error {
+    border: 2pt #FF0000 solid;
+}
+
+#proj_desc {
+    width: 357px;
+    height: 125px;
+    resize: none;
+}
+
+#comm_desc {
+    width: 243px;
+    height: 83px;
+    resize: none;
+}
