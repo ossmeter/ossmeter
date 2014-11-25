@@ -39,7 +39,12 @@ var app = {
 
 // https://learn.jquery.com/using-jquery-core/faq/how-do-i-select-an-element-by-an-id-that-has-characters-used-in-css-notation/
 function jq( myid ) {
-    return "#" + myid.replace( /(:|\.|\[|\])/g, "\\$1" );
+    // return "#" + myid.replace( /(:|\.|\[|\]\s)/g, "\\$1" );
+    return "#" + jqe(myid);
+}
+
+function jqe(myid) {
+	return myid.replace( /(:|\.|\[|\])/g, "\\$1" );//replace(/\s[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
 }
 
 $(function() {
@@ -112,8 +117,83 @@ $(".adjust").toggle(function() {
 });
 }
 
-function updateNotification(id) {
-	console.log(id)
+function getNotification(elem, projectid, projectname, metricid, metricname) {
+	jsRoutes.controllers.Application.profileNotification(projectid, projectname, metricid, metricname).ajax()
+		.success(function(result) {
+			$('#exampleModal .modal-body').html(result)
+
+			$('<input>').attr({
+			    type: 'hidden',
+			    id: 'notiform-elem',
+			    name: 'elem',
+			    value: elem
+			}).appendTo('#notiform');
+
+			$('<input>').attr({
+			    type: 'hidden',
+			    id: 'project.id',
+			    name: 'project.id',
+			    value: projectid
+			}).appendTo('#notiform');
+
+			$("#notiform-project-name").text(projectname);
+			$("#notiform-metric-name").text(metricname);
+
+			$('<input>').attr({
+			    type: 'hidden',
+			    id: 'metric.id',
+			    name: 'metric.id',
+			    value: metricid
+			}).appendTo('#notiform');
+
+			$('<input>').attr({
+			    type: 'hidden',
+			    id: 'project.name',
+			    name: 'project.name',
+			    value: projectname
+			}).appendTo('#notiform');
+
+			$('<input>').attr({
+			    type: 'hidden',
+			    id: 'metric.name',
+			    name: 'metric.name',
+			    value: metricname
+			}).appendTo('#notiform');
+
+			$('#exampleModal').modal('show');
+
+		}).error(function(result) {
+			console.log(result)
+		});
+}
+
+function clearNotificationWindow() {
+	$('#exampleModal .modal-body').html("")
+	$('#exampleModal').modal('hide');
+}
+
+function submitUpdateNotification() {
+
+	var toPost = $("#notiform").serialize();
+
+	jsRoutes.controllers.Account.createNotification().ajax({
+			data : toPost
+		})
+		.success(function(result) {
+				
+			// Set the elem to be active... TODO
+			// var id = "noti-" + config.projectid + "-" + data.id;
+
+			var elem = $("#notiform-elem").val();
+			$(jq(elem)).addClass("active")
+
+
+			$('#exampleModal .modal-body').html('<div class="alert alert-success" role="alert">Success!</div>')
+			
+			setTimeout(function() {$('#exampleModal').modal('hide')}, 1000) ;
+		}).error(function(result) {
+			console.log(result)
+		});
 }
 
 function updateNotification(elem, projectid, metricid, value) {
@@ -134,17 +214,41 @@ function toggleSpark(elem, projectid, projectname, metricid, metricname) {
 	
 	jsRoutes.controllers.Account.watchSpark(projectid, metricid, projectname, metricname
 		).ajax().success(function(result) {
-			var _ind = $.inArray(metricid, app.grid.sparks);
+			var _ind = getIndexOfSpark(projectid, metricid);//$.inArray(metricid, app.grid.sparks);
 			if (_ind == -1) {
-				app.grid.sparks.push(metricid);
-				$(elem).addClass("active");
+				var sp = {"project" : projectid, "metric" : metricid}
+				app.grid.sparks.push(sp);
+				$(jq(elem)).addClass("active");
+				console.log("addeding active to " + elem);
 			} else {
 				app.grid.sparks.splice(_ind, 1);
-				$(elem).removeClass("active");
+				$(jq(elem)).removeClass("active");
+				console.log("removing active from " + elem);
 			}
 		}).error(function(result) {
 			console.log("Error, unable to toggle spark watch.");
 		});
+}
+
+function getIndexOfSpark(project, metric) {
+
+	for (var i =0; i < app.grid.sparks.length; i++) {
+		var spark = app.grid.sparks[i];
+		if (spark.project === project && spark.metric === metric) {
+			return i;
+		}
+	}
+	return -1;
+}
+
+function getIndexOfNotification(project, metric) {
+	for (var i =0; i < app.grid.notifications.length; i++) {
+		var noti = app.grid.notifications[i];
+		if (noti.project === project && noti.metric === metric) {
+			return i;
+		}
+	}
+	return -1;
 }
 
 function drawSparkTable(config) {
@@ -187,21 +291,31 @@ function drawSparkTable(config) {
                 
 	            // Check for errors - TODO: handle better
                 if (data.status === "error") {
-                    console.log("Unable to load sparky '" + data.metricId + "': " + data.msg);
+                    console.log("Unable to load sparky '" + data.id + "': " + data.msg);
                     continue;
                 }
 
                 if (config.toolkittable) {
-                	var tools = '<a href="javascript:grabMetricData(\''+config.projectid+'\',\''+data.metricId+'\')"><span class="glyphicon glyphicon-plus tip" data-toggle="tooltip" data-placement="bottom" title="Add metric to plot"></span></a>';
-                	tools = tools + ' <a href="javascript:showJustOneMetric(\''+config.projectid+'\',\''+data.metricId+'\')"><span class="glyphicon glyphicon-stats tip" data-toggle="tooltip" data-placement="bottom" title="View metric"></span></a>';
+                	var tools = '<a href="javascript:grabMetricData(\''+config.projectid+'\',\''+data.id+'\')"><span class="glyphicon glyphicon-plus tip" data-toggle="tooltip" data-placement="bottom" title="Add metric to plot"></span></a>';
+                	tools = tools + ' <a href="javascript:showJustOneMetric(\''+config.projectid+'\',\''+data.id+'\')"><span class="glyphicon glyphicon-stats tip" data-toggle="tooltip" data-placement="bottom" title="View metric"></span></a>';
                 	if (app.loggedIn) {
-                		var watchId = "watch-spark-" + config.projectid + "-" + data.metricId;
+                		var a = ""; 
+                        if (getIndexOfSpark(config.projectid, data.id) != -1) {
+                            a = "active"; 
+                        } 
 
-                		tools = tools + ' <a href="javascript:toggleSpark(\''+watchId+'\',\''+config.projectid+'\', \'\', \''+data.name+'\')"><span class="glyphicon glyphicon-eye-open tip" data-toggle="tooltip" data-placement="bottom" title="Add spark to dashboard"></span></a>';
-                		tools = tools + ' <a  href="#"><span class="glyphicon glyphicon-bell tip" data-toggle="tooltip" data-placement="bottom" title="Create/edit notification"></span></a>';
+                        var a2 = "";
+                        if (getIndexOfNotification(config.projectid, data.id) != -1) {
+                            a2 = "active"; 
+                        }
+
+                		var watchId = "watch-spark-" + config.projectid + "-" + data.id;
+                		var notiId = "noti-" + config.projectid + "-" + data.id;
+                		tools = tools + ' <a href="javascript:toggleSpark(\''+watchId+'\',\''+config.projectid+'\', \''+config.projectname+'\', \''+data.id+'\', \''+data.name+'\')"><span id="'+watchId+'" class="glyphicon glyphicon-eye-open spark-watch tip ' + a + '" data-toggle="tooltip" data-placement="bottom" title="Add spark to dashboard"></span></a>';
+                		tools = tools + ' <a href="javascript:getNotification(\''+notiId+'\', \''+config.projectid+'\', \''+config.projectname+'\', \''+data.id+'\', \''+data.name+'\')"><span id="'+notiId+'" class="glyphicon glyphicon-bell spark-watch tip '+a2+'" data-toggle="tooltip" data-placement="bottom" title="Create/edit notification"></span></a>';
                 	}
 
-                	$("#" + config.toolkittable + " > tbody:last").append("<tr><td>" + tools + "</td></tr>");
+                	$(jq(config.toolkittable) + " > tbody:last").append("<tr><td>" + tools + "</td></tr>");
                 }
 
                 var bdy = "<tr>";
@@ -351,8 +465,8 @@ function drawSpiderChart(container, factoids) {
 	console.log(d);
 
 	var config = {
-		w: 200,
-		h: 200,
+		w: 150,
+		h: 150,
 		maxValue: 4,
 		levels: 4,
 		ExtraWidthX:200

@@ -80,6 +80,8 @@ public class Application extends Controller {
 						controllers.routes.javascript.Signup.forgotPassword(),
 						controllers.routes.javascript.Account.watchSpark(),
 						controllers.routes.javascript.Application.autocomplete(),
+						controllers.routes.javascript.Application.profileNotification(),
+						controllers.routes.javascript.Account.createNotification(),
 						controllers.routes.javascript.Account.updateGridLocations()
 						)
 				)
@@ -151,9 +153,32 @@ public class Application extends Controller {
 	}
 
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
-	public static Result profileNotification() {
+	public static Result profileNotification(String projectid, String projectName, String metricid, String metricName) {
 		final User localUser = getLocalUser(session());
-		return ok(setupnotification.render(localUser, form(Notification.class)));
+
+		Form<Notification> form = form(Notification.class);
+
+		Notification noti = MongoAuthenticator.findNotification(localUser, projectid, metricid);
+		if (noti == null) {
+			noti = new Notification();
+			Project p = new Project();
+			p.setId(projectid);
+			p.setName(projectName);
+			Metric m = new Metric();
+			m.setId(metricid);
+			m.setName(metricName);
+
+			noti.setProject(p);
+			noti.setMetric(m);
+		} else {
+
+			System.out.println("notification already exists!");
+			System.out.println(noti.getDbObject());
+
+			form.fill(noti);
+		}
+
+		return ok(views.html.projects._notificationForm.render(form));
 	}
 
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))

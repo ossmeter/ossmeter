@@ -13,6 +13,8 @@
     attribute.name.replaceAll(" ", "");
 }
 
+    <div id="myform"></div>
+
     <div class="row" data-toggle="collapse" data-target="#div-attr-@attributeId" aria-expanded="true" aria-controls="div-attr-@attributeId">
         <h2 class="marginless">@attribute.name</h2>
     </div>
@@ -51,6 +53,7 @@
                     var twelveMth = {
                         sparktable : "sparklines-table-12months-@attributeId",
                         projectid : "@project.getShortName()",
+                        projectname : "@project.getName()",
                         metriclist : "@attribute.metrics.map(x=>x.id).mkString("+")",
                         querystring : "startDate=" + getOneYearAgoDateString(),
                         toolkittable : "sparklines-table-toolkit-@attributeId",
@@ -60,6 +63,7 @@
                     var allTime = {
                         sparktable : "sparklines-table-alltime-@attributeId",
                         projectid : "@project.getShortName()",
+                        projectname : "@project.getName()",
                         metriclist : "@attribute.metrics.map(x=>x.id).mkString("+")",
                     };
 

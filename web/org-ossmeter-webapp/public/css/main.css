@@ -300,7 +300,7 @@ table.spark {
     width: 100px;
     position: fixed;
     top: 287px;
-    right: 5px;
+    left: 5px;
     display: none;
     text-align: center;
     color: rgb(102, 102, 102);
@@ -314,4 +314,5 @@ table.spark {
 }
 #returnToTop > span.glyphicon {
     font-size: 50px;
+    z-index:10;
 }

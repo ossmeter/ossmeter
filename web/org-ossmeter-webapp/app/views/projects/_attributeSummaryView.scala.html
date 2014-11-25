@@ -100,14 +100,15 @@
                                     }
 
                                     var a = ""; 
-                                    if ($.inArray(data.name, app.grid.sparks) != -1){
-                                        a = "active";
-                                    }
+                                    if (getIndexOfSpark("@project.getShortName()", data.id) != -1) {
+                                        a = "active"; 
+                                    } 
+
                                     var toAppend = "<tr><td>";
 
                                     if (app.loggedIn) {
-                                        var id = "watch-spark-@project.getShortName()-" + data.name;
-                                        toAppend = toAppend + '<a href="javascript:toggleSpark(\'#'+id+'\',\'@project.getShortName()\',\'@project.getName()\',\''+ data.name + '\', \''+data.name+'\')"><span id="' + id + '" class="glyphicon glyphicon-eye-open spark-watch tip ' + a + '" data-toggle="tooltip" data-placement="left" title="Watch/unwatch on dashboard"></span></a>';
+                                        var id = "watch-spark-@project.getShortName()-" + data.id;
+                                        toAppend = toAppend + '<a href="javascript:toggleSpark(\''+id+'\',\'@project.getShortName()\',\'@project.getName()\',\''+ data.id + '\', \''+data.name+'\')"><span id="' + id + '" class="glyphicon glyphicon-eye-open spark-watch tip ' + a + '" data-toggle="tooltip" data-placement="left" title="Watch/unwatch on dashboard"></span></a>';
                                     }
                                    toAppend = toAppend + "</td>" +
                                         "<td>" + data.name + 

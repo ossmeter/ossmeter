@@ -24,9 +24,17 @@ $(function() {
 @defining(Application.getLocalUser(session())) { user =>
 app.loggedIn = true;
 @for(g <- user.getGrid()) {@g match {
-case n : Notification => {@if(n.getProject().getId()) {app.grid.notifications.push("@n.getMetric().getId()");
+case n : Notification => {@if(n.getProject().getId()) {app.grid.notifications.push({
+	"project" : "@n.getProject().getId()",
+	"metric" : "@n.getMetric().getId()",
+	"threshold" : "@n.getThreshold()",
+	"aboveThreshold" : "@n.getAboveThreshold()"
+	});
 }}
-case s : SparkGridEntry => {@if(s.getProject().getId()) {app.grid.sparks.push("@s.getMetric().getId()");
+case s : SparkGridEntry => {@if(s.getProject().getId()) {app.grid.sparks.push({
+	"project" : "@s.getProject().getId()",
+	"metric" : "@s.getMetric().getId()"
+	});
 }}case other => {}}}}}{ }
 });
 </script>
@@ -40,6 +48,16 @@ case s : SparkGridEntry => {@if(s.getProject().getId()) {app.grid.sparks.push("@
 }
 
 @_aspectView(project, qualityModel, qualityModel, isSummary, List(qualityModel))
+
+<div class="modal fade" id="exampleModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p>One fine body&hellip;</p>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 <script type="text/javascript" src="@routes.Assets.at("js/d3.v3.min.js")"></script>
 <script type="text/javascript" src="@routes.Assets.at("js/RadarChart.js")"></script>

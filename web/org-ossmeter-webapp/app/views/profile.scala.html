@@ -62,8 +62,8 @@
         <div class="col-md-6">
         <h2>Dashboard</h2>
         
-        <a href="@routes.Application.profileEventGroup" class="btn btn-primary">Create Event Group</a>
-        <a href="@routes.Application.profileEventGroup" class="btn btn-primary">Create Notification</a>
+        <!-- <a href="@routes.Application.profileEventGroup" class="btn btn-primary">Create Event Group</a>
+        <a href="@routes.Application.profileEventGroup" class="btn btn-primary">Create Notification</a> -->
        @* @if(localUser.getNotifications().size() > 0) {
             <table class="table">
                 <thead>
@@ -165,6 +165,31 @@
                     <script type="text/javascript">
                         $(function(){ 
                             $(jq("not-@n.getProject().getId()-@n.getMetric().getId()-threshold")).text(abbreviateNumber(@n.getThreshold()));
+
+                            // Check the value
+                            var d = new Date();
+                            d.setDate(d.getDate()-14);
+                            var dStr = d.getFullYear() + "" + d.getMonth() + "" + d.getDate();
+                            $.getJSON(getApi() + "/projects/p/@n.getProject().getId()/m/@n.getMetric().getId()?startDate="+dStr, function(result) {
+
+                                for (var dat in result.datatable) {
+                                    if (@n.getAboveThreshold()) {
+                                        if (result.datatable[dat][result.y] >= @n.getThreshold()) {
+                                            $(jq("not-@n.getProject().getId()-@n.getMetric().getId()-threshold")).addClass("bg-warning");
+                                            break;
+                                        }
+                                    } else {
+                                        if (result.datatable[dat][result.y] <= @n.getThreshold()) {
+                                            $(jq("not-@n.getProject().getId()-@n.getMetric().getId()-threshold")).addClass("bg-danger");
+                                            break;   
+                                        }
+                                    }
+                                    
+                                }
+                            }).error(function(error) {
+                                console.log(error);
+                            });
+
                         });
                     </script>
 

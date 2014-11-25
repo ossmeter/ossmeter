@@ -6,22 +6,44 @@
 		{
 			"name": "Source Code",
 			"factoids": [
-				"rascal.generic.churn.commitSize",
-				"trans.rascal.readability.ReadabilityFactoid",
-				"rascal.generic.churn.churnVolume",
-				"trans.rascal.activecommitters.developmentTeamExperience",
-				"trans.rascal.activecommitters.weekendProject",
-				"trans.rascal.activecommitters.developmentTeamExperienceSpread",
-				"trans.rascal.activecommitters.developmentTeamStability",
-				"trans.rascal.comments.headerUse",
-				"trans.rascal.OO.java.Cohesion-Java",
+				"trans.rascal.LOC.codeSize",
 				"trans.rascal.OO.java.Coupling-Java",
-				"rascal.testability.java.JavaUnitTestCoverage"
+				"rascal.testability.java.JavaUnitTestCoverage",
+				"trans.rascal.activecommitters.developmentTeamStability",
+				"rascal.generic.churn.commitSize",
+				"rascal.generic.churn.commitLocality"
 			],
 			"metrics": [
 				{
-					"name": "commits",
+					"name": "Commits",
 					"id": "commitsovertimeline"
+				},{
+					"name": "Lines of code (per language)",
+					"id": "locPerLanguageTimeLine"
+				},{
+					"name": "LOC over files over time",
+					"id": "LOCoverfilesovertime"
+				},{
+					"name": "Coupling Between Objects (Java)",
+					"id": "CBOJavaQuartilesHistoric"
+				},{
+					"name": "Unit test coverage (all methods)",
+					"id": "testCoverageHistoric"
+				},{
+					"name": "Number of test methods",
+					"id": "numTestsHistoric"
+				},{
+					"name": "Number of active committers (2 weeks)",
+					"id": "numberOfActiveCommittersTimeLine"
+				},{
+					"name": "Number of active committers (1 year)",
+					"id": "numberOfActiveCommittersLongTermTimeLine"
+				},{
+					"name": "Core committers",
+					"id": "coreCommittersChurnBar"
+				},{
+					"name": "Churn (per committer)",
+					"id": "churnPerCommitterTimeLine"
 				}
 			],
 			"detail": "src"
@@ -29,8 +51,17 @@
 		{
 			"name": "Communication Channels",
 			"factoids": [
-				"cocomo",
-				"cocomo"
+				"org.ossmeter.factoid.newsgroups.channelusage.NewsgroupsChannelUsageFactoid",
+				"org.ossmeter.factoid.newsgroups.emotion,NewsgroupsChannelEmotionFactoid",
+				"org.ossmeter.factoid.newsgroups.hourly.NewsgroupsChannelHourlyFactoid",
+				"org.ossmeter.factoid.newsgroups.responsetime.NewsgroupsChannelResponseTimeFactoid",
+				"org.ossmeter.factoid.newsgroups.sentiment.NewsgroupsChannelSentimentFactoid",
+				"org.ossmeter.factoid.newsgroups.severity.NewsgroupsChannelSeverityFactoid",
+				"org.ossmeter.factoid.newsgroups.size.NewsgroupsChannelSizeFactoid",
+				"org.ossmeter.factoid.newsgroups.status.NewsgroupsChannelStatusFactoid",
+				"org.ossmeter.factoid.newsgroups.threadlength.NewsgroupsChannelThreadLengthFactoid",
+				"org.ossmeter.factoid.newsgroups.users.NewsgroupsChannelUsersFactoid",
+				"org.ossmeter.factoid.newsgroups.weekly.NewsgroupsChannelWeeklyFactoid"
 			],
 			"metrics": [
 				{
@@ -167,8 +198,16 @@
 		{
 			"name": "Bug Tracking Systems",
 			"factoids": [
-				"org.ossmeter.factoid.bugs.channelusage.BugsChannelUsageFactoid",
-				"cocomo"
+				"org.ossmeter.factoid.bugs.emotion.BugsChannelEmotionFactoid",
+				"org.ossmeter.factoid.bugs.hourly.BugsChannelHourlyFactoid",
+				"org.ossmeter.factoid.bugs.responsetime.BugsChannelResponseTimeFactoid",
+				"org.ossmeter.factoid.bugs.sentiment.BugsChannelSentimentFactoid",
+				"org.ossmeter.factoid.bugs.severity.BugsChannelSeverityFactoid",
+				"org.ossmeter.factoid.bugs.size.BugsChannelSizeFactoid",
+				"org.ossmeter.factoid.bugs.status.BugsChannelStatusFactoid",
+				"org.ossmeter.factoid.bugs.threadlength.BugsChannelThreadLengthFactoid",
+				"org.ossmeter.factoid.bugs.users.BugsChannelUsersFactoid",
+				"org.ossmeter.factoid.bugs.weekly.BugsChannelWeeklyFactoid"
 			],
 			"metrics": [
 				{

@@ -280,21 +280,26 @@ public class Account extends Controller {
 	@SubjectPresent
 	public static Result createNotification() {
 		// this is the currently logged in user
-		// // final User user = Application.getLocalUser(session());
+		final User user = Application.getLocalUser(session());
 
-		// final Form<Notification> form = form(Notification.class).bindFromRequest();
+		final Form<Notification> form = form(Notification.class).bindFromRequest();
 
 		// if (form.hasErrors()) {
 		// 	flash("error", Messages.get("ossmeter.profile.notifications.creation.error"));
 		// 	return badRequest(views.html.setupnotification.render(user, form));
 		// }
 
-		// Notification noti = form.get();
-		// user.getNotifications().add(noti);
-		// // user.save(); //TODODODODODOD
+		if (form.hasErrors()) {
+			return badRequest("Form had errors" + form.errorsAsJson());
+		}
+
+		Notification noti = form.get();
+		MongoAuthenticator.insertNotification(user, noti);
+
+		System.out.println(noti.getDbObject());
 
 		// flash(Application.FLASH_MESSAGE_KEY, Messages.get("ossmeter.profile.notifications.creation.success"));
-		return redirect(routes.Application.profile());
+		return ok("yarp");//redirect(routes.Application.profile());
 	}
 
 	@SubjectPresent
