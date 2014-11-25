@@ -1,5 +1,3 @@
-@(invitationForm : Form[Invitation])
-
 @import helper._
 @import helper.twitterBootstrap._
 
@@ -17,29 +15,15 @@
     </div>
     <div class="spacer20"></div>
     <div class="row span6">         
-        @helper.form(action=routes.Invitation.submitInvitationRequest()) {       
-
-
-                <div class="input-group col-md-6 submit">
-                        @helper.inputText(field=invitationForm("email"), 'placeholder->"Email address")   
-                        <button class="btn btn-default" type="submit">Submit</button>
-                </div>
-
-          <!-- <form role="form">
-                <div class="input-group col-md-6 submit">
-                   <!-- <div class="clearfix error" id="username_field">
-                        <label for="username">Username:</label>
-                        <div class="input">
-                           <input type="email" name="email" id="email" value="" class="form-control" placeholder="Email address">
-                            <span class="help-inline">This field is required!, Another error</span>
-                            <span class="help-block">Required, Another constraint</d</span> 
-                        </div>
-                    </div>
+        @helper.form(action=routes.InvitationController.submitInvitationRequest()) { 
+          <div class="row">
+                <div class="input-group col-md-6  submit">
+                    <input type="email" class="form-control txt_search" id="email" name="email" placeholder="Email address">
                     <div class="input-group-btn">
-                            <button class="btn btn-default" type="submit" id="submitBtn">Submit</button>
+                        <button class="btn btn-default search_btn">Submit</button>
                     </div>
-                 </div>
-            </form> -->
+                </div>
+            </div>
         }      
     </div>
     <div class="spacer100"></div>
