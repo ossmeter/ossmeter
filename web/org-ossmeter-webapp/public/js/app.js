@@ -251,6 +251,24 @@ function getIndexOfNotification(project, metric) {
 	return -1;
 }
 
+function drawPlot(container, projectid, metricid) {
+	$.getJSON(getApi() + "/projects/p/" + projectid + "/m/" + metricid, function(vis) {
+		if (vis.datatable.length > 0) {
+			var chart = new metvis.Chart(jq(container), vis);
+			chart.height = 200;
+			chart.draw();
+			//TODO:legend
+			console.log(vis)
+		} else {
+			console.log("metric " + metricid + " has no data");
+		}
+
+	}).error(function(error){
+		console.log(error);
+	});
+	
+}
+
 function drawSparkTable(config) {
 	"use strict";
 
@@ -292,7 +310,11 @@ function drawSparkTable(config) {
 	            // Check for errors - TODO: handle better
                 if (data.status === "error") {
                     console.log("Unable to load sparky '" + data.id + "': " + data.msg);
-                    continue;
+                    console.log(data);
+                    if (config.drawNonSparkable) {
+                    	drawPlot(config.drawNonSparkableContainer, data.request.project, data.request.metricId)
+                    }
+                    continue; 
                 }
 
                 if (config.toolkittable) {

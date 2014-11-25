@@ -22,7 +22,7 @@ GET     /assets/javascripts/routes    controllers.Application.jsRoutes
 GET     /profile                    controllers.Application.profile
 GET		/profile/notification		controllers.Application.profileNotification(projectid: String, projectName : String, metricid : String, metricName : String)
 POST	/profile/notification		controllers.Account.createNotification
-GET		/profile/eventgroup			controllers.Application.profileEventGroup
+GET		/profile/eventgroup			controllers.Account.loadEventGroupForm
 POST	/profile/eventgroup			controllers.Account.createEventGroup
 GET		/profile/event				controllers.Application.profileEvent
 POST	/profile/event				controllers.Account.createEvent

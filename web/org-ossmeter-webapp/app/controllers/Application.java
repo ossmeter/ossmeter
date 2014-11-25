@@ -82,7 +82,8 @@ public class Application extends Controller {
 						controllers.routes.javascript.Application.autocomplete(),
 						controllers.routes.javascript.Application.profileNotification(),
 						controllers.routes.javascript.Account.createNotification(),
-						controllers.routes.javascript.Account.updateGridLocations()
+						controllers.routes.javascript.Account.updateGridLocations(),
+						controllers.routes.javascript.Account.loadEventGroupForm()
 						)
 				)
 				.as("text/javascript");

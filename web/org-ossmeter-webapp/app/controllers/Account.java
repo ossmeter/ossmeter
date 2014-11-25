@@ -1,5 +1,7 @@
 package controllers;
 
+import java.util.*;
+
 import model.*;
 import be.objectify.deadbolt.java.actions.Restrict;
 import be.objectify.deadbolt.java.actions.Group;
@@ -303,6 +305,14 @@ public class Account extends Controller {
 	}
 
 	@SubjectPresent
+	public static Result loadEventGroupForm() {
+
+		Form<EventGroup> form = form(EventGroup.class);
+
+		return ok(views.html.account._eventGroupForm.render(form));
+	}	
+
+	@SubjectPresent
 	public static Result createEventGroup() {
 		// this is the currently logged in user
 		final User user = Application.getLocalUser(session());
@@ -319,7 +329,17 @@ public class Account extends Controller {
 		group.setCol(1);
 		group.setSizeX(1);
 		group.setSizeY(2);
+
+		List<Event> toRemove = new ArrayList<>();
+		for (Event e : group.getEvents()) {
+			if (e.getName() == null || e.getName().equals("")
+				||	e.getDate() == null) {
+				toRemove.add(e);
+			}
+		}
 		
+		group.getEvents().removeAll(toRemove);
+
 		MongoAuthenticator.insertNewGrid(user, group);
 
 		flash(Application.FLASH_MESSAGE_KEY, Messages.get("ossmeter.profile.eventgroup.creation.success"));

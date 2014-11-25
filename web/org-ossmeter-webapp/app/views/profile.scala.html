@@ -62,8 +62,22 @@
         <div class="col-md-6">
         <h2>Dashboard</h2>
         
-        <!-- <a href="@routes.Application.profileEventGroup" class="btn btn-primary">Create Event Group</a>
-        <a href="@routes.Application.profileEventGroup" class="btn btn-primary">Create Notification</a> -->
+        <button id="btn_create_event_group" class="btn btn-primary">Create Event Group</button>
+
+        <script type="text/javascript">
+        $(function() {
+            $("#btn_create_event_group").click(function() {
+                jsRoutes.controllers.Account.loadEventGroupForm().ajax()
+                    .success(function(result) {
+                        $('#eventGroupModal .modal-body').html(result);
+                        $('#eventGroupModal').modal('show');
+                    }).error(function(error){
+                        console.log(error);
+                    });
+            });
+        })
+        </script>
+
        @* @if(localUser.getNotifications().size() > 0) {
             <table class="table">
                 <thead>
@@ -347,6 +361,16 @@
 
     </div>
 </section>
+
+<div class="modal fade" id="eventGroupModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <script type="text/javascript" src="@routes.Assets.at("js/ossplots2.js")"></script>
 <script type="text/javascript" src="@routes.Assets.at("js/d3.v3.min.js")"></script>
 }
