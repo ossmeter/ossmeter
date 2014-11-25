@@ -18,30 +18,37 @@
     <div class="row" data-toggle="collapse" data-target="#div-attr-@attributeId" aria-expanded="true" aria-controls="div-attr-@attributeId">
         <h2 class="marginless">@attribute.name</h2>
     </div>
-    <div class="row collapse" id="div-attr-@attributeId">
-        <div class="col-md-2">
-            <table class="table spark" id="sparklines-table-toolkit-@attributeId">
-                <thead></thead>
-                <tbody></tbody>
-            </table>
+    <div id="div-attr-@attributeId">
+        <div class="row collapse">
+            <div class="col-md-2">
+                <table class="table spark" id="sparklines-table-toolkit-@attributeId">
+                    <thead></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <table class="table spark" id="sparklines-table-12months-@attributeId">
+                    <thead></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="col-md-4">
+                <table class="table spark" id="sparklines-table-alltime-@attributeId">
+                    <thead></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
-        <div class="col-md-6">
-            <table class="table spark" id="sparklines-table-12months-@attributeId">
-                <thead></thead>
-                <tbody></tbody>
-            </table>
-        </div>
-        <div class="col-md-4">
-            <table class="table spark" id="sparklines-table-alltime-@attributeId">
-                <thead></thead>
-                <tbody></tbody>
-            </table>
-        </div>
+        <div class="row" id="other-plots-@attributeId"></div>
     </div>
-    <div class="row" id="other-plots-@attributeId"></div>
     <script type="text/javascript">
         $(function() {
             "use strict";
+            // var vm = new UnsparkablePlots();
+            // ko.applyBindings(vm, document.getElementById("other-plots-@attributeId"));
+
+            // var v = new Unsparkable("modeling-epsilon", "bugs.inactiveusers");
+            // // vm.unsparks.push(v);
 
             var twelveMth = {
                 sparktable : "sparklines-table-12months-@attributeId",
@@ -72,3 +79,4 @@
             }, 2000); 
         });
     </script>
+<script type="text/javascript" src="@routes.Assets.at("js/knockout-2.3.0.js")"></script>

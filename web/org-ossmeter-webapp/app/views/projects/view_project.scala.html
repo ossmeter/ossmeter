@@ -16,6 +16,7 @@
 
 @import model.Notification
 @import model.SparkGridEntry
+@import model.EventGroup
 
 @main(Messages("ossmeter.index.title")) {
 <script type="text/javascript">
@@ -35,7 +36,11 @@ case s : SparkGridEntry => {@if(s.getProject().getId()) {app.grid.sparks.push({
 	"project" : "@s.getProject().getId()",
 	"metric" : "@s.getMetric().getId()"
 	});
-}}case other => {}}}}}{ }
+}}
+case e : EventGroup => {app.grid.eventGroups.push({
+	"name" : "@e.getName()", "events" : [@for(ev<-e.getEvents()){ {"name" : "@ev.getName()", "date" : "@ev.getDate().format("yyyyMMdd")" }  }]
+})}
+case other => {}}}}}{ }
 });
 </script>
 
@@ -58,6 +63,48 @@ case s : SparkGridEntry => {@if(s.getProject().getId()) {app.grid.sparks.push({
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<script type="text/javascript">
+	
+            var Unsparkable = function(projectid, metricid) {
+                this.projectid = projectid;
+                this.metricid = metricid;
+            }
+
+            var UnsparkablePlots = function() {
+                this.unsparks = ko.observableArray();
+            }
+
+            ko.bindingHandlers.compPlot = {
+                init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+                },
+                update: function(element, valueAccessor, allBindingsAccessor) {
+                    var vacc = valueAccessor();
+                    var projectid = vacc.projectid();
+                    var metricid = vacc.metricid();
+
+                    console.log("here we go")
+                    $.getJSON(getApi() + "/projects/p/" + projectid + "/m/" + metricid, function(vis) {
+                            console.log("to draw into: " + jq(element));
+                            
+                        if (vis.datatable.length > 0) {
+
+
+                            var chart = new metvis.Chart(jq(element), vis);
+                            chart.height = 200;
+                            chart.draw();
+                            //TODO:legend
+                        } else {
+                            console.log("metric " + metricid + " has no data");
+                        }
+
+                    }).error(function(error){
+                        console.log(error);
+                    });
+
+                }
+            }
+</script>
 
 <script type="text/javascript" src="@routes.Assets.at("js/d3.v3.min.js")"></script>
 <script type="text/javascript" src="@routes.Assets.at("js/RadarChart.js")"></script>

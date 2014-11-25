@@ -32,7 +32,7 @@ public class SparkResource extends AbstractApiResource {
 		if (sd != null) {
 			JsonNode obj;
 			try {
-				System.out.println(sd);
+				System.out.println("SD: "+ sd);
 				obj = mapper.readTree(sd);
 				return Util.createJsonRepresentation(obj);
 			} catch (Exception e) {

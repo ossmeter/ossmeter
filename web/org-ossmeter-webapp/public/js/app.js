@@ -2,7 +2,8 @@ var app = {
 	loggedIn : false,
 	grid : {
 		sparks : [],
-		notifications : []
+		notifications : [],
+		eventGroups : []
 	},
 	tooltipOptions : { 
 		delay: { "show": 500, "hide": 100 }
@@ -252,20 +253,41 @@ function getIndexOfNotification(project, metric) {
 }
 
 function drawPlot(container, projectid, metricid) {
-	$.getJSON(getApi() + "/projects/p/" + projectid + "/m/" + metricid, function(vis) {
-		if (vis.datatable.length > 0) {
-			var chart = new metvis.Chart(jq(container), vis);
-			chart.height = 200;
-			chart.draw();
-			//TODO:legend
-			console.log(vis)
-		} else {
-			console.log("metric " + metricid + " has no data");
-		}
 
-	}).error(function(error){
-		console.log(error);
-	});
+	var unsparkId = 'unspark-'+projectid+metricid;
+	var str = '<div class="col-md-4 box">'
+		+ '<div class="row" id="legend-'+unsparkId+'"></div>'
+		+ '<div class="row" id="'+unsparkId+'"></div>'
+		+'</div>';
+	$(jq(container)).append(str);
+
+	(function(cont) {
+		$.getJSON(getApi() + "/projects/p/" + projectid + "/m/" + metricid, function(vis) {
+			if (vis.datatable.length > 0) {
+				var chart = new metvis.Chart(jq(cont), vis);
+				chart.height = 150;
+				chart.draw();
+				//TODO:legend
+
+				var l = $(jq("legend-"+cont));
+		        l.empty();
+
+		        l.append('<p>'+vis.name+'</p>');
+		        var _st = '<ul class="list-inline">'; 
+
+		        for (var s in chart.series) {
+		            _st = _st + '<li><div class="legend-box" style="background-color:' + chart.colors(s) + '"></div>' + chart.series[s].name + '</li>';
+		        }
+		        _st = _st + "</ul>";
+		        l.append(_st);
+			} else {
+				console.log("metric " + metricid + " has no data");
+			}
+
+		}).error(function(error){
+			console.log(error);
+		});
+	})(unsparkId);
 	
 }
 
@@ -287,8 +309,23 @@ function drawSparkTable(config) {
         for (var r in result) {
                 var data = result[r];
 
+	            // Check for errors - TODO: handle better
+                if (data.status === "error") {
+                    console.log("Unable to load sparky '" + data.request.metricId + "': " + data.msg);
+                    // console.log(data);
+                    if (config.drawNonSparkable) {
+
+                    	// console.log("unsparking")
+                    	// var unspark = new Unsparkable(data.request.project, data.request.metricId);
+                    	// config.unsparkableViewModel.unsparks.push(unspark);
+
+                    	drawPlot(config.drawNonSparkableContainer, data.request.project, data.request.metricId)
+                    }
+                    continue; 
+                }
+
                 // header row
-                if (r == 0) { 
+                if ($("#" + config.sparktable + " > thead > tr").length == 0) { 
 	                var hdr = "<tr>";
 	                if (config.drawName) {
 	                	hdr = hdr + "<th>metric</th>";
@@ -306,16 +343,6 @@ function drawSparkTable(config) {
                 		$("#" + config.toolkittable + " > thead:last").append("<tr><th>toolkit</th></tr>");
                 	}
 	            }
-                
-	            // Check for errors - TODO: handle better
-                if (data.status === "error") {
-                    console.log("Unable to load sparky '" + data.id + "': " + data.msg);
-                    console.log(data);
-                    if (config.drawNonSparkable) {
-                    	drawPlot(config.drawNonSparkableContainer, data.request.project, data.request.metricId)
-                    }
-                    continue; 
-                }
 
                 if (config.toolkittable) {
                 	var tools = '<a href="javascript:grabMetricData(\''+config.projectid+'\',\''+data.id+'\')"><span class="glyphicon glyphicon-plus tip" data-toggle="tooltip" data-placement="bottom" title="Add metric to plot"></span></a>';
@@ -358,6 +385,10 @@ function drawSparkTable(config) {
             $(".tip").tooltip(app.tooltipOptions);
             $(".pop").popover(app.popoverOptions);
     });
+}
+
+function toOssmeterDateString(date) {
+
 }
 
 function fixHeights(table1, table2) {

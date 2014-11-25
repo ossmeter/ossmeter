@@ -12,6 +12,8 @@
                 <a href="#"><span class="glyphicon glyphicon-time tip btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Create notification"></span></a>
                 <a href="javascript:removeAllFromPlot()"><span class="glyphicon glyphicon-refresh tip btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Clear plot"></span></a>
                 <a href="#"><span class="glyphicon glyphicon-calendar tip btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Show events"></span></a>
+                <h4>Event Groups</h4>
+                <div id="eventgroups" class="collapse"></div>
                 <h4>Legend</h4>
                 <div id="legend"></div>
             </div>
@@ -20,10 +22,50 @@
 </section>
 
 <script type="text/javascript">
+
+    $(function() {
+        if (app.grid.eventGroups.length == 0) {
+            $("#eventgroups").append("None");
+        }
+        for (var gp in app.grid.eventGroups) {
+
+            app.grid.eventGroups[gp]._annotations = [];
+
+            for (var e in app.grid.eventGroups[gp].events) {
+                app.grid.eventGroups[gp]._annotations.push(
+                    new metvis.Annotation("X", 
+                        app.grid.eventGroups[gp].events[e].date, 
+                        app.grid.eventGroups[gp].events[e].name)
+                    );
+            }
+
+
+            $("#eventgroups").append('<li class="checkbox"><label><input type="checkbox" class="cb_eventGroup" value="'+gp+'"> ' + app.grid.eventGroups[gp].name + '</label></li>');
+        }
+
+        $(".cb_eventGroup").click(function() {
+            var id = $(this).val();
+            var annos = app.grid.eventGroups[id]._annotations;
+            if (chart) {
+                $.each(annos, function(index, value) {
+                    toggleAnnotation(chart, value);
+                });
+            }
+        })
+    })
+
+    function toggleAnnotation(chart, annotation) {
+        if (chart.annotations.indexOf(annotation) == -1) {
+            chart.addAnnotation(annotation);
+        } else {
+            chart.removeAnnotation(annotation);
+        }
+    }
+
 // THIS SCRIPT SHOULD MOVE TO DETAILVIEW as it will differ from compare. This template
 // is literally that. A template.
-    var vislist = []; //{"id":"bugs.cumulativeAverageResponseTime","name":"Average Response Time (Cumulative) (ms)","description":"The average response time of bugs addressed up to and including the current date.","type":"LineChart","datatable":[{"Date":"20050309","Response Time":0},{"Date":"20050310","Response Time":0},{"Date":"20050311","Response Time":0},{"Date":"20050312","Response Time":0},{"Date":"20050313","Response Time":0},{"Date":"20050314","Response Time":0},{"Date":"20050315","Response Time":0},{"Date":"20050316","Response Time":0},{"Date":"20050317","Response Time":0},{"Date":"20050318","Response Time":0},{"Date":"20060224","Response Time":3925581},{"Date":"20060225","Response Time":3925581},{"Date":"20060226","Response Time":3925581}],"timeSeries":true,"ordinal":false,"x":"Date","y":"Response Time"}
-
+// Turns out we decided against a large plot in the compare view. This still needs refactoring
+    var vislist = []; 
     var metricmap = {};
     var chart;
 

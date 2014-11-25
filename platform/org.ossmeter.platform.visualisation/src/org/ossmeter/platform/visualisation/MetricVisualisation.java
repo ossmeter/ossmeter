@@ -18,6 +18,7 @@ import sparkle.dimensions.SparkDimension;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -87,7 +88,15 @@ public class MetricVisualisation {
 	
 	public byte[] getSparky(DB db, BasicDBObject query) throws IOException, ParseException, UnsparkableVisualisationException {
 		
-		if (!vis.get("timeSeries").asBoolean()) {
+		if (vis.get("timeSeries") == null || !vis.get("timeSeries").asBoolean()) {
+			throw new UnsparkableVisualisationException();
+		}
+		
+		if (vis.get("series") != null) {
+			throw new UnsparkableVisualisationException();
+		}
+		
+		if (vis.get("y").getNodeType().equals(JsonNodeType.ARRAY)) {
 			throw new UnsparkableVisualisationException();
 		}
 		
