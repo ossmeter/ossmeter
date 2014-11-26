@@ -54,8 +54,9 @@
 
                             for (var r in result) {
                                 var f = result[r];
-
-                                $("#factoids-@attributeId").append("<p>" + f.factoid + "</p>");
+                                if (f.factoid) {
+                                    $("#factoids-@attributeId").append("<p>" + f.factoid + "</p>");
+                                }
                             }
                             drawSpiderChart("#spider-@attributeId", result);
                         }).fail(function(err) {

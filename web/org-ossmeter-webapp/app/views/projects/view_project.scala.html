@@ -38,7 +38,7 @@ case s : SparkGridEntry => {@if(s.getProject().getId()) {app.grid.sparks.push({
 	});
 }}
 case e : EventGroup => {app.grid.eventGroups.push({
-	"name" : "@e.getName()", "events" : [@for(ev<-e.getEvents()){ {"name" : "@ev.getName()", "date" : "@ev.getDate().format("yyyyMMdd")" }  }]
+	"name" : "@e.getName()", "events" : [@for(ev<-e.getEvents()){ {"name" : "@ev.getName()", "date" : "@ev.getDate().format("yyyyMMdd")" },  }]
 })}
 case other => {}}}}}{ }
 });
@@ -74,38 +74,40 @@ case other => {}}}}}{ }
             var UnsparkablePlots = function() {
                 this.unsparks = ko.observableArray();
             }
+            $(function(){
+                ko.bindingHandlers.compPlot = {
+                    init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+                    },
+                    update: function(element, valueAccessor, allBindingsAccessor) {
+                        var vacc = valueAccessor();
+                        var projectid = vacc.projectid();
+                        var metricid = vacc.metricid();
 
-            ko.bindingHandlers.compPlot = {
-                init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-                },
-                update: function(element, valueAccessor, allBindingsAccessor) {
-                    var vacc = valueAccessor();
-                    var projectid = vacc.projectid();
-                    var metricid = vacc.metricid();
-
-                    console.log("here we go")
-                    $.getJSON(getApi() + "/projects/p/" + projectid + "/m/" + metricid, function(vis) {
-                            console.log("to draw into: " + jq(element));
-                            
-                        if (vis.datatable.length > 0) {
+                        console.log("here we go")
+                        $.getJSON(getApi() + "/projects/p/" + projectid + "/m/" + metricid, function(vis) {
+                                console.log("to draw into: " + jq(element));
+                                
+                            if (vis.datatable.length > 0) {
 
 
-                            var chart = new metvis.Chart(jq(element), vis);
-                            chart.height = 200;
-                            chart.draw();
-                            //TODO:legend
-                        } else {
-                            console.log("metric " + metricid + " has no data");
-                        }
+                                var chart = new metvis.Chart(jq(element), vis);
+                                chart.height = 200;
+                                chart.draw();
+                                //TODO:legend
+                            } else {
+                                console.log("metric " + metricid + " has no data");
+                            }
 
-                    }).error(function(error){
-                        console.log(error);
-                    });
+                        }).error(function(error){
+                            console.log(error);
+                        });
 
+                    }
                 }
-            }
+            });
 </script>
 
 <script type="text/javascript" src="@routes.Assets.at("js/d3.v3.min.js")"></script>
 <script type="text/javascript" src="@routes.Assets.at("js/RadarChart.js")"></script>
+<script type="text/javascript" src="@routes.Assets.at("js/knockout-2.3.0.js")"></script>
 }

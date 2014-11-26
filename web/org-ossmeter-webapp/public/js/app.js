@@ -484,8 +484,6 @@ function drawSpiderChart(container, factoids) {
 		d.push(ax);
 	}
 
-	console.log(d);
-
 	var config = {
 		w: 150,
 		h: 150,

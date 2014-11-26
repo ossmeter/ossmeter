@@ -8,10 +8,10 @@
             <div class="col-md-9" id="plot"></div>
             <div class="col-md-3">
                 <h4>Toolbox</h4>
-                <a href="#"><span class="glyphicon glyphicon-eye-open tip btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Add plot to dashboard"></span></a>
-                <a href="#"><span class="glyphicon glyphicon-time tip btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Create notification"></span></a>
+                <!-- <a href="#"><span class="glyphicon glyphicon-eye-open tip btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Add plot to dashboard"></span></a>
+                <a href="#"><span class="glyphicon glyphicon-time tip btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Create notification"></span></a> -->
                 <a href="javascript:removeAllFromPlot()"><span class="glyphicon glyphicon-refresh tip btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Clear plot"></span></a>
-                <a href="#"><span class="glyphicon glyphicon-calendar tip btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Show events"></span></a>
+               <!--  <a href="#"><span class="glyphicon glyphicon-calendar tip btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Show events"></span></a> -->
                 <h4>Event Groups</h4>
                 <div id="eventgroups" class="collapse"></div>
                 <h4>Legend</h4>
@@ -113,7 +113,7 @@
         l.empty();
         l.append("<ul>");
         for (var s in chart.series) {
-            l.append('<li><div class="legend-box" style="background-color:' + chart.colors(s) + '"></div>' + chart.series[s].name + '</li>');
+            l.append('<li><div class="legend-box" style="background-color:' + chart.colors(s) + '"></div>' + chart.series[s].name + ' <small>('+chart.series[s].vis.name+')</small></li>');
         }
         l.append("</ul>");
     }
