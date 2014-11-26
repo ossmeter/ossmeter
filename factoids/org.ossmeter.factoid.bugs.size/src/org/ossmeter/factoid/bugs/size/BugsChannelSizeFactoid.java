@@ -1,6 +1,5 @@
 package org.ossmeter.factoid.bugs.size;
 
-import java.text.ParseException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -65,7 +64,7 @@ public class BugsChannelSizeFactoid extends AbstractFactoidMetricProvider{
 	@Override
 	public void measureImpl(Project project, ProjectDelta delta, Factoid factoid) {
 //		factoid.setCategory(FactoidCategory.BUGS);
-		factoid.setName("Bug Channel Size Factoid");
+		factoid.setName(getFriendlyName());
 
 		NewBugsHistoricMetricProvider newBugsProvider = null;
 		CommentsHistoricMetricProvider commentsProvider = null;
@@ -87,7 +86,7 @@ public class BugsChannelSizeFactoid extends AbstractFactoidMetricProvider{
 		}
 		
 		Date end = new Date();
-		Date start = (new Date()).addDays(-1);
+		Date start = (new Date()).addDays(-30);
 //		Date start=null, end=null;
 //		try {
 //			start = new Date("20050301");
@@ -170,10 +169,11 @@ public class BugsChannelSizeFactoid extends AbstractFactoidMetricProvider{
 
 	private int getCumulativeNumberOfBugs(List<Pongo> newBugsList, Map<String, Integer> trackerBugs) {
 		int sum = 0;
-		for (Pongo pongo: newBugsList) {
-			BugsNewBugsHistoricMetric newBugsPongo = (BugsNewBugsHistoricMetric) pongo;
+		if ( newBugsList.size() > 0 ) {
+			BugsNewBugsHistoricMetric newBugsPongo = 
+					(BugsNewBugsHistoricMetric) newBugsList.get(newBugsList.size()-1);
 			for (DailyBugData bugData: newBugsPongo.getBugs()) {
-				int bugs = newBugsPongo.getCumulativeNumberOfBugs();
+				int bugs = bugData.getCumulativeNumberOfBugs();
 				trackerBugs.put(bugData.getBugTrackerId(), bugs);
 				sum += bugs;
 			}
@@ -183,12 +183,13 @@ public class BugsChannelSizeFactoid extends AbstractFactoidMetricProvider{
 	
 	private int getCumulativeNumberOfComments(List<Pongo> commentsList, Map<String, Integer> trackerComments) {
 		int sum = 0;
-		for (Pongo pongo: commentsList) {
-			BugsCommentsHistoricMetric commentsPongo = (BugsCommentsHistoricMetric) pongo;
+		if ( commentsList.size() > 0 ) {
+			BugsCommentsHistoricMetric commentsPongo = 
+					(BugsCommentsHistoricMetric) commentsList.get(commentsList.size()-1);
 			for (org.ossmeter.metricprovider.historic.bugs.comments.model.DailyBugData 
-					bugData: commentsPongo.getBugs()) {
-				int comments = commentsPongo.getCumulativeNumberOfComments();
-				trackerComments.put(bugData.getBugTrackerId(), comments);
+					commentsData: commentsPongo.getBugs()) {
+				int comments = commentsData.getCumulativeNumberOfComments();
+				trackerComments.put(commentsData.getBugTrackerId(), comments);
 				sum += comments;
 			}
 		}
@@ -197,12 +198,13 @@ public class BugsChannelSizeFactoid extends AbstractFactoidMetricProvider{
 	
 	private int getCumulativeNumberOfPatches(List<Pongo> patchesList, Map<String, Integer> trackerPatches) {
 		int sum = 0;
-		for (Pongo pongo: patchesList) {
-			BugsPatchesHistoricMetric patchesPongo = (BugsPatchesHistoricMetric) pongo;
+		if ( patchesList.size() > 0 ) {
+			BugsPatchesHistoricMetric patchesPongo = 
+					(BugsPatchesHistoricMetric) patchesList.get(patchesList.size()-1);
 			for (org.ossmeter.metricprovider.historic.bugs.patches.model.DailyBugData 
-					bugData: patchesPongo.getBugs()) {
-				int patches = patchesPongo.getCumulativeNumberOfPatches();
-				trackerPatches.put(bugData.getBugTrackerId(), patches);
+					patchesData: patchesPongo.getBugs()) {
+				int patches = patchesData.getCumulativeNumberOfPatches();
+				trackerPatches.put(patchesData.getBugTrackerId(), patches);
 				sum += patches;
 			}
 		}

@@ -1,7 +1,6 @@
 package org.ossmeter.factoid.newsgroups.threadlength;
 
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -60,7 +59,7 @@ public class NewsgroupsChannelThreadLengthFactoid extends AbstractFactoidMetricP
 	@Override
 	public void measureImpl(Project project, ProjectDelta delta, Factoid factoid) {
 //		factoid.setCategory(FactoidCategory.BUGS);
-		factoid.setName("Newsgroup Channel Thread Length");
+		factoid.setName(getFriendlyName());
 
 		ThreadsHistoricMetricProvider threadsProvider = null;
 		
@@ -72,7 +71,7 @@ public class NewsgroupsChannelThreadLengthFactoid extends AbstractFactoidMetricP
 		}
 
 		Date end = new Date();
-		Date start = new Date();
+		Date start = (new Date()).addDays(-30);
 //		Date start=null, end=null;
 //		try {
 //			start = new Date("20040801");

@@ -57,8 +57,7 @@ public class NewsgroupsChannelEmotionFactoid extends AbstractFactoidMetricProvid
 	@Override
 	public void measureImpl(Project project, ProjectDelta delta, Factoid factoid) {
 //		factoid.setCategory(FactoidCategory.BUGS);
-		factoid.setName("");
-		factoid.setName("Newsgroup Channel Emotion Factoid");
+		factoid.setName(getFriendlyName());
 
 		System.err.println("uses.size(): " + uses.size());
 		NewsgroupsEmotionsTransMetric emotionsTransMetric = 

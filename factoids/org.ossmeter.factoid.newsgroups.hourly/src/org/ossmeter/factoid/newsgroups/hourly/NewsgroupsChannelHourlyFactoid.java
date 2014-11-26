@@ -56,7 +56,7 @@ public class NewsgroupsChannelHourlyFactoid extends AbstractFactoidMetricProvide
 	@Override
 	public void measureImpl(Project project, ProjectDelta delta, Factoid factoid) {
 //		factoid.setCategory(FactoidCategory.BUGS);
-		factoid.setName("Newsgroup Channel Hourly Factoid");
+		factoid.setName(getFriendlyName());
 
 		NewsgroupsHourlyRequestsRepliesTransMetric hourlyRequestsRepliesTransMetric = 
 				((HourlyRequestsRepliesTransMetricProvider)uses.get(0)).adapt(context.getProjectDB(project));

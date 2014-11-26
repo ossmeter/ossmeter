@@ -1,6 +1,5 @@
 package org.ossmeter.factoid.bugs.channelusage;
 
-import java.text.ParseException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -65,7 +64,7 @@ public class BugsChannelUsageFactoid extends AbstractFactoidMetricProvider{
 	@Override
 	public void measureImpl(Project project, ProjectDelta delta, Factoid factoid) {
 //		factoid.setCategory(FactoidCategory.BUGS);
-		factoid.setName("Bug Channel Usage Factoid");
+		factoid.setName(getFriendlyName());
 
 		NewBugsHistoricMetricProvider newBugsProvider = null;
 		CommentsHistoricMetricProvider commentsProvider = null;

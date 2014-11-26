@@ -95,10 +95,6 @@ public class BugMetadataTransMetricProvider implements ITransientMetricProvider<
 		for (BugTrackerComments comment: usedClassifier.getBugTrackerComments()) {
 			commentReplyRequest.put( comment.getBugTrackerId() + comment.getBugId() + comment.getCommentId(), 
 									 comment.getClassificationResult());
-			System.err.println("A| comment.getBugTrackerId(): " + comment.getBugTrackerId() + 
-					"\tcomment.getBugId(): " + comment.getBugId() +
-					"\tcomment.getCommentId(): " + comment.getCommentId() +
-					"\tcomment.getClassificationResult(): " + comment.getClassificationResult());
 		}
 
 		SentimentClassificationTransMetric sentimentClassifier = 

@@ -99,6 +99,9 @@ public class ClassificationInstance {
 									int threadId) {
 		setNewsgroupName(newsgroupName);
 		setThreadId(threadId);
+		if (deltaArticle==null)
+			System.err.println("deltaArticle==null");
+		System.err.println("deltaArticle.getSubject() : " + deltaArticle.getSubject());
 		setSubject(deltaArticle.getSubject());
 	}
 

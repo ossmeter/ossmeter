@@ -1,7 +1,6 @@
 package org.ossmeter.factoid.bugs.severity;
 
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -66,7 +65,7 @@ public class BugsChannelSeverityFactoid extends AbstractFactoidMetricProvider{
 	@Override
 	public void measureImpl(Project project, ProjectDelta delta, Factoid factoid) {
 //		factoid.setCategory(FactoidCategory.BUGS);
-		factoid.setName("Bug Channel Severity Factoid");
+		factoid.setName(getFriendlyName());
 	
 		SeverityHistoricMetricProvider severityProvider = null;
 		SeverityBugStatusHistoricMetricProvider severityBugStatusProvider = null;
@@ -93,7 +92,7 @@ public class BugsChannelSeverityFactoid extends AbstractFactoidMetricProvider{
 		}
 		
 		Date end = new Date();
-		Date start = new Date();
+		Date start = (new Date()).addDays(-30);
 //		Date start=null, end=null;
 //		try {
 //			start = new Date("20050301");
@@ -129,17 +128,17 @@ public class BugsChannelSeverityFactoid extends AbstractFactoidMetricProvider{
 
 		stringBuffer.append("There are ");
 		if ( seriousBugsPercentage > 50 ) {
-			stringBuffer.append("many");
-			factoid.setStars(StarRating.FOUR);
-		} else if ( seriousBugsPercentage > 25 ) {
-			stringBuffer.append("not so many");
-			factoid.setStars(StarRating.THREE);
-		} else if ( seriousBugsPercentage > 12.5 ) {
-			stringBuffer.append("few");
-			factoid.setStars(StarRating.TWO);
-		} else {
-			stringBuffer.append("very few");
 			factoid.setStars(StarRating.ONE);
+			stringBuffer.append("many");
+		} else if ( seriousBugsPercentage > 25 ) {
+			factoid.setStars(StarRating.TWO);
+			stringBuffer.append("not so many");
+		} else if ( seriousBugsPercentage > 12.5 ) {
+			factoid.setStars(StarRating.THREE);
+			stringBuffer.append("few");
+		} else {
+			factoid.setStars(StarRating.FOUR);
+			stringBuffer.append("very few");
 		}
 		stringBuffer.append(" bugs that report serious (i.e. major," +
 							" critical and blocker) software problems.\n");

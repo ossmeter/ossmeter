@@ -1,6 +1,5 @@
 package org.ossmeter.factoid.newsgroups.channelusage;
 
-import java.text.ParseException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -67,7 +66,7 @@ public class NewsgroupsChannelUsageFactoid extends AbstractFactoidMetricProvider
 	@Override
 	public void measureImpl(Project project, ProjectDelta delta, Factoid factoid) {
 //		factoid.setCategory(FactoidCategory.BUGS);
-		factoid.setName("Newsgroup Channel Usage Factoid");
+		factoid.setName(getFriendlyName());
 
 		ArticlesHistoricMetricProvider articlesProvider = null;
 		NewThreadsHistoricMetricProvider threadsProvider = null;

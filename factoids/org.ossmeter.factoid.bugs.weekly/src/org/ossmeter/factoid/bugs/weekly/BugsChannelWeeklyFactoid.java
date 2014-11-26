@@ -51,7 +51,7 @@ public class BugsChannelWeeklyFactoid extends AbstractFactoidMetricProvider{
 	@Override
 	public void measureImpl(Project project, ProjectDelta delta, Factoid factoid) {
 //		factoid.setCategory(FactoidCategory.BUGS);
-		factoid.setName("Bug Channel Weekly Factoid");
+		factoid.setName(getFriendlyName());
 
 		BugsDailyRequestsRepliesTransMetric dailyRequestsRepliesTransMetric = 
 				((DailyRequestsRepliesTransMetricProvider)uses.get(0)).adapt(context.getProjectDB(project));

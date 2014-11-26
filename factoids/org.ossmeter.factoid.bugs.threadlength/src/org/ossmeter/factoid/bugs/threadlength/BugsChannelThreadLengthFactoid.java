@@ -1,7 +1,6 @@
 package org.ossmeter.factoid.bugs.threadlength;
 
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -55,7 +54,7 @@ public class BugsChannelThreadLengthFactoid extends AbstractFactoidMetricProvide
 	@Override
 	public void measureImpl(Project project, ProjectDelta delta, Factoid factoid) {
 //		factoid.setCategory(FactoidCategory.BUGS);
-		factoid.setName("Bug Channel Thread Length");
+		factoid.setName(getFriendlyName());
 
 		BugsHistoricMetricProvider bugsProvider = null;
 		
@@ -67,7 +66,7 @@ public class BugsChannelThreadLengthFactoid extends AbstractFactoidMetricProvide
 		}
 
 		Date end = new Date();
-		Date start = new Date();
+		Date start = (new Date()).addDays(-30);
 //		Date start=null, end=null;
 //		try {
 //			start = new Date("20050301");

@@ -1,7 +1,6 @@
 package org.ossmeter.factoid.newsgroups.users;
 
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -64,7 +63,7 @@ public class NewsgroupsChannelUsersFactoid extends AbstractFactoidMetricProvider
 	@Override
 	public void measureImpl(Project project, ProjectDelta delta, Factoid factoid) {
 //		factoid.setCategory(FactoidCategory.BUGS);
-		factoid.setName("Newsgroup Channel Users Factoid");
+		factoid.setName(getFriendlyName());
 
 		UsersHistoricMetricProvider usersProvider = null;
 		ThreadsHistoricMetricProvider threadsProvider = null;
@@ -81,7 +80,7 @@ public class NewsgroupsChannelUsersFactoid extends AbstractFactoidMetricProvider
 		}
 
 		Date end = new Date();
-		Date start = new Date();
+		Date start = (new Date()).addDays(-30);
 //		Date start=null, end=null;
 //		try {
 //			start = new Date("20040801");
@@ -92,7 +91,6 @@ public class NewsgroupsChannelUsersFactoid extends AbstractFactoidMetricProvider
 //		}
 		List<Pongo> threadList = threadsProvider.getHistoricalMeasurements(context, project, start, end);
 
-		start = (new Date()).addDays(-30);
 		List<Pongo> usersMonthList = usersProvider.getHistoricalMeasurements(context, project, start, end);
 		
 		start = (new Date()).addDays(-365);
