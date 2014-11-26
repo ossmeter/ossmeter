@@ -11,6 +11,9 @@
       <visualisationKind
             json="chartdefs/barchart.json">
       </visualisationKind>
+      <visualisationKind
+            json="chartdefs/scatterchart.json">
+      </visualisationKind>
    </extension>
 
 </plugin>
