@@ -46,7 +46,7 @@ int commitsToday(ProjectDelta delta = \empty())
 
 @metric{commitActivity}
 @doc{Number of commits in the last two weeks: collects commit activity over a 14-day sliding window.}
-@friendlyName{committersLastTwoWeeks}
+@friendlyName{Commits in last two weeks}
 @uses = ("commitsToday":"commitsToday")
 @appliesTo{generic()}
 rel[datetime, int] commitActivity(ProjectDelta delta = \empty(), rel[datetime,int] prev = {}, int commitsToday = 0) {
@@ -88,7 +88,7 @@ int commitsInTwoWeeks(rel[datetime, int] activity = {})
   
 @metric{churnPerCommitInTwoWeeks}
 @doc{The ratio between the churn and the number of commits indicates how large each commit is on average. We compute this as a sliding average over two weeks which smoothens exceptions and makes it possible to see a trend historically. Commits should not be to big all the time, because that would indicate either that programmers are not focusing on well-defined tasks or that the system architecture does not allow for separation of concerns.}
-@friendlyName{churnPerCommitInTwoWeeks}
+@friendlyName{Churn per commit in two weeks}
 @uses = ("commitsInTwoWeeks":"commits","churnInTwoWeeks":"churn")
 @appliesTo{generic()}
 @historic{}
