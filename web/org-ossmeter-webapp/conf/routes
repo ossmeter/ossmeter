@@ -86,22 +86,6 @@ GET		/projects/:id/summary/		controllers.Projects.viewTmp(id:String, qm : String
 GET		/projects/:id/detail		controllers.Projects.viewTmp(id:String, qm : String ?= "channels", summary : Boolean = false)
 GET		/projects/:id/detail/		controllers.Projects.viewTmp(id:String, qm : String ?= "channels", summary : Boolean = false)
 
-#GET		/projects/:id/channels		controllers.Projects.viewChannelsModel(id:String, summary : Boolean = true)
-#GET		/projects/:id/channels/		controllers.Projects.viewChannelsModel(id:String, summary : Boolean = true)
-#GET		/projects/:id/quality		controllers.Projects.viewAspect(id:String, qmId = "quality", aspect = "quality", summary : Boolean = true)
-#GET		/projects/:id/quality/		controllers.Projects.viewAspect(id:String, qmId = "quality", aspect = "quality", summary : Boolean = true)
-
-#GET		/projects/:id/:qm			controllers.Projects.viewAspect(id:String, qm:String, aspect = "null", summary :Boolean= true)
-#GET		/projects/:id/:qm/			controllers.Projects.viewAspect(id:String, qm:String, aspect = "null", summary :Boolean= true)
-#GET		/projects/:id/:qm/s			controllers.Projects.viewAspect(id:String, qm:String, aspect = "null", summary :Boolean= true)
-#GET		/projects/:id/:qm/s/		controllers.Projects.viewAspect(id:String, qm:String, aspect = "null", summary :Boolean= true)
-#GET		/projects/:id/:qm/d			controllers.Projects.viewAspect(id:String, qm:String, aspect = "null", summary :Boolean= false)
-#GET		/projects/:id/:qm/d/		controllers.Projects.viewAspect(id:String, qm:String, aspect = "null", summary :Boolean= false)
-#GET		/projects/:id/:qm/s/:aspect	controllers.Projects.viewAspect(id:String, qm:String, aspect:String, summary :Boolean= true)
-#GET		/projects/:id/:qm/s/:aspect/	controllers.Projects.viewAspect(id:String, qm:String, aspect:String, summary :Boolean= true)
-#GET		/projects/:id/:qm/d/:aspect	controllers.Projects.viewAspect(id:String, qm:String, aspect:String, summary :Boolean= false)
-#GET		/projects/:id/:qm/d/:aspect/	controllers.Projects.viewAspect(id:String, qm:String, aspect:String, summary :Boolean= false)
-
 # Update/Edit
 # GET 	/projects/:id/edit 			controllers.Projects.edit(id:Long)
 # POST 	/projects/:id/edit  		controllers.Projects.update(id:Long)

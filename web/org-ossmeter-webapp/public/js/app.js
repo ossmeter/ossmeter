@@ -56,37 +56,6 @@ $(function() {
 	$('.collapse').collapse()
 	// TODO: not working correctly
 	//applyMoreLessDescription();
-
-	// Search functions
-	$(".txt_search").autocomplete({
-			source: function(request, response) {
-				console.log("making request")
-				jsRoutes.controllers.Application.autocomplete(request.term
-					).ajax()
-					.success(function(result) {
-						console.log("success: " + result);
-						response($.map(result, function(item) {
-							return {
-								label: item.name,
-								value: item.id
-							}
-						}));
-					}).error(function(result) {
-						console.log("fail: " + result);
-					});
-			},
-			minLength: 2,
-			select : function(event, ui) {
-				//FIXME: Should use Play's routing
-				window.location.href = "projects/" + ui.item.value; 
-			},
-			open: function() {
-        		$( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
-      		},
-      		close: function() {
-        		$( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
-      		}
-		})
 });
 
 // Credit: http://shakenandstirredweb.com/240/jquery-moreless-text
