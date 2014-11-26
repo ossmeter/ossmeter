@@ -148,7 +148,7 @@
     <![endif]-->
     <script type="text/javascript">
     function getApi() {
-      return "@play.Play.application().configuration().getString("ossmeter.api")";
+      return "@routes.Application.api("").absoluteURL()";
     }
     </script>
   </body>
