@@ -215,53 +215,57 @@ public class BugsChannelUsageFactoid extends AbstractFactoidMetricProvider{
 	}
 
 	private int parseNewBugsPongos(List<Pongo> newBugsList, Map<String, Integer> trackerBugs) {
-		int numberOfBugs = 0;
+		int sumOfBugs = 0;
 		for (Pongo pongo: newBugsList) {
 			BugsNewBugsHistoricMetric newBugsPongo = (BugsNewBugsHistoricMetric) pongo;
 			for (DailyBugData bugData: newBugsPongo.getBugs()) {
-				numberOfBugs++;
+				int numberOfBugs = bugData.getNumberOfBugs();
+				sumOfBugs += numberOfBugs;
 				if (trackerBugs.containsKey(bugData.getBugTrackerId()))
 					trackerBugs.put(bugData.getBugTrackerId(), 
-							trackerBugs.get(bugData.getBugTrackerId()) + 1);
+							trackerBugs.get(bugData.getBugTrackerId()) + numberOfBugs);
 				else
-					trackerBugs.put(bugData.getBugTrackerId(), 1);
+					trackerBugs.put(bugData.getBugTrackerId(), numberOfBugs);
 			}
 		}
-		return numberOfBugs;
+		return sumOfBugs;
 	}
 		
 	private int parseCommentsPongos(List<Pongo> commentsList, Map<String, Integer> trackerComments) {
-		int numberOfComments = 0;
+		int sumOfComments = 0;
 		for (Pongo pongo: commentsList) {
 			BugsCommentsHistoricMetric commentsPongo = (BugsCommentsHistoricMetric) pongo;
 			for (org.ossmeter.metricprovider.historic.bugs.comments.model.DailyBugData 
 					bugData: commentsPongo.getBugs()) {
-				numberOfComments += bugData.getNumberOfComments();
+				int numberOfComments = bugData.getNumberOfComments();
+				sumOfComments += numberOfComments;
 				if (trackerComments.containsKey(bugData.getBugTrackerId()))
 					trackerComments.put(bugData.getBugTrackerId(), 
-										trackerComments.get(bugData.getBugTrackerId()) + bugData.getNumberOfComments());
+										trackerComments.get(bugData.getBugTrackerId()) + 
+										numberOfComments);
 				else
-					trackerComments.put(bugData.getBugTrackerId(), bugData.getNumberOfComments());
+					trackerComments.put(bugData.getBugTrackerId(), numberOfComments);
 			}
 		}
-		return numberOfComments;
+		return sumOfComments;
 	}
 	
 	private int parsePatchesPongos(List<Pongo> patchesList, Map<String, Integer> trackerPatches) {
-		int numberOfPatches = 0;
+		int sumOfPatches = 0;
 		for (Pongo pongo: patchesList) {
 			BugsPatchesHistoricMetric patchesPongo = (BugsPatchesHistoricMetric) pongo;
 			for (org.ossmeter.metricprovider.historic.bugs.patches.model.DailyBugData 
 					bugData: patchesPongo.getBugs()) {
-				numberOfPatches += bugData.getNumberOfPatches();
+				int numberOfPatches = bugData.getNumberOfPatches();;
+				sumOfPatches += numberOfPatches;
 				if (trackerPatches.containsKey(bugData.getBugTrackerId()))
 					trackerPatches.put(bugData.getBugTrackerId(), 
-							trackerPatches.get(bugData.getBugTrackerId()) + bugData.getNumberOfPatches());
+							trackerPatches.get(bugData.getBugTrackerId()) + numberOfPatches);
 				else
-					trackerPatches.put(bugData.getBugTrackerId(), bugData.getNumberOfPatches());
+					trackerPatches.put(bugData.getBugTrackerId(), numberOfPatches);
 			}
 		}
-		return numberOfPatches;
+		return sumOfPatches;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
