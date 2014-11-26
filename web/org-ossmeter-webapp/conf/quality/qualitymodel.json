@@ -1,6 +1,6 @@
 {
 	"id" : "quality",
-	"name" : "Test",
+	"name" : "OSSMETER Quality Model",
 	"attributes" : [],
 	"aspects" : [
 		{
@@ -15,14 +15,36 @@
 					"attributes": [
 						{
 							"name" : "Analysability",
-							"description" : "Foo bar",
-							"factoids" : [ "foo", "bar" ],
-							"metrics" : [ "whizz", "buzz" ]
+							"description" : "",
+							"factoids" : [ 
+								"trans.rascal.LOC.codeSize",
+								"trans.rascal.OO.java.Coupling-Java"
+							],
+							"metrics" : [ 
+								{
+									"name": "Commits",
+									"id": "commitsovertimeline"
+								},{
+									"name": "Lines of code (per language)",
+									"id": "locPerLanguageTimeLine"
+								}
+							]
 						},{
 							"name" : "Changeability",
-							"description" : "Foo bar",
-							"factoids" : [ "foo", "bar" ],
-							"metrics" : [ "whizz", "buzz" ]
+							"description" : "",
+							"factoids" : [ 
+								"trans.rascal.LOC.codeSize",
+								"trans.rascal.OO.java.Coupling-Java"
+							],
+							"metrics" : [ 
+								{
+									"name": "Commits",
+									"id": "commitsovertimeline"
+								},{
+									"name": "Lines of code (per language)",
+									"id": "locPerLanguageTimeLine"
+								}
+							]
 						}
 					]
 				}

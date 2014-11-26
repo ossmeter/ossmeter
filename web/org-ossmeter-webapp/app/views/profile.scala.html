@@ -163,7 +163,7 @@
                     <span class="glyphicon glyphicon-bell dash pull-right"></span><a href="#"><span class="glyphicon glyphicon-cog dash edit pull-right"></span></a>
                         <div class="col-md-9 nopadding" style="line-height:1em">
                             <span style="font-size:0.6em">Project:</span><br/>
-                            <span class="no-overflow" style="font-size:0.8em"><a href="@routes.Projects.view(n.getProject().getId())">@n.getProject().getName()</a></span><br/>
+                            <span class="no-overflow" style="font-size:0.8em"><a href="@routes.Projects.view(n.getProject().getId())">@n.getProject().getName().take(10)</a></span><br/>
                             <span style="font-size:0.6em">Metric:</span><br/>
                             <span class="nowrap" style="font-size:0.8em">@n.getMetric().getName()</span>
                         </div>
