@@ -15,9 +15,22 @@
 			],
 			"metrics": [
 				{
+					"name" : "Percentage of commits have happened during weekends",
+					"id" : "percentageOfWeekendCommitsTimeLine"
+				}, 
+				{
 					"name": "Commits",
 					"id": "commitsovertimeline"
-				},{
+				},
+
+				{
+					"name" : "Number of commits (per developer)",
+					"id" : "commitsPerDeveloperTimeLine"
+				},
+
+
+
+				{
 					"name": "Lines of code (per language)",
 					"id": "locPerLanguageTimeLine"
 				},{
