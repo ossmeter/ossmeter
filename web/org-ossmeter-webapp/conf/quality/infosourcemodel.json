@@ -17,20 +17,19 @@
 				{
 					"name" : "Percentage of commits have happened during weekends",
 					"id" : "percentageOfWeekendCommitsTimeLine"
-				}, 
-				{
+				},{
 					"name": "Commits",
 					"id": "commitsovertimeline"
-				},
-
-				{
+				},{
 					"name" : "Number of commits (per developer)",
 					"id" : "commitsPerDeveloperTimeLine"
-				},
-
-
-
-				{
+				},{
+					"name": "Number of active committers (2 weeks)",
+					"id": "numberOfActiveCommittersTimeLine"
+				},{
+					"name": "Number of active committers (1 year)",
+					"id": "numberOfActiveCommittersLongTermTimeLine"
+				},{
 					"name": "Lines of code (per language)",
 					"id": "locPerLanguageTimeLine"
 				},{
@@ -46,12 +45,6 @@
 					"name": "Number of test methods",
 					"id": "numTestsHistoric"
 				},{
-					"name": "Number of active committers (2 weeks)",
-					"id": "numberOfActiveCommittersTimeLine"
-				},{
-					"name": "Number of active committers (1 year)",
-					"id": "numberOfActiveCommittersLongTermTimeLine"
-				},{
 					"name": "Core committers",
 					"id": "coreCommittersChurnBar"
 				},{
@@ -65,7 +58,7 @@
 			"name": "Communication Channels",
 			"factoids": [
 				"org.ossmeter.factoid.newsgroups.channelusage.NewsgroupsChannelUsageFactoid",
-				"org.ossmeter.factoid.newsgroups.emotion,NewsgroupsChannelEmotionFactoid",
+				"org.ossmeter.factoid.newsgroups.emotion.NewsgroupsChannelEmotionFactoid",
 				"org.ossmeter.factoid.newsgroups.hourly.NewsgroupsChannelHourlyFactoid",
 				"org.ossmeter.factoid.newsgroups.responsetime.NewsgroupsChannelResponseTimeFactoid",
 				"org.ossmeter.factoid.newsgroups.sentiment.NewsgroupsChannelSentimentFactoid",
