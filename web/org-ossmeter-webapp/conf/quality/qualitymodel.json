@@ -6,7 +6,25 @@
 		{
 			"id": "codequality",
 			"name" : "Code Quality",
-			"attributes" : [],
+			"attributes" : [
+				{
+					"name" : "Maturity",
+					"description" : "",
+					"factoids": [
+						"style.errorProneFactoid",
+						"style.inefficientStringsFactoid",
+						"trans.rascal.comments.headerUse"
+					],
+					"metrics": []
+				},{
+					"name" : "Testability",
+					"description" : "",
+					"factoids": [ 
+						"rascal.testability.java.JavaUnitTestCoverage"
+					],
+					"metrics": []
+				}
+			],
 			"aspects" : [
 				{
 					"id" : "maintainability",
@@ -18,7 +36,12 @@
 							"description" : "",
 							"factoids" : [ 
 								"trans.rascal.LOC.codeSize",
-								"trans.rascal.OO.java.Coupling-Java"
+								"trans.rascal.OO.java.Coupling-Java",
+								"trans.rascal.comments.percentageCommentedOutCode",
+								"trans.rascal.comments.commentPercentage",
+								"style.understandabilityFactoid",
+								"trans.rascal.OO.java.Coupling-Java",
+								"rascal.generic.churn.commitLocality"
 							],
 							"metrics" : [ 
 								{
@@ -48,6 +71,132 @@
 						}
 					]
 				}
+			]
+		},
+		{
+			"id" : "communityQuality",
+			"name" : "Community Quality",
+			"attributes" : [],
+			"aspects" : [
+				{
+					"id" : "developmentteamquality",
+					"name" : "Development Team Quality",
+					"aspects" : [],
+					"attributes" : [
+						{
+							"name" : "Stability",
+							"description" : "",
+							"factoids" : [ 
+								"trans.rascal.activecommitters.developmentTeamStability",
+								"trans.rascal.activecommitters.developmentTeamExperienceSpread"
+							],
+							"metrics" : [ ]
+						},{
+							"name" : "Professionalism",
+							"description" : "",
+							"factoids" : [ 
+								"trans.rascal.activecommitters.developmentTeamExperience",
+								"rascal.generic.churn.commitSize"
+							],
+							"metrics" : [ ]
+						},{
+							"name" : "Commitment",
+							"description" : "",
+							"factoids" : [ 
+								"trans.rascal.activecommitters.weekendProject",
+								"rascal.generic.churn.churnVolume"
+							],
+							"metrics" : [ ]
+						}
+					]
+				},{
+					"id" : "communityquality",
+					"name" : "Community Quality",
+					"attributes" : [],
+					"aspects" : [
+						{
+							"id" : "communicationchannelquality",
+							"name" : "Communication Channel Quality",
+							"aspects" : [],
+							"attributes" : [
+								{
+									"name" : "Sustainability",
+									"description" : "",
+									"factoids" : [ 
+										"org.ossmeter.factoid.newsgroups.channelusage.NewsgroupsChannelUsageFactoid",
+										"org.ossmeter.factoid.newsgroups.users.NewsgroupsChannelUsersFactoid"
+									],
+									"metrics" : [ ]
+								},{
+									"name" : "Maintenance Capacity",
+									"description" : "",
+									"factoids" : [ 
+										"org.ossmeter.factoid.newsgroups.size.NewsgroupsChannelSizeFactoid",
+										"org.ossmeter.factoid.newsgroups.responsetime.NewsgroupsChannelResponseTimeFactoid",
+										"org.ossmeter.factoid.newsgroups.threadlength.NewsgroupsChannelThreadLengthFactoid",
+										"org.ossmeter.factoid.newsgroups.weekly.NewsgroupsChannelWeeklyFactoid"
+									],
+									"metrics" : [ ]
+								},{
+									"name" : "Maturity",
+									"description" : "",
+									"factoids" : [ 
+										"org.ossmeter.factoid.newsgroups.status.NewsgroupsChannelStatusFactoid"
+									],
+									"metrics" : [ ]
+								},{
+									"name" : "Polarity",
+									"description" : "",
+									"factoids" : [ 
+										"org.ossmeter.factoid.newsgroups.sentiment.NewsgroupsChannelSentimentFactoid",
+										"org.ossmeter.factoid.newsgroups.emotion.NewsgroupsChannelEmotionFactoid",
+										"org.ossmeter.factoid.newsgroups.severity.NewsgroupsChannelSeverityFactoid"
+									],
+									"metrics" : [ ]
+								}
+							]
+						},{
+							"id" : "bugtrackingsystemquality",
+							"name" : "Bug Tracking System Quality",
+							"aspects" : [],
+							"attributes" : [
+								{
+									"name" : "Sustainability",
+									"description" : "",
+									"factoids" : [ 
+										"org.ossmeter.factoid.bugs.users.BugsChannelUsersFactoid"
+									],
+									"metrics" : [ ]
+								},{
+									"name" : "Maintenance Capacity",
+									"description" : "",
+									"factoids" : [
+										"org.ossmeter.factoid.bugs.size.BugsChannelSizeFactoid",
+										"org.ossmeter.factoid.bugs.threadlength.BugsChannelThreadLengthFactoid",
+										"org.ossmeter.factoid.bugs.weekly.BugsChannelWeeklyFactoid"
+									],
+									"metrics" : [ ]
+								},{
+									"name" : "Maturity",
+									"description" : "",
+									"factoids" : [
+										"org.ossmeter.factoid.bugs.status.BugsChannelStatusFactoid"
+									],
+									"metrics" : [ ]
+								},{
+									"name" : "Polarity",
+									"description" : "",
+									"factoids" : [
+										"org.ossmeter.factoid.bugs.sentiment.BugsChannelSentimentFactoid",
+										"org.ossmeter.factoid.bugs.emotion.BugsChannelEmotionFactoid"
+									],
+									"metrics" : [ ]
+								}
+							]
+						}
+					]
+				}
+
 			]
 		}
 	]
