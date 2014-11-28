@@ -281,11 +281,11 @@
          install-size="0"
          version="0.0.0"/>
 
-   <plugin
+ <!--  <plugin
          id="org.eclipse.epsilon.egl.traceability.fine"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"/> -->
 
    <plugin
          id="org.ossmeter.repository.model.vcs.git"
@@ -485,11 +485,11 @@
          install-size="0"
          version="0.0.0"/>
 
-   <plugin
+<!--   <plugin
          id="org.eclipse.epsilon.erl.engine"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"/> -->
 
    <plugin
          id="com.googlecode.pongo.runtime.osgi"
@@ -631,12 +631,12 @@
          install-size="0"
          version="0.0.0"/>
 
-   <plugin
+ <!--  <plugin
          id="org.eclipse.emf.cdo.ecore.retrofit"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         fragment="true"/>
+         fragment="true"/> -->
 
    <plugin
          id="org.ossmeter.metricprovider.historic.bugs.opentime"
@@ -872,11 +872,11 @@
          install-size="0"
          version="0.0.0"/>
 
-   <plugin
+ <!--  <plugin
          id="org.eclipse.emf.mapping.xsd2ecore"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"/> -->
 
    <plugin
          id="org.eclipse.core.filesystem"
@@ -902,11 +902,11 @@
          install-size="0"
          version="0.0.0"/>
 
-   <plugin
+<!--   <plugin
          id="org.eclipse.emf.mapping"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"/> -->
 
    <plugin
          id="org.ossmeter.metricprovider.trans.newsgroups.hourlyrequestsreplies"
@@ -1088,11 +1088,11 @@
          install-size="0"
          version="0.0.0"/>
 
-   <plugin
+ <!--  <plugin
          id="org.eclipse.epsilon.emc.plainxml"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"/> -->
 
    <plugin
          id="org.eclipse.emf.ecore.edit"
@@ -1166,11 +1166,11 @@
          install-size="0"
          version="0.0.0"/>
 
-   <plugin
+ <!--  <plugin
          id="jackson-core-asl"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="0.0.0"/> -->
 
    <plugin
          id="com.google.guava"
@@ -1224,12 +1224,12 @@
          install-size="0"
          version="0.0.0"/>
 
-   <plugin
+  <!-- <plugin
          id="org.eclipse.epsilon.egl.engine"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="true"/>
+         unpack="true"/> -->
 
    <plugin
          id="org.ossmeter.repository.model.cc.forum"
@@ -1294,12 +1294,12 @@
          install-size="0"
          version="0.0.0"/>
 
-   <plugin
+ <!--  <plugin
          id="org.eclipse.epsilon.common"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="true"/>
+         unpack="true"/> -->
 
    <plugin
          id="org.ossmeter.repository.model.googlecode.importer"
