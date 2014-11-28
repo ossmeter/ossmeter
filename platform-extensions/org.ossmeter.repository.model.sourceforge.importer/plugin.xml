@@ -3,30 +3,6 @@
 <plugin>
 
    <extension
-         id="sampleBuilder"
-         name="Sample Project Builder"
-         point="org.eclipse.core.resources.builders">
-      <builder
-            hasNature="true">
-         <run
-               class="org.ossmeter.repository.model.sourceforge.importer.builder.SampleBuilder">
-         </run>
-      </builder>
-   </extension>
-   <extension
-         id="sampleNature"
-         name="Sample Project Nature"
-         point="org.eclipse.core.resources.natures">
-      <runtime>
-         <run
-               class="org.ossmeter.repository.model.sourceforge.importer.builder.SampleNature">
-         </run>
-      </runtime>
-      <builder
-            id="org.ossmeter.repository.model.sourceforge.importer.sampleBuilder">
-      </builder>
-   </extension>
-   <extension
          id="xmlProblem"
          name="XML Problem"
          point="org.eclipse.core.resources.markers">

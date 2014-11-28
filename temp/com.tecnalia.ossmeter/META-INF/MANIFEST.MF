@@ -8,5 +8,5 @@ Bundle-Vendor: TECNALIA
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  com.tecnalia.ossmeter.model;bundle-version="1.0.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
