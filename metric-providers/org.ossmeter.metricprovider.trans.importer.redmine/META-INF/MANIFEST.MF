@@ -5,7 +5,8 @@ Bundle-SymbolicName: org.ossmeter.metricprovider.trans.importer.redmine;singleto
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
-Require-Bundle:  org.ossmeter.platform,
+Require-Bundle: org.ossmeter.platform,
+ com.googlecode.pongo.runtime,
  com.googlecode.pongo.runtime,
  org.ossmeter.repository.model,
  org.ossmeter.repository.model.github,
@@ -19,4 +20,5 @@ Require-Bundle:  org.ossmeter.platform,
  org.ossmeter.repository.model.redmine.importer,
  org.ossmeter.repository.model.sourceforge.importer,
  org.ossmeter.repository.model.importer.exception,
- com.googlecode.pongo.runtime.osgi
+ com.googlecode.pongo.runtime.osgi,
+ org.apache.log4j.1.2.17;bundle-version="1.0.0"

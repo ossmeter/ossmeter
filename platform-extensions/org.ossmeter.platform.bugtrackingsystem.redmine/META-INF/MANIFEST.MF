@@ -5,16 +5,16 @@ Bundle-SymbolicName: org.ossmeter.platform.bugtrackingsystem.redmine;singleton:=
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.platform.bugtrackingsystem.redmine.Activator
 Require-Bundle: org.eclipse.core.runtime,
- org.ossmeter.repository.model;bundle-version="1.0.0",
- org.ossmeter.repository.model.redmine;bundle-version="1.0.0",
+ org.ossmeter.repository.model,
+ org.ossmeter.repository.model.redmine,
  org.ossmeter.platform,
- com.googlecode.pongo.runtime;bundle-version="0.5.0",
- com.mashape.unirest;bundle-version="1.3.21",
+ com.googlecode.pongo.runtime,
+ com.mashape.unirest,
  org.ossmeter.jackson,
- com.fasterxml.jackson;bundle-version="2.3.1",
- org.joda.time;bundle-version="2.3.0",
+ com.fasterxml.jackson,
+ org.joda.time,
  com.google.guava,
  org.ossmeter.platform.bugtrackingsystem,
- org.apache.commons.lang;bundle-version="1.0.0"
+ org.apache.commons.lang
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy

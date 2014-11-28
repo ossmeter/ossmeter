@@ -5,6 +5,7 @@ Bundle-SymbolicName: org.ossmeter.metricprovider.trans.bugs.newbugs;singleton:=t
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.metricprovider.trans.bugs.newbugs.Activator
 Require-Bundle: org.eclipse.core.runtime,
+ com.googlecode.pongo.runtime,
  org.ossmeter.platform,
  org.ossmeter.repository.model,
  com.googlecode.pongo.runtime.osgi,

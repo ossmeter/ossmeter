@@ -6,11 +6,14 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.ossmeter.repository.model,
+ com.googlecode.pongo.runtime,
  org.ossmeter.repository.model.github,
  org.ossmeter.repository.model.importerdependencies,
  org.eclipse.core.runtime,
  org.ossmeter.platform,
  com.googlecode.pongo.runtime.osgi,
  org.ossmeter.repository.model.github.importer,
- org.ossmeter.repository.model.importer.exception
+ org.ossmeter.repository.model.importer.exception,
+ org.ossmeter.repository.model,
+ org.apache.log4j.1.2.17;bundle-version="1.0.0"
 Export-Package: org.ossmeter.metricprovider.trans.importer.github

@@ -5,12 +5,14 @@ Bundle-SymbolicName: org.ossmeter.metricprovider.historic.newsgroups.unansweredt
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.metricprovider.historic.newsgroups.unansweredthreads.Activator
 Require-Bundle: org.eclipse.core.runtime,
+ com.googlecode.pongo.runtime,
  org.ossmeter.platform,
  org.ossmeter.repository.model.cc.nntp,
  org.ossmeter.platform.client.api,
  com.googlecode.pongo.runtime.osgi,
  org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies,
- org.ossmeter.platform.visualisation
+ org.ossmeter.platform.visualisation,
+ org.ossmeter.repository.model
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.metricprovider.historic.newsgroups.unansweredthreads,

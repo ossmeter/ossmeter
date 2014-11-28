@@ -4,6 +4,6 @@ Bundle-Name: Bugzilla
 Bundle-SymbolicName: org.ossmeter.repository.model.bts.bugzilla;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Export-Package: org.ossmeter.repository.model.bts.bugzilla
-Require-Bundle: org.ossmeter.repository.model;visibility:=reexport,
+Require-Bundle: org.ossmeter.repository.model,
  com.googlecode.pongo.runtime
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

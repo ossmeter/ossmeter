@@ -18,10 +18,10 @@
          point="org.eclipse.core.runtime.products">
       <product
             application="ossmeter.workerservice"
-            name="Ossmeter platform product">
+            name="org.ossmeter.product.fromfeature">
          <property
                name="appName"
-               value="Ossmeter platform product">
+               value="org.ossmeter.product.fromfeature">
          </property>
       </product>
    </extension>

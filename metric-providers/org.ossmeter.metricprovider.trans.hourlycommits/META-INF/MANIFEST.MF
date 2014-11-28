@@ -6,6 +6,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.metricprovider.trans.hourlycommits.Activator
 Require-Bundle: org.eclipse.core.runtime,
  com.googlecode.pongo.runtime,
+ com.googlecode.pongo.runtime,
  org.ossmeter.platform,
  org.ossmeter.repository.model,
  org.ossmeter.metricprovider.trans.commits,

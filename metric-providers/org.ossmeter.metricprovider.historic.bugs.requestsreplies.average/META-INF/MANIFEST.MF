@@ -5,6 +5,7 @@ Bundle-SymbolicName: org.ossmeter.metricprovider.historic.bugs.requestsreplies.a
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.metricprovider.historic.bugs.requestsreplies.average.Activator
 Require-Bundle: org.eclipse.core.runtime,
+ com.googlecode.pongo.runtime,
  org.ossmeter.platform,
  org.ossmeter.platform.client.api,
  com.googlecode.pongo.runtime.osgi,

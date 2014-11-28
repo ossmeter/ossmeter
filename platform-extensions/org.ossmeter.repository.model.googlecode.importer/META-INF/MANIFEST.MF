@@ -4,16 +4,19 @@ Bundle-Name: Importer
 Bundle-SymbolicName: org.ossmeter.repository.model.googlecode.importer
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.eclipse.core.runtime,
- org.ossmeter.repository.model.googlecode;bundle-version="0.1.0",
- org.ossmeter.repository.model.bts.bugzilla;bundle-version="1.0.0",
- org.ossmeter.repository.model.cc.forum;bundle-version="1.0.0",
- org.ossmeter.repository.model.cc.nntp;bundle-version="1.0.0",
- org.ossmeter.repository.model.vcs.cvs;bundle-version="1.0.0",
- org.ossmeter.repository.model.vcs.git;bundle-version="1.0.0",
- org.ossmeter.repository.model.vcs.svn;bundle-version="1.0.0",
+ org.ossmeter.repository.model.googlecode,
+ org.ossmeter.repository.model.bts.bugzilla,
+ org.ossmeter.repository.model.cc.forum,
+ org.ossmeter.repository.model.cc.nntp,
+ org.ossmeter.repository.model.vcs.cvs,
+ org.ossmeter.repository.model.vcs.git,
+ org.ossmeter.repository.model.vcs.svn,
  org.ossmeter.repository.model.importerdependencies,
+ com.googlecode.pongo.runtime,
  org.ossmeter.platform,
- org.ossmeter.repository.model.importer.exception
+ org.ossmeter.repository.model.importer.exception,
+ org.apache.log4j.1.2.17,
+ org.ossmeter.repository.model
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.repository.model.googlecode.importer

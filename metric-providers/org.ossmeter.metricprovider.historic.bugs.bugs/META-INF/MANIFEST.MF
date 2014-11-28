@@ -5,13 +5,15 @@ Bundle-SymbolicName: org.ossmeter.metricprovider.historic.bugs.bugs;singleton:=t
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.metricprovider.historic.bugs.bugs.Activator
 Require-Bundle: org.eclipse.core.runtime,
+ com.googlecode.pongo.runtime,
  org.ossmeter.platform,
  org.ossmeter.repository.model.bts.bugzilla,
  org.ossmeter.platform.client.api,
  com.googlecode.pongo.runtime.osgi,
  org.ossmeter.platform.visualisation,
  org.ossmeter.metricprovider.trans.bugs.activeusers,
- org.ossmeter.metricprovider.trans.bugs.bugmetadata
+ org.ossmeter.metricprovider.trans.bugs.bugmetadata,
+ org.ossmeter.repository.model
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.metricprovider.historic.bugs.bugs,
