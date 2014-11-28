@@ -7,9 +7,10 @@ Bundle-Activator: org.ossmeter.rascal.test.Activator
 Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.metricprovider.rascal,
  org.ossmeter.platform,
- org.ossmeter.platform.osgi,
  org.ossmeter.repository.model,
  com.googlecode.pongo.runtime.osgi,
- org.ossmeter.platform.app.example,
- rascal4ossmeter
+ rascal4ossmeter,
+ org.ossmeter.repository.model.vcs.svn,
+ org.ossmeter.repository.model.vcs.git,
+ org.ossmeter.platform.osgi
 Bundle-ActivationPolicy: lazy
