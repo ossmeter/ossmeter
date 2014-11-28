@@ -70,6 +70,9 @@ ossmeter.signup.name=Your name
 ossmeter.signup.now=Sign up now
 ossmeter.signup.oauth=or sign up using one of the following providers:
 
+ossmeter.invitation.title = Request invitation
+
+
 ossmeter.verify.account.title=E-mail verification required
 ossmeter.verify.account.before=Before setting a password, you need to
 ossmeter.verify.account.first=first verify your e-mail address
@@ -122,6 +125,7 @@ ossmeter.navigation.admin=Admin
 ossmeter.navigation.signup=Sign up
 ossmeter.navigation.projects=Projects
 ossmeter.navigation.compare=Compare
+ossmeter.navigation.invitation=Request invitation
 
 # ossmeter: Handler
 ossmeter.handler.loginfirst=You need to log in first, to view ''{0}''

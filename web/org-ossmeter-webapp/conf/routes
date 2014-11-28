@@ -34,7 +34,7 @@ POST    /login                      controllers.Application.doLogin
 GET     /logout                     com.feth.play.module.pa.controllers.Authenticate.logout
 GET     /authenticate/:provider     com.feth.play.module.pa.controllers.Authenticate.authenticate(provider: String)
 
-GET     /signup                     controllers.Application.signup
+GET     /signup/                controllers.Application.signup()
 POST    /signup                     controllers.Application.doSignup
 
 GET     /accounts/unverified        controllers.Signup.unverified
@@ -107,3 +107,8 @@ POST   /users/:id/delete        	controllers.Users.delete(id: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
+
+#Invitations
+GET /invitation                 controllers.InvitationController.requestInvitation
+GET /submitInvitationRequest    controllers.InvitationController.submitInvitationRequest
+GET /invitationsent             controllers.InvitationController.invitationSent

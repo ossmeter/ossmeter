@@ -251,4 +251,7 @@ public class Application extends Controller {
 		return new SimpleDateFormat("yyyy-dd-MM HH:mm:ss").format(new Date(t));
 	}
 
+	private boolean signUpAllowed(String id) {
+		return false;
+	}
 }
