@@ -65,19 +65,13 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.restlet.ext.jetty"
+         id="org.restlet"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
 
    <plugin
          id="org.ossmeter.metricprovider.trans.hourlycommits"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.restlet.ext.jackson"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
@@ -294,12 +288,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.w3c.dom.events"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.ossmeter.platform.bugtrackingsystem.redmine"
          download-size="0"
          install-size="0"
@@ -366,12 +354,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="rabbit.common"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.apache.commons.logging"
          download-size="0"
          install-size="0"
@@ -421,12 +403,6 @@
 
    <plugin
          id="org.w3c.dom.smil"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="jackson-mapper-asl"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
@@ -645,12 +621,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="javax.ws.rs"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.ossmeter.repository.model.googlecode"
          download-size="0"
          install-size="0"
@@ -764,11 +734,6 @@
          install-size="0"
          version="0.0.0"/>
 
-   <plugin
-         id="org.eclipse.epsilon.emc.emf"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
 
    <plugin
          id="org.ossmeter.metricprovider.trans.newsgroups.activeusers"
@@ -987,12 +952,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.emf"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.ossmeter.factoid.bugs.channelusage"
          download-size="0"
          install-size="0"
@@ -1179,24 +1138,11 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.epsilon.eol.engine"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="true"/>
-
-   <plugin
          id="org.ossmeter.platform.app.uda"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
 
-   <plugin
-         id="org.antlr.runtime_3.1.b1"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="true"/>
 
    <plugin
          id="org.apache.xmlrpc"
@@ -1212,24 +1158,11 @@
          unpack="true"/>
 
    <plugin
-         id="org.eclipse.equinox.p2.metadata"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="true"/>
-
-   <plugin
          id="org.ossmeter.platform.vcs.svn"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
 
-  <!-- <plugin
-         id="org.eclipse.epsilon.egl.engine"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="true"/> -->
 
    <plugin
          id="org.ossmeter.repository.model.cc.forum"
@@ -1249,26 +1182,6 @@
          install-size="0"
          version="0.0.0"/>
 
-   <plugin
-         id="org.eclipse.equinox.p2.repository"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="true"/>
-
-   <plugin
-         id="org.eclipse.e4.core.contexts"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="true"/>
-
-   <plugin
-         id="org.eclipse.team.core"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="true"/>
 
    <plugin
          id="org.ossmeter.metricprovider.trans.sentimentclassification"
@@ -1318,21 +1231,6 @@
          download-size="0"
          install-size="0"
          version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.epsilon.dependencies"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="true"/>
-
-   <plugin
-         id="org.eclipse.equinox.security.macosx"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="true"/>
 
    <plugin
          id="org.ossmeter.repository.model.cc.wiki"
@@ -1467,13 +1365,6 @@
 
    <plugin
          id="org.eclipse.jgit"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="true"/>
-
-   <plugin
-         id="javaewah"
          download-size="0"
          install-size="0"
          version="0.0.0"
