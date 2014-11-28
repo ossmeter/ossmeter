@@ -11,7 +11,7 @@ Require-Bundle: org.eclipse.core.runtime,
  com.googlecode.pongo.runtime.osgi,
  org.ossmeter.repository.model.bts.bugzilla,
  org.ossmeter.platform.visualisation,
- com.googlecode.pongo.runtime;bundle-version="0.5.0"
+ com.googlecode.pongo.runtime
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.metricprovider.trans.bugs.patches,

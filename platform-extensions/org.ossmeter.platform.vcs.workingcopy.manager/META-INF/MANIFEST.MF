@@ -9,7 +9,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.repository.model,
  com.googlecode.pongo.runtime,
  org.eclipse.osgi,
- org.apache.log4j.1.2.17;bundle-version="1.0.0"
+ org.apache.log4j.1.2.17
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: org.ossmeter.platform.vcs.workingcopy.manager

@@ -13,6 +13,6 @@ Require-Bundle: org.eclipse.core.runtime,
  com.googlecode.pongo.runtime.osgi,
  org.ossmeter.platform.app.example,
  rascal4ossmeter,
- org.apache.log4j.1.2.17;bundle-version="1.0.0"
+ org.apache.log4j.1.2.17
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

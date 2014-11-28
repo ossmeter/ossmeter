@@ -8,4 +8,4 @@ Export-Package: org.log4mongo,
  org.log4mongo.contrib
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: com.googlecode.pongo.runtime.dependencies,
- org.apache.log4j.1.2.17;bundle-version="1.0.0"
+ org.apache.log4j.1.2.17

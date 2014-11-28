@@ -4,8 +4,8 @@ Bundle-Name: ossmeter-jackson
 Bundle-SymbolicName: org.ossmeter.jackson;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.eclipse.core.runtime,
- com.fasterxml.jackson;bundle-version="2.3.1",
- org.joda.time;bundle-version="2.3.0"
+ com.fasterxml.jackson,
+ org.joda.time
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: org.ossmeter.jackson

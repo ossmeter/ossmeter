@@ -21,4 +21,4 @@ Require-Bundle: org.ossmeter.platform,
  org.ossmeter.repository.model.sourceforge.importer,
  org.ossmeter.repository.model.importer.exception,
  com.googlecode.pongo.runtime.osgi,
- org.apache.log4j.1.2.17;bundle-version="1.0.0"
+ org.apache.log4j.1.2.17

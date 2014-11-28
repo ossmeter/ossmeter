@@ -15,7 +15,7 @@ Require-Bundle: org.ossmeter.repository.model.bts.bugzilla,
  org.ossmeter.repository.model.importerdependencies,
  org.ossmeter.repository.model.importer.exception,
  org.ossmeter.repository.model,
- org.apache.log4j.1.2.17;bundle-version="1.0.0"
+ org.apache.log4j.1.2.17
 Export-Package: org.ossmeter.repository.model.sourceforge.importer
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
