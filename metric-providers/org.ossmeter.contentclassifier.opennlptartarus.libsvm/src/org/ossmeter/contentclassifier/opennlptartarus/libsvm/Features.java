@@ -42,7 +42,8 @@ public class Features {
 	public int getOrder(String lemma) {
 		if (lemmaOrder.containsKey(lemma))
 			return lemmaOrder.get(lemma);
-		throw new RuntimeException("Lemma " + lemma + " not found in LemmaFeatures structure.");
+		System.err.println("Lemma " + lemma + " not found in LemmaFeatures structure.");
+		return -1;
 	}
 
 	public String getLemma(int order) {
