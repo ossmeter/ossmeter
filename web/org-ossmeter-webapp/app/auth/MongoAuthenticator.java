@@ -374,6 +374,16 @@ public class MongoAuthenticator {
 		// connection to Mongo
  	}	
 
+ 	public static Project findProjectById(String projectId) {
+ 		DB db = getUsersDb();
+		Users users = new Users(db);
+
+		Project p = users.getProjects().findOneByIdentifier(projectId);
+
+		db.getMongo().close();
+		return p;
+ 	}
+
  	private static User findUser(Users users, final AuthUserIdentity identity) {
  		User user = null;
 		if (identity instanceof UsernamePasswordAuthUser) {
@@ -444,7 +454,54 @@ public class MongoAuthenticator {
 		users.getUsers().sync();
 
 		db.getMongo().close();
- 	} 
+ 	}
+
+ 	public static Notification findNotification(User u, String projectId, String metricId) {
+ 		DB db = getUsersDb();
+		Users users = new Users(db);
+
+		User user = users.getUsers().findOneByEmail(u.getEmail());
+
+		Notification noti = null;
+
+		for (GridEntry g : user.getGrid()) {
+			if (g instanceof Notification) {
+				Notification gg = (Notification)g;
+				if (gg.getMetric().getId().equals(metricId)
+					&& gg.getProject().getId().equals(projectId)) {
+					noti = gg;
+					break;
+				}
+			}
+		}
+
+		users.getUsers().sync();
+		db.getMongo().close();
+
+		return noti;
+ 	}
+
+ 	public static void insertNotification(User u, Notification notification) {
+ 		DB db = getUsersDb();
+		Users users = new Users(db);
+
+		User user = users.getUsers().findOneByEmail(u.getEmail());
+
+		notification.setSizeX(1);
+		notification.setSizeY(1);
+
+		if (notification.getRow() == 0) {
+			notification.setRow(1);
+		}
+		if (notification.getCol() == 0){
+			notification.setCol(1);
+		}
+
+		user.getGrid().add(notification);
+
+		users.getUsers().sync();
+		db.getMongo().close();
+ 	}
 
  	public static void updateNotification(User u, String projectId, String metricId, double threshold, boolean aboveThreshold) {
  		DB db = getUsersDb();
@@ -539,9 +596,15 @@ public class MongoAuthenticator {
  	}
 
 	// May want to be more public? Or in its own class. This is just auth.
-	private static DB getUsersDb() {
+	public static DB getUsersDb() {
 		try {
-			Mongo mongo = new Mongo();	
+			String host = play.Play.application().configuration().getString("mongo.default.host");
+			if (host == null) host = "localhost";
+			
+			Integer port = play.Play.application().configuration().getInt("mongo.default.port");
+			if (port == null) port = 27017;
+
+			Mongo mongo = new Mongo(host, port);	
 			return mongo.getDB("users");
 		} catch (Exception e) {
 			e.printStackTrace();

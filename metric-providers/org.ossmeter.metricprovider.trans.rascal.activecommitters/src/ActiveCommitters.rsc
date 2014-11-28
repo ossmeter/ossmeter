@@ -18,7 +18,7 @@ import analysis::statistics::Inference;
  
 @metric{committersToday}
 @doc{Who have been active today?}
-@friendlyName{activeCommitters}
+@friendlyName{Active committers}
 @appliesTo{generic()}
 set[str] committersToday(ProjectDelta delta = \empty()) {
   return {co.author | /VcsCommit co := delta};
@@ -90,7 +90,7 @@ int sizeOfDevelopmentTeam(set[str] team = {}) {
 
 @metric{activeCommitters}
 @doc{A list of committers who have been active the last two weeks. This metric is meant for downstream processing.}
-@friendlyName{committersLastTwoWeeks}
+@friendlyName{Committers of last two weeks}
 @uses = ("committersToday":"committersToday")
 @appliesTo{generic()}
 rel[datetime, set[str]] activeCommitters(ProjectDelta delta = \empty(), rel[datetime,set[str]] prev = {}, set[str] committersToday = {}) {
@@ -101,7 +101,7 @@ rel[datetime, set[str]] activeCommitters(ProjectDelta delta = \empty(), rel[date
 
 @metric{longerTermActiveCommitters}
 @doc{Committers who have been active the last 12 months. This metric is meant for downstream processing.}
-@friendlyName{committersLastYear}
+@friendlyName{Committers of last year}
 @uses = ("committersToday":"committersToday")
 @appliesTo{generic()}
 rel[datetime, set[str]] longerTermActiveCommitters(ProjectDelta delta = \empty(), rel[datetime,set[str]] prev = {}, set[str] committersToday = {}) {
@@ -113,7 +113,7 @@ rel[datetime, set[str]] longerTermActiveCommitters(ProjectDelta delta = \empty()
 
 @metric{numberOfActiveCommitters}
 @doc{Number of active committers over time (active in last two weeks). This measures a smooth window of two weeks, where every day we report the number of developers in the previous 14 days.}
-@friendlyName{numberOfActiveCommitters}
+@friendlyName{Number of active committers}
 @uses = ("activeCommitters" :"activeCommitters")
 @appliesTo{generic()}
 @historic{}
@@ -122,7 +122,7 @@ int numberOfActiveCommitters(rel[datetime, set[str]] activeCommitters = {})
     
 @metric{numberOfActiveCommittersLongTerm}
 @doc{Number of long time active committers over time (active in last year). This measures a smooth window of one year, where every day we report the number of developers active in the previous 365 days.}
-@friendlyName{numberOfActiveCommittersLongTerm}
+@friendlyName{Number of active committers long term}
 @uses = ("longerTermActiveCommitters" :"activeCommitters")
 @appliesTo{generic()}
 @historic
@@ -131,7 +131,7 @@ int numberOfActiveCommittersLongTerm(rel[datetime, set[str]] activeCommitters = 
 
 @metric{maximumActiveCommittersEver}
 @doc{What is the maximum number of committers who have been active together in any two week period?}
-@friendlyName{maximumActiveCommittersEver}
+@friendlyName{Maximum active committers ever}
 @uses = ("numberOfActiveCommitters.historic" :"history")
 @appliesTo{generic()}
 int maximumActiveCommittersEver(rel[datetime d, int n] history = {}) {
@@ -255,8 +255,8 @@ Factoid developmentTeamExperience(
 }
 
 @metric{committersoverfile}
-@doc{Calculates the gini coefficient of committeroverfile}
-@friendlyName{committersoverfile}
+@doc{Calculates the gini coefficient of committers per file}
+@friendlyName{Committers over file}
 @appliesTo{generic()}
 @uses=("countCommittersPerFile": "perFile")
 @historic{}
@@ -273,7 +273,7 @@ real giniCommittersOverFile(ProjectDelta delta = \empty(), map[loc,int] perFile 
 
 @metric{countCommittersPerFile}
 @doc{Count the number of committers that have touched a file.}
-@friendlyName{Number of Committers per file}
+@friendlyName{Number of committers per file}
 @appliesTo{generic()}
 @uses= ("committersPerFile": "perFile")
 @historic{}
@@ -328,7 +328,7 @@ Factoid developmentTeamExperienceSpread(real developmentTeamExperienceSpread = 0
 
 @metric{commitsPerWeekDay}
 @doc{On which day of the week do commits take place?}
-@friendlyName{commitsPerWeekDay}
+@friendlyName{Commits per week day}
 @appliesTo{generic()}
 map[str, int] commitsPerWeekDay(ProjectDelta delta = \empty(), map[str, int] prev = ()) {
   dayOfWeek = printDate(delta.date, "EEE");
@@ -336,8 +336,8 @@ map[str, int] commitsPerWeekDay(ProjectDelta delta = \empty(), map[str, int] pre
 }
 
 @metric{percentageOfWeekendCommits}
-@doc{Number of commits during the weekend}
-@friendlyName{percentageOfWeekendCommits}
+@doc{Percentage of commits made during the weekend}
+@friendlyName{Percentage of weekend commits}
 @appliesTo{generic()}
 @uses=("commitsPerWeekDay":"commitsPerWeekDay")
 @historic{}
@@ -355,8 +355,8 @@ int percentageOfWeekendCommits(map[str,int] commitsPerWeekDay = ()) {
 private Factoid factoid(StarRating stars, str msg) = factoid(msg, stars);
 
 @metric{weekendProject}
-@doc{Is this a weekend project or not?}
-@friendlyName{weekendProject}
+@doc{Is this project mainly developed during the week?}
+@friendlyName{Week day project}
 @appliesTo{generic()}
 @uses=("percentageOfWeekendCommits": "percentageOfWeekendCommits")
 Factoid weekendProject(int percentageOfWeekendCommits = -1) {

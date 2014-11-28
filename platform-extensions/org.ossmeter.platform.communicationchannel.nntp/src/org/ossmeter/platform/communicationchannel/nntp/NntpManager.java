@@ -40,6 +40,10 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 		int lastArticleChecked = Integer.parseInt(lac);
 		if (lastArticleChecked<0) lastArticleChecked = newsgroupInfo.getFirstArticle();
 
+		// FIXME: certain eclipse newsgroups return 0 for both FirstArticle and LastArticle which causes exceptions
+		if (lastArticleChecked == 0) return null;
+		
+		
 		CommunicationChannelDelta delta = new CommunicationChannelDelta();
 		delta.setNewsgroup(newsgroup);
 
@@ -125,6 +129,10 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 		NewsgroupInfo newsgroupInfo = NntpUtil.selectNewsgroup(nntpClient, newsgroup);
 		int firstArticleNumber = newsgroupInfo.getFirstArticle();
 		
+		if (firstArticleNumber == 0) {
+			return null; // This is to deal with message-less newsgroups.
+		}
+				
 		Reader reader = nntpClient.retrieveArticle(firstArticleNumber);
 		while (reader == null) {
 			firstArticleNumber++;

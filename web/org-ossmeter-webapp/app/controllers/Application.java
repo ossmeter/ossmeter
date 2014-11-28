@@ -80,7 +80,10 @@ public class Application extends Controller {
 						controllers.routes.javascript.Signup.forgotPassword(),
 						controllers.routes.javascript.Account.watchSpark(),
 						controllers.routes.javascript.Application.autocomplete(),
-						controllers.routes.javascript.Account.updateGridLocations()
+						controllers.routes.javascript.Application.profileNotification(),
+						controllers.routes.javascript.Account.createNotification(),
+						controllers.routes.javascript.Account.updateGridLocations(),
+						controllers.routes.javascript.Account.loadEventGroupForm()
 						)
 				)
 				.as("text/javascript");
@@ -118,13 +121,29 @@ public class Application extends Controller {
 	}
 
 	public static Result api(String path) {
-		String url = "http://localhost:8182/" + path; //FIXME: Put the API path in the config file
+
+		if (!path.startsWith("/")){
+			path = "/" + path;
+		}
+
+		System.out.println("api: " + play.Play.application().configuration().getString("ossmeter.api"));
+		String url = play.Play.application().configuration().getString("ossmeter.api") + path; 
+
+		System.out.println(url);
 
 		Promise<Result> promise = WS.url(url).get().map(
 		    new Function<WSResponse, Result>() {
 		        public Result apply(WSResponse response) {
-		            JsonNode json = response.asJson();
-		            return ok(json);
+		        	try {
+		            	JsonNode json = response.asJson();
+			            return ok(json);
+		            } catch (Exception e) {
+		            	return ok(response.getBody()).as("image/png");
+		            }
+
+
+
+		            // return ok(image).as("image/png")
 		        }
 		    }
 		);
@@ -151,9 +170,32 @@ public class Application extends Controller {
 	}
 
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
-	public static Result profileNotification() {
+	public static Result profileNotification(String projectid, String projectName, String metricid, String metricName) {
 		final User localUser = getLocalUser(session());
-		return ok(setupnotification.render(localUser, form(Notification.class)));
+
+		Form<Notification> form = form(Notification.class);
+
+		Notification noti = MongoAuthenticator.findNotification(localUser, projectid, metricid);
+		if (noti == null) {
+			noti = new Notification();
+			Project p = new Project();
+			p.setId(projectid);
+			p.setName(projectName);
+			Metric m = new Metric();
+			m.setId(metricid);
+			m.setName(metricName);
+
+			noti.setProject(p);
+			noti.setMetric(m);
+		} else {
+
+			System.out.println("notification already exists!");
+			System.out.println(noti.getDbObject());
+
+			form.fill(noti);
+		}
+
+		return ok(views.html.projects._notificationForm.render(form));
 	}
 
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))

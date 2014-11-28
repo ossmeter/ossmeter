@@ -1,5 +1,7 @@
 package controllers;
 
+import java.util.*;
+
 import model.*;
 import be.objectify.deadbolt.java.actions.Restrict;
 import be.objectify.deadbolt.java.actions.Group;
@@ -280,22 +282,35 @@ public class Account extends Controller {
 	@SubjectPresent
 	public static Result createNotification() {
 		// this is the currently logged in user
-		// // final User user = Application.getLocalUser(session());
+		final User user = Application.getLocalUser(session());
 
-		// final Form<Notification> form = form(Notification.class).bindFromRequest();
+		final Form<Notification> form = form(Notification.class).bindFromRequest();
 
 		// if (form.hasErrors()) {
 		// 	flash("error", Messages.get("ossmeter.profile.notifications.creation.error"));
 		// 	return badRequest(views.html.setupnotification.render(user, form));
 		// }
 
-		// Notification noti = form.get();
-		// user.getNotifications().add(noti);
-		// // user.save(); //TODODODODODOD
+		if (form.hasErrors()) {
+			return badRequest("Form had errors" + form.errorsAsJson());
+		}
+
+		Notification noti = form.get();
+		MongoAuthenticator.insertNotification(user, noti);
+
+		System.out.println(noti.getDbObject());
 
 		// flash(Application.FLASH_MESSAGE_KEY, Messages.get("ossmeter.profile.notifications.creation.success"));
-		return redirect(routes.Application.profile());
+		return ok("yarp");//redirect(routes.Application.profile());
 	}
+
+	@SubjectPresent
+	public static Result loadEventGroupForm() {
+
+		Form<EventGroup> form = form(EventGroup.class);
+
+		return ok(views.html.account._eventGroupForm.render(form));
+	}	
 
 	@SubjectPresent
 	public static Result createEventGroup() {
@@ -314,7 +329,17 @@ public class Account extends Controller {
 		group.setCol(1);
 		group.setSizeX(1);
 		group.setSizeY(2);
+
+		List<Event> toRemove = new ArrayList<>();
+		for (Event e : group.getEvents()) {
+			if (e.getName() == null || e.getName().equals("")
+				||	e.getDate() == null) {
+				toRemove.add(e);
+			}
+		}
 		
+		group.getEvents().removeAll(toRemove);
+
 		MongoAuthenticator.insertNewGrid(user, group);
 
 		flash(Application.FLASH_MESSAGE_KEY, Messages.get("ossmeter.profile.eventgroup.creation.success"));

@@ -35,7 +35,7 @@ import org.ossmeter.platform.factoids.*;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Project extends NamedElement {
 
-	protected List<VcsRepository> vcsRepositories;
+	protected List<VcsRepository> vcsRepositories = new ArrayList<VcsRepository>();
 	protected List<CommunicationChannel> communicationChannels;
 	protected List<BugTrackingSystem> bugTrackingSystems;
 	protected List<Person> persons;
@@ -89,5 +89,17 @@ public class Project extends NamedElement {
 	}
 	public List<Company> getCompanies() {
 		return companies;
+	}
+
+	public void setShortName(String sName) {
+		shortName = sName;
+	}
+	
+	public void setHomePage(String hPage) {
+		homePage = hPage;
+	}
+	
+	public void setDescription(String desc) {
+		description = desc;
 	}
 }

@@ -1,1 +1,0 @@
-Almost works. For now Pongo does not support custom datatypes + enumerations.

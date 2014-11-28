@@ -29,10 +29,11 @@
 			    	<h2 style="margin:5px">Discover, <span style="color:#ff9400">Compare</span>, Adopt, Monitor</h2>
 			    </div>
 		    </div>
-          	<div class="row"  data-bind="foreach: projects">
+
+          	<!-- <div class="row"  data-bind="foreach: projects">
 	        	<div class="col-md-4">
 				    <div class="input-group" data-bind="css: css()">
-					    <input type="text" class="form-control" id="project0" placeholder="Search..." data-bind="value: name">
+					    <input type="text" class="form-control txt-search" id="project0" placeholder="Search..." data-bind="value: name">
 					    <div class="input-group-addon" data-bind="click: $parent.removeProject">
 					    	<span class="glyphicon glyphicon-remove"></span>
 					    </div>
@@ -43,16 +44,40 @@
 		    	<div class="col-md-12 center">
 				    <button class="btn btn-default" data-bind="click: addProject, enable: projects().length < 3"><span class="glyphicon glyphicon-plus"></span> Add Project</button>
 			    </div>
-		    </div>
+		    </div> -->
           </div>
       </div>
    	</div>
 </section>
 
-
-
 <section>
     <div class="container box">
+    	<div class="row">
+        	<div class="col-md-4">
+			    <div class="input-group">
+				    <input type="text" class="form-control txt_search" id="project0" placeholder="Search...">
+				    <div class="input-group-addon">
+				    	<span class="glyphicon glyphicon-remove"></span>
+				    </div>
+			    </div>
+		    </div>
+		    <div class="col-md-4">
+			    <div class="input-group">
+				    <input type="text" class="form-control txt_search" id="project1" placeholder="Search...">
+				    <div class="input-group-addon">
+				    	<span class="glyphicon glyphicon-remove"></span>
+				    </div>
+			    </div>
+		    </div>
+		    <div class="col-md-4">
+			    <div class="input-group">
+				    <input type="text" class="form-control txt_search" id="project2" placeholder="Search...">
+				    <div class="input-group-addon">
+				    	<span class="glyphicon glyphicon-remove"></span>
+				    </div>
+			    </div>
+		    </div>
+	    </div>
 	    <div class="row">
 		    <div class="col-md-12">
 		    	<button id="btn_compare" class="btn btn-primary form-control">Compare</button>
@@ -61,14 +86,51 @@
     </div>
 </section>
 
-<section data-bind="visible: projects().length > 0">
+<script type="text/javascript">
+$(function () {
+
+	projects = [];
+
+	$(".txt_search").autocomplete({
+		source: function(request, response) {
+			console.log("making request")
+			console.log(request)
+			jsRoutes.controllers.Application.autocomplete(request.term).ajax()
+				.success(function(result) {
+					console.log("success: " + result);
+					response($.map(result, function(item) {
+						return {
+							label: item.name,
+							value: item.id
+						}
+					}));
+				}).error(function(result) {
+					console.log("fail: " + result);
+				});
+		},
+		minLength: 2,
+		select : function(event, ui) {
+			//FIXME: Should use Play's routing
+			projects.push(ui.item);
+		},
+		open: function() {
+    		$( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+  		},
+  		close: function() {
+    		$( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+  		}
+	})
+});
+</script>
+
+<section data-bind="visible: validProjects().length > 0">
 	<div class="container box">
 		<div class="row">
 			<div class="col-md-6" data-bind="visible: selectedMetrics().length > 0">
 				<strong>Legend</strong> <span data-bind="html: drawMainLegend()"></span>
 			</div>
 			<div class="col-md-6" data-bind="visible: selectedMetrics().length > 0">
-				<strong>Toolbox</strong> <a href="#">EVENTS</a>
+				<!-- <strong>Toolbox</strong> <a href="#">EVENTS</a> -->
 			</div>
 		</div>
 		<div class="row">
@@ -76,7 +138,7 @@
 		    <div class="col-md-6">
 		    	<span data-bind="text:name"></span><span data-bind="attr:{id: 'legend-'+id}"></span>
 				<div class="box" data-bind="compPlot: { metric: $data, projects: $parent.projects}, attr : {id: 'plot-' + id}">
-				loading
+				No data
 				</div>
 			</div>
 			<!--  /ko -->
@@ -86,7 +148,7 @@
 
 
 <!-- ko foreach: qualityAttributes --> 
-<section data-bind="visible: $parent.projects().length > 0">
+<section data-bind="visible: $parent.validProjects().length > 0">
     <div class="container box">
 	    <div class="row" data-toggle="collapse" aria-expanded="true" data-bind="attr : { 'aria-controls' : 'div-attr-' + id, 'data-target' : '#div-attr-' + id }">
 	        <h2 class="marginless" data-bind="text:name"></h2>
@@ -96,7 +158,7 @@
 	        	<thead>
 	        		<th>toolkit</th>
 	        		<th>metric</th>
-	        		<!-- ko foreach: $parent.projects --> 
+	        		<!-- ko foreach: $parent.validProjects() --> 
 	        		<th data-bind="text: name"></th>
 	        		<!-- /ko -->
 	        	</thead>
@@ -108,7 +170,7 @@
 							</div>
 						</td>
 						<td data-bind="text: name"></td>
-						<!-- ko foreach: $root.projects --> 
+						<!-- ko foreach: $root.validProjects() --> 
 		        		<td>
 		        			<span data-bind="sparkplot: { project: $data, metric: $parent }"></span>
 		        		</td>
@@ -153,12 +215,19 @@ $(function(){
 
 	$("#btn_compare").click(function() {
 		// Collect projects
-		var p = new Project("modeling=mmt-atl-bkp", "ATL 1", true);
-		var p2 = new Project("modeling-mmt-atl", "ATL 2", true);
-		var p3 = new Project("modeling-acceleo", "Acceleo", true);
-		vm.projects.push(p);
-		vm.projects.push(p2);
-		vm.projects.push(p3);	
+
+		if (projects.length >= 2) {
+
+			for(var p in projects) {
+				vm.projects.push(new Project(projects[p].value, projects[p].label, true));
+			}
+			// var p  = new Project("modeling-graphiti", "Graphiti", true);
+			// var p2 = new Project("modeling-mmt-atl", "ATL", true);
+			// var p3 = new Project("modeling-acceleo", "Acceleo", true);
+			// vm.projects.push(p);
+			// vm.projects.push(p2);
+			// vm.projects.push(p3);	
+		}
 	});
 
 	chartmap = {}
@@ -182,7 +251,7 @@ $(function(){
 
 
 			// This is really bad coding, but I'm tired. Can easily be generalised.
-			$.getJSON("http://localhost:8182/projects/p/" + projects[0].id() + "/m/" + metric.id, function(vis) {
+			$.getJSON(getApi() + "/projects/p/" + projects[0].id() + "/m/" + metric.id, function(vis) {
 				vis.projectName = projects[0].name();
 				projects[0].metricmap[metric.id] = vis;
 
@@ -197,7 +266,7 @@ $(function(){
 						return;
 					}
 					(function(proj) {
-						$.getJSON("http://localhost:8182/projects/p/" + proj.id() + "/m/" + metric.id, function(vis) {
+						$.getJSON(getApi() + "/projects/p/" + proj.id() + "/m/" + metric.id, function(vis) {
 
 							vis.projectName = proj.name();
 
@@ -211,7 +280,7 @@ $(function(){
 									return;
 								}
 								(function(proj2) {
-									$.getJSON("http://localhost:8182/projects/p/" + proj2.id() + "/m/" + metric.id, function(vis) {
+									$.getJSON(getApi() + "/projects/p/" + proj2.id() + "/m/" + metric.id, function(vis) {
 
 										vis.projectName = proj2.name();
 
@@ -232,7 +301,7 @@ $(function(){
 
 	ko.bindingHandlers.sparkplot = {
 		init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-			$(element).html("Loading...");	
+			$(element).html("No data");	
 		},
 		update: function(element, valueAccessor, allBindingsAccessor) {
 	        // Extract info
@@ -243,8 +312,8 @@ $(function(){
 	        // TODO keep the sparks in memory (in the view model)
 	        // then check the VM before invoking the API
 	        // Grab all sparks in single query on "Compare" push
-	        $.getJSON("http://localhost:8182/projects/p/" + project.id() +"/s/" + metric.id, function (data) {
-	        	$(element).html('<img src="http://localhost:8182'+data.spark+'" class="spark" /> ' + abbreviateNumber(data.last));
+	        $.getJSON(getApi() + "/projects/p/" + project.id() +"/s/" + metric.id, function (data) {
+	        	$(element).html('<img src="' + getApi() + data.spark+'" class="spark" /> ' + abbreviateNumber(data.last));
 	        });
 		}
 	};

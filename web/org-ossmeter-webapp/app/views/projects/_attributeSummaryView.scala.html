@@ -26,6 +26,10 @@
     attribute.metrics.take(10).map(x=> x.id)
 }
 
+
+@* @_attributeFactoidRadarView(project, qualityModel, attribute) *@
+
+
     <div class="row">
         <ul class="nav nav-tabs" role="tablist">
             <li class="disabled col-md-4"><h2 class="marginless">@attribute.name</h2></li>
@@ -49,15 +53,25 @@
                 </div>
                 <script type="text/javascript">
                     $(function() {
-                        $.getJSON("http://localhost:8182/projects/p/@project.getShortName()/f/@attribute.factoids.take(5).mkString("+")", function (result) {
+                        $.getJSON(getApi() + "/projects/p/@project.getShortName()/f/@attribute.factoids.take(5).mkString("+")", function (result) {
                             $("#factoids-@attributeId").empty();
 
                             for (var r in result) {
                                 var f = result[r];
-
-                                $("#factoids-@attributeId").append("<p>" + f.factoid + "</p>");
+                                if (f.factoid) {
+                                    var _s = "<p><strong>" + f.name + "</strong><br/>";
+                                    _s = _s + f.factoid + "</p>"
+                                    $("#factoids-@attributeId").append(_s)
+                                }
                             }
-                            drawSpiderChart("#spider-@attributeId", result);
+                            var config = {
+                                w: 150,
+                                h: 150,
+                                maxValue: 4,
+                                levels: 4,
+                                ExtraWidthX:200
+                            };
+                            drawSpiderChart("#spider-@attributeId", result, config);
                         }).fail(function(err) {
                             $("#factoids-@attributeId").empty();
                             $("#factoids-@attributeId").append("<p>Unable to load factoids: " + JSON.parse(err.responseText).msg + "</p>");
@@ -71,7 +85,7 @@
                     </table>
                     <script type="text/javascript">
                         $('#sparklines-@attributeId-tab').one('click', function(e) {
-                            $.getJSON("http://localhost:8182/projects/p/@project.getShortName()/s/@attribute.metrics.take(10).map(x=> x.id).mkString("+")", function (result) {
+                            $.getJSON(getApi() + "/projects/p/@project.getShortName()/s/@attribute.metrics.take(10).map(x=> x.id).mkString("+")", function (result) {
 
                                 console.log(Object.prototype.toString.call( result ));
 
@@ -83,8 +97,13 @@
                                 for (var r in result) {
                                     var data = result[r];
 
+                                    if (data.status === "error") {
+                                        console.log("Unable to load sparky '" + data.metricId + "': " + data.msg);
+                                        continue;
+                                    }
+
                                     // FIXME: If the first sparkle is in error, this won't work.
-                                    if (r == 0) { // Set up the header
+                                    if ($("#sparklines-table-@attributeId > thead > tr").length == 0) { // Set up the header
                                         $("#sparklines-table-@attributeId > thead:last").append(
                                             "<tr><th></th><th>metric</th>" +
                                             "<th>" + data.firstDate + "</th>" +
@@ -94,25 +113,22 @@
                                             "<th>high</th></tr>");
                                     }
 
-                                    if (data.status === "error") {
-                                        console.log("Unable to load sparky '" + data.metricId + "': " + data.msg);
-                                        continue;
-                                    }
 
                                     var a = ""; 
-                                    if ($.inArray(data.name, app.grid.sparks) != -1){
-                                        a = "active";
-                                    }
+                                    if (getIndexOfSpark("@project.getShortName()", data.id) != -1) {
+                                        a = "active"; 
+                                    } 
+
                                     var toAppend = "<tr><td>";
 
                                     if (app.loggedIn) {
-                                        var id = "watch-spark-@project.getShortName()-" + data.name;
-                                        toAppend = toAppend + '<a href="javascript:toggleSpark(\'#'+id+'\',\'@project.getShortName()\',\'@project.getName()\',\''+ data.name + '\', \''+data.name+'\')"><span id="' + id + '" class="glyphicon glyphicon-eye-open spark-watch tip ' + a + '" data-toggle="tooltip" data-placement="left" title="Watch/unwatch on dashboard"></span></a>';
+                                        var id = "watch-spark-@project.getShortName()-" + data.id;
+                                        toAppend = toAppend + '<a href="javascript:toggleSpark(\''+id+'\',\'@project.getShortName()\',\'@project.getName()\',\''+ data.id + '\', \''+data.name+'\')"><span id="' + id + '" class="glyphicon glyphicon-eye-open spark-watch tip ' + a + '" data-toggle="tooltip" data-placement="left" title="Watch/unwatch on dashboard"></span></a>';
                                     }
                                    toAppend = toAppend + "</td>" +
                                         "<td>" + data.name + 
                                         "</td><td>" + Math.round(data.first * 100) / 100  +
-                                        "</td><td><img class=\"spark\" src=\"http://localhost:8182" + data.spark + "\" />" +  
+                                        "</td><td><img class=\"spark\" src=\"" + getApi() + data.spark + "\" />" +  
                                         "</td><td>" + Math.round(data.last * 100) / 100  + 
                                         "</td><td>" + Math.round(data.low * 100) / 100 + 
                                         "</td><td>" + Math.round(data.high * 100) / 100 + "</td></tr>";

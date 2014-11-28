@@ -166,7 +166,7 @@ NewsgroupsDailyRequestsRepliesTransMetric>{
 			System.err.println("Newsgroups - Daily Requests Replies -\t" + 
 					"there is no classification for article: " + article.getArticleNumber() +
 					"\t of newsgroup: " + newsgroup.getNewsGroupName());
-			System.exit(-1);
+//			System.exit(-1);
 		} else
 			return newsgroupArticleData.getClassificationResult();
 		return "";

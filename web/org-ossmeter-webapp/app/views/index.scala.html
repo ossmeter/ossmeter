@@ -49,6 +49,43 @@
         </div>
       </div>
 
+<script type="text/javascript">
+$(function () {
+    $(".txt_search").autocomplete({
+        source: function(request, response) {
+            console.log("making request")
+            jsRoutes.controllers.Application.autocomplete(request.term).ajax()
+                .success(function(result) {
+                    console.log("success: " + result);
+                    response($.map(result, function(item) {
+                        return {
+                            label: item.name,
+                            value: item.id
+                        }
+                    }));
+                }).error(function(result) {
+                    console.log("fail: " + result);
+                });
+        },
+        minLength: 2,
+        focus: function( event, ui ) {
+            $( "#project0" ).val( ui.item.label );
+            return false;
+        },
+        select : function(event, ui) {
+            //FIXME: Should use Play's routing
+            window.location.href = "projects/" + ui.item.value; 
+        },
+        open: function() {
+            $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+        },
+        close: function() {
+            $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+        }
+    })
+});
+</script>
+
     <section>
         <div class="container box">
             <div class="row">
@@ -63,8 +100,9 @@
                     <h2>Featured Projects</h2>
                     <p>Search through thousands of open-source software projects to discover those that suit your needs</p>
                     <ul>
-                        <li>Epsilon</li>
-                        <li>EMF</li>
+                        <li><a href="@routes.Projects.view("modeling-mmt-atl")">ATL</a></li>
+                        <li><a href="@routes.Projects.view("modeling-incquery")">EMF-IncQuery</a></li>
+                        <li><a href="@routes.Projects.view("modeling-Graphiti")">Graphiti</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4">

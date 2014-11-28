@@ -270,6 +270,22 @@ span.spark-watch.active {
     margin-left: 0;
 }
 
+.error {
+    border: 2pt #FF0000 solid;
+}
+
+#proj_desc {
+    width: 357px;
+    height: 125px;
+    resize: none;
+}
+
+#comm_desc {
+    width: 243px;
+    height: 83px;
+    resize: none;
+}
+
 table.spark {
     font-size : 0.9em;
 }
@@ -284,7 +300,7 @@ table.spark {
     width: 100px;
     position: fixed;
     top: 287px;
-    right: 5px;
+    left: 5px;
     display: none;
     text-align: center;
     color: rgb(102, 102, 102);
@@ -298,4 +314,5 @@ table.spark {
 }
 #returnToTop > span.glyphicon {
     font-size: 50px;
+    z-index:10;
 }

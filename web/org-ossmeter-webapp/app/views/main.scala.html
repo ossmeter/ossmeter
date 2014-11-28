@@ -47,7 +47,7 @@
                   <li class="@("active".when(nav == ""))"><a href="@routes.Application.index()">@Messages("ossmeter.navigation.home")</a></li>
                   <li class="@("active".when(nav == ""))"><a href="@routes.Projects.projects()">@Messages("ossmeter.navigation.projects")</a></li>
                   <li class="@("active".when(nav == ""))"><a href="@routes.Application.compare()">@Messages("ossmeter.navigation.compare")</a></li>
-                  <li class="@("active".when(nav == ""))"><a href="#">API</a></li>
+                  <!-- <li class="@("active".when(nav == ""))"><a href="#">API</a></li> -->
                   @*@subjectPresent() {
                     <li class="@("active".when(nav == "admin"))"><a href="@routes.Application.admin()">@Messages("ossmeter.navigation.admin")</a></li>
                   }*@
@@ -63,7 +63,7 @@
                   </a>
                   <ul class="dropdown-menu" role="menu" aria-labelledby="">
                     <li><a href="@routes.Application.profile()">@Messages("ossmeter.navigation.profile")</a></li>
-                    <li><a href="@routes.Account.link()">@Messages("ossmeter.navigation.link_more")</a></li>
+                    @*<li><a href="@routes.Account.link()">@Messages("ossmeter.navigation.link_more")</a></li>*@
                     <li class="divider"></li>
                     <li><a href="@com.feth.play.module.pa.controllers.routes.Authenticate.logout()"><i class="icon-off"></i> @Messages("ossmeter.navigation.logout")</a></li>
                   </ul>
@@ -147,5 +147,11 @@
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <script type="text/javascript">
+    function getApi() {
+      // return "@routes.Application.api("").absoluteURL()";
+      return "@play.Play.application().configuration().getString("ossmeter.api")";
+    }
+    </script>
   </body>
 </html>
