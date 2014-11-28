@@ -72,7 +72,7 @@ var metvis = {
 		// The legend
 		self.legend = {};
 		// The margin
-		self.margin = {top: 30, right: 20, bottom: 30, left: 50};
+		self.margin = {top: 60, right: 20, bottom: 30, left: 50};
 		// String format of date fields
 		self.dateFormat = "%Y%m%d";
 		// Colours for series
@@ -185,7 +185,6 @@ var metvis = {
 	        self.svg.append("g")
 				.attr("id", "ossplots-annotations")
 				.attr("class", "threshold-line");
-			// d3.select("#ossplots-annotations").selectAll("line").remove();
         	d3.select("#ossplots-annotations").selectAll("line")
 	        	.data(self.annotations)
 	        	.enter()
@@ -218,6 +217,28 @@ var metvis = {
 		        				return self.yScale(d.intersect);
 		        			}
 		        		});
+	        d3.select("#ossplots-annotations").selectAll("text")
+	        	.data(self.annotations)
+	        	.enter()
+	        	.append("text")
+		        	.text(function(d) {
+		        		return d.label;
+		        	})
+		        	.attr("class", "metvis-annotation-text")
+		        	.attr("x", function (d) {
+		        		if (d.axis == "X") {
+	        				return self.xScale(d3.time.format(self.dateFormat).parse(d.intersect));
+	        			} else {
+	        				return self.axes[0].scale().range()[0];
+	        			}
+		        	})
+		        	.attr("y", function (d) {
+		        		if (d.axis == "X") {
+		        				return self.axes[1].scale().range()[1];
+		        			} else {
+		        				return self.yScale(d.intersect);
+		        			}
+		        		})
 		} // end ossplots.chart._draw
 
 		self._createAxis = function(scale, orient, ticks) {
@@ -258,7 +279,7 @@ var metvis = {
 				self.svg.append("g").append("path")
 					.attr("class", "line")
 					.attr("d", s.line(s.vis.datatable))
-					.style("stroke-width", 2)
+					.style("stroke-width", 1)
 					.style("stroke", col);
 			} else if (s.vis.type === "BarChart") {
 				self.svg.selectAll("rect")
@@ -299,7 +320,21 @@ var metvis = {
 		            .attr("title", function(d) {
 		                return d[s.vis.x];
 		            })
-			}	
+			} else if (s.vis.type === "ScatterChart") {
+				self.svg.append("g")
+					.selectAll("circle")
+					.data(s.vis.datatable)
+					.enter()
+					.append("circle")
+						.attr("r", 2)
+						.attr("cx", function (d) {
+							return self.xScale(d[s.vis.x]);
+						})
+						.attr("cy", function (d){
+							return self.yScale(d[s.name]);
+						})	
+						.style("fill", col)
+			}
 		} // end ossplots.chart._drawSeries
 
 		self._updateScales = function() {

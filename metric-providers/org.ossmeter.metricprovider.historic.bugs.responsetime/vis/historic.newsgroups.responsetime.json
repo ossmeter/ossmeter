@@ -17,7 +17,7 @@
 			"id" : "bugs.averageResponseTime-bugs",
 			"name" : "Average Response Time per Thread (ms)",
 			"description" : "The average response time of bugs addressed every day, in relation to the number of bugs considered." ,
-			"type" : "LineChart",
+			"type" : "ScatterChart",
 			"datatable" : {
 				"cols" : [  { "name" : "Threads", "field" : "$bugsConsidered" }, 
 					{ "name" : "Response Time", "field" : "$avgResponseTime" } ]

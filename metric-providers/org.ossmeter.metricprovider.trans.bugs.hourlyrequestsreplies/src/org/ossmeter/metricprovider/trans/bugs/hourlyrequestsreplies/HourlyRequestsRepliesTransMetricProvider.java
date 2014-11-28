@@ -178,7 +178,7 @@ public class HourlyRequestsRepliesTransMetricProvider implements ITransientMetri
 			System.err.println("Bugs - Hourly Requests Replies -\t" + 
 					"there is no classification for comment: " + comment.getCommentId() +
 					"\t of bug tracker: " + tracker.getUrl());
-			System.exit(-1);
+//			System.exit(-1);
 		} else
 			return bugTrackerComments.getClassificationResult();
 		return "";

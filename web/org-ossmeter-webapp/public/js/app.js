@@ -467,12 +467,24 @@ function abbreviateNumber(value) {
     return newValue;
 }
 
-function drawSpiderChart(container, factoids) {
+function drawSpiderChart(container, factoids, config) {
+
+	// if (!config) {
+	// 	config = {
+	// 		w: 150,
+	// 		h: 150,
+	// 		maxValue: 4,
+	// 		levels: 4,
+	// 		ExtraWidthX:200
+	// 	};
+	// }
 
 	var d = [];
 
 	for (var f in factoids) {
 		var stars = 1;
+
+		if (!factoids[f].factoid) continue;
 
 		switch (factoids[f].stars) {
 			case "FOUR": stars = 4; break;
@@ -483,14 +495,6 @@ function drawSpiderChart(container, factoids) {
 		var ax = { axis: factoids[f].name, value: stars } ;
 		d.push(ax);
 	}
-
-	var config = {
-		w: 150,
-		h: 150,
-		maxValue: 4,
-		levels: 4,
-		ExtraWidthX:200
-	};
 
 	RadarChart.draw(container, [d], config);
 }

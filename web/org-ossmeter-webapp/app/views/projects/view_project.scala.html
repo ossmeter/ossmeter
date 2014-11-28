@@ -25,21 +25,23 @@ $(function() {
 @defining(Application.getLocalUser(session())) { user =>
 app.loggedIn = true;
 @for(g <- user.getGrid()) {@g match {
-case n : Notification => {@if(n.getProject().getId()) {app.grid.notifications.push({
+case n : Notification => {@if(n.getProject().getId()) {
+    app.grid.notifications.push({
 	"project" : "@n.getProject().getId()",
 	"metric" : "@n.getMetric().getId()",
 	"threshold" : "@n.getThreshold()",
 	"aboveThreshold" : "@n.getAboveThreshold()"
 	});
 }}
-case s : SparkGridEntry => {@if(s.getProject().getId()) {app.grid.sparks.push({
+case s : SparkGridEntry => {@if(s.getProject().getId()) {
+    app.grid.sparks.push({
 	"project" : "@s.getProject().getId()",
 	"metric" : "@s.getMetric().getId()"
 	});
 }}
 case e : EventGroup => {app.grid.eventGroups.push({
 	"name" : "@e.getName()", "events" : [@for(ev<-e.getEvents()){ {"name" : "@ev.getName()", "date" : "@ev.getDate().format("yyyyMMdd")" },  }]
-})}
+});}
 case other => {}}}}}{ }
 });
 </script>

@@ -158,7 +158,7 @@ public class HourlyRequestsRepliesTransMetricProvider implements ITransientMetri
 			System.err.println("Newsgroups - Hourly Requests Replies -\t" + 
 					"there is no classification for article: " + article.getArticleNumber() +
 					"\t of newsgroup: " + newsgroup.getNewsGroupName());
-			System.exit(-1);
+//			System.exit(-1);
 		} else{
 			return newsgroupArticle.getClassificationResult();
 		}

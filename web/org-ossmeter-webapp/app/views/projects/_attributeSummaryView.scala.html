@@ -26,6 +26,10 @@
     attribute.metrics.take(10).map(x=> x.id)
 }
 
+
+@* @_attributeFactoidRadarView(project, qualityModel, attribute) *@
+
+
     <div class="row">
         <ul class="nav nav-tabs" role="tablist">
             <li class="disabled col-md-4"><h2 class="marginless">@attribute.name</h2></li>
@@ -55,10 +59,19 @@
                             for (var r in result) {
                                 var f = result[r];
                                 if (f.factoid) {
-                                    $("#factoids-@attributeId").append("<p>" + f.factoid + "</p>");
+                                    var _s = "<p><strong>" + f.name + "</strong><br/>";
+                                    _s = _s + f.factoid + "</p>"
+                                    $("#factoids-@attributeId").append(_s)
                                 }
                             }
-                            drawSpiderChart("#spider-@attributeId", result);
+                            var config = {
+                                w: 150,
+                                h: 150,
+                                maxValue: 4,
+                                levels: 4,
+                                ExtraWidthX:200
+                            };
+                            drawSpiderChart("#spider-@attributeId", result, config);
                         }).fail(function(err) {
                             $("#factoids-@attributeId").empty();
                             $("#factoids-@attributeId").append("<p>Unable to load factoids: " + JSON.parse(err.responseText).msg + "</p>");
@@ -84,8 +97,13 @@
                                 for (var r in result) {
                                     var data = result[r];
 
+                                    if (data.status === "error") {
+                                        console.log("Unable to load sparky '" + data.metricId + "': " + data.msg);
+                                        continue;
+                                    }
+
                                     // FIXME: If the first sparkle is in error, this won't work.
-                                    if (r == 0) { // Set up the header
+                                    if ($("#sparklines-table-@attributeId > thead > tr").length == 0) { // Set up the header
                                         $("#sparklines-table-@attributeId > thead:last").append(
                                             "<tr><th></th><th>metric</th>" +
                                             "<th>" + data.firstDate + "</th>" +
@@ -95,10 +113,6 @@
                                             "<th>high</th></tr>");
                                     }
 
-                                    if (data.status === "error") {
-                                        console.log("Unable to load sparky '" + data.metricId + "': " + data.msg);
-                                        continue;
-                                    }
 
                                     var a = ""; 
                                     if (getIndexOfSpark("@project.getShortName()", data.id) != -1) {

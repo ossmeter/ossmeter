@@ -121,13 +121,29 @@ public class Application extends Controller {
 	}
 
 	public static Result api(String path) {
-		String url = play.Play.application().configuration().getString("ossmeter.api") + path; //FIXME: Put the API path in the config file
+
+		if (!path.startsWith("/")){
+			path = "/" + path;
+		}
+
+		System.out.println("api: " + play.Play.application().configuration().getString("ossmeter.api"));
+		String url = play.Play.application().configuration().getString("ossmeter.api") + path; 
+
+		System.out.println(url);
 
 		Promise<Result> promise = WS.url(url).get().map(
 		    new Function<WSResponse, Result>() {
 		        public Result apply(WSResponse response) {
-		            JsonNode json = response.asJson();
-		            return ok(json);
+		        	try {
+		            	JsonNode json = response.asJson();
+			            return ok(json);
+		            } catch (Exception e) {
+		            	return ok(response.getBody()).as("image/png");
+		            }
+
+
+
+		            // return ok(image).as("image/png")
 		        }
 		    }
 		);

@@ -34,7 +34,8 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 		NewsgroupData newsgroupData = dbMessages.getNewsgroup().findOneByUrl((newsgroup.getUrl()));
 		if (newsgroupData == null) {
 			System.err.println("There is no local storage for newsgroup: " + newsgroup.getUrl());
-			System.exit(-1);
+//			System.exit(-1);
+			return null;
 		}
 
 		int lastArticleChecked = Integer.parseInt(newsgroup.getLastArticleChecked());
@@ -131,7 +132,8 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 		
 		if (newsgroupData == null) {
 			System.err.println("There is no local storage for newsgroup: " + newsgroup.getUrl());
-			System.exit(-1);
+//			System.exit(-1);
+			return null;
 		}
 		int firstArticleNumber = Integer.parseInt(newsgroupData.getFirstArticle());
 		Date date = null;
@@ -152,7 +154,8 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 		NewsgroupData newsgroupData = dbMessages.getNewsgroup().findOneByUrl((newsgroup.getUrl()));
 		if (newsgroupData == null) {
 			System.err.println("There is no local storage for newsgroup: " + newsgroup.getUrl());
-			System.exit(-1);
+//			System.exit(-1);
+			return null;
 		}
 		Iterable<ArticleData> articleDataIterable = 
 				dbMessages.getArticles().find(ArticleData.ARTICLENUMBER.eq(article.getArticleNumber()));
