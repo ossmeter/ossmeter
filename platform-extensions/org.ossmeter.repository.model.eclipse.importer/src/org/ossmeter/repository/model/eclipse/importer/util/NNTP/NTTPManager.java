@@ -31,7 +31,7 @@ public class NTTPManager {
 		Vector<NNTPGroup> vg = new Vector<NNTPGroup>();
 		a.getAllGroups(vg);
 		int i=0;
-		ArrayList<String> result = new ArrayList();
+		ArrayList<String> result = new ArrayList<>();
 		for (NNTPGroup nntpGroup : vg) {
 			
 			result.add(nntpGroup.getName());
