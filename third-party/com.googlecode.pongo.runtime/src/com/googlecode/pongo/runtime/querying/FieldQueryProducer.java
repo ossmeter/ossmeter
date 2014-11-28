@@ -1,6 +1,5 @@
 package com.googlecode.pongo.runtime.querying;
 
-import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 
 

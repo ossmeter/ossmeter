@@ -11,7 +11,6 @@
 package org.ossmeter.metricprovider.rascal;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.Priority;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.ossmeter.platform.logging.OssmeterLoggerFactory;

@@ -15,7 +15,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -23,8 +22,6 @@ import java.util.List;
 import sparkle.Sparkle;
 import sparkle.dimensions.DateDimension;
 import sparkle.dimensions.LinearDimension;
-import sparkle.dimensions.SparkDimension;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;

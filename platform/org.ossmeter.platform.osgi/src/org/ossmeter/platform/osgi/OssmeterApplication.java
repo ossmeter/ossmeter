@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.ossmeter.platform.osgi;
 
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;

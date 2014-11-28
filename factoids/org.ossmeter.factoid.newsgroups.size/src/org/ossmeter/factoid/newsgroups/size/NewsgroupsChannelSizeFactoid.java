@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.ossmeter.factoid.newsgroups.size;
 
-import java.text.ParseException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;

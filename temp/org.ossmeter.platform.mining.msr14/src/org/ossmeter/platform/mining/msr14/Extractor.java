@@ -15,8 +15,6 @@ import java.util.Iterator;
 
 import org.ossmeter.platform.mining.msr14.model.Artefact;
 import org.ossmeter.platform.mining.msr14.model.Biodiversity;
-import org.ossmeter.platform.mining.msr14.model.IssueEvent;
-import org.ossmeter.platform.mining.msr14.model.IssueEventKind;
 import org.ossmeter.platform.mining.msr14.model.Project;
 import org.ossmeter.platform.mining.msr14.model.ProjectMembership;
 import org.ossmeter.platform.mining.msr14.model.User;

@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.ossmeter.platform.osgi.services;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.List;
 
 import org.ossmeter.platform.osgi.executors.SchedulerStatus;

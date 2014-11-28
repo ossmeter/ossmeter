@@ -11,9 +11,6 @@
 package org.ossmeter.metricprovider.trans.importer.eclipse;
 
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.UnknownHostException;
 import java.util.List;
 
 import org.ossmeter.platform.IMetricProvider;
@@ -29,10 +26,7 @@ import org.ossmeter.repository.model.eclipse.importer.EclipseProjectImporter;
 import org.ossmeter.repository.model.importer.exception.ProjectUnknownException;
 
 import com.googlecode.pongo.runtime.PongoDB;
-import com.googlecode.pongo.runtime.PongoFactory;
-import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
 import com.mongodb.DB;
-import com.mongodb.Mongo;
 
 
 

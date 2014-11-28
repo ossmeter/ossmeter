@@ -17,11 +17,8 @@ import java.util.List;
 import org.ossmeter.platform.Configuration;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.logging.OssmeterLogger;
-import org.ossmeter.platform.osgi.executors.SchedulerStatus;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.SchedulingInformation;
-import org.ossmeter.repository.model.SchedulingInformationCollection;
-
 import com.mongodb.Mongo;
 
 

@@ -28,8 +28,6 @@
 //////////////////////////////////////////////////////////////////////////////
 package org.ossmeter.repository.model.eclipse.importer.util.NNTP;
 
-import java.net.*;
-import java.io.*;
 import java.util.*;
 
 /**

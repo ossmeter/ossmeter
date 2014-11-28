@@ -33,8 +33,6 @@ import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.logging.OssmeterLogger;
 
-import com.mongodb.Mongo;
-
 public class GoogleCodeImporter {
 	
 	

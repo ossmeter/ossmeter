@@ -11,10 +11,7 @@
 package org.ossmeter.repository.model.eclipse.importer.util.NNTP;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Vector;
-
-import org.apache.commons.collections.map.CaseInsensitiveMap;
 
 public class NTTPManager {
 

@@ -13,7 +13,6 @@ package org.ossmeter.repository.model.redmine;
 import com.mongodb.*;
 import java.util.*;
 import com.googlecode.pongo.runtime.*;
-import com.googlecode.pongo.runtime.querying.*;
 
 
 public class RedmineQueryManager extends org.ossmeter.repository.model.CommunicationChannel {

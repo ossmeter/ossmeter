@@ -24,8 +24,6 @@ import org.ossmeter.repository.model.github.importer.GitHubImporter;
 import org.ossmeter.repository.model.importer.exception.WrongUrlException;
 
 import com.googlecode.pongo.runtime.PongoDB;
-import com.googlecode.pongo.runtime.PongoFactory;
-import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
 import com.mongodb.DB;
 public class GitHubImporterProvider implements ITransientMetricProvider{
 
