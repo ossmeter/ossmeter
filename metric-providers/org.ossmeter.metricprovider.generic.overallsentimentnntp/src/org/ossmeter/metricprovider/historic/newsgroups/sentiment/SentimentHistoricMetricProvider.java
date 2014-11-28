@@ -4,9 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.ossmeter.metricprovider.historic.newsgroups.sentiment.model.NewsgroupsSentimentHistoricMetric;
-import org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.ThreadsRequestsRepliesTransMetricProvider;
-import org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.model.NewsgroupsThreadsRequestsRepliesTransMetric;
-import org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.model.ThreadStatistics;
+import org.ossmeter.metricprovider.trans.newsgroups.sentiment.SentimentTransMetricProvider;
+import org.ossmeter.metricprovider.trans.newsgroups.sentiment.model.NewsgroupsSentimentTransMetric;
+import org.ossmeter.metricprovider.trans.newsgroups.sentiment.model.ThreadStatistics;
 import org.ossmeter.platform.AbstractHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
@@ -50,13 +50,13 @@ public class SentimentHistoricMetricProvider extends AbstractHistoricalMetricPro
 			System.exit(-1);
 		}
 
-		NewsgroupsThreadsRequestsRepliesTransMetric threadsRR = 
-				((ThreadsRequestsRepliesTransMetricProvider)uses.get(0)).adapt(context.getProjectDB(project));
+		 NewsgroupsSentimentTransMetric sentimentTransMetric = 
+				 ((SentimentTransMetricProvider)uses.get(0)).adapt(context.getProjectDB(project));
 
 		float overallSentiment = 0,
-				startSentiment = 0,
-				endSentiment = 0;
-		for (ThreadStatistics threadStatistics: threadsRR.getThreads()) {
+			  startSentiment = 0,
+			  endSentiment = 0;
+		for (ThreadStatistics threadStatistics: sentimentTransMetric.getThreads()) {
 			overallSentiment += threadStatistics.getAverageSentiment();
 			String start = threadStatistics.getStartSentiment();
 			if (start.equals("Positive"))
@@ -69,7 +69,7 @@ public class SentimentHistoricMetricProvider extends AbstractHistoricalMetricPro
 			else if (end.equals("Negative"))
 				endSentiment-=1;
 		}
-		long size = threadsRR.getThreads().size();
+		long size = sentimentTransMetric.getThreads().size();
 		if (size>0) {
 			overallSentiment /= size;
 			startSentiment /= size;
@@ -94,7 +94,7 @@ public class SentimentHistoricMetricProvider extends AbstractHistoricalMetricPro
 	
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return Arrays.asList(ThreadsRequestsRepliesTransMetricProvider.class.getCanonicalName());
+		return Arrays.asList(SentimentTransMetricProvider.class.getCanonicalName());
 	}
 
 	@Override

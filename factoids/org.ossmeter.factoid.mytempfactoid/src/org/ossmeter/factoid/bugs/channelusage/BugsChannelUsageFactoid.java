@@ -1,5 +1,6 @@
 package org.ossmeter.factoid.bugs.channelusage;
 
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -51,9 +52,9 @@ public class BugsChannelUsageFactoid extends AbstractFactoidMetricProvider{
 
 	@Override
 	public List<String> getIdentifiersOfUses() {
-		return Arrays.asList(BugsNewBugsHistoricMetric.class.getCanonicalName(),
-							 BugsCommentsHistoricMetric.class.getCanonicalName(),
-							 BugsPatchesHistoricMetric.class.getCanonicalName());
+		return Arrays.asList(NewBugsHistoricMetricProvider.IDENTIFIER,
+							 CommentsHistoricMetricProvider.IDENTIFIER,
+							 PatchesHistoricMetricProvider.IDENTIFIER);
 	}
 
 	@Override
@@ -64,15 +65,38 @@ public class BugsChannelUsageFactoid extends AbstractFactoidMetricProvider{
 	@Override
 	public void measureImpl(Project project, ProjectDelta delta, Factoid factoid) {
 //		factoid.setCategory(FactoidCategory.BUGS);
-		factoid.setName("");
 		factoid.setName("Bug Channel Usage Factoid");
 
-		NewBugsHistoricMetricProvider newBugsProvider = new NewBugsHistoricMetricProvider();
-		CommentsHistoricMetricProvider commentsProvider = new CommentsHistoricMetricProvider();
-		PatchesHistoricMetricProvider patchesProvider = new PatchesHistoricMetricProvider();
+		NewBugsHistoricMetricProvider newBugsProvider = null;
+		CommentsHistoricMetricProvider commentsProvider = null;
+		PatchesHistoricMetricProvider patchesProvider = null;
+		
+		
+		for (IMetricProvider m : this.uses) {
+			if (m instanceof NewBugsHistoricMetricProvider) {
+				newBugsProvider = (NewBugsHistoricMetricProvider) m;
+				continue;
+			}
+			if (m instanceof CommentsHistoricMetricProvider) {
+				commentsProvider = (CommentsHistoricMetricProvider) m;
+				continue;
+			}
+			if (m instanceof PatchesHistoricMetricProvider) {
+				patchesProvider = (PatchesHistoricMetricProvider) m;
+				continue;
+			}
+		}
 		
 		Date end = new Date();
 		Date start = (new Date()).addDays(-365);
+//		Date start=null, end=null;
+//		try {
+//			start = new Date("20050301");
+//			end = new Date("20060301");
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		List<Pongo> newBugsList = newBugsProvider.getHistoricalMeasurements(context, project, start, end),
 					commentsList = commentsProvider.getHistoricalMeasurements(context, project, start, end),
 					patchesList = patchesProvider.getHistoricalMeasurements(context, project, start, end);
@@ -195,12 +219,13 @@ public class BugsChannelUsageFactoid extends AbstractFactoidMetricProvider{
 		int numberOfBugs = 0;
 		for (Pongo pongo: newBugsList) {
 			BugsNewBugsHistoricMetric newBugsPongo = (BugsNewBugsHistoricMetric) pongo;
-			numberOfBugs += newBugsPongo.getNumberOfBugs();
 			for (DailyBugData bugData: newBugsPongo.getBugs()) {
-				if (trackerBugs.containsKey(bugData.getBugTrackerId())) {
+				numberOfBugs++;
+				if (trackerBugs.containsKey(bugData.getBugTrackerId()))
 					trackerBugs.put(bugData.getBugTrackerId(), 
 							trackerBugs.get(bugData.getBugTrackerId()) + 1);
-				}
+				else
+					trackerBugs.put(bugData.getBugTrackerId(), 1);
 			}
 		}
 		return numberOfBugs;
@@ -210,13 +235,14 @@ public class BugsChannelUsageFactoid extends AbstractFactoidMetricProvider{
 		int numberOfComments = 0;
 		for (Pongo pongo: commentsList) {
 			BugsCommentsHistoricMetric commentsPongo = (BugsCommentsHistoricMetric) pongo;
-			numberOfComments += commentsPongo.getNumberOfComments();
 			for (org.ossmeter.metricprovider.historic.bugs.comments.model.DailyBugData 
 					bugData: commentsPongo.getBugs()) {
-				if (trackerComments.containsKey(bugData.getBugTrackerId())) {
+				numberOfComments += bugData.getNumberOfComments();
+				if (trackerComments.containsKey(bugData.getBugTrackerId()))
 					trackerComments.put(bugData.getBugTrackerId(), 
-										trackerComments.get(bugData.getBugTrackerId()) + 1);
-				}
+										trackerComments.get(bugData.getBugTrackerId()) + bugData.getNumberOfComments());
+				else
+					trackerComments.put(bugData.getBugTrackerId(), bugData.getNumberOfComments());
 			}
 		}
 		return numberOfComments;
@@ -226,13 +252,14 @@ public class BugsChannelUsageFactoid extends AbstractFactoidMetricProvider{
 		int numberOfPatches = 0;
 		for (Pongo pongo: patchesList) {
 			BugsPatchesHistoricMetric patchesPongo = (BugsPatchesHistoricMetric) pongo;
-			numberOfPatches += patchesPongo.getNumberOfPatches();
 			for (org.ossmeter.metricprovider.historic.bugs.patches.model.DailyBugData 
 					bugData: patchesPongo.getBugs()) {
-				if (trackerPatches.containsKey(bugData.getBugTrackerId())) {
+				numberOfPatches += bugData.getNumberOfPatches();
+				if (trackerPatches.containsKey(bugData.getBugTrackerId()))
 					trackerPatches.put(bugData.getBugTrackerId(), 
-							trackerPatches.get(bugData.getBugTrackerId()) + 1);
-				}
+							trackerPatches.get(bugData.getBugTrackerId()) + bugData.getNumberOfPatches());
+				else
+					trackerPatches.put(bugData.getBugTrackerId(), bugData.getNumberOfPatches());
 			}
 		}
 		return numberOfPatches;

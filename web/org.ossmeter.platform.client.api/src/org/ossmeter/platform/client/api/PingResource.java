@@ -2,14 +2,12 @@ package org.ossmeter.platform.client.api;
 
 
 import org.restlet.data.Status;
-import org.restlet.resource.Get;
-import org.restlet.resource.ServerResource;
+import org.restlet.representation.Representation;
 
-public class PingResource extends ServerResource {
+public class PingResource extends AbstractApiResource {
 	
-	@Get
-	public String represent() {
+	public Representation doRepresent() {
 		getResponse().setStatus(new Status(200));
-		return "{'status':200}";
+		return Util.createJsonRepresentation("{'status':200, 'message' : 'hello :)'}");
 	}
 }

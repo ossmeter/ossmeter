@@ -79,7 +79,8 @@ public abstract class PlatformVcsManager extends AbstractVcsManager {
 				return vcsManager;
 			}
 		}
-		throw new NoManagerFoundException("No vcs manager found for repository " + repository);
+		return null;
+//		throw new NoManagerFoundException("No vcs manager found for repository " + repository);
 	}
 	
 	@Override
@@ -126,5 +127,14 @@ public abstract class PlatformVcsManager extends AbstractVcsManager {
 			deltaCache = new VcsDeltaCache();
 		}
 		return deltaCache;		
+	}
+	
+	@Override
+	public boolean validRepository(VcsRepository repository) throws Exception {
+		IVcsManager vcsManager = getVcsManager(repository);
+		if (vcsManager != null) {
+			return vcsManager.validRepository(repository);
+		}
+		return false;
 	}
 }

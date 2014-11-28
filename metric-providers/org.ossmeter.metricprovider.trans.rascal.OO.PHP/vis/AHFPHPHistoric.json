@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.PHP.AHF-PHP.historic",
 	"vis" : [ 
 		{
-			"name" : "AHFPHPHistoric",
-			"nicename" : "AHFPHPHistoric",
+			"id" : "AHFPHPHistoric",
+			"name" : "Attribute Hiding Factor (PHP)",
 			"description" : "This metric shows the Attribute Hiding Factor for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

@@ -2,6 +2,7 @@ package org.ossmeter.platform;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -21,25 +22,52 @@ public class Date {
 	 * @throws ParseException
 	 */
 	public Date(String date) throws ParseException {
-		// YYYYMMDD
-		DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-		_date = formatter.parse(date);
+		_date = parseDate(date);
 	}
 	
+	static SimpleDateFormat[] sdfList = new SimpleDateFormat[]{
+		// YYYYMMDD
+		new SimpleDateFormat("yyyyMMdd"),
+		new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz"),
+		new SimpleDateFormat("dd MMM yyyy HH:mm:ss zzz"),
+		new SimpleDateFormat("EEE, dd MMM yyyy HH:mm zzz (Z)"),
+		new SimpleDateFormat("EEE, dd MMM yyyy HH:mm zzz"),
+		new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss"),
+		new SimpleDateFormat("dd MMM yyyy HH:mm:ss"),
+		new SimpleDateFormat("EEE, dd MMM yyyy hh:mm:ss Z"),
+		new SimpleDateFormat("EEE MMM d HH:mm:ss zzz yyyy")
+	};
+
+	public static java.util.Date parseDate(String dateString) throws ParseException {
+		if (dateString.equals("null"))
+			return sdfList[0].parse(dateString);
+		for ( SimpleDateFormat formatter: sdfList) {
+			ParsePosition ps = new ParsePosition(0);
+			java.util.Date result = formatter.parse(dateString, ps);
+			if (result != null)
+				return processDate(result);
+		}
+		return null;
+	}
+
 	public Date(long epoch) {
 		this(new java.util.Date(epoch));
 	}
 	
 	public Date(java.util.Date date) {
+		this._date = processDate(date);
+	}
+
+	private static java.util.Date processDate(java.util.Date date) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
 		c.set(Calendar.HOUR_OF_DAY, 0);
 		c.set(Calendar.MINUTE, 0);
 		c.set(Calendar.SECOND, 0);
 		c.set(Calendar.MILLISECOND, 0);
-		this._date = c.getTime();
+		return c.getTime();
 	}
-	
+
 	/**
 	 * @param days
 	 * @return

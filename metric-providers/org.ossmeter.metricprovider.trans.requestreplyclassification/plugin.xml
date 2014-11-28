@@ -20,10 +20,18 @@
 
 
 
+
+
+
+
+
+
+
+
+
 <extension point="com.googlecode.pongo.runtime.osgi">
     <class name="org.ossmeter.metricprovider.trans.requestreplyclassification.model.RequestReplyClassificationTransMetric"/>
-    <class name="org.ossmeter.metricprovider.trans.requestreplyclassification.model.BugTrackerCommentsData"/>
-
-    <class name="org.ossmeter.metricprovider.trans.requestreplyclassification.model.NewsgroupArticlesData"/>
+    <class name="org.ossmeter.metricprovider.trans.requestreplyclassification.model.BugTrackerComments"/>
+    <class name="org.ossmeter.metricprovider.trans.requestreplyclassification.model.NewsgroupArticles"/>
   </extension>
 </plugin>

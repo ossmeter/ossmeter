@@ -7,15 +7,11 @@ class NewsgroupsThreadsRequestsRepliesTransMetric {
 
 class ThreadStatistics {
    @searchable
-   attr String url_name;
+   attr String newsgroupName;
    @searchable
    attr int threadId;
    attr boolean firstRequest;
    attr boolean answered;
    attr long responseDurationSec;
    attr String responseDate;
-   
-   attr float averageSentiment;
-   attr String startSentiment; 
-   attr String endSentiment; 
 }

@@ -6,9 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.repository.model;uses:="com.googlecode.pongo.runtime,com.mongodb"
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.ui.workbench,
  com.googlecode.pongo.runtime;visibility:=reexport
 Bundle-ActivationPolicy: lazy

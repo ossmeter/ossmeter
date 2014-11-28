@@ -1,11 +1,15 @@
 package org.ossmeter.platform.osgi.executors;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.osgi.old.IScheduler;
 import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.SchedulingInformation;
 
 import com.mongodb.Mongo;
 
@@ -18,6 +22,7 @@ public class SlaveScheduler implements IScheduler {
 	protected List<String> queue;
 	
 	protected Thread worker;
+	protected Thread heartbeat;
 	final protected Mongo mongo;
 	protected Platform platform;
 	
@@ -46,35 +51,78 @@ public class SlaveScheduler implements IScheduler {
 
 	@Override
 	public void run() {
-	
-		if (status.equals(SchedulerStatus.AVAILABLE) && queue.size() > 0) {
-			status = SchedulerStatus.BUSY;
-			
-			worker = new Thread() {
-				@Override
-				public void run() {
+		
+		String id = UUID.randomUUID().toString();
+		try {
+			id = InetAddress.getLocalHost().getHostName();
+		} catch (UnknownHostException e1) {
+			e1.printStackTrace();
+		}
+		
+		final String identifier = id;
+		
+		heartbeat = new Thread() {
+			@Override
+			public void run() {
+				while (alive) {
+					SchedulingInformation job = platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().findOneByWorkerIdentifier(identifier);
+					if (job == null) {
+						job = new SchedulingInformation();
+						job.setWorkerIdentifier(identifier);
+						platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().add(job);
+					}
+					// TODO: One issue with this is that the machines clock's may differ..
+					job.setHeartbeat(System.currentTimeMillis());
+					platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().sync();
 					
-					// Focus on a single project at a time. Sequential.
-					for (String projectName : queue) {
-						Project project = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByShortName(projectName); //FIXME This should be just NAME
+					try {
+						Thread.sleep(60000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		};
+		heartbeat.start();
+		
+		worker = new Thread() {
+			@Override
+			public void run() {
+				
+				while (alive) {
+					SchedulingInformation job = platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().findOneByWorkerIdentifier(identifier);
+					
+					if(job != null) {
+						List<String> projects = job.getCurrentLoad();
 						
-						if (project == null) {
-							System.err.println("DB lookup for project named '" + projectName + "' failed. Skipping.");
-							continue;
+						System.out.println("Slave '" + identifier + "' executing " + projects.size() + " projects.");
+						
+						for (String projectName : projects) {
+							Project project = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByShortName(projectName); //FIXME This should be just NAME
+							
+							if (project == null) {
+								System.err.println("DB lookup for project named '" + projectName + "' failed. Skipping.");
+								continue;
+							}
+							
+							ProjectExecutor exe = new ProjectExecutor(platform, project);
+							exe.run();
 						}
 						
-						ProjectExecutor exe = new ProjectExecutor(platform, project);
-						exe.run();
+						job = platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().findOneByWorkerIdentifier(identifier);
+						job.getCurrentLoad().clear();
+						platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().sync();
 					}
-
-					// Make it known that you're free
-					status = SchedulerStatus.AVAILABLE;
+					try {
+						// Give the master time to schedule some new projects
+						Thread.sleep(10000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 				}
-			};
-			worker.start();
-		} else {
-			System.err.println("Tried to start slave when slave already started.");
-		}
+			}
+		};
+		worker.start();
 	}
 	
 	public void pause() {
@@ -94,6 +142,7 @@ public class SlaveScheduler implements IScheduler {
 		alive = false;
 		try {
 			worker.join();
+			heartbeat.join();
 			return true;
 		} catch (InterruptedException e) {
 			return false;

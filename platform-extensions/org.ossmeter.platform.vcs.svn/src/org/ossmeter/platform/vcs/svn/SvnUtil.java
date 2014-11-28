@@ -27,7 +27,7 @@ public class SvnUtil {
 	    } 
 	    catch (SVNException svne) {
 	        System.err.println("error while creating an SVNRepository for location '"+ url + "': " + svne.getMessage());
-	        System.exit(1);
+	        return null;
 	    }
 	    
 	    try {
@@ -48,7 +48,7 @@ public class SvnUtil {
 	    } 
 	    catch (SVNException svne) {
 	        System.err.println("error while creating an SVNRepository for location '"+ url + "': " + svne.getMessage());
-	        System.exit(1);
+	        return null;
 	    }
 	    
 	    ISVNAuthenticationManager authManager = SVNWCUtil.createDefaultAuthenticationManager(usr, pass);

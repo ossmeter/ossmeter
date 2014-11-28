@@ -4,8 +4,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.time.DurationFormatUtils;
-import org.ossmeter.metricprovider.trans.requestreplyclassification.model.BugTrackerCommentsData;
-import org.ossmeter.metricprovider.trans.requestreplyclassification.model.NewsgroupArticlesData;
+import org.ossmeter.metricprovider.trans.requestreplyclassification.model.BugTrackerComments;
+import org.ossmeter.metricprovider.trans.requestreplyclassification.model.NewsgroupArticles;
 import org.ossmeter.metricprovider.trans.requestreplyclassification.model.RequestReplyClassificationTransMetric;
 import org.ossmeter.platform.Date;
 import org.ossmeter.platform.IMetricProvider;
@@ -72,7 +72,7 @@ public class RequestReplyClassificationTransMetricProvider  implements ITransien
 	public void measure(Project project, ProjectDelta projectDelta, RequestReplyClassificationTransMetric db) {
 		final long startTime = System.currentTimeMillis();
 		long previousTime = startTime;
-		System.err.println("Started " + getIdentifier());
+//		System.err.println("Started " + getIdentifier());
 
 		BugTrackingSystemProjectDelta btspDelta = projectDelta.getBugTrackingSystemDelta();
 		clearDB(db);
@@ -80,14 +80,14 @@ public class RequestReplyClassificationTransMetricProvider  implements ITransien
 		for (BugTrackingSystemDelta bugTrackingSystemDelta : btspDelta.getBugTrackingSystemDeltas()) {
 			BugTrackingSystem bugTracker = bugTrackingSystemDelta.getBugTrackingSystem();
 			for (BugTrackingSystemComment comment: bugTrackingSystemDelta.getComments()) {
-				BugTrackerCommentsData bugTrackerCommentsData = findBugTrackerComment(db, bugTracker, comment);
-				if (bugTrackerCommentsData == null) {
-					bugTrackerCommentsData = new BugTrackerCommentsData();
-					bugTrackerCommentsData.setBugTrackerId(bugTracker.getOSSMeterId());
-					bugTrackerCommentsData.setBugId(comment.getBugId());
-					bugTrackerCommentsData.setCommentId(comment.getCommentId());
-					bugTrackerCommentsData.setDate(new Date(comment.getCreationTime()).toString());
-					db.getBugTrackerComments().add(bugTrackerCommentsData);
+				BugTrackerComments bugTrackerComments = findBugTrackerComment(db, bugTracker, comment);
+				if (bugTrackerComments == null) {
+					bugTrackerComments = new BugTrackerComments();
+					bugTrackerComments.setBugTrackerId(bugTracker.getOSSMeterId());
+					bugTrackerComments.setBugId(comment.getBugId());
+					bugTrackerComments.setCommentId(comment.getCommentId());
+					bugTrackerComments.setDate(new Date(comment.getCreationTime()).toString());
+					db.getBugTrackerComments().add(bugTrackerComments);
 				} 
 				prepareBugTrackerCommentInstance(classifier, bugTracker, comment);
 			}
@@ -103,13 +103,13 @@ public class RequestReplyClassificationTransMetricProvider  implements ITransien
 			if (!(communicationChannel instanceof NntpNewsGroup)) continue;
 			NntpNewsGroup newsgroup = (NntpNewsGroup) communicationChannel;
 			for (CommunicationChannelArticle article: communicationChannelDelta.getArticles()) {
-				NewsgroupArticlesData newsgroupArticlesData = findNewsgroupArticle(db, newsgroup, article);
-				if (newsgroupArticlesData == null) {
-					newsgroupArticlesData = new NewsgroupArticlesData();
-					newsgroupArticlesData.setUrl(newsgroup.getUrl());
-					newsgroupArticlesData.setArticleNumber(article.getArticleNumber());
-					newsgroupArticlesData.setDate(new Date(article.getDate()).toString());
-					db.getNewsgroupArticles().add(newsgroupArticlesData);
+				NewsgroupArticles newsgroupArticles = findNewsgroupArticle(db, newsgroup, article);
+				if (newsgroupArticles == null) {
+					newsgroupArticles = new NewsgroupArticles();
+					newsgroupArticles.setNewsgroupName(newsgroup.getNewsGroupName());
+					newsgroupArticles.setArticleNumber(article.getArticleNumber());
+					newsgroupArticles.setDate(new Date(article.getDate()).toString());
+					db.getNewsgroupArticles().add(newsgroupArticles);
 				} 
 				prepareNewsgroupArticleInstance(classifier, newsgroup, article);
 			}
@@ -127,9 +127,9 @@ public class RequestReplyClassificationTransMetricProvider  implements ITransien
 		for (BugTrackingSystemDelta bugTrackingSystemDelta : btspDelta.getBugTrackingSystemDeltas()) {
 			BugTrackingSystem bugTracker = bugTrackingSystemDelta.getBugTrackingSystem();
 			for (BugTrackingSystemComment comment: bugTrackingSystemDelta.getComments()) {
-				BugTrackerCommentsData bugTrackerCommentsData = findBugTrackerComment(db, bugTracker, comment);
+				BugTrackerComments bugTrackerComments = findBugTrackerComment(db, bugTracker, comment);
 				String classificationResult = getBugTrackerCommentClass(classifier, bugTracker, comment);
-				bugTrackerCommentsData.setClassificationResult(classificationResult);
+				bugTrackerComments.setClassificationResult(classificationResult);
 			}
 			db.sync();
 		}
@@ -142,9 +142,9 @@ public class RequestReplyClassificationTransMetricProvider  implements ITransien
 			if (!(communicationChannel instanceof NntpNewsGroup)) continue;
 			NntpNewsGroup newsgroup = (NntpNewsGroup) communicationChannel;
 			for (CommunicationChannelArticle article: communicationChannelDelta.getArticles()) {
-				NewsgroupArticlesData newsgroupArticlesData = findNewsgroupArticle(db, newsgroup, article);
+				NewsgroupArticles newsgroupArticles = findNewsgroupArticle(db, newsgroup, article);
 				String classificationResult = getNewsgroupArticleClass(classifier, newsgroup, article);
-				newsgroupArticlesData.setClassificationResult(classificationResult);
+				newsgroupArticles.setClassificationResult(classificationResult);
 			}
 			db.sync();
 		}
@@ -187,7 +187,7 @@ public class RequestReplyClassificationTransMetricProvider  implements ITransien
 	private void prepareNewsgroupArticleInstance(Classifier classifier, NntpNewsGroup newsgroup, 
 			CommunicationChannelArticle article) {
     	ClassificationInstance classificationInstance = new ClassificationInstance();
-        classificationInstance.setUrl(newsgroup.getUrl());
+        classificationInstance.setNewsgroupName(newsgroup.getNewsGroupName());
         classificationInstance.setArticleNumber(article.getArticleNumber());
         classificationInstance.setSubject(article.getSubject());
         classificationInstance.setText(article.getText());
@@ -197,38 +197,38 @@ public class RequestReplyClassificationTransMetricProvider  implements ITransien
 	private String getNewsgroupArticleClass(Classifier classifier, NntpNewsGroup newsgroup, 
 			CommunicationChannelArticle article) {
     	ClassificationInstance classificationInstance = new ClassificationInstance();
-        classificationInstance.setUrl(newsgroup.getUrl());
+        classificationInstance.setNewsgroupName(newsgroup.getNewsGroupName());
         classificationInstance.setArticleNumber(article.getArticleNumber());
         classificationInstance.setSubject(article.getSubject());
         return classifier.getClassificationResult(classificationInstance);
 	}
 
-	private BugTrackerCommentsData findBugTrackerComment(RequestReplyClassificationTransMetric db, 
+	private BugTrackerComments findBugTrackerComment(RequestReplyClassificationTransMetric db, 
 									BugTrackingSystem bugTracker, BugTrackingSystemComment comment) {
-		BugTrackerCommentsData bugTrackerCommentsData = null;
-		Iterable<BugTrackerCommentsData> bugTrackerCommentsDataIt = 
+		BugTrackerComments bugTrackerCommentsData = null;
+		Iterable<BugTrackerComments> bugTrackerCommentsIt = 
 				db.getBugTrackerComments().
-						find(BugTrackerCommentsData.BUGTRACKERID.eq(bugTracker.getOSSMeterId()), 
-								BugTrackerCommentsData.BUGID.eq(comment.getBugId()),
-								BugTrackerCommentsData.COMMENTID.eq(comment.getCommentId()));
-		for (BugTrackerCommentsData bcd:  bugTrackerCommentsDataIt) {
+						find(BugTrackerComments.BUGTRACKERID.eq(bugTracker.getOSSMeterId()), 
+								BugTrackerComments.BUGID.eq(comment.getBugId()),
+								BugTrackerComments.COMMENTID.eq(comment.getCommentId()));
+		for (BugTrackerComments bcd:  bugTrackerCommentsIt) {
 			bugTrackerCommentsData = bcd;
 		}
 		return bugTrackerCommentsData;
 	}
 	
 
-	private NewsgroupArticlesData findNewsgroupArticle(RequestReplyClassificationTransMetric db, 
+	private NewsgroupArticles findNewsgroupArticle(RequestReplyClassificationTransMetric db, 
 									NntpNewsGroup newsgroup, CommunicationChannelArticle article) {
-		NewsgroupArticlesData newsgroupArticlesData = null;
-		Iterable<NewsgroupArticlesData> newsgroupArticlesDataIt = 
+		NewsgroupArticles newsgroupArticles = null;
+		Iterable<NewsgroupArticles> newsgroupArticlesIt = 
 				db.getNewsgroupArticles().
-						find(NewsgroupArticlesData.URL.eq(newsgroup.getUrl()), 
-								NewsgroupArticlesData.ARTICLENUMBER.eq(article.getArticleNumber()));
-		for (NewsgroupArticlesData nad:  newsgroupArticlesDataIt) {
-			newsgroupArticlesData = nad;
+						find(NewsgroupArticles.NEWSGROUPNAME.eq(newsgroup.getNewsGroupName()), 
+								NewsgroupArticles.ARTICLENUMBER.eq(article.getArticleNumber()));
+		for (NewsgroupArticles nad:  newsgroupArticlesIt) {
+			newsgroupArticles = nad;
 		}
-		return newsgroupArticlesData;
+		return newsgroupArticles;
 	}
 
 	private void clearDB(RequestReplyClassificationTransMetric db) {

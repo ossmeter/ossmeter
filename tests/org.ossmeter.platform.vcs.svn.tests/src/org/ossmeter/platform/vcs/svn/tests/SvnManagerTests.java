@@ -99,4 +99,16 @@ public class SvnManagerTests {
 		
 		assertEquals("20130212", date.toString());
 	}
+	
+	@Test
+	public void testValidateRepository() throws Exception {
+		SvnManager manager = new SvnManager();
+		SvnRepository repo = getRepo();
+		
+		assertTrue(manager.validRepository(repo));
+		
+		SvnRepository repo2 = new SvnRepository();
+		repo2.setUrl("fooooo");
+		assertFalse(manager.validRepository(repo2));
+	}
 }

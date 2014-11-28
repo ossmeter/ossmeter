@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.java.MHF-Java.historic",
 	"vis" : [ 
 		{
-			"name" : "MHFJavaHistoric",
-			"nicename" : "MHFJavaHistoric",
+			"id" : "MHFJavaHistoric",
+			"name" : "Method Hiding Factor (Java)",
 			"description" : "This metric shows the Method Hiding Factor for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

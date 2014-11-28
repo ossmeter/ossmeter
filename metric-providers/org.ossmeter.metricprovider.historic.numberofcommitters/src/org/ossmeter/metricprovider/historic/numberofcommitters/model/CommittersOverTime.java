@@ -9,14 +9,14 @@ import java.util.List;
 import org.ossmeter.metricprovider.trans.committers.CommittersMetricProvider;
 import org.ossmeter.metricprovider.trans.committers.model.Committer;
 import org.ossmeter.metricprovider.trans.committers.model.ProjectCommitters;
-import org.ossmeter.platform.IHistoricalMetricProvider;
+import org.ossmeter.platform.AbstractHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.repository.model.Project;
 
 import com.googlecode.pongo.runtime.Pongo;
 
-public class CommittersOverTime implements IHistoricalMetricProvider {
+public class CommittersOverTime extends AbstractHistoricalMetricProvider {
 
 	protected List<IMetricProvider> uses;
 	protected MetricProviderContext context;

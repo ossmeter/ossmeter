@@ -16,10 +16,15 @@ import com.mongodb.QueryBuilder;
 
 public abstract class AbstractHistoricalMetricProvider implements IHistoricalMetricProvider {
 	
+	
+	final public String getCollectionName() {
+		return this.getIdentifier().replace("org.ossmeter.metricprovider.", "");
+	}
+	
 	public List<Pongo> getHistoricalMeasurements(MetricProviderContext context, Project project, Date start, Date end) {
 		
 		DB db = context.getProjectDB(project);
-		DBCollection collection = db.getCollection(getIdentifier());
+		DBCollection collection = db.getCollection(this.getCollectionName());
 		
 		QueryBuilder builder = QueryBuilder.start();
 		if (start != null) {
@@ -43,5 +48,4 @@ public abstract class AbstractHistoricalMetricProvider implements IHistoricalMet
 		return pongoList;
 		
 	}
-	
 }

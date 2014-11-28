@@ -51,7 +51,7 @@ public real checkSpaces(list[str] lines, set[str] symbolsTwoSides, set[str] symb
 	maxSpacesPossible = spacesFound + spacesMissed;
 	
 	if (maxSpacesPossible > 0) {
-		return spacesFound / toReal(maxSpacesPossible);
+		return round(spacesFound / toReal(maxSpacesPossible), 0.01);
 	}
 	
 	return 1.0;
@@ -72,8 +72,9 @@ public real checkSpaces(list[str] lines, set[str] symbolsTwoSides, set[str] symb
 
 
 @metric{fileReadability}
-@doc{Code readability per file, measured by use of whitespace}
-@friendlyName{FileReadability}
+@doc{Code readability per file, measured by use of whitespace measures deviations from common usage of whitespace in source code, such 
+as spaces after commas. This is a basic collection metric which is used further downstream.}
+@friendlyName{File readability}
 @appliesTo{generic()}
 map[loc, real] fileReadability(rel[Language, loc, AST] asts = {}) {
   return (f : checkSpaces(l, {"{", "}"}, {";", ","}) 
@@ -81,8 +82,22 @@ map[loc, real] fileReadability(rel[Language, loc, AST] asts = {}) {
          , f.extension == "java" || f.extension == "php");
 }
 
+@metric{fileReadabilityQuartiles}
+@doc{We measure file readability by counting exceptions to common usage of whitespace in source code, such as spaces after commas. The quartiles
+represent how many of the files have how many of these deviations. A few deviations per file is ok, but many files with many deviations indicates a
+lack of attention to readability.}
+@friendlyName{File readability quartiles}
+@appliesTo{generic()}
+@historic
+@uses{("fileReadability": "val")}
+map[str, real] fileReadabilityQ(map[loc, real] val = ()) {
+  return quartiles(val);
+}
+
 @metric{ReadabilityFactoid}
-@doc{Check for proper use of whitespace}
+@doc{We measure file readability by counting exceptions to common usage of whitespace in source code, such as spaces after commas. We find out  
+how many of the files have how many of these deviations. A few deviations per file is ok, but many files with many deviations indicates a
+lack of attention to readability.}
 @friendlyName{Use of whitespace}
 @appliesTo{generic()}
 @uses=("fileReadability":"fileReadability")
@@ -101,7 +116,7 @@ Factoid readabilityFactoid(map[loc, real] fileReadability = ()) {
 
   total = size(fileReadability);
 
-  med = 100.0 * ((size(lowPerc) == total) ? median(lowPerc) : median(medPerc + highPerc + veryHighPerc));
+  med = round(100.0 * ((size(lowPerc) == total) ? median(lowPerc) : median(medPerc + highPerc + veryHighPerc)), 0.01);
   
   star = \one();
   

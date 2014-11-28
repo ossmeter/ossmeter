@@ -4,8 +4,7 @@ Bundle-Name: Newthreadsperdaypernewsgroup
 Bundle-SymbolicName: org.ossmeter.metricprovider.historic.newsgroups.newthreads;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.metricprovider.historic.newsgroups.newthreads.Activator
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.platform,
  org.ossmeter.metricprovider.trans.newsgroups.threads,
  org.ossmeter.platform.client.api,

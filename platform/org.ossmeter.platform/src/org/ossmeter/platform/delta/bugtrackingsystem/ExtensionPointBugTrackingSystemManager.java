@@ -22,10 +22,10 @@ public class ExtensionPointBugTrackingSystemManager extends PlatformBugTrackingS
 					e.printStackTrace();
 				}
 			}
-			System.err.println("Registered bug tracking managers: ");
-			for (IBugTrackingSystemManager man : bugTrackingSystemManagers) {
-				System.err.println("\t" + man.getClass());
-			}
+//			System.err.println("Registered bug tracking managers: ");
+//			for (IBugTrackingSystemManager man : bugTrackingSystemManagers) {
+//				System.err.println("\t" + man.getClass());
+//			}
 		}
 		
 		return bugTrackingSystemManagers;

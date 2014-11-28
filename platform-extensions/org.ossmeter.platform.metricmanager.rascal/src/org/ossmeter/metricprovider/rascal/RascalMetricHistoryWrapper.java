@@ -7,7 +7,7 @@ import org.eclipse.imp.pdb.facts.type.Type;
 import org.ossmeter.metricprovider.rascal.trans.model.ListMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.Measurement;
 import org.ossmeter.metricprovider.rascal.trans.model.RascalMetrics;
-import org.ossmeter.platform.IHistoricalMetricProvider;
+import org.ossmeter.platform.AbstractHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.repository.model.Project;
@@ -18,7 +18,7 @@ import com.mongodb.DB;
 /**
  * Wraps a transient metric provider to be an historic one
  */
-public class RascalMetricHistoryWrapper implements IHistoricalMetricProvider {
+public class RascalMetricHistoryWrapper extends AbstractHistoricalMetricProvider {
 	private final RascalMetricProvider transientId;
 	private MetricProviderContext context;
 

@@ -268,6 +268,7 @@ public class RascalManager {
 	private final Set<Extractor> astExtractors = new HashSet<>();
 	
 	public static final String MODULE = "org::ossmeter::metricprovider::Manager";
+	private List<IMetricProvider> metricProviders;
 
 	public void configureRascalMetricProviders(Set<Bundle> providers) {
 		assert eval != null;
@@ -322,7 +323,6 @@ public class RascalManager {
 				if (f.hasTag("metric")) {
 					try {
 						String metricName = getTag(f, "metric");
-						String metricId = bundle.getSymbolicName() + "." + metricName;
 						String friendlyName = getTag(f, "friendlyName");
 						String description = getTag(f, "doc");
 						IValue language = f.getTag("appliesTo");
@@ -334,10 +334,10 @@ public class RascalManager {
 						}
 	
 						if (f.getReturnType().toString().equals("Factoid")) {
-							providers.add(new RascalFactoidProvider(bundle.getSymbolicName(), metricId, funcName, friendlyName, description, f, uses));
+							providers.add(new RascalFactoidProvider(bundle.getSymbolicName(), metricName, funcName, friendlyName, description, f, uses));
 						}
 						else { 
-							RascalMetricProvider m = new RascalMetricProvider(bundle.getSymbolicName(), metricId, funcName, friendlyName, description, f, uses); 
+							RascalMetricProvider m = new RascalMetricProvider(bundle.getSymbolicName(), metricName, funcName, friendlyName, description, f, uses); 
 						
 							providers.add(m);
 	
@@ -414,7 +414,11 @@ public class RascalManager {
 	}
 
 	public synchronized List<IMetricProvider> getMetricProviders() {
-		List<IMetricProvider> providers = new LinkedList<>();
+		if (metricProviders != null) {
+			return metricProviders;
+		}
+		
+		metricProviders = new LinkedList<>();
 		
 		Set<Bundle> extractorBundles = new HashSet<>();
 		IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint("ossmeter.rascal.extractor");
@@ -452,10 +456,10 @@ public class RascalManager {
 		}
 
 		for (Bundle bundle : metricBundles) {
-			addMetricProviders(bundle, providers, extractedLanguages);
+			addMetricProviders(bundle, metricProviders, extractedLanguages);
 		}
 
-		return providers;
+		return metricProviders;
 	}
 
 	public void initialize(IValue... parameters) {

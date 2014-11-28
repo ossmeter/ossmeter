@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.java.Ce-Java-Quartiles.historic",
 	"vis" : [ 
 		{
-			"name" : "CeJavaQuartilesHistoric",
-			"nicename" : "CeJavaQuartilesHistoric",
+			"id" : "CeJavaQuartilesHistoric",
+			"name" : "Efferent coupling (Java)",
 			"description" : "This metric shows the quartiles of Efferent coupling for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

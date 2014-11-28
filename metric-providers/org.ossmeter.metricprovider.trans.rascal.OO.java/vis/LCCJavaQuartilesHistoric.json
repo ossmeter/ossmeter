@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.java.LCC-Java-Quartiles.historic",
 	"vis" : [ 
 		{
-			"name" : "LCCJavaQuartilesHistoric",
-			"nicename" : "LCCJavaQuartilesHistoric",
+			"id" : "LCCJavaQuartilesHistoric",
+			"name" : "Loose Class Cohesion (Java)",
 			"description" : "This metric shows the quartiles of Loose class cohesion for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

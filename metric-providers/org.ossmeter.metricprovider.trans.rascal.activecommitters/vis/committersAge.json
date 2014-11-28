@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.activecommitters.committersAge",
 	"vis" : [ 
 		{
-			"name" : "committersAgeBar",
-			"nicename" : "committersAgeBar",
+			"id" : "committersAgeBar",
+			"name" : "Age of a committer over the life of the project",
 			"description" : "This metric shows the time each committer has been active on the project.",
 			"type" : "BarChart",
 			"datatable" : {

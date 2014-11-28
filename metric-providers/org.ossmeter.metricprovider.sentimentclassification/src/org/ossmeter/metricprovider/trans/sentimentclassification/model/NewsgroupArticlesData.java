@@ -11,24 +11,24 @@ public class NewsgroupArticlesData extends Pongo {
 	
 	public NewsgroupArticlesData() { 
 		super();
-		URL.setOwningType("org.ossmeter.metricprovider.trans.sentimentclassification.model.NewsgroupArticlesData");
+		NEWSGROUPNAME.setOwningType("org.ossmeter.metricprovider.trans.sentimentclassification.model.NewsgroupArticlesData");
 		ARTICLENUMBER.setOwningType("org.ossmeter.metricprovider.trans.sentimentclassification.model.NewsgroupArticlesData");
 		CLASSIFICATIONRESULT.setOwningType("org.ossmeter.metricprovider.trans.sentimentclassification.model.NewsgroupArticlesData");
 		EMOTIONALDIMENSIONS.setOwningType("org.ossmeter.metricprovider.trans.sentimentclassification.model.NewsgroupArticlesData");
 	}
 	
-	public static StringQueryProducer URL = new StringQueryProducer("url"); 
+	public static StringQueryProducer NEWSGROUPNAME = new StringQueryProducer("newsGroupName"); 
 	public static NumericalQueryProducer ARTICLENUMBER = new NumericalQueryProducer("articleNumber");
 	public static StringQueryProducer CLASSIFICATIONRESULT = new StringQueryProducer("classificationResult"); 
 	public static StringQueryProducer EMOTIONALDIMENSIONS = new StringQueryProducer("emotionalDimensions"); 
 	
 	
-	public String getUrl() {
-		return parseString(dbObject.get("url")+"", "");
+	public String getNewsGroupName() {
+		return parseString(dbObject.get("newsGroupName")+"", "");
 	}
 	
-	public NewsgroupArticlesData setUrl(String url) {
-		dbObject.put("url", url);
+	public NewsgroupArticlesData setNewsGroupName(String newsGroupName) {
+		dbObject.put("newsGroupName", newsGroupName);
 		notifyChanged();
 		return this;
 	}

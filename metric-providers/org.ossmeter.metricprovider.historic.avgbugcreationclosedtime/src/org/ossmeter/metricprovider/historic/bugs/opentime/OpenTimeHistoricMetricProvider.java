@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.ossmeter.metricprovider.historic.bugs.opentime.model.BugsOpenTimeHistoricMetric;
 import org.ossmeter.metricprovider.trans.bugs.bugmetadata.BugMetadataTransMetricProvider;
-import org.ossmeter.metricprovider.trans.bugs.bugmetadata.model.BugTrackerData;
+import org.ossmeter.metricprovider.trans.bugs.bugmetadata.model.BugData;
 import org.ossmeter.metricprovider.trans.bugs.bugmetadata.model.BugsBugMetadataTransMetric;
 import org.ossmeter.platform.AbstractHistoricalMetricProvider;
 import org.ossmeter.platform.Date;
@@ -48,23 +48,25 @@ public class OpenTimeHistoricMetricProvider extends AbstractHistoricalMetricProv
 			BugsBugMetadataTransMetric usedBhm = ((BugMetadataTransMetricProvider)uses.get(0)).adapt(context.getProjectDB(project));
 			long seconds = 0;
 			int durations = 0;
-			for (BugTrackerData bugTrackerData: usedBhm.getBugTrackerData()) {
-				if (!bugTrackerData.getLastClosedTime().equals("null")) {
-					java.util.Date javaOpenTime = NntpUtil.parseDate(bugTrackerData.getCreationTime());
-					java.util.Date javaCloseTime = NntpUtil.parseDate(bugTrackerData.getLastClosedTime());
+			for (BugData bugData: usedBhm.getBugData()) {
+				if (!bugData.getLastClosedTime().equals("null")) {
+					java.util.Date javaOpenTime = NntpUtil.parseDate(bugData.getCreationTime());
+					java.util.Date javaCloseTime = NntpUtil.parseDate(bugData.getLastClosedTime());
 					seconds += ( Date.duration(javaOpenTime, javaCloseTime) / 1000);
 					durations++;
 				}
 			}
-			if (durations>0) {
-				long avgDuration = seconds/durations;
-				int days = (int) (avgDuration / SECONDS_DAY);
-				long lessThanDay = (avgDuration % SECONDS_DAY);
-				String formatted = DurationFormatUtils.formatDuration(lessThanDay*1000, "HH:mm:ss:SS");
-				avgBugOpenTime.setAvgBugOpenTime(days+":"+formatted);
-//				System.out.println(days + ":" + formatted);
-				avgBugOpenTime.setBugsConsidered(durations);
-			}
+			long avgDuration = 0;
+			if (durations>0)
+				avgDuration = seconds / durations;
+			double daysReal = ( (double) avgDuration ) / SECONDS_DAY;
+			avgBugOpenTime.setAvgBugOpenTimeInDays(daysReal);
+			int days = (int) daysReal;
+			long lessThanDay = (avgDuration % SECONDS_DAY);
+			String formatted = DurationFormatUtils.formatDuration(lessThanDay*1000, "HH:mm:ss:SS");
+			avgBugOpenTime.setAvgBugOpenTime(days+":"+formatted);
+//			System.out.println(days + ":" + formatted);
+			avgBugOpenTime.setBugsConsidered(durations);
 
 		}
 		return avgBugOpenTime;

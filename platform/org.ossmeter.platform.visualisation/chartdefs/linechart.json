@@ -4,6 +4,7 @@
 	"fields" : [
 				{ "name" : "x", "type" : "Orderable", "required" : true}, 
 				{ "name" : "y", "type" : "Number", "required" : true }, 
-				{ "name" : "y2", "type" : "Number", "required" : false }
+				{ "name" : "y2", "type" : "Number", "required" : false }, 
+				{ "name" : "series", "type" : "String", "required" : false }
 			   ]
 }

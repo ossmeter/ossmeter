@@ -26,7 +26,12 @@ public class NntpUtil {
 
 		NNTPClient client = new NNTPClient();
 		client.setDefaultPort(newsgroup.getPort());
-		String serverUrl = newsgroup.getUrl().substring(0, newsgroup.getUrl().lastIndexOf("/"));		
+		String serverUrl = newsgroup.getUrl();		
+		
+		if (serverUrl.endsWith("/")) {
+			serverUrl = newsgroup.getUrl().substring(0, newsgroup.getUrl().lastIndexOf("/"));
+		}
+		
 		try {
 			client.connect(serverUrl);
 			if (newsgroup.getAuthenticationRequired()) {
@@ -36,18 +41,20 @@ public class NntpUtil {
 			// TODO Auto-generated catch block
 	        System.err.println("SocketException while connecting to NNTP server: '"+ 
 	        		newsgroup.getUrl() + "': " + e.getMessage());
+	        e.printStackTrace();
 //	        System.exit(1);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 	        System.err.println("IOException while connecting to NNTP server: '"+ 
 	        		newsgroup.getUrl() + "': " + e.getMessage());
+	        e.printStackTrace();
 //	        System.exit(1);
 		}
 		return client;
 	}
 	
 	public static NewsgroupInfo selectNewsgroup(NNTPClient client, NntpNewsGroup newsgroup) {
-		String newsgroupName = newsgroup.getUrl().substring(newsgroup.getUrl().lastIndexOf("/") + 1);
+		String newsgroupName = newsgroup.getNewsGroupName();//newsgroup.getUrl().substring(newsgroup.getUrl().lastIndexOf("/") + 1);
 		NewsgroupInfo newsgroupInfo = new NewsgroupInfo();
 		try {
 			client.selectNewsgroup(newsgroupName, newsgroupInfo);
@@ -55,6 +62,7 @@ public class NntpUtil {
 			// TODO Auto-generated catch block
 	        System.err.println("IOException while selecting newsgroup: '"+ 
 	        		newsgroupName + "': " + e.getMessage());
+	        e.printStackTrace();
 		}
 		return newsgroupInfo;
 	}
@@ -209,7 +217,8 @@ public class NntpUtil {
 			new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss"),
 			new SimpleDateFormat("dd MMM yyyy HH:mm:ss"),
 			new SimpleDateFormat("EEE, dd MMM yyyy hh:mm:ss Z"),
-			new SimpleDateFormat("EEE MMM d HH:mm:ss zzz yyyy")
+			new SimpleDateFormat("EEE MMM d HH:mm:ss zzz yyyy"),
+			new SimpleDateFormat("yyyyMMdd")
 		};
 	
     public static Date parseDate(String dateString) {

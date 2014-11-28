@@ -84,26 +84,26 @@ public class ContentClassesTransMetricProvider implements ITransientMetricProvid
 			for (ArticleData articleData: thread.getArticles()) {
 				
 				Iterable<NewsgroupData> newsgroupDataIt = 
-					db.getNewsgroups().findByUrl_name(articleData.getUrl_name());
+					db.getNewsgroups().findByNewsgroupName(articleData.getNewsgroupName());
 				NewsgroupData newsgroupData = null;
 				for (NewsgroupData ngd:  newsgroupDataIt) 
 					newsgroupData = ngd;
 				if (newsgroupData == null) {
 					newsgroupData = new NewsgroupData();
-					newsgroupData.setUrl_name(articleData.getUrl_name());
+					newsgroupData.setNewsgroupName(articleData.getNewsgroupName());
 					newsgroupData.setNumberOfArticles(0);
 					db.getNewsgroups().add(newsgroupData);
 				}
 				newsgroupData.setNumberOfArticles(newsgroupData.getNumberOfArticles() + 1);
 				
 				Iterable<ContentClass> contentClassIt =db.getContentClasses().find(
-								ContentClass.URL_NAME.eq(articleData.getUrl_name()),
+								ContentClass.NEWSGROUPNAME.eq(articleData.getNewsgroupName()),
 								ContentClass.CLASSLABEL.eq(articleData.getContentClass()));
 				ContentClass contentClass = null;
 				for (ContentClass cc:  contentClassIt) contentClass = cc;
 				if (contentClass == null) {
 					contentClass = new ContentClass();
-					contentClass.setUrl_name(articleData.getUrl_name());
+					contentClass.setNewsgroupName(articleData.getNewsgroupName());
 					contentClass.setClassLabel(articleData.getContentClass());
 					contentClass.setNumberOfArticles(0);
 					db.getContentClasses().add(contentClass);
@@ -115,7 +115,7 @@ public class ContentClassesTransMetricProvider implements ITransientMetricProvid
 
 		for (NewsgroupData newsgroupData: db.getNewsgroups()) {
 			Iterable<ContentClass> contentClassIt = 
-					db.getContentClasses().find(ContentClass.URL_NAME.eq(newsgroupData.getUrl_name()));
+					db.getContentClasses().find(ContentClass.NEWSGROUPNAME.eq(newsgroupData.getNewsgroupName()));
 			for (ContentClass contentClass:  contentClassIt)
 				contentClass.setPercentage( ((float) 100 * contentClass.getNumberOfArticles()) / 
 														newsgroupData.getNumberOfArticles());

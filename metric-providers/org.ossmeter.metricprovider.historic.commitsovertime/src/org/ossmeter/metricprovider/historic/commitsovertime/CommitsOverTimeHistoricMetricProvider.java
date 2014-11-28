@@ -8,15 +8,15 @@ import org.ossmeter.metricprovider.historic.commitsovertime.model.CommitsOverTim
 import org.ossmeter.metricprovider.trans.commits.CommitsTransientMetricProvider;
 import org.ossmeter.metricprovider.trans.commits.model.Commits;
 import org.ossmeter.metricprovider.trans.commits.model.RepositoryData;
-import org.ossmeter.platform.IHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
+import org.ossmeter.platform.AbstractHistoricalMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.repository.model.Project;
 
 import com.googlecode.pongo.runtime.Pongo;
 
-public class CommitsOverTimeHistoricMetricProvider implements
-		IHistoricalMetricProvider {
+public class CommitsOverTimeHistoricMetricProvider extends
+		AbstractHistoricalMetricProvider {
 
 	protected List<IMetricProvider> uses;
 	protected MetricProviderContext context;

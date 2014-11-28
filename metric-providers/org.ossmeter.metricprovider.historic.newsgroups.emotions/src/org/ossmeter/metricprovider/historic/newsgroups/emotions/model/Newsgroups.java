@@ -1,0 +1,55 @@
+package org.ossmeter.metricprovider.historic.newsgroups.emotions.model;
+
+import com.googlecode.pongo.runtime.Pongo;
+import com.googlecode.pongo.runtime.querying.NumericalQueryProducer;
+import com.googlecode.pongo.runtime.querying.StringQueryProducer;
+
+
+public class Newsgroups extends Pongo {
+	
+	
+	
+	public Newsgroups() { 
+		super();
+		NEWSGROUPNAME.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.emotions.model.Newsgroups");
+		NUMBEROFARTICLES.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.emotions.model.Newsgroups");
+		CUMULATIVENUMBEROFARTICLES.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.emotions.model.Newsgroups");
+	}
+	
+	public static StringQueryProducer NEWSGROUPNAME = new StringQueryProducer("newsgroupName"); 
+	public static NumericalQueryProducer NUMBEROFARTICLES = new NumericalQueryProducer("numberOfArticles");
+	public static NumericalQueryProducer CUMULATIVENUMBEROFARTICLES = new NumericalQueryProducer("cumulativeNumberOfArticles");
+	
+	
+	public String getNewsgroupName() {
+		return parseString(dbObject.get("newsgroupName")+"", "");
+	}
+	
+	public Newsgroups setNewsgroupName(String newsgroupName) {
+		dbObject.put("newsgroupName", newsgroupName);
+		notifyChanged();
+		return this;
+	}
+	public int getNumberOfArticles() {
+		return parseInteger(dbObject.get("numberOfArticles")+"", 0);
+	}
+	
+	public Newsgroups setNumberOfArticles(int numberOfArticles) {
+		dbObject.put("numberOfArticles", numberOfArticles);
+		notifyChanged();
+		return this;
+	}
+	public int getCumulativeNumberOfArticles() {
+		return parseInteger(dbObject.get("cumulativeNumberOfArticles")+"", 0);
+	}
+	
+	public Newsgroups setCumulativeNumberOfArticles(int cumulativeNumberOfArticles) {
+		dbObject.put("cumulativeNumberOfArticles", cumulativeNumberOfArticles);
+		notifyChanged();
+		return this;
+	}
+	
+	
+	
+	
+}

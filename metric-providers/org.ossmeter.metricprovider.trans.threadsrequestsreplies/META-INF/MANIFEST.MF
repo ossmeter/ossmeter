@@ -4,8 +4,7 @@ Bundle-Name: Threadsrequestsreplies
 Bundle-SymbolicName: org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.Activator
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.platform,
  org.ossmeter.repository.model.cc.nntp,
  com.googlecode.pongo.runtime.osgi,
@@ -13,7 +12,6 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.platform.communicationchannel.nntp,
  org.ossmeter.metricprovider.trans.requestreplyclassification,
  org.ossmeter.metricprovider.trans.newsgroups.threads,
- org.ossmeter.metricprovider.trans.sentimentclassification,
  org.ossmeter.platform.visualisation
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

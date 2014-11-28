@@ -72,7 +72,12 @@ public class MetricVisualisationExtensionPointManager {
 						ArrayNode visses = (ArrayNode)json.get("vis");
 						for (JsonNode vis : visses) {
 							String chartType = vis.path("type").textValue();
-							String visName = vis.path("name").textValue();
+							String visName = vis.path("id").textValue();
+							
+							// Legacy support
+							if (visName == null && vis.path("nicename").textValue() != null) {
+								visName = vis.path("nicename").textValue();
+							}
 							
 							if (visMap.containsKey(visName)) {
 								// FIXME: Use logger.

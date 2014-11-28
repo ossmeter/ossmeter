@@ -24,10 +24,10 @@ public class ExtensionPointCommunicationChannelManager extends PlatformCommunica
 					e.printStackTrace();
 				}
 			}
-			System.err.println("Registered communication channel managers: ");
-			for (ICommunicationChannelManager man : communicationChannelManagers) {
-				System.err.println("\t" + man.getClass());
-			}
+//			System.err.println("Registered communication channel managers: ");
+//			for (ICommunicationChannelManager man : communicationChannelManagers) {
+//				System.err.println("\t" + man.getClass());
+//			}
 		}
 		return communicationChannelManagers;
 	}

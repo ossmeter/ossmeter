@@ -6,5 +6,6 @@ Bundle-Version: 0.0.0.qualifier
 Bundle-Vendor: OSSMETER
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.ossmeter.metricprovider.rascal,
- org.apache.commons.math
+ org.apache.commons.math,
+ org.ossmeter.platform.visualisation
 Import-Package: org.ossmeter.platform

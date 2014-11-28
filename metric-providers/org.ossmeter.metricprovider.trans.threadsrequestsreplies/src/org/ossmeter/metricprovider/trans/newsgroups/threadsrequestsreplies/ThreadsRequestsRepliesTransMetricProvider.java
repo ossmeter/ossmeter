@@ -16,10 +16,8 @@ import org.ossmeter.metricprovider.trans.newsgroups.threads.model.ThreadData;
 import org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.model.NewsgroupsThreadsRequestsRepliesTransMetric;
 import org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.model.ThreadStatistics;
 import org.ossmeter.metricprovider.trans.requestreplyclassification.RequestReplyClassificationTransMetricProvider;
-import org.ossmeter.metricprovider.trans.requestreplyclassification.model.NewsgroupArticlesData;
+import org.ossmeter.metricprovider.trans.requestreplyclassification.model.NewsgroupArticles;
 import org.ossmeter.metricprovider.trans.requestreplyclassification.model.RequestReplyClassificationTransMetric;
-import org.ossmeter.metricprovider.trans.sentimentclassification.SentimentClassificationTransMetricProvider;
-import org.ossmeter.metricprovider.trans.sentimentclassification.model.SentimentClassificationTransMetric;
 import org.ossmeter.platform.Date;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.ITransientMetricProvider;
@@ -63,8 +61,7 @@ public class ThreadsRequestsRepliesTransMetricProvider  implements
 	@Override
 	public List<String> getIdentifiersOfUses() {
 		return Arrays.asList(ThreadsTransMetricProvider.class.getCanonicalName(),
-				RequestReplyClassificationTransMetricProvider.class.getCanonicalName(),
-				SentimentClassificationTransMetricProvider.class.getCanonicalName());
+				RequestReplyClassificationTransMetricProvider.class.getCanonicalName());
 
 	}
 
@@ -87,7 +84,7 @@ public class ThreadsRequestsRepliesTransMetricProvider  implements
 		db.getThreads().getDbCollection().drop();
 		db.sync();
 
-		if (uses.size()!=3) {
+		if (uses.size()!=2) {
 			System.err.println("Metric: " + getIdentifier() + " failed to retrieve " + 
 								"the three transient metrics it needs!");
 			System.exit(-1);
@@ -98,26 +95,11 @@ public class ThreadsRequestsRepliesTransMetricProvider  implements
 		
 		RequestReplyClassificationTransMetric usedClassifier = 
 				((RequestReplyClassificationTransMetricProvider)uses.get(1)).adapt(context.getProjectDB(project));
-
-		SentimentClassificationTransMetric sentimentClassifier = 
-				((SentimentClassificationTransMetricProvider)uses.get(2)).adapt(context.getProjectDB(project));
 		
 		Map<String, String> articleReplyRequest = new HashMap<String, String>();
-		for (NewsgroupArticlesData article: usedClassifier.getNewsgroupArticles())
-			articleReplyRequest.put(article.getUrl()+article.getArticleNumber(), 
+		for (NewsgroupArticles article: usedClassifier.getNewsgroupArticles())
+			articleReplyRequest.put(article.getNewsgroupName()+article.getArticleNumber(), 
 										article.getClassificationResult());
-
-		Map<String, String> articleSentiment = new HashMap<String, String>();
-		for (org.ossmeter.metricprovider.trans.sentimentclassification.model.NewsgroupArticlesData 
-				article: sentimentClassifier.getNewsgroupArticles())
-			articleSentiment.put(article.getUrl()+article.getArticleNumber(), 
-										article.getClassificationResult());
-
-		Map<String, String> articleEmotionalDimensions = new HashMap<String, String>();
-		for (org.ossmeter.metricprovider.trans.sentimentclassification.model.NewsgroupArticlesData 
-				article: sentimentClassifier.getNewsgroupArticles())
-			articleEmotionalDimensions.put(article.getUrl()+article.getArticleNumber(), 
-										article.getEmotionalDimensions());
 
 		for (ThreadData thread: usedThreads.getThreads()) {
 
@@ -130,28 +112,18 @@ public class ThreadsRequestsRepliesTransMetricProvider  implements
 					noReplyFound=true,
 					isFirstRequest=true;
 
-			String lastUrl_name = "";
-			int totalSentiment = 0;
+			String lastNewsgroupName = "";
 			ThreadStatistics threadStats = new ThreadStatistics();
 			while (iterator.hasNext()) {
 				ArticleData article = iterator.next();
-				lastUrl_name = article.getUrl_name();
-				String sentiment = articleSentiment.get(article.getUrl_name()+article.getArticleNumber());
-				if (sentiment.equals("Positive")) 
-					totalSentiment += 1;
-				else if(sentiment.equals("Negative")) 
-					totalSentiment -= 1;
-//				String emotionalDimensions = articleEmotionalDimensions.get(article.getUrl_name()+article.getArticleNumber());
-				String responseReply = articleReplyRequest.get(article.getUrl_name()+article.getArticleNumber());
-				if (first) {
-					threadStats.setStartSentiment(sentiment);
+				lastNewsgroupName = article.getNewsgroupName();
+				String responseReply = articleReplyRequest.get(article.getNewsgroupName() + article.getArticleNumber());
+				if (first)
 					firstMessageTime = article.getDate();
-				}
-				threadStats.setEndSentiment(sentiment);
 				if ((first)&&(responseReply.equals("Reply"))) isFirstRequest=false;
 				if ((!first)&&(noReplyFound)&&(responseReply.equals("Reply"))) {
 					
-					threadStats.setUrl_name(lastUrl_name);
+					threadStats.setNewsgroupName(lastNewsgroupName);
 					threadStats.setFirstRequest(isFirstRequest);
 					threadStats.setThreadId(thread.getThreadId());
 					threadStats.setAnswered(true);
@@ -160,7 +132,7 @@ public class ThreadsRequestsRepliesTransMetricProvider  implements
 					threadStats.setResponseDurationSec(duration);
 					db.getThreads().add(threadStats);
 					
-//					System.err.println("threadId: " + threadId + "\t" +
+//					System.err.println("threadId: " + thread.getThreadId() + "\t" +
 //							"firstMessageTime: " + firstMessageTime + "\t" +
 //							"firstResponseTime: " + article.getDate() + "\t" + 
 //							"duration: " + duration);
@@ -168,10 +140,9 @@ public class ThreadsRequestsRepliesTransMetricProvider  implements
 				if (responseReply.equals("Reply")) noReplyFound=false;
 				first=false;
 			}
-			threadStats.setAverageSentiment(((float)totalSentiment)/sortedArticleSet.size());
 			if (noReplyFound&&(!first)) {
 				threadStats = new ThreadStatistics();
-				threadStats.setUrl_name(lastUrl_name);
+				threadStats.setNewsgroupName(lastNewsgroupName);
 				threadStats.setFirstRequest(isFirstRequest);
 				threadStats.setThreadId(thread.getThreadId());
 				threadStats.setAnswered(false);

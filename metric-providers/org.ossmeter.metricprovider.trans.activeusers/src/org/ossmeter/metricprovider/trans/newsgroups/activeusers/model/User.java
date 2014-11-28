@@ -11,7 +11,7 @@ public class User extends Pongo {
 	
 	public User() { 
 		super();
-		URL_NAME.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.activeusers.model.User");
+		NEWSGROUPNAME.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.activeusers.model.User");
 		USERID.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.activeusers.model.User");
 		LASTACTIVITYDATE.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.activeusers.model.User");
 		ARTICLES.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.activeusers.model.User");
@@ -19,7 +19,7 @@ public class User extends Pongo {
 		REPLIES.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.activeusers.model.User");
 	}
 	
-	public static StringQueryProducer URL_NAME = new StringQueryProducer("url_name"); 
+	public static StringQueryProducer NEWSGROUPNAME = new StringQueryProducer("newsgroupName"); 
 	public static StringQueryProducer USERID = new StringQueryProducer("userId"); 
 	public static StringQueryProducer LASTACTIVITYDATE = new StringQueryProducer("lastActivityDate"); 
 	public static NumericalQueryProducer ARTICLES = new NumericalQueryProducer("articles");
@@ -27,12 +27,12 @@ public class User extends Pongo {
 	public static NumericalQueryProducer REPLIES = new NumericalQueryProducer("replies");
 	
 	
-	public String getUrl_name() {
-		return parseString(dbObject.get("url_name")+"", "");
+	public String getNewsgroupName() {
+		return parseString(dbObject.get("newsgroupName")+"", "");
 	}
 	
-	public User setUrl_name(String url_name) {
-		dbObject.put("url_name", url_name);
+	public User setNewsgroupName(String newsgroupName) {
+		dbObject.put("newsgroupName", newsgroupName);
 		notifyChanged();
 		return this;
 	}

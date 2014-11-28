@@ -2,24 +2,28 @@
 	"metricid" : "org.ossmeter.metricprovider.historic.newsgroups.newusers",
 	"vis" : [ 
 		{
-			"name" : "newUsers",
+			"id" : "newsgroups.newUsers",
+			"name" : "New Users",
+			"description" : "The number of new users every day." ,
 			"type" : "LineChart",
 			"datatable" : {
 				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
-					{ "name" : "New Users", "field" : "$numberOfNewUsers" } ]
+					{ "name" : "Users", "field" : "$numberOfNewUsers" } ]
 			},
 			"x" : "Date",
-			"y" : "New Users",
+			"y" : "Users",
 			"timeSeries" : true
 		},{
-			"name" : "cumulativeNewUsers",
+			"id" : "newsgroups.cumulativeNewUsers",
+			"name" : "New Users (Cumulative)",
+			"description" : "The number of new users up to and including the current date." ,
 			"type" : "LineChart",
 			"datatable" : {
 				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
-					{ "name" : "Cumulative New Users", "field" : "$cumulativeNumberOfNewUsers" } ]
+					{ "name" : "Users", "field" : "$cumulativeNumberOfNewUsers" } ]
 			},
 			"x" : "Date",
-			"y" : "Cumulative New Users",
+			"y" : "Users",
 			"timeSeries" : true
 		}
 	]

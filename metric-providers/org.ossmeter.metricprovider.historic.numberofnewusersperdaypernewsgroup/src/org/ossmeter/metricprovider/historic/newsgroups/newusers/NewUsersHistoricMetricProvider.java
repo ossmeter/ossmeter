@@ -48,15 +48,15 @@ public class NewUsersHistoricMetricProvider extends AbstractHistoricalMetricProv
 		if (uses.size()==1) {
 			int newUsersSum = 0,
 				cumulativeNewUsersSum = 0;
-			NewsgroupsActiveUsersTransMetric ActiveUsers = ((ActiveUsersTransMetricProvider)uses.get(0)).adapt(context.getProjectDB(project));
-			for (NewsgroupData newsgroup: ActiveUsers.getNewsgroups()) {
+			NewsgroupsActiveUsersTransMetric activeUsers = ((ActiveUsersTransMetricProvider)uses.get(0)).adapt(context.getProjectDB(project));
+			for (NewsgroupData newsgroup: activeUsers.getNewsgroups()) {
 				int newUsers = newsgroup.getUsers() - newsgroup.getPreviousUsers(),
 					cumulativeNewUsers = newsgroup.getUsers();
 				newUsersSum += newUsers;
 				cumulativeNewUsersSum += cumulativeNewUsers;
 				if ( (newUsers > 0) || (cumulativeNewUsers > 0) ) {
 					DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
-					dailyNewsgroupData.setUrl_name(newsgroup.getUrl_name());
+					dailyNewsgroupData.setNewsgroupName(newsgroup.getNewsgroupName());
 					dailyNewsgroupData.setNumberOfNewUsers(newUsers);
 					dailyNewsgroupData.setCumulativeNumberOfNewUsers(cumulativeNewUsers);
 					dailyNewUsers.getNewsgroups().add(dailyNewsgroupData);

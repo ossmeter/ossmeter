@@ -3,6 +3,8 @@ module Advanced
 import lang::java::m3::Core;
 import lang::java::m3::AST;
 
+import org::ossmeter::metricprovider::MetricProvider;
+
 private int countAdvancedFeatures(Declaration d) {
 	result = 0; 
 
@@ -23,7 +25,7 @@ private int countAdvancedFeatures(Declaration d) {
 
 
 @metric{AdvancedLanguageFeaturesJava}
-@doc{Usage of advanced Java features (wildcards, union types and anonymous classes)}
+@doc{Usage of advanced Java features (wildcards, union types and anonymous classes), reported per file and line number of the occurrence. This metric is for downstream processing by other metrics.}
 @friendlyName{Usage of advanced Java features}
 @appliesTo{java()}
 public map[loc file, int count] countUsesOfAdvancedLanguageFeatures(rel[Language, loc, AST] asts = {}) {
@@ -35,3 +37,14 @@ public map[loc file, int count] countUsesOfAdvancedLanguageFeatures(rel[Language
 
 	return result;
 }
+
+@metric{AdvancedLanguageFeaturesJavaQuartiles}
+@doc{Quartiles of counts of advanced Java features (wildcards, union types and anonymous classes). The numbers indicate the thresholds that delimit the first 25%, 50% and 75% of the data as well as the maximum and minumum values.}
+@friendlyName{Usage of advanced Java features quartiles}
+@appliesTo{java()}
+@historic
+@uses{("AdvancedLanguageFeaturesJava": "v")}
+public map[str, real] countUsesOfAdvancedLanguageFeaturesQ(map[loc, int] v = ()) {
+	return quartiles(v);
+}
+

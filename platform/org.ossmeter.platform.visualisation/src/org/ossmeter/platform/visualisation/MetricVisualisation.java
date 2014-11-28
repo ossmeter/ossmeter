@@ -18,6 +18,7 @@ import sparkle.dimensions.SparkDimension;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -87,7 +88,15 @@ public class MetricVisualisation {
 	
 	public byte[] getSparky(DB db, BasicDBObject query) throws IOException, ParseException, UnsparkableVisualisationException {
 		
-		if (!vis.get("timeSeries").asBoolean()) {
+		if (vis.get("timeSeries") == null || !vis.get("timeSeries").asBoolean()) {
+			throw new UnsparkableVisualisationException();
+		}
+		
+		if (vis.get("series") != null) {
+			throw new UnsparkableVisualisationException();
+		}
+		
+		if (vis.get("y").getNodeType().equals(JsonNodeType.ARRAY)) {
 			throw new UnsparkableVisualisationException();
 		}
 		
@@ -118,6 +127,16 @@ public class MetricVisualisation {
 			Double y = obj.path(yColName).asDouble();
 			ydata.add(y);
 		}
+		
+		if (xdata.isEmpty()) {
+			sparkData = mapper.createObjectNode();
+			sparkData.put("id", vis.path("id").textValue());
+			sparkData.put("name", vis.path("name").textValue());
+			sparkData.put("description", vis.path("description").textValue());
+			sparkData.put("status", "error");
+			sparkData.put("msg", "No data for metric.");
+			return null;
+		}
 			
 		// Spark config
 		int height = 60;
@@ -134,10 +153,11 @@ public class MetricVisualisation {
 
 		byte[] bytes = sparkle.renderToByteArray(xdim, ydim);
 		
-		DateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		DateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yy");
 		
 		// Set the spark data
 		sparkData = mapper.createObjectNode();
+		sparkData.put("status", "ok");
 		sparkData.put("id", vis.path("id").textValue());
 		sparkData.put("name", vis.path("name").textValue());
 		sparkData.put("description", vis.path("description").textValue());
@@ -153,13 +173,15 @@ public class MetricVisualisation {
 	}
 
 	private DBCollection getCollection(DB db) {
-		// TODO metric ID might not always be the correct identififer??
+		// TODO: Look up metric provider and get collection name from there.
+		// 		 If we're visualising transients, this may need amending 
 		
-		if (!db.collectionExists(metricId)) {
+		String id = metricId.replace("org.ossmeter.metricprovider.", "");
+		if (!db.collectionExists(id)) {
 			System.err.println("ERROR: Could not find collection: " + metricId);
 		}
 		
-		DBCollection collection = db.getCollection(metricId);
+		DBCollection collection = db.getCollection(id);
 		return collection;
 	}
 	

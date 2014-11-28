@@ -4,8 +4,7 @@ Bundle-Name: Numberofarticlesperdaypernewsgroup
 Bundle-SymbolicName: org.ossmeter.metricprovider.historic.newsgroups.articles;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.metricprovider.historic.newsgroups.articles.Activator
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.metricprovider.trans.newsgroups.articles,
  org.ossmeter.platform,
  org.ossmeter.repository.model.cc.nntp,
@@ -14,4 +13,5 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.platform.visualisation
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.historic.newsgroups.articles
+Export-Package: org.ossmeter.metricprovider.historic.newsgroups.articles,
+ org.ossmeter.metricprovider.historic.newsgroups.articles.model

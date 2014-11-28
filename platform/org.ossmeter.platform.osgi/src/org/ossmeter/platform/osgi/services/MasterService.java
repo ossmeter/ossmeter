@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ossmeter.platform.Configuration;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.platform.osgi.executors.SchedulerStatus;
@@ -34,21 +35,21 @@ public class MasterService implements IMasterService {
 	public void start() throws Exception {
 		logger.info("Master service started.");
 		
-		mongo = new Mongo(); //FIXME: should use replica set / conf
+		mongo = Configuration.getInstance().getMongoConnection(); 
 		platform = new Platform(mongo);
 	
-		SchedulingInformationCollection schedCol = platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation();
-		
-		SchedulingInformation schedulingInformation = null;
-		if (schedCol == null || schedCol.size() ==0) {
-			schedulingInformation = new SchedulingInformation();
-			schedCol.add(schedulingInformation);
-			platform.getProjectRepositoryManager().getProjectRepository().sync();
-		} else {
-			schedulingInformation = schedCol.first();
-		}
-		schedulingInformation.setIsMaster(true);
-		platform.getProjectRepositoryManager().getProjectRepository().sync();
+//		SchedulingInformationCollection schedCol = platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation();
+//		
+//		SchedulingInformation schedulingInformation = null;
+//		if (schedCol == null || schedCol.size() ==0) {
+//			schedulingInformation = new SchedulingInformation();
+//			schedCol.add(schedulingInformation);
+//			platform.getProjectRepositoryManager().getProjectRepository().sync();
+//		} else {
+//			schedulingInformation = schedCol.first();
+//		}
+//		schedulingInformation.setIsMaster(true);
+//		platform.getProjectRepositoryManager().getProjectRepository().sync();
 		
 		// Now start scheduling
 		master = new Thread() {
@@ -63,13 +64,14 @@ public class MasterService implements IMasterService {
 						
 						while (it.hasNext()) {
 							Project next = it.next();
-							if (next.getExecutionInformation().getMonitor()) {
+							List<String> currentlyExecuting = getCurrentlyExecutingProjects();
+							if (next.getExecutionInformation().getMonitor() && !currentlyExecuting.contains(next.getShortName())) {
 								projects.add(next.getShortName());
 							}
 							if (projects.size() >= 3) break;
 						}
 						
-						IWorkerService worker = null;
+						SchedulingInformation worker = null;
 						while (worker == null) {
 							worker = nextFreeWorker();
 							if (worker == null) {
@@ -80,27 +82,11 @@ public class MasterService implements IMasterService {
 									e.printStackTrace();
 								}
 							} else {
-								//worker.queueProjects(projects);
 								logger.info("Queuing " + projects.size() + " on worker ");
-								
-								worker.queueProjects(projects);
-								
-								// Update DB with load
-								SchedulingInformation wn = null;
-								for (SchedulingInformation n : platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation()) {
-									if (n.getWorkerIdentifier().equals(worker.getIdentifier())) { 
-										wn = n;
-										break;
-									}
-								}
-								if (wn == null) {
-									wn = new SchedulingInformation();
-									wn.setWorkerIdentifier(worker.getIdentifier());
-									platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().add(wn);
-								}
-								wn.getCurrentLoad().clear();
-								wn.getCurrentLoad().addAll(projects);
-								platform.getProjectRepositoryManager().getProjectRepository().sync();
+
+								for (String p : projects)
+									worker.getCurrentLoad().add(p);
+								platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().sync();
 							}
 						}
 					}
@@ -115,11 +101,37 @@ public class MasterService implements IMasterService {
 		};
 		master.start();
 	}
+	
+	protected List<String> getCurrentlyExecutingProjects() {
+		List<String> projects = new ArrayList<>();
+		Iterator<SchedulingInformation> it = platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().iterator();
+		
+		while (it.hasNext()) {
+			SchedulingInformation job = it.next();
 
-	protected IWorkerService nextFreeWorker() {
-		for (IWorkerService worker : workers) {
-			if (worker.getStatus().equals(SchedulerStatus.AVAILABLE)){
-				return worker;
+			// Ensure that we only count slaves who are still running 
+			if (System.currentTimeMillis() - job.getHeartbeat() < 70000) {
+				
+				for (String p : job.getCurrentLoad()) { // Currently can't do addAll as Pongo hasn't implemented toArray
+					projects.add(p);
+				}
+			}
+		}
+		
+		return projects;
+	}
+
+	protected SchedulingInformation nextFreeWorker() {
+		Iterator<SchedulingInformation> it = platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().iterator();
+		
+		while (it.hasNext()) {
+			SchedulingInformation job = it.next();
+
+			// Ensure that we only use slaves who are still running 
+			if (System.currentTimeMillis() - job.getHeartbeat() < 70000) {
+				if (job.getCurrentLoad() == null || job.getCurrentLoad().size() == 0) {
+					return job;
+				}
 			}
 		}
 		return null;
@@ -151,7 +163,6 @@ public class MasterService implements IMasterService {
 		}
 		
 		mongo.close();
-		
 	}
 
 	class MasterRunner implements Runnable {

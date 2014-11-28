@@ -11,35 +11,48 @@ public class NewsgroupsResponseTimeHistoricMetric extends Pongo {
 	
 	public NewsgroupsResponseTimeHistoricMetric() { 
 		super();
-		URL_NAME.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.responsetime.model.NewsgroupsResponseTimeHistoricMetric");
+		NEWSGROUPNAME.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.responsetime.model.NewsgroupsResponseTimeHistoricMetric");
 		AVGRESPONSETIME.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.responsetime.model.NewsgroupsResponseTimeHistoricMetric");
+		AVGRESPONSETIMEFORMATTED.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.responsetime.model.NewsgroupsResponseTimeHistoricMetric");
 		THREADSCONSIDERED.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.responsetime.model.NewsgroupsResponseTimeHistoricMetric");
 		CUMULATIVEAVGRESPONSETIME.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.responsetime.model.NewsgroupsResponseTimeHistoricMetric");
+		CUMULATIVEAVGRESPONSETIMEFORMATTED.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.responsetime.model.NewsgroupsResponseTimeHistoricMetric");
 		CUMULATIVETHREADSCONSIDERED.setOwningType("org.ossmeter.metricprovider.historic.newsgroups.responsetime.model.NewsgroupsResponseTimeHistoricMetric");
 	}
 	
-	public static StringQueryProducer URL_NAME = new StringQueryProducer("url_name"); 
-	public static StringQueryProducer AVGRESPONSETIME = new StringQueryProducer("avgResponseTime"); 
+	public static StringQueryProducer NEWSGROUPNAME = new StringQueryProducer("newsgroupName"); 
+	public static NumericalQueryProducer AVGRESPONSETIME = new NumericalQueryProducer("avgResponseTime");
+	public static StringQueryProducer AVGRESPONSETIMEFORMATTED = new StringQueryProducer("avgResponseTimeFormatted"); 
 	public static NumericalQueryProducer THREADSCONSIDERED = new NumericalQueryProducer("threadsConsidered");
-	public static StringQueryProducer CUMULATIVEAVGRESPONSETIME = new StringQueryProducer("cumulativeAvgResponseTime"); 
+	public static NumericalQueryProducer CUMULATIVEAVGRESPONSETIME = new NumericalQueryProducer("cumulativeAvgResponseTime");
+	public static StringQueryProducer CUMULATIVEAVGRESPONSETIMEFORMATTED = new StringQueryProducer("cumulativeAvgResponseTimeFormatted"); 
 	public static NumericalQueryProducer CUMULATIVETHREADSCONSIDERED = new NumericalQueryProducer("cumulativeThreadsConsidered");
 	
 	
-	public String getUrl_name() {
-		return parseString(dbObject.get("url_name")+"", "");
+	public String getNewsgroupName() {
+		return parseString(dbObject.get("newsgroupName")+"", "");
 	}
 	
-	public NewsgroupsResponseTimeHistoricMetric setUrl_name(String url_name) {
-		dbObject.put("url_name", url_name);
+	public NewsgroupsResponseTimeHistoricMetric setNewsgroupName(String newsgroupName) {
+		dbObject.put("newsgroupName", newsgroupName);
 		notifyChanged();
 		return this;
 	}
-	public String getAvgResponseTime() {
-		return parseString(dbObject.get("avgResponseTime")+"", "");
+	public long getAvgResponseTime() {
+		return parseLong(dbObject.get("avgResponseTime")+"", 0);
 	}
 	
-	public NewsgroupsResponseTimeHistoricMetric setAvgResponseTime(String avgResponseTime) {
+	public NewsgroupsResponseTimeHistoricMetric setAvgResponseTime(long avgResponseTime) {
 		dbObject.put("avgResponseTime", avgResponseTime);
+		notifyChanged();
+		return this;
+	}
+	public String getAvgResponseTimeFormatted() {
+		return parseString(dbObject.get("avgResponseTimeFormatted")+"", "");
+	}
+	
+	public NewsgroupsResponseTimeHistoricMetric setAvgResponseTimeFormatted(String avgResponseTimeFormatted) {
+		dbObject.put("avgResponseTimeFormatted", avgResponseTimeFormatted);
 		notifyChanged();
 		return this;
 	}
@@ -52,12 +65,21 @@ public class NewsgroupsResponseTimeHistoricMetric extends Pongo {
 		notifyChanged();
 		return this;
 	}
-	public String getCumulativeAvgResponseTime() {
-		return parseString(dbObject.get("cumulativeAvgResponseTime")+"", "");
+	public long getCumulativeAvgResponseTime() {
+		return parseLong(dbObject.get("cumulativeAvgResponseTime")+"", 0);
 	}
 	
-	public NewsgroupsResponseTimeHistoricMetric setCumulativeAvgResponseTime(String cumulativeAvgResponseTime) {
+	public NewsgroupsResponseTimeHistoricMetric setCumulativeAvgResponseTime(long cumulativeAvgResponseTime) {
 		dbObject.put("cumulativeAvgResponseTime", cumulativeAvgResponseTime);
+		notifyChanged();
+		return this;
+	}
+	public String getCumulativeAvgResponseTimeFormatted() {
+		return parseString(dbObject.get("cumulativeAvgResponseTimeFormatted")+"", "");
+	}
+	
+	public NewsgroupsResponseTimeHistoricMetric setCumulativeAvgResponseTimeFormatted(String cumulativeAvgResponseTimeFormatted) {
+		dbObject.put("cumulativeAvgResponseTimeFormatted", cumulativeAvgResponseTimeFormatted);
 		notifyChanged();
 		return this;
 	}

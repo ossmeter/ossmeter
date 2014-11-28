@@ -85,6 +85,7 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 						newNewsgroup.setAuthenticationRequired(newsgroup.getAuthenticationRequired());
 						newNewsgroup.setUsername(newsgroup.getUsername());
 						newNewsgroup.setPassword(newsgroup.getPassword());
+						newNewsgroup.setNewsGroupName(newsgroup.getNewsGroupName());
 						newNewsgroup.setPort(newsgroup.getPort());
 						newNewsgroup.setInterval(newsgroup.getInterval());
 						communicationChannelArticle.setNewsgroup(newNewsgroup);
@@ -124,17 +125,22 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 		NewsgroupInfo newsgroupInfo = NntpUtil.selectNewsgroup(nntpClient, newsgroup);
 		int firstArticleNumber = newsgroupInfo.getFirstArticle();
 		
-		Reader reader = reader = nntpClient.retrieveArticle(firstArticleNumber);
+		Reader reader = nntpClient.retrieveArticle(firstArticleNumber);
 		while (reader == null) {
 			firstArticleNumber++;
 			reader = nntpClient.retrieveArticle(firstArticleNumber);
 			if (firstArticleNumber >= newsgroupInfo.getLastArticle()) break;
 		}
 		
+		
+		
 		ArticleHeader articleHeader = new ArticleHeader(reader);
 //		Article article = NntpUtil.getArticleInfo(nntpClient, articleId);
 		nntpClient.disconnect();
 //		String date = article.getDate();
+		
+		
+		
 		return new Date(NntpUtil.parseDate(articleHeader.getDate().trim()));
 	}
 

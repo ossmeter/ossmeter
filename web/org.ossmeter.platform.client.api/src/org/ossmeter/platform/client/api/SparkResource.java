@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.ossmeter.platform.Date;
-import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.client.api.cache.SparkCache;
 import org.ossmeter.platform.visualisation.MetricVisualisation;
 import org.ossmeter.platform.visualisation.MetricVisualisationExtensionPointManager;
@@ -14,11 +13,7 @@ import org.ossmeter.platform.visualisation.UnsparkableVisualisationException;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectRepository;
 import org.restlet.data.Status;
-import org.restlet.engine.header.Header;
 import org.restlet.representation.Representation;
-import org.restlet.resource.Get;
-import org.restlet.resource.ServerResource;
-import org.restlet.util.Series;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,25 +23,16 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.QueryBuilder;
 
-public class SparkResource extends ServerResource {
+public class SparkResource extends AbstractApiResource {
 
-	@Get
-	public Representation represent() {
-		Series<Header> responseHeaders = (Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers");
-		if (responseHeaders == null) {
-		    responseHeaders = new Series(Header.class);
-		    getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders);
-		}
-		responseHeaders.add(new Header("Access-Control-Allow-Origin", "*"));
-		responseHeaders.add(new Header("Access-Control-Allow-Methods", "GET"));
-		
+	public Representation doRepresent() {
 		// Check cache
-		ObjectMapper mapper = new ObjectMapper();
 		String sd = SparkCache.getSparkCache().getSparkData(getRequest().getResourceRef().toString());
 		
 		if (sd != null) {
 			JsonNode obj;
 			try {
+				System.out.println("SD: "+ sd);
 				obj = mapper.readTree(sd);
 				return Util.createJsonRepresentation(obj);
 			} catch (Exception e) {
@@ -93,10 +79,8 @@ public class SparkResource extends ServerResource {
 			}
 			
 			BasicDBObject query = (BasicDBObject) builder.get(); 
-			
-			Platform platform = Platform.getInstance();
+
 			ProjectRepository projectRepo = platform.getProjectRepositoryManager().getProjectRepository();
-			
 			Project project = projectRepo.getProjects().findOneByShortName(projectId);
 			if (project == null) {
 				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
@@ -121,27 +105,29 @@ public class SparkResource extends ServerResource {
 			byte[] sparky;
 			try {
 				sparky = vis.getSparky(db, query);
-				String uuid = UUID.randomUUID().toString();
-				SparkCache.getSparkCache().putSpark(uuid, sparky);
-				
 				ObjectNode sparkData = vis.getSparkData();
-				sparkData.put("spark", "/spark/"+uuid);
+
+				if (sparky != null) {
+					String uuid = UUID.randomUUID().toString();
+					SparkCache.getSparkCache().putSpark(uuid, sparky);
+					sparkData.put("spark", "/spark/"+uuid);
+				}
 				sparkData.put("metricId", metricId);
 				sparkData.put("projectId", projectId);
 				
 				// And add to the return list
 				sparks.add(sparkData);		
 			} catch (ParseException e) {
-				getResponse().setStatus(Status.SERVER_ERROR_INTERNAL);
+//				getResponse().setStatus(Status.SERVER_ERROR_INTERNAL);
 				// TODO Log this as series - needs investigating by admin
-				return Util.createJsonRepresentation(generateErrorMessage(mapper, "Error whilst generating sparkle. Unable to parse data.", projectId, metricId));
+				sparks.add(generateErrorMessage(mapper, "Error whilst generating sparkle. Unable to parse data.", projectId, metricId));
 			} catch (UnsparkableVisualisationException e) {
-				getResponse().setStatus(Status.SERVER_ERROR_INTERNAL);
-				return Util.createJsonRepresentation(generateErrorMessage(mapper, "Visualisation not sparkable. Metrics must be time series in order to be sparkable.", projectId, metricId));
+//				getResponse().setStatus(Status.SERVER_ERROR_INTERNAL);
+				sparks.add(generateErrorMessage(mapper, "Visualisation not sparkable. Metrics must be time series in order to be sparkable.", projectId, metricId));
 			} catch (IOException e) {
 				e.printStackTrace(); // FIXME
-				getResponse().setStatus(Status.SERVER_ERROR_INTERNAL);
-				return Util.createJsonRepresentation(generateErrorMessage(mapper, "Error whilst generating sparkle.", projectId, metricId));
+//				getResponse().setStatus(Status.SERVER_ERROR_INTERNAL);
+				sparks.add(generateErrorMessage(mapper, "Error whilst generating sparkle.", projectId, metricId));
 			}
 		}
 

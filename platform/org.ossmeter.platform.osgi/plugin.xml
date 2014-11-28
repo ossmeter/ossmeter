@@ -13,5 +13,41 @@
          </run>
       </application>
    </extension>
+   <extension
+         id="ossmeter"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="ossmeter.workerservice"
+            name="Ossmeter platform product">
+         <property
+               name="appName"
+               value="Ossmeter platform product">
+         </property>
+      </product>
+   </extension>
+   <extension
+         id="testproduct"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="ossmeter.workerservice"
+            name="Test">
+         <property
+               name="appName"
+               value="Test">
+         </property>
+      </product>
+   </extension>
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="ossmeter.workerservice"
+            name="org.ossmeter.product.fromfeature">
+         <property
+               name="appName"
+               value="org.ossmeter.product.fromfeature">
+         </property>
+      </product>
+   </extension>
 
 </plugin>

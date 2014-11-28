@@ -17,7 +17,7 @@ import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 
 import com.googlecode.pongo.runtime.Pongo;
 
-public class ArticlesHistoricMetricProvider extends AbstractHistoricalMetricProvider{
+public class ArticlesHistoricMetricProvider extends AbstractHistoricalMetricProvider {
 
 	public final static String IDENTIFIER = "org.ossmeter.metricprovider.historic.newsgroups.articles";
 
@@ -57,7 +57,7 @@ public class ArticlesHistoricMetricProvider extends AbstractHistoricalMetricProv
 				sumOfCumulativeArticles += cumulativeArticles;
 				if ( (articles > 0) || (cumulativeArticles > 0) ) {
 					DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
-					dailyNewsgroupData.setUrl_name(newsgroup.getUrl_name());
+					dailyNewsgroupData.setNewsgroupName(newsgroup.getNewsgroupName());
 					dailyNewsgroupData.setNumberOfArticles(articles);
 					dailyNewsgroupData.setCumulativeNumberOfArticles(cumulativeArticles);
 					dailyNoa.getNewsgroups().add(dailyNewsgroupData);

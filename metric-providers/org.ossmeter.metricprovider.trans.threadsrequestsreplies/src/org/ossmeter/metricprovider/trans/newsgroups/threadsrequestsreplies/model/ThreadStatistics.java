@@ -11,34 +11,28 @@ public class ThreadStatistics extends Pongo {
 	
 	public ThreadStatistics() { 
 		super();
-		URL_NAME.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.model.ThreadStatistics");
+		NEWSGROUPNAME.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.model.ThreadStatistics");
 		THREADID.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.model.ThreadStatistics");
 		FIRSTREQUEST.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.model.ThreadStatistics");
 		ANSWERED.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.model.ThreadStatistics");
 		RESPONSEDURATIONSEC.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.model.ThreadStatistics");
 		RESPONSEDATE.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.model.ThreadStatistics");
-		AVERAGESENTIMENT.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.model.ThreadStatistics");
-		STARTSENTIMENT.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.model.ThreadStatistics");
-		ENDSENTIMENT.setOwningType("org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.model.ThreadStatistics");
 	}
 	
-	public static StringQueryProducer URL_NAME = new StringQueryProducer("url_name"); 
+	public static StringQueryProducer NEWSGROUPNAME = new StringQueryProducer("newsgroupName"); 
 	public static NumericalQueryProducer THREADID = new NumericalQueryProducer("threadId");
 	public static StringQueryProducer FIRSTREQUEST = new StringQueryProducer("firstRequest"); 
 	public static StringQueryProducer ANSWERED = new StringQueryProducer("answered"); 
 	public static NumericalQueryProducer RESPONSEDURATIONSEC = new NumericalQueryProducer("responseDurationSec");
 	public static StringQueryProducer RESPONSEDATE = new StringQueryProducer("responseDate"); 
-	public static NumericalQueryProducer AVERAGESENTIMENT = new NumericalQueryProducer("averageSentiment");
-	public static StringQueryProducer STARTSENTIMENT = new StringQueryProducer("startSentiment"); 
-	public static StringQueryProducer ENDSENTIMENT = new StringQueryProducer("endSentiment"); 
 	
 	
-	public String getUrl_name() {
-		return parseString(dbObject.get("url_name")+"", "");
+	public String getNewsgroupName() {
+		return parseString(dbObject.get("newsgroupName")+"", "");
 	}
 	
-	public ThreadStatistics setUrl_name(String url_name) {
-		dbObject.put("url_name", url_name);
+	public ThreadStatistics setNewsgroupName(String newsgroupName) {
+		dbObject.put("newsgroupName", newsgroupName);
 		notifyChanged();
 		return this;
 	}
@@ -84,33 +78,6 @@ public class ThreadStatistics extends Pongo {
 	
 	public ThreadStatistics setResponseDate(String responseDate) {
 		dbObject.put("responseDate", responseDate);
-		notifyChanged();
-		return this;
-	}
-	public float getAverageSentiment() {
-		return parseFloat(dbObject.get("averageSentiment")+"", 0.0f);
-	}
-	
-	public ThreadStatistics setAverageSentiment(float averageSentiment) {
-		dbObject.put("averageSentiment", averageSentiment);
-		notifyChanged();
-		return this;
-	}
-	public String getStartSentiment() {
-		return parseString(dbObject.get("startSentiment")+"", "");
-	}
-	
-	public ThreadStatistics setStartSentiment(String startSentiment) {
-		dbObject.put("startSentiment", startSentiment);
-		notifyChanged();
-		return this;
-	}
-	public String getEndSentiment() {
-		return parseString(dbObject.get("endSentiment")+"", "");
-	}
-	
-	public ThreadStatistics setEndSentiment(String endSentiment) {
-		dbObject.put("endSentiment", endSentiment);
 		notifyChanged();
 		return this;
 	}

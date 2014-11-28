@@ -1,41 +1,25 @@
 package org.ossmeter.platform.client.api;
 
-import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.factoids.Factoid;
 import org.ossmeter.platform.factoids.FactoidCategory;
 import org.ossmeter.platform.factoids.Factoids;
+import org.ossmeter.platform.factoids.StarRating;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectRepository;
 import org.restlet.data.Status;
-import org.restlet.engine.header.Header;
 import org.restlet.representation.Representation;
-import org.restlet.resource.Get;
-import org.restlet.resource.ServerResource;
-import org.restlet.util.Series;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-public class FactoidResource extends ServerResource {
+public class FactoidResource extends AbstractApiResource {
 
-	@Get("json")
-    public Representation represent() {
-		Series<Header> responseHeaders = (Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers");
-		if (responseHeaders == null) {
-		    responseHeaders = new Series(Header.class);
-		    getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders);
-		}
-		responseHeaders.add(new Header("Access-Control-Allow-Origin", "*"));
-		responseHeaders.add(new Header("Access-Control-Allow-Methods", "GET"));
-		
+    public Representation doRepresent() {
 		String projectName = (String) getRequest().getAttributes().get("projectid");
 		String id = (String) getRequest().getAttributes().get("factoidid");
 		
-		ObjectMapper mapper = new ObjectMapper();
-		
-		Platform platform = Platform.getInstance();
 		ProjectRepository projectRepo = platform.getProjectRepositoryManager().getProjectRepository();
 		
 		Project project = projectRepo.getProjects().findOneByShortName(projectName);
@@ -49,6 +33,8 @@ public class FactoidResource extends ServerResource {
 		}
 	
 		Factoids factoids = new Factoids(platform.getMetricsRepository(project).getDb());
+		
+		// If they didn't provide an id.
 		if (id == null || id.equals("")) {
 			String filter = getQueryValue("cat"); // filter by category --unimplemented
 			
@@ -71,39 +57,47 @@ public class FactoidResource extends ServerResource {
 			ArrayNode arr = mapper.createArrayNode();
 			
 			for (Factoid f : fs) {
-				ObjectNode factoid = mapper.createObjectNode();
-				factoid.put("id", f.getMetricId());
-				factoid.put("factoid", f.getFactoid());
-				factoid.put("stars", f.getStars().toString());
-				factoid.put("category", f.getCategory().toString());
-				arr.add(factoid);
+				// TODO: Inefficient as it looks up twice
+				arr.add(getFactoidById(factoids, f.getMetricId()));
 			}
 			getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 			return Util.createJsonRepresentation(arr);
+		} else {// If an id (or a list of ids) was provided
+			String[] i = id.split("\\+");
 			
-			
-		} else {		
-			Factoid f = factoids.getFactoids().findOneByMetricId(id);
-			
-			if (f == null) {
-				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-				ObjectNode node = mapper.createObjectNode();
-				node.put("status", "error");
-				node.put("msg", "No factoid was found with the requested identifier.");
-				node.put("request", generateRequestJson(projectName, id));
-				return Util.createJsonRepresentation(node);
+			if (i.length == 1) {
+				return Util.createJsonRepresentation(getFactoidById(factoids, id));
 			} else {
-				ObjectNode factoid = mapper.createObjectNode();
-				factoid.put("id", f.getMetricId());
-				factoid.put("factoid", f.getFactoid());
-				factoid.put("stars", f.getStars().toString());
-				factoid.put("category", f.getCategory().toString());
+				ArrayNode result = mapper.createArrayNode();
 				
-				getResponse().setStatus(Status.SUCCESS_OK);
-				return Util.createJsonRepresentation(factoid);
+				for (String fId : i) {
+					result.add(getFactoidById(factoids, fId));
+				}
+				return Util.createJsonRepresentation(result);
 			}
 		}
 	}
+    
+    protected ObjectNode getFactoidById(Factoids factoids, String factoidId) {
+    	Factoid f = factoids.getFactoids().findOneByMetricId(factoidId);
+		
+		if (f == null) {
+			ObjectNode factoid = mapper.createObjectNode();
+			factoid.put("id", factoidId);
+			factoid.put("status", "error");
+			factoid.put("msg", "Unable to find factoid with given ID.");
+			return factoid;
+		} else {
+			ObjectNode factoid = mapper.createObjectNode();
+			factoid.put("id", f.getMetricId());
+			factoid.put("factoid", f.getFactoid());
+			factoid.put("name", f.getName());
+			if (f.getStars() != null) factoid.put("stars", f.getStars().toString());
+			else factoid.put("stars", StarRating.ONE.toString());
+			if (f.getCategory() != null) factoid.put("category", f.getCategory().toString());
+			return factoid;
+		}
+    }
 	
 	private JsonNode generateRequestJson(String projectName, String factoidid) {
 		ObjectMapper mapper = new ObjectMapper();

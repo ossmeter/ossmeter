@@ -170,7 +170,7 @@ public class EclipseProjectImporter {
 	public EclipseProject importProject(String projectId, Platform platform) throws ProjectUnknownException{
 			
 		
-		String URL_PROJECT = "http://projects.eclipse.org/projects/"+ projectId;
+		String URL_PROJECT = "http://projects.eclipse.org/projects/"+ projectId.replaceAll("-", "\\.");
 		String html = null;
 		XML xml = null;
 		
@@ -197,7 +197,7 @@ public class EclipseProjectImporter {
 			html = getRawHtml(URL_PROJECT);
 			xml = new XML(html);
 			Document xmlDoc = xml.getDOM();
-			List<String> eclipsePlatformNames = getPlatforms(xmlDoc, projectId);
+			List<String> eclipsePlatformNames = getPlatforms(xmlDoc, projectId.replaceAll("-", "\\."));
 			String platformName;
 			
 			
@@ -215,7 +215,7 @@ public class EclipseProjectImporter {
 				project.getPlatforms().add(eclipsePlatform);
 				platform.getProjectRepositoryManager().getProjectRepository().sync();	
 			}
-			URL projectUrl = new URL("http://projects.eclipse.org/json/project/" + projectId);
+			URL projectUrl = new URL("http://projects.eclipse.org/json/project/" + projectId.replaceAll("-", "\\."));
 			URLConnection conn = projectUrl.openConnection();
 			String sorry = conn.getHeaderField("STATUS");
 			
@@ -228,14 +228,14 @@ public class EclipseProjectImporter {
 						
 			
 			JSONObject obj2=(JSONObject)JSONValue.parse(jsonText);
-			JSONObject currentProg = (JSONObject)((JSONObject)obj2.get("projects")).get(projectId);
+			JSONObject currentProg = (JSONObject)((JSONObject)obj2.get("projects")).get(projectId.replaceAll("-", "\\."));
 			
-			project.setShortName(projectId);
+			project.setShortName(projectId.replaceAll("\\.", "-"));
 			if ((isNotNullObj(currentProg,"title")))
 				project.setName(currentProg.get("title").toString());
 			logger.info("---> Retrieving metadata of " + project.getShortName());
 						
-			project.setParagraphUrl(getParagraphUrl(projectId));
+			project.setParagraphUrl(getParagraphUrl(projectId.replaceAll("-", "\\.")));
 
 			if ((isNotNull(currentProg,"description")))
 				project.setDescription(((JSONObject)((JSONArray)currentProg.get("description")).get(0)).get("value").toString());
@@ -329,11 +329,11 @@ public class EclipseProjectImporter {
 				}
 			}
 			
-			for (NntpNewsGroup cc : getNntpNewsGroup(projectId)) {
+			for (NntpNewsGroup cc : getNntpNewsGroup(projectId.replaceAll("-", "\\."))) {
 				project.getCommunicationChannels().add(cc);
 			}
 			
-			for (Company cc : getCompany(projectId, platform)) {
+			for (Company cc : getCompany(projectId.replaceAll("-", "\\."), platform)) {
 				project.getCompanies().add(cc);
 			}
 		// END Management of Communication Channels
@@ -351,7 +351,7 @@ public class EclipseProjectImporter {
 					Bugzilla bugzilla = new Bugzilla();
 					bugzilla.setComponent((String)((JSONObject)object).get("component"));
 					bugzilla.setCgiQueryProgram((String)((JSONObject)object).get("query_url"));
-					bugzilla.setUrl((String)((JSONObject)object).get("create_url"));
+					bugzilla.setUrl("https://bugs.eclipse.org/bugs/xmlrpc.cgi");//(String)((JSONObject)object).get("create_url"));
 					bugzilla.setProduct((String)((JSONObject)object).get("product"));
 					project.getBugTrackingSystems().add(bugzilla);
 				}				
@@ -419,7 +419,7 @@ public class EclipseProjectImporter {
 			}
 			// END Management of VcsRepositories
 			
-			List<Person> ps = getProjectPersons(platform, projectId);
+			List<Person> ps = getProjectPersons(platform, projectId.replaceAll("-", "\\."));
 			for (Person person : ps) {
 				project.getPersons().add(person);
 			}
@@ -441,11 +441,11 @@ public class EclipseProjectImporter {
 	
 	private EclipseProject importProjectFromImportAll(String projectId, Platform platform) throws ProjectUnknownException, MalformedURLException, IOException{
 		
-		String URL_PROJECT = "http://projects.eclipse.org/projects/"+ projectId;
+		String URL_PROJECT = "http://projects.eclipse.org/projects/"+ projectId.replaceAll("-", "\\.");
 		String html = null;
 		XML xml = null;
 		
-		Iterable<Project> pl = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(projectId);
+		Iterable<Project> pl = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(projectId.replaceAll("\\.", "-"));
 		Iterator<Project> iprojects = pl.iterator();
 		
 		Project projectTemp = null;
@@ -486,19 +486,19 @@ public class EclipseProjectImporter {
 				platform.getProjectRepositoryManager().getProjectRepository().sync();	
 			}
 			
-			InputStream is = new URL("http://projects.eclipse.org/json/project/" + projectId).openStream();
+			InputStream is = new URL("http://projects.eclipse.org/json/project/" + projectId.replaceAll("-", "\\.")).openStream();
 			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
 			String jsonText = readAll(rd);
 						
 			JSONObject obj=(JSONObject)JSONValue.parse(jsonText);
-			JSONObject currentProg = (JSONObject)((JSONObject)obj.get("projects")).get(projectId);
+			JSONObject currentProg = (JSONObject)((JSONObject)obj.get("projects")).get(projectId.replaceAll("-", "\\."));
 			
-			project.setShortName(projectId);
+			project.setShortName(projectId.replaceAll("\\.", "-"));
 			if ((isNotNullObj(currentProg,"title")))
 				project.setName(currentProg.get("title").toString());
 			logger.info("---> Retrieving metadata of " + project.getShortName());
 						
-			project.setParagraphUrl(getParagraphUrl(projectId));
+			project.setParagraphUrl(getParagraphUrl(projectId.replaceAll("-", "\\.")));
 
 			if ((isNotNull(currentProg,"description")))
 				project.setDescription(((JSONObject)((JSONArray)currentProg.get("description")).get(0)).get("value").toString());
@@ -592,11 +592,11 @@ public class EclipseProjectImporter {
 				}
 			}
 			
-			for (NntpNewsGroup cc : getNntpNewsGroup(projectId)) {
+			for (NntpNewsGroup cc : getNntpNewsGroup(projectId.replaceAll("-", "\\."))) {
 				project.getCommunicationChannels().add(cc);
 			}
 			
-			for (Company cc : getCompany(projectId, platform)) {
+			for (Company cc : getCompany(projectId.replaceAll("-", "\\."), platform)) {
 				project.getCompanies().add(cc);
 			}
 		// END Management of Communication Channels
@@ -614,7 +614,7 @@ public class EclipseProjectImporter {
 					Bugzilla bugzilla = new Bugzilla();
 					bugzilla.setComponent((String)((JSONObject)object).get("component"));
 					bugzilla.setCgiQueryProgram((String)((JSONObject)object).get("query_url"));
-					bugzilla.setUrl((String)((JSONObject)object).get("create_url"));
+					bugzilla.setUrl("https://bugs.eclipse.org/bugs/xmlrpc.cgi");//(String)((JSONObject)object).get("create_url"));
 					bugzilla.setProduct((String)((JSONObject)object).get("product"));
 					project.getBugTrackingSystems().add(bugzilla);
 				}				
@@ -682,7 +682,7 @@ public class EclipseProjectImporter {
 			}
 			// END Management of VcsRepositories
 			
-			List<Person> ps = getProjectPersons(platform, projectId);
+			List<Person> ps = getProjectPersons(platform, projectId.replaceAll("-", "\\."));
 			for (Person person : ps) {
 				project.getPersons().add(person);
 			}
@@ -759,6 +759,7 @@ public class EclipseProjectImporter {
 		url = URL_PROJECT;
 		try {
 			doc = Jsoup.connect(URL_PROJECT).timeout(10000).get();
+			
 			Elements e = doc.getElementsByClass("forum-nntp");
 			for (int i = 0; i < e.size(); i++){
 				NntpNewsGroup NNTPuRL = null;

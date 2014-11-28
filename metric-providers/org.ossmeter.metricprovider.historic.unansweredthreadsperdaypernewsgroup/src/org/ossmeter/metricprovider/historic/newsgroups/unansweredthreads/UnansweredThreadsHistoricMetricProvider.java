@@ -1,8 +1,11 @@
 package org.ossmeter.metricprovider.historic.newsgroups.unansweredthreads;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.ossmeter.metricprovider.historic.newsgroups.unansweredthreads.model.DailyNewsgroupData;
 import org.ossmeter.metricprovider.historic.newsgroups.unansweredthreads.model.NewsgroupsUnansweredThreadsHistoricMetric;
 import org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.ThreadsRequestsRepliesTransMetricProvider;
 import org.ossmeter.metricprovider.trans.newsgroups.threadsrequestsreplies.model.NewsgroupsThreadsRequestsRepliesTransMetric;
@@ -59,18 +62,30 @@ public class UnansweredThreadsHistoricMetricProvider extends AbstractHistoricalM
 		NewsgroupsThreadsRequestsRepliesTransMetric usedThreads = 
 				((ThreadsRequestsRepliesTransMetricProvider)uses.get(0)).adapt(context.getProjectDB(project));
 		
-		int sumOfUnansweredThreads = 0;
+		Map<String, Integer> newsgroupsUnansweredThreads = new HashMap<String, Integer>();
 		for (ThreadStatistics thread: usedThreads.getThreads()) {
-			if ((!thread.getAnswered())&&(thread.getFirstRequest()))
-				sumOfUnansweredThreads++;
+			if ((!thread.getAnswered())&&(thread.getFirstRequest())) {
+				if (newsgroupsUnansweredThreads.containsKey(thread.getNewsgroupName()))
+					newsgroupsUnansweredThreads.put(thread.getNewsgroupName(), 
+									newsgroupsUnansweredThreads.get(thread.getNewsgroupName()) + 1);
+				else
+					newsgroupsUnansweredThreads.put(thread.getNewsgroupName(), 1);
+			}
 		}
 		
 		NewsgroupsUnansweredThreadsHistoricMetric dailyUnansweredThreads = 
 									new NewsgroupsUnansweredThreadsHistoricMetric();
 
-		if (sumOfUnansweredThreads > 0) {
-			dailyUnansweredThreads.setNumberOfUnansweredThreads(sumOfUnansweredThreads);
+		int unansweredThreadsSum = 0;
+		for (String newsgroupName: newsgroupsUnansweredThreads.keySet()) {
+			DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
+			dailyUnansweredThreads.getNewsgroups().add(dailyNewsgroupData);
+			dailyNewsgroupData.setNewsgroupName(newsgroupName);
+			int unansweredThreads = newsgroupsUnansweredThreads.get(newsgroupName);
+			dailyNewsgroupData.setNumberOfUnansweredThreads(unansweredThreads);
+			unansweredThreadsSum += unansweredThreads;
 		}
+		dailyUnansweredThreads.setNumberOfUnansweredThreads(unansweredThreadsSum);
 		
 //		System.err.println(time(System.currentTimeMillis() - startTime) + "\tunanswered_new");
 		return dailyUnansweredThreads;

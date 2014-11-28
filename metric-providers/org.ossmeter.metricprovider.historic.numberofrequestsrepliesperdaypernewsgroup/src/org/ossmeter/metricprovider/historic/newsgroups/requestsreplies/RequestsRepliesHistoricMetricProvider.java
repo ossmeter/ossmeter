@@ -11,7 +11,7 @@ import java.util.Set;
 import org.ossmeter.metricprovider.historic.newsgroups.requestsreplies.model.DailyNewsgroupData;
 import org.ossmeter.metricprovider.historic.newsgroups.requestsreplies.model.NewsgroupsRequestsRepliesHistoricMetric;
 import org.ossmeter.metricprovider.trans.requestreplyclassification.RequestReplyClassificationTransMetricProvider;
-import org.ossmeter.metricprovider.trans.requestreplyclassification.model.NewsgroupArticlesData;
+import org.ossmeter.metricprovider.trans.requestreplyclassification.model.NewsgroupArticles;
 import org.ossmeter.metricprovider.trans.requestreplyclassification.model.RequestReplyClassificationTransMetric;
 import org.ossmeter.platform.AbstractHistoricalMetricProvider;
 import org.ossmeter.platform.Date;
@@ -58,12 +58,12 @@ public class RequestsRepliesHistoricMetricProvider extends AbstractHistoricalMet
 				replySum = 0;
 			RequestReplyClassificationTransMetric usedRrc = 
 					((RequestReplyClassificationTransMetricProvider)uses.get(0)).adapt(context.getProjectDB(project));
-			Set<String> newsgroupUrls = new HashSet<String>();
+			Set<String> newsgroupNames = new HashSet<String>();
 			Map<String, Integer> cumulativeRequests = new HashMap<String, Integer>(), 
 								 cumulativeReplies = new HashMap<String, Integer>(),
 								 requests = new HashMap<String, Integer>(), 
 								 replies = new HashMap<String, Integer>();
-			for (NewsgroupArticlesData naData: usedRrc.getNewsgroupArticles()) {
+			for (NewsgroupArticles naData: usedRrc.getNewsgroupArticles()) {
 				Map<String, Integer> crr = null, rr = null;
 				Date naDate = null;
 				try {
@@ -88,44 +88,40 @@ public class RequestsRepliesHistoricMetricProvider extends AbstractHistoricalMet
 					}
 				}
 				if (crr!=null) {
-					newsgroupUrls.add(naData.getUrl());
-					if (crr.containsKey(naData.getUrl()))
-						crr.put(naData.getUrl(), crr.get(naData.getUrl()) + 1);
+					newsgroupNames.add(naData.getNewsgroupName());
+					if (crr.containsKey(naData.getNewsgroupName()))
+						crr.put(naData.getNewsgroupName(), crr.get(naData.getNewsgroupName()) + 1);
 					else
-						crr.put(naData.getUrl(), 1);
+						crr.put(naData.getNewsgroupName(), 1);
 				} else {
 					System.err.println("Classification result ( " + 
 							naData.getClassificationResult() + 
 							" ) should be either Request or Reply!");
 				}
 				if (rr!=null) {
-					if (rr.containsKey(naData.getUrl()))
-						rr.put(naData.getUrl(), rr.get(naData.getUrl()) + 1);
+					if (rr.containsKey(naData.getNewsgroupName()))
+						rr.put(naData.getNewsgroupName(), rr.get(naData.getNewsgroupName()) + 1);
 					else
-						rr.put(naData.getUrl(), 1);
+						rr.put(naData.getNewsgroupName(), 1);
 				}
 			}
-			for (String newsgroupUrl: newsgroupUrls) {
+			for (String newsgroupName: newsgroupNames) {
 				DailyNewsgroupData dailyNewsgroupData = new DailyNewsgroupData();
-				dailyNewsgroupData.setUrl_name(newsgroupUrl);
-				if (cumulativeRequests.containsKey(newsgroupUrl))
-					dailyNewsgroupData.setCumulativeNumberOfRequests(cumulativeRequests.get(newsgroupUrl));
-				if (cumulativeReplies.containsKey(newsgroupUrl))
-					dailyNewsgroupData.setCumulativeNumberOfReplies(cumulativeReplies.get(newsgroupUrl));
-				if (requests.containsKey(newsgroupUrl))
-					dailyNewsgroupData.setNumberOfRequests(requests.get(newsgroupUrl));
-				if (replies.containsKey(newsgroupUrl))
-					dailyNewsgroupData.setNumberOfReplies(replies.get(newsgroupUrl));
+				dailyNewsgroupData.setNewsgroupName(newsgroupName);
+				if (cumulativeRequests.containsKey(newsgroupName))
+					dailyNewsgroupData.setCumulativeNumberOfRequests(cumulativeRequests.get(newsgroupName));
+				if (cumulativeReplies.containsKey(newsgroupName))
+					dailyNewsgroupData.setCumulativeNumberOfReplies(cumulativeReplies.get(newsgroupName));
+				if (requests.containsKey(newsgroupName))
+					dailyNewsgroupData.setNumberOfRequests(requests.get(newsgroupName));
+				if (replies.containsKey(newsgroupName))
+					dailyNewsgroupData.setNumberOfReplies(replies.get(newsgroupName));
 				dailyNorr.getNewsgroups().add(dailyNewsgroupData);
 			}
-			if (cumulativeRequestSum > 0)
-				dailyNorr.setCumulativeNumberOfRequests(cumulativeRequestSum);
-			if (cumulativeRequestSum > 0)
-				dailyNorr.setCumulativeNumberOfReplies(cumulativeReplySum);
-			if (cumulativeRequestSum > 0)
-				dailyNorr.setNumberOfRequests(requestSum);
-			if (cumulativeRequestSum > 0)
-				dailyNorr.setNumberOfReplies(replySum);
+			dailyNorr.setCumulativeNumberOfRequests(cumulativeRequestSum);
+			dailyNorr.setCumulativeNumberOfReplies(cumulativeReplySum);
+			dailyNorr.setNumberOfRequests(requestSum);
+			dailyNorr.setNumberOfReplies(replySum);
 		}
 		
 		return dailyNorr;

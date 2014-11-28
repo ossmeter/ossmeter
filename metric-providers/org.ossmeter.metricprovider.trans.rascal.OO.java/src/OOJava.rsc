@@ -56,7 +56,7 @@ private rel[loc, loc] methodFieldAccesses(M3 m) = domainR(m@fieldAccess, methods
 private rel[loc, loc] methodMethodCalls(M3 m) = domainR(m@methodInvocation, methods(m));
 
 @memo
-private rel[loc, loc] packageTypes(M3 m3) = { <p, t> | <p, t> <- m3@containment, isPackage(p), isClass(t) || isInterface(t) || t.scheme == "java+enum" };
+private rel[loc, loc] packageTypes(M3 m3) = { <p, t> | <p, t> <- m3@containment+, isPackage(p), isClass(t) || isInterface(t) || t.scheme == "java+enum" };
 
 @memo
 private rel[loc, loc] overridableMethods(M3 m3) = { <p, m> | <p, m> <- allMethods(m3), \private() notin m3@modifiers[m] };
@@ -154,7 +154,7 @@ private tuple[map[loc, int], map[loc, int]] dac_mpc(rel[Language, loc, AST] asts
 	map[loc, int] dac = ();
 	map[loc, int] mpc = ();
 
-	for (/c:class(_, _, _, _, _) <- asts[\java()]) {
+	for (/Declaration c <- asts[\java()], \class(_,_,_,_) := c || \class(_) := c) {
 		dac[c@decl] = 0;
 		mpc[c@decl] = 0;
 	
@@ -387,7 +387,7 @@ map[loc, int] NOA_Java(rel[Language, loc, M3] m3s = {}) {
 
 
 @metric{Coupling-Java}
-@doc{Java coupling}
+@doc{Coupling between Java classes counts dependencies between class definitions. The higher the coupling between classes, the harder a system is to test and to maintain.}
 @friendlyName{Java coupling}
 @appliesTo{java()}
 @uses{("CBO-Java": "cbo")}
@@ -486,7 +486,7 @@ map[str, real] Ce_Java_Q(map[loc, int] val = ()) {
 @appliesTo{java()}
 @historic
 @uses{("I-Java":"val")}
-map[loc, real] I_Java_Q(map[loc, real] val = ()) {
+map[str, real] I_Java_Q(map[loc, real] val = ()) {
 	return quartiles(val);
 }
 
@@ -506,7 +506,7 @@ map[str, real] RFC_Java_Q(map[loc, int] val = ()) {
 @appliesTo{java()}
 @historic
 @uses{("MIF-Java":"val")}
-map[loc, real] MIF_Java_Q(map[loc, real] val = ()) {
+map[str, real] MIF_Java_Q(map[loc, real] val = ()) {
 	return quartiles(val);
 }
 
@@ -516,7 +516,7 @@ map[loc, real] MIF_Java_Q(map[loc, real] val = ()) {
 @appliesTo{java()}
 @historic
 @uses{("AIF-Java":"val")}
-map[loc, real] AIF_Java_Q(map[loc, real] val = ()) {
+map[str, real] AIF_Java_Q(map[loc, real] val = ()) {
 	return quartiles(val);
 }
 
@@ -548,7 +548,7 @@ map[str, real] LCOM4_Java_Q(map[loc, int] val = ()) {
 @appliesTo{java()}
 @historic
 @uses{("TCC-Java":"val")}
-map[loc, real] TCC_Java_Q(map[loc, real] val = ()) {
+map[str, real] TCC_Java_Q(map[loc, real] val = ()) {
 	return quartiles(val);
 }
 
@@ -558,7 +558,7 @@ map[loc, real] TCC_Java_Q(map[loc, real] val = ()) {
 @appliesTo{java()}
 @historic
 @uses{("LCC-Java":"val")}
-map[loc, real] LCC_Java_Q(map[loc, real] val = ()) {
+map[str, real] LCC_Java_Q(map[loc, real] val = ()) {
 	return quartiles(val);
 }
 

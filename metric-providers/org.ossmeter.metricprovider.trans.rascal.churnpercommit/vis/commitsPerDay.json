@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.rascal.generic.churn.commitsToday.historic",
 	"vis" : [ 
 		{
-			"name" : "commitsPerDayTimeLine",
-			"nicename" : "commitsPerDayTimeLine",
+			"id" : "commitsPerDayTimeLine",
+			"name" : "Number of commits (per day)",
 			"description" : "This metric shows the number of commits per day over time.",
 			"type" : "LineChart",
 			"datatable" : {

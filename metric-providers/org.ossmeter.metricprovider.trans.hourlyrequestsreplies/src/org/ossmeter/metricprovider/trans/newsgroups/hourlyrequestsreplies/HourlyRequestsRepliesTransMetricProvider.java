@@ -6,7 +6,7 @@ import java.util.List;
 import org.ossmeter.metricprovider.trans.newsgroups.hourlyrequestsreplies.model.HourArticles;
 import org.ossmeter.metricprovider.trans.newsgroups.hourlyrequestsreplies.model.NewsgroupsHourlyRequestsRepliesTransMetric;
 import org.ossmeter.metricprovider.trans.requestreplyclassification.RequestReplyClassificationTransMetricProvider;
-import org.ossmeter.metricprovider.trans.requestreplyclassification.model.NewsgroupArticlesData;
+import org.ossmeter.metricprovider.trans.requestreplyclassification.model.NewsgroupArticles;
 import org.ossmeter.metricprovider.trans.requestreplyclassification.model.RequestReplyClassificationTransMetric;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.ITransientMetricProvider;
@@ -106,24 +106,61 @@ public class HourlyRequestsRepliesTransMetricProvider implements ITransientMetri
 				db.sync();
 			}
 		}
+
+		int sumOfArticles = 0,
+			sumOfRequests = 0,
+			sumOfReplies = 0;
+
+		for (HourArticles hourArticles: db.getHourArticles()) {
+			sumOfArticles += hourArticles.getNumberOfArticles();
+			sumOfRequests += hourArticles.getNumberOfRequests();
+			sumOfReplies += hourArticles.getNumberOfReplies();
+		}
+
+		for (HourArticles hourArticles: db.getHourArticles()) {
+			
+			float percentageOfComments;
+			if (sumOfArticles == 0)
+				percentageOfComments = ( (float) 100 ) / 7;
+			else
+				percentageOfComments = ( (float) 100 * hourArticles.getNumberOfArticles() ) / sumOfArticles;
+			hourArticles.setPercentageOfArticles(percentageOfComments);
+			
+			float percentageOfRequests;
+			if (sumOfRequests == 0)
+				percentageOfRequests = ( (float) 100 ) / 7;
+			else
+				percentageOfRequests = ( (float) 100 * hourArticles.getNumberOfRequests() ) / sumOfRequests;
+			hourArticles.setPercentageOfRequests(percentageOfRequests);
+			
+			float percentageOfReplies;
+			if (sumOfReplies == 0)
+				percentageOfReplies = ( (float) 100 ) / 7;
+			else
+				percentageOfReplies = ( (float) 100 * hourArticles.getNumberOfReplies() ) / sumOfReplies;
+			hourArticles.setPercentageOfReplies(percentageOfReplies);
+		}
+		
+		db.sync();
+
 	}
 
 	private String getRequestReplyClass(RequestReplyClassificationTransMetric usedClassifier, 
 			NntpNewsGroup newsgroup, CommunicationChannelArticle article) {
-		Iterable<NewsgroupArticlesData> newsgroupArticlesDataIt = usedClassifier.getNewsgroupArticles().
-				find(NewsgroupArticlesData.URL.eq(newsgroup.getUrl()), 
-						NewsgroupArticlesData.ARTICLENUMBER.eq(article.getArticleNumber()));
-		NewsgroupArticlesData newsgroupArticleData = null;
-		for (NewsgroupArticlesData art:  newsgroupArticlesDataIt) {
-			newsgroupArticleData = art;
+		Iterable<NewsgroupArticles> newsgroupArticlesIt = usedClassifier.getNewsgroupArticles().
+				find(NewsgroupArticles.NEWSGROUPNAME.eq(newsgroup.getNewsGroupName()), 
+						NewsgroupArticles.ARTICLENUMBER.eq(article.getArticleNumber()));
+		NewsgroupArticles newsgroupArticle = null;
+		for (NewsgroupArticles art:  newsgroupArticlesIt) {
+			newsgroupArticle = art;
 		}
-		if (newsgroupArticleData == null) {
-			System.err.println("Active users metric -\t" + 
+		if (newsgroupArticle == null) {
+			System.err.println("Newsgroups - Hourly Requests Replies -\t" + 
 					"there is no classification for article: " + article.getArticleNumber() +
-					"\t of newsgroup: " + newsgroup.getUrl());
+					"\t of newsgroup: " + newsgroup.getNewsGroupName());
 			System.exit(-1);
 		} else{
-			return newsgroupArticleData.getClassificationResult();
+			return newsgroupArticle.getClassificationResult();
 		}
 		return "";
 	}

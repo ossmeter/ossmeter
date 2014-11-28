@@ -2,7 +2,9 @@
 	"metricid" : "org.ossmeter.metricprovider.historic.bugs.comments",
 	"vis" : [ 
 		{
-			"name" : "comments",
+			"id" : "bugs.comments",
+			"name" : "Comments",
+			"description" : "The number of comments submitted every day." ,
 			"type" : "LineChart",
 			"datatable" : {
 				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
@@ -12,14 +14,16 @@
 			"y" : "Comments",
 			"timeSeries" : true
 		},{
-			"name" : "cumulativeComments",
+			"id" : "bugs.cumulativeComments",
+			"name" : "Comments (Cumulative)",
+			"description" : "The number of comments submitted up to and including the current date." ,
 			"type" : "LineChart",
 			"datatable" : {
 				"cols" : [  { "name" : "Date", "field" : "$__date" }, 
-					{ "name" : "Cumulative Comments", "field" : "$cumulativeNumberOfComments" } ]
+					{ "name" : "Comments", "field" : "$cumulativeNumberOfComments" } ]
 			},
 			"x" : "Date",
-			"y" : "Cumulative Comments",
+			"y" : "Comments",
 			"timeSeries" : true
 		}
 	]

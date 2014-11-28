@@ -60,7 +60,7 @@ public class BugzillaManager implements IBugTrackingSystemManager<Bugzilla> {
 	private void getUpdatedBugsComments(Bugzilla bugzilla, BugTrackingSystemDelta delta, 
 			 BugzillaSession session, Date date) throws Exception {
 		//=-=-=-=-=-=
-		if ((storage.getCommentStoreSize()>0)&(storage.getLatestCheckBugDate().compareTo(date)>0)) {
+		if (storage.getLatestCheckBugDate() != null && (storage.getCommentStoreSize()>0)&&(storage.getLatestCheckBugDate().compareTo(date)>0)) {
 //			System.err.println("retrieving stored comments");
 //			System.err.println("UBC:Date " + date + " is before " + storage.getLatestCheckBugDate());
 			for (int bugId: storage.getBugIds()) {
@@ -81,7 +81,7 @@ public class BugzillaManager implements IBugTrackingSystemManager<Bugzilla> {
 			// I HAVE TO CHECK IF THE BUG'S COMMENTS ARE PREVIOUSLY STORED
 			// DATES NEED TO BE CHECKED AS WELL.
 			//-=-=-=-=-=-=-=-
-			if (!bugzilla.getComponent().equals("null")) {
+			if (!bugzilla.getComponent().equals("null") && !bugzilla.getComponent().equals("")) {
 				searchQueries = new SearchQuery[5];
 				searchQueries[4] = new SearchQuery(SearchLimiter.COMPONENT, bugzilla.getComponent());
 			}
@@ -260,13 +260,13 @@ public class BugzillaManager implements IBugTrackingSystemManager<Bugzilla> {
 	private List<Bug> getBugs(Bugzilla bugzilla, 
 			BugTrackingSystemDelta delta, BugzillaSession session, Date date) throws BugzillaException {
 		SearchQuery[] searchQueries;
-		if (!bugzilla.getComponent().equals("null"))
+		if (!bugzilla.getComponent().equals("null") && !bugzilla.getComponent().equals(""))
 			searchQueries = new SearchQuery[4];
 		else
 			searchQueries = new SearchQuery[3];
 		searchQueries[0] = new SearchQuery(SearchLimiter.PRODUCT, bugzilla.getProduct());
 		searchQueries[1] = new SearchQuery(SearchLimiter.LIMIT, BUG_QUERY_LIMIT_A);
-		if (!bugzilla.getComponent().equals("null"))
+		if (!bugzilla.getComponent().equals("null") && !bugzilla.getComponent().equals(""))
 			searchQueries[3] = new SearchQuery(SearchLimiter.COMPONENT, bugzilla.getComponent());
 		List<Bug> bugs = new ArrayList<Bug>();
 		java.util.Date javaDate = date.toJavaDate();
@@ -383,7 +383,7 @@ public class BugzillaManager implements IBugTrackingSystemManager<Bugzilla> {
 			bugzillaBug.setCreationTime(session.getCreationTime(bug));
 			bugzillaBug.setCreator(session.getCreator(bug));
 			bugzillaBug.setStatus(bug.getStatus());
-//			bugzillaBug.setSummary(bug.getSummary());
+			bugzillaBug.setSummary(bug.getSummary());
 			bugzillaBug.setAssignedTo(session.getAssignedTo(bug));
 			bugzillaBug.setCategory(session.getCategory(bug));
 			bugzillaBug.setClassification(session.getClassification(bug));
@@ -429,12 +429,12 @@ public class BugzillaManager implements IBugTrackingSystemManager<Bugzilla> {
 	public Date getFirstDate(DB db, Bugzilla bugzilla) throws Exception {
 
 		SearchQuery[] searchQueries;
-		if (!bugzilla.getComponent().equals("null"))
+		if (!bugzilla.getComponent().equals("null") && !bugzilla.getComponent().equals(""))
 			searchQueries = new SearchQuery[3];
 		else
 			searchQueries = new SearchQuery[2];
 		searchQueries[0] = new SearchQuery(SearchLimiter.PRODUCT, bugzilla.getProduct()); // "Pulp");
-		if (!bugzilla.getComponent().equals("null"))
+		if (!bugzilla.getComponent().equals("null") && !bugzilla.getComponent().equals(""))
 			searchQueries[2] = new SearchQuery(SearchLimiter.COMPONENT, bugzilla.getComponent());  // "acpi");
 		searchQueries[1] = new SearchQuery(SearchLimiter.LIMIT, "10");
 

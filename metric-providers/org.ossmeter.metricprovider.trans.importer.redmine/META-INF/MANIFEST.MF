@@ -19,5 +19,4 @@ Require-Bundle:  org.ossmeter.platform,
  org.ossmeter.repository.model.redmine.importer,
  org.ossmeter.repository.model.sourceforge.importer,
  org.ossmeter.repository.model.importer.exception,
- org.eclipse.ui,
  com.googlecode.pongo.runtime.osgi

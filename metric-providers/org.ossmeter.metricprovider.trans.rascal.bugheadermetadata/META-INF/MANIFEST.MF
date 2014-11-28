@@ -4,8 +4,7 @@ Bundle-Name: Bugstatus
 Bundle-SymbolicName: org.ossmeter.metricprovider.trans.bugs.bugmetadata;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.metricprovider.trans.bugs.bugmetadata.Activator
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.core.runtime,
  com.googlecode.pongo.runtime,
  org.ossmeter.repository.model.bts.bugzilla,
  com.googlecode.pongo.runtime.osgi,
@@ -13,7 +12,8 @@ Require-Bundle: org.eclipse.ui,
  org.ossmeter.platform,
  org.ossmeter.contentclassifier.opennlptartarus.libsvm,
  org.ossmeter.metricprovider.trans.sentimentclassification,
- org.ossmeter.platform.visualisation
+ org.ossmeter.platform.visualisation,
+ org.ossmeter.metricprovider.trans.requestreplyclassification
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.metricprovider.trans.bugs.bugmetadata,
