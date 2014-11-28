@@ -13,5 +13,6 @@ Require-Bundle: org.ossmeter.repository.model.redmine;bundle-version="1.0.0",
  com.googlecode.pongo.runtime.osgi,
  org.ossmeter.platform
 Export-Package: org.ossmeter.repository.model.redmine.importer
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 
 

@@ -6,4 +6,5 @@ Bundle-Version: 1.0.0.qualifier
 Export-Package: org.ossmeter.repository.model.vcs.git
 Require-Bundle: com.googlecode.pongo.runtime.dependencies,
  org.ossmeter.repository.model
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 

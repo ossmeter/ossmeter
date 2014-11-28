@@ -5,3 +5,4 @@ Bundle-SymbolicName: org.ossmeter.repository.model.vcs.svn;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Export-Package: org.ossmeter.repository.model.vcs.svn
 Require-Bundle: org.ossmeter.repository.model;visibility:=reexport
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

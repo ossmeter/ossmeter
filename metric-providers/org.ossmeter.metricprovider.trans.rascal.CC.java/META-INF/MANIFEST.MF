@@ -7,3 +7,4 @@ Require-Bundle: org.ossmeter.metricprovider.rascal;bundle-version="0.0.0",
  org.apache.commons.math,
  org.ossmeter.metricprovider.trans.rascal.CC;bundle-version="1.0.0",
  org.ossmeter.platform.visualisation
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

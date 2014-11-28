@@ -6,3 +6,4 @@ Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.ossmeter.metricprovider.rascal;bundle-version="0.0.0",
  com.googlecode.pongo.runtime.osgi,
  org.ossmeter.platform.visualisation
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

@@ -6,3 +6,4 @@ Bundle-Version: 1.0.0.qualifier
 Export-Package: org.ossmeter.repository.model.redmine
 Require-Bundle: com.googlecode.pongo.runtime;bundle-version="0.5.0",
  org.ossmeter.repository.model
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

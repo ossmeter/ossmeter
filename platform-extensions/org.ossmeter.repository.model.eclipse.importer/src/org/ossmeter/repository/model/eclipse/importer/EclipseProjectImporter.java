@@ -103,6 +103,7 @@ public class EclipseProjectImporter {
 	 *
 	 * @param  platform Ossmeter Platform object
 	 */
+	@SuppressWarnings("rawtypes")
 	public void importAll(Platform platform) 
 	{		
 		try {
@@ -138,6 +139,7 @@ public class EclipseProjectImporter {
 		logger.info("Importer has finished!");
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public void importProjects(Platform platform, int numberfOfProjects) 
 	{		
 		try {

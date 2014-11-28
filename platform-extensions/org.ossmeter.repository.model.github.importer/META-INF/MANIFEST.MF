@@ -15,4 +15,5 @@ Require-Bundle: org.ossmeter.repository.model,
  org.ossmeter.repository.model.importer.exception,
  org.ossmeter.repository.model.importer.exception,
  org.ossmeter.repository.model.importer.exception
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 

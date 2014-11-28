@@ -5,3 +5,4 @@ Bundle-SymbolicName: org.ossmeter.metricprovider.style;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.ossmeter.metricprovider.rascal,
  org.ossmeter.platform.visualisation
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

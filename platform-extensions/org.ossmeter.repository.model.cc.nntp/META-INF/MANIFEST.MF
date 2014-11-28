@@ -6,3 +6,4 @@ Bundle-Version: 1.0.0.qualifier
 Export-Package: org.ossmeter.repository.model.cc.nntp
 Require-Bundle: org.ossmeter.repository.model;visibility:=reexport,
  com.googlecode.pongo.runtime
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
