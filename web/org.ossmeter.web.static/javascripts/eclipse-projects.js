@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    James Williams - Implementation.
+ *******************************************************************************/
 var Projects = {
 	"birt" : { "name" : "BIRT", "shortName" : "birt", "url" : "www.eclipse.org/birt", "desc" : "BIRT is an open source Eclipse-based reporting system that integrates with your Java/Java EE application to produce compelling reports." },
 	"ecf" : { "name" : "ECF", "shortName" : "ecf", "url" : "www.eclipse.org/ecf", "desc" : "ECF is a set of frameworks for building distributed servers, applications, and tools. It provides a modular implementation of the OSGi 5 Remote Services standard, along with support for REST-based and other types of remote services." },
