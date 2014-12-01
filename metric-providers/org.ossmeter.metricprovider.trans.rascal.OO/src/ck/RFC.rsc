@@ -12,10 +12,10 @@ import Set;
 @doc{
 	Response for class (nr of methods reachable by class methods (direct and indirect))
 }
-public map[loc, int] RFC(rel[loc, loc] calls, rel[loc, loc] typeMethods, set[loc] allTypes) {
+public map[loc, int] RFC(rel[loc, loc] calls, map[loc, set[loc]] typeMethods, set[loc] allTypes) {
 	callsTrans = calls+;
 
-	return ( t : size(callsTrans[typeMethods[t]] - typeMethods[t]) | t <- allTypes );
+	return ( t : size(callsTrans[(typeMethods[t]?{})] - (typeMethods[t]?{})) | t <- allTypes );
 }
 
 

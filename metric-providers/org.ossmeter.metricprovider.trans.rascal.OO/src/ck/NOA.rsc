@@ -12,8 +12,8 @@ import Set;
 @doc{
 	Number of attributes per class
 }
-public map[loc, int] NOA(rel[loc \type, loc att] typeAttributes, set[loc] allTypes) {
-	return ( t : size(typeAttributes[t]) | t <- allTypes );
+public map[loc, int] NOA(map[loc \type, set[loc] attributes] typeAttributes, set[loc] allTypes) {
+	return ( t : size(typeAttributes[t]?{}) | t <- allTypes );
 }
 
 /*

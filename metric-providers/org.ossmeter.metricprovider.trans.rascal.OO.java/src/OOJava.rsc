@@ -54,13 +54,19 @@ private rel[loc, loc] typeDependencies(M3 m3) = typeDependencies(superTypes(m3),
 private rel[loc, loc] allMethods(M3 m3) = { <t, m> | t <- allTypes(m3), m <- m3@containment[t], isMethod(m) };
 
 @memo
+private map[loc, set[loc]] allMethodsMap(M3 m3) = ( t : { m | m <- m3@containment[t], isMethod(m) } | t <- allTypes(m3) );
+
+@memo
 private rel[loc, loc] allFields(M3 m3) = { <t, f> | t <- allTypes(m3), f <- m3@containment[t], isField(f) };
 
 @memo
-private rel[loc, loc] methodFieldAccesses(M3 m) = domainR(m@fieldAccess, methods(m));
+private map[loc, set[loc]] allFieldsMap(M3 m3) = ( t : { f | f <- m3@containment[t], isField(f) } | t <- allTypes(m3) );
 
 @memo
-private rel[loc, loc] methodMethodCalls(M3 m) = domainR(m@methodInvocation, methods(m));
+private map[loc, set[loc]] methodFieldAccesses(M3 m) = domainR(toMap(m@fieldAccess), methods(m));
+
+@memo
+private map[loc, set[loc]] methodMethodCalls(M3 m) = domainR(toMap(m@methodInvocation), methods(m));
 
 @memo
 private rel[loc, loc] packageTypes(M3 m3) = { <p, t> | <p, t> <- m3@containment+, isPackage(p), isClass(t) || isInterface(t) || t.scheme == "java+enum" };
@@ -241,7 +247,7 @@ map[loc, real] I_Java(map[loc, int] ce = (), map[loc, int] ca = ()) {
 @appliesTo{java()}
 map[loc, int] RFC_Java(rel[Language, loc, M3] m3s = {}) {
   M3 m3 = systemM3(m3s);
-  return RFC(m3@methodInvocation, allMethods(m3), allTypes(m3));
+  return RFC(m3@methodInvocation, allMethodsMap(m3), allTypes(m3));
 }
 
 @metric{MIF-Java}
@@ -254,7 +260,7 @@ map[loc, real] MIF_Java(rel[Language, loc, M3] m3s = {}) {
 	// TODO package visibility?	
 	inheritableMethods = { <t, m> | <t, m> <- allMethods(m3), {\private(), \abstract()} & m3@modifiers[m] == {} };
 	
-	return MIF(allMethods(m3), inheritableMethods, m3@extends, classes(m3));
+	return MIF(allMethodsMap(m3), inheritableMethods, m3@extends, classes(m3));
 }
 
 @metric{AIF-Java}
@@ -267,7 +273,7 @@ map[loc, real] AIF_Java(rel[Language, loc, M3] m3s = {}) {
 	// TODO package visibility?	
 	publicAndProtectedFields = { <t, f> | <t, f> <- allFields(m3), \private() notin m3@modifiers[f] };
 	
-	return MIF(allFields(m3), publicAndProtectedFields, superTypes(m3), allTypes(m3));
+	return MIF(allFieldsMap(m3), publicAndProtectedFields, superTypes(m3), allTypes(m3));
 }
 
 @doc{
@@ -340,7 +346,7 @@ real PF_Java(rel[Language, loc, M3] m3s = {}) {
 @appliesTo{java()}
 map[loc, int] LCOM_Java(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
-	return LCOM(methodFieldAccesses(m3), allMethods(m3), allFields(m3), allTypes(m3));
+	return LCOM(methodFieldAccesses(m3), allMethodsMap(m3), allFieldsMap(m3), allTypes(m3));
 }
 
 @metric{LCOM4-Java}
@@ -349,7 +355,7 @@ map[loc, int] LCOM_Java(rel[Language, loc, M3] m3s = {}) {
 @appliesTo{java()}
 map[loc, int] LCOM4_Java(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
-	return LCOM4(methodMethodCalls(m3), methodFieldAccesses(m3), allMethods(m3), allFields(m3), allTypes(m3));
+	return LCOM4(methodMethodCalls(m3), methodFieldAccesses(m3), allMethodsMap(m3), allFieldsMap(m3), allTypes(m3));
 }
 
 @metric{TCC-Java}
@@ -358,7 +364,7 @@ map[loc, int] LCOM4_Java(rel[Language, loc, M3] m3s = {}) {
 @appliesTo{java()}
 map[loc, real] TCC_Java(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
-	return TCC(allMethods(m3), allFields(m3), methodMethodCalls(m3), methodFieldAccesses(m3), allTypes(m3));
+	return TCC(allMethodsMap(m3), allFieldsMap(m3), methodMethodCalls(m3), methodFieldAccesses(m3), allTypes(m3));
 }
 
 @metric{LCC-Java}
@@ -367,7 +373,7 @@ map[loc, real] TCC_Java(rel[Language, loc, M3] m3s = {}) {
 @appliesTo{java()}
 map[loc, real] LCC_Java(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
-	return LCC(allMethods(m3), allFields(m3), methodMethodCalls(m3), methodFieldAccesses(m3), allTypes(m3));
+	return LCC(allMethodsMap(m3), allFieldsMap(m3), methodMethodCalls(m3), methodFieldAccesses(m3), allTypes(m3));
 }
 
 
@@ -377,7 +383,7 @@ map[loc, real] LCC_Java(rel[Language, loc, M3] m3s = {}) {
 @appliesTo{java()}
 map[loc, int] NOM_Java(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
-	return NOA(allMethods(m3), allTypes(m3));
+	return NOM(allMethodsMap(m3), allTypes(m3));
 }
 
 @metric{NOA-Java}
@@ -386,7 +392,7 @@ map[loc, int] NOM_Java(rel[Language, loc, M3] m3s = {}) {
 @appliesTo{java()}
 map[loc, int] NOA_Java(rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s);
-	return NOA(allFields(m3), allTypes(m3));
+	return NOA(allFieldsMap(m3), allTypes(m3));
 }
 
 

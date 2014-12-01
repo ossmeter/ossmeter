@@ -12,8 +12,8 @@ import Set;
 @doc{
 	Number of methods per class
 }
-public map[loc, int] NOM(rel[loc \type, loc att] typeMethods, set[loc] allTypes) {
-	return ( t : size(typeMethods[t]) | t <- allTypes );
+public map[loc, int] NOM(map[loc \type, set[loc] methods] typeMethods, set[loc] allTypes) {
+	return ( t : size(typeMethods[t]?{}) | t <- allTypes );
 }
 
 
