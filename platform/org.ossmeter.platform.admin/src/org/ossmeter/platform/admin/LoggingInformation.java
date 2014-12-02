@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.ossmeter.platform.admin;
 
-import org.ossmeter.platform.Platform;
-
 import java.io.IOException;
 import java.net.UnknownHostException;
 

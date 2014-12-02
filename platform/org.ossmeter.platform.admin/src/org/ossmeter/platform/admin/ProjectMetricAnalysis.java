@@ -11,8 +11,6 @@
 package org.ossmeter.platform.admin;
 
 import java.net.UnknownHostException;
-import java.util.Date;
-
 import org.ossmeter.platform.Configuration;
 import org.restlet.engine.header.Header;
 import org.restlet.resource.Get;

@@ -11,8 +11,6 @@
 package org.ossmeter.platform.visualisation;
 
 import java.util.Calendar;
-import java.util.Date;
-
 import org.junit.Test;
 import org.ossmeter.metricprovider.rascal.trans.model.IntegerMeasurement;
 import org.ossmeter.metricprovider.rascal.trans.model.ListMeasurement;

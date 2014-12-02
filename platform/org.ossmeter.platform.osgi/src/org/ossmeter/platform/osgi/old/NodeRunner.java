@@ -13,7 +13,6 @@ package org.ossmeter.platform.osgi.old;
 import java.util.List;
 
 import org.ossmeter.platform.osgi.executors.MasterScheduler;
-import org.ossmeter.platform.osgi.executors.SlaveScheduler;
 
 public class NodeRunner {
 	

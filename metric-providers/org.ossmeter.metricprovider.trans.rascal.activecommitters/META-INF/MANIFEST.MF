@@ -4,5 +4,6 @@ Bundle-Name: Activecommitters
 Bundle-SymbolicName: org.ossmeter.metricprovider.trans.rascal.activecommitters;singleton:=true
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Version: 1.0.0.qualifier
-Require-Bundle: org.ossmeter.metricprovider.rascal;bundle-version="0.0.0",
+Require-Bundle: org.ossmeter.metricprovider.rascal,
+ com.googlecode.pongo.runtime,
  org.ossmeter.platform.visualisation

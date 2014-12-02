@@ -28,9 +28,6 @@
 //////////////////////////////////////////////////////////////////////////////
 package org.ossmeter.repository.model.eclipse.importer.util.NNTP;
 
-import java.util.StringTokenizer;
-import java.util.*;
-
 /**
 * NNTPArticle holds information about an article.  
 *

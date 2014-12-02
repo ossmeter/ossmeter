@@ -5,6 +5,7 @@ Bundle-SymbolicName: org.ossmeter.contentclassifier.opennlptartarus.libsvm
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.contentclassifier.opennlptartarus.libsvm.Activator
 Require-Bundle: org.eclipse.core.runtime,
+ com.googlecode.pongo.runtime,
  org.ossmeter.libsvm,
  org.ossmeter.libsvm.dependencies,
  org.ossmeter.tartarus.parser.posstemmer,

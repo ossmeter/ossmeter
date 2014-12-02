@@ -18,7 +18,6 @@ import org.ossmeter.platform.Date;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.app.example.util.ProjectCreationUtil;
 import org.ossmeter.platform.delta.NoManagerFoundException;
-import org.ossmeter.platform.osgi.OssmeterApplication;
 import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.Project;

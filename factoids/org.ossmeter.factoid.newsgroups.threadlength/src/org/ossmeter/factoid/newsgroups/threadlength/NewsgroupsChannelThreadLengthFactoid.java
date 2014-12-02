@@ -11,7 +11,6 @@
 package org.ossmeter.factoid.newsgroups.threadlength;
 
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 

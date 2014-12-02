@@ -18,8 +18,6 @@ import org.apache.log4j.DailyRollingFileAppender;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
-import org.apache.log4j.PropertyConfigurator;
-import org.log4mongo.MongoDbAppender;
 
 public class OssmeterLogger extends Logger {
 

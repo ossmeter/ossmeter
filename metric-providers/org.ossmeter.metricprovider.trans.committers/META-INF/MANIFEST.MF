@@ -5,6 +5,7 @@ Bundle-SymbolicName: org.ossmeter.metricprovider.trans.committers;singleton:=tru
 Bundle-Version: 1.0.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: com.googlecode.pongo.runtime,
+ com.googlecode.pongo.runtime,
  com.googlecode.pongo.runtime.dependencies,
  org.ossmeter.platform,
  org.ossmeter.repository.model

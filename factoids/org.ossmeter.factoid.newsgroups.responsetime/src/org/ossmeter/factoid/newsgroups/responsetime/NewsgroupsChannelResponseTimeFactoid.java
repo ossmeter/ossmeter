@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.ossmeter.factoid.newsgroups.responsetime;
 
-import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 

@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.ossmeter.metricprovider.trans.importer.googlecode;
 
-import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.List;
 
 import org.ossmeter.platform.IMetricProvider;
@@ -25,12 +23,8 @@ import org.ossmeter.repository.model.googlecode.GoogleCodeProject;
 import org.ossmeter.repository.model.googlecode.importer.GoogleCodeImporter;
 import org.ossmeter.repository.model.importer.exception.WrongUrlException;
 
-import com.googlecode.pongo.runtime.Pongo;
 import com.googlecode.pongo.runtime.PongoDB;
-import com.googlecode.pongo.runtime.PongoFactory;
-import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
 import com.mongodb.DB;
-import com.mongodb.Mongo;
 
 public class GoogleCodeImporterProvider implements ITransientMetricProvider{
 

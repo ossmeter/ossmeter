@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.ossmeter.repository.model.jira;
 
-import com.mongodb.*;
-import java.util.*;
-import com.googlecode.pongo.runtime.*;
 import com.googlecode.pongo.runtime.querying.*;
 
 // protected region custom-imports on begin

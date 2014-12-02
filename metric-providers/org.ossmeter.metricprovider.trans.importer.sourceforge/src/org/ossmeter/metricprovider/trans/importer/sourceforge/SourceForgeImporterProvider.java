@@ -9,12 +9,8 @@
  * 	Davide Di Ruscio- Implementation.
  *******************************************************************************/
 package org.ossmeter.metricprovider.trans.importer.sourceforge;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.UnknownHostException;
 import java.util.List;
 
-import org.ossmeter.platform.IHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.ITransientMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
@@ -24,16 +20,11 @@ import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectExecutionInformation;
 import org.ossmeter.repository.model.importer.exception.WrongUrlException;
-import org.ossmeter.repository.model.sourceforge.SourceForgeBugTrackingSystem;
 import org.ossmeter.repository.model.sourceforge.SourceForgeProject;
 import org.ossmeter.repository.model.sourceforge.importer.SourceforgeProjectImporter;
 
-import com.googlecode.pongo.runtime.Pongo;
 import com.googlecode.pongo.runtime.PongoDB;
-import com.googlecode.pongo.runtime.PongoFactory;
-import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
 import com.mongodb.DB;
-import com.mongodb.Mongo;
 public class SourceForgeImporterProvider  implements ITransientMetricProvider {
 
 	public final static String IDENTIFIER = 

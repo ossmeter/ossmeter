@@ -3,7 +3,6 @@ package com.googlecode.pongo.runtime;
 import java.util.Iterator;
 
 import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
 
 public class PongoCursorIterator<T> implements Iterator<T> {
 	

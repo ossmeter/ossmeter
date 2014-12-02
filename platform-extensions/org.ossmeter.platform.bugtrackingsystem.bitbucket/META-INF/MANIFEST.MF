@@ -14,6 +14,6 @@ Require-Bundle: org.eclipse.core.runtime,
  com.mashape.unirest,
  org.ossmeter.jackson,
  org.ossmeter.platform.bugtrackingsystem,
- org.apache.commons.lang;bundle-version="1.0.0"
+ org.apache.commons.lang
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy

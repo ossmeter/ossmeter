@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.ossmeter.metricprovider.trans.importer.redmine;
 
-import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.List;
 
 import org.ossmeter.platform.IMetricProvider;
@@ -26,12 +24,8 @@ import org.ossmeter.repository.model.importer.exception.RepoInfoNotFound;
 import org.ossmeter.repository.model.redmine.RedmineProject;
 import org.ossmeter.repository.model.redmine.importer.RedmineImporter;
 
-import com.googlecode.pongo.runtime.Pongo;
 import com.googlecode.pongo.runtime.PongoDB;
-import com.googlecode.pongo.runtime.PongoFactory;
-import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
 import com.mongodb.DB;
-import com.mongodb.Mongo;
 
 public class RedmineImporterProvider implements ITransientMetricProvider {
 	public final static String IDENTIFIER = 

@@ -11,10 +11,7 @@
 package org.ossmeter.platform.osgi;
 
 import java.text.ParseException;
-import java.util.List;
-
 import org.ossmeter.platform.Date;
-import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.delta.NoManagerFoundException;
 import org.ossmeter.platform.delta.ProjectDelta;

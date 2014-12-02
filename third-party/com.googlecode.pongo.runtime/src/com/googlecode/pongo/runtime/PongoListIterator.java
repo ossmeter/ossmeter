@@ -2,9 +2,6 @@ package com.googlecode.pongo.runtime;
 
 import java.util.Iterator;
 
-import com.mongodb.BasicDBList;
-import com.mongodb.DBObject;
-
 public class PongoListIterator<T extends Pongo> implements Iterator<T>{
 	
 	protected Iterator<Object> dbListIterator = null; 

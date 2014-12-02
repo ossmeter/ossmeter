@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: OSSMETER Logging
-Bundle-SymbolicName: org.apache.log4j
+Bundle-SymbolicName: org.apache.log4j.1.2.17
 Bundle-Version: 1.0.0
 Bundle-ClassPath: log4mongo-java-0.7.4.jar,
  mongo-java-driver-2.9.3.jar,
@@ -20,10 +20,12 @@ Export-Package: com.mongodb,
  org.apache.log4j.jdbc,
  org.apache.log4j.jmx,
  org.apache.log4j.lf5,
+ org.apache.log4j.lf5.config,
  org.apache.log4j.lf5.util,
  org.apache.log4j.lf5.viewer,
  org.apache.log4j.lf5.viewer.categoryexplorer,
  org.apache.log4j.lf5.viewer.configure,
+ org.apache.log4j.lf5.viewer.images,
  org.apache.log4j.net,
  org.apache.log4j.nt,
  org.apache.log4j.or,

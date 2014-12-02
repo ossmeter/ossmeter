@@ -10,9 +10,6 @@
  *******************************************************************************/
 package org.ossmeter.repository.model.vcs.cvs;
 
-import com.mongodb.*;
-import java.util.*;
-import com.googlecode.pongo.runtime.*;
 import com.googlecode.pongo.runtime.querying.*;
 
 

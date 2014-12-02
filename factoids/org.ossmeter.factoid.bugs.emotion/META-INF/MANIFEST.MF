@@ -5,6 +5,7 @@ Bundle-SymbolicName: org.ossmeter.factoid.bugs.emotion;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.platform,
+ com.googlecode.pongo.runtime,
  org.ossmeter.repository.model,
  org.ossmeter.metricprovider.trans.bugs.emotions
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

@@ -18,8 +18,6 @@ import org.ossmeter.platform.cache.communicationchannel.CommunicationChannelDelt
 import org.ossmeter.platform.cache.communicationchannel.ICommunicationChannelContentsCache;
 import org.ossmeter.platform.cache.communicationchannel.ICommunicationChannelDeltaCache;
 import org.ossmeter.repository.model.CommunicationChannel;
-import org.ossmeter.repository.model.Project;
-
 import com.mongodb.DB;
 
 public abstract class PlatformCommunicationChannelManager implements ICommunicationChannelManager<CommunicationChannel> {

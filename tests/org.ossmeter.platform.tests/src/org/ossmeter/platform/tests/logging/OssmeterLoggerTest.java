@@ -10,10 +10,6 @@
  *******************************************************************************/
 package org.ossmeter.platform.tests.logging;
 
-import static org.junit.Assert.fail;
-
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.PatternLayout;
 import org.junit.Test;
 import org.ossmeter.platform.logging.OssmeterLogger;
 

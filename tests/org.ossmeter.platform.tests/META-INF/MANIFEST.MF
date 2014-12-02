@@ -12,4 +12,5 @@ Require-Bundle: org.junit,
  org.mapdb,
  org.ossmeter.repository.model,
  org.mockito,
- org.ossmeter.repository.model.cc.nntp
+ org.ossmeter.repository.model.cc.nntp,
+ org.apache.log4j.1.2.17

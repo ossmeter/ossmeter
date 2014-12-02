@@ -12,28 +12,17 @@ package org.ossmeter.platform.importers.tests;
 
 import static org.junit.Assert.*;
 
-import java.io.IOException;
-import java.lang.reflect.Array;
-import java.net.MalformedURLException;
-import java.util.Arrays;
-
-import static org.hamcrest.CoreMatchers.*;
-
-import org.hamcrest.Matcher;
-import org.hamcrest.core.AnyOf;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.ossmeter.metricprovider.trans.importer.eclipse.EclipseImporterProvider;
-import org.ossmeter.metricprovider.trans.importer.github.GitHubImporterProvider;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 import org.ossmeter.repository.model.eclipse.importer.EclipseProjectImporter;
-import org.ossmeter.repository.model.github.importer.GitHubImporter;
 import org.ossmeter.repository.model.importer.exception.ProjectUnknownException;
 import org.ossmeter.repository.model.importer.exception.WrongUrlException;
 

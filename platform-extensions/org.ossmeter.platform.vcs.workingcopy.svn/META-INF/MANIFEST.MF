@@ -4,8 +4,9 @@ Bundle-Name: org.ossmeter.platform.vcs.workingcopy.svn
 Bundle-SymbolicName: org.ossmeter.platform.vcs.workingcopy.svn;singleton:=true
 Bundle-Version: 0.0.1.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Require-Bundle: org.ossmeter.platform.vcs.workingcopy.manager;bundle-version="0.0.1",
- org.ossmeter.platform.vcs.svn;bundle-version="1.0.0",
- org.ossmeter.repository.model.vcs.svn;bundle-version="1.0.0",
- org.svnkit
+Require-Bundle: org.ossmeter.platform.vcs.workingcopy.manager,
+ org.ossmeter.platform.vcs.svn,
+ org.ossmeter.repository.model.vcs.svn,
+ org.svnkit,
+ org.ossmeter.repository.model
 Export-Package: org.ossmeter.platform.vcs.workingcopy.svn

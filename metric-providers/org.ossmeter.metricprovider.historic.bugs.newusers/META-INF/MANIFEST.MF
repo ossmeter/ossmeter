@@ -5,8 +5,9 @@ Bundle-SymbolicName: org.ossmeter.metricprovider.historic.bugs.newusers;singleto
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.metricprovider.historic.bugs.newusers.Activator
 Require-Bundle: org.eclipse.core.runtime,
+ com.googlecode.pongo.runtime,
  org.ossmeter.platform,
- org.ossmeter.metricprovider.trans.bugs.activeusers;bundle-version="1.0.0",
+ org.ossmeter.metricprovider.trans.bugs.activeusers,
  org.ossmeter.platform.client.api,
  com.googlecode.pongo.runtime.osgi,
  org.ossmeter.platform.visualisation,

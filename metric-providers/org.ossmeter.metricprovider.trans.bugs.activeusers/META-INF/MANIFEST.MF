@@ -9,9 +9,10 @@ Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.platform.visualisation,
  org.ossmeter.platform.client.api,
  org.ossmeter.repository.model.bts.bugzilla,
- com.googlecode.pongo.runtime.osgi,
  org.ossmeter.metricprovider.trans.requestreplyclassification,
- org.ossmeter.platform.communicationchannel.nntp
+ org.ossmeter.platform.communicationchannel.nntp,
+ com.googlecode.pongo.runtime,
+ org.ossmeter.repository.model
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.metricprovider.trans.bugs.activeusers,

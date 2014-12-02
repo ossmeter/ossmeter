@@ -37,7 +37,7 @@ import java.util.StringTokenizer;
 * @version 	0.1
 * @since    0.1
 */
-public class NNTPGroup implements Comparable
+public class NNTPGroup implements Comparable<NNTPGroup>
 {
     // fullname of the newsgroup
     private String m_name;
@@ -131,7 +131,7 @@ public class NNTPGroup implements Comparable
     * @return       true if posting is allowed, false if not
     * @since        0.1
     */
-    public int compareTo(Object obj)
+    public int compareTo(NNTPGroup obj)
     {
         int result = m_name.compareTo(((NNTPGroup)obj).m_name);
         return result;
