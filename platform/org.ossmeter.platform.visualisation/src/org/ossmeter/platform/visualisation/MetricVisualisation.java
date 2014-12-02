@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    James Williams - Implementation.
+ *******************************************************************************/
 package org.ossmeter.platform.visualisation;
 
 import java.io.IOException;
@@ -5,7 +15,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -13,11 +22,10 @@ import java.util.List;
 import sparkle.Sparkle;
 import sparkle.dimensions.DateDimension;
 import sparkle.dimensions.LinearDimension;
-import sparkle.dimensions.SparkDimension;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -87,7 +95,15 @@ public class MetricVisualisation {
 	
 	public byte[] getSparky(DB db, BasicDBObject query) throws IOException, ParseException, UnsparkableVisualisationException {
 		
-		if (!vis.get("timeSeries").asBoolean()) {
+		if (vis.get("timeSeries") == null || !vis.get("timeSeries").asBoolean()) {
+			throw new UnsparkableVisualisationException();
+		}
+		
+		if (vis.get("series") != null) {
+			throw new UnsparkableVisualisationException();
+		}
+		
+		if (vis.get("y").getNodeType().equals(JsonNodeType.ARRAY)) {
 			throw new UnsparkableVisualisationException();
 		}
 		
@@ -144,7 +160,7 @@ public class MetricVisualisation {
 
 		byte[] bytes = sparkle.renderToByteArray(xdim, ydim);
 		
-		DateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		DateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yy");
 		
 		// Set the spark data
 		sparkData = mapper.createObjectNode();

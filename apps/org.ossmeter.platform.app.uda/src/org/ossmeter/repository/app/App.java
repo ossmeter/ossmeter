@@ -1,10 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    James Williams - Implementation.
+ *******************************************************************************/
     package org.ossmeter.repository.app;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.Collection;
-import java.util.Iterator;
 
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
@@ -14,19 +18,12 @@ import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.delta.vcs.ExtensionPointVcsManager;
 import org.ossmeter.platform.delta.vcs.PlatformVcsManager;
 import org.ossmeter.repository.model.redmine.importer.RedmineImporter;
-//import org.ossmeter.repository.model.github.GitHubRepository;
-//import org.ossmeter.repository.model.github.GitHubUser;
-import org.ossmeter.repository.model.sourceforge.SourceForgeProject;
 import org.ossmeter.repository.model.sourceforge.importer.SourceforgeProjectImporter;
 import org.ossmeter.repository.model.eclipse.importer.*;
-import org.ossmeter.repository.model.eclipse.*;
-import org.ossmeter.repository.model.github.GitHubRepository;
 import org.ossmeter.repository.model.github.importer.GitHubImporter;
 import org.ossmeter.repository.model.googlecode.importer.GoogleCodeImporter;
 import org.ossmeter.repository.model.importer.exception.RepoInfoNotFound;
 import org.ossmeter.repository.model.importer.exception.WrongUrlException;
-import org.ossmeter.repository.model.*;
-
 import com.googlecode.pongo.runtime.PongoFactory;
 import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
 import com.mongodb.Mongo;

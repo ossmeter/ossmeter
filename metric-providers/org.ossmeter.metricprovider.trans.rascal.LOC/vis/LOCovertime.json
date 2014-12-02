@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.LOC.locPerLanguage.historic",
 	"vis" : [ 
 		{
-			"name" : "locPerLanguageTimeLine",
-			"nicename" : "locPerLanguage",
+			"id" : "locPerLanguageTimeLine",
+			"name" : "Lines of code (per language)",
 			"description" : "This metric shows the physical lines of code per language over time.",
 			"type" : "LineChart",
 			"datatable" : {
@@ -17,7 +17,7 @@
 			"series" : "Language",
 			"x-label" : "Date",		
 			"y-label" : "LOC",
-			"timeseries" : "true"
+			"timeSeries" : true
 		}
 	]
 }

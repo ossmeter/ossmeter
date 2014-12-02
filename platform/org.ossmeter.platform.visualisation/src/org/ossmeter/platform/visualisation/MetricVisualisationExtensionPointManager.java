@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    James Williams - Implementation.
+ *******************************************************************************/
 package org.ossmeter.platform.visualisation;
 
 import java.net.URL;
@@ -73,6 +83,11 @@ public class MetricVisualisationExtensionPointManager {
 						for (JsonNode vis : visses) {
 							String chartType = vis.path("type").textValue();
 							String visName = vis.path("id").textValue();
+							
+							// Legacy support
+							if (visName == null && vis.path("nicename").textValue() != null) {
+								visName = vis.path("nicename").textValue();
+							}
 							
 							if (visMap.containsKey(visName)) {
 								// FIXME: Use logger.

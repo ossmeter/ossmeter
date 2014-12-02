@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.PHP.RFC-PHP-Quartiles.historic",
 	"vis" : [ 
 		{
-			"name" : "RFCPHPQuartilesHistoric",
-			"nicename" : "RFCPHPQuartilesHistoric",
+			"id" : "RFCPHPQuartilesHistoric",
+			"name" : "Response For Class (PHP)",
 			"description" : "This metric shows the quartiles of Response for class for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

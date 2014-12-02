@@ -5,6 +5,7 @@ Bundle-SymbolicName: org.ossmeter.severityclassifier.opennlptartarus.libsvm;sing
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.severityclassifier.opennlptartarus.libsvm.Activator
 Require-Bundle: org.eclipse.core.runtime,
+ com.googlecode.pongo.runtime,
  org.ossmeter.libsvm,
  org.ossmeter.libsvm.dependencies,
  org.ossmeter.opennlp,

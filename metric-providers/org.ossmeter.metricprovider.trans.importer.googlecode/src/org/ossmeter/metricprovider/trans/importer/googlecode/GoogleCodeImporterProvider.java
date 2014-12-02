@@ -1,7 +1,15 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * 	Davide Di Ruscio- Implementation.
+ *******************************************************************************/
 package org.ossmeter.metricprovider.trans.importer.googlecode;
 
-import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.List;
 
 import org.ossmeter.platform.IMetricProvider;
@@ -15,12 +23,8 @@ import org.ossmeter.repository.model.googlecode.GoogleCodeProject;
 import org.ossmeter.repository.model.googlecode.importer.GoogleCodeImporter;
 import org.ossmeter.repository.model.importer.exception.WrongUrlException;
 
-import com.googlecode.pongo.runtime.Pongo;
 import com.googlecode.pongo.runtime.PongoDB;
-import com.googlecode.pongo.runtime.PongoFactory;
-import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
 import com.mongodb.DB;
-import com.mongodb.Mongo;
 
 public class GoogleCodeImporterProvider implements ITransientMetricProvider{
 

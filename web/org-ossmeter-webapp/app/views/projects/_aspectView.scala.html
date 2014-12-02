@@ -1,28 +1,11 @@
-@(project: org.ossmeter.repository.model.Project, qualityModel : QualityModel, aspect : QualityAspect, summary : Boolean)
+@(project: org.ossmeter.repository.model.Project, qualityModel : QualityModel, aspect : QualityAspect, summary : Boolean, parents : List[QualityAspect])
 
-@if(summary) {
-    @for(attribute <- aspect.attributes) {
-        @_attributeSummaryView(project, qualityModel, attribute)
-    }
-} else {
-    
-<section>
-    <div class="container box">
-        <div class="row">
-            <div class="col-md-12 center" id="metricplot-legend">
-                hi
-            </div>
-        </div>
-    </div>
-</section>
+@import scala._
 
-<section>
-    <div class="container box">
-        <div class="row">
-    @for(attribute <- aspect.attributes) {
-        @_attributeDetailView(project, qualityModel, attribute)
-    }
-        </div>
-    </div>
-</section>
+@for(attribute <- aspect.attributes) {
+    @_attributeView(project, qualityModel, attribute, List.concat(parents, List(aspect)), summary)
+}
+
+@for(a <- aspect.aspects) {
+    @_aspectView(project, qualityModel, a, summary, List.concat(parents, List(aspect)))
 }

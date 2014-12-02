@@ -5,4 +5,6 @@ Bundle-SymbolicName: org.ossmeter.repository.model.cc.forum;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Export-Package: org.ossmeter.repository.model.cc.forum
 Require-Bundle: com.googlecode.pongo.runtime.dependencies,
- org.ossmeter.repository.model
+ org.ossmeter.repository.model,
+ com.googlecode.pongo.runtime
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

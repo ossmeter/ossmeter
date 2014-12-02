@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.comments.headerPercentage.historic",
 	"vis" : [ 
 		{
-			"name" : "headerPercentageTimeLine",
-			"nicename" : "headerPercentageTimeLine",
+			"id" : "headerPercentageTimeLine",
+			"name" : "Percentage of files with headers",
 			"description" : "This metric shows the percentage of files with a header over time.",
 			"type" : "LineChart",
 			"datatable" : {
@@ -15,7 +15,7 @@
 			"y" : "Percentage", 
 			"x-label" : "Date",		
 			"y-label" : "Files with headers (%)",
-			"timeseries" : "true"
+			"timeSeries" : true
 		}
 	]
 }

@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.rascal.testability.java.TestOverPublicMethods.historic",
 	"vis" : [ 
 		{
-			"name" : "testCoveragePublicHistoric",
-			"nicename" : "testCoveragePublicHistoric",
+			"id" : "testCoveragePublicHistoric",
+			"name" : "Unit test coverage (public methods)",
 			"description" : "This metric shows the percentage of public Java methods covered by unit tests, over time.",
 			"type" : "LineChart",
 			"datatable" : {

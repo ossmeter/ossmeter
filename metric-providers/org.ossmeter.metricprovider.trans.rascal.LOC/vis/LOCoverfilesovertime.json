@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.LOC.genericLOCoverFiles.historic",
 	"vis" : [ 
 		{
-			"name" : "LOCoverfilesovertime",
-			"nicename" : "LOC over files over time",
+			"id" : "LOCoverfilesovertime",
+			"name" : "LOC over files over time",
 			"description" : "This metric shows the distribution of physical lines of code over files over time.",
 			"type" : "LineChart",
 			"datatable" : {
@@ -16,7 +16,7 @@
 			"series" : "Language",
 			"x-label" : "Date",
 			"y-label" : "Gini coefficient",
-			"timeseries" : "true"
+			"timeSeries" : true
 		}
 	]
 }

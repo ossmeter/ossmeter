@@ -9,82 +9,75 @@
 
 @import scala._
 
-@import org.ossmeter.repository.model._
-@import org.ossmeter.repository.model.bts.bugzilla._
-@import org.ossmeter.repository.model.cc.forum._
-@import org.ossmeter.repository.model.cc.nntp._
-@import org.ossmeter.repository.model.cc.wiki._
-@import org.ossmeter.repository.model.vcs.svn._
-@import org.ossmeter.repository.model.vcs.git._
-@import org.ossmeter.repository.model.eclipse._
-
 @attributeId = @{ 
     attribute.name.replaceAll(" ", "");
 }
 
-    <div class="row">
+    <div id="myform"></div>
+
+    <div class="row" data-toggle="collapse" data-target="#div-attr-@attributeId" aria-expanded="true" aria-controls="div-attr-@attributeId">
         <h2 class="marginless">@attribute.name</h2>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <table class="table" id="sparklines-table-@attributeId">
-                <thead></thead>
-                <tbody></tbody>
-            </table>
-            <script type="text/javascript">
-                $(function() {
-                    $.getJSON("http://localhost:8182/projects/p/@project.getShortName()/s/@attribute.metrics.mkString("+")", function (result) {
-
-                        console.log(Object.prototype.toString.call( result ));
-
-                        // Convert into an array if only one spark was requested
-                        if( Object.prototype.toString.call( result ) === '[object Object]' ) {
-                            result = [result];
-                        }
-
-                        for (var r in result) {
-                            var data = result[r];
-
-                            // FIXME: If the first sparkle is in error, this won't work.
-                            if (r == 0) { // Set up the header
-                                $("#sparklines-table-@attributeId > thead:last").append(
-                                    "<tr><th></th><th>metric</th>" +
-                                    "<th>" + data.firstDate + "</th>" +
-                                    "<th>" + data.months + " months</th>" +
-                                    "<th>" + data.lastDate + "</th>" +
-                                    "<th>low</th>" +
-                                    "<th>high</th></tr>");
-                            }
-
-                            if (data.status === "error") {
-                                console.log("Unable to load sparky '" + data.metricId + "': " + data.msg);
-                                continue;
-                            }
-
-                            var a = ""; 
-                            if ($.inArray(data.name, app.grid.sparks) != -1){
-                                a = "active";
-                            }
-                            var toAppend = "<tr><td>";
-
-                            if (app.loggedIn) {
-                                var id = "watch-spark-@project.getShortName()-" + data.name;
-                                toAppend = toAppend + '<a href="javascript:toggleSpark(\'#'+id+'\',\'@project.getShortName()\',\'@project.getName()\',\''+ data.name + '\', \''+data.name+'\')"><span id="' + id + '" class="glyphicon glyphicon-eye-open spark-watch tip ' + a + '" data-toggle="tooltip" data-placement="left" title="Watch/unwatch on dashboard"></span></a>';
-                            }
-                           toAppend = toAppend + "</td>" +
-                                "<td>" + data.name + 
-                                "</td><td>" + Math.round(data.first * 100) / 100  +
-                                "</td><td><img class=\"spark\" src=\"http://localhost:8182" + data.spark + "\" />" +  
-                                "</td><td>" + Math.round(data.last * 100) / 100  + 
-                                "</td><td>" + Math.round(data.low * 100) / 100 + 
-                                "</td><td>" + Math.round(data.high * 100) / 100 + "</td></tr>";
-
-                            $("#sparklines-table-@attributeId > tbody:last").append(toAppend);
-                        }
-                        $(".tip").tooltip(app.tooltipOptions);
-                    });
-                });
-
-            </script>
+    <div id="div-attr-@attributeId">
+        <div class="row collapse">
+            <div class="col-md-2">
+                <table class="table spark" id="sparklines-table-toolkit-@attributeId">
+                    <thead></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <table class="table spark" id="sparklines-table-12months-@attributeId">
+                    <thead></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="col-md-4">
+                <table class="table spark" id="sparklines-table-alltime-@attributeId">
+                    <thead></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
-    </div>    
+        <h3>Other Metrics</h3>
+        <div class="row" id="other-plots-@attributeId"></div>
+    </div>
+    <script type="text/javascript">
+        $(function() {
+            "use strict";
+            // var vm = new UnsparkablePlots();
+            // ko.applyBindings(vm, document.getElementById("other-plots-@attributeId"));
+
+            // var v = new Unsparkable("modeling-epsilon", "bugs.inactiveusers");
+            // // vm.unsparks.push(v);
+
+            var twelveMth = {
+                sparktable : "sparklines-table-12months-@attributeId",
+                projectid : "@project.getShortName()",
+                projectname : "@project.getName()",
+                metriclist : "@attribute.metrics.map(x=>x.id).mkString("+")",
+                querystring : "startDate=" + getOneYearAgoDateString(),
+                toolkittable : "sparklines-table-toolkit-@attributeId",
+                drawName : true,
+                drawNonSparkable : true,
+                drawNonSparkableContainer : "other-plots-@attributeId"
+            };
+
+            var allTime = {
+                sparktable : "sparklines-table-alltime-@attributeId",
+                projectid : "@project.getShortName()",
+                projectname : "@project.getName()",
+                metriclist : "@attribute.metrics.map(x=>x.id).mkString("+")",
+            };
+
+            drawSparkTable(twelveMth);
+            drawSparkTable(allTime);
+
+            // Ensure all rows are the same height
+            setTimeout(function() {
+                fixHeights("sparklines-table-12months-@attributeId", "sparklines-table-alltime-@attributeId");
+                fixHeights("sparklines-table-12months-@attributeId", "sparklines-table-toolkit-@attributeId");
+            }, 2000); 
+        });
+    </script>
+<script type="text/javascript" src="@routes.Assets.at("js/knockout-2.3.0.js")"></script>

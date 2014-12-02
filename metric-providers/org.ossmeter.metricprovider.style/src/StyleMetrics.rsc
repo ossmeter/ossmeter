@@ -1,3 +1,10 @@
+@license{
+Copyright (c) 2014 OSSMETER Partners.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+}
 module StyleMetrics
 
 import org::ossmeter::metricprovider::MetricProvider;
@@ -36,8 +43,9 @@ private real spreadOverFiles(rel[Language, loc, M3] m3s = {}, Table violations =
  
 @metric{styleViolations}
 @doc{
-  Lists a large number of categorized style violations for a project which will be categorized and
-  summarized by depending metrics.    
+  This is a basic metric which collects per file all the style violations, recording the line number and the kind of style violation.
+  Each kind of violation is grouped into a category. The resulting table is hard to interpret manually and can not be compared between projects.
+  Other metrics further downstream do aggregate this information.
 }
 @friendlyName{All style violations}
 @appliesTo{java()}
@@ -48,7 +56,7 @@ Table styleViolations(rel[Language, loc, AST] asts = {}, rel[Language, loc, M3] 
 
 @metric{filesWithStyleViolations}
 @doc{Percentage of files with style violations}
-@friendlyName{Files with any kind of style violation}
+@friendlyName{Counts the number of files with any kind of style violation. This metric can not be easily compared between projects.}
 @appliesTo{java()}
 @uses=("styleViolations": "styleViolations")
 @historic{}
@@ -56,7 +64,8 @@ int filesWithStyleViolations(rel[Language, loc, M3] m3s = {}, Table styleViolati
   = percentageOfFilesWithViolations(m3s=m3s, violations=styleViolations);
 
 @metric{spreadOfStyleViolations}
-@doc{Between 0 and 1 how evenly spread are the style violations.}
+@doc{Between 0 and 1 how evenly spread are the style violations. This metric makes sense if there are more than 5 files in a project and can
+be compared between projects as well. If problems are widespread this may be a quality contra-indicator, while a localized problem could be easily fixed.}
 @friendlyName{Spread of style violations over files}
 @appliesTo{java()}
 @uses=("styleViolations": "styleViolations")
@@ -70,7 +79,9 @@ private set[str] errorProneCategories = {
 };
 
 @metric{errorProneness}
-@doc{Percentage of the projects files with coding style violations which indicate error prone code.}
+@doc{Percentage of the projects files with coding style violations which indicate error prone code. This is a basic metric which collects per file all the style violations, recording the line number and the kind of style violation.
+  Each kind of violation is grouped into a category. The resulting table is hard to interpret manually and can not be compared between projects.
+  Other metrics further downstream do aggregate this information.}
 @friendlyName{Error proneness}
 @uses = ("styleViolations":"styleViolations")
 @appliesTo{java()}
@@ -79,7 +90,7 @@ Table errorProneness(rel[Language, loc, M3] m3s = {}, Table styleViolations = {}
 
 @metric{filesWithErrorProneness}
 @doc{Percentage of files with error proneness}
-@friendlyName{Files with style violations which make the code error prone}
+@friendlyName{Files with style violations which make the code error prone. This is basic metric which can not be easily compared between projects.}
 @appliesTo{java()}
 @uses=("errorProneness":"styleViolations")
 @historic{}
@@ -87,7 +98,8 @@ int filesWithErrorProneness(rel[Language, loc, M3] m3s = {}, Table styleViolatio
   = percentageOfFilesWithViolations(m3s=m3s, violations=styleViolations);
 
 @metric{spreadOfErrorProneness}
-@doc{Between 0 and 1 how evenly spread are the style violations which indicate error proneness.}
+@doc{Between 0 and 1 how evenly spread are the style violations which indicate error proneness. This metric makes sense if there are more than 5 files in a project and can
+be compared between projects as well. If problems are widespread this may be a quality contra-indicator, while a localized problem could be easily fixed.}
 @friendlyName{Spread of error proneness style violations over files}
 @appliesTo{java()}
 @uses=("errorProneness":"styleViolations")
@@ -109,7 +121,7 @@ Table inefficiencies(rel[Language, loc, M3] m3s = {}, Table styleViolations = {}
 
 @metric{filesWithInefficiencies}
 @doc{Percentage of files with inefficiencies}
-@friendlyName{Files with style violations which indicate inefficiencies}
+@friendlyName{Files with style violations which indicate inefficiencies. This is a basic metric which can not be easily compared between projects.}
 @appliesTo{java()}
 @uses=("inefficiencies":"styleViolations")
 @historic{}
@@ -117,7 +129,8 @@ int filesWithInefficiencies(rel[Language, loc, M3] m3s = {}, Table styleViolatio
   = percentageOfFilesWithViolations(m3s=m3s, violations=styleViolations);
 
 @metric{spreadOfInefficiencies}
-@doc{Between 0 and 1 how evenly spread are the style violations which indicate inefficiencies.}
+@doc{Between 0 and 1 how evenly spread are the style violations which indicate inefficiencies. This metric makes sense if there are more than 5 files in a project and can
+be compared between projects as well. If problems are widespread this may be a quality contra-indicator, while a localized problem could be easily fixed.}
 @friendlyName{Spread of inefficiencies over files}
 @appliesTo{java()}
 @uses=("inefficiencies":"styleViolations")
@@ -143,7 +156,7 @@ Table understandability(rel[Language, loc, M3] m3s = {}, Table styleViolations =
   = { <g,c,f,l> | <g, c, f, l> <- styleViolations, c in unreadableCategories};
 
 @metric{filesWithUnderstandabilityIssues}
-@doc{Percentage of files with understandability issues}
+@doc{Percentage of files with understandability issues. This is a basic metric which can not be easily compared between projects.}
 @friendlyName{Files with style violations which make the code harder to understand}
 @appliesTo{java()}
 @uses=("understandability":"styleViolations")
@@ -152,7 +165,8 @@ int filesWithUnderstandabilityIssues(rel[Language, loc, M3] m3s = {}, Table styl
   = percentageOfFilesWithViolations(m3s=m3s, violations=styleViolations);
 
 @metric{spreadOfUnderstandabilityIssues}
-@doc{Between 0 and 1 how evenly spread are the understandability issues.}
+@doc{Between 0 and 1 how evenly spread are the understandability issues. This metric makes sense if there are more than 5 files in a project and can
+be compared between projects as well. If problems are widespread this may be a quality contra-indicator, while a localized problem could be easily fixed.}
 @friendlyName{Spread of understandability issues over files}
 @appliesTo{java()}
 @uses=("understandability":"styleViolations")
@@ -165,7 +179,8 @@ real spreadOfUnderstandabilityIssues(rel[Language, loc, M3] m3s = {}, Table styl
       ,"filesWithErrorProneness":"filesWithErrorProneness"
       ,"filesWithErrorProneness.historic":"filesWithErrorPronenessHistory"
       )
-@doc{Explains what the impact of style violations is for the project.}
+@doc{Explains what the impact of error prone style violations is for the project. This metric makes sense if there are more than 5 files in a project and can
+be compared between projects as well. If problems are widespread this may be a quality contra-indicator, while a localized problem could be easily fixed.}
 @friendlyName{Spread of style violations over files}
 @appliesTo{java()}      
 Factoid errorProneFactoid( real spreadOfErrorProneness  = 0.0

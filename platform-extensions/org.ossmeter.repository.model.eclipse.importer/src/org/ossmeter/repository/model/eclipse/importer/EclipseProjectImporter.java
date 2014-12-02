@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Davide Di Ruscio - Implementation.
+ *******************************************************************************/
 
 package org.ossmeter.repository.model.eclipse.importer;
 
@@ -93,6 +103,7 @@ public class EclipseProjectImporter {
 	 *
 	 * @param  platform Ossmeter Platform object
 	 */
+	@SuppressWarnings("rawtypes")
 	public void importAll(Platform platform) 
 	{		
 		try {
@@ -128,6 +139,7 @@ public class EclipseProjectImporter {
 		logger.info("Importer has finished!");
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public void importProjects(Platform platform, int numberfOfProjects) 
 	{		
 		try {

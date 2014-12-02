@@ -31,3 +31,4 @@ Export-Package: com.google.gson;
  org.jsoup.parser,
  org.jsoup.safety,
  org.jsoup.select
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

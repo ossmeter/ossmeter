@@ -1,6 +1,14 @@
+@license{
+Copyright (c) 2014 OSSMETER Partners.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+}
 module OOFactoids
 
 import Prelude;
+import util::Math;
 
 import org::ossmeter::metricprovider::MetricProvider;
 
@@ -56,7 +64,7 @@ Factoid Coupling(
 	// CBO > 14 is too high according to:
 	// Houari A. Sahraoui, Robert Godin, Thierry Miceli: Can Metrics Help Bridging the Gap Between the Improvement of OO Design Quality and Its Automation?
 	
-	badPercentage = numClassesWithBadCoupling * 100.0 / size(cbo);
+	badPercentage = round(numClassesWithBadCoupling * 100.0 / size(cbo), 0.01);
 	
 	stars = four();
 	
@@ -88,7 +96,7 @@ Factoid Cohesion(
 	
 	numClassesWithBadCohesion = ( 0 | it + 1 | c <- lcom4, lcom4[c] != 1 );
 	
-	badPercentage = numClassesWithBadCohesion * 100.0 / size(lcom4);
+	badPercentage = round(numClassesWithBadCohesion * 100.0 / size(lcom4), 0.01);
 	
 	stars = four();
 	

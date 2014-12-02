@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.java.DAC-Java-Quartiles.historic",
 	"vis" : [ 
 		{
-			"name" : "DACJavaQuartilesHistoric",
-			"nicename" : "DACJavaQuartilesHistoric",
+			"id" : "DACJavaQuartilesHistoric",
+			"name" : "Data Abstraction Coupling (Java)",
 			"description" : "This metric shows the quartiles of Data abstraction coupling for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.activecommitters.numberOfActiveCommitters.historic",
 	"vis" : [ 
 		{
-			"name" : "numberOfActiveCommittersTimeLine",
-			"nicename" : "numberOfActiveCommittersTimeLine",
+			"id" : "numberOfActiveCommittersTimeLine",
+			"name" : "Number of active committers (2 weeks)",
 			"description" : "This metric shows the number of committers active in the last two weeks, over time.",
 			"type" : "LineChart",
 			"datatable" : {

@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.java.MIF-Java-Quartiles.historic",
 	"vis" : [ 
 		{
-			"name" : "MIFJavaQuartilesHistoric",
-			"nicename" : "MIFJavaQuartilesHistoric",
+			"id" : "MIFJavaQuartilesHistoric",
+			"name" : "Method Inheritance Factor (Java)",
 			"description" : "This metric shows the quartiles of Method inheritance factor for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

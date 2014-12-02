@@ -1,3 +1,10 @@
+@license{
+Copyright (c) 2014 OSSMETER Partners.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+}
 module Clones
 
 import analysis::m3::Core;
@@ -6,6 +13,7 @@ import org::ossmeter::metricprovider::ProjectDelta;
 import org::ossmeter::metricprovider::MetricProvider;
 
 import Prelude;
+import util::Math;
 
 import Generic;
 import Split;
@@ -96,7 +104,7 @@ private alias Block = list[str];
 
 
 @metric{cloneLOCPerLanguage}
-@doc{Lines of code in Type I clones larger than 6 lines, per language}
+@doc{Lines of code in Type I clones larger than 6 lines, per language. A Type I clone is a literal clone. A large number of literal clones is considered to be bad. This metric is not easily compared between systems because it is not size normalized yet. We use it for further processing downstream. You can analyze the trend over time using this metric.}
 @friendlyName{Lines of code in Type I clones larger than 6 lines, per language}
 @appliesTo{generic()}
 @historic
@@ -132,7 +140,7 @@ map[str, int] cloneLOCPerLanguage(rel[Language, loc, AST] asts = {}) {
             }
           }
 
-          result["<lang>"]?0 += size(linesInClones);
+          result["<getName(lang)>"]?0 += size(linesInClones);
         }
       }
     }
@@ -143,8 +151,9 @@ map[str, int] cloneLOCPerLanguage(rel[Language, loc, AST] asts = {}) {
 
 
 @metric{cloneCode}
-@doc{The amount of code in the project in Type I clones larger than 6 lines}
-@friendlyName{The amount of clone in the project in Type I clones larger than 6 lines}
+@doc{The amount of code in the project in Type I clones larger than 6 lines. A Type I clone is a literal clone. If a considerable part of a large project 
+consists of cloned code there may be maintainability risks.}
+@friendlyName{Code Cloning}
 @appliesTo{generic()}
 @uses{("org.ossmeter.metricprovider.trans.rascal.LOC.locPerLanguage": "locPerLanguage", "cloneLOCPerLanguage": "cloneLOCPerLanguage")}
 Factoid cloneCode(map[str, int] locPerLanguage = (), map[str, int] cloneLOCPerLanguage = ()) {
@@ -154,7 +163,7 @@ Factoid cloneCode(map[str, int] locPerLanguage = (), map[str, int] cloneLOCPerLa
     throw undefined("No LOC data available", |unknown:///|);
   }
 
-  rel[str, real] clonePercentagePerLanguage = { <"<l>", (100.0 * cloneLOCPerLanguage[l]) / locPerLanguage[l]> | l <- measuredLanguages };  
+  rel[str, real] clonePercentagePerLanguage = { <l, round((100.0 * cloneLOCPerLanguage[l]) / locPerLanguage[l], 0.01)> | l <- measuredLanguages };  
 
   // generic() is already removed in locPerLanguage
   lrel[str, real] sorted = sort(clonePercentagePerLanguage,
@@ -165,7 +174,7 @@ Factoid cloneCode(map[str, int] locPerLanguage = (), map[str, int] cloneLOCPerLa
   totalLOC = sum([ locPerLanguage[l] | l <- measuredLanguages ]);
   totalCloneLOC = sum([ cloneLOCPerLanguage[l] | l <- measuredLanguages ]); 
 
-  totalClonePercentage = (100.0 * totalCloneLOC) / totalLOC;
+  totalClonePercentage = round((100.0 * totalCloneLOC) / totalLOC, 0.01);
 
   // Kapser, C.; Godfrey, M.W., ""Cloning Considered Harmful" Considered Harmful," 13th Working Conference on Reverse Engineering (WCRE), pp. 19-28, Oct. 2006:
   // clone code is not necessarily bad

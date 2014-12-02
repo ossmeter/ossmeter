@@ -1,3 +1,10 @@
+@license{
+Copyright (c) 2014 OSSMETER Partners.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+}
 @doc{
 
 This how to add a new metric to OSSMETER. You write a function with a number of tags with meta-information,
@@ -100,7 +107,7 @@ real spreadOverItems(map[value item, int amount] d) {
   }
   
   dist = distribution(d);
-  return gini([<0,0>] + [<x, dist[x]> | x <- dist]);
+  return round(gini([<0,0>] + [<x, dist[x]> | x <- dist]), 0.01);
 }
 
 map[str, real] quartiles(map[&T, num] m) {
@@ -114,11 +121,15 @@ map[str, real] quartiles(map[&T, num] m) {
   
   numValues = size(values);
   
-  result["Min"] = toReal(values[0]);
-  result["Q1"] = toReal(values[round(numValues * 0.25)]);
-  result["Q2"] = toReal(values[round(numValues * 0.5)]);
-  result["Q3"] = toReal(values[round(numValues * 0.75)]);
-  result["Max"] = toReal(values[-1]);
+  r = real (num i) {
+  	return round(toReal(i), 0.01);  
+  };
+  
+  result["Min"] = r(values[0]);
+  result["Q1"] = r(values[round(numValues * 0.25)]);
+  result["Q2"] = r(values[round(numValues * 0.5)]);
+  result["Q3"] = r(values[round(numValues * 0.75)]);
+  result["Max"] = r(values[-1]);
   
   return result;
 }

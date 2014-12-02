@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    James Williams - Implementation.
+ *******************************************************************************/
 package org.ossmeter.platform.osgi.executors;
 
 import java.io.IOException;
@@ -145,6 +155,11 @@ public class ProjectExecutor implements Runnable {
 				mExe.setMetricList(factoids);
 				mExe.run(); // TODO Blocking (as desired). But should it have its own thread?
 			}
+
+			// FIXME: We need to re-query the DB as we're holding onto an old instance of the project object
+			// Need to find a way around this - updating to the newer version of the Mongo Java client may help as it
+			// provides a new, threadsafe class called MongoClient
+			project = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByShortName(project.getShortName());
 			
 			// Update meta-data
 			if (project.getExecutionInformation().getInErrorState()) {
@@ -153,7 +168,7 @@ public class ProjectExecutor implements Runnable {
 				logger.warn("Project in error state. Stopping execution.");
 				break;
 			} else {
-				logger.info("Updating last executed date."); //FIXME: This is not persisting to the database. 
+				logger.info("Updating last executed date."); 
 				project.getExecutionInformation().setLastExecuted(date.toString());
 				platform.getProjectRepositoryManager().getProjectRepository().sync();
 			}

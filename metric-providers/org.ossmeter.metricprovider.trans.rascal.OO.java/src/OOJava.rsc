@@ -1,3 +1,10 @@
+@license{
+Copyright (c) 2014 OSSMETER Partners.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+}
 module OOJava
 
 import Relation;
@@ -387,7 +394,7 @@ map[loc, int] NOA_Java(rel[Language, loc, M3] m3s = {}) {
 
 
 @metric{Coupling-Java}
-@doc{Java coupling}
+@doc{Coupling between Java classes counts dependencies between class definitions. The higher the coupling between classes, the harder a system is to test and to maintain.}
 @friendlyName{Java coupling}
 @appliesTo{java()}
 @uses{("CBO-Java": "cbo")}

@@ -1,3 +1,10 @@
+@license{
+Copyright (c) 2014 OSSMETER Partners.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+}
 module OOPHP
 
 import Prelude;
@@ -343,8 +350,10 @@ map[loc, int] NOA_PHP(rel[Language, loc, M3] m3s = {}) {
 
 
 @metric{Coupling-PHP}
-@doc{PHP coupling}
-@friendlyName{PHP coupling}
+@doc{Coupling between PHP classes counts dependencies between class definitions where possible. The higher the coupling is the harder a system is to test and to maintain. The metric over-approximates the actual dependencies: when we
+can not statically which class is referred to and there are, for example, two candidates then both candidates count. The result is that PHP programs with ambiguous
+use of class names are judged more harshly.}
+@friendlyName{PHP Coupling}
 @appliesTo{php()}
 @uses{("CBO-PHP": "cbo")}
 Factoid Coupling_PHP(map[loc, int] cbo = ()) {

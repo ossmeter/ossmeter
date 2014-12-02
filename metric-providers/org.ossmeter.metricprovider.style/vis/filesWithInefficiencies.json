@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.style.filesWithInefficiencies.historic",
 	"vis" : [ 
 		{
-			"name" : "filesWithInefficienciesTimeLine",
-			"nicename" : "filesWithInefficienciesTimeLine",
+			"id" : "filesWithInefficienciesTimeLine",
+			"name" : "Percentage of files that have inefficient code",
 			"description" : "This metric shows the percentage of files with style violations which indicate inefficiencies, over time.",
 			"type" : "LineChart",
 			"datatable" : {
@@ -15,7 +15,7 @@
 			"y" : "Percentage", 
 			"x-label" : "Date",		
 			"y-label" : "Files with violations (%)",
-			"timeseries" : "true"
+			"timeSeries" : true
 		}
 	]
 }

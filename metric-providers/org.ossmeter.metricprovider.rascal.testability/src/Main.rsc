@@ -1,3 +1,10 @@
+@license{
+Copyright (c) 2014 OSSMETER Partners.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+}
 module Main
 
 import Set;
@@ -13,7 +20,10 @@ import org::ossmeter::metricprovider::MetricProvider;
 
 
 @metric{TestCoverage}
-@doc{Static Estimation of test coverage}
+@doc{This is a static over-estimation of test coverage: which code is executed in the system when all JUnit test cases are executed? We approximate
+this by using the static call graphs and assuming every method which can be called, will be called. This leads to an over-approximation,
+as compared to a dynamic code coverage analysis, but the static analysis does follow the trend and a low code coverage here is an good indicator
+for a lack in testing effort for the project.}
 @friendlyName{Static Estimation of test coverage}
 @appliesTo{java()}
 @historic{}
@@ -47,7 +57,7 @@ real estimateTestCoverage(rel[Language, loc, M3] m3s = {}) {
   interfaceMethods = { meth | <entity, meth> <- m@containment, isMethod(meth), isInterface(entity) };
   set[loc] reachableMethods = { meth | meth <- reach(fullCallGraph, allTestMethods), meth in m@declarations<0> } - allTestMethods - interfaceMethods;
   int totalDefinedMethods = (0 | it + 1 | meth <- m@declarations<0> - allTestMethods - interfaceMethods, isMethod(meth));
-  return (100.0 * size(reachableMethods)) / totalDefinedMethods;
+  return round((100.0 * size(reachableMethods)) / totalDefinedMethods, 0.01);
 }
 
 /*  
@@ -92,7 +102,8 @@ private rel[loc, loc] getImplicitContainment(M3 m) {
 }
 
 @metric{TestOverPublicMethods}
-@doc{Number of JUnit tests averaged over the total number of public methods}
+@doc{Number of JUnit tests averaged over the total number of public methods. Ideally all public methods are tested. With this number we
+compute how far from the ideal situation the project is.}
 @friendlyName{Number of JUnit tests averaged over the total number of public methods}
 @appliesTo{java()}
 @historic{}
@@ -104,12 +115,12 @@ real percentageOfTestedPublicMethods(rel[Language, loc, M3] m3s = {}) {
   allPublicMethods = { meth | meth <- m@declarations<0> - interfaceMethods - onlyTestMethods - supportTestMethods, isMethod(meth), \public() in m@modifiers[meth] };
   directlyCalledFromTestMethods = domainR(m@methodInvocation, onlyTestMethods);
   testedPublicMethods = rangeR(directlyCalledFromTestMethods + (directlyCalledFromTestMethods o m@methodOverrides<1,0>), allPublicMethods);
-  return (100.0 * size(range(testedPublicMethods)))/size(allPublicMethods);
+  return round((100.0 * size(range(testedPublicMethods)))/size(allPublicMethods), 0.01);
 }
 
 @metric{NumberOfTestMethods}
 @doc{Number of JUnit test methods}
-@friendlyName{Number of JUnit test methods}
+@friendlyName{Number of JUnit test methods. This is an intermediate absolute metric used to compute others. The bare metric is hard to compare between projects.}
 @appliesTo{java()}
 @historic
 int numberOfTestMethods(rel[Language, loc, M3] m3s = {}) {
@@ -118,7 +129,8 @@ int numberOfTestMethods(rel[Language, loc, M3] m3s = {}) {
 
 
 @metric{JavaUnitTestCoverage}
-@doc{How well do the project's unit tests cover its code (Java)}
+@doc{How well do the project's unit tests cover its code? A static approximation is done, measuring the code which would be executed if all JUnit tests are run. 
+This analysis may produce a higher number than a dynamic analysis would (due to dynamic dispatch and overriding) but it indicates bad coverage easily and it follows the trend.}
 @friendlyName{Java unit test coverage}
 @uses{("TestOverPublicMethods": "testOverPublicMethods", "TestCoverage": "testCoverage", "TestCoverage.historic": "history")}
 @appliesTo{java()}

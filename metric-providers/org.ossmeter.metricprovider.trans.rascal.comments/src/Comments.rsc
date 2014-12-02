@@ -1,3 +1,10 @@
+@license{
+Copyright (c) 2014 OSSMETER Partners.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+}
 module Comments
 
 import analysis::m3::Core;
@@ -116,7 +123,8 @@ CommentStats genericCommentStats(list[str] lines, rel[str, str] blockDelimiters,
 }
 
 @metric{commentLOC}
-@doc{Number of lines containing comments per file}
+@doc{Number of lines containing comments per file is a basic metric used for downstream processing. This metric does not consider the difference
+between natural language comments and commented out code.}
 @friendlyName{Number of lines containing comments per file}
 @appliesTo{generic()}
 map[loc, int] commentLOC(rel[Language, loc, AST] asts = {}) {
@@ -135,7 +143,7 @@ map[loc, int] commentLOC(rel[Language, loc, AST] asts = {}) {
 }
 
 @metric{headerLOC}
-@doc{Header size per file}
+@doc{Header size per file is a basic metric counting the size of the comment at the start of each file. It is used for further processing downstream.}
 @friendlyName{Header size per file}
 @appliesTo{generic()}
 map[loc, int] headerLOC(rel[Language, loc, AST] asts = {}) {
@@ -154,7 +162,8 @@ map[loc, int] headerLOC(rel[Language, loc, AST] asts = {}) {
 }
 
 @metric{commentedOutCode}
-@doc{Lines of commented out code per file}
+@doc{Lines of commented out code per file uses heuristics (frequency of certain substrings typically used in code and not in natural language) to find out how
+much source code comments are actually commented out code. Commented out code is, in large quantities is a quality contra-indicator.}
 @friendlyName{Lines of commented out code per file}
 @appliesTo{generic()}
 map[loc, int] commentedOutCode(rel[Language, loc, AST] asts = {}) {
@@ -174,7 +183,8 @@ map[loc, int] commentedOutCode(rel[Language, loc, AST] asts = {}) {
 
 
 @metric{commentedOutCodePerLanguage}
-@doc{Lines of commented out code per language}
+@doc{Lines of commented out code per file uses heuristics (frequency of certain substrings typically used in code and not in natural language) to find out how
+much source code comments are actually commented out code. Commented out code is, in large quantities is a quality contra-indicator.}
 @friendlyName{Lines of commented out code per language}
 @appliesTo{generic()}
 @uses{("commentedOutCode": "commentedOutCode")}
@@ -182,14 +192,14 @@ map[loc, int] commentedOutCode(rel[Language, loc, AST] asts = {}) {
 map[str, int] commentedOutCodePerLanguage(rel[Language, loc, AST] asts = {}, map[loc, int] commentedOutCode = ()) {
   map[str, int] result = ();
   for (<l, f, a> <- asts, l != generic(), f in commentedOutCode) {
-    result["<l>"]?0 += commentedOutCode[f];
+    result["<getName(l)>"]?0 += commentedOutCode[f];
   }
   return result;
 }
 
 
 @metric{percentageCommentedOutCode}
-@doc{Percentage of commented out code}
+@doc{Commented-out code, in large quantities, is a contra-indicator for quality being a sign of experimental code or avoiding the use of a version control system.}
 @friendlyName{Percentage of commented out code}
 @appliesTo{generic()}
 @uses{("org.ossmeter.metricprovider.trans.rascal.LOC.locPerLanguage": "locPerLanguage",
@@ -205,7 +215,7 @@ Factoid percentageCommentedOutCode(map[str, int] locPerLanguage = (), map[str, i
   totalLines = toReal(sum([ locPerLanguage[l] | l <- languages ]));
   totalCommentedLines = toReal(sum([ commentedOutCodePerLanguage[l] | l <- languages ]));
 
-  totalPercentage = (totalCommentedLines / totalLines) * 100.0;
+  totalPercentage = round((totalCommentedLines / totalLines) * 100.0, 0.01);
   
   stars = four();
   
@@ -219,7 +229,7 @@ Factoid percentageCommentedOutCode(map[str, int] locPerLanguage = (), map[str, i
   
   txt = "The percentage of commented out code over all measured languages is <totalPercentage>%.";
 
-  languagePercentage = ( l : 100 * commentedOutCodePerLanguage[l] / toReal(locPerLanguage[l]) | l <- languages ); 
+  languagePercentage = ( l : round(100 * commentedOutCodePerLanguage[l] / toReal(locPerLanguage[l]), 0.01) | l <- languages ); 
 
   otherTxt = intercalate(", ", ["<l[0]> (<languagePercentage[l]>%)" | l <- languages]);  
   txt += " The percentages per language are <otherTxt>.";
@@ -229,7 +239,7 @@ Factoid percentageCommentedOutCode(map[str, int] locPerLanguage = (), map[str, i
 
 
 @metric{commentLinesPerLanguage}
-@doc{Number of lines containing comments per language (excluding headers)}
+@doc{Number of lines containing comments per language (excluding headers). The balance between comments and code indicates understandability. Too many comments are often not maintained and may lead to confusion, not enough means the code lacks documentation explaining its intent. This is a basic fact collection metric which is used further downstream.}
 @friendlyName{Number of lines containing comments per language (excluding headers)}
 @appliesTo{generic()}
 @uses{("commentLOC": "commentLOC",
@@ -241,14 +251,14 @@ map[str, int] commentLinesPerLanguage(rel[Language, loc, AST] asts = {},
                                       map[loc, int] commentedOutCode = ()) {
   map[str, int] result = ();
   for (<l, f, a> <- asts, l != generic(), f in commentLOC) {
-    result["<l>"]?0 += commentLOC[f] - (headerLOC[f]?0) - (commentedOutCode[f]?0);
+    result["<getName(l)>"]?0 += commentLOC[f] - (headerLOC[f]?0) - (commentedOutCode[f]?0);
   }
   return result;
 }
 
 
 @metric{commentPercentage}
-@doc{Percentage of lines with comments (excluding headers)}
+@doc{The balance between comments and code indicates understandability. Too many comments are often not maintained and may lead to confusion, not enough means the code lacks documentation explaining its intent.}
 @friendlyName{Percentage of lines with comments (excluding headers)}
 @appliesTo{generic()}
 @uses{("org.ossmeter.metricprovider.trans.rascal.LOC.locPerLanguage": "locPerLanguage",
@@ -292,7 +302,7 @@ Factoid commentPercentage(map[str, int] locPerLanguage = (), map[str, int] comme
   
   txt = "The percentage of lines containing comments over all measured languages is <totalPercentage>%. Headers and commented out code are not included in this measure.";
 
-  languagePercentage = ( l : 100 * commentLinesPerLanguage[l] / toReal(locPerLanguage[l]) | l <- languages ); 
+  languagePercentage = ( l : round(100 * commentLinesPerLanguage[l] / toReal(locPerLanguage[l]), 0.01) | l <- languages ); 
 
   otherTxt = intercalate(", ", ["<l> (<languagePercentage[l]>%)" | l <- languages]);  
   txt += " The percentages per language are <otherTxt>.";
@@ -302,8 +312,8 @@ Factoid commentPercentage(map[str, int] locPerLanguage = (), map[str, int] comme
 
 
 @metric{headerPercentage}
-@doc{Percentage of files with headers}
-@friendlyName{Percentage of files with headers}
+@doc{Percentage of files with headers is an indicator for the amount of files which have been tagged with a copyright statement (or not). If the number is low this indicates a problem with the copyright of the program. Source files without a copyright statement are not open-source, they are owned, in principle, by the author and may not be copied without permission. Note that the existence of a header does not guarantee the presence of an open-source license, but its absence certainly is telling.}
+@friendlyName{Percentage of files with headers.}
 @appliesTo{generic()}
 @uses{("headerLOC": "headerLOC")}
 @historic
@@ -312,7 +322,7 @@ real headerPercentage(map[loc, int] headerLOC = ()) {
 	if (measuredFiles == 0) {
 		throw undefined("No headers found", |unknown:///|); 
 	}	
-	return (100.0 * ( 0 | it + 1 | f <- headerLOC, headerLOC[f] > 0 ) ) / measuredFiles;
+	return round((100.0 * ( 0 | it + 1 | f <- headerLOC, headerLOC[f] > 0 ) ) / measuredFiles, 0.01);
 }
 
 private alias Header = set[str];
@@ -340,7 +350,7 @@ private map[loc, Header] extractHeaders(rel[Language, loc, AST] asts) {
 
 
 @metric{headerCounts}
-@doc{Number of appearances of estimated unique headers}
+@doc{In principle it is expected for the files in a project to share the same license. The license text in the header of each file may differ slightly due to different copyright years and or lists of contributors. The heuristic allows for slight differences. The metric produces the number of different types of header files found. A high number is a contra-indicator, meaning either a confusing licensing scheme or the source code of many different projects is included in the code base of the analyzed system.}
 @friendlyName{Number of appearances of estimated unique headers}
 @appliesTo{generic()}
 list[int] headerCounts(rel[Language, loc, AST] asts = {}) {
@@ -393,7 +403,7 @@ list[int] headerCounts(rel[Language, loc, AST] asts = {}) {
 
 
 @metric{headerUse}
-@doc{Consistency of header use}
+@doc{In principle it is expected for the files in a project to share the same license. The license text in the header of each file may differ slightly due to different copyright years and or lists of contributors. We find out how many different types of header files are used and if the distribution is flat or focused on a single distribution. The difference is between  a clear and simple license for the entire project or a confusing licensing scheme with possible juridical consequences.}
 @friendlyName{Consistency of header use}
 @appliesTo{generic()}
 @uses{("headerCounts": "headerCounts", "headerPercentage": "headerPercentage")}

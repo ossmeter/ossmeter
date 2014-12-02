@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Yannis Korkontzelos - Implementation.
+ *******************************************************************************/
 package org.ossmeter.platform.communicationchannel.nntp;
 
 
@@ -27,6 +37,11 @@ public class NntpUtil {
 		NNTPClient client = new NNTPClient();
 		client.setDefaultPort(newsgroup.getPort());
 		String serverUrl = newsgroup.getUrl();		
+		
+		if (serverUrl.endsWith("/")) {
+			serverUrl = newsgroup.getUrl().substring(0, newsgroup.getUrl().lastIndexOf("/"));
+		}
+		
 		try {
 			client.connect(serverUrl);
 			if (newsgroup.getAuthenticationRequired()) {
@@ -36,11 +51,13 @@ public class NntpUtil {
 			// TODO Auto-generated catch block
 	        System.err.println("SocketException while connecting to NNTP server: '"+ 
 	        		newsgroup.getUrl() + "': " + e.getMessage());
+	        e.printStackTrace();
 //	        System.exit(1);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 	        System.err.println("IOException while connecting to NNTP server: '"+ 
 	        		newsgroup.getUrl() + "': " + e.getMessage());
+	        e.printStackTrace();
 //	        System.exit(1);
 		}
 		return client;
@@ -55,6 +72,7 @@ public class NntpUtil {
 			// TODO Auto-generated catch block
 	        System.err.println("IOException while selecting newsgroup: '"+ 
 	        		newsgroupName + "': " + e.getMessage());
+	        e.printStackTrace();
 		}
 		return newsgroupInfo;
 	}

@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    James Williams - Implementation.
+ *******************************************************************************/
 package org.ossmeter.platform.osgi.services;
 
 import java.util.ArrayList;
@@ -7,11 +17,8 @@ import java.util.List;
 import org.ossmeter.platform.Configuration;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.logging.OssmeterLogger;
-import org.ossmeter.platform.osgi.executors.SchedulerStatus;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.SchedulingInformation;
-import org.ossmeter.repository.model.SchedulingInformationCollection;
-
 import com.mongodb.Mongo;
 
 
@@ -38,19 +45,6 @@ public class MasterService implements IMasterService {
 		mongo = Configuration.getInstance().getMongoConnection(); 
 		platform = new Platform(mongo);
 	
-//		SchedulingInformationCollection schedCol = platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation();
-//		
-//		SchedulingInformation schedulingInformation = null;
-//		if (schedCol == null || schedCol.size() ==0) {
-//			schedulingInformation = new SchedulingInformation();
-//			schedCol.add(schedulingInformation);
-//			platform.getProjectRepositoryManager().getProjectRepository().sync();
-//		} else {
-//			schedulingInformation = schedCol.first();
-//		}
-//		schedulingInformation.setIsMaster(true);
-//		platform.getProjectRepositoryManager().getProjectRepository().sync();
-		
 		// Now start scheduling
 		master = new Thread() {
 			@Override

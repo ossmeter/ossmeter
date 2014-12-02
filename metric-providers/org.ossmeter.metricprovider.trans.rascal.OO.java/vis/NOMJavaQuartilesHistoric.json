@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.java.NOM-Java-Quartiles.historic",
 	"vis" : [ 
 		{
-			"name" : "NOMJavaQuartilesHistoric",
-			"nicename" : "NOMJavaQuartilesHistoric",
+			"id" : "NOMJavaQuartilesHistoric",
+			"name" : "Number of methods (Java)",
 			"description" : "This metric shows the quartiles of Number of methods for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

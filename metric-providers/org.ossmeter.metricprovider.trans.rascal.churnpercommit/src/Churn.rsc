@@ -1,3 +1,10 @@
+@license{
+Copyright (c) 2014 OSSMETER Partners.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+}
 module Churn
 
 import org::ossmeter::metricprovider::ProjectDelta;
@@ -13,8 +20,9 @@ import analysis::statistics::Inference;
 
 
 @metric{churnPerCommit}
-@doc{Count churn}
-@friendlyName{Counts number of lines added and deleted per commit}
+@doc{Count churn. Churn is the number lines added or deleted. We measure this per commit because the commit
+is a basic unit of work for a programmer. This metric computes a table per commit for today and is not used for comparison between projects. It is used further downstream to analyze activity.}
+@friendlyName{Counts number of lines added and deleted per commit.}
 @appliesTo{generic()}
 @historic{}
 map[loc, int] churnPerCommit(ProjectDelta delta = \empty()) {
@@ -26,7 +34,7 @@ map[loc, int] churnPerCommit(ProjectDelta delta = \empty()) {
 }
 
 @metric{commitsToday}
-@doc{Counts the number of commits today}
+@doc{Counts the number of commits made today.}
 @friendlyName{Number of commits today}
 @appliesTo{generic()}
 @historic{}
@@ -35,7 +43,7 @@ int commitsToday(ProjectDelta delta = \empty())
   ;
   
 @metric{churnToday}
-@doc{Counts the churn for today}
+@doc{Counts the churn for today: the total number of lines of code added and deleted. This metric is used further downstream to analyze trends.}
 @friendlyName{Churn of today}
 @appliesTo{generic()}
 @historic{}
@@ -44,8 +52,8 @@ int commitsToday(ProjectDelta delta = \empty())
   
 
 @metric{commitActivity}
-@doc{Number of commits in the last two weeks}
-@friendlyName{committersLastTwoWeeks}
+@doc{Number of commits in the last two weeks: collects commit activity over a 14-day sliding window.}
+@friendlyName{Commits in last two weeks}
 @uses = ("commitsToday":"commitsToday")
 @appliesTo{generic()}
 rel[datetime, int] commitActivity(ProjectDelta delta = \empty(), rel[datetime,int] prev = {}, int commitsToday = 0) {
@@ -55,8 +63,8 @@ rel[datetime, int] commitActivity(ProjectDelta delta = \empty(), rel[datetime,in
 }
 
 @metric{churnActivity}
-@doc{Churn over the last two weeks}
-@friendlyName{Churn in the last two weeks}
+@friendlyName{Churn over the last two weeks}
+@doc{Churn in the last two weeks: collects the lines of code added and deleted over a 14-day sliding window.}
 @uses = ("churnToday":"churnToday")
 @appliesTo{generic()}
 rel[datetime, int] churnActivity(ProjectDelta delta = \empty(), rel[datetime,int] prev = {}, int churnToday = 0) {
@@ -67,6 +75,7 @@ rel[datetime, int] churnActivity(ProjectDelta delta = \empty(), rel[datetime,int
 
 @metric{churnInTwoWeeks}
 @doc{Sum of churn over the last two weeks}
+@doc{Churn in the last two weeks: aggregates the lines of code added and deleted over a 14-day sliding window.}
 @friendlyName{Sum of churn in the last two weeks}
 @uses = ("churnActivity":"activity")
 @appliesTo{generic()}
@@ -76,6 +85,7 @@ int churnInTwoWeeks(rel[datetime, int] activity = {})
   
 @metric{commitsInTwoWeeks}
 @doc{Number of commits in the last two weeks}
+@doc{Churn in the last two weeks: aggregates the number of commits over a 14-day sliding window.}
 @friendlyName{Number of commits in the last two weeks}
 @uses = ("commitActivity":"activity")
 @appliesTo{generic()}
@@ -84,15 +94,15 @@ int commitsInTwoWeeks(rel[datetime, int] activity = {})
   = (0 | it + ch | <_, ch> <- activity);
   
 @metric{churnPerCommitInTwoWeeks}
-@doc{The ration between the churn and the number of commits indicates how each commits is on average}
-@friendlyName{churnPerCommitInTwoWeeks}
+@doc{The ratio between the churn and the number of commits indicates how large each commit is on average. We compute this as a sliding average over two weeks which smoothens exceptions and makes it possible to see a trend historically. Commits should not be to big all the time, because that would indicate either that programmers are not focusing on well-defined tasks or that the system architecture does not allow for separation of concerns.}
+@friendlyName{Churn per commit in two weeks}
 @uses = ("commitsInTwoWeeks":"commits","churnInTwoWeeks":"churn")
 @appliesTo{generic()}
 @historic{}
 int churnPerCommitInTwoWeeks(int churn = 0, int commits = 1) = churn / commits;  
 
 @metric{commitSize}
-@doc{Commit frequency and size}
+@doc{The activity of a project is characterized by the number of contributions per time unit and their size. We also report on the size of each unit of work (commit) size. Commits should not be to big all the time, because that would indicate either that programmers are not focusing on well-defined tasks or that the system architecture does not allow for separation of concerns.}
 @friendlyName{Commit frequency and size}
 @appliesTo{generic()}
 @uses= ("churnPerCommitInTwoWeeks.historic":"ratioHistory",
@@ -122,7 +132,7 @@ Factoid commitSize(rel[datetime, int] ratioHistory = {}, int ratio = 0) {
 }
 
 @metric{churnVolume}
-@doc{Churn Volume}
+@doc{Reporting how much work is actually done to the system currently and in the last six months.}
 @friendlyName{Churn Volume}
 @appliesTo{generic()}
 @uses= ("churnInTwoWeeks.historic":"churnHistory", "churnInTwoWeeks":"churn")
@@ -150,22 +160,22 @@ Factoid churnVolume(rel[datetime, int] churnHistory = {}, int churn = 0) {
 }
 
 @metric{churnPerCommitter}
-@doc{Count churn per committer}
-@friendlyName{Counts number of lines added and deleted per committer over the lifetime of the project}
+@doc{Count churn per committer: the number of lines of code added and deleted. It zooms in on the single committer producing a table which can be used for downstream processing.}
+@friendlyName{Churn per committer}
 @appliesTo{generic()}
 @historic{}
-map[loc author, int churn] churnPerCommitter(ProjectDelta delta = \empty())
-  = sumPerItem([<|author:///| + co.author, churn(co)> | /VcsCommit co := delta])
+map[str author, int churn] churnPerCommitter(ProjectDelta delta = \empty())
+  = sumPerItem([<co.author, churn(co)> | /VcsCommit co := delta])
   ;
   
-private map[loc, int] sumPerItem(lrel[loc item, int val] input)
+private map[&T, int] sumPerItem(lrel[&T item, int val] input)
   = (x : s | x <- { * input<item> }, int s := filt(input, x));  
  
-private int filt(lrel[loc, int] input, loc i) = (0 | it + nu | nu <- [n | <i, n> <- input]);
+private int filt(lrel[&T, int] input, &T i) = (0 | it + nu | nu <- [n | <i, n> <- input]);
   
 @metric{churnPerFile}
-@doc{Count churn}
-@friendlyName{Counts number of lines added and deleted per file over the lifetime of the project}
+@doc{Churn per file counts the number of files added and deleted for a single file. This is a basic metric to indicate hotspots in the design of the system which is changed often. This metric is used further downstream.}
+@friendlyName{Churn per file}
 @appliesTo{generic()}
 map[loc file, int churn] churnPerFile(ProjectDelta delta = \empty(), map[loc file, int churn] prev = ()) {
   result = prev;
@@ -181,7 +191,7 @@ int churn(node item)
   ;
 
 @metric{filesPerCommit}
-@doc{Counts the number of files per commit}
+@doc{Counts the number of files per commit to find out about the separation of concerns in the architecture or in the tasks the programmers perform. This metric is used further downstream.}
 @friendlyName{Number of files per commit}
 @appliesTo{generic()}
 @historic{}
@@ -198,10 +208,11 @@ map[loc, int] numberOfFilesPerCommit(ProjectDelta delta = \empty()) {
 }
 
 @metric{commitLocality}
-@doc{Find out if commits are usually local to a file or widespread over the system}
+@doc{Find out if commits are usually local to a file or widespread over the system. If the commits are widespread this can mean either a problem with 
+separation of concerns in the architecture of the system, or that the developers are not concentrating on one task at the same time.} 
 @friendlyName{Commit locality}
 @appliesTo{generic()}
-@uses=("filesPerCommit":"filesPerCommit.historic")
+@uses=("filesPerCommit.historic":"filesPerCommit")
 Factoid commitLocality(rel[datetime day, map[loc, int] files] filesPerCommit = {}) {
    counts = [ d[f] | <_, map[loc, int] d> <- filesPerCommit, loc f <- d];
    if (counts == []) {
@@ -225,11 +236,11 @@ Factoid commitLocality(rel[datetime day, map[loc, int] files] filesPerCommit = {
 }
   
 @metric{coreCommittersChurn}
-@doc{Find the core committers and the churn they have produced}
+@doc{Find out about the committers what their total number of added and deleted lines for this system.}
 @friendlyName{Churn per core committer}
 @appliesTo{generic()}
 @uses = ("churnPerCommitter" : "committerChurn")
-map[loc, int] coreCommittersChurn(map[loc, int] prev = (), map[loc, int] committerChurn = ()) 
+map[str, int] coreCommittersChurn(map[str, int] prev = (), map[str, int] committerChurn = ()) 
   = prev + (author : prev[author]?0 + committerChurn[author] | author <- committerChurn);
   
   

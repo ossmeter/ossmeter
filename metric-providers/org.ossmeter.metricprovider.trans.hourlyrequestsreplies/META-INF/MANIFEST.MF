@@ -5,12 +5,14 @@ Bundle-SymbolicName: org.ossmeter.metricprovider.trans.newsgroups.hourlyrequests
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.metricprovider.trans.newsgroups.hourlyrequestsreplies.Activator
 Require-Bundle: org.eclipse.core.runtime,
+ com.googlecode.pongo.runtime,
  org.ossmeter.platform,
  org.ossmeter.repository.model.cc.nntp,
  org.ossmeter.metricprovider.trans.requestreplyclassification,
  org.ossmeter.platform.client.api,
  com.googlecode.pongo.runtime.osgi,
- org.ossmeter.platform.visualisation
+ org.ossmeter.platform.visualisation,
+ org.ossmeter.repository.model
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.metricprovider.trans.newsgroups.hourlyrequestsreplies,

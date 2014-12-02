@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    James Williams - Implementation.
+ *******************************************************************************/
 package org.ossmeter.platform.visualisation;
 
 import java.util.ArrayList;
@@ -188,11 +198,11 @@ public class Chart {
 
 	public void completeFields(ObjectNode visualisation, JsonNode vis) {
 		for (String field : requiredFields) {
-			visualisation.put(field, vis.path(field).textValue());
+				visualisation.put(field, vis.path(field));
 		}
 		for (String field : optionalFields) {
 			if (vis.has(field)) {
-				visualisation.put(field, vis.path(field).textValue());
+				visualisation.put(field, vis.path(field));
 			}
 		}
 	}

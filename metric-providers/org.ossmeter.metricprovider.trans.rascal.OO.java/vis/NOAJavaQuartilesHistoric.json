@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.java.NOA-Java-Quartiles.historic",
 	"vis" : [ 
 		{
-			"name" : "NOAJavaQuartilesHistoric",
-			"nicename" : "NOAJavaQuartilesHistoric",
+			"id" : "NOAJavaQuartilesHistoric",
+			"name" : "Number of Attributes (Java)",
 			"description" : "This metric shows the quartiles of Number of attributes for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

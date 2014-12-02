@@ -1,3 +1,10 @@
+@license{
+Copyright (c) 2014 OSSMETER Partners.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+}
 module Advanced
 
 import lang::java::m3::Core;
@@ -25,7 +32,7 @@ private int countAdvancedFeatures(Declaration d) {
 
 
 @metric{AdvancedLanguageFeaturesJava}
-@doc{Usage of advanced Java features (wildcards, union types and anonymous classes)}
+@doc{Usage of advanced Java features (wildcards, union types and anonymous classes), reported per file and line number of the occurrence. This metric is for downstream processing by other metrics.}
 @friendlyName{Usage of advanced Java features}
 @appliesTo{java()}
 public map[loc file, int count] countUsesOfAdvancedLanguageFeatures(rel[Language, loc, AST] asts = {}) {
@@ -39,7 +46,7 @@ public map[loc file, int count] countUsesOfAdvancedLanguageFeatures(rel[Language
 }
 
 @metric{AdvancedLanguageFeaturesJavaQuartiles}
-@doc{Quartiles of counts of advanced Java features (wildcards, union types and anonymous classes)}
+@doc{Quartiles of counts of advanced Java features (wildcards, union types and anonymous classes). The numbers indicate the thresholds that delimit the first 25%, 50% and 75% of the data as well as the maximum and minumum values.}
 @friendlyName{Usage of advanced Java features quartiles}
 @appliesTo{java()}
 @historic

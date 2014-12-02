@@ -5,6 +5,7 @@ Bundle-SymbolicName: org.ossmeter.metricprovider.historic.bugs.opentime;singleto
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.metricprovider.historic.bugs.opentime.Activator
 Require-Bundle: org.eclipse.core.runtime,
+ com.googlecode.pongo.runtime,
  org.ossmeter.platform.bugtrackingsystem.bugzilla,
  com.googlecode.pongo.runtime.osgi,
  org.ossmeter.platform.client.api,
@@ -13,7 +14,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.repository.model.bts.bugzilla,
  org.ossmeter.platform,
  org.apache.commons.lang,
- org.ossmeter.platform.communicationchannel.nntp;bundle-version="1.0.0",
+ org.ossmeter.platform.communicationchannel.nntp,
  org.ossmeter.platform.visualisation
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

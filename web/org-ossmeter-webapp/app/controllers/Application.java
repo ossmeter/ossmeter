@@ -3,6 +3,7 @@ package controllers;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.io.File;
+import java.util.List;
 
 import model.*;
 import models.*;
@@ -16,6 +17,12 @@ import providers.MyUsernamePasswordAuthProvider;
 import providers.MyUsernamePasswordAuthProvider.MyLogin;
 import providers.MyUsernamePasswordAuthProvider.MySignup;
 
+import play.libs.ws.*;
+import play.libs.F.Function;
+import play.libs.F.Promise;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import views.html.*;
@@ -35,19 +42,48 @@ public class Application extends Controller {
 	public static final String FLASH_MESSAGE_KEY = "message";
 	public static final String FLASH_ERROR_KEY = "danger";
 	
+	public static final String INFO_SOURCE_MODEL = "channels";
+	public static final String QUALITY_MODEL = "quality";
+
 	public static Result index() {
 		return ok(index.render());
 	}
 
+	public static Result autocomplete(String query) {
+		List<model.Project> projects = MongoAuthenticator.autocomplete(query);
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		ArrayNode arr = mapper.createArrayNode();
+
+		for (model.Project p : projects) {
+			ObjectNode o = mapper.createObjectNode();
+			o.put("id", p.getId());
+			o.put("name", p.getName());
+			arr.add(o);
+		}
+
+		return ok(arr);
+	}
+
+	public static Result search(String query) {
+		return null;
+	}
+
 	public static Result compare() {
-		return ok(compare.render()); //FIXME
+		return ok(compare.render(getInformationSourceModel()));
 	}
 
 	public static Result jsRoutes() {
 		return ok(
 				Routes.javascriptRouter("jsRoutes",
 						controllers.routes.javascript.Signup.forgotPassword(),
-						controllers.routes.javascript.Account.watchSpark()
+						controllers.routes.javascript.Account.watchSpark(),
+						controllers.routes.javascript.Application.autocomplete(),
+						controllers.routes.javascript.Application.profileNotification(),
+						controllers.routes.javascript.Account.createNotification(),
+						controllers.routes.javascript.Account.updateGridLocations(),
+						controllers.routes.javascript.Account.loadEventGroupForm()
 						)
 				)
 				.as("text/javascript");
@@ -63,8 +99,9 @@ public class Application extends Controller {
 
 	// FIXME: Consider caching
 	public static QualityModel getQualityModelById(String id) {
-		if (id.equals("channels")) return getInformationSourceModel();
-		else return getPlatformQualityModel();
+		if (id.equals(INFO_SOURCE_MODEL)) return getInformationSourceModel();
+		else if (id.equals(QUALITY_MODEL)) return getPlatformQualityModel();
+		else return null;
 	}
 
 	protected static QualityModel getQualityModel(String modelPath) {
@@ -81,6 +118,37 @@ public class Application extends Controller {
 		}
 
 		return model;
+	}
+
+	public static Result api(String path) {
+
+		if (!path.startsWith("/")){
+			path = "/" + path;
+		}
+
+		System.out.println("api: " + play.Play.application().configuration().getString("ossmeter.api"));
+		String url = play.Play.application().configuration().getString("ossmeter.api") + path; 
+
+		System.out.println(url);
+
+		Promise<Result> promise = WS.url(url).get().map(
+		    new Function<WSResponse, Result>() {
+		        public Result apply(WSResponse response) {
+		        	try {
+		            	JsonNode json = response.asJson();
+			            return ok(json);
+		            } catch (Exception e) {
+		            	return ok(response.getBody()).as("image/png");
+		            }
+
+
+
+		            // return ok(image).as("image/png")
+		        }
+		    }
+		);
+
+		return promise.get(120000);
 	}
 
 	public static User getLocalUser(final Session session) {
@@ -102,9 +170,32 @@ public class Application extends Controller {
 	}
 
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
-	public static Result profileNotification() {
+	public static Result profileNotification(String projectid, String projectName, String metricid, String metricName) {
 		final User localUser = getLocalUser(session());
-		return ok(setupnotification.render(localUser, form(Notification.class)));
+
+		Form<Notification> form = form(Notification.class);
+
+		Notification noti = MongoAuthenticator.findNotification(localUser, projectid, metricid);
+		if (noti == null) {
+			noti = new Notification();
+			Project p = new Project();
+			p.setId(projectid);
+			p.setName(projectName);
+			Metric m = new Metric();
+			m.setId(metricid);
+			m.setName(metricName);
+
+			noti.setProject(p);
+			noti.setMetric(m);
+		} else {
+
+			System.out.println("notification already exists!");
+			System.out.println(noti.getDbObject());
+
+			form.fill(noti);
+		}
+
+		return ok(views.html.projects._notificationForm.render(form));
 	}
 
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
@@ -160,4 +251,7 @@ public class Application extends Controller {
 		return new SimpleDateFormat("yyyy-dd-MM HH:mm:ss").format(new Date(t));
 	}
 
+	private boolean signUpAllowed(String id) {
+		return false;
+	}
 }

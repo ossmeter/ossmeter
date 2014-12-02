@@ -17,7 +17,7 @@
 			"id" : "newsgroups.averageResponseTime-threads",
 			"name" : "Average Response Time per Thread (ms)",
 			"description" : "The average response time of threads addressed every day, in relation to the number of threads considered." ,
-			"type" : "LineChart",
+			"type" : "ScatterChart",
 			"datatable" : {
 				"cols" : [  { "name" : "Threads", "field" : "$threadsConsidered" }, 
 					{ "name" : "Response Time", "field" : "$avgResponseTime" } ]
@@ -41,7 +41,7 @@
 			"id" : "newsgroups.cumulativeAverageResponseTime-threads",
 			"name" : " Average Response Time per Thread (Cumulative) (ms)",
 			"description" : "The average response time of threads addressed up to and including the current date, in relation to the number of threads considered." ,
-			"type" : "LineChart",
+			"type" : "ScatterChart",
 			"datatable" : {
 				"cols" : [  { "name" : "Threads", "field" : "$threadsConsidered" }, 
 					{ "name" : "Response Time", "field" : "$cumulativeAvgResponseTime" } ]

@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    James Williams - Implementation.
+ *******************************************************************************/
 package org.ossmeter.platform.importers.tests;
 
 import static org.junit.Assert.*;
@@ -5,14 +15,11 @@ import static org.junit.Assert.*;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.omg.PortableInterceptor.SUCCESSFUL;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.repository.model.*;
-import org.ossmeter.platform.bugtrackingsystem.bugzilla.BugzillaManager;
 import org.ossmeter.platform.delta.vcs.AbstractVcsManager;
 import org.ossmeter.platform.vcs.git.GitManager;
 import org.ossmeter.platform.vcs.svn.SvnManager;
-import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
 import org.ossmeter.repository.model.eclipse.EclipseProject;
 import org.ossmeter.repository.model.eclipse.importer.EclipseProjectImporter;
 import org.ossmeter.repository.model.vcs.git.GitRepository;

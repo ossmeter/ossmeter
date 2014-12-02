@@ -5,6 +5,7 @@ Bundle-SymbolicName: org.ossmeter.repository.model.sourceforge.importer; singlet
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.ossmeter.repository.model.bts.bugzilla,
  org.ossmeter.repository.model.cc.forum,
+ com.googlecode.pongo.runtime,
  org.ossmeter.repository.model.cc.wiki,
  org.ossmeter.repository.model.vcs.svn,
  org.ossmeter.repository.model.vcs.git,
@@ -12,7 +13,9 @@ Require-Bundle: org.ossmeter.repository.model.bts.bugzilla,
  org.ossmeter.repository.model.sourceforge,
  org.ossmeter.platform,
  org.ossmeter.repository.model.importerdependencies,
- org.ossmeter.repository.model.importer.exception;bundle-version="1.0.0"
+ org.ossmeter.repository.model.importer.exception,
+ org.ossmeter.repository.model,
+ org.apache.log4j.1.2.17
 Export-Package: org.ossmeter.repository.model.sourceforge.importer
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

@@ -3,7 +3,6 @@ package org.mapdb;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NavigableSet;
-import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -58,12 +57,12 @@ public final class Bind {
         public void removeModificationListener(MapListener<K,V> listener);
     }
 
-    public static void size(MapWithModificationListener map, final Atomic.Long size){
+    public static <L,U> void size(MapWithModificationListener<L,U> map, final Atomic.Long size){
         //set initial value first if necessary
         if(size.get() == 0 && map.isEmpty())
             size.set(map.size()); //TODO long overflow?
 
-        map.addModificationListener(new MapListener() {
+        map.addModificationListener(new MapListener<L,U>() {
             @Override
             public void update(Object key, Object oldVal, Object newVal) {
                 if(oldVal == null && newVal!=null)

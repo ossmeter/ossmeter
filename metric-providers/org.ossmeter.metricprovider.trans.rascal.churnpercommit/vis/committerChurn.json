@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.rascal.generic.churn.churnPerCommitter.historic",
 	"vis" : [ 
 		{
-			"name" : "churnPerCommitterTimeLine",
-			"nicename" : "churnPerCommitterTimeLine",
+			"id" : "churnPerCommitterTimeLine",
+			"name" : "Churn (per committer)",
 			"description" : "This metric shows the churn per committer over time.",
 			"type" : "LineChart",
 			"datatable" : {

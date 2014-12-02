@@ -11,7 +11,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.apache.ws.commons,
  org.apache.xmlrpc,
  org.apache.xmlrpc.common,
- org.ossmeter.repository.model.bts.bugzilla
+ org.ossmeter.repository.model.bts.bugzilla,
+ org.ossmeter.repository.model
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.platform.bugtrackingsystem.bugzilla

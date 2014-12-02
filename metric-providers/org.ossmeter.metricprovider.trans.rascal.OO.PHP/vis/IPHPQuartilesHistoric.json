@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.PHP.I-PHP-Quartiles.historic",
 	"vis" : [ 
 		{
-			"name" : "IPHPQuartilesHistoric",
-			"nicename" : "IPHPQuartilesHistoric",
+			"id" : "IPHPQuartilesHistoric",
+			"name" : "Instability (PHP)",
 			"description" : "This metric shows the quartiles of Instability for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

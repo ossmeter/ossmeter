@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.PHP.MHF-PHP.historic",
 	"vis" : [ 
 		{
-			"name" : "MHFPHPHistoric",
-			"nicename" : "MHFPHPHistoric",
+			"id" : "MHFPHPHistoric",
+			"name" : "Method Hiding Factor (PHP)",
 			"description" : "This metric shows the Method Hiding Factor for PHP over time.",
 			"type" : "LineChart",
 			"datatable" : {

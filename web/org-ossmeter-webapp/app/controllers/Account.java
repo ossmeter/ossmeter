@@ -1,5 +1,7 @@
 package controllers;
 
+import java.util.*;
+
 import model.*;
 import be.objectify.deadbolt.java.actions.Restrict;
 import be.objectify.deadbolt.java.actions.Group;
@@ -20,6 +22,11 @@ import providers.MyUsernamePasswordAuthProvider;
 import providers.MyUsernamePasswordAuthUser;
 import views.html.account.*;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import static play.data.Form.form;
 
 import auth.MongoAuthenticator;
@@ -29,8 +36,6 @@ public class Account extends Controller {
 	@SubjectPresent
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result watchSpark(String projectid, String metricid, String projectName, String metricName) {
-		System.out.println();
-
 		User user = Application.getLocalUser(session());
 
 		if (user == null) {
@@ -44,6 +49,43 @@ public class Account extends Controller {
 		
 		return ok("");
 	}
+
+	@SubjectPresent
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
+	public static Result updateNotification(String projectid, String metricid, double value, boolean aboveThreshold) {
+		User user = Application.getLocalUser(session());
+
+		if (user == null) {
+			// Not logged in
+			return ok("Sorry, you need to be logged in to do that.");
+		}
+
+		MongoAuthenticator.updateNotification(user, projectid, metricid, value, aboveThreshold);
+		
+		return ok(""); // TODO?
+	}
+
+	@SubjectPresent
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
+	public static Result updateGridLocations(String serializedLocations) {
+		try {
+			User user = Application.getLocalUser(session());
+
+			if (user == null) {
+				// Not logged in
+				return ok("Sorry, you need to be logged in to do that.");
+			}
+
+			ObjectMapper mapper = new ObjectMapper();
+			ArrayNode loc = (ArrayNode)mapper.readTree(serializedLocations);
+
+			MongoAuthenticator.updateGridLocations(user, loc);
+
+			return ok();
+		} catch (Exception e) {
+			return badRequest();
+		}
+	}	
 
 	public static class Accept {
 
@@ -240,22 +282,35 @@ public class Account extends Controller {
 	@SubjectPresent
 	public static Result createNotification() {
 		// this is the currently logged in user
-		// // final User user = Application.getLocalUser(session());
+		final User user = Application.getLocalUser(session());
 
-		// final Form<Notification> form = form(Notification.class).bindFromRequest();
+		final Form<Notification> form = form(Notification.class).bindFromRequest();
 
 		// if (form.hasErrors()) {
 		// 	flash("error", Messages.get("ossmeter.profile.notifications.creation.error"));
 		// 	return badRequest(views.html.setupnotification.render(user, form));
 		// }
 
-		// Notification noti = form.get();
-		// user.getNotifications().add(noti);
-		// // user.save(); //TODODODODODOD
+		if (form.hasErrors()) {
+			return badRequest("Form had errors" + form.errorsAsJson());
+		}
+
+		Notification noti = form.get();
+		MongoAuthenticator.insertNotification(user, noti);
+
+		System.out.println(noti.getDbObject());
 
 		// flash(Application.FLASH_MESSAGE_KEY, Messages.get("ossmeter.profile.notifications.creation.success"));
-		return redirect(routes.Application.profile());
+		return ok("yarp");//redirect(routes.Application.profile());
 	}
+
+	@SubjectPresent
+	public static Result loadEventGroupForm() {
+
+		Form<EventGroup> form = form(EventGroup.class);
+
+		return ok(views.html.account._eventGroupForm.render(form));
+	}	
 
 	@SubjectPresent
 	public static Result createEventGroup() {
@@ -274,7 +329,17 @@ public class Account extends Controller {
 		group.setCol(1);
 		group.setSizeX(1);
 		group.setSizeY(2);
+
+		List<Event> toRemove = new ArrayList<>();
+		for (Event e : group.getEvents()) {
+			if (e.getName() == null || e.getName().equals("")
+				||	e.getDate() == null) {
+				toRemove.add(e);
+			}
+		}
 		
+		group.getEvents().removeAll(toRemove);
+
 		MongoAuthenticator.insertNewGrid(user, group);
 
 		flash(Application.FLASH_MESSAGE_KEY, Messages.get("ossmeter.profile.eventgroup.creation.success"));

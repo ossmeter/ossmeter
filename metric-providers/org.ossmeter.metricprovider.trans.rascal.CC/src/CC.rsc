@@ -1,3 +1,10 @@
+@license{
+Copyright (c) 2014 OSSMETER Partners.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+}
 module CC
 
 import Map;
@@ -21,7 +28,7 @@ public real giniCCOverMethods(map[loc, int] methodCC) {
     throw undefined("Not enough data available.", |tmp:///|);
   }
   
-  return gini([<x, distCCOverMethods[x]> | x <- distCCOverMethods]);
+  return round(gini([<x, distCCOverMethods[x]> | x <- distCCOverMethods]), 0.01);
 }
 
 
@@ -63,7 +70,7 @@ public Factoid CCFactoid(map[str, int] riskCounts, str language) {
     throw undefined("No methods", |tmp:///|);
   }
   
-  percentages = [ 100.0 * riskCounts[c] / numMethods | c <- riskCounts, c != "low" ]; // drop low risk counts
+  percentages = [ round(100.0 * riskCounts[c] / numMethods, 0.01) | c <- riskCounts, c != "low" ]; // drop low risk counts
   
   rankings = [ [25, 0, 0], [30, 5, 0], [40, 10, 0] ];
   

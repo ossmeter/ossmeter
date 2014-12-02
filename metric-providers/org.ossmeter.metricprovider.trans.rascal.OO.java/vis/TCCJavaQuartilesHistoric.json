@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.java.TCC-Java-Quartiles.historic",
 	"vis" : [ 
 		{
-			"name" : "TCCJavaQuartilesHistoric",
-			"nicename" : "TCCJavaQuartilesHistoric",
+			"id" : "TCCJavaQuartilesHistoric",
+			"name" : "Tight Class Cohesion (Java)",
 			"description" : "This metric shows the quartiles of Tight class cohesion for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {

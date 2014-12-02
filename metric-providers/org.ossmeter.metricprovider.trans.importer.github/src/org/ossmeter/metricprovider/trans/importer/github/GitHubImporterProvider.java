@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * 	Davide Di Ruscio- Implementation.
+ *******************************************************************************/
 package org.ossmeter.metricprovider.trans.importer.github;
 import java.util.List;
 
@@ -14,8 +24,6 @@ import org.ossmeter.repository.model.github.importer.GitHubImporter;
 import org.ossmeter.repository.model.importer.exception.WrongUrlException;
 
 import com.googlecode.pongo.runtime.PongoDB;
-import com.googlecode.pongo.runtime.PongoFactory;
-import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
 import com.mongodb.DB;
 public class GitHubImporterProvider implements ITransientMetricProvider{
 

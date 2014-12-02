@@ -1,3 +1,10 @@
+@license{
+Copyright (c) 2014 OSSMETER Partners.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+}
 module mood::MHF
 
 import Set;
@@ -19,7 +26,7 @@ real MHF(rel[loc class, loc method] containment, rel[loc class, loc method] visi
   	MVF = size(visible - containment) / toReal(maxNum); // MHF = num visibility edges / max visibility edges
   }
 
-  return 1 - MVF;
+  return round(1 - MVF, 0.01);
 } 
 
 /*

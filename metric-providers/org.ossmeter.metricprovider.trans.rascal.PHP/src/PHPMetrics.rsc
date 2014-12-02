@@ -1,3 +1,10 @@
+@license{
+Copyright (c) 2014 OSSMETER Partners.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+}
 module PHPMetrics
 
 extend lang::php::m3::Core;
@@ -23,8 +30,8 @@ private M3 systemM3WithStdLib(rel[Language, loc, M3] m3s) {
 
 
 @metric{StaticTypeNameResolutionHistogram}
-@doc{Histogram counting type names that could be resolved to a certain number of declarations}
-@friendlyName{StaticTypeNameResolutionHistogram}
+@doc{This histogram shows to how many source code artefacts a name can point in PHP code. The more declarations a single name can point to the more "dynamic" the code is and the harder it is to predict what happens at run-time. A low precision for static name resolution indicates the project is hard to change and perhaps also hard to understand.}
+@friendlyName{Static PHP type resolution histogram}
 @appliesTo{php()}
 map[int, int] getTypeNameResolutionHistogram(rel[Language, loc, M3] m3s = {})
 {
@@ -37,10 +44,9 @@ map[int, int] getTypeNameResolutionHistogram(rel[Language, loc, M3] m3s = {})
 	return calculateResolutionHistogram(countNumPossibleDeclarations(useDecl));
 }
 
-
 @metric{StaticMethodNameResolutionHistogram}
-@doc{Histogram counting called method names that could be resolved to a certain number of declarations}
-@friendlyName{StaticMethodNameResolutionHistogram}
+@doc{This histogram shows to how many method definitions a call can point in PHP code. The more declarations a single name can point to the more "dynamic" the code is and the harder it is to predict what happens at run-time. A low precision for static name resolution indicates the project is hard to change and perhaps also hard to understand.}
+@friendlyName{Static PHP method name resolution histogram}
 @appliesTo{php()}
 map[int, int] getMethodNameResolutionHistogram(rel[Language, loc, M3] m3s = {})
 {
@@ -53,8 +59,8 @@ map[int, int] getMethodNameResolutionHistogram(rel[Language, loc, M3] m3s = {})
 
 
 @metric{StaticFieldNameResolutionHistogram}
-@doc{Histogram counting accessed field names that could be resolved to a certain number of declarations}
-@friendlyName{StaticFieldNameResolutionHistogram}
+@doc{This histogram shows to how many field declarations the usage sites (references) can point in PHP code. The more declarations a single name can point to the more "dynamic" the code is and the harder it is to predict what happens at run-time. A low precision for static name resolution indicates the project is hard to change and perhaps also hard to understand.}
+@friendlyName{Static PHP field name resolution histogram}
 @appliesTo{php()}
 map[int, int] getFieldNameResolutionHistogram(rel[Language, loc, M3] m3s = {})
 {
@@ -86,7 +92,8 @@ map[loc, map[DynamicFeature, int]] getDynamicFeatureCountsPerFunction(rel[Langua
 
 
 @metric{numDynamicFeatureUses-PHP}
-@doc{Number of uses of dynamic PHP language features}
+@doc{The number of uses of dynamic PHP language features measures locations in the source code where code such as "eval" is used. This can be very handy to build
+plugin architecture, but should not be used everywhere in the code because it makes it hard to predict what the code is doing, also leading to possible security leaks.}
 @friendlyName{Number of uses of dynamic PHP language features}
 @appliesTo{php()}
 @historic
@@ -99,8 +106,9 @@ public int getNumberOfDynamicFeatureUses(rel[Language, loc, AST] asts = {})
 
 
 @metric{numEvals}
-@doc{number of calls to eval}
-@friendlyName{numEvals}
+@doc{The number of uses of eval measures locations in the source code where this reflective function is called. This can be very handy to build
+plugin architecture, but should not be used everywhere in the code because it makes it hard to predict what the code is doing, also leading to possible security leaks.}
+@friendlyName{Number of PHP eval calls}
 @appliesTo{php()}
 @historic
 public int getNumberOfEvalCalls(rel[Language, loc, AST] asts = {})
@@ -112,8 +120,9 @@ public int getNumberOfEvalCalls(rel[Language, loc, AST] asts = {})
 
 
 @metric{numFunctionsWithDynamicFeatures}
-@doc{Number of functions using at least one dynamic language feature}
-@friendlyName{numFunctionsWithDynamicFeatures}
+@doc{We measure the number of functions which are "infected" by the use of dynamic language features. It is to be expected that a limited number of functions use
+the advanced features, but a widespread usage would be a quality contra-indicator.}
+@friendlyName{Number of PHP functions using dynamic features}
 @appliesTo{php()}
 @historic
 public int getNumberOfFunctionsWithDynamicFeatures(rel[Language, loc, AST] asts = {})
@@ -125,8 +134,9 @@ public int getNumberOfFunctionsWithDynamicFeatures(rel[Language, loc, AST] asts 
 
 
 @metric{IncludesResolutionHistogram}
-@doc{Histogram counting number of times a PHP include could be resolved to a certain number of files}
-@friendlyName{IncludesResolutionHistogram}
+@doc{We use a simple static resolution algorithm to find out which files are included by which other files. If it is hard to decide this statically, then it 
+is hard to know what code the system is actually running, also for the maintainer of the system. This is a quality contra-indicator because of security and understandability issues that arise.}
+@friendlyName{Static PHP includes resolution histogram}
 @appliesTo{php()}
 public map[int, int] getIncludesResolutionHistogram(rel[Language, loc, M3] m3s = {}, rel[Language, loc, AST] asts = {})
 {
@@ -137,8 +147,8 @@ public map[int, int] getIncludesResolutionHistogram(rel[Language, loc, M3] m3s =
 
 
 @metric{MissingLibrariesPHP}
-@doc{Estimation of missing PHP libraries of the project}
-@friendlyName{MissingLibrariesPHP}
+@doc{If we can not resolve an include we assume a library is not included in the source code of the project and no dependency was declared. The number of external dependencies is good to know for deciding adoption or use of an open-source project in combination with other observations.}
+@friendlyName{Missing PHP libraries}
 @appliesTo{php()}
 public set[str] estimateMissingLibraries(rel[Language, loc, M3] m3s = {}, rel[Language, loc, AST] asts = {})
 {
@@ -149,8 +159,9 @@ public set[str] estimateMissingLibraries(rel[Language, loc, M3] m3s = {}, rel[La
 
 
 @metric{DynamicLanguageFeaturesPHP}
-@doc{The use of dynamic language features in PHP code.}
-@friendlyName{DynamicLanguageFeaturesPHP}
+@doc{The number of uses of dynamic PHP language features measures locations in the source code where code such as "eval" is used. This can be very handy to build
+plugin architecture, but should not be used everywhere in the code because it makes it hard to predict what the code is doing, also leading to possible security leaks.}
+@friendlyName{PHP dynamic language feature use}
 @appliesTo{php()}
 @uses=("numFunctionsWithDynamicFeatures": "numFunctionsWithDynamicFeatures")
 Factoid dynamicLanguageFeaturesFactoid(rel[Language, loc, AST] asts = {}, int numFunctionsWithDynamicFeatures = -1) {
@@ -186,8 +197,8 @@ Factoid dynamicLanguageFeaturesFactoid(rel[Language, loc, AST] asts = {}, int nu
 
 
 @metric{StaticNameResolutionPHP}
-@doc{How well could the names in the PHP code be statically resolved?}
-@friendlyName{StaticNameResolutionPHP}
+@doc{How well could the names in the PHP code be statically resolved? The more declarations a single name can point to the more "dynamic" the code is and the harder it is to predict what happens at run-time. A low precision for static name resolution indicates the project is hard to change and perhaps also hard to understand because the code is ambiguous about what data will be referred to at run-time and what code will be executed at run-time.}
+@friendlyName{PHP static name resolution}
 @appliesTo{php()}
 @uses=(
   "StaticTypeNameResolutionHistogram": "typeNames",

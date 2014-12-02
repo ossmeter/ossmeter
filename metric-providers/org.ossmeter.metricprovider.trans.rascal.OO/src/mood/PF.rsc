@@ -1,3 +1,10 @@
+@license{
+Copyright (c) 2014 OSSMETER Partners.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+}
 module mood::PF
 
 import util::Math;
@@ -16,7 +23,7 @@ public real PF(rel[loc subtype, loc supertype] superTypes,
 	numPossibleOverrides = ( 0 | it + size(overridableMethods[ancestors[c]]) | c <- allTypes );
 	
 	if (numPossibleOverrides > 0) {
-		return size(overrides) / toReal(numPossibleOverrides);
+		return round(size(overrides) / toReal(numPossibleOverrides), 0.01);
 	}
 	
 	return 0.0;

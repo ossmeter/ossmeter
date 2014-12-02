@@ -29,8 +29,15 @@ import model.Metric;
 import model.EventGroup;
 import model.Event;
 import model.GridEntry;
+import model.Statistics;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.googlecode.pongo.runtime.querying.*;
+import com.googlecode.pongo.runtime.PongoFactory;
 
 public class MongoAuthenticator {
 
@@ -38,6 +45,40 @@ public class MongoAuthenticator {
 	public static final String ADMIN_ROLE = "admin";
 
 	private final static long VERIFICATION_TIME = 7 * 24 * 3600;
+
+	public static Statistics getStatistics() {
+		DB db = getUsersDb();
+		DBCollection col = db.getCollection("statistics");
+		
+		DBCursor cursor = col.find().sort(new BasicDBObject("date", -1));
+
+		Statistics stats = null;
+		if (cursor.hasNext()) {
+			stats = (Statistics)PongoFactory.getInstance().createPongo(cursor.next());
+		}
+		db.getMongo().close();
+		return stats;
+	}
+
+	public static List<Project> autocomplete(String query) {
+		// Turn query into regex
+		String regex = "^" + query + ".*";
+		BasicDBObject obj = new BasicDBObject("name", java.util.regex.Pattern.compile(regex, java.util.regex.Pattern.CASE_INSENSITIVE));
+
+		// Pongo doesn't support regexs yet, so we're using the Java driver
+		DB db = getUsersDb();
+		DBCollection col = db.getCollection("projects");
+		DBCursor cursor = col.find(obj).sort(new BasicDBObject("name", 1));
+
+		List<Project> projects = new ArrayList<>();
+
+		while (cursor.hasNext()) {
+			projects.add((Project)PongoFactory.getInstance().createPongo(cursor.next()));
+		}
+
+		db.getMongo().close();
+		return projects;
+	}
 
 	public static User createUser(final AuthUser identity) {
 		final User user = new User();
@@ -333,6 +374,16 @@ public class MongoAuthenticator {
 		// connection to Mongo
  	}	
 
+ 	public static Project findProjectById(String projectId) {
+ 		DB db = getUsersDb();
+		Users users = new Users(db);
+
+		Project p = users.getProjects().findOneByIdentifier(projectId);
+
+		db.getMongo().close();
+		return p;
+ 	}
+
  	private static User findUser(Users users, final AuthUserIdentity identity) {
  		User user = null;
 		if (identity instanceof UsernamePasswordAuthUser) {
@@ -365,6 +416,34 @@ public class MongoAuthenticator {
 		db.getMongo().close();
  	}
 
+
+ 	public static void updateGridLocations(final User user, final ArrayNode loc) {
+ 		DB db = getUsersDb();
+		Users users = new Users(db);
+
+		User u = users.getUsers().findOneByEmail(user.getEmail());
+
+		for (GridEntry ge : u.getGrid()) {
+			for (JsonNode gloc : loc) {
+				if (ge.getId().equals(gloc.get("id").textValue())) {
+					ge.setCol(gloc.get("col").asInt());
+					ge.setRow(gloc.get("row").asInt());
+
+					System.out.println("row" + gloc.get("row").asInt());
+					System.out.println("col" + gloc.get("col").asInt());
+					break;
+				}
+			}			
+		}
+
+		// This is needed due to a bug in Pongo - modifying the GridEntries isn't
+		// enough to dirty the collection into syncing.
+		u.setEmail(u.getEmail()); 
+
+		users.getUsers().sync();
+		db.getMongo().close();
+ 	}
+
  	public static void insertNewGrid(final User user, final GridEntry entry) {
  		DB db = getUsersDb();
 		Users users = new Users(db);
@@ -375,7 +454,101 @@ public class MongoAuthenticator {
 		users.getUsers().sync();
 
 		db.getMongo().close();
- 	} 
+ 	}
+
+ 	public static Notification findNotification(User u, String projectId, String metricId) {
+ 		DB db = getUsersDb();
+		Users users = new Users(db);
+
+		User user = users.getUsers().findOneByEmail(u.getEmail());
+
+		Notification noti = null;
+
+		for (GridEntry g : user.getGrid()) {
+			if (g instanceof Notification) {
+				Notification gg = (Notification)g;
+				if (gg.getMetric().getId().equals(metricId)
+					&& gg.getProject().getId().equals(projectId)) {
+					noti = gg;
+					break;
+				}
+			}
+		}
+
+		users.getUsers().sync();
+		db.getMongo().close();
+
+		return noti;
+ 	}
+
+ 	public static void insertNotification(User u, Notification notification) {
+ 		DB db = getUsersDb();
+		Users users = new Users(db);
+
+		User user = users.getUsers().findOneByEmail(u.getEmail());
+
+		notification.setSizeX(1);
+		notification.setSizeY(1);
+
+		if (notification.getRow() == 0) {
+			notification.setRow(1);
+		}
+		if (notification.getCol() == 0){
+			notification.setCol(1);
+		}
+
+		user.getGrid().add(notification);
+
+		users.getUsers().sync();
+		db.getMongo().close();
+ 	}
+
+ 	public static void updateNotification(User u, String projectId, String metricId, double threshold, boolean aboveThreshold) {
+ 		DB db = getUsersDb();
+		Users users = new Users(db);
+
+		User user = users.getUsers().findOneByEmail(u.getEmail());
+
+		Notification noti = null;
+
+		for (GridEntry g : user.getGrid()) {
+			if (g instanceof Notification) {
+				Notification gg = (Notification)g;
+				if (gg.getMetric().getId().equals(metricId)
+					&& gg.getProject().getId().equals(projectId)) {
+					noti = gg;
+					break;
+				}
+			}
+		}
+
+		if (noti == null) { // Create new
+			noti = new Notification();
+			noti.setSizeX(1);
+			noti.setSizeY(1);
+			noti.setRow(1);
+			noti.setCol(1);
+
+			Project p = new Project();
+			p.setId(projectId);
+			// p.setName("epsilon"); // TODO
+			noti.setProject(p);
+			Metric m = new Metric();
+			m.setId(metricId);
+			// m.setName("bugs"); //TODO
+			noti.setMetric(m);
+
+			noti.setThreshold(threshold);
+			noti.setAboveThreshold(aboveThreshold);
+			user.getGrid().add(noti);
+		} else { // Edit existing - only support one notification per project metric
+			noti.setThreshold(threshold);
+			noti.setAboveThreshold(aboveThreshold);
+		}
+
+		users.getUsers().sync();
+		db.getMongo().close();
+ 	}
 
  	public static void toggleSparkGrid(User u, String projectid, String projectName, String metricid, String metricName) {
  		DB db = getUsersDb();
@@ -423,9 +596,15 @@ public class MongoAuthenticator {
  	}
 
 	// May want to be more public? Or in its own class. This is just auth.
-	private static DB getUsersDb() {
+	public static DB getUsersDb() {
 		try {
-			Mongo mongo = new Mongo();	
+			String host = play.Play.application().configuration().getString("mongo.default.host");
+			if (host == null) host = "localhost";
+			
+			Integer port = play.Play.application().configuration().getInt("mongo.default.port");
+			if (port == null) port = 27017;
+
+			Mongo mongo = new Mongo(host, port);	
 			return mongo.getDB("users");
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -5,11 +5,13 @@ Bundle-SymbolicName: org.ossmeter.metricprovider.historic.newsgroups.topics;sing
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.metricprovider.historic.newsgroups.topics.Activator
 Require-Bundle: org.eclipse.core.runtime,
+ com.googlecode.pongo.runtime,
  org.ossmeter.platform,
  org.ossmeter.metricprovider.trans.topics,
  org.ossmeter.platform.client.api,
  com.googlecode.pongo.runtime.osgi,
  org.ossmeter.platform.visualisation,
- org.ossmeter.repository.model.cc.nntp
+ org.ossmeter.repository.model.cc.nntp,
+ org.ossmeter.repository.model
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

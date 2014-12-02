@@ -2,8 +2,8 @@
 	"metricid" : "org.ossmeter.metricprovider.trans.rascal.OO.java.A-Java.historic",
 	"vis" : [ 
 		{
-			"name" : "AJavaHistoric",
-			"nicename" : "AJavaHistoric",
+			"id" : "AJavaHistoric",
+			"name" : "Abstractness (Java)",
 			"description" : "This metric shows the Abstractness for Java over time.",
 			"type" : "LineChart",
 			"datatable" : {
