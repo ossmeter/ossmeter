@@ -13,9 +13,9 @@ import Set;
 	Response for class (nr of methods reachable by class methods (direct and indirect))
 }
 public map[loc, int] RFC(rel[loc, loc] calls, map[loc, set[loc]] typeMethods, set[loc] allTypes) {
-	callsTrans = calls+;
+	callsTrans = toMap(calls+);
 
-	return ( t : size(callsTrans[(typeMethods[t]?{})] - (typeMethods[t]?{})) | t <- allTypes );
+	return ( t : size({ *(callsTrans[m]?{}) | m <- typeMethods[t]?{} } - typeMethods[t]?{}) | t <- allTypes );
 }
 
 
