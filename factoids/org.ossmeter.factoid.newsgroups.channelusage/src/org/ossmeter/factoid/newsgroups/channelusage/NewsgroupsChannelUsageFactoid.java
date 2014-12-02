@@ -76,7 +76,7 @@ public class NewsgroupsChannelUsageFactoid extends AbstractFactoidMetricProvider
 	@Override
 	public void measureImpl(Project project, ProjectDelta delta, Factoid factoid) {
 //		factoid.setCategory(FactoidCategory.BUGS);
-		factoid.setName("Newsgroup Channel Usage Factoid");
+		factoid.setName(getFriendlyName());
 
 		ArticlesHistoricMetricProvider articlesProvider = null;
 		NewThreadsHistoricMetricProvider threadsProvider = null;
@@ -200,36 +200,40 @@ public class NewsgroupsChannelUsageFactoid extends AbstractFactoidMetricProvider
 	}
 
 	private int parseArticlesPongos(List<Pongo> articlesList, Map<String, Integer> newsgroupArticles) {
-		int numberOfArticles = 0;
+		int sumOfArticles = 0;
 		for (Pongo pongo: articlesList) {
 			NewsgroupsArticlesHistoricMetric articlesPongo = (NewsgroupsArticlesHistoricMetric) pongo;
-			numberOfArticles += articlesPongo.getNumberOfArticles();
 			for (DailyNewsgroupData newsgroup: articlesPongo.getNewsgroups()) {
+				int numberOfArticles = newsgroup.getNumberOfArticles(); 
+				sumOfArticles += numberOfArticles; 
 				if (newsgroupArticles.containsKey(newsgroup.getNewsgroupName()))
 					newsgroupArticles.put(newsgroup.getNewsgroupName(), 
-										  newsgroupArticles.get(newsgroup.getNewsgroupName()) + 1);
+										  newsgroupArticles.get(newsgroup.getNewsgroupName()) + 
+										  numberOfArticles);
 				else
-					newsgroupArticles.put(newsgroup.getNewsgroupName(), 1);
+					newsgroupArticles.put(newsgroup.getNewsgroupName(), numberOfArticles);
 			}
 		}
-		return numberOfArticles;
+		return sumOfArticles;
 	}
 		
 	private int parseThreadsPongos(List<Pongo> threadsList, Map<String, Integer> newsgroupThreads) {
-		int numberOfThreads = 0;
+		int sumOfThreads = 0;
 		for (Pongo pongo: threadsList) {
 			NewsgroupsNewThreadsHistoricMetric threadsPongo = (NewsgroupsNewThreadsHistoricMetric) pongo;
-			numberOfThreads += threadsPongo.getNumberOfNewThreads();
 			for ( org.ossmeter.metricprovider.historic.newsgroups.newthreads.model.DailyNewsgroupData 
 					newsgroup: threadsPongo.getNewsgroups()) {
+				int numberOfThreads = newsgroup.getNumberOfNewThreads();
+				sumOfThreads += numberOfThreads;
 				if (newsgroupThreads.containsKey(newsgroup.getNewsgroupName()))
 					newsgroupThreads.put(newsgroup.getNewsgroupName(), 
-										 newsgroupThreads.get(newsgroup.getNewsgroupName()) + 1);
+										 newsgroupThreads.get(newsgroup.getNewsgroupName()) + 
+										 numberOfThreads);
 				else
-					newsgroupThreads.put(newsgroup.getNewsgroupName(), 1);
+					newsgroupThreads.put(newsgroup.getNewsgroupName(), numberOfThreads);
 			}
 		}
-		return numberOfThreads;
+		return sumOfThreads;
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })

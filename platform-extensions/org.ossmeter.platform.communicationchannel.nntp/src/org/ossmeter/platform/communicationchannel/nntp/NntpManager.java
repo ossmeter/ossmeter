@@ -133,8 +133,7 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 	}
 
 	@Override
-	public Date getFirstDate(DB db, NntpNewsGroup newsgroup)
-			throws Exception {
+	public Date getFirstDate(DB db, NntpNewsGroup newsgroup) throws Exception {
 		NNTPClient nntpClient = NntpUtil.connectToNntpServer(newsgroup);
 		NewsgroupInfo newsgroupInfo = NntpUtil.selectNewsgroup(nntpClient, newsgroup);
 		int firstArticleNumber = newsgroupInfo.getFirstArticle();

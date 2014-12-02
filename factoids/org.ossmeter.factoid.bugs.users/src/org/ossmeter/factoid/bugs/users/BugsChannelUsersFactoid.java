@@ -68,7 +68,7 @@ public class BugsChannelUsersFactoid extends AbstractFactoidMetricProvider{
 	@Override
 	public void measureImpl(Project project, ProjectDelta delta, Factoid factoid) {
 //		factoid.setCategory(FactoidCategory.BUGS);
-		factoid.setName("Bug Channel Users Factoid");
+		factoid.setName(getFriendlyName());
 
 		UsersHistoricMetricProvider usersProvider = null;
 		BugsHistoricMetricProvider bugsProvider = null;
@@ -85,7 +85,7 @@ public class BugsChannelUsersFactoid extends AbstractFactoidMetricProvider{
 		}
 
 		Date end = new Date();
-		Date start = new Date();
+		Date start = (new Date()).addDays(-30);
 //		Date start=null, end=null;
 //		try {
 //			start = new Date("20050301");
@@ -96,7 +96,6 @@ public class BugsChannelUsersFactoid extends AbstractFactoidMetricProvider{
 //		}
 		List<Pongo> bugList = bugsProvider.getHistoricalMeasurements(context, project, start, end);
 
-		start = (new Date()).addDays(-30);
 		List<Pongo> usersMonthList = usersProvider.getHistoricalMeasurements(context, project, start, end);
 		
 		start = (new Date()).addDays(-365);

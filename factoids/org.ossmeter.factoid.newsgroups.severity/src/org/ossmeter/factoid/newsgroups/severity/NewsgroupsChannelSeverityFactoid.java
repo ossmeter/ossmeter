@@ -82,8 +82,7 @@ public class NewsgroupsChannelSeverityFactoid extends AbstractFactoidMetricProvi
 	@Override
 	public void measureImpl(Project project, ProjectDelta delta, Factoid factoid) {
 //		factoid.setCategory(FactoidCategory.BUGS);
-		factoid.setName("");
-		factoid.setName("Newsgroup Channel Severity Factoid");
+		factoid.setName(getFriendlyName());
 
 		SeverityHistoricMetricProvider severityProvider = null;
 		SeverityResponseTimeHistoricMetricProvider severityResponseTimeProvider = null;
@@ -105,7 +104,7 @@ public class NewsgroupsChannelSeverityFactoid extends AbstractFactoidMetricProvi
 		}
 
 		Date end = new Date();
-		Date start = new Date();
+		Date start = (new Date()).addDays(-30);
 //		Date start=null, end=null;
 //		try {
 //			start = new Date("20040801");
@@ -145,16 +144,16 @@ public class NewsgroupsChannelSeverityFactoid extends AbstractFactoidMetricProvi
 		stringBuffer.append("There are ");
 		if ( seriousBugsPercentage > 50 ) {
 			stringBuffer.append("many");
-			factoid.setStars(StarRating.FOUR);
+			factoid.setStars(StarRating.ONE);
 		} else if ( seriousBugsPercentage > 25 ) {
 			stringBuffer.append("not so many");
-			factoid.setStars(StarRating.THREE);
+			factoid.setStars(StarRating.TWO);
 		} else if ( seriousBugsPercentage > 12.5 ) {
 			stringBuffer.append("few");
-			factoid.setStars(StarRating.TWO);
+			factoid.setStars(StarRating.THREE);
 		} else {
 			stringBuffer.append("very few");
-			factoid.setStars(StarRating.ONE);
+			factoid.setStars(StarRating.FOUR);
 		}
 		stringBuffer.append(" newsgroup threads that report serious (i.e. major," +
 							" critical and blocker) software problems.\n");

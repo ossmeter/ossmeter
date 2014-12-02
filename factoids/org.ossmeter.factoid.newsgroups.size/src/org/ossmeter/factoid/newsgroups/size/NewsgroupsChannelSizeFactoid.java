@@ -76,7 +76,7 @@ public class NewsgroupsChannelSizeFactoid extends AbstractFactoidMetricProvider{
 	@Override
 	public void measureImpl(Project project, ProjectDelta delta, Factoid factoid) {
 //		factoid.setCategory(FactoidCategory.NEWSGROUPS);
-		factoid.setName("Newsgroup Channel Size Factoid");
+		factoid.setName(getFriendlyName());
 
 		ArticlesHistoricMetricProvider articlesProvider = new ArticlesHistoricMetricProvider();
 		NewThreadsHistoricMetricProvider newThreadsProvider = new NewThreadsHistoricMetricProvider();
@@ -93,7 +93,7 @@ public class NewsgroupsChannelSizeFactoid extends AbstractFactoidMetricProvider{
 		}
 
 		Date end = new Date();
-		Date start = new Date();
+		Date start = (new Date()).addDays(-30);
 //		Date start=null, end=null;
 //		try {
 //			start = new Date("20040801");
@@ -164,10 +164,11 @@ public class NewsgroupsChannelSizeFactoid extends AbstractFactoidMetricProvider{
 
 	private int getCumulativeNumberOfArticles(List<Pongo> newArticlesList, Map<String, Integer> trackerArticles) {
 		int sum = 0;
-		for (Pongo pongo: newArticlesList) {
-			NewsgroupsArticlesHistoricMetric newArticlesPongo = (NewsgroupsArticlesHistoricMetric) pongo;
+		if ( newArticlesList.size() > 0 ) {
+			NewsgroupsArticlesHistoricMetric newArticlesPongo = 
+					(NewsgroupsArticlesHistoricMetric) newArticlesList.get(newArticlesList.size()-1);
 			for (DailyNewsgroupData newsgroupData: newArticlesPongo.getNewsgroups()) {
-				int articles = newArticlesPongo.getCumulativeNumberOfArticles();
+				int articles = newsgroupData.getCumulativeNumberOfArticles();
 				trackerArticles.put(newsgroupData.getNewsgroupName(), articles);
 				sum += articles;
 			}
@@ -181,7 +182,7 @@ public class NewsgroupsChannelSizeFactoid extends AbstractFactoidMetricProvider{
 			NewsgroupsNewThreadsHistoricMetric commentsPongo = (NewsgroupsNewThreadsHistoricMetric) pongo;
 			for (org.ossmeter.metricprovider.historic.newsgroups.newthreads.model.DailyNewsgroupData 
 					newsgroupData: commentsPongo.getNewsgroups()) {
-				int comments = commentsPongo.getCumulativeNumberOfNewThreads();
+				int comments = newsgroupData.getCumulativeNumberOfNewThreads();
 				trackerNewThreads.put(newsgroupData.getNewsgroupName(), comments);
 				sum += comments;
 			}

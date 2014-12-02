@@ -40,6 +40,7 @@ public class ResetApp {
 		mongo.dropDatabase("modelinggmtamw");
 		mongo.dropDatabase("Log4J");
 		mongo.dropDatabase("BIRT");
+		mongo.dropDatabase("SiriusForum");
 	}
 	
 }

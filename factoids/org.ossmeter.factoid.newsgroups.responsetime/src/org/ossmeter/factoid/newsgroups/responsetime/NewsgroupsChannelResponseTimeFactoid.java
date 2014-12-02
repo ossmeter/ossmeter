@@ -68,7 +68,7 @@ public class NewsgroupsChannelResponseTimeFactoid extends AbstractFactoidMetricP
 	@Override
 	public void measureImpl(Project project, ProjectDelta delta, Factoid factoid) {
 //		factoid.setCategory(FactoidCategory.BUGS);
-		factoid.setName("Newsgroup Response Time Factoid");
+		factoid.setName(getFriendlyName());
 
 		ResponseTimeHistoricMetricProvider responseTimeProvider = null;
 

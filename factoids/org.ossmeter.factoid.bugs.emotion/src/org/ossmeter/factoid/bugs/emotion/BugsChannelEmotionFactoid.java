@@ -62,7 +62,7 @@ public class BugsChannelEmotionFactoid extends AbstractFactoidMetricProvider{
 	@Override
 	public void measureImpl(Project project, ProjectDelta delta, Factoid factoid) {
 //		factoid.setCategory(FactoidCategory.BUGS);
-		factoid.setName("Bug Channel Emotion Factoid");
+		factoid.setName(getFriendlyName());
 
 		BugsEmotionsTransMetric emotionsTransMetric = 
 				((EmotionsTransMetricProvider)uses.get(0)).adapt(context.getProjectDB(project));

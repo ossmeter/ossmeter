@@ -12,8 +12,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.joda.time,
  com.google.guava,
  org.ossmeter.platform.bugtrackingsystem,
- org.apache.log4j.1.2.17
+ org.apache.log4j.1.2.17,
+ com.google.gson,
+ org.apache.commons.lang
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
-Import-Package: com.google.gson.reflect,
- org.apache.commons.lang.time

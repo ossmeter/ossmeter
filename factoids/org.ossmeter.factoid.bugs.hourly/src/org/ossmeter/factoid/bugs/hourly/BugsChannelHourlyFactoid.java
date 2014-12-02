@@ -61,7 +61,7 @@ public class BugsChannelHourlyFactoid extends AbstractFactoidMetricProvider{
 	@Override
 	public void measureImpl(Project project, ProjectDelta delta, Factoid factoid) {
 //		factoid.setCategory(FactoidCategory.BUGS);
-		factoid.setName("Bug Channel Hourly Factoid");
+		factoid.setName(getFriendlyName());
 
 		BugsHourlyRequestsRepliesTransMetric hourlyRequestsRepliesTransMetric = 
 				((HourlyRequestsRepliesTransMetricProvider)uses.get(0)).adapt(context.getProjectDB(project));
