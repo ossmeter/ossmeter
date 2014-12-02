@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package org.ossmeter.platform.delta.vcs;
 
 import java.util.List;
@@ -79,7 +89,8 @@ public abstract class PlatformVcsManager extends AbstractVcsManager {
 				return vcsManager;
 			}
 		}
-		throw new NoManagerFoundException("No vcs manager found for repository " + repository);
+		return null;
+//		throw new NoManagerFoundException("No vcs manager found for repository " + repository);
 	}
 	
 	@Override
@@ -126,5 +137,14 @@ public abstract class PlatformVcsManager extends AbstractVcsManager {
 			deltaCache = new VcsDeltaCache();
 		}
 		return deltaCache;		
+	}
+	
+	@Override
+	public boolean validRepository(VcsRepository repository) throws Exception {
+		IVcsManager vcsManager = getVcsManager(repository);
+		if (vcsManager != null) {
+			return vcsManager.validRepository(repository);
+		}
+		return false;
 	}
 }

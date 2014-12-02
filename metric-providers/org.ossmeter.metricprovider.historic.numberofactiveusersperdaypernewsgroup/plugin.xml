@@ -2,20 +2,26 @@
 <?eclipse version="3.4"?><plugin>
    
    <extension point="org.ossmeter.platform.metricprovider">
-      <metricProvider provider="org.ossmeter.metricprovider.historic.numberofactiveusersperdaypernewsgroup.NumberOfActiveUsersPerDayPerNewsgroupProvider">
+      <metricProvider provider="org.ossmeter.metricprovider.historic.newsgroups.users.UsersHistoricMetricProvider">
       </metricProvider>
    </extension>
 
 
-<extension point="com.googlecode.pongo.runtime.osgi">
-    <class name="org.ossmeter.metricprovider.generic.numberofactiveusersperdaypernewsgroup.model.DailyActiveUsers"/>
-    <class name="org.ossmeter.metricprovider.generic.numberofactiveusersperdaypernewsgroup.model.DailyNewsgroupData"/>
-  </extension>
-<extension
-      point="org.ossmeter.platform.client.api.pongoviz">
-   <visualiser
-         metricProviderId="org.ossmeter.metricprovider.generic.numberofactiveusersperdaypernewsgroup"
-         pongoVisualiser="org.ossmeter.metricprovider.historic.numberofactiveusersperdaypernewsgroup.model.DailyActiveUsersViz">
-   </visualiser>
+
+
+
+<extension point="org.ossmeter.platform.visualisation.metric">
+   <visualisation json="vis/historic.newsgroups.users.json">
+   </visualisation>
 </extension>
+
+
+
+
+
+
+<extension point="com.googlecode.pongo.runtime.osgi">
+    <class name="org.ossmeter.metricprovider.historic.newsgroups.users.model.NewsgroupsUsersHistoricMetric"/>
+    <class name="org.ossmeter.metricprovider.historic.newsgroups.users.model.DailyNewsgroupData"/>
+  </extension>
 </plugin>

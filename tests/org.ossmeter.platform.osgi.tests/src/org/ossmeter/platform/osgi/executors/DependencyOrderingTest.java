@@ -1,8 +1,16 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    James Williams - Implementation.
+ *******************************************************************************/
 package org.ossmeter.platform.osgi.executors;
 
 import java.util.List;
-import java.util.Set;
-
 import org.junit.Test;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.Platform;
@@ -22,7 +30,7 @@ public class DependencyOrderingTest {
 		PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
 		
 		Project project = platform.getProjectRepositoryManager().getProjectRepository().getProjects()
-				.findOneByName("BIRT");
+				.findOneByName("Ponte");
 		
 		ProjectExecutor pe = new ProjectExecutor(platform, project);
 		

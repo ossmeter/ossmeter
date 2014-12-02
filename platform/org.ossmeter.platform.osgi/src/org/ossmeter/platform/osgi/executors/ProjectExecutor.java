@@ -1,6 +1,15 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    James Williams - Implementation.
+ *******************************************************************************/
 package org.ossmeter.platform.osgi.executors;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,6 +23,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.ossmeter.platform.AbstractFactoidMetricProvider;
 import org.ossmeter.platform.Date;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.Platform;
@@ -49,7 +59,7 @@ public class ProjectExecutor implements Runnable {
 		}
 		
 		try{	
-			Path projectLocalStoragePath = Paths.get(platform.getLocalStorageHomeDirectory().toString(), project.getName());		
+			Path projectLocalStoragePath = Paths.get(platform.getLocalStorageHomeDirectory().toString(), project.getShortName());		
 			if (Files.notExists(projectLocalStoragePath)) {
 				Files.createDirectory(projectLocalStoragePath);
 			}
@@ -76,10 +86,18 @@ public class ProjectExecutor implements Runnable {
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 		
 		// Split metrics into branches
-		List<List<IMetricProvider>> metricBranches = splitIntoBranches(platform.getMetricProviderManager().getMetricProviders());
+		List<IMetricProvider> metricProviders = platform.getMetricProviderManager().getMetricProviders();
+		List<IMetricProvider> factoids = extractFactoidProviders(metricProviders);
+		
+		logger.info("Creating metric branches.");
+		// FIXME: Need to check that no metrics depend on factoids!
+		List<List<IMetricProvider>> metricBranches = splitIntoBranches(metricProviders);
+		logger.info("Created metric branches.");
 		
 		// Find the date to start from 
 		Date lastExecuted = getLastExecutedDate();
+		
+		logger.info("Last executed: " + lastExecuted);
 		
 		if (lastExecuted == null) {
 			// TODO: Perhaps flag the project as being in a fatal error state? This will potentially keep occurring.
@@ -88,8 +106,13 @@ public class ProjectExecutor implements Runnable {
 		}
 		Date today = new Date();
 		
-		Date[] dates = Date.range(lastExecuted.addDays(1), today.addDays(-1));
+		if (lastExecuted.compareTo(today) >= 0) {
+			logger.info("Project up to date. Skipping metric execution.");
+			return;
+		}
 		
+		Date[] dates = Date.range(lastExecuted.addDays(1), today.addDays(-1));
+		logger.info("Dates: " + dates.length);
 		
 		for (Date date : dates) {
 			// TODO: An alternative would be to have a single thread pool for the node. I briefly tried this
@@ -97,14 +120,10 @@ public class ProjectExecutor implements Runnable {
 			ExecutorService executorService = Executors.newFixedThreadPool(numberOfCores);
 			logger.info("Date: " + date + ", project: " + project.getName());
 			
-			long startDelta = System.currentTimeMillis();
 			ProjectDelta delta = new ProjectDelta(project, date, platform);
 			boolean createdOk = delta.create();
-			String deltaTimes = delta.getTimingsString();
-			long timeDelta = System.currentTimeMillis() - startDelta;
 
-			if (createdOk) {
-			} else {
+			if (!createdOk) {
 				project.getExecutionInformation().setInErrorState(true);
 				platform.getProjectRepositoryManager().getProjectRepository().sync();
 				
@@ -112,9 +131,8 @@ public class ProjectExecutor implements Runnable {
 				return;
 			}
 			
-			long startMetrics = System.currentTimeMillis();
 			for (List<IMetricProvider> branch : metricBranches) {
-				MetricListExecutor mExe = new MetricListExecutor(platform, project, delta, date);
+				MetricListExecutor mExe = new MetricListExecutor(project.getShortName(), delta, date);
 				mExe.setMetricList(branch);
 				
 				executorService.execute(mExe);
@@ -126,14 +144,31 @@ public class ProjectExecutor implements Runnable {
 			} catch (InterruptedException e) {
 				logger.error("Exception thrown when shutting down executor service.", e);
 			}
-			long timeMetrics = System.currentTimeMillis() - startMetrics;
 			
+			// Now fun the factoids: 
+			// FIXME: Should factoids only run on the last date..? It depends on whether factoid results can 
+			// depend on other factoids...
+			// TODO: Should check if in error state before and after factoids
+			if (factoids.size() > 0) {
+				logger.info("Executing factoids.");
+				MetricListExecutor mExe = new MetricListExecutor(project.getShortName(), delta, date);
+				mExe.setMetricList(factoids);
+				mExe.run(); // TODO Blocking (as desired). But should it have its own thread?
+			}
+
+			// FIXME: We need to re-query the DB as we're holding onto an old instance of the project object
+			// Need to find a way around this - updating to the newer version of the Mongo Java client may help as it
+			// provides a new, threadsafe class called MongoClient
+			project = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByShortName(project.getShortName());
+			
+			// Update meta-data
 			if (project.getExecutionInformation().getInErrorState()) {
 				// TODO: what should we do? Is the act of not-updating the lastExecuted flag enough?
 				// If it continues to loop, it simply tries tomorrow. We need to stop this happening.
 				logger.warn("Project in error state. Stopping execution.");
 				break;
 			} else {
+				logger.info("Updating last executed date."); 
 				project.getExecutionInformation().setLastExecuted(date.toString());
 				platform.getProjectRepositoryManager().getProjectRepository().sync();
 			}
@@ -142,13 +177,28 @@ public class ProjectExecutor implements Runnable {
 		logger.info("Project execution complete. In error state: " + project.getExecutionInformation().getInErrorState());
 	}
 
+	protected List<IMetricProvider> extractFactoidProviders(List<IMetricProvider> allProviders) {
+		List<IMetricProvider> factoids = new ArrayList<>();
+		
+		for (IMetricProvider imp : allProviders) {
+			if (imp instanceof AbstractFactoidMetricProvider) {
+				factoids.add(imp);
+			}
+		}
+		
+		allProviders.removeAll(factoids);
+		
+		return factoids;
+	}
+	
+	
 	/**
 	 * Algorithm to split a list of metric providers into dependency branches. Current implementation isn't
 	 * wonderful - it was built to work, not to perform - and needs relooking at in the future. 
 	 * @param metrics
 	 * @return
 	 */
-	public List<List<IMetricProvider>> splitIntoBranches(List<IMetricProvider> metrics) {
+	protected List<List<IMetricProvider>> splitIntoBranches(List<IMetricProvider> metrics) {
 		List<Set<IMetricProvider>> branches = new ArrayList<Set<IMetricProvider>>();
 		
 		for (IMetricProvider m : metrics) {
@@ -163,23 +213,23 @@ public class ProjectExecutor implements Runnable {
 			if (!mBranch.contains(m)) mBranch.add(m);
 			if (!branches.contains(mBranch)) branches.add(mBranch);
 
-			//FIXME: Test m.getIdentifiersOfUses() for null
-			
-			for (String id : m.getIdentifiersOfUses()) {
-				IMetricProvider use = lookupMetricProviderById(metrics, id);
-				if (use == null) continue;
-				boolean foundUse = false;
-				for (Set<IMetricProvider> branch : branches) {
-					if (branch.contains(use)) {
-						branch.addAll(mBranch);
-						branches.remove(mBranch);
-						mBranch = branch;
-						foundUse = true;
-						break;
+			if (m.getIdentifiersOfUses() != null) {
+				for (String id : m.getIdentifiersOfUses()) {
+					IMetricProvider use = lookupMetricProviderById(metrics, id);
+					if (use == null) continue;
+					boolean foundUse = false;
+					for (Set<IMetricProvider> branch : branches) {
+						if (branch.contains(use)) {
+							branch.addAll(mBranch);
+							branches.remove(mBranch);
+							mBranch = branch;
+							foundUse = true;
+							break;
+						}
 					}
-				}
-				if (!foundUse) {
-					mBranch.add(use);
+					if (!foundUse) {
+						mBranch.add(use);
+					}
 				}
 			}
 			if (!branches.contains(mBranch)) branches.add(mBranch);
@@ -205,7 +255,6 @@ public class ProjectExecutor implements Runnable {
 	protected Date getLastExecutedDate() {
 		Date lastExec;
 		String lastExecuted = project.getExecutionInformation().getLastExecuted();
-		
 		if(lastExecuted.equals("null") || lastExecuted.equals("")) {
 			lastExec = new Date();
 			
@@ -225,8 +274,9 @@ public class ProjectExecutor implements Runnable {
 			}
 			for (CommunicationChannel communicationChannel : project.getCommunicationChannels()) {
 				try {
-					Date d = platform.getCommunicationChannelManager().getFirstDate(platform.getMetricsRepository(project).getDb(), communicationChannel).addDays(-1);
+					Date d = platform.getCommunicationChannelManager().getFirstDate(platform.getMetricsRepository(project).getDb(), communicationChannel);
 					if (d == null) continue;
+					d = d.addDays(-1);
 					if (lastExec.compareTo(d) > 0) {
 						lastExec = d;
 					}
@@ -238,14 +288,16 @@ public class ProjectExecutor implements Runnable {
 			}
 			for (BugTrackingSystem bugTrackingSystem : project.getBugTrackingSystems()) {
 				try {
-					Date d = platform.getBugTrackingSystemManager().getFirstDate(bugTrackingSystem).addDays(-1);
+					Date d = platform.getBugTrackingSystemManager().getFirstDate(platform.getMetricsRepository(project).getDb(), bugTrackingSystem).addDays(-1);
 					if (d == null) continue;
 					if (lastExec.compareTo(d) > 0) {
 						lastExec = d;
 					}
-				} catch (NoManagerFoundException e) {
+				} 
+				catch (NoManagerFoundException e) {
 					System.err.println(e.getMessage());					
-				} catch (Exception e) {
+				}
+				catch (Exception e) {
 					e.printStackTrace();
 				}
 			}

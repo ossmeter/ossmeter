@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    James Williams - Implementation.
+ *******************************************************************************/
 package org.ossmeter.platform.vcs.svn.tests;
 
 import static org.junit.Assert.assertEquals;
@@ -98,5 +108,17 @@ public class SvnManagerTests {
 		Date date = manager.getDateForRevision(repo, "81");
 		
 		assertEquals("20130212", date.toString());
+	}
+	
+	@Test
+	public void testValidateRepository() throws Exception {
+		SvnManager manager = new SvnManager();
+		SvnRepository repo = getRepo();
+		
+		assertTrue(manager.validRepository(repo));
+		
+		SvnRepository repo2 = new SvnRepository();
+		repo2.setUrl("fooooo");
+		assertFalse(manager.validRepository(repo2));
 	}
 }

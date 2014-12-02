@@ -6,10 +6,10 @@ Bundle-Version: 1.0.0.qualifier
 Require-Bundle: com.googlecode.pongo.runtime,
  org.mapdb,
  org.ossmeter.repository.model,
- org.apache.log4j.1.2.17;visibility:=reexport,
  org.eclipse.osgi,
  org.eclipse.core.runtime,
- org.ossmeter.repository.model.cc.nntp
+ org.ossmeter.repository.model.cc.nntp,
+ org.apache.log4j.1.2.17
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.platform,
@@ -20,5 +20,7 @@ Export-Package: org.ossmeter.platform,
  org.ossmeter.platform.delta.bugtrackingsystem,
  org.ossmeter.platform.delta.communicationchannel,
  org.ossmeter.platform.delta.vcs,
+ org.ossmeter.platform.factoids,
  org.ossmeter.platform.logging,
  org.ossmeter.platform.util
+

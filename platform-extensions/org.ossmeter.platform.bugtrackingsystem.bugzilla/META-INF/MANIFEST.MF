@@ -4,15 +4,15 @@ Bundle-Name: Bugzilla
 Bundle-SymbolicName: org.ossmeter.platform.bugtrackingsystem.bugzilla;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.platform.bugtrackingsystem.bugzilla.Activator
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.platform,
  com.googlecode.pongo.runtime,
  com.j2bugzilla,
  org.apache.ws.commons,
  org.apache.xmlrpc,
  org.apache.xmlrpc.common,
- org.ossmeter.repository.model.bts.bugzilla
+ org.ossmeter.repository.model.bts.bugzilla,
+ org.ossmeter.repository.model
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.platform.bugtrackingsystem.bugzilla

@@ -6,9 +6,12 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.metricprovider.historic.commitsovertime.Activator
 Require-Bundle: org.eclipse.core.runtime,
  com.googlecode.pongo.runtime,
+ com.googlecode.pongo.runtime,
  org.ossmeter.platform,
  org.ossmeter.repository.model,
  org.ossmeter.metricprovider.trans.commits,
- org.ossmeter.platform.client.api
+ org.ossmeter.platform.client.api,
+ org.ossmeter.platform.visualisation
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: org.ossmeter.metricprovider.historic.commitsovertime.model

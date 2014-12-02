@@ -1,12 +1,22 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    James Williams - Implementation.
+ *******************************************************************************/
 package org.ossmeter.platform.vcs.svn;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import org.ossmeter.platform.Date;
@@ -19,7 +29,6 @@ import org.ossmeter.repository.model.VcsRepository;
 import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 import org.tmatesoft.svn.core.SVNLogEntry;
 import org.tmatesoft.svn.core.SVNLogEntryPath;
-import org.tmatesoft.svn.core.SVNNodeKind;
 import org.tmatesoft.svn.core.SVNProperties;
 import org.tmatesoft.svn.core.io.SVNRepository;
 
@@ -43,6 +52,14 @@ public class SvnManager extends AbstractVcsManager {
 
 		VcsRepositoryDelta delta = new VcsRepositoryDelta();
 		delta.setRepository(repository);
+		
+		String userProviderURL = _svnRepository.getUrl();
+		String rootURL = svnRepository.getRepositoryRoot(false).toDecodedString();
+		
+		String overLappedURL = makeRelative(rootURL, userProviderURL);
+		if (!overLappedURL.startsWith("/")) {
+			overLappedURL = "/" + overLappedURL;
+		}
 		
 //		if (!startRevision.equals(endRevision)) {
 			Collection<?> c = svnRepository.log(new String[]{""}, null, Long.valueOf(startRevision), Long.valueOf(endRevision), true, true);
@@ -77,7 +94,12 @@ public class SvnManager extends AbstractVcsManager {
 							VcsCommitItem commitItem = new VcsCommitItem();
 							commit.getItems().add(commitItem);
 							commitItem.setCommit(commit);
-							commitItem.setPath(path);
+							
+							String relativePath = makeRelative(overLappedURL, path);
+							if (!relativePath.startsWith("/")) {
+								relativePath = "/" + relativePath;
+							}
+							commitItem.setPath(relativePath);
 							
 							if (svnLogEntryPath.getType() == 'A') {
 								commitItem.setChangeType(VcsChangeType.ADDED);
@@ -199,5 +221,23 @@ public class SvnManager extends AbstractVcsManager {
 			}
 		}
 		return null;
+	}
+	
+	private String makeRelative(String base, String extension) {
+		StringBuilder result = new StringBuilder();
+		List<String> baseSegments = Arrays.asList(base.split("/"));
+		String[] extensionSegments = extension.split("/");
+		for (String ext : extensionSegments) {
+			if (!baseSegments.contains(ext)) {
+				result.append(extension.substring(extension.indexOf(ext)));
+				break;
+			}
+		}
+		return result.toString();
+	}
+
+	@Override
+	public boolean validRepository(VcsRepository repository) throws Exception {
+		return getSVNRepository((SvnRepository)repository) != null;
 	}
 }

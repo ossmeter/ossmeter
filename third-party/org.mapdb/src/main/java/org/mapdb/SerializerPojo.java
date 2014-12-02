@@ -541,7 +541,7 @@ public class SerializerPojo extends SerializerBase{
 
     static{
         try{
-            Class clazz = Class.forName("sun.reflect.ReflectionFactory");
+            Class<?> clazz = Class.forName("sun.reflect.ReflectionFactory");
             if(clazz!=null){
                 Method getReflectionFactory = clazz.getMethod("getReflectionFactory");
                 sunReflFac = getReflectionFactory.invoke(null);

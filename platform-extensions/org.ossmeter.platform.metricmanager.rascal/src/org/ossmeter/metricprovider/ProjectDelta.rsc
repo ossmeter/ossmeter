@@ -1,16 +1,24 @@
+@license{
+Copyright (c) 2014 OSSMETER Partners.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+}
 module org::ossmeter::metricprovider::ProjectDelta
 
 data ProjectDelta
   = projectDelta(datetime date, Project project, list[VcsRepositoryDelta] vcsProjectDelta)
-  | \empty()
   ;
+  
+ProjectDelta empty() = projectDelta($1970-01-01$, project("", []), []);
   
 data Project
   = project(str name, list[VcsRepository] vcsRepositories)
   ;
   
 data VcsRepository
-  = vcsRepository(str url)
+  = vcsRepository(loc url)
   ;
   
 data VcsRepositoryDelta
@@ -22,7 +30,7 @@ data VcsCommit
   ;
   
 data VcsCommitItem
-  = vcsCommitItem(str path, VcsChangeType changeType, list[Churn] churns)
+  = vcsCommitItem(str path, VcsChangeType changeType, list[Churn] churns) // TODO path as loc?
   ;
   
 data VcsChangeType
@@ -38,9 +46,9 @@ data Churn
   | linesDeleted(int i)
   ;
   
-map[str, list[str]] getChangedItemsPerRepository(ProjectDelta delta) {
+map[loc, list[str]] getChangedItemsPerRepository(ProjectDelta delta) {
   list[str] emptyList = [];
-  map[str, list[str]] result = ();
+  map[loc, list[str]] result = ();
   for (/VcsRepositoryDelta vcrd <- delta) {
     result[vcrd.repository.url]? emptyList += [ fVCI.path | VcsCommitItem fVCI <- checkSanity([ vci | /VcsCommitItem vci <- vcrd ]) ];
   }
@@ -56,4 +64,11 @@ set[VcsCommitItem] checkSanity(list[VcsCommitItem] items) {
     }
   }
   return result;
+}
+
+list[loc] getChangedFilesInWorkingCopyFolders(ProjectDelta delta, map[loc, loc] workingCopyFolders)
+{
+  list[loc] result = [];
+  map[loc, list[str]] changedItemsPerRepo = getChangedItemsPerRepository(delta);
+  return [workingCopyFolders[repo] + item | repo <- changedItemsPerRepo, item <- changedItemsPerRepo[repo]];
 }

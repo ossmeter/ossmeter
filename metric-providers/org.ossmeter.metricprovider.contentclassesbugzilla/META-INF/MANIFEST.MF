@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Contentclassesbugzilla
+Bundle-SymbolicName: org.ossmeter.metricprovider.trans.bugs.contentclasses;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.ossmeter.metricprovider.trans.bugs.contentclasses.Activator
+Require-Bundle: org.eclipse.core.runtime,
+ com.googlecode.pongo.runtime,
+ org.ossmeter.repository.model.bts.bugzilla,
+ org.ossmeter.platform,
+ com.googlecode.pongo.runtime.osgi,
+ org.ossmeter.metricprovider.trans.bugs.bugmetadata,
+ org.ossmeter.platform.visualisation,
+ org.ossmeter.repository.model
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: org.ossmeter.metricprovider.trans.bugs.contentclasses

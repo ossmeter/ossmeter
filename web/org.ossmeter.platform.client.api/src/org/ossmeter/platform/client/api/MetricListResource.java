@@ -1,40 +1,36 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    James Williams - Implementation.
+ *******************************************************************************/
+
 package org.ossmeter.platform.client.api;
 
-import java.util.Iterator;
+import java.util.Map;
 
-import org.ossmeter.platform.IMetricProvider;
-import org.ossmeter.platform.Platform;
-import org.restlet.engine.header.Header;
-import org.restlet.resource.Get;
-import org.restlet.resource.ServerResource;
-import org.restlet.util.Series;
+import org.ossmeter.platform.visualisation.MetricVisualisation;
+import org.ossmeter.platform.visualisation.MetricVisualisationExtensionPointManager;
+import org.restlet.representation.Representation;
 
-public class MetricListResource extends ServerResource {
+import com.fasterxml.jackson.databind.node.ArrayNode;
 
-	@Get("json")
-    public String represent() {
-		Series<Header> responseHeaders = (Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers");
-		if (responseHeaders == null) {
-		    responseHeaders = new Series(Header.class);
-		    getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders);
+public class MetricListResource extends AbstractApiResource {
+
+    public Representation doRepresent() {
+		ArrayNode metrics = mapper.createArrayNode();
+		
+		MetricVisualisationExtensionPointManager manager = MetricVisualisationExtensionPointManager.getInstance();
+		Map<String, MetricVisualisation> vizs = manager.getRegisteredVisualisations();
+		
+		for (MetricVisualisation vis : vizs.values()) {
+			metrics.add(vis.getVis());
 		}
-		responseHeaders.add(new Header("Access-Control-Allow-Origin", "*"));
-		responseHeaders.add(new Header("Access-Control-Allow-Methods", "GET"));
 		
-		Platform platform = Platform.getInstance();
-		String json = "{ \"metrics\" : [ ";
-		
-		Iterator<IMetricProvider> it = platform.getMetricProviderManager().getMetricProviders().iterator();
-		
-		while (it.hasNext()) {
-			IMetricProvider ip = it.next();
-			json += "{ \"name\" : \"" + ip.getFriendlyName() + "\", \"type\" : \"" + ip.getClass().getName() + "\", \"description\" : \"" + ip.getSummaryInformation() + "\" }";
-			if (it.hasNext()) json += ",";
-		}
-
-		json += " ] }";
-		return json;
+		return Util.createJsonRepresentation(metrics);
 	}
-
-	
 }

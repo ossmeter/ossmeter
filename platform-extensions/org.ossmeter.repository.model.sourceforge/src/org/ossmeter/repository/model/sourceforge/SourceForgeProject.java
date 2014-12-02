@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Davide Di Ruscio - Implementation.
+ *******************************************************************************/
 package org.ossmeter.repository.model.sourceforge;
 
 import com.mongodb.*;
@@ -47,8 +57,8 @@ public class SourceForgeProject extends org.ossmeter.repository.model.Project {
 		RANKING.setOwningType("org.ossmeter.repository.model.sourceforge.SourceForgeProject");
 		DOWNLOADPAGE.setOwningType("org.ossmeter.repository.model.sourceforge.SourceForgeProject");
 		SUPPORTPAGE.setOwningType("org.ossmeter.repository.model.sourceforge.SourceForgeProject");
-		SUMMARYPAGE.setOwningType("org.ossmeter.repository.model.sourceforge.SourceForgeProject");
-		HOMEPAGE.setOwningType("org.ossmeter.repository.model.sourceforge.SourceForgeProject");
+		SUMMARY.setOwningType("org.ossmeter.repository.model.sourceforge.SourceForgeProject");
+		DOWNLOADCOUNT.setOwningType("org.ossmeter.repository.model.sourceforge.SourceForgeProject");
 	}
 	
 	public static StringQueryProducer CREATED = new StringQueryProducer("created"); 
@@ -59,8 +69,8 @@ public class SourceForgeProject extends org.ossmeter.repository.model.Project {
 	public static NumericalQueryProducer RANKING = new NumericalQueryProducer("ranking");
 	public static StringQueryProducer DOWNLOADPAGE = new StringQueryProducer("downloadPage"); 
 	public static StringQueryProducer SUPPORTPAGE = new StringQueryProducer("supportPage"); 
-	public static StringQueryProducer SUMMARYPAGE = new StringQueryProducer("summaryPage"); 
-	public static StringQueryProducer HOMEPAGE = new StringQueryProducer("homePage"); 
+	public static StringQueryProducer SUMMARY = new StringQueryProducer("summary"); 
+	public static StringQueryProducer DOWNLOADCOUNT = new StringQueryProducer("downloadCount"); 
 	
 	
 	public String getCreated() {
@@ -135,21 +145,21 @@ public class SourceForgeProject extends org.ossmeter.repository.model.Project {
 		notifyChanged();
 		return this;
 	}
-	public String getSummaryPage() {
-		return parseString(dbObject.get("summaryPage")+"", "");
+	public String getSummary() {
+		return parseString(dbObject.get("summary")+"", "");
 	}
 	
-	public SourceForgeProject setSummaryPage(String summaryPage) {
-		dbObject.put("summaryPage", summaryPage);
+	public SourceForgeProject setSummary(String summary) {
+		dbObject.put("summary", summary);
 		notifyChanged();
 		return this;
 	}
-	public String getHomePage() {
-		return parseString(dbObject.get("homePage")+"", "");
+	public String getDownloadCount() {
+		return parseString(dbObject.get("downloadCount")+"", "");
 	}
 	
-	public SourceForgeProject setHomePage(String homePage) {
-		dbObject.put("homePage", homePage);
+	public SourceForgeProject setDownloadCount(String downloadCount) {
+		dbObject.put("downloadCount", downloadCount);
 		notifyChanged();
 		return this;
 	}
@@ -223,7 +233,7 @@ public class SourceForgeProject extends org.ossmeter.repository.model.Project {
 	}
 	public List<Bug> getBugs() {
 		if (bugs == null) {
-			bugs = new PongoList<Bug>(this, "bugs", false);
+			bugs = new PongoList<Bug>(this, "bugs", true);
 		}
 		return bugs;
 	}

@@ -1,6 +1,18 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Jurgen Vinju - Implementation.
+ *******************************************************************************/
 package org.ossmeter.metricprovider.rascal;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +21,7 @@ import org.eclipse.imp.pdb.facts.IConstructor;
 import org.eclipse.imp.pdb.facts.IDateTime;
 import org.eclipse.imp.pdb.facts.IList;
 import org.eclipse.imp.pdb.facts.IListWriter;
+import org.eclipse.imp.pdb.facts.ISourceLocation;
 import org.eclipse.imp.pdb.facts.IString;
 import org.eclipse.imp.pdb.facts.IValue;
 import org.eclipse.imp.pdb.facts.IValueFactory;
@@ -26,6 +39,7 @@ import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.VcsRepository;
 import org.rascalmpl.interpreter.Evaluator;
 import org.rascalmpl.interpreter.NullRascalMonitor;
+import org.rascalmpl.uri.URIUtil;
 import org.rascalmpl.values.ValueFactoryFactory;
 
 public class RascalProjectDeltas {
@@ -42,8 +56,12 @@ public class RascalProjectDeltas {
 	store.extendStore(eval.getHeap().getModule(MODULE).getStore());
   }
 
-  public IConstructor emptyDelta() {
-	  return createConstructor("ProjectDelta", "projectDelta");
+  public TypeStore getStore() {
+    return store;
+  }
+
+  public IConstructor emptyDelta(ProjectDelta delta) {
+	  return convert(delta, Collections.<VcsCommit, List<Churn>>emptyMap());
   }
   
   public IConstructor convert(final ProjectDelta delta, Map<VcsCommit, List<Churn>> churnPerCommit) {
@@ -96,7 +114,7 @@ public class RascalProjectDeltas {
   }
   
   private IConstructor convert(VcsRepository repo) {
-	return values.constructor(store.lookupConstructor(store.lookupAbstractDataType("VcsRepository"), "vcsRepository", TF.tupleType(TF.stringType())), convert(repo.getUrl()));
+	return values.constructor(store.lookupConstructor(store.lookupAbstractDataType("VcsRepository"), "vcsRepository", TF.tupleType(TF.sourceLocationType())), convertToLocation(repo.getUrl()));
   }
   
   private IConstructor convert(VcsRepositoryDelta vcsRepoDelta) {
@@ -128,12 +146,31 @@ public class RascalProjectDeltas {
 	return values.string(toConvert);
   }
   
+  private ISourceLocation convertToLocation(String url) {
+	  if (url == null) {
+		  try {
+			return values.sourceLocation("unknown", null, null, null, null);
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	  }
+	  return values.sourceLocation(URIUtil.assumeCorrect(url));
+  }
+  
   private IConstructor convert(VcsCommitItem commitItem) {
 	List<IValue> children = new ArrayList<>();
 	
+//	children.add(convertToLocation(commitItem.getCommit().getDelta().getRepository().getUrl() + "/" + commitItem.getPath()));
 	children.add(convert(commitItem.getPath()));
 	children.add(convert(commitItem.getChangeType()));
-	children.add(createChurn(churns.get(commitItem.getCommit()), commitItem.getPath()));
+	List<Churn> commitChurns = churns.get(commitItem.getCommit());
+	if (commitChurns != null) {
+		children.add(createChurn(commitChurns, commitItem.getPath()));
+	}
+	else {
+		children.add(values.listWriter().done());
+	}
 				
 	return createConstructor("VcsCommitItem", "vcsCommitItem", children.toArray(new IValue[0]));
   }

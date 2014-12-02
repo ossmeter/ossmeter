@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Davide Di Ruscio - Implementation.
+ *******************************************************************************/
 //////////////////////////////////////////////////////////////////////////////
 //  This file is part of jnntpe, an NNTP client library.
 //  Copyright (C) 2001 Scott MacDiarmid
@@ -17,9 +27,6 @@
 //  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //////////////////////////////////////////////////////////////////////////////
 package org.ossmeter.repository.model.eclipse.importer.util.NNTP;
-
-import java.util.StringTokenizer;
-import java.util.*;
 
 /**
 * NNTPArticle holds information about an article.  

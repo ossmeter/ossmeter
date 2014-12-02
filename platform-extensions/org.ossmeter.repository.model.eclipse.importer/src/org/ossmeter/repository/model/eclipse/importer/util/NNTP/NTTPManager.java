@@ -1,10 +1,17 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Davide Di Ruscio - Implementation.
+ *******************************************************************************/
 package org.ossmeter.repository.model.eclipse.importer.util.NNTP;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Vector;
-
-import org.apache.commons.collections.map.CaseInsensitiveMap;
 
 public class NTTPManager {
 
@@ -21,7 +28,7 @@ public class NTTPManager {
 		Vector<NNTPGroup> vg = new Vector<NNTPGroup>();
 		a.getAllGroups(vg);
 		int i=0;
-		ArrayList<String> result = new ArrayList();
+		ArrayList<String> result = new ArrayList<>();
 		for (NNTPGroup nntpGroup : vg) {
 			
 			result.add(nntpGroup.getName());

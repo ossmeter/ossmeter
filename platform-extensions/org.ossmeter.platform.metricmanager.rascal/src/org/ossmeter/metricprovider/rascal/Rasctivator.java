@@ -1,17 +1,24 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Jurgen Vinju - Implementation.
+ *******************************************************************************/
 package org.ossmeter.metricprovider.rascal;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IExtension;
-import org.eclipse.core.runtime.IExtensionPoint;
-import org.eclipse.core.runtime.Platform;
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.ossmeter.platform.logging.OssmeterLoggerFactory;
+import org.rascalmpl.interpreter.StackTrace;
 
 public class Rasctivator implements BundleActivator {
 	private static final Logger LOGGER = new OssmeterLoggerFactory().makeNewLoggerInstance("rascalLogger");
-  private static BundleContext context;
+	private static BundleContext context;
 	
 	static BundleContext getContext() {
 		return context;
@@ -20,32 +27,16 @@ public class Rasctivator implements BundleActivator {
 	@Override
 	public void start(BundleContext bundleContext) throws Exception {
 		Rasctivator.context = bundleContext;
-		
-		IExtensionPoint extensionPoint = Platform.getExtensionRegistry()
-        .getExtensionPoint("ossmeter.rascal.metricprovider");
-                   
-    if (extensionPoint != null) {
-    	for (IExtension element : extensionPoint.getExtensions()) {
-	      String name = element.getContributor().getName();
-	      Bundle bundle = Platform.getBundle(name);
-	      RascalManager.getInstance().registerRascalMetricProvider(bundle);
-	    }
-    }
-    
-    extensionPoint = Platform.getExtensionRegistry().getExtensionPoint("ossmeter.rascal.extractor");
-    
-    if (extensionPoint != null) {
-    	for (IExtension element : extensionPoint.getExtensions()) {
-    		String name = element.getContributor().getName();
-    		Bundle bundle = Platform.getBundle(name);
-    		RascalManager.getInstance().registerExtractor(bundle);
-    	}
-    }
-    
+	}
+
+	public static void logException(Object message, Throwable cause) {
+//		LOGGER.log(Priority.ERROR, message, cause);
+		System.err.println(message);
+		cause.printStackTrace();
 	}
 	
-	public static void logException(Object message, Throwable cause) {
-	  LOGGER.error(message, cause);
+	public static void printRascalTrace(StackTrace trace) {
+		System.err.println("Rascal stack trace:\n" + trace);
 	}
 
 	@Override
@@ -53,4 +44,5 @@ public class Rasctivator implements BundleActivator {
 		Rasctivator.context = null;
 	}
 
+	
 }

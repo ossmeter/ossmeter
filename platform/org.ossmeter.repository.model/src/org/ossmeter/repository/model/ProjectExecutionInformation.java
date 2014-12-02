@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Davide Di Ruscio - Implementation.
+ *******************************************************************************/
 package org.ossmeter.repository.model;
 
 import com.mongodb.*;
@@ -14,6 +24,7 @@ public class ProjectExecutionInformation extends Pongo {
 	
 	public ProjectExecutionInformation() { 
 		super();
+		dbObject.put("storage", new LocalStorage().getDbObject());
 		dbObject.put("metricProviderData", new BasicDBList());
 		LASTEXECUTED.setOwningType("org.ossmeter.repository.model.ProjectExecutionInformation");
 		MONITOR.setOwningType("org.ossmeter.repository.model.ProjectExecutionInformation");
@@ -65,6 +76,7 @@ public class ProjectExecutionInformation extends Pongo {
 	public LocalStorage getStorage() {
 		if (storage == null && dbObject.containsField("storage")) {
 			storage = (LocalStorage) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("storage"));
+			storage.setContainer(this);
 		}
 		return storage;
 	}

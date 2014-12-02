@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Davide Di Ruscio - Implementation.
+ *******************************************************************************/
 package org.ossmeter.repository.model.redmine;
 
 import com.mongodb.*;
@@ -17,6 +27,8 @@ public class RedmineProject extends org.ossmeter.repository.model.Project {
 	
 	public RedmineProject() { 
 		super();
+		dbObject.put("wiki", new BasicDBObject());
+		dbObject.put("queryManager", new BasicDBObject());
 		dbObject.put("issueTracker", new BasicDBList());
 		dbObject.put("members", new BasicDBList());
 		dbObject.put("versions", new BasicDBList());
@@ -25,12 +37,20 @@ public class RedmineProject extends org.ossmeter.repository.model.Project {
 		DESCRIPTION.setOwningType("org.ossmeter.repository.model.redmine.RedmineProject");
 		CREATED_ON.setOwningType("org.ossmeter.repository.model.redmine.RedmineProject");
 		UPDATED_ON.setOwningType("org.ossmeter.repository.model.redmine.RedmineProject");
+		USERNAME.setOwningType("org.ossmeter.repository.model.redmine.RedmineProject");
+		PASSWORD.setOwningType("org.ossmeter.repository.model.redmine.RedmineProject");
+		TOKEN.setOwningType("org.ossmeter.repository.model.redmine.RedmineProject");
+		BASEREPO.setOwningType("org.ossmeter.repository.model.redmine.RedmineProject");
 	}
 	
 	public static StringQueryProducer IDENTIFIER = new StringQueryProducer("identifier"); 
 	public static StringQueryProducer DESCRIPTION = new StringQueryProducer("description"); 
 	public static StringQueryProducer CREATED_ON = new StringQueryProducer("created_on"); 
 	public static StringQueryProducer UPDATED_ON = new StringQueryProducer("updated_on"); 
+	public static StringQueryProducer USERNAME = new StringQueryProducer("username"); 
+	public static StringQueryProducer PASSWORD = new StringQueryProducer("password"); 
+	public static StringQueryProducer TOKEN = new StringQueryProducer("token"); 
+	public static StringQueryProducer BASEREPO = new StringQueryProducer("baseRepo"); 
 	
 	
 	public String getIdentifier() {
@@ -69,6 +89,42 @@ public class RedmineProject extends org.ossmeter.repository.model.Project {
 		notifyChanged();
 		return this;
 	}
+	public String getUsername() {
+		return parseString(dbObject.get("username")+"", "");
+	}
+	
+	public RedmineProject setUsername(String username) {
+		dbObject.put("username", username);
+		notifyChanged();
+		return this;
+	}
+	public String getPassword() {
+		return parseString(dbObject.get("password")+"", "");
+	}
+	
+	public RedmineProject setPassword(String password) {
+		dbObject.put("password", password);
+		notifyChanged();
+		return this;
+	}
+	public String getToken() {
+		return parseString(dbObject.get("token")+"", "");
+	}
+	
+	public RedmineProject setToken(String token) {
+		dbObject.put("token", token);
+		notifyChanged();
+		return this;
+	}
+	public String getBaseRepo() {
+		return parseString(dbObject.get("baseRepo")+"", "");
+	}
+	
+	public RedmineProject setBaseRepo(String baseRepo) {
+		dbObject.put("baseRepo", baseRepo);
+		notifyChanged();
+		return this;
+	}
 	
 	
 	public List<RedmineBugIssueTracker> getIssueTracker() {
@@ -94,6 +150,7 @@ public class RedmineProject extends org.ossmeter.repository.model.Project {
 	public RedmineWiki getWiki() {
 		if (wiki == null && dbObject.containsField("wiki")) {
 			wiki = (RedmineWiki) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("wiki"));
+			wiki.setContainer(this);
 		}
 		return wiki;
 	}
@@ -114,6 +171,7 @@ public class RedmineProject extends org.ossmeter.repository.model.Project {
 	public RedmineQueryManager getQueryManager() {
 		if (queryManager == null && dbObject.containsField("queryManager")) {
 			queryManager = (RedmineQueryManager) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("queryManager"));
+			queryManager.setContainer(this);
 		}
 		return queryManager;
 	}

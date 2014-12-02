@@ -1,9 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<?eclipse version="3.4"?>
-<plugin id="org.ossmeter.platform">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?eclipse version="3.4"?><plugin>
    <extension-point id="org.ossmeter.platform.metricprovider" name="metricProvider" schema="schema/org.ossmeter.platform.metricprovider.exsd"/>
    <extension-point id="org.ossmeter.platform.managers.vcs" name="vcsManager" schema="schema/org.ossmeter.platform.managers.vcs.exsd"/>
    <extension-point id="org.ossmeter.platform.managers.metricprovider" name="metricProviderManager" schema="schema/org.ossmeter.platform.managers.metricprovider.exsd"/>
    <extension-point id="org.ossmeter.platform.managers.bugtracking" name="bugtracker" schema="schema/org.ossmeter.platform.managers.bugtracking.exsd"/>
    <extension-point id="org.ossmeter.platform.managers.communicationchannel" name="communcationChannel" schema="schema/org.ossmeter.platform.managers.communicationchannel.exsd"/>
+
+<extension point="com.googlecode.pongo.runtime.osgi">
+    <class name="org.ossmeter.platform.factoids.Factoids"/>
+    <class name="org.ossmeter.platform.factoids.Factoid"/>
+  </extension>
 </plugin>

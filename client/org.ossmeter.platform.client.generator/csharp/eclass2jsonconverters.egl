@@ -1,0 +1,28 @@
+[%import "csharputil.eol";%]
+[%import "../util/ecoreutil.eol";%]
+using System;
+using System.Net;
+using System.IO;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
+
+namespace ossmeterclient.converters
+{
+
+	class Json[%=c.name%]Converter : JsonCreationConverter<[%=c.name%]>
+	{
+		protected override [%=c.name%] Create(Type objectType, JObject jsonObject)
+		{
+			var typeName = jsonObject ["_type"].ToString ();
+			switch (typeName) {
+			[%for (sub in c.getSubTypes()) {%]
+				case "[%=sub.ePackage.nsURI%].[%=sub.name%]":
+					return new [%=sub.name%] ();
+			[%}%]
+				default:
+					return null;
+			}
+		}
+	}
+}

@@ -1,0 +1,58 @@
+[%import "csharputil.eol";%]
+[%import "../util/ecoreutil.eol";%]
+[%import "wadlutil.eol";%]
+using System;
+using System.Net;
+using System.IO;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
+
+
+namespace ossmeterclient
+{
+	class OssmeterClient 
+	{
+		protected readonly string connectionUrl;
+
+		public OssmeterClient(string connectionUrl) 
+		{
+			this.connectionUrl = connectionUrl;
+			
+			// TODO: Test connection
+		}
+[%for (resource in w.c_resources.c_resource) {%]
+	[%for (method in resource.c_method.select(m | m.s_name.at(0)=="GET").flatten()) { %]
+		public [%=method.getResultType()%] get[%=method.getName()%]([%=method.getArguments()%])
+		{
+			string result = makeRequest(connectionUrl + "[%=method.getUrl()%]");
+			return JsonConvert.DeserializeObject<[%=method.getResultType()%]> (result[%for (sub in method.getResultSubTypes()) { %], new Json[%=sub.name%]Converter()[% } %]);
+		}
+	[%}%]
+[%}%]		
+		protected string makeRequest(string urlString) 
+		{
+			HttpWebRequest req = (HttpWebRequest)WebRequest.Create (urlString);
+			HttpWebResponse res = (HttpWebResponse)req.GetResponse ();
+
+			Stream stream = res.GetResponseStream ();
+			StreamReader reader = new StreamReader (stream);
+
+			return reader.ReadToEnd ();
+		}
+	}
+	
+	
+	/**
+	 *	This is a test method to ensure that the generated client works ok.
+	 */
+	public static void Main (string[] args)
+		OssmeterClient c = new OssmeterClient("http://localhost:1234");
+		
+		System.out.println(c.getProjectList());
+		
+		Project p = c.getProject("epsilon");
+		Metric m2 = c.getMetric(p.getShortName(), "activeusersperday");
+		
+	}
+}

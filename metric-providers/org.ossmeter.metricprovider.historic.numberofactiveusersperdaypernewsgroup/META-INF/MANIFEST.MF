@@ -1,16 +1,19 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Numberofactiveusersperdaypernewsgroup
-Bundle-SymbolicName: org.ossmeter.metricprovider.historic.numberofactiveusersperdaypernewsgroup;singleton:=true
+Bundle-SymbolicName: org.ossmeter.metricprovider.historic.newsgroups.users;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.ossmeter.metricprovider.historic.numberofactiveusersperdaypernewsgroup.Activator
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
+Bundle-Activator: org.ossmeter.metricprovider.historic.newsgroups.users.Activator
+Require-Bundle: org.eclipse.core.runtime,
+ com.googlecode.pongo.runtime,
  org.ossmeter.platform,
- org.ossmeter.metricprovider.trans.activeusers,
+ org.ossmeter.metricprovider.trans.newsgroups.activeusers,
  org.ossmeter.repository.model.cc.nntp,
  org.ossmeter.platform.client.api,
- com.googlecode.pongo.runtime.osgi
+ com.googlecode.pongo.runtime.osgi,
+ org.ossmeter.platform.visualisation,
+ org.ossmeter.repository.model
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.historic.numberofactiveusersperdaypernewsgroup
+Export-Package: org.ossmeter.metricprovider.historic.newsgroups.users,
+ org.ossmeter.metricprovider.historic.newsgroups.users.model

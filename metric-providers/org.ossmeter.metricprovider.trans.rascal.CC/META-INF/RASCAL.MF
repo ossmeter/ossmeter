@@ -1,2 +1,2 @@
 Source: src
-Main-Module: WMC
+Main-Module: CC

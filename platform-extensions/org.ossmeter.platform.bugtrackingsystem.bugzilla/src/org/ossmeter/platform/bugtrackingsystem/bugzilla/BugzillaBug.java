@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Yannis Korkontzelos - Implementation.
+ *******************************************************************************/
 package org.ossmeter.platform.bugtrackingsystem.bugzilla;
 
 import java.util.Date;
@@ -29,7 +39,6 @@ public class BugzillaBug  extends BugTrackingSystemBug {
 	private Boolean isCcAccesible;
 	private String verifiedBranch;
 	private String releaseNotes;
-	private String severity;
 	private String docType;
 	private String cloneOf;
 	private String assignedTo;
@@ -38,7 +47,14 @@ public class BugzillaBug  extends BugTrackingSystemBug {
 	private String regressionStatus;
 	private String classification;
 	private String type;
+	private String summary;
 	
+	public String getSummary() {
+		return summary;
+	}
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
 	public String getProduct() {
 		return product;
 	}
@@ -164,12 +180,6 @@ public class BugzillaBug  extends BugTrackingSystemBug {
 	}
 	public void setReleaseNotes(String releaseNotes) {
 		this.releaseNotes = releaseNotes;
-	}
-	public String getSeverity() {
-		return severity;
-	}
-	public void setSeverity(String severity) {
-		this.severity = severity;
 	}
 	public String getDocType() {
 		return docType;

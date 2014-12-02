@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tests
+Bundle-SymbolicName: org.ossmeter.platform.visualisation.tests
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: org.ossmeter.platform.visualisation,
+ org.ossmeter.platform,
+ org.ossmeter.repository.model,
+ org.junit,
+ org.jackson.all,
+ org.ossmeter.metricprovider.historic.commitsovertime,
+ org.ossmeter.metricprovider.rascal,
+ org.apache.log4j.1.2.17,
+ com.googlecode.pongo.runtime

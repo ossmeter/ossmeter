@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package org.ossmeter.platform;
 
 import java.io.IOException;
@@ -80,6 +90,13 @@ public class SimpleMetricProviderScheduler {
 			
 
 			for (VcsRepository repo : project.getVcsRepositories()) {
+				if (platform.getCommunicationChannelManager()==null)
+					System.err.println("platform.getCommunicationChannelManager()==null");
+				if (platform.getMetricsRepository(project).getDb()==null)
+					System.err.println("platform.getMetricsRepository(project).getDb()==null");
+				if (platform.getCommunicationChannelManager().getFirstDate(platform.getMetricsRepository(project).getDb(), communicationChannel)==null)
+					System.err.println("platform.getCommunicationChannelManager().getFirstDate(platform.getMetricsRepository(project).getDb(), communicationChannel)==null");
+
 				// This needs to be the day BEFORE the first day! (Hence the addDays(-1))
 				Date d = platform.getVcsManager().getDateForRevision(repo, platform.getVcsManager().getFirstRevision(repo)).addDays(-1);
 				if (lastExec.compareTo(d) < 0) {
@@ -106,7 +123,7 @@ public class SimpleMetricProviderScheduler {
 
 		//DEBUG
 //		if (project.getName().equals("Epsilon"))
-//			last = new Date("20130901");
+			last = new Date("20130901");
 //		today = new Date("20131014");
 		//END DEBUG
 		

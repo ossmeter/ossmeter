@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Davide Di Ruscio - Implementation.
+ *******************************************************************************/
 package org.ossmeter.repository.model.googlecode;
 
 import com.mongodb.*;
@@ -55,31 +65,21 @@ public class GoogleIssue extends Pongo {
 		notifyChanged();
 		return this;
 	}
-	public GoogleIssuePriority getPriority() {
-		GoogleIssuePriority priority = null;
-		try {
-			priority = GoogleIssuePriority.valueOf(dbObject.get("priority")+"");
-		}
-		catch (Exception ex) {}
-		return priority;
+	public String getPriority() {
+		return parseString(dbObject.get("priority")+"", "");
 	}
 	
-	public GoogleIssue setPriority(GoogleIssuePriority priority) {
-		dbObject.put("priority", priority.toString());
+	public GoogleIssue setPriority(String priority) {
+		dbObject.put("priority", priority);
 		notifyChanged();
 		return this;
 	}
-	public GoogleIssueType getType() {
-		GoogleIssueType type = null;
-		try {
-			type = GoogleIssueType.valueOf(dbObject.get("type")+"");
-		}
-		catch (Exception ex) {}
-		return type;
+	public String getType() {
+		return parseString(dbObject.get("type")+"", "");
 	}
 	
-	public GoogleIssue setType(GoogleIssueType type) {
-		dbObject.put("type", type.toString());
+	public GoogleIssue setType(String type) {
+		dbObject.put("type", type);
 		notifyChanged();
 		return this;
 	}
@@ -92,17 +92,12 @@ public class GoogleIssue extends Pongo {
 		notifyChanged();
 		return this;
 	}
-	public GoogleIssueStatus getStatus() {
-		GoogleIssueStatus status = null;
-		try {
-			status = GoogleIssueStatus.valueOf(dbObject.get("status")+"");
-		}
-		catch (Exception ex) {}
-		return status;
+	public String getStatus() {
+		return parseString(dbObject.get("status")+"", "");
 	}
 	
-	public GoogleIssue setStatus(GoogleIssueStatus status) {
-		dbObject.put("status", status.toString());
+	public GoogleIssue setStatus(String status) {
+		dbObject.put("status", status);
 		notifyChanged();
 		return this;
 	}

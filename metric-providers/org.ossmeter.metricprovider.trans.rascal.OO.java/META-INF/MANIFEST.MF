@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: OSSMETER Rascal Examples
+Bundle-SymbolicName: org.ossmeter.metricprovider.trans.rascal.OO.java;singleton:=true
+Bundle-Version: 0.0.0.qualifier
+Bundle-Vendor: OSSMETER
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: org.ossmeter.metricprovider.rascal,
+ org.apache.commons.math,
+ org.ossmeter.metricprovider.trans.rascal.OO,
+ org.ossmeter.platform.visualisation
+Import-Package: org.ossmeter.platform

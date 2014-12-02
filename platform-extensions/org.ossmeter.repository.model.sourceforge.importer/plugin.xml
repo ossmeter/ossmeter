@@ -3,46 +3,6 @@
 <plugin>
 
    <extension
-         id="sampleBuilder"
-         name="Sample Project Builder"
-         point="org.eclipse.core.resources.builders">
-      <builder
-            hasNature="true">
-         <run
-               class="org.ossmeter.repository.model.sourceforge.importer.builder.SampleBuilder">
-         </run>
-      </builder>
-   </extension>
-   <extension
-         id="sampleNature"
-         name="Sample Project Nature"
-         point="org.eclipse.core.resources.natures">
-      <runtime>
-         <run
-               class="org.ossmeter.repository.model.sourceforge.importer.builder.SampleNature">
-         </run>
-      </runtime>
-      <builder
-            id="org.ossmeter.repository.model.sourceforge.importer.sampleBuilder">
-      </builder>
-   </extension>
-   <extension
-         point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            adaptable="true"
-            objectClass="org.eclipse.core.resources.IProject"
-            nameFilter="*"
-            id="org.ossmeter.repository.model.sourceforge.importer.contribution1">
-         <action
-               label="Add/Remove Sample Nature"
-               class="org.ossmeter.repository.model.sourceforge.importer.builder.ToggleNatureAction"
-               menubarPath="additions"
-               enablesFor="+"
-               id="org.ossmeter.repository.model.sourceforge.importer.addRemoveNatureAction">
-         </action>
-      </objectContribution>
-   </extension>
-   <extension
          id="xmlProblem"
          name="XML Problem"
          point="org.eclipse.core.resources.markers">

@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Yannis Korkontzelos - Implementation.
+ *******************************************************************************/
 package org.ossmeter.platform.communicationchannel.nntp;
 
 import java.io.Reader;
@@ -9,7 +19,7 @@ import org.ossmeter.platform.Date;
 import org.ossmeter.platform.delta.communicationchannel.CommunicationChannelArticle;
 import org.ossmeter.platform.delta.communicationchannel.CommunicationChannelDelta;
 import org.ossmeter.platform.delta.communicationchannel.ICommunicationChannelManager;
-import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 
 import com.mongodb.DB;
@@ -19,7 +29,7 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 	private final static int RETRIEVAL_STEP = 50;
 
 	@Override
-	public boolean appliesTo(NntpNewsGroup newsgroup) {
+	public boolean appliesTo(CommunicationChannel newsgroup) {
 		return newsgroup instanceof NntpNewsGroup;
 	}
 
@@ -35,9 +45,15 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 //		if (Integer.parseInt(newsgroup.getLastArticleChecked())<134500)
 //			newsgroup.setLastArticleChecked("134500"); //137500");
 
-		int lastArticleChecked = Integer.parseInt(newsgroup.getLastArticleChecked());
+		String lac = newsgroup.getLastArticleChecked();
+		if (lac == null || lac.equals("") || lac.equals("null")) lac = "-1";
+		int lastArticleChecked = Integer.parseInt(lac);
 		if (lastArticleChecked<0) lastArticleChecked = newsgroupInfo.getFirstArticle();
 
+		// FIXME: certain eclipse newsgroups return 0 for both FirstArticle and LastArticle which causes exceptions
+		if (lastArticleChecked == 0) return null;
+		
+		
 		CommunicationChannelDelta delta = new CommunicationChannelDelta();
 		delta.setNewsgroup(newsgroup);
 
@@ -83,6 +99,7 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 						newNewsgroup.setAuthenticationRequired(newsgroup.getAuthenticationRequired());
 						newNewsgroup.setUsername(newsgroup.getUsername());
 						newNewsgroup.setPassword(newsgroup.getPassword());
+						newNewsgroup.setNewsGroupName(newsgroup.getNewsGroupName());
 						newNewsgroup.setPort(newsgroup.getPort());
 						newNewsgroup.setInterval(newsgroup.getInterval());
 						communicationChannelArticle.setNewsgroup(newNewsgroup);
@@ -116,23 +133,31 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 	}
 
 	@Override
-	public Date getFirstDate(DB db, NntpNewsGroup newsgroup)
-			throws Exception {
+	public Date getFirstDate(DB db, NntpNewsGroup newsgroup) throws Exception {
 		NNTPClient nntpClient = NntpUtil.connectToNntpServer(newsgroup);
 		NewsgroupInfo newsgroupInfo = NntpUtil.selectNewsgroup(nntpClient, newsgroup);
 		int firstArticleNumber = newsgroupInfo.getFirstArticle();
 		
-		Reader reader = reader = nntpClient.retrieveArticle(firstArticleNumber);;
+		if (firstArticleNumber == 0) {
+			return null; // This is to deal with message-less newsgroups.
+		}
+				
+		Reader reader = nntpClient.retrieveArticle(firstArticleNumber);
 		while (reader == null) {
 			firstArticleNumber++;
 			reader = nntpClient.retrieveArticle(firstArticleNumber);
 			if (firstArticleNumber >= newsgroupInfo.getLastArticle()) break;
 		}
 		
+		
+		
 		ArticleHeader articleHeader = new ArticleHeader(reader);
 //		Article article = NntpUtil.getArticleInfo(nntpClient, articleId);
 		nntpClient.disconnect();
 //		String date = article.getDate();
+		
+		
+		
 		return new Date(NntpUtil.parseDate(articleHeader.getDate().trim()));
 	}
 

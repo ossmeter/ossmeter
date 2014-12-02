@@ -1,0 +1,149 @@
+package model;
+
+@db
+class Users {
+	val User[*] users;
+	val Token[*] tokens;
+	val Project[*] projects;
+	val Statistics[*] statistics;
+	val Tag[*] tags;
+}
+
+class Project {
+	@searchable
+	attr String ~id;
+	@searchable
+	attr String name;
+	val Tag[*] tags;
+}
+
+class Tag {
+	attr String name;
+	val Project[*] projects;
+}
+
+class Statistics {
+	attr Date date;
+	attr int numberOfProjects;
+	attr int numberOfUsers;
+	attr int numberOfVcsRepositories;
+	attr int numberOfBugTrackers;
+	attr int numberOfCommunicationChannels;
+	attr int numberOfBugs;
+	attr int numberOfMessages;
+	attr int numberOfCodeLines;
+	val Demographic[*] demographics;
+}
+
+class Demographic {
+	attr String name;
+	val DemographicEntry[*] entries;
+}
+
+class DemographicEntry {
+	attr String name;
+	attr double value;
+}
+
+@customize
+class Token {
+	ref User user;
+	@searchable
+	attr String token;
+	attr TokenType type;
+	attr Date created;
+	attr Date expires;
+}
+
+enum TokenType {
+	EMAIL_VERIFICATION; PASSWORD_RESET;
+}
+
+@customize
+class User {
+	@searchable
+	attr String email;
+	
+	attr String name;
+	attr String company;
+	attr String country;
+
+	attr boolean emailValidated;
+	attr Date lastLogin;
+	attr Date joinDate;	
+
+	// Deadbolt classes
+	val Role[*] roles;
+	val Permission[*] permissions;
+	
+	val LinkedAccount[*] linkedAccounts;
+
+	val Project[*] watching;
+	val Project[*] owns;
+
+	//val Notification[*] notifications;
+	//val Event[*] events;
+	val GridEntry[*] grid;
+}
+
+@customize
+class Role {
+	attr String name;
+}
+
+@customize
+class Permission {
+	attr String value;
+}
+
+class Metric {
+	attr String ~id;
+	attr String name;
+}
+
+class LinkedAccount {
+	attr String providerUserId;
+	attr String providerKey;
+}
+
+abstract class GridEntry {
+	attr int col;
+	attr int row;
+	attr int sizeX;
+	attr int sizeY;
+}
+
+class EventGroup extends GridEntry {
+	attr String name;
+	val Event[*] events;
+}
+
+@customize
+class Event {
+	attr String name;
+	attr Date date;
+}
+
+
+class Message extends GridEntry {
+	
+}
+
+abstract class MetricGridEntry extends GridEntry {
+	val Project project;
+	val Metric metric;
+	//TODO: sohuld have a query here? e.g. for date. Just store querystring
+	//attr String queryString;
+}
+
+class Notification extends MetricGridEntry {
+	attr double threshold;
+	attr boolean aboveThreshold;
+}
+
+class PlotGridEntry extends MetricGridEntry { }
+
+class SparkGridEntry extends MetricGridEntry {
+	attr double lastValue;
+}
+

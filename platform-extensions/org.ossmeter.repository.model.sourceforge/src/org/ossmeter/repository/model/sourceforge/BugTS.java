@@ -1,7 +1,16 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Davide Di Ruscio - Implementation.
+ *******************************************************************************/
 package org.ossmeter.repository.model.sourceforge;
 
 import com.mongodb.*;
-import java.util.*;
 import com.googlecode.pongo.runtime.*;
 import com.googlecode.pongo.runtime.querying.*;
 
@@ -49,31 +58,21 @@ public class BugTS extends Tracker {
 		notifyChanged();
 		return this;
 	}
-	public ResolutionStatus getResolutionStatus() {
-		ResolutionStatus resolutionStatus = null;
-		try {
-			resolutionStatus = ResolutionStatus.valueOf(dbObject.get("resolutionStatus")+"");
-		}
-		catch (Exception ex) {}
-		return resolutionStatus;
+	public String getResolutionStatus() {
+		return parseString(dbObject.get("resolutionStatus")+"", "");
 	}
 	
-	public BugTS setResolutionStatus(ResolutionStatus resolutionStatus) {
-		dbObject.put("resolutionStatus", resolutionStatus.toString());
+	public BugTS setResolutionStatus(String resolutionStatus) {
+		dbObject.put("resolutionStatus", resolutionStatus);
 		notifyChanged();
 		return this;
 	}
-	public BugVisibility getBugVisibility() {
-		BugVisibility bugVisibility = null;
-		try {
-			bugVisibility = BugVisibility.valueOf(dbObject.get("bugVisibility")+"");
-		}
-		catch (Exception ex) {}
-		return bugVisibility;
+	public String getBugVisibility() {
+		return parseString(dbObject.get("bugVisibility")+"", "");
 	}
 	
-	public BugTS setBugVisibility(BugVisibility bugVisibility) {
-		dbObject.put("bugVisibility", bugVisibility.toString());
+	public BugTS setBugVisibility(String bugVisibility) {
+		dbObject.put("bugVisibility", bugVisibility);
 		notifyChanged();
 		return this;
 	}

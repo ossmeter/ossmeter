@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    James Williams - Implementation.
+ *******************************************************************************/
 package org.ossmeter.platform.vcs.git.tests;
 
 import static org.junit.Assert.assertEquals;
@@ -12,6 +22,7 @@ import org.ossmeter.platform.delta.vcs.VcsCommit;
 import org.ossmeter.platform.delta.vcs.VcsCommitItem;
 import org.ossmeter.platform.delta.vcs.VcsRepositoryDelta;
 import org.ossmeter.platform.vcs.git.GitManager;
+import org.ossmeter.repository.model.VcsRepository;
 import org.ossmeter.repository.model.vcs.git.GitRepository;
 import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 
@@ -97,5 +108,15 @@ public class TestGitManager {
 //				break;
 			}
 		}
+	}
+	
+	@Test
+	public void testLsRemote() throws Exception {
+		GitManager m = new GitManager();
+		assertTrue(m.validRepository(repository));
+		
+		VcsRepository repo = new GitRepository();
+		repo.setUrl("fooooo");
+		assertFalse(m.validRepository(repo));
 	}
 }

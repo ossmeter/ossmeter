@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    James Williams - Implementation.
+ *******************************************************************************/
 package org.ossmeter.platform.vcs.svn;
 
 import java.util.ArrayList;
@@ -27,7 +37,7 @@ public class SvnUtil {
 	    } 
 	    catch (SVNException svne) {
 	        System.err.println("error while creating an SVNRepository for location '"+ url + "': " + svne.getMessage());
-	        System.exit(1);
+	        return null;
 	    }
 	    
 	    try {
@@ -48,7 +58,7 @@ public class SvnUtil {
 	    } 
 	    catch (SVNException svne) {
 	        System.err.println("error while creating an SVNRepository for location '"+ url + "': " + svne.getMessage());
-	        System.exit(1);
+	        return null;
 	    }
 	    
 	    ISVNAuthenticationManager authManager = SVNWCUtil.createDefaultAuthenticationManager(usr, pass);

@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <plugin>
-  
-
 
 <extension point="org.ossmeter.platform.metricprovider">
-   <metricProvider provider="org.ossmeter.metricprovider.historic.avgbugcreationclosedtime.AvgBugzillaBugOpenTimeProvider">
+   <metricProvider provider="org.ossmeter.metricprovider.historic.bugs.opentime.OpenTimeHistoricMetricProvider">
    </metricProvider>
 </extension>
-<extension point="org.ossmeter.platform.client.api.pongoviz">
-   <visualiser metricProviderId="org.ossmeter.metricprovider.generic.avgbugcreationclosedtime" pongoVisualiser="org.ossmeter.metricprovider.historic.avgbugcreationclosedtime.model.DailyAvgBugOpenTimeViz">
-   </visualiser>
+
+
+<extension point="org.ossmeter.platform.visualisation.metric">
+   <visualisation json="vis/historic.bugs.opentime.json">
+   </visualisation>
 </extension>
+
+
+
 
 
 
 <extension point="com.googlecode.pongo.runtime.osgi">
-    <class name="org.ossmeter.metricprovider.generic.avgbugcreationclosedtime.model.DailyAvgBugOpenTime"/>
-    <class name="org.ossmeter.metricprovider.generic.avgbugcreationclosedtime.model.DailyBugzillaData"/>
+    <class name="org.ossmeter.metricprovider.historic.bugs.opentime.model.BugsOpenTimeHistoricMetric"/>
   </extension>
 </plugin>

@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package org.ossmeter.platform.delta.bugtrackingsystem;
 
 import java.io.Serializable;
@@ -17,8 +27,9 @@ public class BugTrackingSystemBug implements Serializable {
 	protected String operatingSystem;
 	protected String priority;
 	protected String resolution;
+	protected String severity;
 	protected Date creationTime;
-//	protected String summary;
+	protected String summary;
 	transient protected BugTrackingSystem bugTrackingSystem;	
 	protected List<BugTrackingSystemComment> comments = new ArrayList<BugTrackingSystemComment>();
 
@@ -54,13 +65,13 @@ public class BugTrackingSystemBug implements Serializable {
 		this.creationTime = creationTime;
 	}
 	
-//	public String getSummary() {
-//		return summary;
-//	}
+	public String getSummary() {
+		return summary;
+	}
 
-//	public void setSummary(String summary) {
-//		this.summary = summary;
-//	}
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
 
 	public BugTrackingSystem getBugTrackingSystem() {
 		return bugTrackingSystem;
@@ -90,6 +101,14 @@ public class BugTrackingSystemBug implements Serializable {
 		this.resolution = resolution;
 	}
 
+	public String getSeverity() {
+		return severity;
+	}
+
+	public void setSeverity(String severity) {
+		this.severity = severity;
+	}
+
 	public void setBugTrackingSystem(BugTrackingSystem bugTrackingSystem) {
 		this.bugTrackingSystem = bugTrackingSystem;
 	}
@@ -101,18 +120,22 @@ public class BugTrackingSystemBug implements Serializable {
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof BugTrackingSystemBug) {
-//			if (!this.newsgroup.equals(((CommunicationChannelArticle) obj).getCommunicationChannel())) {
-//				return false;
-//			} 
-			if (this.bugId != ((BugTrackingSystemBug) obj).getBugId()) {
+			if (this.bugId != ((BugTrackingSystemBug) obj).getBugId())
 				return false;
-			}
 			return true;
 		}
-		
 		return false;
 	}
 
+	public boolean equals(int bugId) {
+		return equals(Integer.toString(bugId));
+	}
+
+	public boolean equals(String bugId) {
+		if (!this.bugId.equals(bugId))
+			return false;
+		return true;
+	}
 
 
 }

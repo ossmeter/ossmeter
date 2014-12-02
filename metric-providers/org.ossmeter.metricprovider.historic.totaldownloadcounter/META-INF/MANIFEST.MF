@@ -4,11 +4,11 @@ Bundle-Name: TotalDownloadCounter
 Bundle-SymbolicName: org.ossmeter.metricprovider.historic.totaldownloadcounter;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.metricprovider.historic.totaldownloadcounter.Activator
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
- com.googlecode.pongo.runtime;bundle-version="0.5.0",
- org.ossmeter.platform;bundle-version="1.0.0",
- org.ossmeter.metricprovider.downloadcounter.sourceforge;bundle-version="1.0.0",
+Require-Bundle: org.eclipse.core.runtime,
+ com.googlecode.pongo.runtime,
+ com.googlecode.pongo.runtime,
+ org.ossmeter.platform,
+ org.ossmeter.metricprovider.downloadcounter.sourceforge,
  org.ossmeter.metricprovider.downloadcounter,
  org.ossmeter.repository.model,
  org.ossmeter.repository.model.sourceforge

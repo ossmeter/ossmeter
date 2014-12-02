@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Davide Di Ruscio - Implementation.
+ *******************************************************************************/
 package org.ossmeter.repository.model.eclipse.importer.util;
 
 
@@ -16,8 +26,6 @@ import java.net.URLConnection;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -65,8 +73,8 @@ public class XML {
          //if html
          if (text.indexOf("<html")>-1 ||text.indexOf("<HTML")>-1 ){
                
-            Logger.getLogger(this.getClass().getName()).warning("The text to be parsed seems to be in html format...html is not xml");
-            Logger.getLogger(this.getClass().getName()).warning("Sanitizing html...");
+            //Logger.getLogger(this.getClass().getName()).warning("The text to be parsed seems to be in html format...html is not xml");
+            //Logger.getLogger(this.getClass().getName()).warning("Sanitizing html...");
             //replace any entity
             text=text.replaceAll("&nbsp;","_");text=text.replaceAll("&uacute;","");
             text=text.replaceAll("&","_AND_SYMBOL_");

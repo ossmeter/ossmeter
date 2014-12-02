@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    James Williams - Implementation.
+ *******************************************************************************/
 package org.ossmeter.metricprovider.historic.commitsovertime;
 
 import java.util.ArrayList;
@@ -8,15 +18,15 @@ import org.ossmeter.metricprovider.historic.commitsovertime.model.CommitsOverTim
 import org.ossmeter.metricprovider.trans.commits.CommitsTransientMetricProvider;
 import org.ossmeter.metricprovider.trans.commits.model.Commits;
 import org.ossmeter.metricprovider.trans.commits.model.RepositoryData;
-import org.ossmeter.platform.IHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
+import org.ossmeter.platform.AbstractHistoricalMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.repository.model.Project;
 
 import com.googlecode.pongo.runtime.Pongo;
 
-public class CommitsOverTimeHistoricMetricProvider implements
-		IHistoricalMetricProvider {
+public class CommitsOverTimeHistoricMetricProvider extends
+		AbstractHistoricalMetricProvider {
 
 	protected List<IMetricProvider> uses;
 	protected MetricProviderContext context;

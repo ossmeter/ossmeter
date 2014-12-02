@@ -1,7 +1,16 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Davide Di Ruscio - Implementation.
+ *******************************************************************************/
 package org.ossmeter.repository.model.cc.nntp;
 
-import com.googlecode.pongo.runtime.querying.NumericalQueryProducer;
-import com.googlecode.pongo.runtime.querying.StringQueryProducer;
+import com.googlecode.pongo.runtime.querying.*;
 
 
 public class NntpNewsGroup extends org.ossmeter.repository.model.CommunicationChannel {
@@ -19,6 +28,7 @@ public class NntpNewsGroup extends org.ossmeter.repository.model.CommunicationCh
 		NAME.setOwningType("org.ossmeter.repository.model.cc.nntp.NntpNewsGroup");
 		INTERVAL.setOwningType("org.ossmeter.repository.model.cc.nntp.NntpNewsGroup");
 		LASTARTICLECHECKED.setOwningType("org.ossmeter.repository.model.cc.nntp.NntpNewsGroup");
+		NEWSGROUPNAME.setOwningType("org.ossmeter.repository.model.cc.nntp.NntpNewsGroup");
 	}
 	
 	public static StringQueryProducer AUTHENTICATIONREQUIRED = new StringQueryProducer("authenticationRequired"); 
@@ -29,6 +39,7 @@ public class NntpNewsGroup extends org.ossmeter.repository.model.CommunicationCh
 	public static StringQueryProducer NAME = new StringQueryProducer("name"); 
 	public static NumericalQueryProducer INTERVAL = new NumericalQueryProducer("interval");
 	public static StringQueryProducer LASTARTICLECHECKED = new StringQueryProducer("lastArticleChecked"); 
+	public static StringQueryProducer NEWSGROUPNAME = new StringQueryProducer("newsGroupName"); 
 	
 	
 	public boolean getAuthenticationRequired() {
@@ -100,6 +111,15 @@ public class NntpNewsGroup extends org.ossmeter.repository.model.CommunicationCh
 	
 	public NntpNewsGroup setLastArticleChecked(String lastArticleChecked) {
 		dbObject.put("lastArticleChecked", lastArticleChecked);
+		notifyChanged();
+		return this;
+	}
+	public String getNewsGroupName() {
+		return parseString(dbObject.get("newsGroupName")+"", "");
+	}
+	
+	public NntpNewsGroup setNewsGroupName(String newsGroupName) {
+		dbObject.put("newsGroupName", newsGroupName);
 		notifyChanged();
 		return this;
 	}

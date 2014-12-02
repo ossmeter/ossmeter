@@ -1,7 +1,15 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    James Williams - Implementation.
+ *******************************************************************************/
 package org.ossmeter.platform.osgi.services;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.List;
 
 import org.ossmeter.platform.osgi.executors.SchedulerStatus;
@@ -58,11 +66,11 @@ public class WorkerService implements IWorkerService {
 
 	@Override
 	public String getIdentifier() {
-		try {
-			return InetAddress.getLocalHost().getHostAddress();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
-		return "Unknown IP"; //FIXME
+//		try {
+			return "SLAVE - FIXME";//InetAddress.getLocalHost().getHostAddress(); //FIXME
+//		} catch (UnknownHostException e) {
+//			e.printStackTrace();
+//		}
+//		return "Unknown IP"; //FIXME
 	}
 }

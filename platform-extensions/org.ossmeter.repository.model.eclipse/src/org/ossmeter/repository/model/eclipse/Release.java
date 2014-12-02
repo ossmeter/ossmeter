@@ -1,9 +1,16 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Davide Di Ruscio - Implementation.
+ *******************************************************************************/
 package org.ossmeter.repository.model.eclipse;
 
-import com.mongodb.*;
-import java.util.*;
-import com.googlecode.pongo.runtime.*;
-import com.googlecode.pongo.runtime.querying.*;
+import com.googlecode.pongo.runtime.querying.StringQueryProducer;
 
 
 public class Release extends org.ossmeter.repository.model.NamedElement {
@@ -23,17 +30,12 @@ public class Release extends org.ossmeter.repository.model.NamedElement {
 	public static StringQueryProducer LINK = new StringQueryProducer("link"); 
 	
 	
-	public ReleaseType getType() {
-		ReleaseType type = null;
-		try {
-			type = ReleaseType.valueOf(dbObject.get("type")+"");
-		}
-		catch (Exception ex) {}
-		return type;
+	public String getType() {
+		return parseString(dbObject.get("type")+"", "");
 	}
 	
-	public Release setType(ReleaseType type) {
-		dbObject.put("type", type.toString());
+	public Release setType(String type) {
+		dbObject.put("type", type);
 		notifyChanged();
 		return this;
 	}

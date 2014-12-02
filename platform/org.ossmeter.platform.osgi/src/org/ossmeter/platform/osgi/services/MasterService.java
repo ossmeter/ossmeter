@@ -1,19 +1,24 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    James Williams - Implementation.
+ *******************************************************************************/
 package org.ossmeter.platform.osgi.services;
 
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ossmeter.platform.Configuration;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.logging.OssmeterLogger;
-import org.ossmeter.platform.logging.OssmeterLoggerFactory;
-import org.ossmeter.platform.osgi.executors.SchedulerStatus;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.SchedulingInformation;
-import org.ossmeter.repository.model.SchedulingInformationCollection;
-import org.ossmeter.repository.model.WorkerNode;
-
 import com.mongodb.Mongo;
 
 
@@ -37,22 +42,9 @@ public class MasterService implements IMasterService {
 	public void start() throws Exception {
 		logger.info("Master service started.");
 		
-		mongo = new Mongo(); //FIXME: should use replica set / conf
+		mongo = Configuration.getInstance().getMongoConnection(); 
 		platform = new Platform(mongo);
 	
-		SchedulingInformationCollection schedCol = platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation();
-		
-		SchedulingInformation schedulingInformation = null;
-		if (schedCol == null || schedCol.size() ==0) {
-			schedulingInformation = new SchedulingInformation();
-			schedCol.add(schedulingInformation);
-			platform.getProjectRepositoryManager().getProjectRepository().sync();
-		} else {
-			schedulingInformation = schedCol.first();
-		}
-		schedulingInformation.setMasterNodeIdentifier(InetAddress.getLocalHost().getHostAddress());
-		platform.getProjectRepositoryManager().getProjectRepository().sync();
-		
 		// Now start scheduling
 		master = new Thread() {
 			@Override
@@ -65,42 +57,30 @@ public class MasterService implements IMasterService {
 						List<String> projects = new ArrayList<String>();
 						
 						while (it.hasNext()) {
-							projects.add(it.next().getShortName());
+							Project next = it.next();
+							List<String> currentlyExecuting = getCurrentlyExecutingProjects();
+							if (next.getExecutionInformation().getMonitor() && !currentlyExecuting.contains(next.getShortName())) {
+								projects.add(next.getShortName());
+							}
 							if (projects.size() >= 3) break;
 						}
 						
-						IWorkerService worker = null;
+						SchedulingInformation worker = null;
 						while (worker == null) {
 							worker = nextFreeWorker();
 							if (worker == null) {
 								try {
 									logger.info("No workers available. Sleeping.");
-									Thread.sleep(1000);
+									Thread.sleep(60000);
 								} catch (InterruptedException e) {
 									e.printStackTrace();
 								}
 							} else {
-								//worker.queueProjects(projects);
 								logger.info("Queuing " + projects.size() + " on worker ");
-								
-								worker.queueProjects(projects);
-								
-								// Update DB with load
-								WorkerNode wn = null;
-								for (WorkerNode n : platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().first().getNodes()) {
-									if (n.getIdentifier().equals(worker.getIdentifier())) { 
-										wn = n;
-										break;
-									}
-								}
-								if (wn == null) {
-									wn = new WorkerNode();
-									wn.setIdentifier(worker.getIdentifier());
-									platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().first().getNodes().add(wn);
-								}
-								wn.getCurrentLoad().clear();
-								wn.getCurrentLoad().addAll(projects);
-								platform.getProjectRepositoryManager().getProjectRepository().sync();
+
+								for (String p : projects)
+									worker.getCurrentLoad().add(p);
+								platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().sync();
 							}
 						}
 					}
@@ -115,11 +95,37 @@ public class MasterService implements IMasterService {
 		};
 		master.start();
 	}
+	
+	protected List<String> getCurrentlyExecutingProjects() {
+		List<String> projects = new ArrayList<>();
+		Iterator<SchedulingInformation> it = platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().iterator();
+		
+		while (it.hasNext()) {
+			SchedulingInformation job = it.next();
 
-	protected IWorkerService nextFreeWorker() {
-		for (IWorkerService worker : workers) {
-			if (worker.getStatus().equals(SchedulerStatus.AVAILABLE)){
-				return worker;
+			// Ensure that we only count slaves who are still running 
+			if (System.currentTimeMillis() - job.getHeartbeat() < 70000) {
+				
+				for (String p : job.getCurrentLoad()) { // Currently can't do addAll as Pongo hasn't implemented toArray
+					projects.add(p);
+				}
+			}
+		}
+		
+		return projects;
+	}
+
+	protected SchedulingInformation nextFreeWorker() {
+		Iterator<SchedulingInformation> it = platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().iterator();
+		
+		while (it.hasNext()) {
+			SchedulingInformation job = it.next();
+
+			// Ensure that we only use slaves who are still running 
+			if (System.currentTimeMillis() - job.getHeartbeat() < 70000) {
+				if (job.getCurrentLoad() == null || job.getCurrentLoad().size() == 0) {
+					return job;
+				}
 			}
 		}
 		return null;
@@ -151,7 +157,6 @@ public class MasterService implements IMasterService {
 		}
 		
 		mongo.close();
-		
 	}
 
 	class MasterRunner implements Runnable {

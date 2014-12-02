@@ -1,0 +1,3 @@
+Source: src
+Main-Module: WMC
+Require-Bundles: org.ossmeter.code.model.java, org.ossmeter.metricprovider.trans.rascal.CC

@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Severity
+Bundle-SymbolicName: org.ossmeter.factoid.newsgroups.severity;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: org.eclipse.core.runtime,
+ com.googlecode.pongo.runtime,
+ org.ossmeter.platform,
+ org.ossmeter.repository.model,
+ org.ossmeter.repository.model.cc.nntp,
+ org.ossmeter.metricprovider.historic.newsgroups.severity,
+ org.ossmeter.metricprovider.historic.newsgroups.severitysentiment,
+ org.ossmeter.metricprovider.historic.newsgroups.severityresponsetime
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

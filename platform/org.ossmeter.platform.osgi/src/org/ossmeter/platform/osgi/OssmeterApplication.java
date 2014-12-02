@@ -1,8 +1,17 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    James Williams - Implementation.
+ *******************************************************************************/
 package org.ossmeter.platform.osgi;
 
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.List;
 import java.util.Properties;
 
@@ -12,27 +21,30 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
+import org.ossmeter.platform.Configuration;
+import org.ossmeter.platform.admin.ProjectListAnalysis;
 import org.ossmeter.platform.client.api.ProjectResource;
 import org.ossmeter.platform.logging.OssmeterLogger;
+import org.ossmeter.platform.osgi.executors.SlaveScheduler;
 import org.ossmeter.platform.osgi.services.IWorkerService;
 import org.ossmeter.platform.osgi.services.MasterService;
-import org.ossmeter.platform.osgi.services.WorkerService;
 
 import com.googlecode.pongo.runtime.PongoFactory;
 import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
 import com.mongodb.Mongo;
-import com.mongodb.ServerAddress;
 
 public class OssmeterApplication implements IApplication, ServiceTrackerCustomizer<IWorkerService, IWorkerService> {
 	
-	protected boolean master = false;
+	protected boolean slave = false;
+	protected boolean apiServer = false;
+	protected boolean master = false; 
+	
 	protected OssmeterLogger logger;
 	protected boolean done = false;
 	protected Object appLock = new Object();
-	protected Properties configuration;
-	protected List<ServerAddress> mongoHostAddresses;
 	
 	protected Mongo mongo;
+	protected Properties prop;
 	
 	protected ServiceTracker<IWorkerService, IWorkerService> workerServiceTracker;
 	protected ServiceRegistration<IWorkerService> workerRegistration;
@@ -44,37 +56,24 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 		workers = new ArrayList<IWorkerService>();
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes", "restriction" })// FIXME !!! (I just hate yellow squiggles...)
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
 		// Setup platform
 		processArguments(context);
-		loadConfiguration();
-
+		
+		prop = new Properties();
+		prop.load(this.getClass().getResourceAsStream("/config/log4j.properties"));
+		
 		logger = (OssmeterLogger)OssmeterLogger.getLogger("OssmeterApplication");
 		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
+		logger.addMongoDBAppender(prop);
 		logger.info("Application initialising.");
-		
+
 		// Connect to Mongo - single instance per node
-		mongo = new Mongo(mongoHostAddresses);
+		mongo = Configuration.getInstance().getMongoConnection();
 		
 		// Ensure OSGi contributors are active
 		PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
-		
-		// Advertise as being a worker
-		Dictionary props = new Properties();
-//		props.put(IDistributionConstants.SERVICE_EXPORTED_INTERFACES, IDistributionConstants.SERVICE_EXPORTED_INTERFACES_WILDCARD);
-//		props.put(IDistributionConstants.SERVICE_EXPORTED_CONFIGS, "ecf.generic.server");
-//		props.put(IDistributionConstants.SERVICE_EXPORTED_CONTAINER_FACTORY_ARGUMENTS, "ecftcp://localhost:3788/worker");
-		// FIXME: Understand the above: commenting out the props has no effect (at least locally - maybe a clue to network issue).
-		
-		// TODO: Pass the service any configuration details it needs
-		WorkerService worker = new WorkerService(mongo);
-		workerRegistration = Activator.getContext().registerService(IWorkerService.class, worker, props);		
-		
-		// Detect other workers
-		workerServiceTracker = new ServiceTracker<IWorkerService, IWorkerService>(Activator.getContext(), IWorkerService.class, this);	
-		workerServiceTracker.open();
 		
 		// If master, start
 		if (master) {
@@ -82,44 +81,52 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 			masterService.start();
 		}
 
-		// Start web server
-		ProjectResource pr = new ProjectResource();
+		if (slave) {
+			SlaveScheduler slave = new SlaveScheduler(mongo);
+			slave.run();
+		}
 		
+		// Start web servers
+		if (apiServer) {
+			new ProjectResource();
+			new ProjectListAnalysis();
+		}
+
 		// Now, rest.
-		waitForDone();
+  		waitForDone();
 		return IApplication.EXIT_OK;
 	}
 
-	protected void processArguments(IApplicationContext context) throws Exception {
+	protected void processArguments(IApplicationContext context) {
 		String[] args = (String[])context.getArguments().get("application.args");
 		if (args == null) return;
 		
 		for (int i = 0; i < args.length; i++) {
 			if ("-ossmeterConfig".equals(args[i])) {
-				configuration = new Properties();
-				configuration.load(new FileReader(args[i+1]));
+				Properties configuration = new Properties();
+				try {
+					configuration.load(new FileReader(args[i+1]));
+				} catch (Exception e) {
+					logger.error("Unable to read the specified platform configuration file. Using defaults.", e);
+				}
+				// Update the configuraiton instance
+				Configuration.getInstance().setConfigurationProperties(configuration);
+				
+				// Ensure maven is configured
+				if (System.getProperty("MAVEN_EXECUTABLE") == null) {
+					String mvn = configuration.getProperty(Configuration.MAVEN_EXECUTABLE, "/Applications/apache-maven-3.2.3/bin/mvn");
+					System.setProperty("MAVEN_EXECUTABLE", mvn);
+				}
+				
 				i++;
 			} else if ("-master".equals(args[i])) { 
 				master = true;
+			} else if ("-slave".equals(args[i])) { 
+				slave = true;
+			} else if ("-apiServer".equals(args[i])) { 
+				apiServer = true;
 			}
 		}
-	}
-
-	protected void loadConfiguration() throws Exception {
-		if (configuration == null) {
-			// TODO Create default configuration. Maybe a config class?
-			configuration = new Properties();
-		}
-
-		// Mongo
-		String[] hosts = configuration.getProperty("mongohosts", "localhost:27017").split(",");
-		mongoHostAddresses = new ArrayList<>();
-		for (String host : hosts) {
-			mongoHostAddresses.add(new ServerAddress(host));
-		}
-		
-		// Storage
-		// TODO
 	}
 
 	@Override

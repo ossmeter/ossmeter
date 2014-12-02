@@ -30,8 +30,7 @@ class SourceForgeProject extends Project {
   attr int ranking;
   attr String downloadPage;
   attr String supportPage;
-  attr String summaryPage;
-  attr String homePage;
+  attr String summary;
   val MailingList mailingList;
   val OS[*] os;
   val Topic[*] topics;
@@ -45,7 +44,8 @@ class SourceForgeProject extends Project {
   val SourceForgeBugTrackingSystem[*] bts;
   val Donation donation;
   val Discussion[*] discussion;
-  ref Bug[*] bugs;
+  val Bug[*] bugs;
+  attr String downloadCount;
 }
 
 class MailingList extends CommunicationChannel{
@@ -75,25 +75,26 @@ class Category extends NamedElement {
 
 class Donation {
   attr String comment;
-  attr DonationStatus status;
+  attr String status;
   attr String[*] charities;
 }
 
-enum DonationStatus {
-  notAccepting = 1;
-  accepting = 2;
-}
+//enum DonationStatus {
+//  notAccepting = 1;
+//  accepting = 2;
+//}
 
-enum TrackerStatus {
-  open = 1;
-  closed = 2;
-}
+//enum TrackerStatus {
+//  open = 1;
+// closed = 2;
+//}
 
 abstract class Tracker extends NamedElement {
   attr String location;
-  attr TrackerStatus status;
+  attr String status;
 }
 
+@customize
 class SourceForgeBugTrackingSystem extends BugTrackingSystem {
   val BugTS[*] bugsTS;
 }
@@ -105,19 +106,19 @@ class BugTS extends Tracker {
   val Person assignee;
   val Person submitted;
   attr int priority;
-  attr ResolutionStatus resolutionStatus;
-  attr BugVisibility bugVisibility;
+  attr String resolutionStatus;
+  attr String bugVisibility;
 }
 
-enum BugVisibility {
-  public = 1;
-  private = 2;
-}
+//enum BugVisibility {
+//  public = 1;
+//  private = 2;
+//}
 
-enum ResolutionStatus {
-  none = 1;
-  fixed = 2;
-}
+//enum ResolutionStatus {
+//  none = 1;
+//  fixed = 2;
+//}
 
 abstract class Request extends Tracker {
   attr String summary;

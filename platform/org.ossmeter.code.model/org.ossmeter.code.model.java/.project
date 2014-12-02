@@ -3,6 +3,7 @@
 	<name>org.ossmeter.code.model.java</name>
 	<comment></comment>
 	<projects>
+		<project>rascal4ossmeter</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
@@ -24,5 +25,6 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.pde.PluginNature</nature>
+		<nature>rascal_eclipse.rascal_nature</nature>
 	</natures>
 </projectDescription>

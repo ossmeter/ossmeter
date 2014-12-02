@@ -1,19 +1,21 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Avgbugcreationclosedtime
-Bundle-SymbolicName: org.ossmeter.metricprovider.historic.avgbugcreationclosedtime;singleton:=true
+Bundle-SymbolicName: org.ossmeter.metricprovider.historic.bugs.opentime;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.ossmeter.metricprovider.historic.avgbugcreationclosedtime.Activator
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
+Bundle-Activator: org.ossmeter.metricprovider.historic.bugs.opentime.Activator
+Require-Bundle: org.eclipse.core.runtime,
+ com.googlecode.pongo.runtime,
  org.ossmeter.platform.bugtrackingsystem.bugzilla,
  com.googlecode.pongo.runtime.osgi,
  org.ossmeter.platform.client.api,
- org.ossmeter.metricprovider.trans.bugheadermetadata,
+ org.ossmeter.metricprovider.trans.bugs.bugmetadata,
  org.ossmeter.repository.model,
  org.ossmeter.repository.model.bts.bugzilla,
  org.ossmeter.platform,
- org.apache.commons.lang
+ org.apache.commons.lang,
+ org.ossmeter.platform.communicationchannel.nntp,
+ org.ossmeter.platform.visualisation
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.historic.avgbugcreationclosedtime
+Export-Package: org.ossmeter.metricprovider.historic.bugs.opentime

@@ -2,15 +2,18 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Overalldailynumberofbugzillacomments
 Bundle-Version: 1.0.0.qualifier
-Bundle-SymbolicName: org.ossmeter.metricprovider.historic.overalldailynumberofbugzillacomments;singleton:=true
-Bundle-Activator: org.ossmeter.metricprovider.historic.overalldailynumberofbugzillacomments.Activator
+Bundle-SymbolicName: org.ossmeter.metricprovider.historic.bugs.comments;singleton:=true
+Bundle-Activator: org.ossmeter.metricprovider.historic.bugs.comments.Activator
 Require-Bundle: org.eclipse.core.runtime,
+ com.googlecode.pongo.runtime,
  org.ossmeter.platform,
- org.ossmeter.metricprovider.trans.numberofbugzillacomments,
  org.ossmeter.repository.model.bts.bugzilla,
+ org.ossmeter.metricprovider.trans.bugs.comments,
  org.ossmeter.platform.client.api,
- com.googlecode.pongo.runtime.osgi
+ com.googlecode.pongo.runtime.osgi,
+ org.ossmeter.platform.visualisation,
+ org.ossmeter.repository.model
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.historic.overalldailynumberofbugzillacomments,
- org.ossmeter.metricprovider.historic.overalldailynumberofbugzillacomments.model
+Export-Package: org.ossmeter.metricprovider.historic.bugs.comments,
+ org.ossmeter.metricprovider.historic.bugs.comments.model

@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Severity
+Bundle-SymbolicName: org.ossmeter.factoid.bugs.severity;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: org.eclipse.core.runtime,
+ com.googlecode.pongo.runtime,
+ org.ossmeter.platform,
+ org.ossmeter.repository.model,
+ org.ossmeter.metricprovider.historic.bugs.severity,
+ org.ossmeter.metricprovider.historic.bugs.severitybugstatus,
+ org.ossmeter.metricprovider.historic.bugs.severityresponsetime,
+ org.ossmeter.metricprovider.historic.bugs.severitysentiment
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

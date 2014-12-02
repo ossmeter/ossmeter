@@ -4,14 +4,14 @@ Bundle-Name: Local
 Bundle-SymbolicName: org.ossmeter.platform.communicationchannel.nntp.local;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.platform.communicationchannel.nntp.local.Activator
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.platform,
  com.googlecode.pongo.runtime,
  org.apache.commons.net,
  org.ossmeter.repository.model.cc.nntp,
  javax.mail,
- org.apache.commons.lang
+ org.apache.commons.lang,
+ org.ossmeter.repository.model
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.platform.communicationchannel.nntp.local,

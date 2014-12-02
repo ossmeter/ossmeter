@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package org.ossmeter.platform;
 
 import java.util.ArrayList;
@@ -31,20 +41,20 @@ public class ExtensionPointMetricProviderManager implements IMetricProviderManag
 			}
 			
 			// Load extension points via custom managers 
-			System.err.println("Custom Extension Point managers: ");
+//			System.err.println("Custom Extension Point managers: ");
 			for(IConfigurationElement configurationElement : ExtensionPointHelper.getConfigurationElementsForExtensionPoint(metricProviderManagerExtensionPointId)){
 				try {
 					IMetricProviderManager impm = (IMetricProviderManager) configurationElement.createExecutableExtension("manager");
-					System.err.println("\t" + impm.getClass().toString());
+//					System.err.println("\t" + impm.getClass().toString());
 					metricProviders.addAll(impm.getMetricProviders());
 				} catch (CoreException e) {
 					e.printStackTrace();
 				}
 			}
-			System.err.println("Registered metric providers: ");
-			for (IMetricProvider imp : metricProviders) {
-				System.err.println("\t"+ imp.getIdentifier());
-			}
+//			System.err.println("Registered metric providers: ");
+//			for (IMetricProvider imp : metricProviders) {
+//				System.err.println("\t"+ imp.getIdentifier());
+//			}
 		}
 		
 		return metricProviders;

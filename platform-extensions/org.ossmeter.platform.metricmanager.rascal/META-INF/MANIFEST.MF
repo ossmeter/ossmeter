@@ -12,8 +12,10 @@ Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.platform.vcs.svn,
  org.eclipse.osgi,
  org.ossmeter.platform.vcs.workingcopy.manager,
- rascal4ossmeter
+ rascal4ossmeter,
+ org.apache.log4j.1.2.17
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
-Export-Package: org.ossmeter.metricprovider.rascal
+Export-Package: org.ossmeter.metricprovider.rascal,
+ org.ossmeter.metricprovider.rascal.trans.model
 Import-Package: org.mapdb

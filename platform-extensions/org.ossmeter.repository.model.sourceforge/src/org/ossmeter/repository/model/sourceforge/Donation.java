@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Davide Di Ruscio - Implementation.
+ *******************************************************************************/
 package org.ossmeter.repository.model.sourceforge;
 
 import com.mongodb.*;
@@ -33,17 +43,12 @@ public class Donation extends Pongo {
 		notifyChanged();
 		return this;
 	}
-	public DonationStatus getStatus() {
-		DonationStatus status = null;
-		try {
-			status = DonationStatus.valueOf(dbObject.get("status")+"");
-		}
-		catch (Exception ex) {}
-		return status;
+	public String getStatus() {
+		return parseString(dbObject.get("status")+"", "");
 	}
 	
-	public Donation setStatus(DonationStatus status) {
-		dbObject.put("status", status.toString());
+	public Donation setStatus(String status) {
+		dbObject.put("status", status);
 		notifyChanged();
 		return this;
 	}

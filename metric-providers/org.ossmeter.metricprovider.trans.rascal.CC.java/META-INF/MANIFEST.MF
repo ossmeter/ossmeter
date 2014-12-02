@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: CC.java
+Bundle-SymbolicName: org.ossmeter.metricprovider.trans.rascal.CC.java;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: org.ossmeter.metricprovider.rascal,
+ org.apache.commons.math,
+ org.ossmeter.metricprovider.trans.rascal.CC,
+ org.ossmeter.platform.visualisation
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

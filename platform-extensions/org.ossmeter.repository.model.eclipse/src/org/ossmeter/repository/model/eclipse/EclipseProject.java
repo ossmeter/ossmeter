@@ -1,9 +1,20 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Davide Di Ruscio - Implementation.
+ *******************************************************************************/
 package org.ossmeter.repository.model.eclipse;
 
-import com.mongodb.*;
-import java.util.*;
-import com.googlecode.pongo.runtime.*;
-import com.googlecode.pongo.runtime.querying.*;
+import java.util.List;
+
+import com.googlecode.pongo.runtime.PongoList;
+import com.googlecode.pongo.runtime.querying.StringQueryProducer;
+import com.mongodb.BasicDBList;
 
 
 public class EclipseProject extends org.ossmeter.repository.model.Project {
@@ -21,35 +32,22 @@ public class EclipseProject extends org.ossmeter.repository.model.Project {
 		dbObject.put("articles", new BasicDBList());
 		dbObject.put("releases", new BasicDBList());
 		super.setSuperTypes("org.ossmeter.repository.model.eclipse.Project");
-		SHORTNAME.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
 		PARAGRAPHURL.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
 		DESCRIPTIONURL.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
 		DOWNLOADSURL.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
-		HOMEPAGE.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
 		PROJECTPLANURL.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
 		UPDATESITEURL.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
 		STATE.setOwningType("org.ossmeter.repository.model.eclipse.EclipseProject");
 	}
 	
-	public static StringQueryProducer SHORTNAME = new StringQueryProducer("shortName"); 
 	public static StringQueryProducer PARAGRAPHURL = new StringQueryProducer("paragraphUrl"); 
 	public static StringQueryProducer DESCRIPTIONURL = new StringQueryProducer("descriptionUrl"); 
 	public static StringQueryProducer DOWNLOADSURL = new StringQueryProducer("downloadsUrl"); 
-	public static StringQueryProducer HOMEPAGE = new StringQueryProducer("homePage"); 
 	public static StringQueryProducer PROJECTPLANURL = new StringQueryProducer("projectplanUrl"); 
 	public static StringQueryProducer UPDATESITEURL = new StringQueryProducer("updatesiteUrl"); 
 	public static StringQueryProducer STATE = new StringQueryProducer("state"); 
 	
 	
-	public String getShortName() {
-		return parseString(dbObject.get("shortName")+"", "");
-	}
-	
-	public EclipseProject setShortName(String shortName) {
-		dbObject.put("shortName", shortName);
-		notifyChanged();
-		return this;
-	}
 	public String getParagraphUrl() {
 		return parseString(dbObject.get("paragraphUrl")+"", "");
 	}
@@ -74,15 +72,6 @@ public class EclipseProject extends org.ossmeter.repository.model.Project {
 	
 	public EclipseProject setDownloadsUrl(String downloadsUrl) {
 		dbObject.put("downloadsUrl", downloadsUrl);
-		notifyChanged();
-		return this;
-	}
-	public String getHomePage() {
-		return parseString(dbObject.get("homePage")+"", "");
-	}
-	
-	public EclipseProject setHomePage(String homePage) {
-		dbObject.put("homePage", homePage);
 		notifyChanged();
 		return this;
 	}

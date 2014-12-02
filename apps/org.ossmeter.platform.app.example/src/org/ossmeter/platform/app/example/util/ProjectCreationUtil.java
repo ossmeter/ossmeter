@@ -1,8 +1,19 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    James Williams - Implementation.
+ *******************************************************************************/
 package org.ossmeter.platform.app.example.util;
 
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
 import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
+import org.ossmeter.repository.model.vcs.git.GitRepository;
 import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 
 /**
@@ -45,9 +56,11 @@ public class ProjectCreationUtil {
 			Boolean authenticationRequired, String username, String password, int port, int interval){
 		Project project = new Project();
 		project.setName(name);
+		project.setShortName(name);
 		
 		NntpNewsGroup newsGroup = new NntpNewsGroup();
-		newsGroup.setUrl(url+'/' + newsGroupName);
+		newsGroup.setUrl(url);
+		newsGroup.setNewsGroupName(newsGroupName);
 		newsGroup.setAuthenticationRequired(authenticationRequired);
 		newsGroup.setUsername(username);
 		newsGroup.setPassword(password);
@@ -59,17 +72,18 @@ public class ProjectCreationUtil {
 		return project;
 	}
 	
-	/*
 	public static Project createGitProject(String name, String url) {
 		Project project = new Project();
 		project.setName(name);
+		project.setShortName(name);
+		project.setDescription(name);
 		
 		GitRepository repo = new GitRepository();
 		repo.setUrl(url);
 		
 		project.getVcsRepositories().add(repo);
 		return project;
-	}*/
+	}
 	
 	public static Project createProjectWithBugTrackingSystem(String name, String url, String product, String component){
 		Project project = new Project();

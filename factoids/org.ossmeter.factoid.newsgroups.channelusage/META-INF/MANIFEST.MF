@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Channelusage
+Bundle-SymbolicName: org.ossmeter.factoid.newsgroups.channelusage;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: org.eclipse.core.runtime,
+ com.googlecode.pongo.runtime,
+ org.ossmeter.platform,
+ org.ossmeter.repository.model,
+ org.ossmeter.metricprovider.historic.newsgroups.articles,
+ org.ossmeter.metricprovider.historic.newsgroups.newthreads,
+ org.ossmeter.repository.model.cc.nntp
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

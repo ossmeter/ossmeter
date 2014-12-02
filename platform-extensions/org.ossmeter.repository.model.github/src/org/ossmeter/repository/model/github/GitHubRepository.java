@@ -1,9 +1,21 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Davide Di Ruscio - Implementation.
+ *******************************************************************************/
 package org.ossmeter.repository.model.github;
 
-import com.mongodb.*;
-import java.util.*;
-import com.googlecode.pongo.runtime.*;
-import com.googlecode.pongo.runtime.querying.*;
+import java.util.List;
+
+import com.googlecode.pongo.runtime.PongoList;
+import com.googlecode.pongo.runtime.querying.NumericalQueryProducer;
+import com.googlecode.pongo.runtime.querying.StringQueryProducer;
+import com.mongodb.BasicDBList;
 
 
 public class GitHubRepository extends org.ossmeter.repository.model.Project {
@@ -32,7 +44,6 @@ public class GitHubRepository extends org.ossmeter.repository.model.Project {
 		SSH_URL.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
 		SVN_URL.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
 		MIRROR_URL.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
-		HOMEPAGE.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
 		SIZE.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
 		MASTER_BRANCH.setOwningType("org.ossmeter.repository.model.github.GitHubRepository");
 	}
@@ -46,7 +57,6 @@ public class GitHubRepository extends org.ossmeter.repository.model.Project {
 	public static StringQueryProducer SSH_URL = new StringQueryProducer("ssh_url"); 
 	public static StringQueryProducer SVN_URL = new StringQueryProducer("svn_url"); 
 	public static StringQueryProducer MIRROR_URL = new StringQueryProducer("mirror_url"); 
-	public static StringQueryProducer HOMEPAGE = new StringQueryProducer("homepage"); 
 	public static NumericalQueryProducer SIZE = new NumericalQueryProducer("size");
 	public static StringQueryProducer MASTER_BRANCH = new StringQueryProducer("master_branch"); 
 	
@@ -129,15 +139,6 @@ public class GitHubRepository extends org.ossmeter.repository.model.Project {
 	
 	public GitHubRepository setMirror_url(String mirror_url) {
 		dbObject.put("mirror_url", mirror_url);
-		notifyChanged();
-		return this;
-	}
-	public String getHomepage() {
-		return parseString(dbObject.get("homepage")+"", "");
-	}
-	
-	public GitHubRepository setHomepage(String homepage) {
-		dbObject.put("homepage", homepage);
 		notifyChanged();
 		return this;
 	}

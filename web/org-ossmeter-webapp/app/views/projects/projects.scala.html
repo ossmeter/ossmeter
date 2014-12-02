@@ -1,0 +1,161 @@
+@(projects: List[org.ossmeter.repository.model.Project], statistics : model.Statistics)
+
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+
+@main(Messages("ossmeter.index.title")) {
+<section class="foo">
+  <div class="container box">
+    
+     <div class="row">
+     	<div class="col-md-3">
+     		<h1>Projects</h1>
+     	</div>
+     	<div class="col-md-6">
+     		<div class="row">
+			    <div class="col-md-12 center">
+			    	<h2 style="margin:5px"><span style="color:#ff9400">Discover</span>, Compare, Adopt, Monitor</h2>
+			    </div>
+		    </div>
+          	<div class="input-group">
+              <input type="text" class="form-control txt_search" placeholder="Search for Open-Source Software">
+              <div class="input-group-btn ui-widget">
+                  <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+              </div>
+              </div>
+          </div>
+@subjectPresentOr() {
+    @defining(Application.getLocalUser(session())) { user =>
+			<div class="col-md-2">
+			   	<a style="margin-top:40px" class="btn btn-success" href="@routes.Projects.create()">Add Project</a>
+		   	</div>
+}}{<!--  Print nothing -->}
+      </div>
+   	</div>
+</section>
+
+<script type="text/javascript">
+	$(function () {
+	$(".txt_search").autocomplete({
+		source: function(request, response) {
+			console.log("making request")
+			jsRoutes.controllers.Application.autocomplete(request.term).ajax()
+				.success(function(result) {
+					console.log("success: " + result);
+					response($.map(result, function(item) {
+						return {
+							label: item.name,
+							value: item.id
+						}
+					}));
+				}).error(function(result) {
+					console.log("fail: " + result);
+				});
+		},
+		minLength: 2,
+		focus: function( event, ui ) {
+	        $( "#project0" ).val( ui.item.label );
+        	return false;
+      	},
+		select : function(event, ui) {
+			//FIXME: Should use Play's routing
+			window.location.href = "projects/" + ui.item.value; 
+		},
+		open: function() {
+    		$( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+  		},
+  		close: function() {
+    		$( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+  		}
+	})
+});
+</script>
+
+<section class="foo">
+	<div class="container box">
+	<div class="row">
+		<div class="col-md-6">
+		    <h2>Featured Projects</h2>	
+		    <ul class="projects">
+		    	<li>
+		            <div class="row">
+		        		<!-- <div class="col-md-2">
+		        			<img style="max-width:100%" src="@routes.Assets.at("img/tmp/epsilon.png")" />
+	        			</div> -->
+	        			<div class="col-md-12">
+		            		<h3><a href="@routes.Projects.view("modeling-mmt-atl")">ATL</a></h3>
+		            		<small>ATL (ATL Transformation Language) is a model transformation language and toolkit. In the field of Model-Driven Engineering (MDE), ATL provides ways to produce a set of target models from a set of source models. Developed on top of the Eclipse platform, the ATL Integrated Environnement (IDE) provides a number of standard development tools (syntax highlighting, debugger, etc.) that aims to ease development of ATL transformations.</small>
+		            		<small><a href="@routes.Projects.view("modeling-mmt-atl")">Learn more</a></small>
+	            		</div>
+            		</div>
+		        </li>
+		        <li>
+		            <div class="row">
+		        		<!-- <div class="col-md-2">
+		        			<img style="max-width:100%" src="@routes.Assets.at("img/osslogo.png")" />
+	        			</div> -->
+	        			<div class="col-md-12">
+		            		<h3><a href="@routes.Projects.view("modeling-graphiti")">Graphiti</a></h3>
+		            		<small>The goal of Graphiti is to support the fast and easy creation of graphical tools, which can display and edit underlying domain models using a tool-defined graphical notation</small>
+		            		<small><a href="@routes.Projects.view("modeling-graphiti")">Learn more</a></small>
+	            		</div>
+            		</div>
+		        </li>
+		        <li>
+		        	<div class="row">
+		        		<!-- <div class="col-md-2">
+		        			<img style="max-width:100%" src="https://code.google.com/p/pongo/logo?cct=1362146193" />
+	        			</div> -->
+	        			<div class="col-md-10">
+		            		<h3><a href="@routes.Projects.view("modeling-incquery")">EMF-IncQuery</a></h3>
+		            		<small>EMF-IncQuery is a framework for defining declarative queries over EMF models, and executing them efficiently without manual coding.</small>
+		            		<small><a href="@routes.Projects.view("modeling-incquery")">Learn more</a></small>
+	            		</div>
+            		</div>
+		        </li>
+		    </ul>
+		</div>
+		<div class="col-md-6">
+		    <div class="row">
+				<div class="col-md-12">
+				    <h2>OSSMETER Statistics</h2>	
+				    <table class="table">
+					    <tbody>
+						    <tr>
+						    	<td>Number of projects</td>
+						    	<td>@statistics.getNumberOfProjects()</td>
+						    </tr>
+						    <tr>
+						    	<td>Number of VCS repositories</td>
+						    	<td>@statistics.getNumberOfVcsRepositories()</td>
+						    </tr>
+						    <tr>
+						    	<td>Number of communication channels</td>
+						    	<td>@statistics.getNumberOfCommunicationChannels()</td>
+						    </tr>
+						    <tr>
+						    	<td>Number of bug trackers</td>
+						    	<td>@statistics.getNumberOfBugTrackers()</td>
+						    </tr>
+						   <!--  <tr>
+						    	<td>Number of lines of code</td>
+						    	<td>15 Billion</td>
+						    </tr>
+						    <tr>
+						    	<td>Number of messages</td>
+						    	<td>7 Million</td>
+						    </tr>
+						    <tr>
+						    	<td>Number of bugs</td>
+						    	<td>100 Million</td>
+						    </tr> -->
+					    </tbody>
+				    </table>
+				</div>
+			</div>
+		</div>
+	</div>
+  </div>
+</section>
+}

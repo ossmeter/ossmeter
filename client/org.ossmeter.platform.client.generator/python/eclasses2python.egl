@@ -1,0 +1,18 @@
+[%import "javautil.eol";%]
+[%import "../util/ecoreutil.eol";%]
+#!/usr/bin/python
+
+import json
+import urllib
+from collections import namedtuple
+
+
+
+[%
+@template
+operation OSS!EClass toPythonClass() {%]
+class [%=self.name%]:
+	def __init__(self, json):
+		
+		
+[%}%]

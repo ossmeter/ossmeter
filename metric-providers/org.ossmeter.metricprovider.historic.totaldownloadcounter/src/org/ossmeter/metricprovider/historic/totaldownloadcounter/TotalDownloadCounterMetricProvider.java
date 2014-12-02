@@ -1,3 +1,14 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * James Williams
+ *  - Implementation.
+ *******************************************************************************/
 package org.ossmeter.metricprovider.historic.totaldownloadcounter;
 
 import java.util.Arrays;
@@ -7,7 +18,7 @@ import org.ossmeter.metricprovider.downloadcounter.model.Download;
 import org.ossmeter.metricprovider.downloadcounter.model.DownloadCounter;
 import org.ossmeter.metricprovider.downloadcounter.sourceforge.SourceForgeDownloadCounterMetricProvider;
 import org.ossmeter.metricprovider.historic.totaldownloadcounter.model.TotalDownloadCounter;
-import org.ossmeter.platform.IHistoricalMetricProvider;
+import org.ossmeter.platform.AbstractHistoricalMetricProvider;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.repository.model.Project;
@@ -15,7 +26,7 @@ import org.ossmeter.repository.model.sourceforge.SourceForgeProject;
 
 import com.googlecode.pongo.runtime.Pongo;
 
-public class TotalDownloadCounterMetricProvider implements IHistoricalMetricProvider{
+public class TotalDownloadCounterMetricProvider extends AbstractHistoricalMetricProvider{
 
 	protected MetricProviderContext context;
 	protected SourceForgeDownloadCounterMetricProvider downloadCounterMetricProvider;

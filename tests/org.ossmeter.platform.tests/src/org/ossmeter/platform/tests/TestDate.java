@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    James Williams - Implementation.
+ *******************************************************************************/
 package org.ossmeter.platform.tests;
 
 import static org.junit.Assert.assertEquals;
@@ -46,6 +56,14 @@ public class TestDate {
 		Date jToday = new Date(today);
 		Date sToday = new Date(jToday.toString());
 		assertEquals(0, jToday.compareTo(sToday));
+	}
+	
+	@Test
+	public void testEquals() throws ParseException {
+		Date jBirthday = new Date("19860812");
+		Date jBirthday2 = new Date("19860812");
+		
+		assertEquals(jBirthday, jBirthday2);
 	}
 
 	@Test

@@ -21,14 +21,12 @@ class NntpNewsGroup {
 }
 
 class EclipseProject extends Project {
-	attr String shortName;
 	attr String paragraphUrl;
 	attr String descriptionUrl;
 	attr String downloadsUrl;
-	attr String homePage;
 	attr String projectplanUrl;
 	attr String updatesiteUrl;
-	attr String status;
+	attr String state;
 //	val  EclipseProject[1] parent; 
 	val  EclipsePlatform[*] platforms;
 	
@@ -46,17 +44,10 @@ class EclipsePlatform extends NamedElement {
 	
 }
 
-enum ProjectStatus {
-	prepoposal = 0;
-	proposal = 1;
-	incubation = 2;
-	mature = 3;
-	toplevel = 4;
-	archived = 5;
-}
+
 
 class Release extends NamedElement{
-	attr ReleaseType type;
+	attr String type;
 	attr String date;   
 	attr String link;
 }
@@ -66,18 +57,14 @@ class Article {
 }
 
 class EclipseNewsGroup extends NntpNewsGroup {
-	attr NewsGroupType type;
+	attr String type;
 }
 
 class MailingList extends CommunicationChannel{
    attr String name;
    attr String description;
-   attr MailingListType type;
+   attr String type;
    attr String archiveUrl;
-}
-
-class Wiki extends CommunicationChannel{
-
 }
 
 class Documentation extends CommunicationChannel{
@@ -85,34 +72,7 @@ class Documentation extends CommunicationChannel{
 }
 
 class Review {
-   attr ReviewType type;
-   attr ReviewState state;
+   attr String type;
+   attr String state;
    attr String endDate;
-}
-
-enum NewsGroupType {
-  main = 0;
-}
-
-enum MailingListType {
-  main = 0;
-}
-
-enum ReviewType {
-   creation = 0;
-   graduation = 1;
-   release = 2;
-   promotion = 3;
-   continuation = 4;
-   termination = 5;
-}
-
-enum ReviewState {
-   successful = 0;
-}
-
-enum ReleaseType {
-   scheduled = 0;
-   completed = 1;
-   tentative = 2;
 }

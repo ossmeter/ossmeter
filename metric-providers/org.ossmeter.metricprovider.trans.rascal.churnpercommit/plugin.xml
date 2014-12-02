@@ -4,5 +4,35 @@
    <extension
          point="ossmeter.rascal.metricprovider">
    </extension>
+   <extension
+         point="org.ossmeter.platform.visualisation.metric">
+      <visualisation
+            json="vis/committerChurn.json">
+      </visualisation>
+   </extension>
+   <extension
+         point="org.ossmeter.platform.visualisation.metric">
+      <visualisation
+            json="vis/coreCommitters.json">
+      </visualisation>
+   </extension>
+   <extension
+         point="org.ossmeter.platform.visualisation.metric">
+      <visualisation
+            json="vis/churnPerCommitInTwoWeeks.json">
+      </visualisation>
+   </extension>
+   <extension
+         point="org.ossmeter.platform.visualisation.metric">
+      <visualisation
+            json="vis/churnPerDay.json">
+      </visualisation>
+   </extension>
+   <extension
+         point="org.ossmeter.platform.visualisation.metric">
+      <visualisation
+            json="vis/commitsPerDay.json">
+      </visualisation>
+   </extension>
 
 </plugin>

@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    James Williams - Implementation.
+ *******************************************************************************/
 package org.ossmeter.platform.vcs.git;
 
 import java.io.File;
@@ -126,14 +136,18 @@ public class GitManager extends AbstractVcsManager {
 						VcsChangeType change = convertChangeType(diff.getChangeType());
 						if (change == null) continue;
 						VcsCommitItem item = new VcsCommitItem();
-			    		item.setPath(diff.getNewPath());
+						String path = diff.getNewPath();
+						if (change.equals(VcsChangeType.DELETED)) {
+							path = diff.getOldPath();
+						}
+			    		item.setPath(path);
 			    		item.setChangeType(change);
 			    		item.setCommit(vcsCommit);
 			    		vcsCommit.getItems().add(item);
 					}
 			    } else {
 			    	// First commit: everything is ADDED
-			    	vcsCommit = new VcsCommit();
+//			    	vcsCommit = new VcsCommit();
 			    	TreeWalk treeWalk = new TreeWalk(repo);
 				    treeWalk.addTree(commit.getTree());
 				    while(treeWalk.next()) {
@@ -263,7 +277,8 @@ public class GitManager extends AbstractVcsManager {
 			RevCommit commit = iterator.next();
 			
 //			System.out.println(Long.valueOf(commit.getCommitTime())*1000 + " == " + epoch); 
-			if (new Date(Long.valueOf(commit.getCommitTime())*1000).toString().equals(date.toString())) {
+//			System.err.println("comparing " +new Date(Long.valueOf(commit.getCommitTime())*1000) + " with date " + date + " and epoch " + epoch);
+			if (new Date(Long.valueOf(commit.getCommitTime())*1000).compareTo(date) == 0) {
 				foundDate = true;
 				revisions.add(0, commit.getId().getName());
 				//FIXME: Added the zero index to in an attempt to bugfix
@@ -296,11 +311,10 @@ public class GitManager extends AbstractVcsManager {
 		
 		return date;
 	}
-	
 
 	protected Git getGit(GitRepository repository) throws Exception {
 		String localPath = localBaseDirectory + makeSafe(repository.getUrl()); // FIXME local stora1ge
-
+		
 		Git git;
 		File gitDir = new File(localPath);
 		if (gitDir.exists()) {
@@ -313,6 +327,18 @@ public class GitManager extends AbstractVcsManager {
 					.call();
 		}
 		return git;
+	}
+
+	@Override
+	public boolean validRepository(VcsRepository repository) throws Exception {
+		
+		try {
+			Git.lsRemoteRepository().setRemote(repository.getUrl()).call();
+		} catch (Exception e) {
+			return false;
+		}
+		
+		return true;
 	}
 	
 }

@@ -45,9 +45,6 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="mirror_url">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="homepage">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="languages" upperBound="-1" eType="//Language" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="size">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject"/>
@@ -66,7 +63,9 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GitHubContent">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="//GitHubContentType"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="envoding">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
@@ -82,10 +81,6 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="sha">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="GitHubContentType">
-    <eLiterals name="file"/>
-    <eLiterals name="dir" value="1"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GitHubDownload">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="_id">
@@ -114,13 +109,28 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GitHubBugTracker" eSuperTypes="//BugTrackingSystem">
+    <eAnnotations source="customize"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="user">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="repository">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="login">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="password">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="issues" upperBound="-1" eType="//GitHubIssue" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GitHubIssue">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="number">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject"/>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="state" eType="//GitHubIssueState"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="state">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="title">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
@@ -141,10 +151,6 @@
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="GitHubIssueState">
-    <eLiterals name="open"/>
-    <eLiterals name="closed" value="1"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GitHubMilestone">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="url">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -152,7 +158,9 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="number">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EIntegerObject"/>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="state" eType="//GitHubMilestoneState"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="state">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="title">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
@@ -168,10 +176,6 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="due_on">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="GitHubMilestoneState">
-    <eLiterals name="open"/>
-    <eLiterals name="closed" value="1"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GitHubUser" eSuperTypes="//Person">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="login">

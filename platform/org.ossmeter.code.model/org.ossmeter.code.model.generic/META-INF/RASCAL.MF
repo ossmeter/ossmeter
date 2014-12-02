@@ -1,2 +1,2 @@
 Source: src
-Main-Module: Main
+Main-Module: Generic

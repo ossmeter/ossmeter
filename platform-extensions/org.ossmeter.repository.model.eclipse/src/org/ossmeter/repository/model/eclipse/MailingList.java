@@ -1,9 +1,16 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Davide Di Ruscio - Implementation.
+ *******************************************************************************/
 package org.ossmeter.repository.model.eclipse;
 
-import com.mongodb.*;
-import java.util.*;
-import com.googlecode.pongo.runtime.*;
-import com.googlecode.pongo.runtime.querying.*;
+import com.googlecode.pongo.runtime.querying.StringQueryProducer;
 
 
 public class MailingList extends org.ossmeter.repository.model.CommunicationChannel {
@@ -43,17 +50,12 @@ public class MailingList extends org.ossmeter.repository.model.CommunicationChan
 		notifyChanged();
 		return this;
 	}
-	public MailingListType getType() {
-		MailingListType type = null;
-		try {
-			type = MailingListType.valueOf(dbObject.get("type")+"");
-		}
-		catch (Exception ex) {}
-		return type;
+	public String getType() {
+		return parseString(dbObject.get("type")+"", "");
 	}
 	
-	public MailingList setType(MailingListType type) {
-		dbObject.put("type", type.toString());
+	public MailingList setType(String type) {
+		dbObject.put("type", type);
 		notifyChanged();
 		return this;
 	}

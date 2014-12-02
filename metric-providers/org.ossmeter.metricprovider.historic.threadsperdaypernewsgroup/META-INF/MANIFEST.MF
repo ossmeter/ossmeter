@@ -1,17 +1,20 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Threadsperdaypernewsgroup
-Bundle-SymbolicName: org.ossmeter.metricprovider.historic.threadsperdaypernewsgroup;singleton:=true
+Bundle-SymbolicName: org.ossmeter.metricprovider.historic.newsgroups.threads;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.ossmeter.metricprovider.historic.threadsperdaypernewsgroup.Activator
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
+Bundle-Activator: org.ossmeter.metricprovider.historic.newsgroups.threads.Activator
+Require-Bundle: org.eclipse.core.runtime,
+ com.googlecode.pongo.runtime,
  org.ossmeter.platform,
  org.ossmeter.repository.model.cc.nntp,
  org.ossmeter.platform.client.api,
  com.googlecode.pongo.runtime.osgi,
- org.ossmeter.metricprovider.trans.threads
+ org.ossmeter.metricprovider.trans.newsgroups.threads,
+ org.ossmeter.platform.visualisation,
+ org.ossmeter.metricprovider.trans.newsgroups.activeusers,
+ org.ossmeter.repository.model
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.metricprovider.historic.threadsperdaypernewsgroup,
- org.ossmeter.metricprovider.historic.threadsperdaypernewsgroup.model
+Export-Package: org.ossmeter.metricprovider.historic.newsgroups.threads,
+ org.ossmeter.metricprovider.historic.newsgroups.threads.model

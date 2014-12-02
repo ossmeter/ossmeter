@@ -7,19 +7,16 @@
       </metricProviderManager>
    </extension>
 
-
-
-
-
-
-
-
 <extension point="com.googlecode.pongo.runtime.osgi">
-    <class name="org.ossmeter.metricprovider.rascal.historic.model.RascalHistoricMetrics"/>
-    <class name="org.ossmeter.metricprovider.rascal.historic.model.RascalMetrics"/>
-    <class name="org.ossmeter.metricprovider.rascal.historic.model.IntegerMeasurement"/>
-    <class name="org.ossmeter.metricprovider.rascal.historic.model.RealMeasurement"/>
-    <class name="org.ossmeter.metricprovider.rascal.historic.model.BooleanMeasurement"/>
-    <class name="org.ossmeter.metricprovider.rascal.historic.model.StringMeasurement"/>
+    <class name="org.ossmeter.metricprovider.rascal.trans.model.RascalMetrics"/>
+    <class name="org.ossmeter.metricprovider.rascal.trans.model.IntegerMeasurement"/>
+    <class name="org.ossmeter.metricprovider.rascal.trans.model.DatetimeMeasurement"/>
+    <class name="org.ossmeter.metricprovider.rascal.trans.model.RealMeasurement"/>
+    <class name="org.ossmeter.metricprovider.rascal.trans.model.BooleanMeasurement"/>
+    <class name="org.ossmeter.metricprovider.rascal.trans.model.StringMeasurement"/>
+    <class name="org.ossmeter.metricprovider.rascal.trans.model.ListMeasurement"/>
+    <class name="org.ossmeter.metricprovider.rascal.trans.model.TupleMeasurement"/>
+    <class name="org.ossmeter.metricprovider.rascal.trans.model.SetMeasurement"/>
+    <class name="org.ossmeter.metricprovider.rascal.trans.model.URIMeasurement"/>
   </extension>
 </plugin>

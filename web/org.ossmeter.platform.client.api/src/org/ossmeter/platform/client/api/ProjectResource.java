@@ -1,52 +1,71 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    James Williams - Implementation.
+ *******************************************************************************/
 package org.ossmeter.platform.client.api;
 
-import org.ossmeter.platform.Platform;
-import org.ossmeter.platform.client.api.mixins.OssmeterMixins;
-import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectRepository;
+import org.restlet.data.MediaType;
 import org.restlet.data.Status;
-import org.restlet.engine.header.Header;
-import org.restlet.resource.Get;
-import org.restlet.resource.ServerResource;
-import org.restlet.util.Series;
+import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
+import org.restlet.resource.Put;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 
-public class ProjectResource extends ServerResource {
-	@Get
-	public String represent() {	
-		Series<Header> responseHeaders = (Series<Header>) getResponse().getAttributes().get("org.restlet.http.headers");
-		if (responseHeaders == null) {
-		    responseHeaders = new Series(Header.class);
-		    getResponse().getAttributes().put("org.restlet.http.headers", responseHeaders);
-		}
-		responseHeaders.add(new Header("Access-Control-Allow-Origin", "*"));
-		responseHeaders.add(new Header("Access-Control-Allow-Methods", "GET"));
+public class ProjectResource extends AbstractApiResource {
+
+	public Representation doRepresent() {	
+		String projectId = (String) getRequest().getAttributes().get("projectid");
 		
-		String projectName = (String) getRequest().getAttributes().get("name");
-		
-		Platform platform = Platform.getInstance();
 		ProjectRepository projectRepo = platform.getProjectRepositoryManager().getProjectRepository();
 		
-		ObjectMapper mapper = OssmeterMixins.getObjectMapper();
+		// FIXME: This exclusion list needs to be somewhere... 
+		BasicDBObject ex = new BasicDBObject("executionInformation", 0);
+		ex.put("storage", 0);
+		ex.put("metricProviderData", 0);
+		ex.put("_superTypes", 0);
+		ex.put("_id", 0);
 		
-		Project p = projectRepo.getProjects().findOneByShortName(projectName);
+		// FIXME: Temporary solution to DBRefs not being expanded
+		// How can we auto-expand and DBRefs when serialising?
+		ex.put("licenses", 0);
+		ex.put("persons", 0);
+		ex.put("companies", 0);
 		
+		BasicDBObject query = new BasicDBObject("shortName", projectId);
+		
+		DBObject p = projectRepo.getProjects().getDbCollection().findOne(query, ex);
+
 		if (p == null) {
 			getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-			return Util.generateErrorMessage(generateRequestJson(projectName), "No project was found with the requested name.");
+			return Util.generateErrorMessageRepresentation(generateRequestJson(mapper, projectId), "No project was found with the requested name.");
 		}
 		
 		try {
-			return p.getDbObject().toString();//mapper.writeValueAsString(p);//
+			StringRepresentation resp = new StringRepresentation(p.toString());
+			resp.setMediaType(MediaType.APPLICATION_JSON);
+			return resp;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return Util.generateErrorMessage(generateRequestJson(projectName), "An error occurred when converting the project to JSON: " + e.getMessage());
+			getResponse().setStatus(Status.SERVER_ERROR_INTERNAL);
+			return Util.generateErrorMessageRepresentation(generateRequestJson(mapper, projectId), "An error occurred when converting the project to JSON: " + e.getMessage());
 		}
 	}
 	
-	private String generateRequestJson(String projectName) {
-		return "{\"project\" : \"" + projectName + "\" }";
+	/**
+	 * This is an update to the existing project (identified by projectId field)
+	 * @param entity
+	 */
+	@Put("json")
+	public void updateProject(Representation entity) {
+		
 	}
-	
 }

@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2014 OSSMETER Partners.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Davide Di Ruscio - Implementation.
+ *******************************************************************************/
 package org.ossmeter.repository.model.redmine;
 
 import com.mongodb.*;
@@ -8,7 +18,7 @@ import com.googlecode.pongo.runtime.querying.*;
 
 public class RedmineIssue extends Pongo {
 	
-	protected List<RedminIssueRelation> relations = null;
+	protected List<RedmineIssueRelation> relations = null;
 	protected RedmineCategory category = null;
 	protected RedmineFeature feature = null;
 	protected RedmineUser author = null;
@@ -19,6 +29,8 @@ public class RedmineIssue extends Pongo {
 		super();
 		dbObject.put("author", new BasicDBObject());
 		dbObject.put("assignedTo", new BasicDBObject());
+		dbObject.put("category", new BasicDBObject());
+		dbObject.put("feature", new BasicDBObject());
 		dbObject.put("relations", new BasicDBList());
 		DESCRIPTION.setOwningType("org.ossmeter.repository.model.redmine.RedmineIssue");
 		STATUS.setOwningType("org.ossmeter.repository.model.redmine.RedmineIssue");
@@ -47,45 +59,30 @@ public class RedmineIssue extends Pongo {
 		notifyChanged();
 		return this;
 	}
-	public RedmineIssueStatus getStatus() {
-		RedmineIssueStatus status = null;
-		try {
-			status = RedmineIssueStatus.valueOf(dbObject.get("status")+"");
-		}
-		catch (Exception ex) {}
-		return status;
+	public String getStatus() {
+		return parseString(dbObject.get("status")+"", "");
 	}
 	
-	public RedmineIssue setStatus(RedmineIssueStatus status) {
-		dbObject.put("status", status.toString());
+	public RedmineIssue setStatus(String status) {
+		dbObject.put("status", status);
 		notifyChanged();
 		return this;
 	}
-	public RedmineIssuePriority getPriority() {
-		RedmineIssuePriority priority = null;
-		try {
-			priority = RedmineIssuePriority.valueOf(dbObject.get("priority")+"");
-		}
-		catch (Exception ex) {}
-		return priority;
+	public String getPriority() {
+		return parseString(dbObject.get("priority")+"", "");
 	}
 	
-	public RedmineIssue setPriority(RedmineIssuePriority priority) {
-		dbObject.put("priority", priority.toString());
+	public RedmineIssue setPriority(String priority) {
+		dbObject.put("priority", priority);
 		notifyChanged();
 		return this;
 	}
-	public RedminIssueTemplate getTemplate() {
-		RedminIssueTemplate template = null;
-		try {
-			template = RedminIssueTemplate.valueOf(dbObject.get("template")+"");
-		}
-		catch (Exception ex) {}
-		return template;
+	public String getTemplate() {
+		return parseString(dbObject.get("template")+"", "");
 	}
 	
-	public RedmineIssue setTemplate(RedminIssueTemplate template) {
-		dbObject.put("template", template.toString());
+	public RedmineIssue setTemplate(String template) {
+		dbObject.put("template", template);
 		notifyChanged();
 		return this;
 	}
@@ -118,9 +115,9 @@ public class RedmineIssue extends Pongo {
 	}
 	
 	
-	public List<RedminIssueRelation> getRelations() {
+	public List<RedmineIssueRelation> getRelations() {
 		if (relations == null) {
-			relations = new PongoList<RedminIssueRelation>(this, "relations", true);
+			relations = new PongoList<RedmineIssueRelation>(this, "relations", true);
 		}
 		return relations;
 	}
@@ -169,6 +166,7 @@ public class RedmineIssue extends Pongo {
 	public RedmineCategory getCategory() {
 		if (category == null && dbObject.containsField("category")) {
 			category = (RedmineCategory) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("category"));
+			category.setContainer(this);
 		}
 		return category;
 	}
@@ -189,6 +187,7 @@ public class RedmineIssue extends Pongo {
 	public RedmineFeature getFeature() {
 		if (feature == null && dbObject.containsField("feature")) {
 			feature = (RedmineFeature) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("feature"));
+			feature.setContainer(this);
 		}
 		return feature;
 	}

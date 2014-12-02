@@ -1,10 +1,21 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Importer
-Bundle-SymbolicName: org.ossmeter.repository.model.github.importer
+Bundle-SymbolicName: org.ossmeter.repository.model.github.importer;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Export-Package: org.ossmeter.repository.model.github.importer
-Require-Bundle: org.ossmeter.repository.model.github.importer.dependencies,
+Require-Bundle: org.ossmeter.repository.model.github,
+ com.googlecode.pongo.runtime,
+ org.ossmeter.platform,
+ org.ossmeter.repository.model.importerdependencies,
+ org.ossmeter.repository.model.importer.exception,
+ org.ossmeter.repository.model.vcs.git,
+ org.ossmeter.repository.model.vcs.svn,
+ org.ossmeter.repository.model.importer.exception,
+ org.ossmeter.repository.model.importer.exception,
+ org.ossmeter.repository.model.importer.exception,
+ org.ossmeter.repository.model.importer.exception,
  org.ossmeter.repository.model,
- org.ossmeter.repository.model.github,
- org.ossmeter.platform
+ org.apache.log4j.1.2.17
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+

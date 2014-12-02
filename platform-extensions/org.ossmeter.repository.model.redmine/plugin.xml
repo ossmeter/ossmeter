@@ -4,6 +4,10 @@
 
 
 
+
+
+
+
 <extension point="com.googlecode.pongo.runtime.osgi">
     <class name="org.ossmeter.repository.model.redmine.RedmineProject"/>
     <class name="org.ossmeter.repository.model.redmine.RedmineWiki"/>
@@ -14,7 +18,7 @@
     <class name="org.ossmeter.repository.model.redmine.RedmineBugIssueTracker"/>
     <class name="org.ossmeter.repository.model.redmine.RedmineIssue"/>
     <class name="org.ossmeter.repository.model.redmine.RedmineCategory"/>
-    <class name="org.ossmeter.repository.model.redmine.RedminIssueRelation"/>
+    <class name="org.ossmeter.repository.model.redmine.RedmineIssueRelation"/>
     <class name="org.ossmeter.repository.model.redmine.RedmineFeature"/>
   </extension>
 </plugin>
