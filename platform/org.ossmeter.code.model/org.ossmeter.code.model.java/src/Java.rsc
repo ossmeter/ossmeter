@@ -74,7 +74,6 @@ private set[loc] getSourceRoots(set[loc] folders) {
 	return result;
 }
 
-
 @M3Extractor{java()}
 @memo
 rel[Language, loc, M3] javaM3(loc project, ProjectDelta delta, map[loc repos,loc folders] checkouts, map[loc,loc] scratch) {  

@@ -7,7 +7,7 @@ Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.ossmeter.repository.model;uses:="com.googlecode.pongo.runtime,com.mongodb"
+Export-Package: org.ossmeter.repository.model
 Require-Bundle: org.eclipse.core.runtime,
  com.googlecode.pongo.runtime
 Bundle-ActivationPolicy: lazy
