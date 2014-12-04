@@ -36,9 +36,6 @@ public class VcsProjectDelta {
 			}
 			if (foundNull) continue;
 			
-//			if (revs.length != 2 || revs[0] == null || revs[1] == null) return;
-			
-//			repoDeltas.add(vcsManager.getDelta(repo, revs[0], revs[1]));
 			repoDeltas.add(vcsManager.getDelta(repo, revs[0], revs[revs.length-1]));
 		}
 	}

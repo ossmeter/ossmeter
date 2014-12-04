@@ -109,7 +109,9 @@ public class MetricListExecutor implements Runnable {
 				}
 			} catch (ParseException e1) {
 				// we can ignore this
-			} 
+			} catch (NumberFormatException e) {
+				
+			}
 			
 			// Performance analysis
 			MetricAnalysis mAnal = new MetricAnalysis();

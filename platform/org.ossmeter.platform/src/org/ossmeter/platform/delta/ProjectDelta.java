@@ -71,9 +71,6 @@ public class ProjectDelta {
 			bugTrackingSystemDelta = new BugTrackingSystemProjectDelta(db, project, date, bugTrackingSystemManager);
 			long endBTSDelta = System.currentTimeMillis();
 			
-			timings = ""+ (endVcsDelta - startVcsDelta) +"," 
-					+ (endCCDelta - startCCDelta) + ","
-					+ (endBTSDelta - startBTSDelta);
 		} catch (Exception e) {
 			logger.error("Delta creation failed.", e);
 			return false;
@@ -81,11 +78,6 @@ public class ProjectDelta {
 		return true;
 	}
 	
-	protected String timings; //FIXME: this is temporary. Very temporary.
-	public String getTimingsString() {
-		return timings;
-	}
-
 	public Date getDate() {
 		return date;
 	}
