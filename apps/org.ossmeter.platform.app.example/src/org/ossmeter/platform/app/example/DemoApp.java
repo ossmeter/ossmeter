@@ -56,7 +56,7 @@ public class DemoApp implements IApplication {
 	
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
-		run(new ExtensionPointMetricProviderManager(), new ExtensionPointVcsManager(), new ExtensionPointCommunicationChannelManager(), new ExtensionPointBugTrackingSystemManager());
+		run(new ExtensionPointMetricProviderManager(), null, null, null);
 		return IApplication.EXIT_OK;
 	}
 

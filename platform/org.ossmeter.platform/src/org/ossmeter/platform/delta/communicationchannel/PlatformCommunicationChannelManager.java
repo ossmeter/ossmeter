@@ -13,20 +13,28 @@ package org.ossmeter.platform.delta.communicationchannel;
 import java.util.List;
 
 import org.ossmeter.platform.Date;
+import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.cache.communicationchannel.CommunicationChannelContentsCache;
 import org.ossmeter.platform.cache.communicationchannel.CommunicationChannelDeltaCache;
 import org.ossmeter.platform.cache.communicationchannel.ICommunicationChannelContentsCache;
 import org.ossmeter.platform.cache.communicationchannel.ICommunicationChannelDeltaCache;
 import org.ossmeter.repository.model.CommunicationChannel;
+import org.ossmeter.repository.model.ManagerAnalysis;
+
 import com.mongodb.DB;
 
 public abstract class PlatformCommunicationChannelManager implements ICommunicationChannelManager<CommunicationChannel> {
 	
+	protected final Platform platform;
 	protected List<ICommunicationChannelManager> communicationChannelManagers;
 	protected ICommunicationChannelDeltaCache deltaCache;
 	protected ICommunicationChannelContentsCache contentsCache;
 	
 	abstract public List<ICommunicationChannelManager> getCommunicationChannelManagers();
+	
+	public PlatformCommunicationChannelManager (Platform platform) {
+		this.platform = platform;
+	}
 	
 	@Override
 	public boolean appliesTo(CommunicationChannel communicationChannel) {
@@ -47,11 +55,22 @@ public abstract class PlatformCommunicationChannelManager implements ICommunicat
 			throws Exception {
 		for (ICommunicationChannelManager communicationChannelManager : getCommunicationChannelManagers()) {
 			if (communicationChannelManager.appliesTo(communicationChannel)) {
-				return communicationChannelManager.getFirstDate(db, communicationChannel);
+				ManagerAnalysis mAnal = ManagerAnalysis.create(communicationChannelManager.toString(), 
+						"getFirstDate",
+						communicationChannel.getUrl(),
+						null,
+						new java.util.Date());
+				platform.getProjectRepositoryManager().getProjectRepository().getManagerAnalysis().add(mAnal);
+				long start = System.currentTimeMillis();
+				
+				Date firstDate = communicationChannelManager.getFirstDate(db, communicationChannel);
+				
+				mAnal.setMillisTaken(System.currentTimeMillis() - start);
+				platform.getProjectRepositoryManager().getProjectRepository().getManagerAnalysis().sync();
+
+				return firstDate;
 			}
 		}
-//		throw new RuntimeException("No communication channel manager applies to " + communicationChannel);
-		//FIXME: Needs to log this error. 
 		return null;
 	}
 	
@@ -65,7 +84,20 @@ public abstract class PlatformCommunicationChannelManager implements ICommunicat
 		
 		ICommunicationChannelManager communicationChannelManager = getCommunicationChannelManager(communicationChannel);
 		if (communicationChannelManager != null) {
+			ManagerAnalysis mAnal = ManagerAnalysis.create(communicationChannelManager.toString(), 
+					"getDelta",
+					communicationChannel.getUrl(),
+					date.toJavaDate(),
+					new java.util.Date());
+			platform.getProjectRepositoryManager().getProjectRepository().getManagerAnalysis().add(mAnal);
+			long start = System.currentTimeMillis();
+			
 			CommunicationChannelDelta delta = communicationChannelManager.getDelta(db, communicationChannel, date);
+			
+			mAnal.setMillisTaken(System.currentTimeMillis() - start);
+			platform.getProjectRepositoryManager().getProjectRepository().getManagerAnalysis().sync();
+
+			// Cache it
 			getDeltaCache().putDelta(communicationChannel.getUrl(), date, delta);
 			return delta;
 		}

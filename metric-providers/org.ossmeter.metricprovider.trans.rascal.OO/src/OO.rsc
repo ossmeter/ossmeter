@@ -131,26 +131,33 @@ public real CF(rel[loc, loc] typeDependencies, rel[loc, loc] superTypes, set[loc
 	Tight Class Cohesion per type
 }
 map[loc, real] TCC(
-	rel[loc \type, loc method] typeMethods,
- 	rel[loc \type, loc field] typeFields,
- 	rel[loc method1, loc method2] calls,
- 	rel[loc method, loc field] fieldAccesses,
+	map[loc \type, set[loc] methods] typeMethods,
+ 	map[loc \type, set[loc] fields] typeFields,
+ 	map[loc caller, set[loc] callees] calls,
+ 	map[loc method, set[loc] fields] fieldAccesses,
  	set[loc] allTypes) {
 
 	map[loc, real] tcc = ();
 
 	for (t <- allTypes) {
-		methodsOfT = typeMethods[t];
+		methodsOfT = typeMethods[t]?{};
 		numMethods = size(methodsOfT);
 		maxConnections = numMethods * (numMethods - 1);
-		
-		fieldConnections = rangeR(calls, methodsOfT)+ o rangeR(fieldAccesses, typeFields[t]); 
-		methodConnections = fieldConnections o invert(fieldConnections);
-		
-		directConnections = methodConnections - ident(methodsOfT);
 
 		if (maxConnections > 0) {
-			tcc[t] = round(size(directConnections) / toReal(maxConnections), 0.01);
+			fieldsOfT = typeFields[t]?{};
+			
+			// fieldConnections = carrierR(calls, methodsOfT)* o rangeR(fieldAccesses, typeFields[t]);
+			callsTC = { <a, b> | a <- methodsOfT, b <- calls[a]?{}, b in methodsOfT }*;
+			fieldConnections = { <a, c> | <a, b> <- callsTC, c <- fieldAccesses[b]?{}, c in fieldsOfT };
+			
+			methodConnections = fieldConnections o invert(fieldConnections);
+			
+			// directConnections = methodConnections - ident(methodsOfT);
+			numDirectConnections = ( 0 | it + 1 | <a, b> <- methodConnections, a != b );
+
+			// tcc[t] = round(size(directConnections) / toReal(maxConnections), 0.01);
+			tcc[t] = round(numDirectConnections / toReal(maxConnections), 0.01);
 		} else {
 			tcc[t] = -1.0;
 		}
@@ -164,26 +171,33 @@ map[loc, real] TCC(
 	Loose Class Cohesion per type
 }
 map[loc, real] LCC(
-	rel[loc \type, loc method] typeMethods,
- 	rel[loc \type, loc field] typeFields,
- 	rel[loc method1, loc method2] calls,
- 	rel[loc method, loc field] fieldAccesses,
+	map[loc \type, set[loc] methods] typeMethods,
+ 	map[loc \type, set[loc] fields] typeFields,
+ 	map[loc caller, set[loc] callees] calls,
+ 	map[loc method, set[loc] fields] fieldAccesses,
  	set[loc] allTypes) {
 
 	map[loc, real] lcc = ();
 
 	for (t <- allTypes) {
-		methodsOfT = typeMethods[t];
+		methodsOfT = typeMethods[t]?{};
 		numMethods = size(methodsOfT);
 		maxConnections = numMethods * (numMethods - 1);
-		
-		fieldConnections = rangeR(calls, methodsOfT)+ o rangeR(fieldAccesses, typeFields[t]); 
-		methodConnections = fieldConnections o invert(fieldConnections);
-		
-		indirectConnections = (methodConnections+) - ident(methodsOfT);
-		
+
 		if (maxConnections > 0) {
-			lcc[t] = round(size(indirectConnections) / toReal(maxConnections), 0.01);
+			fieldsOfT = typeFields[t]?{};
+			
+			// fieldConnections = carrierR(calls, methodsOfT)* o rangeR(fieldAccesses, typeFields[t]);
+			callsTC = { <a, b> | a <- methodsOfT, b <- calls[a]?{}, b in methodsOfT }*;
+			fieldConnections = { <a, c> | <a, b> <- callsTC, c <- fieldAccesses[b]?{}, c in fieldsOfT };
+			
+			methodConnections = fieldConnections o invert(fieldConnections);
+			
+			// indirectConnections = (methodConnections*) - ident(methodsOfT);		
+			numIndirectConnections = ( 0 | it + 1 | <a, b> <- methodConnections*, a != b );
+		
+			// lcc[t] = round(size(indirectConnections) / toReal(maxConnections), 0.01);
+			lcc[t] = round(numIndirectConnections / toReal(maxConnections), 0.01);
 		} else {
 			lcc[t] = -1.0;
 		}
@@ -198,21 +212,21 @@ map[loc, real] LCC(
 	Two methods are related if one of them calls the other of if they both access the same field.
 }
 map[loc, int] LCOM4(
-	rel[loc caller, loc callee] methodCalls,
-	rel[loc method, loc field] fieldAccesses,
-	rel[loc \type, loc method] methods,
-	rel[loc \type, loc field] fields,
+	map[loc caller, set[loc] callees] methodCalls,
+	map[loc method, set[loc] fields] fieldAccesses,
+	map[loc \type, set[loc] method] methods,
+	map[loc \type, set[loc] field] fields,
 	set[loc] allTypes) {
 	
 	map[loc, int] lcom = ();
 	
 	for (t <- allTypes) {
-		fs = fields[t];
-		ms = methods[t];
+		fs = fields[t]?{};
+		ms = methods[t]?{};
 		
-		localAccesses = rangeR(domainR(fieldAccesses, ms), fs);
+		localAccesses = { <a, b> | a <- fieldAccesses, a in ms, b <- fieldAccesses[a], b in fs }; //rangeR(domainR(fieldAccesses, ms), fs);
 		
-		relatedMethods = carrierR(methodCalls, ms);
+		relatedMethods = { <a, b> | a <- methodCalls, a in ms, b <- methodCalls[a], b in ms }; //carrierR(methodCalls, ms);
 		relatedMethods += localAccesses o invert(localAccesses);
 		
 		lcom[t] = size(connectedComponents(relatedMethods));

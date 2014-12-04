@@ -15,10 +15,15 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.util.ExtensionPointHelper;
 
 public class ExtensionPointBugTrackingSystemManager extends PlatformBugTrackingSystemManager {
 	
+	public ExtensionPointBugTrackingSystemManager(Platform platform) {
+		super(platform);
+	}
+
 	protected final String bugTrackingSystemExtensionPointId = "org.ossmeter.platform.managers.bugtracking";
 	
 	public List<IBugTrackingSystemManager> getBugTrackingSystemManagers() {

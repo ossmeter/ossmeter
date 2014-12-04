@@ -330,12 +330,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.ossmeter.platform.app.example"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.restlet"
          download-size="0"
          install-size="0"
@@ -1071,12 +1065,6 @@
 
    <plugin
          id="com.google.guava"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.ossmeter.platform.app.uda"
          download-size="0"
          install-size="0"
          version="0.0.0"/>

@@ -12,7 +12,17 @@ class ProjectRepository extends NamedElement {
   val MetricProvider[*] metricProviders;
   val SchedulingInformation[*] schedulingInformation;  
   val MetricAnalysis[*] metricAnalysis;
+  val ManagerAnalysis[*] managerAnalysis;
   val Company[*] companies;
+}
+
+class ManagerAnalysis {
+	attr String manager;
+	attr String method;
+	attr String projectId;
+	attr Date analysisDate;
+	attr Date executionDate;
+	attr double millisTaken;
 }
 
 class MetricAnalysis {

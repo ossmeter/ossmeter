@@ -54,7 +54,7 @@ public class MetricListExecutor implements Runnable {
 		this.delta = delta;
 		this.date = date;
 		this.logger = (OssmeterLogger) OssmeterLogger.getLogger("MetricListExecutor (" + projectId + ", " + date.toString() + ")");
-		this.logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
+//		this.logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 	}
 	
 	public void setMetricList(List<IMetricProvider> metrics) {
@@ -107,9 +107,11 @@ public class MetricListExecutor implements Runnable {
 					logger.warn("Metric provider '" + m.getIdentifier() + "' has been executed for this date already. Ignoring.");
 					continue;
 				}
-			} catch (ParseException e1) {
+			} catch (ParseException e) {
 				// we can ignore this
-			} 
+			} catch (NumberFormatException e) {
+				// We can ignore this
+			}
 			
 			// Performance analysis
 			MetricAnalysis mAnal = new MetricAnalysis();
@@ -133,9 +135,11 @@ public class MetricListExecutor implements Runnable {
 						historyManager.store(project, date, (IHistoricalMetricProvider) m);
 				}
 				
-				// Update the meta data
+				// Update the meta data -- need to requery the database due to Pongo caching in different threads(!)
+				project = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByShortName(project.getShortName());
+				mpd = getProjectModelMetricProvider(project, m);
 				mpd.setLastExecuted(date.toString()); 
-//				platform.getProjectRepositoryManager().getProjectRepository().sync();
+				platform.getProjectRepositoryManager().getProjectRepository().sync();
 			} catch (Exception e) {
 				logger.error("Exception thrown during metric provider execution ("+m.getShortIdentifier()+").", e);
 				project.getExecutionInformation().setInErrorState(true);
@@ -144,6 +148,7 @@ public class MetricListExecutor implements Runnable {
 			}
 			
 			mAnal.setMillisTaken(now() - start);
+			
 			platform.getProjectRepositoryManager().getProjectRepository().sync(); // Will sync-ing here mess things up?
 		}
 		

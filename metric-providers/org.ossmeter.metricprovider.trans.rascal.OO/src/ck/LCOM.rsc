@@ -14,23 +14,24 @@ import List;
 	Lack of Cohesion of Methods per class
 }
 map[loc, int] LCOM(
-	rel[loc method, loc field] fieldAccesses,
-	rel[loc \type, loc method] methods,
-	rel[loc \type, loc field] fields,
+	map[loc method, set[loc] fields] fieldAccesses,
+	map[loc \type, set[loc] methods] methods,
+	map[loc \type, set[loc] fields] fields,
 	set[loc] allTypes) {
 	
 	map[loc, int] lcom = ();
 	
 	for (t <- allTypes) {
-		fs = fields[t];
-		ms = toList(methods[t]);
+		fs = fields[t]?{};
+		ms = toList(methods[t]?{});
 		
 		P = 0;
 		Q = 0;
 		
 		for (i <- [0..size(ms)]) {
+		    fieldsI = (fieldAccesses[ms[i]]?{}) & fs; 
 			for (j <- [i+1 .. size(ms)]) {
-				if ((fieldAccesses[ms[i]] & fieldAccesses[ms[j]] & fs) == {}) {
+				if ((fieldsI & (fieldAccesses[ms[j]]?{})) == {}) {
 					P += 1;
 				} else {
 					Q += 1;
