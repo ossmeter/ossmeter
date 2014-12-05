@@ -5,7 +5,7 @@ are made available under the terms of the Eclipse Public License v1.0
 which accompanies this distribution, and is available at
 http://www.eclipse.org/legal/epl-v10.html
 }
-module WMC
+module php::WMC
 
 import lang::php::m3::AST;
 import lang::php::m3::Core;
