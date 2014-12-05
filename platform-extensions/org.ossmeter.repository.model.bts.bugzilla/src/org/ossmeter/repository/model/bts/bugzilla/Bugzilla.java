@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Davide Di Ruscio - Implementation.
+ *    Davide Di Ruscio - Implementation,
+ *    Juri Di Rocco - Implementation.
  *******************************************************************************/
 package org.ossmeter.repository.model.bts.bugzilla;
 
