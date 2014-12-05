@@ -35,7 +35,7 @@ public class Date {
 		_date = parseDate(date);
 	}
 	
-	static SimpleDateFormat[] sdfList = new SimpleDateFormat[]{
+	private SimpleDateFormat[] sdfList = new SimpleDateFormat[]{
 		// YYYYMMDD
 		new SimpleDateFormat("yyyyMMdd"),
 		new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz"),
@@ -48,7 +48,7 @@ public class Date {
 		new SimpleDateFormat("EEE MMM d HH:mm:ss zzz yyyy")
 	};
 
-	public static java.util.Date parseDate(String dateString) throws ParseException {
+	public java.util.Date parseDate(String dateString) throws ParseException {
 		if (dateString.equals("null"))
 			return sdfList[0].parse(dateString);
 		for ( SimpleDateFormat formatter: sdfList) {
