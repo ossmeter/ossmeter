@@ -294,12 +294,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="com.jcraft.jsch"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.ossmeter.platform"
          download-size="0"
          install-size="0"
@@ -675,12 +669,6 @@
 
    <plugin
          id="org.jackson.all"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.jsch.core"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
@@ -1594,6 +1582,13 @@
 
    <plugin
          id="org.w3c.dom.events"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.jcraft.jsch"
          download-size="0"
          install-size="0"
          version="0.0.0"

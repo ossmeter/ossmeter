@@ -1,20 +1,50 @@
+<!DOCTYPE html>
+<html lang="@lang().code()">
+  <head>
+    <title>OSSMETER</title>
 
-@main(Messages("ossmeter.index.title")) {
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="OSSMETER: Automated Measurement and Analysis of Open-Source Software">
+    <meta name="author" content="The OSSMETER Team: github.com/ossmeter">
+    
+    <link rel="icon" type="image/png" href="@routes.Assets.at("icons/favicon.png")">
+
+    <!-- Styles -->    
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,400,300,800' rel='stylesheet' type='text/css'>
+    <link href="http://fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet" type="text/css">
+    <link href="@routes.Assets.at("css/bootstrap.min.css")" rel="stylesheet">
+    <link href="@routes.Assets.at("css/main.css")" rel="stylesheet">
+  </head>
+
+  <body>
+
       <!-- Main hero unit for a primary marketing message or call to action -->
-      <div class="container blank">
+      <div class="container" style="margin-top:150px;margin-bottom:150px;">
         <div class="row">
-            <div class="span12 center">
-                <img src="@routes.Assets.at("img/osslogo_large.png")" alt="OSSMETER logo" class="logo"/>  
-                <p class="lead">@Messages("ossmeter.index.intro") <!-- <br/>
-                <a href="#" data-toggle="tooltip" title="Project website"><i class="icon-globe"></i></a>&nbsp;&nbsp;
-                <a href="#" data-toggle="tooltip" title="Twitter: @@ossmeter"><i class="icon-retweet"></i></a>&nbsp;&nbsp;
-                  <a href="#" data-toggle="tooltip" title="Mailing list"><i class="icon-envelope"></i></a> -->
+            <div class="col-md-12 center">
+                <img src="@routes.Assets.at("img/osslogo_large.png")" alt="OSSMETER logo" />  
+                <p class="lead">@Messages("ossmeter.index.intro") 
                 </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 center">
+                <button class="btn btn-lg btn-primary" type="button">Sign In*</button>
+                <button class="btn btn-lg btn-primary" type="button">Demo</button>
+                <p><small>*We are currently in a closed beta phase. Check out the demo to see what we'll be releasing shortly.</small></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 center">
+                <a href="https://github.com/ossmeter/ossmeter"><img src="@routes.Assets.at("img/GitHub-Mark-64px.png")" class="social-logo"></a>
+                <a href="https://www.twitter.com/ossmeter"><img src="@routes.Assets.at("img/Twitter_logo_blue.png")" class="social-logo"></a>
             </div>
         </div>
       </div> <!-- container -->
 
-      <div class="banner">
+    <div class="banner">
         <div class="container blank">
             <div class="row">
               <div class="col-md-3">
@@ -38,65 +68,24 @@
                 <p>Monitor adopted open-source software to ensure that it remains active and healthy</p>
               </div>
             </div>
-            <div class="row">
-                <div class="input-group col-md-6 col-md-offset-3 search">
-                    <input type="text" class="form-control txt_search" placeholder="Search for Open-Source Software">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default search_btn"><i class="glyphicon glyphicon-search"></i></button>
-                    </div>
-                </div>
-            </div>
         </div>
-      </div>
-
-<script type="text/javascript">
-$(function () {
-    $(".txt_search").autocomplete({
-        source: function(request, response) {
-            console.log("making request")
-            jsRoutes.controllers.Application.autocomplete(request.term).ajax()
-                .success(function(result) {
-                    console.log("success: " + result);
-                    response($.map(result, function(item) {
-                        return {
-                            label: item.name,
-                            value: item.id
-                        }
-                    }));
-                }).error(function(result) {
-                    console.log("fail: " + result);
-                });
-        },
-        minLength: 2,
-        focus: function( event, ui ) {
-            $( "#project0" ).val( ui.item.label );
-            return false;
-        },
-        select : function(event, ui) {
-            //FIXME: Should use Play's routing
-            window.location.href = "projects/" + ui.item.value; 
-        },
-        open: function() {
-            $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
-        },
-        close: function() {
-            $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
-        }
-    })
-});
-</script>
+    </div>
 
     <section>
         <div class="container box">
             <div class="row">
-                <div class="col-md-4">
-                    <h2>What is OSSMETER?</h2>
+                <div class="col-md-12">
+                    <h1>What is OSSMETER?</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
                     <!-- <p>OSSMETER aims to extend the state-of-the-art in the field of automated analysis and measurement of open-source software (OSS) by developing a platform that will support decision makers in the process of discovering, comparing, assessing and monitoring the health, quality, impact and activity of open-source software.</p> -->
                     <p>OSSMETER computes trustworthy quality indicators of open-source software by performing advanced analysis and integration of information from diverse sources including the project metadata, source code repositories, communication channels and bug tracking systems of OSS projects.</p>
                     <p>OSSMETER is not another OSS forge but instead it provides a meta-platform for analysing existing OSS projects that are developed in existing OSS forges and foundations such as SourceForge, Google Code, GitHub, Eclipse, Mozilla and Apache.</p>
                     <p><a href="#">Click here to find out more about OSSMETER</a></p>
                 </div>
-                <div class="col-md-4">
+                <!-- <div class="col-md-4">
                     <h2>Featured Projects</h2>
                     <p>Search through thousands of open-source software projects to discover those that suit your needs</p>
                     <ul>
@@ -107,11 +96,13 @@ $(function () {
                 </div>
                 <div class="col-md-4">
                     <h2>Create an Account</h2>
-                    <!-- <p>Having an account with OSSMETER enables you to add your own projects to be monitored, and gives you ability to set up triggers that notify you when a particular metric of interest reaches a certain threshold. </p> -->
+                    <p>Having an account with OSSMETER enables you to add your own projects to be monitored, and gives you ability to set up triggers that notify you when a particular metric of interest reaches a certain threshold. </p> 
                     <p>We are currently accepting users on an invite-only basis. If you have received an invite, click the button below. If not, you are still able to browse and compare the projects, but won't be able to add new projects or set up notifications.</p>
                     <button type="button" class="btn btn-default form-control">Accept Invite</button>
-                </div>
+                </div> -->
             </div>
         </div>
     </section>
-    }
+  
+  </body>
+</html>
