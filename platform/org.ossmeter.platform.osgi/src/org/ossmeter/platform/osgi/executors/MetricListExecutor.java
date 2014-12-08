@@ -54,7 +54,7 @@ public class MetricListExecutor implements Runnable {
 		this.delta = delta;
 		this.date = date;
 		this.logger = (OssmeterLogger) OssmeterLogger.getLogger("MetricListExecutor (" + projectId + ", " + date.toString() + ")");
-//		this.logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
+		this.logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 	}
 	
 	public void setMetricList(List<IMetricProvider> metrics) {
@@ -93,9 +93,10 @@ public class MetricListExecutor implements Runnable {
 			MetricProviderExecution mpd = getProjectModelMetricProvider(project, m);
 			if (mpd == null) {
 				mpd = new MetricProviderExecution();
-				project.getExecutionInformation().getMetricProviderData().add(mpd);
 				mpd.setMetricProviderId(m.getIdentifier());
 				mpd.setType(type);
+				project = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByShortName(project.getShortName());
+				project.getExecutionInformation().getMetricProviderData().add(mpd);
 				platform.getProjectRepositoryManager().getProjectRepository().sync();
 			}
 			
@@ -138,6 +139,11 @@ public class MetricListExecutor implements Runnable {
 				// Update the meta data -- need to requery the database due to Pongo caching in different threads(!)
 				project = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByShortName(project.getShortName());
 				mpd = getProjectModelMetricProvider(project, m);
+			
+				if (mpd == null) {
+					System.out.println("null: " + m.getIdentifier());
+				}
+				
 				mpd.setLastExecuted(date.toString()); 
 				platform.getProjectRepositoryManager().getProjectRepository().sync();
 			} catch (Exception e) {
