@@ -17,14 +17,15 @@ import java.util.List;
 import java.util.UUID;
 
 import org.ossmeter.platform.Platform;
-import org.ossmeter.platform.osgi.old.IScheduler;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.SchedulingInformation;
 
 import com.mongodb.Mongo;
 
-public class SlaveScheduler implements IScheduler {
+public class SlaveScheduler {
 
+	protected final int heartbeatTick = 10000;
+	
 	protected boolean alive = true;
 	protected Object master;
 	
@@ -59,7 +60,6 @@ public class SlaveScheduler implements IScheduler {
 		return true;
 	}
 
-	@Override
 	public void run() {
 		
 		String id = UUID.randomUUID().toString();
@@ -86,7 +86,7 @@ public class SlaveScheduler implements IScheduler {
 					platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().sync();
 					
 					try {
-						Thread.sleep(60000);
+						Thread.sleep(heartbeatTick);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -147,7 +147,6 @@ public class SlaveScheduler implements IScheduler {
 		worker.notify();
 	}
 	
-	@Override
 	public boolean finish() {
 		alive = false;
 		try {
@@ -159,7 +158,6 @@ public class SlaveScheduler implements IScheduler {
 		}
 	}
 
-	@Override 
 	public SchedulerStatus getStatus() {
 		return status;
 	}

@@ -75,8 +75,7 @@ public class NewsgroupsChannelStatusFactoid extends AbstractFactoidMetricProvide
 	@Override
 	public void measureImpl(Project project, ProjectDelta delta, Factoid factoid) {
 //		factoid.setCategory(FactoidCategory.BUGS);
-		factoid.setName("");
-		factoid.setName("Newsgroup Channel Status Factoid");
+		factoid.setName(getFriendlyName());
 
 		UnansweredThreadsHistoricMetricProvider unansweredThreadsProvider = null;
 		RequestsRepliesHistoricMetricProvider requestsRepliesProvider = null;
@@ -98,7 +97,7 @@ public class NewsgroupsChannelStatusFactoid extends AbstractFactoidMetricProvide
 		}
 
 		Date end = new Date();
-		Date start = new Date();
+		Date start = (new Date()).addDays(-30);
 //		Date start=null, end=null;
 //		try {
 //			start = new Date("20040801");

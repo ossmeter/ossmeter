@@ -14,7 +14,7 @@ import util::Math;
 	Method Inheritance Factor (can also be used for Attribute Inheritance Factor)	
 }
 public map[loc, real] MIF(
-	rel[loc \type, loc method] typeMethods,
+	map[loc \type, set[loc] methods] typeMethods,
 	rel[loc \type, loc method] inheritableConcreteMethods,
 	rel[loc subtype, loc supertype] superTypes,
 	set[loc] allTypes) {

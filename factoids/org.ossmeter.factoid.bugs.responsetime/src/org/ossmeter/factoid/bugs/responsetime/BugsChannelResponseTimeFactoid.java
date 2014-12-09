@@ -63,7 +63,7 @@ public class BugsChannelResponseTimeFactoid extends AbstractFactoidMetricProvide
 	@Override
 	public void measureImpl(Project project, ProjectDelta delta, Factoid factoid) {
 //		factoid.setCategory(FactoidCategory.BUGS);
-		factoid.setName("Bug Channel Response Time Factoid");
+		factoid.setName(getFriendlyName());
 
 		ResponseTimeHistoricMetricProvider responseTimeProvider = null;
 

@@ -64,7 +64,7 @@ public class BugsChannelSentimentFactoid extends AbstractFactoidMetricProvider{
 	@Override
 	public void measureImpl(Project project, ProjectDelta delta, Factoid factoid) {
 //		factoid.setCategory(FactoidCategory.BUGS);
-		factoid.setName("Bug Channel Sentiment Factoid");
+		factoid.setName(getFriendlyName());
 
 		SentimentHistoricMetricProvider sentimentProvider = null;
 
@@ -76,7 +76,7 @@ public class BugsChannelSentimentFactoid extends AbstractFactoidMetricProvider{
 		}
 
 		Date end = new Date();
-		Date start = new Date();
+		Date start = (new Date()).addDays(-30);
 //		Date start=null, end=null;
 //		try {
 //			start = new Date("20050301");
@@ -142,7 +142,7 @@ public class BugsChannelSentimentFactoid extends AbstractFactoidMetricProvider{
 			stringBuffer.append("are happier");
 		else
 			stringBuffer.append("are unhappier");
-		stringBuffer.append("at the end of a discussion ");
+		stringBuffer.append(" at the end of a discussion ");
 		if ( Math.abs( sentimentAtThreadBeggining - sentimentAtThreadEnd ) < 0.15 )
 			stringBuffer.append("as");
 		else

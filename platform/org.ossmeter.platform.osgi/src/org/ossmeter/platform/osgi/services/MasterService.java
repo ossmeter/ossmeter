@@ -45,19 +45,6 @@ public class MasterService implements IMasterService {
 		mongo = Configuration.getInstance().getMongoConnection(); 
 		platform = new Platform(mongo);
 	
-//		SchedulingInformationCollection schedCol = platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation();
-//		
-//		SchedulingInformation schedulingInformation = null;
-//		if (schedCol == null || schedCol.size() ==0) {
-//			schedulingInformation = new SchedulingInformation();
-//			schedCol.add(schedulingInformation);
-//			platform.getProjectRepositoryManager().getProjectRepository().sync();
-//		} else {
-//			schedulingInformation = schedCol.first();
-//		}
-//		schedulingInformation.setIsMaster(true);
-//		platform.getProjectRepositoryManager().getProjectRepository().sync();
-		
 		// Now start scheduling
 		master = new Thread() {
 			@Override

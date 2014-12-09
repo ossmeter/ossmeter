@@ -64,7 +64,7 @@ public class BugsChannelStatusFactoid extends AbstractFactoidMetricProvider{
 	@Override
 	public void measureImpl(Project project, ProjectDelta delta, Factoid factoid) {
 //		factoid.setCategory(FactoidCategory.BUGS);
-		factoid.setName("Bug Channel Status Factoid");
+		factoid.setName(getFriendlyName());
 
 		StatusHistoricMetricProvider bugStatusProvider = null;
 
@@ -76,7 +76,7 @@ public class BugsChannelStatusFactoid extends AbstractFactoidMetricProvider{
 		}
 
 		Date end = new Date();
-		Date start = new Date();
+		Date start = (new Date()).addDays(-30);
 //		Date start=null, end=null;
 //		try {
 //			start = new Date("20050301");

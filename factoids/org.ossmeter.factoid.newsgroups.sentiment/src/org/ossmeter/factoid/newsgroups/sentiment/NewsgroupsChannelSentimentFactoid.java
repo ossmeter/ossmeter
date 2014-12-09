@@ -69,7 +69,7 @@ public class NewsgroupsChannelSentimentFactoid extends AbstractFactoidMetricProv
 	@Override
 	public void measureImpl(Project project, ProjectDelta delta, Factoid factoid) {
 //		factoid.setCategory(FactoidCategory.BUGS);
-		factoid.setName("Newsgroup Channel Sentiment Factoid");
+		factoid.setName(getFriendlyName());
 
 		SentimentHistoricMetricProvider sentimentProvider = null;
 
@@ -81,7 +81,7 @@ public class NewsgroupsChannelSentimentFactoid extends AbstractFactoidMetricProv
 		}
 
 		Date end = new Date();
-		Date start = new Date();
+		Date start = (new Date()).addDays(-30);
 //		Date start=null, end=null;
 //		try {
 //			start = new Date("20040801");
