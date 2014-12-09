@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.client.PageIterator;
