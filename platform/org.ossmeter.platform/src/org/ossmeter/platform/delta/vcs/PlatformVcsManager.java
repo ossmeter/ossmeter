@@ -13,20 +13,27 @@ package org.ossmeter.platform.delta.vcs;
 import java.util.List;
 
 import org.ossmeter.platform.Date;
+import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.cache.vcs.IVcsContentsCache;
 import org.ossmeter.platform.cache.vcs.IVcsDeltaCache;
 import org.ossmeter.platform.cache.vcs.VcsContentsCache;
 import org.ossmeter.platform.cache.vcs.VcsDeltaCache;
 import org.ossmeter.platform.delta.NoManagerFoundException;
+import org.ossmeter.repository.model.ManagerAnalysis;
 import org.ossmeter.repository.model.VcsRepository;
 
 public abstract class PlatformVcsManager extends AbstractVcsManager {
 	
+	protected final Platform platform;
 	protected List<IVcsManager> vcsManagers;
 	protected IVcsDeltaCache deltaCache;
 	protected IVcsContentsCache contentsCache;
 	
 	abstract public List<IVcsManager> getVcsManagers();
+	
+	public PlatformVcsManager (Platform platform) {
+		this.platform = platform;
+	}
 
 	@Override
 	public String getCurrentRevision(VcsRepository repository) throws Exception {
@@ -59,7 +66,21 @@ public abstract class PlatformVcsManager extends AbstractVcsManager {
 	public String[] getRevisionsForDate(VcsRepository repository, Date date) throws Exception {
 		IVcsManager manager = getVcsManager(repository);
 		if (manager != null) {
-			return manager.getRevisionsForDate(repository, date);
+
+			ManagerAnalysis mAnal = ManagerAnalysis.create(manager.toString(),
+				"getRevisionsForDate",
+				repository.getUrl(),
+				date.toJavaDate(),
+				new java.util.Date());
+			platform.getProjectRepositoryManager().getProjectRepository().getManagerAnalysis().add(mAnal);
+			long start = System.currentTimeMillis();
+			
+			String[] revisions = manager.getRevisionsForDate(repository, date);
+			
+			mAnal.setMillisTaken(System.currentTimeMillis() - start);
+			platform.getProjectRepositoryManager().getProjectRepository().getManagerAnalysis().sync();
+			
+			return revisions;
 		}
 		return null;
 	}
@@ -102,8 +123,21 @@ public abstract class PlatformVcsManager extends AbstractVcsManager {
 		
 		IVcsManager vcsManager = getVcsManager(repository);
 		if (vcsManager != null) {
+			ManagerAnalysis mAnal = ManagerAnalysis.create(vcsManager.toString(), 
+					"getDelta " + startVersion + ":" + endVersion,
+					repository.getUrl(),
+					null,
+					new java.util.Date());
+			platform.getProjectRepositoryManager().getProjectRepository().getManagerAnalysis().add(mAnal);
+			
+			long start = System.currentTimeMillis();
+			
 			VcsRepositoryDelta delta = vcsManager.getDelta(repository, startVersion, endVersion);
 			getDeltaCache().putDelta(repository, startVersion, endVersion, delta);
+			
+			mAnal.setMillisTaken(System.currentTimeMillis() - start);
+			platform.getProjectRepositoryManager().getProjectRepository().getManagerAnalysis().sync();
+			
 			return delta;
 		}
 		return null;

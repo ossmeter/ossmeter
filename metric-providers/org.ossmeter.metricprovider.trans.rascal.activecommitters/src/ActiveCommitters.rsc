@@ -39,7 +39,7 @@ it is also used to drill down on the membership of specific individuals of the d
 @appliesTo{generic()}
 map[str, tuple[datetime, datetime]] firstLastCommitDates(ProjectDelta delta = \empty(), map[str, tuple[datetime first, datetime last]] prev = (), 
   set[str] committersToday = {}) {
-  map[str, tuple[datetime, datetime]] developerCommitDates = ();
+  map[str, tuple[datetime, datetime]] developerCommitDates = prev;
   for (author <- committersToday) {
     if (author in prev) {
       // don't assume the dates in delta are newer than in prev.
@@ -74,7 +74,7 @@ map[str, int] commitsPerDeveloper(ProjectDelta delta = \empty(), map[str, int] p
 @uses = ("firstLastCommitDatesPerDeveloper" : "commitDates")
 @appliesTo{generic()}
 rel[str, int] ageOfCommitters(map[str, tuple[datetime first, datetime last]] commitDates = ()) {
-  return { <author, daysDiff(commitDates[author].first, commitDates[author].last)> | author <- commitDates };
+  return { <author, daysDiff(commitDates[author].first, commitDates[author].last) + 1> | author <- commitDates };
 }
 
 @metric{developmentTeam}
@@ -203,7 +203,7 @@ int projectAge(map[str, tuple[datetime first, datetime last]] firstLastCommitDat
   firstDate = min([ firstLastCommitDates[name][0] | name <- firstLastCommitDates]);
   lastDate = max([ firstLastCommitDates[name][1] | name <- firstLastCommitDates]);
   
-  return daysDiff(lastDate, firstDate) + 1;
+  return daysDiff(firstDate, lastDate) + 1;
 }
 
 @metric{developmentTeamExperience}

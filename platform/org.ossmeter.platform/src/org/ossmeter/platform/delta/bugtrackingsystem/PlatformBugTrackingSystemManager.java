@@ -13,22 +13,29 @@ package org.ossmeter.platform.delta.bugtrackingsystem;
 import java.util.List;
 
 import org.ossmeter.platform.Date;
+import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.cache.bugtrackingsystem.BugTrackingSystemContentsCache;
 import org.ossmeter.platform.cache.bugtrackingsystem.BugTrackingSystemDeltaCache;
 import org.ossmeter.platform.cache.bugtrackingsystem.IBugTrackingSystemContentsCache;
 import org.ossmeter.platform.cache.bugtrackingsystem.IBugTrackingSystemDeltaCache;
 import org.ossmeter.platform.delta.NoManagerFoundException;
 import org.ossmeter.repository.model.BugTrackingSystem;
+import org.ossmeter.repository.model.ManagerAnalysis;
 
 import com.mongodb.DB;
 
 public abstract class PlatformBugTrackingSystemManager implements IBugTrackingSystemManager<BugTrackingSystem> {
 	
+	protected final Platform platform;
 	protected List<IBugTrackingSystemManager> bugTrackingSystemManagers;
 	protected IBugTrackingSystemDeltaCache deltaCache;
 	protected IBugTrackingSystemContentsCache contentsCache;
 	
 	abstract public List<IBugTrackingSystemManager> getBugTrackingSystemManagers();
+	
+	public PlatformBugTrackingSystemManager(Platform platform) {
+		this.platform = platform;
+	}
 	
 	@Override
 	public boolean appliesTo(BugTrackingSystem bugTrackingSystem) {
@@ -54,7 +61,20 @@ public abstract class PlatformBugTrackingSystemManager implements IBugTrackingSy
 			throws Exception {
 		IBugTrackingSystemManager bugTrackingSystemManager = getBugTrackingSystemManager(bugTrackingSystem);
 		if (bugTrackingSystemManager != null) {
-			return bugTrackingSystemManager.getFirstDate(db, bugTrackingSystem);
+			ManagerAnalysis mAnal = ManagerAnalysis.create(bugTrackingSystemManager.toString(), 
+					"getFirstDate",
+					bugTrackingSystem.getUrl(),
+					null,
+					new java.util.Date());
+			platform.getProjectRepositoryManager().getProjectRepository().getManagerAnalysis().add(mAnal);
+			long start = System.currentTimeMillis();
+			
+			Date firstDate = bugTrackingSystemManager.getFirstDate(db, bugTrackingSystem);
+			
+			mAnal.setMillisTaken(System.currentTimeMillis() - start);
+			platform.getProjectRepositoryManager().getProjectRepository().getManagerAnalysis().sync();
+
+			return firstDate;
 		}
 		
 		return null;
@@ -70,7 +90,19 @@ public abstract class PlatformBugTrackingSystemManager implements IBugTrackingSy
 		
 		IBugTrackingSystemManager bugTrackingSystemManager = getBugTrackingSystemManager(bugTrackingSystem);
 		if (bugTrackingSystemManager != null) {
+			ManagerAnalysis mAnal = ManagerAnalysis.create(bugTrackingSystemManager.toString(), 
+					"getDelta",
+					bugTrackingSystem.getUrl(),
+					date.toJavaDate(),
+					new java.util.Date());
+			platform.getProjectRepositoryManager().getProjectRepository().getManagerAnalysis().add(mAnal);
+			long start = System.currentTimeMillis();
+			
 			BugTrackingSystemDelta delta = bugTrackingSystemManager.getDelta(db, bugTrackingSystem, date);
+			
+			mAnal.setMillisTaken(System.currentTimeMillis() - start);
+			platform.getProjectRepositoryManager().getProjectRepository().getManagerAnalysis().sync();
+
 			getDeltaCache().putDelta(bugTrackingSystem.getUrl(), date, delta);
 			return delta;
 		}

@@ -18,13 +18,15 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Test;
 import org.ossmeter.platform.Date;
+import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.delta.vcs.PlatformVcsManager;
-import org.ossmeter.platform.delta.vcs.ServiceVcsManager;
 import org.ossmeter.platform.delta.vcs.VcsCommit;
 import org.ossmeter.platform.delta.vcs.VcsCommitItem;
 import org.ossmeter.platform.delta.vcs.VcsRepositoryDelta;
 import org.ossmeter.platform.vcs.svn.SvnManager;
 import org.ossmeter.repository.model.vcs.svn.SvnRepository;
+
+import com.mongodb.Mongo;
 
 public class SvnManagerTests {
 
@@ -40,7 +42,8 @@ public class SvnManagerTests {
 		SvnRepository repository = new SvnRepository();
 		repository.setUrl("http://pongo.googlecode.com/svn");
 		
-		PlatformVcsManager platformVcsManager = new ServiceVcsManager();
+		Platform platform = new Platform(new Mongo());
+		PlatformVcsManager platformVcsManager = platform.getVcsManager();
 		platformVcsManager.getVcsManagers().add(new SvnManager());
 		
 		VcsRepositoryDelta delta = platformVcsManager.getDelta(repository, "95"/*, "101"*/);

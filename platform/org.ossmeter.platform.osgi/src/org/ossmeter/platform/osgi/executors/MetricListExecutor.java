@@ -93,9 +93,10 @@ public class MetricListExecutor implements Runnable {
 			MetricProviderExecution mpd = getProjectModelMetricProvider(project, m);
 			if (mpd == null) {
 				mpd = new MetricProviderExecution();
-				project.getExecutionInformation().getMetricProviderData().add(mpd);
 				mpd.setMetricProviderId(m.getIdentifier());
 				mpd.setType(type);
+				project = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByShortName(project.getShortName());
+				project.getExecutionInformation().getMetricProviderData().add(mpd);
 				platform.getProjectRepositoryManager().getProjectRepository().sync();
 			}
 			
@@ -107,9 +108,11 @@ public class MetricListExecutor implements Runnable {
 					logger.warn("Metric provider '" + m.getIdentifier() + "' has been executed for this date already. Ignoring.");
 					continue;
 				}
-			} catch (ParseException e1) {
+			} catch (ParseException e) {
 				// we can ignore this
-			} 
+			} catch (NumberFormatException e) {
+				// We can ignore this
+			}
 			
 			// Performance analysis
 			MetricAnalysis mAnal = new MetricAnalysis();
@@ -133,9 +136,16 @@ public class MetricListExecutor implements Runnable {
 						historyManager.store(project, date, (IHistoricalMetricProvider) m);
 				}
 				
-				// Update the meta data
+				// Update the meta data -- need to requery the database due to Pongo caching in different threads(!)
+				project = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByShortName(project.getShortName());
+				mpd = getProjectModelMetricProvider(project, m);
+			
+				if (mpd == null) {
+					System.out.println("null: " + m.getIdentifier());
+				}
+				
 				mpd.setLastExecuted(date.toString()); 
-//				platform.getProjectRepositoryManager().getProjectRepository().sync();
+				platform.getProjectRepositoryManager().getProjectRepository().sync();
 			} catch (Exception e) {
 				logger.error("Exception thrown during metric provider execution ("+m.getShortIdentifier()+").", e);
 				project.getExecutionInformation().setInErrorState(true);
@@ -144,6 +154,7 @@ public class MetricListExecutor implements Runnable {
 			}
 			
 			mAnal.setMillisTaken(now() - start);
+			
 			platform.getProjectRepositoryManager().getProjectRepository().sync(); // Will sync-ing here mess things up?
 		}
 		

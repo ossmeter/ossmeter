@@ -15,10 +15,15 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
+import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.util.ExtensionPointHelper;
 
 public class ExtensionPointCommunicationChannelManager extends PlatformCommunicationChannelManager {
 	
+	public ExtensionPointCommunicationChannelManager(Platform platform) {
+		super(platform);
+	}
+
 	protected final String communicationChannelManagerExtensionPointId = "org.ossmeter.platform.managers.communicationchannel";
 	
 	public List<ICommunicationChannelManager> getCommunicationChannelManagers() {

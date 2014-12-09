@@ -22,7 +22,7 @@ public class Invitation extends Controller{
          Invitation invitation = boundForm.get();
         if(boundForm.hasErrors()){
             flash("error", "Please correct the form below.");
-            return badRequest(views.html.invitation.render(invitationForm));
+            return badRequest(views.html.invitation.render());//invitationForm));
         }
         else{
           
@@ -39,7 +39,7 @@ public class Invitation extends Controller{
 
 
     public static Result requestInvitation() {
-        return  ok(views.html.invitation.render(invitationForm));
+        return  ok(views.html.invitation.render());//invitationForm));
     }
     
 
