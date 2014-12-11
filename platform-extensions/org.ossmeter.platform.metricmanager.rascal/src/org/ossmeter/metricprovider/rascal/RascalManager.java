@@ -66,8 +66,7 @@ public class RascalManager {
 	private static final String EXTRACTOR_TAG_AST = "ASTExtractor";
 	private static final String EXTRACTOR_TAG_M3 = "M3Extractor";
 	private final static IValueFactory VF = ValueFactoryFactory.getValueFactory();
-	private final ThreadLocalEvaluator eval = new ThreadLocalEvaluator();
-
+	private final static ThreadLocalEvaluator eval = new ThreadLocalEvaluator();
 
 	private static class ThreadLocalEvaluator extends ThreadLocal<Evaluator> {
 		private final Set<Bundle> registeredBundles = new HashSet<>();
@@ -102,7 +101,8 @@ public class RascalManager {
 			return eval;
 		}
 		
-		private void configureRascalPath(Evaluator evaluator, Bundle bundle) {
+		private void configureRascalPath(Bundle bundle) {
+			Evaluator evaluator = get();
 			if (registeredBundles.contains(bundle)) {
 				return;
 			}
@@ -117,7 +117,7 @@ public class RascalManager {
 					for (String bundleName : dependencies) {
 						Bundle dep = Platform.getBundle(bundleName);
 						if (dep != null) {
-							configureRascalPath(evaluator, dep);
+							configureRascalPath(dep);
 						} else {
 							throw new BundleException("Bundle " + bundleName + " not found.");
 						}
@@ -284,7 +284,7 @@ public class RascalManager {
 		assert eval != null;
 
 		for (Bundle provider : providers) {
-			eval.configureRascalPath(getEvaluator(), provider);
+			eval.configureRascalPath(provider);
 		}
 	}
 
@@ -436,7 +436,7 @@ public class RascalManager {
 			for (IExtension element : extensionPoint.getExtensions()) {
 				String name = element.getContributor().getName();
 				Bundle bundle = Platform.getBundle(name);
-				eval.configureRascalPath(getEvaluator(), bundle);
+				eval.configureRascalPath(bundle);
 				extractorBundles.add(bundle);
 			}
 		}
@@ -460,7 +460,7 @@ public class RascalManager {
 			for (IExtension element : extensionPoint.getExtensions()) {
 				String name = element.getContributor().getName();
 				Bundle bundle = Platform.getBundle(name);
-				eval.configureRascalPath(getEvaluator(), bundle);
+				eval.configureRascalPath(bundle);
 				metricBundles.add(bundle);
 			}
 		}
@@ -477,7 +477,7 @@ public class RascalManager {
 	}
 
 	public synchronized void addExtractors(Bundle bundle) {
-		eval.configureRascalPath(getEvaluator(), bundle);
+		eval.configureRascalPath(bundle);
 		RascalBundleManifest mf = new RascalBundleManifest();
 		String moduleName = mf.getMainModule(bundle);
 

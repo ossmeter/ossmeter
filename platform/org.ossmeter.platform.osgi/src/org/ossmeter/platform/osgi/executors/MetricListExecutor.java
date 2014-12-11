@@ -141,7 +141,12 @@ public class MetricListExecutor implements Runnable {
 				mpd = getProjectModelMetricProvider(project, m);
 			
 				if (mpd == null) {
-					System.out.println("null: " + m.getIdentifier());
+					mpd = new MetricProviderExecution();
+					mpd.setMetricProviderId(m.getIdentifier());
+					mpd.setType(type);
+					project = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByShortName(project.getShortName());
+					project.getExecutionInformation().getMetricProviderData().add(mpd);
+					platform.getProjectRepositoryManager().getProjectRepository().sync();
 				}
 				
 				mpd.setLastExecuted(date.toString()); 
