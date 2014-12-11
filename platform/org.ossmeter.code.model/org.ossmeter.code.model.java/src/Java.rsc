@@ -14,6 +14,7 @@ import org::ossmeter::metricprovider::ProjectDelta;
 import org::ossmeter::metricprovider::MetricProvider;
 import IO;
 import util::SystemAPI;
+import DateTime;
   
 private str MAVEN = getSystemProperty("MAVEN_EXECUTABLE");
    
@@ -26,14 +27,16 @@ java map[loc,list[loc]] getClassPath(
  
 @memo
 map[loc,list[loc]] inferClassPaths(loc workspace, ProjectDelta delta) {
-  try {
-    return getClassPath(workspace);
-  }
-  catch Java("BuildException", msg, cause): {
-    println("Could not infer classpath using Maven: <msg>, due to <cause>.");
-  }
-  catch Java("BuildException", msg): {
-    println("Could not infer classpath using Maven: <msg>.");
+  if (daysDiff(delta.date, now()) < 14) { 
+    try {
+      return getClassPath(workspace);
+    }
+    catch Java("BuildException", msg, cause): {
+      println("Could not infer classpath using Maven: <msg>, due to <cause>.");
+    }
+    catch Java("BuildException", msg): {
+      println("Could not infer classpath using Maven: <msg>.");
+    }
   }
   
   return (d : [*findJars({d})] | d <- workspace.ls, isDirectory(d));
