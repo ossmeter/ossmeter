@@ -101,12 +101,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.swt"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.ossmeter.platform.bugtrackingsystem.jira"
          download-size="0"
          install-size="0"
@@ -137,13 +131,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.swt.cocoa.macosx.x86_64"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
          id="org.ossmeter.factoid.cocomo"
          download-size="0"
          install-size="0"
@@ -151,12 +138,6 @@
 
    <plugin
          id="org.eclipse.equinox.security"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.jface.text"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
@@ -536,12 +517,6 @@
 
    <plugin
          id="org.eclipse.core.commands"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.jface"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
@@ -1029,12 +1004,6 @@
 
    <plugin
          id="org.w3c.dom.svg"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.jface.databinding"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
