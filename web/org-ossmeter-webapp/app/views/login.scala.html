@@ -9,14 +9,14 @@
 <section>
 <div class="container box">
   <div class="row">
-    <div class="span6">
+    <div class="col-md-12">
       <h1>@Messages("ossmeter.login.title")</h1>
     </div>
   </div>
 
   <div id="login" class="row">
 
-    <div class="span3">
+    <div class="col-md-4">
       @* Display proprietary login form *@
     	@helper.form(routes.Application.doLogin) {
 
@@ -37,11 +37,9 @@
         <input type="submit" value="@Messages("ossmeter.login.now")" class="btn btn-primary"><br/>
         <br/>
         <a href="javascript:void(0);" onclick="window.location.href = jsRoutes.controllers.Signup.forgotPassword($('#email').val() || null).absoluteURL();">@Messages("ossmeter.login.forgot.password")</a>
-
     	}
     </div>
-
-    <div class="span3">
+    <div class="col-md-4">
       @Messages("ossmeter.login.oauth")
       @* Display list of available providers *@
       @_providerPartial(skipCurrent=false)
@@ -52,7 +50,6 @@
           }
       }
     </div>
-
   </div>
 </div>
 </section>

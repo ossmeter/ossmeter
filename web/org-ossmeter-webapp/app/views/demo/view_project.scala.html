@@ -1,0 +1,88 @@
+@(project: org.ossmeter.repository.model.Project, qualityModel : QualityModel, isSummary : Boolean)
+
+@import scala._
+
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
+@import org.ossmeter.repository.model._
+@import org.ossmeter.repository.model.bts.bugzilla._
+@import org.ossmeter.repository.model.cc.forum._
+@import org.ossmeter.repository.model.cc.nntp._
+@import org.ossmeter.repository.model.cc.wiki._
+@import org.ossmeter.repository.model.vcs.svn._
+@import org.ossmeter.repository.model.vcs.git._
+@import org.ossmeter.repository.model.eclipse._
+
+@import model.Notification
+@import model.SparkGridEntry
+@import model.EventGroup
+
+
+@demomain("OSSMETER") {
+
+@projects._projectMetaData(project)
+
+@if(!isSummary) {
+    @projects._largePlot()
+}
+
+@projects._aspectView(project, qualityModel, qualityModel, isSummary, List(qualityModel))
+
+<div class="modal fade" id="exampleModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <p>One fine body&hellip;</p>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script type="text/javascript">
+    
+            var Unsparkable = function(projectid, metricid) {
+                this.projectid = projectid;
+                this.metricid = metricid;
+            }
+
+            var UnsparkablePlots = function() {
+                this.unsparks = ko.observableArray();
+            }
+            $(function(){
+                ko.bindingHandlers.compPlot = {
+                    init: function(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
+                    },
+                    update: function(element, valueAccessor, allBindingsAccessor) {
+                        var vacc = valueAccessor();
+                        var projectid = vacc.projectid();
+                        var metricid = vacc.metricid();
+
+                        console.log("here we go")
+                        $.getJSON(getApi() + "/projects/p/" + projectid + "/m/" + metricid, function(vis) {
+                                console.log("to draw into: " + jq(element));
+                                
+                            if (vis.datatable.length > 0) {
+
+
+                                var chart = new metvis.Chart(jq(element), vis);
+                                chart.height = 200;
+                                chart.draw();
+                                //TODO:legend
+                            } else {
+                                console.log("metric " + metricid + " has no data");
+                            }
+
+                        }).error(function(error){
+                            console.log(error);
+                        });
+
+                    }
+                }
+            });
+</script>
+
+<script type="text/javascript" src="@routes.Assets.at("js/d3.v3.min.js")"></script>
+<script type="text/javascript" src="@routes.Assets.at("js/RadarChart.js")"></script>
+<script type="text/javascript" src="@routes.Assets.at("js/knockout-2.3.0.js")"></script>
+}
