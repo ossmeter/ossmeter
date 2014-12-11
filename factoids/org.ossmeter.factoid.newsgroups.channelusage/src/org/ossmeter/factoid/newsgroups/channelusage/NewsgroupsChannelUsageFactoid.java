@@ -131,7 +131,7 @@ public class NewsgroupsChannelUsageFactoid extends AbstractFactoidMetricProvider
 		stringBuffer.append(project.getCommunicationChannels().size());
 		stringBuffer.append(" communication ");
 		
-		if (project.getBugTrackingSystems().size()==1)
+		if (project.getCommunicationChannels().size()==1)
 			stringBuffer.append("channel.\nIn the last year, it has ");
 		else
 			stringBuffer.append("channels.\nIn the last year, they have ");

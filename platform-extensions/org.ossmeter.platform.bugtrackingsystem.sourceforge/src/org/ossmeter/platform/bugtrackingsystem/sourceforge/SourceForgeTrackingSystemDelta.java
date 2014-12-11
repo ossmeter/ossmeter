@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Yannis Korkontzelos - Implementation.
+ * Jacob Carter - Implementation.
  *******************************************************************************/
 package org.ossmeter.platform.bugtrackingsystem.sourceforge;
 

@@ -44,7 +44,7 @@ public class App implements IApplication {
 //		Project pdb = ProjectCreationUtil.createProjectWithNewsGroup("epsilon", "news.eclipse.org", "eclipse.epsilon", true, "exquisitus", "flinder1f7", 80, 10000);
 //		Project pdb = ProjectCreationUtil.createProjectWithNewsGroup("thunderbird", "news.mozilla.org", "mozilla.support.thunderbird", false, null, null, 80, 10000);
 //		Project pdb = ProjectCreationUtil.createProjectWithNewsGroup("eclipsePlatform", "news.eclipse.org", "eclipse.platform", true, "exquisitus", "flinder1f7", 80, 10000);
-  		Project pdb = ProjectCreationUtil.createProjectWithNewsGroup("BIRT", "news.eclipse.org", "eclipse.birt", true, "exquisitus", "flinder1f7", 80, 10000);
+  	//	Project pdb = ProjectCreationUtil.createProjectWithNewsGroup("BIRT", "news.eclipse.org", "eclipse.birt", true, "exquisitus", "flinder1f7", 80, 10000);
 //		Project pdb = ProjectCreationUtil.createProjectWithNewsGroup("SiriusForum", "news.eclipse.org", "eclipse.sirius", true, "exquisitus", "flinder1f7", 80, 10000);
 //		Project pdb = ProjectCreationUtil.createProjectWithNewsGroup("toolsEmf", "news.eclipse.org", "eclipse.tools.emf", true, "exquisitus", "flinder1f7", 80, 10000);
 //		Project pdb = ProjectCreationUtil.createProjectWithNewsGroup("Log4J", "news.gmane.org", "gmane.comp.jakarta.log4j.user", false, null, null, 119, 10000);
@@ -71,9 +71,9 @@ public class App implements IApplication {
 //		Project pdb = ProjectCreationUtil.createProjectWithBugTrackingSystem("epsilon", "https://bugs.eclipse.org/bugs/xmlrpc.cgi", "epsilon", null);
 //		Project pdb = ProjectCreationUtil.createGitProject("rascal", "file:///Users/jurgenv/Workspaces/Rascal/rascal");
 
-		pdb.getExecutionInformation().setMonitor(true);
+	//	pdb.getExecutionInformation().setMonitor(true);
 		
-		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(pdb);
+	//	platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(pdb);
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 		
 		System.err.println(platform.getBugTrackingSystemManager().getBugTrackingSystemManagers());
