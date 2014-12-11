@@ -263,10 +263,10 @@ public class BugsChannelSeverityFactoid extends AbstractFactoidMetricProvider{
 			  percentageOfStatusEnhancementFixedBugs = 0;
 		
 		if ( numberOfStatusSeriousBugs > 0 )
-			percentageOfStatusSeriousFixedBugs = ( (float) numberOfStatusSeriousFixedBugs ) / numberOfStatusSeriousBugs;
+			percentageOfStatusSeriousFixedBugs = ( (float) 100 * numberOfStatusSeriousFixedBugs ) / numberOfStatusSeriousBugs;
 		
 		if ( numberOfStatusEnhancementBugs > 0 )
-			percentageOfStatusEnhancementFixedBugs = ( (float) numberOfStatusEnhancementFixedBugs ) / numberOfStatusEnhancementBugs;
+			percentageOfStatusEnhancementFixedBugs = ( (float) 100 * numberOfStatusEnhancementFixedBugs ) / numberOfStatusEnhancementBugs;
 
 		DecimalFormat decimalFormat = new DecimalFormat("#.##");
 		

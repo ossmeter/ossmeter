@@ -77,7 +77,7 @@ public class NewBugsHistoricMetricProvider extends AbstractHistoricalMetricProvi
 					cumulativeNumberOfBugs = bugTracker.getCumulativeNumberOfBugs();
 				numberOfNewBugs += numberOfBugs;
 				cumulativeNumberOfNewBugs += cumulativeNumberOfBugs;
-				if (numberOfBugs>0) {
+				if ( (numberOfBugs>0) || (cumulativeNumberOfNewBugs>0) ) {
 					DailyBugData bugData = new DailyBugData();
 					bugData.setBugTrackerId(bugTracker.getBugTrackerId());
 					bugData.setNumberOfBugs(numberOfBugs);

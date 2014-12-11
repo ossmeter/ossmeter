@@ -128,10 +128,10 @@ public class NewsgroupsChannelSizeFactoid extends AbstractFactoidMetricProvider{
 		
 		stringBuffer.append("The project is associated with ");
 		stringBuffer.append(project.getCommunicationChannels().size());
-		if (project.getBugTrackingSystems().size()==1)
-			stringBuffer.append(" newsgroup.\n");
+		if (project.getCommunicationChannels().size()==1)
+			stringBuffer.append(" communication channel.\n");
 		else
-			stringBuffer.append(" newsgroups.\n");
+			stringBuffer.append(" communication channels.\n");
 			
 		for (String tracker: sortByKeys(trackerArticles)) {
 			

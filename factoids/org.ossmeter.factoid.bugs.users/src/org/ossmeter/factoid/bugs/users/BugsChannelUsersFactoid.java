@@ -116,11 +116,11 @@ public class BugsChannelUsersFactoid extends AbstractFactoidMetricProvider{
 		stringBuffer.append(decimalFormat.format(currentActivePercentage));
 		stringBuffer.append(" %).\n");
 		stringBuffer.append("Each user has contributed approximately ");
-		stringBuffer.append(getMessagesPerUser(bugList));
+		stringBuffer.append(decimalFormat.format(getMessagesPerUser(bugList)));
 		stringBuffer.append(" messages, "); 
-		stringBuffer.append(getMessagesPerRequests(bugList));
+		stringBuffer.append(decimalFormat.format(getMessagesPerRequests(bugList)));
 		stringBuffer.append(" requests and ");
-		stringBuffer.append(getMessagesPerReplies(bugList));
+		stringBuffer.append(decimalFormat.format(getMessagesPerReplies(bugList)));
 		stringBuffer.append(" replies.\n");
 
 		float dailyNumberOfNewUsersInTheLastMonth = getDailyNumberOfNewUsersInDuration(usersMonthList),
@@ -209,7 +209,7 @@ public class BugsChannelUsersFactoid extends AbstractFactoidMetricProvider{
 		int numberOfNewUsers = 0;
 		if ( usersList.size() > 0 ) {
 			BugsUsersHistoricMetric firstUsersPongo = 
-					(BugsUsersHistoricMetric) usersList.get(1);
+					(BugsUsersHistoricMetric) usersList.get(0);
 			BugsUsersHistoricMetric lastUsersPongo = 
 					(BugsUsersHistoricMetric) usersList.get(usersList.size()-1);
 			int firstNumberOfUsers = firstUsersPongo.getNumberOfUsers();

@@ -124,26 +124,30 @@ public class BugsChannelResponseTimeFactoid extends AbstractFactoidMetricProvide
 			stringBuffer.append("not so");
 		stringBuffer.append(" quickly.\n");
 
-		stringBuffer.append("Lately, requests receive a first response ");
-		if ( yearlyAvgResponseTime < eightHoursMilliSeconds ) {
-			stringBuffer.append("very");
-		} else if ( yearlyAvgResponseTime < dayMilliSeconds ) {
-			stringBuffer.append("");
-		} else if ( yearlyAvgResponseTime < weekMilliSeconds ) {
-			stringBuffer.append("fairly");
-		} else
-			stringBuffer.append("not so");
-		stringBuffer.append(" quickly.\n");
+		if (yearlyAvgResponseTime > 0) {
+			
+			stringBuffer.append("Lately, requests receive a first response ");
+			if ( yearlyAvgResponseTime < eightHoursMilliSeconds ) {
+				stringBuffer.append("very");
+			} else if ( yearlyAvgResponseTime < dayMilliSeconds ) {
+				stringBuffer.append("");
+			} else if ( yearlyAvgResponseTime < weekMilliSeconds ) {
+				stringBuffer.append("fairly");
+			} else
+				stringBuffer.append("not so");
+			stringBuffer.append(" quickly.\n");
+			
+			stringBuffer.append("Response speed is lately ");
+			if ( Math.abs(cumulativeAvgResponseTime-yearlyAvgResponseTime) < eightHoursMilliSeconds )
+				stringBuffer.append("approximately equal");
+			else if ( cumulativeAvgResponseTime > yearlyAvgResponseTime )
+				stringBuffer.append("better");
+			else 
+				stringBuffer.append("worse");
+			stringBuffer.append(" than the overall average for the project.\n");
+			
+		}
 		
-		stringBuffer.append("Response speed is lately ");
-		if ( Math.abs(cumulativeAvgResponseTime-yearlyAvgResponseTime) < eightHoursMilliSeconds )
-			stringBuffer.append("approximately equal");
-		else if ( cumulativeAvgResponseTime > yearlyAvgResponseTime )
-			stringBuffer.append("better");
-		else 
-			stringBuffer.append("worse");
-		stringBuffer.append(" than the overall average for the project.\n");
-
 		factoid.setFactoid(stringBuffer.toString());
 
 	}
