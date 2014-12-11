@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Davide Di Ruscio - Implementation.
+ *    Davide Di Ruscio - Implementation,
+ *    Juri Di Rocco - Implementation.
  *******************************************************************************/
 package org.ossmeter.repository.model;
 
@@ -30,6 +31,7 @@ public class ProjectRepository extends PongoDB {
 	protected MetricProviderCollection metricProviders = null;
 	protected SchedulingInformationCollection schedulingInformation = null;
 	protected MetricAnalysisCollection metricAnalysis = null;
+	protected ManagerAnalysisCollection managerAnalysis = null;
 	protected CompanyCollection companies = null;
 	
 	
@@ -69,6 +71,10 @@ public class ProjectRepository extends PongoDB {
 	public MetricAnalysisCollection getMetricAnalysis() {
 		return metricAnalysis;
 	}
+
+	public ManagerAnalysisCollection getManagerAnalysis() {
+		return managerAnalysis;
+	}
 	
 	public CompanyCollection getCompanies() {
 		return companies;
@@ -96,6 +102,8 @@ public class ProjectRepository extends PongoDB {
 		pongoCollections.add(schedulingInformation);
 		metricAnalysis = new MetricAnalysisCollection(db.getCollection("metricAnalysis"));
 		pongoCollections.add(metricAnalysis);
+		managerAnalysis = new ManagerAnalysisCollection(db.getCollection("managerAnalysis"));
+		pongoCollections.add(managerAnalysis);
 		companies = new CompanyCollection(db.getCollection("companies"));
 		pongoCollections.add(companies);
 	}

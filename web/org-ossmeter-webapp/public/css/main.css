@@ -5,6 +5,11 @@
     margin:20px;
 }
 
+.social-logo {
+    width:32px;
+    margin:8px;
+}
+
 .ui-autocomplete {
     background: #fff;
     border-radius: 1px;
@@ -147,7 +152,7 @@ div.checkbox {
 }
 
 .banner {
-    background-color: #0073b4;
+    background-color: #1074B2;
     padding:20px;
     color:white;
     text-align:center;
@@ -167,6 +172,10 @@ div.checkbox {
 .search {
     font-size:1.5em;
     height:1.5em;
+}
+
+.btn-primary {
+    background-color: #1074B2;
 }
 
 img.spark {

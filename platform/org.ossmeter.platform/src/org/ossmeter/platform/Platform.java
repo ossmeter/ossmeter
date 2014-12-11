@@ -53,9 +53,9 @@ public class Platform {
 		this.mongo = mongo;
 		projectRepositoryManager = new ProjectRepositoryManager(mongo);
 		metricProviderManager = new ExtensionPointMetricProviderManager();
-		vcsManager = new ExtensionPointVcsManager();
-		communicationChannelManager = new ExtensionPointCommunicationChannelManager();
-		bugTrackingSystemManager = new ExtensionPointBugTrackingSystemManager();
+		vcsManager = new ExtensionPointVcsManager(this);
+		communicationChannelManager = new ExtensionPointCommunicationChannelManager(this);
+		bugTrackingSystemManager = new ExtensionPointBugTrackingSystemManager(this);
 		initialisePlatformLocalStorage();
 	}
 	

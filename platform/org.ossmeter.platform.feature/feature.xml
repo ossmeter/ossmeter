@@ -101,12 +101,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.swt"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.ossmeter.platform.bugtrackingsystem.jira"
          download-size="0"
          install-size="0"
@@ -137,13 +131,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.swt.cocoa.macosx.x86_64"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"/>
-
-   <plugin
          id="org.ossmeter.factoid.cocomo"
          download-size="0"
          install-size="0"
@@ -151,12 +138,6 @@
 
    <plugin
          id="org.eclipse.equinox.security"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.jface.text"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
@@ -294,12 +275,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="com.jcraft.jsch"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.ossmeter.platform"
          download-size="0"
          install-size="0"
@@ -325,12 +300,6 @@
 
    <plugin
          id="org.eclipse.e4.core.di.extensions"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.ossmeter.platform.app.example"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
@@ -553,12 +522,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.jface"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="com.j2bugzilla"
          download-size="0"
          install-size="0"
@@ -681,12 +644,6 @@
 
    <plugin
          id="org.jackson.all"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.eclipse.jsch.core"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
@@ -1052,12 +1009,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.jface.databinding"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.apache.batik.util.gui"
          download-size="0"
          install-size="0"
@@ -1071,12 +1022,6 @@
 
    <plugin
          id="com.google.guava"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
-         id="org.ossmeter.platform.app.uda"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
@@ -1606,6 +1551,13 @@
 
    <plugin
          id="org.w3c.dom.events"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.jcraft.jsch"
          download-size="0"
          install-size="0"
          version="0.0.0"
