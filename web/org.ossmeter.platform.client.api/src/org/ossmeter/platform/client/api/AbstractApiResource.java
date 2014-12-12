@@ -24,6 +24,8 @@ import org.restlet.util.Series;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.googlecode.pongo.runtime.PongoFactory;
+import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
 import com.mongodb.Mongo;
 
 public abstract class AbstractApiResource extends ServerResource {
@@ -56,6 +58,7 @@ public abstract class AbstractApiResource extends ServerResource {
 		platform = new Platform(mongo);
 
 		// Delegate to resource
+		PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
 		Representation rep = doRepresent();
 		
 		mongo.close();
