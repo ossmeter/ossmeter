@@ -92,7 +92,7 @@ rel[Language, loc, M3] javaM3(loc project, ProjectDelta delta, map[loc repos,loc
       sources = getSourceRoots({checkout});
       setEnvironmentOptions({*(classpaths[checkout]?[])}, sources);
     
-      result += {<java(), f, createM3FromFile(f)> | f <- find(checkout, "java")};
+      result += {<java(), f, createM3FromFile(f)> | f <- find(checkout, "java"), isFile(f)};
     }
   }
   catch "not-maven": {
@@ -103,7 +103,7 @@ rel[Language, loc, M3] javaM3(loc project, ProjectDelta delta, map[loc repos,loc
       sources = getSourceRoots({checkout});
       setEnvironmentOptions(jars, sources);
     
-      result += {<java(), f, createM3FromFile(f)> | f <- find(checkout, "java")};
+      result += {<java(), f, createM3FromFile(f)> | f <- find(checkout, "java"), isFile(f)};
     }
   }
   
@@ -126,7 +126,7 @@ rel[Language, loc, AST] javaAST(loc project, ProjectDelta delta, map[loc repos,l
 
       // TODO: turn classpath into a list
       setEnvironmentOptions({*(classpaths[checkout]?[])}, sources);
-      result += {<java(), f, declaration(createAstFromFile(f, true))> | f <- find(checkout, "java")};
+      result += {<java(), f, declaration(createAstFromFile(f, true))> | f <- find(checkout, "java"), isFile(f) };
     }
   }
   catch "not-maven": {
@@ -136,7 +136,7 @@ rel[Language, loc, AST] javaAST(loc project, ProjectDelta delta, map[loc repos,l
       sources = getSourceRoots({checkout});
       setEnvironmentOptions(jars, sources);
     
-      result += {<java(), f, declaration(createAstFromFile(f, true))> | f <- find(checkout, "java")};
+      result += {<java(), f, declaration(createAstFromFile(f, true))> | f <- find(checkout, "java"), isFile(f) };
     }
   }
   
@@ -148,20 +148,20 @@ rel[Language, loc, AST] javaAST(loc project, ProjectDelta delta, map[loc repos,l
 // for now we do a simple file search
 // we have to find out what are "external" dependencies and also measure these!
 set[loc] findSourceRoots(set[loc] checkouts) {
-  bool containsFile(loc d) = isDirectory(d) ? (x <- d.ls && x.extension == "java") : false;
+  bool containsFile(loc d) = isDirectory(d) ? (x <- d.ls && x.extension == "java" && isFile(x)) : false;
   return {*find(dir, containsFile) | dir <- checkouts};       
 }
 
 // this may become more interesting if we try to recover dependency information from meta-data
 // for now we do a simple file search
 set[loc] findJars(set[loc] checkouts) {
-  return {*find(ch, "jar") | ch <- checkouts};
+  return { f | ch <- checkouts, f <- find(ch, "jar"), isFile(f) };
 }
 
 // this may become more interesting if we try to recover dependency information from meta-data
 // for now we do a simple file search
 set[loc] findClassFiles(set[loc] checkouts) {
-  return {*find(ch, "class") | ch <- checkouts};
+  return { f | ch <- checkouts, f <- find(ch, "class"), isFile(f) };
 }
 
 
