@@ -159,7 +159,7 @@ map[loc, real] TCC(
 			// tcc[t] = round(size(directConnections) / toReal(maxConnections), 0.01);
 			tcc[t] = round(numDirectConnections / toReal(maxConnections), 0.01);
 		} else {
-			tcc[t] = -1.0;
+			tcc[t] = 0.0;
 		}
 	}
 	
@@ -199,7 +199,7 @@ map[loc, real] LCC(
 			// lcc[t] = round(size(indirectConnections) / toReal(maxConnections), 0.01);
 			lcc[t] = round(numIndirectConnections / toReal(maxConnections), 0.01);
 		} else {
-			lcc[t] = -1.0;
+			lcc[t] = 0.0;
 		}
 	}
 	
