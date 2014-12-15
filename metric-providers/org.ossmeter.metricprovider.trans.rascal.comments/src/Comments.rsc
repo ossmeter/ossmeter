@@ -245,6 +245,7 @@ Factoid percentageCommentedOutCode(map[str, int] locPerLanguage = (), map[str, i
 @uses{("commentLOC": "commentLOC",
        "headerLOC": "headerLOC",
        "commentedOutCode": "commentedOutCode")}
+@historic
 map[str, int] commentLinesPerLanguage(rel[Language, loc, AST] asts = {},
                                       map[loc, int] commentLOC = (),
                                       map[loc, int] headerLOC = (),
