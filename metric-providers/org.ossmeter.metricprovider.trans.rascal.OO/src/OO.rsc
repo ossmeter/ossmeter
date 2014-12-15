@@ -30,14 +30,11 @@ real RR(rel[loc, loc] superTypes, set[loc] allTypes) {
 
 
 @doc{
-	Specialization Ratio (No. of subclasses/ no. of super classes)
+	Specialization Ratio (No. of subclasses/ total no. of classes)
 }
-real SR(rel[loc, loc] superTypes) {
-	nrOfSubTypes = size(domain(superTypes));
-	nrOfSuperTypes = size(range(superTypes));
-
-	if (nrOfSuperTypes > 0) {
-		return round(nrOfSubTypes / toReal(nrOfSuperTypes), 0.01);
+real SR(rel[loc, loc] superTypes, set[loc] allTypes) {
+	if (size(allTypes) > 0) {
+		return round(size(domain(superTypes)) / toReal(size(allTypes)), 0.01);
 	}
 	return 0.0;
 }
