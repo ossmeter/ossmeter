@@ -106,7 +106,7 @@ real RR_Java(rel[Language, loc, M3] m3s = {}) {
 @appliesTo{java()}
 @historic
 real SR_Java(rel[Language, loc, M3] m3s = {}) {
-	return SR(superTypes(systemM3(m3s)), allTypes(m3));
+	return SR(superTypes(systemM3(m3s)));
 }
 
 @metric{DIT-Java}

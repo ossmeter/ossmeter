@@ -107,7 +107,7 @@ real RR_PHP(rel[Language, loc, M3] m3s = {}) {
 @appliesTo{php()}
 @historic
 real SR_PHP(rel[Language, loc, M3] m3s = {}) {
-	return SR(superTypes(systemM3(m3s)), allTypes(m3));
+	return SR(superTypes(systemM3(m3s)));
 }
 
 @metric{DIT-PHP}
