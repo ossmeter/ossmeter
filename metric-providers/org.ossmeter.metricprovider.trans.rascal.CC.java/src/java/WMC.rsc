@@ -37,14 +37,15 @@ map[loc class, int wmcCount] getWMC(
 	)
 {
 	map[loc, int] result = prev;
-	set[loc] declarations = { * m@declarations<0> | <_, _, m> <- m3s };
+	set[loc] declarations = { * m@declarations<0> | <java(), _, m> <- m3s };
 	
 	changed = getChangedFilesInWorkingCopyFolders(delta, workingCopies);
 	
 	for (file <- changed, m3 <- m3s[java(), file]) {
 	   result += (cl : (0 | it + methodCC[m]?0 | m <- m3@containment[cl], isMethod(m)) | <cl, _> <- m3@containment, isClass(cl));
-	   result = (key : result[key] | key <- result, key in declarations);
 	}
+
+	result = domainR(result, declarations); // remove entries for any removed declarations
 	 
 	return result;
 }
@@ -64,12 +65,13 @@ map[loc, int] getCC(ProjectDelta delta = ProjectDelta::\empty(),
   map[loc method, int cc] result = prev;
   changed = getChangedFilesInWorkingCopyFolders(delta, workingCopies);
   
-  set[loc] declarations = { * m@declarations<0> | <_, _, m> <- m3s };
+  set[loc] declarations = { * m@declarations<0> | <java(), _, m> <- m3s };
   
   for (file <- changed, ast <- asts[java(), file]) {
     result += (d@decl : countCC(d) | /Declaration d := ast, d is method || d is constructor);
-    result = (key : result[key] | key <- result, key in declarations);
   }
+  
+  result = domainR(result, declarations); // remove entries for any removed declarations
   
   return result;
 }
