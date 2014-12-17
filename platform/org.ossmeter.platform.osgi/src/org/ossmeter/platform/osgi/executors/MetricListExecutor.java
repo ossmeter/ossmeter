@@ -54,7 +54,6 @@ public class MetricListExecutor implements Runnable {
 		this.delta = delta;
 		this.date = date;
 		this.logger = (OssmeterLogger) OssmeterLogger.getLogger("MetricListExecutor (" + projectId + ", " + date.toString() + ")");
-		this.logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 	}
 	
 	public void setMetricList(List<IMetricProvider> metrics) {
@@ -82,7 +81,7 @@ public class MetricListExecutor implements Runnable {
 		
 		for (IMetricProvider m : metrics) {
 			
-			m.setMetricProviderContext(new MetricProviderContext(platform, new OssmeterLoggerFactory().makeNewLoggerInstance(m.getIdentifier())));
+			m.setMetricProviderContext(new MetricProviderContext(platform, OssmeterLoggerFactory.getInstance().makeNewLoggerInstance(m.getIdentifier())));
 			addDependenciesToMetricProvider(platform, m);
 			
 			// We need to check that it hasn't already been excuted for this date

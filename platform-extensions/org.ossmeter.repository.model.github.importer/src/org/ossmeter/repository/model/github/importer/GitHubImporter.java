@@ -58,7 +58,6 @@ public class GitHubImporter {
 	public GitHubImporter() {
 		this.authToken = getToken();
 		logger = (OssmeterLogger) OssmeterLogger.getLogger("importer.gitHub");
-		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 		if (authToken != null)
 			authString = "?access_token=" + authToken;
 		else 

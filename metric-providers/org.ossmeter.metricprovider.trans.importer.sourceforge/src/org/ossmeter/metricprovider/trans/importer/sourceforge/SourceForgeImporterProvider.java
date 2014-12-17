@@ -40,7 +40,6 @@ public class SourceForgeImporterProvider  implements ITransientMetricProvider {
 	public SourceForgeImporterProvider()
 	{
 		logger = (OssmeterLogger) OssmeterLogger.getLogger("metricprovider.importer.sourceforge");
-		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 	}
 	@Override
 	public String getIdentifier() {

@@ -17,7 +17,7 @@ import org.ossmeter.platform.logging.OssmeterLoggerFactory;
 import org.rascalmpl.interpreter.StackTrace;
 
 public class Rasctivator implements BundleActivator {
-	private static final Logger LOGGER = new OssmeterLoggerFactory().makeNewLoggerInstance("rascalLogger");
+	private static final Logger LOGGER = OssmeterLoggerFactory.getInstance().makeNewLoggerInstance("rascalLogger");
 	private static BundleContext context;
 	
 	static BundleContext getContext() {

@@ -37,7 +37,6 @@ public class RedmineImporterProvider implements ITransientMetricProvider {
 	public RedmineImporterProvider()
 	{
 		logger = (OssmeterLogger) OssmeterLogger.getLogger("Redmine Importer");
-		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 	}
 	/**
 	 * List of MPs that are used by this MP. These are MPs who have specified that 

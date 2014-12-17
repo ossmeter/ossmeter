@@ -40,7 +40,6 @@ public class EclipseImporterProvider implements ITransientMetricProvider{
 	public EclipseImporterProvider()
 	{
 		logger = (OssmeterLogger) OssmeterLogger.getLogger("GitHub Importer");
-		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 	}
 	/**
 	 * List of MPs that are used by this MP. These are MPs who have specified that 

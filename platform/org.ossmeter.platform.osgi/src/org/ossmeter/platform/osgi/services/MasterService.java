@@ -35,7 +35,6 @@ public class MasterService implements IMasterService {
 	public MasterService(List<IWorkerService> workers) {
 		this.workers = workers;
 		this.logger = (OssmeterLogger) OssmeterLogger.getLogger("Master");
-		this.logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 	}
 	
 	@Override

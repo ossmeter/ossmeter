@@ -70,7 +70,6 @@ public class RascalTestCaseGenerator implements IApplication  {
 		PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
 		Platform platform = new Platform(mongo);
 		OssmeterLogger logger = (OssmeterLogger) OssmeterLogger.getLogger("RascalTestCaseGenerator");
-		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 		
 		// load rascal manager and metric providers
 		RascalManager manager = RascalManager.getInstance();

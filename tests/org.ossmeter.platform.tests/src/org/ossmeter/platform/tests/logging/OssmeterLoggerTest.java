@@ -10,20 +10,95 @@
  *******************************************************************************/
 package org.ossmeter.platform.tests.logging;
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.Enumeration;
+import java.util.Properties;
+
+import org.apache.log4j.Logger;
+import org.junit.Before;
 import org.junit.Test;
+import org.ossmeter.platform.Configuration;
 import org.ossmeter.platform.logging.OssmeterLogger;
 
 public class OssmeterLoggerTest {
 
+	@Before
+	public void reset() {
+		
+	}
+	
 	@Test
-	public void test() {
+	public void testNoConfiguration() {
 		
 		OssmeterLogger logger = (OssmeterLogger) OssmeterLogger.getLogger("ossmeter.logger.test");
-
-		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 		
 		logger.warn("I'm warning you.");
 		logger.debug("The bus has hit the house.");
+	}
+	
+	@Test
+	public void testConsole() {
+		
+		Properties props = new Properties();
+		props.setProperty("log.type", "console");
+		
+		Configuration.getInstance().setConfigurationProperties(props);
+		
+		OssmeterLogger logger = (OssmeterLogger) OssmeterLogger.getLogger("ossmeter.logger.test");
+		
+		int count = 0;
+		Enumeration apps = logger.getAllAppenders();
+		while (apps.hasMoreElements()) {
+			System.out.println(apps.nextElement());
+			count++;
+		}
+		assertEquals(1, count);
+		
+		logger.warn("I'm warning you.");
+		logger.debug("The bus has hit the house.");
+	}
+	
+	@Test
+	public void testFile() {
+
+		Properties props = new Properties();
+		props.setProperty("log.type", "file");
+		props.setProperty("log.file.path", "/tmp/ossmeterlog.log");
+		
+		Configuration.getInstance().setConfigurationProperties(props);
+		
+		Logger logger = OssmeterLogger.getLogger("ossmeter.logger.test");
+		
+		logger.warn("I'm warning you.");
+		logger.debug("The bus has hit the house.");
+	}
+	
+	@Test
+	public void testRolling() {
+		Properties props = new Properties();
+		props.setProperty("log.type", "rolling");
+		props.setProperty("log.rolling.path", "/tmp/rollinglog.log");
+		
+		Configuration.getInstance().setConfigurationProperties(props);
+		
+		OssmeterLogger logger = (OssmeterLogger) OssmeterLogger.getLogger("ossmeter.logger.one");
+		
+		OssmeterLogger logger2 = (OssmeterLogger) OssmeterLogger.getLogger("ossmeter.logger.one.two");
+		
+		
+		logger2.warn("I'm warning you hard.");
+		logger.warn("I'm warning you.");
+		
+		try {
+			Thread.sleep(60000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		logger.debug("The bus has hit the house.");
+		logger2.warn("I'm warning you really ahrd.");
 	}
 
 }

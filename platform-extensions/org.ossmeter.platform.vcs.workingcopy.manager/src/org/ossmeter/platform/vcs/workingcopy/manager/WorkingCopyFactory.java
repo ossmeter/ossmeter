@@ -25,7 +25,7 @@ import org.ossmeter.repository.model.VcsRepository;
 public class WorkingCopyFactory {
   private static final String WORKING_COPY_DIRECTORY = "workingCopies";
   private static final String MODEL_DIRECTORY = "workingModels";
-  private static final Logger LOGGER = new OssmeterLoggerFactory().makeNewLoggerInstance("workingCopyManagerFactory");
+  private static final Logger LOGGER = OssmeterLoggerFactory.getInstance().makeNewLoggerInstance("workingCopyManagerFactory");
   
   private static class InstanceKeeper {
     public static WorkingCopyFactory instance = new WorkingCopyFactory();

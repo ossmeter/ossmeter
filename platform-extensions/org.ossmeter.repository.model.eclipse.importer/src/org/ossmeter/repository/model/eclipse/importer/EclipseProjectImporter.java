@@ -70,7 +70,6 @@ public class EclipseProjectImporter {
 	protected OssmeterLogger logger;
 	public EclipseProjectImporter(){
 		logger = (OssmeterLogger) OssmeterLogger.getLogger("importer.eclipse ");
-		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 	}
 
 	
