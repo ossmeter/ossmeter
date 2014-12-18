@@ -11,6 +11,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.apache.commons.net,
  org.ossmeter.repository.model.cc.zendesk,
  javax.mail,
- org.ossmeter.repository.model
+ org.ossmeter.repository.model,
+ com.fasterxml.jackson,
+ org.ossmeter.platform.communicationchannel.zendesk.dependency;bundle-version="1.0.0",
+ org.junit
 Bundle-ActivationPolicy: lazy
 Export-Package: org.ossmeter.platform.communicationchannel.zendesk

@@ -12,6 +12,7 @@
 package org.ossmeter.platform.communicationchannel.zendesk;
 
 import org.ossmeter.platform.Date;
+import org.ossmeter.platform.communicationchannel.zendesk.model.Ticket;
 import org.ossmeter.platform.delta.communicationchannel.CommunicationChannelArticle;
 import org.ossmeter.platform.delta.communicationchannel.CommunicationChannelDelta;
 import org.ossmeter.platform.delta.communicationchannel.ICommunicationChannelManager;
@@ -24,14 +25,18 @@ public class ZendeskManager implements ICommunicationChannelManager<Zendesk>{
 
 	@Override
 	public boolean appliesTo(CommunicationChannel communicationChannel) {
-		// TODO Auto-generated method stub
-		return false;
+		return communicationChannel instanceof Zendesk;
 	}
 
 	@Override
 	public CommunicationChannelDelta getDelta(DB db,
 			Zendesk communicationChannel, Date date) throws Exception {
 		// TODO Auto-generated method stub
+		
+		org.ossmeter.platform.communicationchannel.zendesk.Zendesk z;
+		z = new org.ossmeter.platform.communicationchannel.zendesk.Zendesk.Builder("")
+			.setUsername("").setToken("").build();
+		Ticket t = z.getTicket(1);
 		return null;
 	}
 
