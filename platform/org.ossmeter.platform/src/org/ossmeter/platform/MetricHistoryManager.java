@@ -31,7 +31,7 @@ public class MetricHistoryManager {
 		
 		DBCollection collection = db.getCollection(provider.getCollectionName());
 
-		MetricProviderContext context = new MetricProviderContext(platform, new OssmeterLoggerFactory().makeNewLoggerInstance(provider.getIdentifier()));
+		MetricProviderContext context = new MetricProviderContext(platform, OssmeterLoggerFactory.getInstance().makeNewLoggerInstance(provider.getIdentifier()));
 		context.setDate(date);
 		provider.setMetricProviderContext(context);
 		Pongo metric = provider.measure(project);

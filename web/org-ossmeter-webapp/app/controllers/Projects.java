@@ -28,6 +28,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 
+
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
+
 import java.net.ConnectException;
 
 import auth.MongoAuthenticator;
@@ -88,6 +92,7 @@ public class Projects extends Controller {
 		return resultPromise.get(120000);
 	}
 	
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result projects() {
 		try {
 		    List<Project> projectList = getProjects();
@@ -103,6 +108,7 @@ public class Projects extends Controller {
 		}
 	}
 	
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result viewTmp(String id, String qm, boolean summary) {
 
 		System.err.println("selected qm:" + qm);
@@ -119,12 +125,14 @@ public class Projects extends Controller {
 		return ok(views.html.projects.view_project.render(project, qualityModel, summary));
 	}
 
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result view(String id) {
 		
 		Logger.debug("Trying to view " + id);
 		return viewAspect(id, Application.INFO_SOURCE_MODEL, Application.INFO_SOURCE_MODEL, true);
 	}
 	
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result viewAspect(String projectId, String qmId, String aspectId, boolean summary) {
 		if (aspectId.equals("null")) aspectId = qmId; // Workaround for routing issue
 
@@ -158,9 +166,9 @@ public class Projects extends Controller {
 		return null;
 	}
 	
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result create() {
 		return ok(views.html.projects.form.render(form(Project.class), form(ProjectImport.class)));
-		
 	}
 	
 	
@@ -174,6 +182,7 @@ public class Projects extends Controller {
 	    );
 	}
 	
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result createProject() {
 		return ok(views.html.projects.addProject.render());
 	}
@@ -258,6 +267,7 @@ public class Projects extends Controller {
 	}
 	
 
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result importProject() {
 	    final Form<ProjectImport> form = form(ProjectImport.class).bindFromRequest();
 	    

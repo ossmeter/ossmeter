@@ -49,7 +49,6 @@ public class ProjectExecutor implements Runnable {
 		this.platform = platform;
 		this.project = project;
 		this.logger = (OssmeterLogger)OssmeterLogger.getLogger("ProjectExecutor (" + project.getName() +")");
-		this.logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 		
 	}
 	

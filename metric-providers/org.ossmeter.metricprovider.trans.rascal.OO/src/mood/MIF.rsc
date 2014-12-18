@@ -31,7 +31,7 @@ public map[loc, real] MIF(
 		if (totalMethods > 0) {
 			mif[t] = round(inheritedMethods / toReal(totalMethods), 0.01);
 		} else {
-			mif[t] = -1.0;
+			mif[t] = 0.0;
 		}
 	}
 	

@@ -2,10 +2,6 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-POST    /profile/spark                   	controllers.Account.watchSpark(projectid:String, metricid:String, projectName:String, metricName:String)
-
-POST    /profile/updategrid                   	controllers.Account.updateGridLocations(loc : String)
-
 
 # Client API proxy
 GET		/api/*path					controllers.Application.api(path : String)
@@ -16,9 +12,23 @@ GET		/autocomplete				controllers.Application.autocomplete(query : String)
 
 # Home page
 GET     /                           controllers.Application.index
+GET     /index.html                 controllers.Application.index
 GET     /admin                 		controllers.Application.admin
 GET     /assets/javascripts/routes    controllers.Application.jsRoutes
 
+# Demo
+GET		/demo 						controllers.DemoApplication.index
+GET		/demo/						controllers.DemoApplication.index
+GET		/demo/compare 				controllers.DemoApplication.compare	
+GET		/demo/compare/ 				controllers.DemoApplication.compare
+GET		/demo/projects/:id 			controllers.DemoApplication.viewProject(id : String, summary : Boolean = true)
+GET		/demo/projects/:id/ 		controllers.DemoApplication.viewProject(id : String, summary : Boolean = true)
+GET		/demo/projects/:id/summary 	controllers.DemoApplication.viewProject(id : String, summary : Boolean = true)
+GET		/demo/projects/:id/summary/ controllers.DemoApplication.viewProject(id : String, summary : Boolean = true)
+GET		/demo/projects/:id/detail	controllers.DemoApplication.viewProject(id : String, summary : Boolean = false)
+GET		/demo/projects/:id/detail/ 	controllers.DemoApplication.viewProject(id : String, summary : Boolean = false)
+
+# User Profile
 GET     /profile                    controllers.Application.profile
 GET		/profile/notification		controllers.Application.profileNotification(projectid: String, projectName : String, metricid : String, metricName : String)
 POST	/profile/notification		controllers.Account.createNotification
@@ -26,6 +36,9 @@ GET		/profile/eventgroup			controllers.Account.loadEventGroupForm
 POST	/profile/eventgroup			controllers.Account.createEventGroup
 GET		/profile/event				controllers.Application.profileEvent
 POST	/profile/event				controllers.Account.createEvent
+POST    /profile/spark              controllers.Account.watchSpark(projectid:String, metricid:String, projectName:String, metricName:String)
+POST    /profile/updategrid         controllers.Account.updateGridLocations(loc : String)
+
 
 # User accounts login/auth routes
 GET     /login                      controllers.Application.login
@@ -34,7 +47,7 @@ POST    /login                      controllers.Application.doLogin
 GET     /logout                     com.feth.play.module.pa.controllers.Authenticate.logout
 GET     /authenticate/:provider     com.feth.play.module.pa.controllers.Authenticate.authenticate(provider: String)
 
-GET     /signup/                controllers.Application.signup()
+GET     /signup/                	controllers.Application.signup()
 POST    /signup                     controllers.Application.doSignup
 
 GET     /accounts/unverified        controllers.Signup.unverified

@@ -59,7 +59,6 @@ public class RedmineImporter {
 	public RedmineImporter(String baseRepo, String key, String user, String password)
 	{
 		logger = (OssmeterLogger) OssmeterLogger.getLogger("importer.redmine");
-		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 		this.baseRepo = baseRepo;
 		this.token = key;
 		this.username = user;
@@ -68,7 +67,6 @@ public class RedmineImporter {
 	public RedmineImporter() 
 	{
 		logger = (OssmeterLogger) OssmeterLogger.getLogger("importer.redmine");
-		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 	}
 
 

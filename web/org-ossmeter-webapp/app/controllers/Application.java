@@ -46,9 +46,12 @@ public class Application extends Controller {
 	public static final String QUALITY_MODEL = "quality";
 
 	public static Result index() {
-		return ok(index.render());
+		final User localUser = getLocalUser(session());
+		if (localUser == null) return ok(landing.render());
+		else return ok(index.render());
 	}
 
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result autocomplete(String query) {
 		List<model.Project> projects = MongoAuthenticator.autocomplete(query);
 
@@ -66,10 +69,12 @@ public class Application extends Controller {
 		return ok(arr);
 	}
 
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result search(String query) {
 		return null;
 	}
 
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result compare() {
 		return ok(compare.render(getInformationSourceModel()));
 	}
@@ -120,6 +125,7 @@ public class Application extends Controller {
 		return model;
 	}
 
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result api(String path) {
 
 		if (!path.startsWith("/")){
@@ -217,8 +223,8 @@ public class Application extends Controller {
 
 	public static Result doLogin() {
 		com.feth.play.module.pa.controllers.Authenticate.noCache(response());
-		final Form<MyLogin> filledForm = MyUsernamePasswordAuthProvider.LOGIN_FORM
-				.bindFromRequest();
+		final Form<MyLogin> filledForm = MyUsernamePasswordAuthProvider.LOGIN_FORM.bindFromRequest();
+
 		if (filledForm.hasErrors()) {
 			// User did not fill everything properly
 			return badRequest(login.render(filledForm));

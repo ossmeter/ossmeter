@@ -37,14 +37,15 @@ map[loc class, int wmcCount] getWMC(
 	)
 {
 	map[loc, int] result = prev;
+	set[loc] declarations = { * m@declarations<0> | <java(), _, m> <- m3s };
+	
 	changed = getChangedFilesInWorkingCopyFolders(delta, workingCopies);
 	
-	// remove results for changed files
-	result -= (file : 0 | file <- changed); 
-	
 	for (file <- changed, m3 <- m3s[java(), file]) {
-		result += (cl : (0 | it + methodCC[m]?0 | m <- m3@containment[cl], isMethod(m)) | <cl, _> <- m3@containment, isClass(cl));
+	   result += (cl : (0 | it + methodCC[m]?0 | m <- m3@containment[cl], isMethod(m)) | <cl, _> <- m3@containment, isClass(cl));
 	}
+
+	result = domainR(result, declarations); // remove entries for any removed declarations
 	 
 	return result;
 }
@@ -57,19 +58,20 @@ you would need to test the method. A high number indicates also a lot of work to
 map[loc, int] getCC(ProjectDelta delta = ProjectDelta::\empty(),
     map[loc, loc] workingCopies = (),
     rel[Language, loc, AST] asts = {},
+    rel[Language, loc, M3] m3s = {},
     map[loc, int] prev = ()
   ) 
 {
-  map[loc method, int cc] result = ();
+  map[loc method, int cc] result = prev;
   changed = getChangedFilesInWorkingCopyFolders(delta, workingCopies);
   
+  set[loc] declarations = { * m@declarations<0> | <java(), _, m> <- m3s };
+  
   for (file <- changed, ast <- asts[java(), file]) {
-    visit (ast) {
-      case Declaration d: \method(_, _, _, _, _) :  result += (d@decl : countCC(d));
-      case Declaration d: \method(_, _, _, _) : result += (d@decl : countCC(d));
-      case Declaration d: \constructor(_, _, _, _) : result += (d@decl : countCC(d));
-    }
+    result += (d@decl : countCC(d) | /Declaration d := ast, d is method || d is constructor);
   }
+  
+  result = domainR(result, declarations); // remove entries for any removed declarations
   
   return result;
 }

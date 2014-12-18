@@ -44,7 +44,6 @@ public class GoogleCodeImporter {
 	public GoogleCodeImporter()
 	{
 		logger = (OssmeterLogger) OssmeterLogger.getLogger("importer.GoogleCode");
-		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 	}
 	public GoogleCodeProject importProject(String projectId, Platform platform) throws WrongUrlException 
 	{
