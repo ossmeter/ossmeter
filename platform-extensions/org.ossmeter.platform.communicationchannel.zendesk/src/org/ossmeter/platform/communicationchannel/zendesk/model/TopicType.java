@@ -1,6 +1,7 @@
 package org.ossmeter.platform.communicationchannel.zendesk.model;
 
 public enum TopicType {
+	ARTICLE("articles"),
     ARTICLES("Articles"),
     QUESTIONS("Questions"),
     IDEAS("Ideas");
