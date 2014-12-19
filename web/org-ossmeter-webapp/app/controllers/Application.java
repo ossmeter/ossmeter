@@ -131,25 +131,27 @@ public class Application extends Controller {
 		if (!path.startsWith("/")){
 			path = "/" + path;
 		}
-
-		System.out.println("api: " + play.Play.application().configuration().getString("ossmeter.api"));
 		String url = play.Play.application().configuration().getString("ossmeter.api") + path; 
-
-		System.out.println(url);
 
 		Promise<Result> promise = WS.url(url).get().map(
 		    new Function<WSResponse, Result>() {
 		        public Result apply(WSResponse response) {
-		        	try {
-		            	JsonNode json = response.asJson();
-			            return ok(json);
-		            } catch (Exception e) {
-		            	return ok(response.getBody()).as("image/png");
-		            }
-
-
-
-		            // return ok(image).as("image/png")
+		        	List<String> contentTypes = response.getAllHeaders().get("Content-Type");
+		        	if (contentTypes.size() > 0) {
+		        		String type = contentTypes.get(0);
+		        		if (type.contains("application/json")) {
+		        			return ok(response.asJson());
+		        		} else if(type.equals("image/png")) {
+		        			// return ok(response.asByteArray()).as("image/png");
+		        			return ok(response.getBodyAsStream());
+		        		} else {
+		        			System.err.println("Unrecognised Content-Type.");
+			        		return ok();	
+		        		}
+		        	} else {
+		        		System.err.println("No Content-Type set on response.");
+		        		return ok();
+		        	}
 		        }
 		    }
 		);
@@ -240,8 +242,7 @@ public class Application extends Controller {
 
 	public static Result doSignup() {
 		com.feth.play.module.pa.controllers.Authenticate.noCache(response());
-		final Form<MySignup> filledForm = MyUsernamePasswordAuthProvider.SIGNUP_FORM
-				.bindFromRequest();
+		final Form<MySignup> filledForm = MyUsernamePasswordAuthProvider.SIGNUP_FORM.bindFromRequest();
 		if (filledForm.hasErrors()) {
 			// User did not fill everything properly
 			return badRequest(signup.render(filledForm));
