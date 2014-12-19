@@ -48,13 +48,13 @@ case other => {}}}}}{ }
 
 @_projectMetaData(project)
 
-@* @_qualityModelView(project, qualityModel, selectedAspect, isSummary) *@
+@if(project.getAnalysed()) {
 
-@if(!isSummary) {
-    @_largePlot()
-}
+    @if(!isSummary) {
+        @_largePlot()
+    }
 
-@_aspectView(project, qualityModel, qualityModel, isSummary, List(qualityModel))
+    @_aspectView(project, qualityModel, qualityModel, isSummary, List(qualityModel))
 
 <div class="modal fade" id="exampleModal">
   <div class="modal-dialog">
@@ -112,4 +112,10 @@ case other => {}}}}}{ }
 <script type="text/javascript" src="@routes.Assets.at("js/d3.v3.min.js")"></script>
 <script type="text/javascript" src="@routes.Assets.at("js/RadarChart.js")"></script>
 <script type="text/javascript" src="@routes.Assets.at("js/knockout-2.3.0.js")"></script>
+       
+    } else { @* End if(project.getAnalysed())*@
+
+        @_unanalysed()
+    }
+
 }
