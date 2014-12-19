@@ -71,7 +71,7 @@
                   }
                 }{
 
-                  <li class="@("active".when(nav == "invitation"))"><a href="@routes.InvitationController.requestInvitation()">@Messages("ossmeter.navigation.invitation")</a></li>
+                  <li class="@("active".when(nav == "invitation"))"><a href="@routes.Invitation.requestInvitation()">@Messages("ossmeter.navigation.invitation")</a></li>
                   <li><a href="@routes.Application.login()" class="@("disabled".when(nav == "login"))">@Messages("ossmeter.navigation.login")</a></li>
                 }
               </ul>

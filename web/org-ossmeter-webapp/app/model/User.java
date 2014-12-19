@@ -9,8 +9,7 @@ import com.googlecode.pongo.runtime.querying.*;
 import be.objectify.deadbolt.core.models.Subject;
 
 public class User extends Pongo implements Subject {
-// protected region custom-imports end
-
+// protected region custom-imports end	
 	protected List<Role> roles = null;
 	protected List<Permission> permissions = null;
 	protected List<LinkedAccount> linkedAccounts = null;
