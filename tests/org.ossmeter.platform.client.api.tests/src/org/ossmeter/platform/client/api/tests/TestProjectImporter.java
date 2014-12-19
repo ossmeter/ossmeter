@@ -40,24 +40,24 @@ public class TestProjectImporter extends TestAbstractResource {
 	@Test
 	public void testEclipse() {
 		ProjectImporter importer = new ProjectImporter();
-		Project p = importer.importProject("https://projects.eclipse.org/projects/modeling.epsilon");
+		Project p = importer.importProject("https://projects.eclipse.org/projects/modeling.epsilon", platform);
 		
 		assertNotNull(p);
 		assertEquals("Epsilon", p.getName());
 		
-		p = importer.importProject("https://projects.eclipse.org/projects/modeling.epsiloon");
+		p = importer.importProject("https://projects.eclipse.org/projects/modeling.epsiloon", platform);
 		assertNull(p);
 	}
 	
 	@Test
 	public void testGitHub() {
 		ProjectImporter importer = new ProjectImporter();
-		Project p = importer.importProject("https://github.com/jrwilliams/gif-hook");
+		Project p = importer.importProject("https://github.com/jrwilliams/gif-hook", platform);
 		
 		assertNotNull(p);
 		assertEquals("gif-hook", p.getName());
 		
-		p = importer.importProject("https://github.com/jrwilliams/");
+		p = importer.importProject("https://github.com/jrwilliams/", platform);
 		assertNull(p);
 	
 	}
