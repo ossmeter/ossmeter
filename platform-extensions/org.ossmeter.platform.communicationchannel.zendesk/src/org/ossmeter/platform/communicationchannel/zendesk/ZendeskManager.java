@@ -11,7 +11,6 @@
  *******************************************************************************/
 package org.ossmeter.platform.communicationchannel.zendesk;
 
-import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -102,7 +101,7 @@ public class ZendeskManager implements ICommunicationChannelManager<Zendesk> {
 							zenDesk.setPort(communicationChannel.getPort());
 							zenDesk.setInterval(communicationChannel.getInterval());
 							//communicationChannelArticle.setNewsgroup(zenDesk);
-							//communicationChannelArticle.setReferences(article.getReferences());
+							communicationChannelArticle.setUser(zendesk.getUser(tk.getRequesterId()).getName());
 							communicationChannelArticle.setSubject(tk.getSubject());
 							
 							
@@ -188,17 +187,4 @@ public class ZendeskManager implements ICommunicationChannelManager<Zendesk> {
 		new SimpleDateFormat("EEE MMM d HH:mm:ss zzz yyyy"),
 		new SimpleDateFormat("yyyyMMdd")
 	};
-	
-	
-	private static java.util.Date parseDate(String dateString) {
-    	for (SimpleDateFormat sdf: sdfList) {
-    		ParsePosition ps = new ParsePosition(0);
-    		java.util.Date result = sdf.parse(dateString, ps);
-    		if (ps.getIndex() != 0)
-    			return result;
-    	}
-    	System.err.println("\t\t" + dateString + " cannot be parsed!\n");
-		return null;
-    }
-
 }
