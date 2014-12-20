@@ -1,0 +1,32 @@
+@(invites : List[model.InvitationRequest])
+
+@main(Messages("ossmeter.navigation.admin"), "admin") {
+<section>
+	<div class="container box">
+	    <div class="row col-md-12">
+		    <h1>Invite Requests</h1>
+	    </div>
+	    <div class="row col-md-12">
+		    <table class="table">
+		    	<thead>
+		    		<tr>
+		    			<th>Email</th>
+		    			<th>Status</th>
+		    			<th>Action</th>
+		    		</tr>
+		    	</thead>
+		    	<tbody>
+		    		@for(i <- invites){
+		    		<tr>
+		    			<td>@i.getEmail()</td>
+		    			<td>@i.getStatus()</td>
+		    			<td><a href="@routes.Admin.offerInvite(i.getEmail())">Make offer</a> | <a href="@routes.Admin.deleteInvite(i.getEmail())">Delete</a></td>
+		    		</tr>
+		    		}
+		    	</tbody>
+		    </table>
+
+		</div>
+   </div>
+</section>
+}

@@ -12,6 +12,7 @@ import play.data.DynamicForm;
 import play.data.Form;
 import play.data.validation.Constraints;
 
+import static play.data.Form.*;
 import com.typesafe.plugin.*;
 
 import auth.MongoAuthenticator;
@@ -52,6 +53,7 @@ public class Invitation extends Controller{
 
             // Generate token and store
             invitation.setToken(UUID.randomUUID().toString());
+            invitation.setStatus("NOT SENT");
             users.getInvites().add(invitation);
 
             users.getInvites().sync();
@@ -64,5 +66,25 @@ public class Invitation extends Controller{
 
     public static Result requestInvitation() {
         return ok(views.html.invitation.render(invitationForm));
+    }
+
+    public static Result acceptInvitation(String key) {
+        DB db = MongoAuthenticator.getUsersDb();
+        Users users = new Users(db);
+
+        InvitationRequest inv = users.getInvites().findOneByToken(key);
+
+        if (inv == null) {
+            db.getMongo().close();
+            flash(Application.FLASH_ERROR_KEY, "Sorry, that registration token wasn't valid. If you think this is a mistake, please get in touch.");
+            return redirect(routes.Application.index());
+        }
+
+        db.getMongo().close();
+
+        Form<InvitationRequest> form = form(InvitationRequest.class);
+        form.fill(inv);
+
+        return ok(signup.render(form));
     }
 }

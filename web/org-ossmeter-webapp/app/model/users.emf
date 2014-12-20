@@ -15,6 +15,7 @@ class InvitationRequest {
 	attr String email;
 	@searchable
 	attr String token;
+	attr String status;
 }
 
 class Project {

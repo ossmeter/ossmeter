@@ -7,6 +7,7 @@ import java.util.List;
 
 import model.*;
 import models.*;
+import model.Users;
 import play.Routes;
 import play.data.Form;
 import play.mvc.*;
@@ -36,6 +37,8 @@ import com.feth.play.module.pa.user.AuthUser;
 import static play.data.Form.*;
 
 import auth.MongoAuthenticator;
+import com.mongodb.Mongo;
+import com.mongodb.DB;
 
 public class Application extends Controller {
 
@@ -166,12 +169,6 @@ public class Application extends Controller {
 	}
 
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
-	public static Result admin() {
-		final User localUser = getLocalUser(session());
-		return ok(admin.render(localUser));
-	}
-
-	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result profile() {
 		final User localUser = getLocalUser(session());
 		return ok(profile.render(localUser));
@@ -196,10 +193,6 @@ public class Application extends Controller {
 			noti.setProject(p);
 			noti.setMetric(m);
 		} else {
-
-			System.out.println("notification already exists!");
-			System.out.println(noti.getDbObject());
-
 			form.fill(noti);
 		}
 
