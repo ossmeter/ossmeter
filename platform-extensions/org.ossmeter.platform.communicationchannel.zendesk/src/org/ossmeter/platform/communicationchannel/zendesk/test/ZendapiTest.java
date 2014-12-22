@@ -21,9 +21,17 @@ import com.mongodb.Mongo;
 
 public class ZendapiTest {
 
+	static private ZendeskManager zendesk = new ZendeskManager();
+	
+	static private Zendesk communicationChannel = new Zendesk();
+	static {
+		communicationChannel.setUsername("juri.dirocco@univaq.it");
+		communicationChannel.setPassword("Pavone84");
+		communicationChannel.setUrl("https://univaq.zendesk.com");
+	}
 	static Mongo mongo;
 	static Platform platform;
-	private OssmeterLogger logger = (OssmeterLogger) OssmeterLogger.getLogger("metricprovider.importer.gitHub");
+	private OssmeterLogger logger = (OssmeterLogger) OssmeterLogger.getLogger("platform.communicatonchannel.zendesk");
 	@BeforeClass
 	public static void setup() throws Exception {
 		mongo = new Mongo();
@@ -37,12 +45,6 @@ public class ZendapiTest {
 	@Rule public ExpectedException expected = ExpectedException.none();
 	@Test
 	public void testZendeskGetFirstDateMethod() {
-		ZendeskManager zendesk = new ZendeskManager();
-		Zendesk communicationChannel = new Zendesk();
-		communicationChannel.setUsername("juri.dirocco@univaq.it");
-		communicationChannel.setPassword("Pavone84");
-		communicationChannel.setUrl("https://univaq.zendesk.com");
-		
 		try {
 			org.ossmeter.platform.Date d = zendesk.getFirstDate(mongo.getDB("ossmeter"), communicationChannel);
 			logger.info("First Date: " + d);
@@ -54,14 +56,8 @@ public class ZendapiTest {
 	
 	@Test
 	public void testZendeskGetDeltaMethod() {
-		ZendeskManager zendesk = new ZendeskManager();
-		Zendesk communicationChannel = new Zendesk();
-		communicationChannel.setUsername("juri.dirocco@univaq.it");
-		communicationChannel.setPassword("Pavone84");
-		communicationChannel.setUrl("https://univaq.zendesk.com");
-		
 		try {
-			CommunicationChannelDelta d = zendesk.getDelta(mongo.getDB("ossmeter"), communicationChannel, new Date());
+			CommunicationChannelDelta d = zendesk.getDelta(mongo.getDB("ossmeter"), communicationChannel, new Date().addDays(-5));
 			logger.info("Get Delta: " + d);
 		} catch (Exception e) {
 			fail("Thows Exception" + e.getMessage());
@@ -71,15 +67,8 @@ public class ZendapiTest {
 	
 	@Test
 	public void testZendeskGetContentMethod() {
-		ZendeskManager zendesk = new ZendeskManager();
-		Zendesk communicationChannel = new Zendesk();
-		communicationChannel.setUsername("juri.dirocco@univaq.it");
-		communicationChannel.setPassword("Pavone84");
-		communicationChannel.setUrl("https://univaq.zendesk.com");
-		
 		try {
-			CommunicationChannelDelta d = zendesk.getDelta(mongo.getDB("ossmeter"), communicationChannel, new Date());
-			
+			CommunicationChannelDelta d = zendesk.getDelta(mongo.getDB("ossmeter"), communicationChannel, new Date().addDays(-5));
 			String s = zendesk.getContents(mongo.getDB("ossmeter"), communicationChannel, d.getArticles().get(0));
 			logger.info("get Content " + s);
 		} catch (Exception e) {

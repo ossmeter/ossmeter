@@ -19,6 +19,7 @@ import org.ossmeter.platform.communicationchannel.zendesk.model.Ticket;
 import org.ossmeter.platform.delta.communicationchannel.CommunicationChannelArticle;
 import org.ossmeter.platform.delta.communicationchannel.CommunicationChannelDelta;
 import org.ossmeter.platform.delta.communicationchannel.ICommunicationChannelManager;
+import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.cc.zendesk.Zendesk;
 
@@ -28,6 +29,7 @@ public class ZendeskManager implements ICommunicationChannelManager<Zendesk> {
 
 	private final static int RETRIEVAL_STEP = 50;
 
+	private OssmeterLogger logger = (OssmeterLogger) OssmeterLogger.getLogger("platform.communicatonchannel.zendesk");
 	@Override
 	public boolean appliesTo(CommunicationChannel communicationChannel) {
 		return communicationChannel instanceof Zendesk;
@@ -75,7 +77,7 @@ public class ZendeskManager implements ICommunicationChannelManager<Zendesk> {
 						java.util.Date javaArticleDate = lastArticleRetrieved
 								.getUpdatedAt();
 						articleDate = new Date(javaArticleDate);
-						date = articleDate;
+//						date = articleDate;
 						if (date.compareTo(articleDate) > 0)
 							lastTicketChecked = lastArticleRetrieved.getId();
 					}
@@ -134,7 +136,7 @@ public class ZendeskManager implements ICommunicationChannelManager<Zendesk> {
 						}
 					} else {
 						// If an article has no correct date, then ignore it
-						System.err.println("\t\tUnparsable article date: "
+						logger.error("\t\tUnparsable article date: "
 								+ tk.getUpdatedAt());
 					}
 				}
@@ -144,7 +146,7 @@ public class ZendeskManager implements ICommunicationChannelManager<Zendesk> {
 
 		}
 		zendesk.close();
-		System.out.println("delta (" + date.toString() + ") contains:\t"
+		logger.info("delta (" + date.toString() + ") contains:\t"
 				+ delta.getArticles().size() + " nntp articles");
 
 		return delta;
