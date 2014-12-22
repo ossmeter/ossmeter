@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Dependency
-Bundle-SymbolicName: org.ossmeter.platform.communicationchannel.zendesk.dependency
-Bundle-Version: 1.0.0.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: com.damnhandy.uri.template,
- com.ning.http.client,
- org.slf4j
