@@ -2,11 +2,20 @@ package model;
 
 @db
 class Users {
+	val InvitationRequest[*] invites;
 	val User[*] users;
 	val Token[*] tokens;
 	val Project[*] projects;
 	val Statistics[*] statistics;
 	val Tag[*] tags;
+}
+
+class InvitationRequest {
+	@searchable
+	attr String email;
+	@searchable
+	attr String token;
+	attr String status;
 }
 
 class Project {

@@ -19,7 +19,16 @@
   </head>
 
   <body>
-
+    @if(flash.contains(Application.FLASH_ERROR_KEY)) {
+      <div class="alert alert-danger">
+        @flash().get(Application.FLASH_ERROR_KEY)
+      </div>
+    }
+    @if(flash.contains(Application.FLASH_MESSAGE_KEY)) {
+      <div class="alert alert-success">
+        @flash().get(Application.FLASH_MESSAGE_KEY)
+      </div>
+    }
       <!-- Main hero unit for a primary marketing message or call to action -->
       <div class="container" style="margin-top:150px;margin-bottom:150px;">
         <div class="row">

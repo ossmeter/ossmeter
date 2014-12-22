@@ -95,12 +95,9 @@ public class Projects extends Controller {
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result projects() {
 		try {
-		    List<Project> projectList = getProjects();
+			// TODO: This should be featured projects - taken from the DB.
+		    List<Project> projectList = new ArrayList<>();
 		    return ok(views.html.projects.projects.render(projectList, MongoAuthenticator.getStatistics()));
-		} catch (ConnectException e) {
-			e.printStackTrace();
-			flash(Application.FLASH_ERROR_KEY, "Unable to connect to the OSSMETER API."); //TODO move to Messages.
-			return ok(views.html.index.render());
 		} catch (Exception e) {
 			e.printStackTrace();
 			flash(Application.FLASH_ERROR_KEY, "An unexpected error has occurred. We are looking into it.");//TODO move to Messages.
