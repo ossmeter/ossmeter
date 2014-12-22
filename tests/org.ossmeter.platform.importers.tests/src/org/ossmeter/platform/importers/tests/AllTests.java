@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    James Williams - Implementation.
+ *    James Williams - Implementation,
+ *    Juri Di Rocco - Implementation.
  *******************************************************************************/
 package org.ossmeter.platform.importers.tests;
 
