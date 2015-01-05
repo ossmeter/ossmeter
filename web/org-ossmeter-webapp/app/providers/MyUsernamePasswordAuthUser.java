@@ -12,7 +12,7 @@ public class MyUsernamePasswordAuthUser extends UsernamePasswordAuthUser
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private final String name = "THIS SHOULD NEVER WORK.";
+	private final String name = "";
 
 	public MyUsernamePasswordAuthUser(final MySignup signup) {
 		super(signup.password, signup.email);

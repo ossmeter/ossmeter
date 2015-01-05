@@ -168,22 +168,12 @@ public class Projects extends Controller {
 		return ok(views.html.projects.form.render(form(Project.class), form(ProjectImport.class)));
 	}
 	
-	
-	//jimi
-	public static Result javascriptRoutes() {
-	    response().setContentType("text/javascript");
-	    return ok(
-	        Routes.javascriptRouter("myJsRoutes",
-	            routes.javascript.Projects.addProject()
-	        )
-	    );
-	}
-	
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result createProject() {
 		return ok(views.html.projects.addProject.render());
 	}
 	
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	@BodyParser.Of(value = BodyParser.Text.class, maxLength = 1000 * 1024)
 	public static Result addProject(String projectJson) {
 		
@@ -314,55 +304,5 @@ public class Projects extends Controller {
 					}
 				});
 		return resultPromise.get(120000);	
-	}
-	
-	public static Result save() {
-		Form<Project> form = form(Project.class).bindFromRequest();
-		if (form.hasErrors()) {
-			flash("error", "Invalid details.");
-	        return badRequest(views.html.projects.form.render(form, form(ProjectImport.class)));
-	    } else {
-			Project project = form.get();
-
-			// TODO
-
-			// project.save();
-			// flash.success("Project successfully created!");
-	    }
-	    return redirect(routes.Projects.projects());
-	}
-	
-	public static Result edit(Long id) {
-		// TODO FIXME
-
-		// Form<Project> form = form(Project.class).fill(models.Project.find.byId(id));
-		// return ok(views.html.projects.form_edit.render(form));
-		return redirect(routes.Projects.projects());
-	}
-	
-	public static Result update(Long id) {
-		// TODO FIXME
-		// Form<Project> form = form(Project.class).bindFromRequest();
-		// if (form.hasErrors()) {
-	 //        return badRequest(views.html.projects.form.render(form, form(ProjectImport.class)));
-	 //    } else {
-		// 	Project project = form.get();
-		// 	project.id = id;
-		// 	project.update();
-		// 	// flash.success("Project successfully updated!");
-	 //    }
-		return redirect(routes.Projects.projects());
-	}
-	
-	public static Result delete_confirmation(Long id) {
-		return ok(views.html.projects.confirmation.render(id));
-	}
-
-	public static Result delete(Long id) {
-		// TODO FIXME
-		// Project project = models.Project.find.byId(id);
-		// project.delete();
-		// flash.success("Project successfully deleted!");
-		return redirect(routes.Projects.projects());
 	}
 }

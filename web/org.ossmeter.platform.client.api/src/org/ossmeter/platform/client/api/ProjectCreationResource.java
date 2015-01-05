@@ -27,22 +27,20 @@ import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 
-public class ProjectImportResource extends ServerResource {
+public class ProjectCreationResource extends ServerResource {
 
 	@Post("json")
-	public Representation importProject(Representation entity) {
+	public Representation createProject(Representation entity) {
 		
 		Mongo mongo = null;
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			ObjectNode obj = (ObjectNode)mapper.readTree(entity.getText());
 			System.out.println(obj);
-			String url = obj.get("url").toString();
-
-			url = url.replace("\"", "");
+			
+			Project project = mapper.readValue(entity.getText(), Project.class);
 			
 			try {
 				mongo = Configuration.getInstance().getMongoConnection();
@@ -53,32 +51,8 @@ public class ProjectImportResource extends ServerResource {
 			}
 			Platform platform = new Platform(mongo);
 			
-			ProjectImporter importer = new ProjectImporter();
 			
-			Project p = importer.importProject(url, platform);
-			
-			if (p == null) {
-				ObjectNode msg = mapper.createObjectNode();
-				msg.put("status", "error");
-				msg.put("msg", "Unable to import project."); // FIXME inc reason
-				StringRepresentation rep = new StringRepresentation(msg.toString());
-				rep.setMediaType(MediaType.APPLICATION_JSON);
-				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-				return rep;
-			}
-			
-			// Clean up the object
-			DBObject project = p.getDbObject();
-			project.removeField("storage");
-			project.removeField("metricProviderData");
-			project.removeField("_superTypes");
-			project.removeField("_id");
-			
-			// FIXME: Temporary solution
-			project.removeField("licenses");
-			project.removeField("persons");
-			
-			StringRepresentation rep = new StringRepresentation(p.getDbObject().toString());
+			StringRepresentation rep = new StringRepresentation("{'foo':'bar'}");
 			rep.setMediaType(MediaType.APPLICATION_JSON);
 			getResponse().setStatus(Status.SUCCESS_CREATED);
 			return rep;
