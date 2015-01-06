@@ -21,6 +21,7 @@ public class InvitationRequest extends Pongo {
 	public static StringQueryProducer TOKEN = new StringQueryProducer("token"); 
 	public static StringQueryProducer STATUS = new StringQueryProducer("status"); 
 	
+	
 	public String getEmail() {
 		return parseString(dbObject.get("email")+"", "");
 	}
@@ -33,16 +34,16 @@ public class InvitationRequest extends Pongo {
 	public String getToken() {
 		return parseString(dbObject.get("token")+"", "");
 	}
-	public String getStatus() {
-		return parseString(dbObject.get("status")+"", "");
-	}
 	
 	public InvitationRequest setToken(String token) {
 		dbObject.put("token", token);
 		notifyChanged();
 		return this;
 	}
-
+	public String getStatus() {
+		return parseString(dbObject.get("status")+"", "");
+	}
+	
 	public InvitationRequest setStatus(String status) {
 		dbObject.put("status", status);
 		notifyChanged();

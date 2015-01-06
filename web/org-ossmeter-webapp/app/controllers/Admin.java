@@ -13,6 +13,7 @@ import play.mvc.*;
 import play.mvc.Http.Response;
 import play.mvc.Http.Session;
 import play.mvc.Result;
+import play.mvc.Http.Request;
 
 import views.html.*;
 import be.objectify.deadbolt.java.actions.Group;
@@ -25,6 +26,19 @@ import com.mongodb.DB;
 import org.apache.commons.mail.*;
 
 public class Admin extends Controller {
+
+	public static void logRequest(Request request) {
+		final User localUser = Application.getLocalUser(session());
+
+		if (request.uri().startsWith("/assets")) return;
+		if (request.uri().startsWith("/api")) return;
+
+		System.out.println(request.cookies());
+	    System.out.println(request.host());
+	    System.out.println("username: " + request.username());
+	    System.out.println(request.uri());
+	    System.out.println("---");
+	}
 
 	@Restrict(@Group(MongoAuthenticator.ADMIN_ROLE))
 	public static Result index() {

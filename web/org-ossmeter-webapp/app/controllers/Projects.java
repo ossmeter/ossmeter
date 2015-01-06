@@ -11,6 +11,7 @@ import models.ProjectImport;
 
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.vcs.svn.SvnRepository;
+import org.ossmeter.repository.model.vcs.git.GitRepository;
 
 import play.*;
 import play.mvc.*;
@@ -38,6 +39,7 @@ import auth.MongoAuthenticator;
 
 import static play.data.Form.*;
 
+@With(LogAction.class)
 public class Projects extends Controller {
 	
 	private static final String jsonUrl = play.Play.application().configuration().getString("ossmeter.api");
@@ -170,8 +172,28 @@ public class Projects extends Controller {
 	
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result createProject() {
-		return ok(views.html.projects.addProject.render());
+		Project project = new Project();
+		project.setName("hello");
+
+		project.getVcsRepositories().add(new SvnRepository());
+		project.getVcsRepositories().add(new GitRepository());
+
+		Form<Project> form = form(Project.class);
+		form.fill(project);
+
+		// FIXME: Cannot get the form working with POJOs. Just translate
+		// Jimi's JSON into a Project object and send it.
+
+
+		return ok(views.html.projects.createProject.render(form));
 	}
+
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
+	public static Result postCreateProject() {
+		Form<Project> filledForm = form(Project.class).bindFromRequest();
+
+		return ok();
+	}	
 	
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	@BodyParser.Of(value = BodyParser.Text.class, maxLength = 1000 * 1024)

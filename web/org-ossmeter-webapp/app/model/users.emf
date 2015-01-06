@@ -8,6 +8,14 @@ class Users {
 	val Project[*] projects;
 	val Statistics[*] statistics;
 	val Tag[*] tags;
+	val Log[*] logs;
+}
+
+class Log {
+	@searchable
+	attr String user;
+	attr Date date;
+	attr String uri;
 }
 
 class InvitationRequest {

@@ -10,6 +10,7 @@ import play.data.Form;
 import play.i18n.Messages;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.With;
 import providers.MyLoginUsernamePasswordAuthUser;
 import providers.MyUsernamePasswordAuthProvider;
 import providers.MyUsernamePasswordAuthProvider.MyIdentity;
@@ -22,6 +23,7 @@ import static play.data.Form.form;
 
 import auth.MongoAuthenticator;
 
+@With(LogAction.class)
 public class Signup extends Controller {
 
 	public static class PasswordReset extends Account.PasswordChange {

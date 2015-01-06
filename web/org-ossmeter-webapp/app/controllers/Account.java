@@ -18,6 +18,7 @@ import play.data.validation.Constraints.Required;
 import play.i18n.Messages;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.With;
 import providers.MyUsernamePasswordAuthProvider;
 import providers.MyUsernamePasswordAuthUser;
 import views.html.account.*;
@@ -31,6 +32,7 @@ import static play.data.Form.form;
 
 import auth.MongoAuthenticator;
 
+@With(LogAction.class)
 public class Account extends Controller {
 
 	@SubjectPresent

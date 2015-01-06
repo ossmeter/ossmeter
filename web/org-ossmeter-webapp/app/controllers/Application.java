@@ -40,6 +40,7 @@ import auth.MongoAuthenticator;
 import com.mongodb.Mongo;
 import com.mongodb.DB;
 
+@With(LogAction.class)
 public class Application extends Controller {
 
 	public static final String FLASH_MESSAGE_KEY = "message";

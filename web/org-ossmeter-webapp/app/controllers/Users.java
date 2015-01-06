@@ -10,6 +10,7 @@ import model.User;
 
 import auth.MongoAuthenticator;
 
+@With(LogAction.class)
 public class Users extends Controller {
 
 	public static Result users() {

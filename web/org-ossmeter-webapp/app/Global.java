@@ -7,12 +7,19 @@ import com.feth.play.module.pa.exceptions.AccessDeniedException;
 import com.feth.play.module.pa.exceptions.AuthException;
 
 import controllers.routes;
+import controllers.Admin;
 
 import auth.MongoAuthenticator;
 
+import java.lang.reflect.Method;
+
 import play.Application;
 import play.GlobalSettings;
+import play.mvc.Result;
+import play.mvc.Action;
 import play.mvc.Call;
+import play.mvc.Http.Request;
+import play.mvc.Http.Context;
 import play.libs.Akka;
 import akka.actor.*;
 import java.util.concurrent.TimeUnit;

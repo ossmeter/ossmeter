@@ -17,6 +17,7 @@ public class Users extends PongoDB {
 	protected ProjectCollection projects = null;
 	protected StatisticsCollection statistics = null;
 	protected TagCollection tags = null;
+	protected LogCollection logs = null;
 	
 	
 	
@@ -44,6 +45,10 @@ public class Users extends PongoDB {
 		return tags;
 	}
 	
+	public LogCollection getLogs() {
+		return logs;
+	}
+	
 	
 	@Override
 	public void setDb(DB db) {
@@ -60,5 +65,7 @@ public class Users extends PongoDB {
 		pongoCollections.add(statistics);
 		tags = new TagCollection(db.getCollection("tags"));
 		pongoCollections.add(tags);
+		logs = new LogCollection(db.getCollection("logs"));
+		pongoCollections.add(logs);
 	}
 }

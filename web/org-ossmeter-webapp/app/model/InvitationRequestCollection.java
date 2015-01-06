@@ -8,23 +8,12 @@ public class InvitationRequestCollection extends PongoCollection<InvitationReque
 	
 	public InvitationRequestCollection(DBCollection dbCollection) {
 		super(dbCollection);
+		createIndex("email");
 		createIndex("token");
 	}
 	
 	public Iterable<InvitationRequest> findById(String id) {
 		return new IteratorIterable<InvitationRequest>(new PongoCursorIterator<InvitationRequest>(this, dbCollection.find(new BasicDBObject("_id", id))));
-	}
-	
-	public Iterable<InvitationRequest> findByToken(String q) {
-		return new IteratorIterable<InvitationRequest>(new PongoCursorIterator<InvitationRequest>(this, dbCollection.find(new BasicDBObject("token", q + ""))));
-	}
-	
-	public InvitationRequest findOneByToken(String q) {
-		InvitationRequest invitationRequest = (InvitationRequest) PongoFactory.getInstance().createPongo(dbCollection.findOne(new BasicDBObject("token", q + "")));
-		if (invitationRequest != null) {
-			invitationRequest.setPongoCollection(this);
-		}
-		return invitationRequest;
 	}
 	
 	public Iterable<InvitationRequest> findByEmail(String q) {
@@ -38,6 +27,23 @@ public class InvitationRequestCollection extends PongoCollection<InvitationReque
 		}
 		return invitationRequest;
 	}
+	
+
+	public long countByEmail(String q) {
+		return dbCollection.count(new BasicDBObject("email", q + ""));
+	}
+	public Iterable<InvitationRequest> findByToken(String q) {
+		return new IteratorIterable<InvitationRequest>(new PongoCursorIterator<InvitationRequest>(this, dbCollection.find(new BasicDBObject("token", q + ""))));
+	}
+	
+	public InvitationRequest findOneByToken(String q) {
+		InvitationRequest invitationRequest = (InvitationRequest) PongoFactory.getInstance().createPongo(dbCollection.findOne(new BasicDBObject("token", q + "")));
+		if (invitationRequest != null) {
+			invitationRequest.setPongoCollection(this);
+		}
+		return invitationRequest;
+	}
+	
 
 	public long countByToken(String q) {
 		return dbCollection.count(new BasicDBObject("token", q + ""));
