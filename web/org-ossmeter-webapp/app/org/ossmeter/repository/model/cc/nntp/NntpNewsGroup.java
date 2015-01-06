@@ -64,5 +64,12 @@ public class NntpNewsGroup extends CommunicationChannel {
 	public String getLastArticleChecked() {
 		return lastArticleChecked;
 	}
+
+	public void setName(String name){
+		this.name = name;
+	}
+	public void setUrl(String url) {
+		this.url = url;
+	}
 	
 }

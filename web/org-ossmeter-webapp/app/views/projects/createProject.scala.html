@@ -2,7 +2,7 @@
 
 @main(Messages("ossmeter.index.title")) {
 
-@helper.form(action = routes.Projects.addProject()) {
+@helper.form(action = routes.Projects.postCreateProject()) {
   @helper.inputText(form("name"))
 
   <div class="form-group">

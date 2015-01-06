@@ -93,7 +93,7 @@ public class Application extends Controller {
 						controllers.routes.javascript.Account.createNotification(),
 						controllers.routes.javascript.Account.updateGridLocations(),
 						controllers.routes.javascript.Account.loadEventGroupForm(),
-						controllers.routes.javascript.Projects.addProject()
+						controllers.routes.javascript.Projects.createProject()
 						)
 				)
 				.as("text/javascript");

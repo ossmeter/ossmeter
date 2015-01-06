@@ -45,6 +45,10 @@ public abstract class CommunicationChannel extends Object {
 	protected String url;
 	protected boolean nonProcessable;
 	
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
 	public String getUrl() {
 		return url;
 	}

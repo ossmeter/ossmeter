@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.ossmeter.platform;
 
+import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectRepository;
 
 import com.mongodb.DB;
@@ -48,5 +49,9 @@ public class ProjectRepositoryManager {
 	public void reset() {
 		mongo.dropDatabase(projectsDatabaseName);
 		init();
+	}
+	
+	public static String generateUniqueId(Project project) {
+		return null;
 	}
 }

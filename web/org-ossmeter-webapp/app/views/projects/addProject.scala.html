@@ -210,6 +210,11 @@
                 
                 if(!isValidForm() )
                     return false;
+
+                // reset
+                versionControlSystems = [];
+                communicationChannels = [];
+                bugTrackingSystems = [];
                 
                 processObjects($('#vcs'));
                 processObjects($('#comm'));
@@ -242,7 +247,7 @@
                     data: JSON.stringify(project),
                     dataType: 'json',
                     contentType : 'application/json; charset=utf-8',
-                    url: '@routes.Projects.addProject()',
+                    url: '@routes.Projects.postCreateProject()',
                     success: function(data){
             			console.log(data);
             			},

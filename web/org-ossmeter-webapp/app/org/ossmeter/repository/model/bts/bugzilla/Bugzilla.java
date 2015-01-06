@@ -51,5 +51,14 @@ public class Bugzilla extends BugTrackingSystem {
 	public String getCgiQueryProgram() {
 		return cgiQueryProgram;
 	}
+	public void setProduct(String product) {
+		this.product = product;
+	}
+	public void setComponent(String component) {
+		this.component = component;
+	}
+	public void setUrl(String url) {
+		this.url = url;
+	}
 	
 }

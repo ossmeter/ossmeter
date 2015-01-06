@@ -17,7 +17,12 @@ Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.repository.model.github,
  org.mapdb,
  org.ossmeter.repository.model.importer.exception,
- com.googlecode.pongo.runtime.osgi
+ com.googlecode.pongo.runtime.osgi,
+ org.ossmeter.repository.model.cc.nntp,
+ org.ossmeter.repository.model.bts.bugzilla,
+ org.apache.commons.lang;bundle-version="2.4.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.platform.client.api
+Import-Package: org.ossmeter.repository.model.vcs.git,
+ org.ossmeter.repository.model.vcs.svn
