@@ -12,11 +12,9 @@ package org.ossmeter.platform.client.api;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.util.UUID;
 
 import org.ossmeter.platform.Configuration;
 import org.ossmeter.platform.Platform;
-import org.ossmeter.platform.ProjectRepositoryManager;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.VcsRepository;
 import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
@@ -118,8 +116,6 @@ public class ProjectCreationResource extends ServerResource {
 				project.getBugTrackingSystems().add(bugs);
 			}	// TODO: Validate all channels.
 
-			// TODO: Generate shortName
-			project.setShortName(ProjectRepositoryManager.generateUniqueId(project));
 			
 			try {
 				mongo = Configuration.getInstance().getMongoConnection();
@@ -129,8 +125,9 @@ public class ProjectCreationResource extends ServerResource {
 				return Util.generateErrorMessageRepresentation(generateRequestJson(mapper, null), "The API was unable to connect to the database.");
 			}
 			Platform platform = new Platform(mongo);
+			project.setShortName(platform.getProjectRepositoryManager().generateUniqueId(project));
 			
-			// TODO: Check it doesn't already exist
+			// TODO: Check it doesn't already exist - how?
 			System.out.println("Adding new project");
 			platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
 			platform.getProjectRepositoryManager().getProjectRepository().getProjects().sync();
