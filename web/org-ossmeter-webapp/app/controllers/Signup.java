@@ -161,29 +161,30 @@ public class Signup extends Controller {
 			if (ta == null) {
 				return badRequest(no_token_or_invalid.render());
 			}
-			final User u = ta.getUser(); // FIXME: This looks like it might shit a brick
+			final User u = ta.getUser(); 
+
 			try {
 				// Pass true for the second parameter if you want to
 				// automatically create a password and the exception never to
 				// happen
-				MongoAuthenticator.resetUserPassword(new MyUsernamePasswordAuthUser(newPassword));
+				MyUsernamePasswordAuthUser authUser = new MyUsernamePasswordAuthUser(newPassword, u.getEmail());
+				MongoAuthenticator.changeUserPassword(authUser, false);
+
+				// Delete token
+				MongoAuthenticator.deleteToken(token);
 			} catch (final RuntimeException re) {
 				flash(Application.FLASH_MESSAGE_KEY,
 						Messages.get("ossmeter.reset_password.message.no_password_account"));
 			}
-			final boolean login = MyUsernamePasswordAuthProvider.getProvider()
-					.isLoginAfterPasswordReset();
+			final boolean login = MyUsernamePasswordAuthProvider.getProvider().isLoginAfterPasswordReset();
 			if (login) {
 				// automatically log in
-				flash(Application.FLASH_MESSAGE_KEY,
-						Messages.get("ossmeter.reset_password.message.success.auto_login"));
+				flash(Application.FLASH_MESSAGE_KEY, Messages.get("ossmeter.reset_password.message.success.auto_login"));
 
-				return PlayAuthenticate.loginAndRedirect(ctx(),
-						new MyLoginUsernamePasswordAuthUser(u.getEmail()));
+				return PlayAuthenticate.loginAndRedirect(ctx(), new MyLoginUsernamePasswordAuthUser(u.getEmail()));
 			} else {
 				// send the user to the login page
-				flash(Application.FLASH_MESSAGE_KEY,
-						Messages.get("ossmeter.reset_password.message.success.manual_login"));
+				flash(Application.FLASH_MESSAGE_KEY, Messages.get("ossmeter.reset_password.message.success.manual_login"));
 			}
 			return redirect(routes.Application.login());
 		}

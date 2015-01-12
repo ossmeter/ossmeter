@@ -255,12 +255,19 @@ public class MongoAuthenticator {
 				throw new RuntimeException("Account not enabled for password usage.");				
 			}
 		}
+
+		// This isn't enough to dirty the object (Pongo bug), so we dirty the email too
 		account.setProviderUserId(authUser.getHashedPassword());
+		user.setEmail(user.getEmail());
 
 		users.getUsers().sync();
 		db.getMongo().close();
 
 		return user;
+	}
+
+	public static void resetUserPassword(final MyUsernamePasswordAuthUser authUser) {
+		changeUserPassword(authUser, false);
 	}
 
 	public static List<User> findAllUsers() {
@@ -288,41 +295,6 @@ public class MongoAuthenticator {
 			users.getUsers().sync();
 		}
 		db.getMongo().close();
-	}
-
-	public static User resetUserPassword(final MyUsernamePasswordAuthUser authUser) {
-		
-
-		changeUserPassword(authUser, false);
-
-		LinkedAccount account = null;
-
-		DB db = getUsersDb();
-		Users users = new Users(db);
-		User user = users.getUsers().findOneByEmail(authUser.getEmail());
-
-		for (LinkedAccount acc : user.getLinkedAccounts()) {
-			if (acc.getProviderKey().equals(authUser.getProvider())) {
-				account = acc;
-				break;
-			}
-		}
-
-		if (account == null) {
-			account = new LinkedAccount();
-			account.setProviderUserId(authUser.getHashedPassword());
-			account.setProviderKey(authUser.getProvider());
-			user.getLinkedAccounts().add(account);
-
-		} else {
-			db.getMongo().close();
-			throw new RuntimeException("Account not enabled for password usage.");
-		}
-
-		users.getUsers().sync();
-		db.getMongo().close();
-
-		return user;
 	}
 
 	/* 
