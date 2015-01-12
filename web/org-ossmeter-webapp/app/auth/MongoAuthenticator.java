@@ -456,6 +456,25 @@ public class MongoAuthenticator {
 		db.getMongo().close();
  	}
 
+ 	public static void deleteGridObject(final User user, final String id) {
+ 		DB db = getUsersDb();
+		Users users = new Users(db);
+
+		User u = users.getUsers().findOneByEmail(user.getEmail());
+		GridEntry toDel = null;
+
+		for (GridEntry g : u.getGrid()) {
+			if (id.equals(g.getUid())) {
+				toDel = g;
+				break;
+			}
+		}
+		u.getGrid().remove(toDel);
+		
+		users.getUsers().sync();
+		db.getMongo().close();
+ 	}
+
  	public static Notification findNotification(User u, String projectId, String metricId) {
  		DB db = getUsersDb();
 		Users users = new Users(db);
@@ -501,6 +520,29 @@ public class MongoAuthenticator {
 
 		users.getUsers().sync();
 		db.getMongo().close();
+ 	}
+
+
+ 	public static EventGroup getEventGroupById(User u, String id) {
+ 		DB db = getUsersDb();
+		Users users = new Users(db);
+
+		User user = users.getUsers().findOneByEmail(u.getEmail());
+		EventGroup toReturn = null;
+
+		for (GridEntry g : user.getGrid()) {
+			if (g instanceof EventGroup) {
+				EventGroup gg = (EventGroup)g;
+				if (id.equals(gg.getUid())) {
+					toReturn = gg;
+					break;
+				}
+			}
+		}
+
+		db.getMongo().close();
+
+		return toReturn;
  	}
 
  	public static void updateNotification(User u, String projectId, String metricId, double threshold, boolean aboveThreshold) {

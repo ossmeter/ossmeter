@@ -150,17 +150,24 @@
     @for(g <- localUser.getGrid()) {
         <li class="box gridentry" data-row="@g.getRow()" data-col="@g.getCol()" data-sizex="@g.getSizeX()" data-sizey="@g.getSizeY()" id="@g.getId()">
             @g match {
-                case m : Message => {
-                    <div class="clearfix">
-                        <h3 class="pull-left">Messages</h3>
-                        <span class="glyphicon glyphicon-comment dash pull-right"></span>
-                        <!-- <div class="pull-right"><button class="btn btn-primary">M</button></div> -->
+                case n : Message => {
+                    <div class="row nopadding">
+                        <span class="glyphicon glyphicon-envelope dash"></span>
+                        <a href="@routes.Account.deleteGridObject(n.getUid())"><span class="glyphicon glyphicon-remove dash edit pull-right"></span></a>
                     </div>
-                    <p>Welcome to your Dashboard! You can drag these widgets about to organise them as you like!</p>
+                    <div class="row nopadding">
+                        <h3 class="pull-left">Messages</h3>
+                        <p>Welcome to your Dashboard! You can drag these widgets about to organise them as you like!</p>
+                    </div>
+                    
                 }
                 case n : Notification => {
                     <div class="row nopadding">
-                    <span class="glyphicon glyphicon-bell dash pull-right"></span><a href="#"><span class="glyphicon glyphicon-cog dash edit pull-right"></span></a>
+                        <span class="glyphicon glyphicon-bell dash"></span>
+                        <a href="@routes.Account.deleteGridObject(n.getUid())"><span class="glyphicon glyphicon-remove dash edit pull-right"></span></a>
+                        <a href="#"><span class="glyphicon glyphicon-pencil dash edit pull-right"></span></a>
+                    </div>
+                    <div class="row nopadding">
                         <div class="col-md-9 nopadding" style="line-height:1em">
                             <span style="font-size:0.6em">Project:</span><br/>
                             <span class="no-overflow" style="font-size:0.8em"><a href="@routes.Projects.view(n.getProject().getId())">@n.getProject().getName().take(10)</a></span><br/>
@@ -209,23 +216,28 @@
 
                 }
                 case n : PlotGridEntry => {
-                    <span class="glyphicon glyphicon-stats dash pull-right"></span>
-                    <div class="clearfix">
-                        <div class="row nopadding">
-                            <div class="col-md-6 nopadding" style="line-height:1em">
-                                <span style="font-size:0.6em">Project:</span><br/>
-                                <span style="font-size:0.8em">@n.getProject().getName()</span><br/>
-                            </div>
-                            <div class="col-md-5 nopadding" style="line-height:1em">
-                                <span style="font-size:0.6em">Metric:</span><br/>
-                                <span style="font-size:0.8em">@n.getMetric().getName()</span>
-                            </div>
-                            <!-- <div class="col-md-1 nopadding" style="line-height:1em">
-                                <span class="glyphicon glyphicon-stats dash pull-right"></span>
-                            </div> -->
-                        </div>
+                    <div class="row nopadding">
+                        <span class="glyphicon glyphicon-stats dash"></span>
+                        <a href="@routes.Account.deleteGridObject(n.getUid())"><span class="glyphicon glyphicon-remove dash edit pull-right"></span></a>
                     </div>
-                    <div id="plot-@n.getProject().getId()-@n.getMetric().getId()"></div>
+                    <div class="row nopadding">
+                        <div class="clearfix">
+                            <div class="row nopadding">
+                                <div class="col-md-6 nopadding" style="line-height:1em">
+                                    <span style="font-size:0.6em">Project:</span><br/>
+                                    <span style="font-size:0.8em">@n.getProject().getName()</span><br/>
+                                </div>
+                                <div class="col-md-5 nopadding" style="line-height:1em">
+                                    <span style="font-size:0.6em">Metric:</span><br/>
+                                    <span style="font-size:0.8em">@n.getMetric().getName()</span>
+                                </div>
+                                <!-- <div class="col-md-1 nopadding" style="line-height:1em">
+                                    <span class="glyphicon glyphicon-stats dash pull-right"></span>
+                                </div> -->
+                            </div>
+                        </div>
+                        <div id="plot-@n.getProject().getId()-@n.getMetric().getId()"></div>
+                    </div>
                     <script type="text/javascript">
                     $(function(){ 
                         $.getJSON(getApi() + "/projects/p/@n.getProject().getId()/m/@n.getMetric().getId()", function(vis) {
@@ -239,28 +251,32 @@
                     </script>
                 }
                 case n : SparkGridEntry => {
-                    <div class="clearfix">
-                        <!-- <div class="pull-right"><button class="btn btn-primary">S</button></div> -->
-                        <span class="glyphicon glyphicon-flash dash pull-right"></span>
-                        <div class="row pull-left nopadding">
-                            <div class="col-md-12 nopadding" style="line-height:1em">
-                                <span style="font-size:0.6em">Project:</span><br/>
-                                <span style="font-size:0.8em">@n.getProject().getName()</span><br/>
-                                <span style="font-size:0.6em">Metric:</span><br/>
-                                <span style="font-size:0.8em">@n.getMetric().getName()</span>
+                    <div class="row nopadding">
+                        <span class="glyphicon glyphicon-flash dash"></span>
+                        <a href="@routes.Account.deleteGridObject(n.getUid())"><span class="glyphicon glyphicon-remove dash edit pull-right"></span></a>
+                    </div>
+                    <div class="row nopadding">
+                        <div class="clearfix">
+                            <div class="row pull-left nopadding">
+                                <div class="col-md-12 nopadding" style="line-height:1em">
+                                    <span style="font-size:0.6em">Project:</span><br/>
+                                    <span style="font-size:0.8em">@n.getProject().getName()</span><br/>
+                                    <span style="font-size:0.6em">Metric:</span><br/>
+                                    <span style="font-size:0.8em">@n.getMetric().getName()</span>
+                                </div>
                             </div>
-                        </div>
-                        <table class="table spark-table" id="spark-@n.getProject().getId()-@n.getMetric().getId()-table">
-                            <thead>
-                                <th>low</th>
-                                <th>high</th>
-                                <th>curr</th>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
+                            <table class="table spark-table" id="spark-@n.getProject().getId()-@n.getMetric().getId()-table">
+                                <thead>
+                                    <th>low</th>
+                                    <th>high</th>
+                                    <th>curr</th>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
 
-                        <div id="spark-@n.getProject().getId()-@n.getMetric().getId()"></div>
+                            <div id="spark-@n.getProject().getId()-@n.getMetric().getId()"></div>
+                        </div>
                     </div>
                     <script type="text/javascript">
                     $(function() {
@@ -276,10 +292,12 @@
                     </script>
                 }
                 case n : EventGroup => {
-                    <div class="">
-                        <!-- <div class="pull-right"><img src="@routes.Assets.at("icons/events.png")" alt="Edit Event Group"/></div> -->
-                        <span class="glyphicon glyphicon-calendar dash pull-right"></span>
-                        <h3 class="pull-left">@n.getName()</h3>
+                    <div class="row nopadding">
+                        <span class="glyphicon glyphicon-calendar dash"></span>
+                        <a href="@routes.Account.deleteGridObject(n.getUid())"><span class="glyphicon glyphicon-remove dash edit pull-right"></span></a><a href="#"><span class="glyphicon glyphicon-pencil dash edit pull-right"></span></a>
+                    </div>
+                    <div class="row nopadding">
+                        <h4>@n.getName()</h4>
                         <div class="clearfix"></div>
                         @if(n.getEvents().size() >0){
                             <div class="">
@@ -332,7 +350,7 @@
     $(function(){ 
         grid = $(".gridster ul").gridster({
             widget_margins: [10, 10],
-            widget_base_dimensions: [140, 140],
+            widget_base_dimensions: [140, 180],
             serialize_params: function($w, wgd) {
                 return {
                     id: $($w).attr("id"),

@@ -54,6 +54,20 @@ public class Account extends Controller {
 
 	@SubjectPresent
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
+	public static Result deleteGridObject(String id) {
+		User user = Application.getLocalUser(session());
+
+		if (user == null) {
+			// Not logged in
+			return ok("Sorry, you need to be logged in to do that.");
+		}
+
+		MongoAuthenticator.deleteGridObject(user, id);
+		return redirect(routes.Application.profile());
+	}
+
+	@SubjectPresent
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result updateNotification(String projectid, String metricid, double value, boolean aboveThreshold) {
 		User user = Application.getLocalUser(session());
 
@@ -312,7 +326,19 @@ public class Account extends Controller {
 		Form<EventGroup> form = form(EventGroup.class);
 
 		return ok(views.html.account._eventGroupForm.render(form));
-	}	
+	}
+
+	@SubjectPresent
+	public static Result editEventGroup(String id) {
+
+		final User user = Application.getLocalUser(session());
+		EventGroup eg = MongoAuthenticator.getEventGroupById(user, id);
+
+		Form<EventGroup> form = form(EventGroup.class);
+		form.fill(eg);
+
+		return ok(views.html.account._eventGroupForm.render(form));
+	}
 
 	@SubjectPresent
 	public static Result createEventGroup() {

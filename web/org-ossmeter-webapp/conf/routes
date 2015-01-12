@@ -10,7 +10,7 @@ GET		/admin/requests/offer		controllers.Admin.offerInvite(email:String)
 GET		/admin/requests/delete		controllers.Admin.deleteInvite(email:String)
 GET     /admin/users                controllers.Users.users()
 GET     /admin/users/:id            controllers.Users.view(id:String)
-GET    /admin/users/:id/delete      controllers.Users.delete_confirmation(id: String)
+GET     /admin/users/:id/delete      controllers.Users.delete_confirmation(id: String)
 POST   /admin/users/:id/delete      controllers.Users.delete(id: String)
 
 # Invite Acceptance
@@ -44,7 +44,9 @@ GET		/demo/projects/:id/detail/ 	controllers.DemoApplication.viewProject(id : St
 GET     /profile                    controllers.Application.profile
 GET		/profile/notification		controllers.Application.profileNotification(projectid: String, projectName : String, metricid : String, metricName : String)
 POST	/profile/notification		controllers.Account.createNotification
+GET	/profile/grid/delete/:id	controllers.Account.deleteGridObject(id:String)
 GET		/profile/eventgroup			controllers.Account.loadEventGroupForm
+GET		/profile/eventgroup/:id		controllers.Account.editEventGroup(id : String)
 POST	/profile/eventgroup			controllers.Account.createEventGroup
 GET		/profile/event				controllers.Application.profileEvent
 POST	/profile/event				controllers.Account.createEvent
