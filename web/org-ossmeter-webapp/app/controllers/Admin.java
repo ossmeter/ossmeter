@@ -102,6 +102,7 @@ public class Admin extends Controller {
 
         inv.setStatus("SENT");
         users.getInvites().sync();
+        db.getMongo().close();
 
 		flash(Application.FLASH_MESSAGE_KEY, "Invite sent: " + routes.Invitation.acceptInvitation(inv.getToken()));
 		return redirect(routes.Admin.requests());
@@ -109,7 +110,19 @@ public class Admin extends Controller {
 
 	@Restrict(@Group(MongoAuthenticator.ADMIN_ROLE))
 	public static Result deleteInvite(String email) {
-		System.out.println(email);
+		
+		DB db = MongoAuthenticator.getUsersDb();
+        Users users = new Users(db);
+
+        InvitationRequest inv = users.getInvites().findOneByEmail(email);
+
+        if (inv != null) {
+        	users.getInvites().remove(inv);
+        }
+
+        users.getInvites().sync();
+        db.getMongo().close();
+
 		flash(Application.FLASH_MESSAGE_KEY, "Invite deleted.");
 		return redirect(routes.Admin.requests());
 	}

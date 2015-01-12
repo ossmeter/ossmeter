@@ -94,6 +94,8 @@ public class MongoAuthenticator {
 		message.setSizeY(1);
 		message.setRow(1); // Stupid gridster is 1-based
 		message.setCol(1);
+		message.setTitle("Welcome!");
+		message.setBody("<p>Thanks for signing up for OSSMETER!</p>");
 		user.getGrid().add(message);
 
 		// // DEBUG - examples only (we could leave them here though, to show the user what it would look like)

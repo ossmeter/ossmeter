@@ -61,9 +61,10 @@ POST    /login                      controllers.Application.doLogin
 GET     /logout                     com.feth.play.module.pa.controllers.Authenticate.logout
 GET     /authenticate/:provider     com.feth.play.module.pa.controllers.Authenticate.authenticate(provider: String)
 
-GET     /signup                		controllers.Application.signup()
-GET     /signup/                	controllers.Application.signup()
-POST    /signup                     controllers.Application.doSignup
+# Standard signup currently disabled
+#GET     /signup                	controllers.Application.signup()
+#GET     /signup/                	controllers.Application.signup()
+POST    /signup                    controllers.Application.doSignup
 
 GET     /accounts/unverified        controllers.Signup.unverified
 GET     /authenticate/:provider/denied     controllers.Signup.oAuthDenied(provider: String)

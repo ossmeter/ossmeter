@@ -156,8 +156,8 @@
                         <a href="@routes.Account.deleteGridObject(n.getUid())"><span class="glyphicon glyphicon-remove dash edit pull-right"></span></a>
                     </div>
                     <div class="row nopadding">
-                        <h3 class="pull-left">Messages</h3>
-                        <p>Welcome to your Dashboard! You can drag these widgets about to organise them as you like!</p>
+                        <h4>@n.getTitle()</h4>
+                        @Html(n.getBody())
                     </div>
                     
                 }
