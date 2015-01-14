@@ -11,13 +11,19 @@ public class Users extends PongoDB {
 		setDb(db);
 	}
 	
+	protected InvitationRequestCollection invites = null;
 	protected UserCollection users = null;
 	protected TokenCollection tokens = null;
 	protected ProjectCollection projects = null;
 	protected StatisticsCollection statistics = null;
 	protected TagCollection tags = null;
+	protected LogCollection logs = null;
 	
 	
+	
+	public InvitationRequestCollection getInvites() {
+		return invites;
+	}
 	
 	public UserCollection getUsers() {
 		return users;
@@ -39,10 +45,16 @@ public class Users extends PongoDB {
 		return tags;
 	}
 	
+	public LogCollection getLogs() {
+		return logs;
+	}
+	
 	
 	@Override
 	public void setDb(DB db) {
 		super.setDb(db);
+		invites = new InvitationRequestCollection(db.getCollection("invites"));
+		pongoCollections.add(invites);
 		users = new UserCollection(db.getCollection("users"));
 		pongoCollections.add(users);
 		tokens = new TokenCollection(db.getCollection("tokens"));
@@ -53,5 +65,7 @@ public class Users extends PongoDB {
 		pongoCollections.add(statistics);
 		tags = new TagCollection(db.getCollection("tags"));
 		pongoCollections.add(tags);
+		logs = new LogCollection(db.getCollection("logs"));
+		pongoCollections.add(logs);
 	}
 }

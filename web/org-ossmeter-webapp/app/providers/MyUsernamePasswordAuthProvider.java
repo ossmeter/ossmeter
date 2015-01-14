@@ -144,7 +144,8 @@ public class MyUsernamePasswordAuthProvider
 		// if you return
 		// return SignupResult.USER_CREATED;
 		// then the user gets logged in directly
-		return SignupResult.USER_CREATED_UNVERIFIED;
+		// return SignupResult.USER_CREATED_UNVERIFIED;
+		return SignupResult.USER_CREATED;
 	}
 
 	@Override
@@ -154,9 +155,10 @@ public class MyUsernamePasswordAuthProvider
 		if (u == null) {
 			return LoginResult.NOT_FOUND;
 		} else {
-			if (!u.getEmailValidated()) {
-				return LoginResult.USER_UNVERIFIED;
-			} else {
+			// FIXME: We may need to put this back in when going into production
+			// if (!u.getEmailValidated()) {
+			// 	return LoginResult.USER_UNVERIFIED;
+			// } else {
 				for (final LinkedAccount acc : u.getLinkedAccounts()) {
 					if (getKey().equals(acc.getProviderKey())) {
 						if (authUser.checkPassword(acc.getProviderUserId(),
@@ -173,7 +175,7 @@ public class MyUsernamePasswordAuthProvider
 					}
 				}
 				return LoginResult.WRONG_PASSWORD;
-			}
+			// }
 		}
 	}
 

@@ -51,11 +51,15 @@ public class Project extends NamedElement {
 		HOMEPAGE.setOwningType("org.ossmeter.repository.model.Project");
 	}
 	
+	
+	
+	
 	public static StringQueryProducer NAME = new StringQueryProducer("name"); 
 	public static StringQueryProducer SHORTNAME = new StringQueryProducer("shortName"); 
 	public static StringQueryProducer DESCRIPTION = new StringQueryProducer("description"); 
 	public static NumericalQueryProducer YEAR = new NumericalQueryProducer("year");
 	public static StringQueryProducer ACTIVE = new StringQueryProducer("active"); 
+	public static StringQueryProducer ANALYSED = new StringQueryProducer("analysed"); 
 	public static StringQueryProducer LASTEXECUTED = new StringQueryProducer("lastExecuted"); 
 	public static StringQueryProducer HOMEPAGE = new StringQueryProducer("homePage"); 
 	
@@ -91,8 +95,17 @@ public class Project extends NamedElement {
 		return parseBoolean(dbObject.get("active")+"", true);
 	}
 	
-	public Project setActive(boolean active) {
-		dbObject.put("active", active);
+	public Project setActive(boolean analysed) {
+		dbObject.put("analysed", analysed);
+		notifyChanged();
+		return this;
+	}
+	public boolean getAnalysed() {
+		return parseBoolean(dbObject.get("active")+"", true);
+	}
+	
+	public Project setAnalysed(boolean analysed) {
+		dbObject.put("analysed", analysed);
 		notifyChanged();
 		return this;
 	}

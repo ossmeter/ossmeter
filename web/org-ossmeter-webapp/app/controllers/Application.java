@@ -7,6 +7,7 @@ import java.util.List;
 
 import model.*;
 import models.*;
+import model.Users;
 import play.Routes;
 import play.data.Form;
 import play.mvc.*;
@@ -36,7 +37,10 @@ import com.feth.play.module.pa.user.AuthUser;
 import static play.data.Form.*;
 
 import auth.MongoAuthenticator;
+import com.mongodb.Mongo;
+import com.mongodb.DB;
 
+@With(LogAction.class)
 public class Application extends Controller {
 
 	public static final String FLASH_MESSAGE_KEY = "message";
@@ -88,7 +92,8 @@ public class Application extends Controller {
 						controllers.routes.javascript.Application.profileNotification(),
 						controllers.routes.javascript.Account.createNotification(),
 						controllers.routes.javascript.Account.updateGridLocations(),
-						controllers.routes.javascript.Account.loadEventGroupForm()
+						controllers.routes.javascript.Account.loadEventGroupForm(),
+						controllers.routes.javascript.Projects.createProject()
 						)
 				)
 				.as("text/javascript");
@@ -131,25 +136,27 @@ public class Application extends Controller {
 		if (!path.startsWith("/")){
 			path = "/" + path;
 		}
-
-		System.out.println("api: " + play.Play.application().configuration().getString("ossmeter.api"));
 		String url = play.Play.application().configuration().getString("ossmeter.api") + path; 
-
-		System.out.println(url);
 
 		Promise<Result> promise = WS.url(url).get().map(
 		    new Function<WSResponse, Result>() {
 		        public Result apply(WSResponse response) {
-		        	try {
-		            	JsonNode json = response.asJson();
-			            return ok(json);
-		            } catch (Exception e) {
-		            	return ok(response.getBody()).as("image/png");
-		            }
-
-
-
-		            // return ok(image).as("image/png")
+		        	List<String> contentTypes = response.getAllHeaders().get("Content-Type");
+		        	if (contentTypes.size() > 0) {
+		        		String type = contentTypes.get(0);
+		        		if (type.contains("application/json")) {
+		        			return ok(response.asJson());
+		        		} else if(type.equals("image/png")) {
+		        			// return ok(response.asByteArray()).as("image/png");
+		        			return ok(response.getBodyAsStream());
+		        		} else {
+		        			System.err.println("Unrecognised Content-Type.");
+			        		return ok();	
+		        		}
+		        	} else {
+		        		System.err.println("No Content-Type set on response.");
+		        		return ok();
+		        	}
 		        }
 		    }
 		);
@@ -161,12 +168,6 @@ public class Application extends Controller {
 		final AuthUser currentAuthUser = PlayAuthenticate.getUser(session);
 		final User localUser = MongoAuthenticator.findUser(currentAuthUser);
 		return localUser;
-	}
-
-	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
-	public static Result admin() {
-		final User localUser = getLocalUser(session());
-		return ok(admin.render(localUser));
 	}
 
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
@@ -194,10 +195,6 @@ public class Application extends Controller {
 			noti.setProject(p);
 			noti.setMetric(m);
 		} else {
-
-			System.out.println("notification already exists!");
-			System.out.println(noti.getDbObject());
-
 			form.fill(noti);
 		}
 
@@ -240,8 +237,7 @@ public class Application extends Controller {
 
 	public static Result doSignup() {
 		com.feth.play.module.pa.controllers.Authenticate.noCache(response());
-		final Form<MySignup> filledForm = MyUsernamePasswordAuthProvider.SIGNUP_FORM
-				.bindFromRequest();
+		final Form<MySignup> filledForm = MyUsernamePasswordAuthProvider.SIGNUP_FORM.bindFromRequest();
 		if (filledForm.hasErrors()) {
 			// User did not fill everything properly
 			return badRequest(signup.render(filledForm));

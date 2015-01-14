@@ -65,8 +65,6 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 		prop.load(this.getClass().getResourceAsStream("/config/log4j.properties"));
 		
 		logger = (OssmeterLogger)OssmeterLogger.getLogger("OssmeterApplication");
-		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
-		logger.addMongoDBAppender(prop);
 		logger.info("Application initialising.");
 
 		// Connect to Mongo - single instance per node

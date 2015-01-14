@@ -41,7 +41,7 @@ public class DemoApplication extends Controller {
 	}
 
 	public static Result compare() {
-		return ok(views.html.demo.compare.render());//Application.getInformationSourceModel()));
+		return ok(views.html.demo.compare.render(Application.getInformationSourceModel()));
 	}
 
 	public static Result viewProject(String id, boolean summary) {

@@ -17,6 +17,7 @@
 @import org.ossmeter.repository.model.vcs.svn._
 @import org.ossmeter.repository.model.vcs.git._
 @import org.ossmeter.repository.model.eclipse._
+@import org.ossmeter.repository.model.github._
 
 @attributeId = @{ 
     attribute.name.replaceAll(" ", "");
@@ -222,6 +223,12 @@
                                     <td>@bts match {
                                         case a : Bugzilla => {
                                         Bugzilla
+                                        }
+                                        case b : GitHubBugTracker => {
+
+                                        }
+                                        case default => {
+
                                         }
                                     }</td>
                                 </tr>

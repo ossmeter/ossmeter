@@ -35,7 +35,6 @@ public class GitHubImporterProvider implements ITransientMetricProvider{
 	public GitHubImporterProvider()
 	{
 		logger = (OssmeterLogger) OssmeterLogger.getLogger("metricprovider.importer.gitHub");
-		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 	}
 	/**
 	 * List of MPs that are used by this MP. These are MPs who have specified that 

@@ -49,7 +49,6 @@ public class ProjectExecutor implements Runnable {
 		this.platform = platform;
 		this.project = project;
 		this.logger = (OssmeterLogger)OssmeterLogger.getLogger("ProjectExecutor (" + project.getName() +")");
-		this.logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 		
 	}
 	
@@ -174,6 +173,11 @@ public class ProjectExecutor implements Runnable {
 			}
 			
 		}
+		
+		if (!project.getExecutionInformation().getInErrorState() && !project.getAnalysed()) {
+			project.setAnalysed(true);
+		}
+		
 		logger.info("Project execution complete. In error state: " + project.getExecutionInformation().getInErrorState());
 	}
 

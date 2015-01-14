@@ -21,7 +21,7 @@
     		<div class="row section-heading">
     	        <div class="col-md-6">
     		        <ol class="breadcrumb projectbreadcrumb">
-    		            <li>@if(project.getActive()) {Active}else{Inactive} (2007-present)</li>
+    		            <!-- <li>@if(project.getActive()) {Active}else{Inactive} (2007-present)</li> -->
                         @if(project.getLicenses() ne null) {
                             @project.getLicenses().foreach(lic =>{
     		            <li><a href="#">lic.getName()</a></li>

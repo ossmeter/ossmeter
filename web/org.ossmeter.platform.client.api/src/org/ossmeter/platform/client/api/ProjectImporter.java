@@ -20,7 +20,7 @@ public class ProjectImporter {
 
 	
 //	TODO: This should be smarter and return helpful error messages
-	public Project importProject(String url) {
+	public Project importProject(String url, Platform platform) {
 		Project p = null;
 		
 		url = url.replace("http://", "");
@@ -44,7 +44,7 @@ public class ProjectImporter {
 			System.out.println("url to import: " + url);
 			try {
 				EclipseProjectImporter importer = new EclipseProjectImporter();
-				p = importer.importProject(url, Platform.getInstance());
+				p = importer.importProject(url, platform);
 			} catch (Exception e) {
 				e.printStackTrace(); // FIXME better handling
 				return null;

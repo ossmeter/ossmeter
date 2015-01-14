@@ -58,7 +58,6 @@ public class SourceforgeProjectImporter {
 	public SourceforgeProjectImporter()
 	{
 		logger = (OssmeterLogger) OssmeterLogger.getLogger("importer.sourceforge");
-		logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 	}
 
 	

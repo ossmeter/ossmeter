@@ -1,0 +1,16 @@
+@(localUser: model.User = null)
+
+@main(Messages("ossmeter.navigation.admin"), "admin") {
+<section>
+	<div class="container box">
+	    <div class="row col-md-12">
+		    <h1>@Messages("ossmeter.navigation.admin")</h1>
+		    <ul>
+		        <li><a class="btn" href="@routes.Users.users()">@Messages("ossmeter.admin.users") &raquo;</a></li>
+		        <li><a class="btn" href="@routes.Admin.requests()">Invite requests</a></li>
+		    </ul>
+
+		</div>
+   </div>
+</section>
+}

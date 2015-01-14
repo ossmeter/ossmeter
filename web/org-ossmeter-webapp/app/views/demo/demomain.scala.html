@@ -49,7 +49,7 @@
             </ul>
           <div class="btn-group pull-right">
             <ul class="nav navbar-nav navbar-right">
-                  <li class="@("active".when(nav == "invitation"))"><a href="@routes.InvitationController.requestInvitation()">@Messages("ossmeter.navigation.invitation")</a></li>
+                  <li class="@("active".when(nav == "invitation"))"><a href="@routes.Invitation.requestInvitation()">@Messages("ossmeter.navigation.invitation")</a></li>
                   <li><a href="@routes.Application.login()" class="@("disabled".when(nav == "login"))">@Messages("ossmeter.navigation.login")</a></li>
               </ul>
             </div><!--/.pull-right -->
@@ -111,8 +111,8 @@
             <strong>Twitter:</strong> <a href="https://www.twitter.com/ossmeter">@@ossmeter</a></p>
           </div>
         </div>
-        <p>&copy; 2014 OSSMETER. Licensed under the Eclipse Public License, Version 1.0. View details <a href="https://www.eclipse.org/legal/epl-v10.html">here</a>.</p>
-        <p>
+        <p>&copy; 2015 OSSMETER. Licensed under the Eclipse Public License, Version 1.0. View details <a href="https://www.eclipse.org/legal/epl-v10.html">here</a>.</p>
+        <p>Hosted by <a href="http://www.york.ac.uk">The University of York</a>. <a href="http://www.york.ac.uk/about/legal-statements/">Disclaimer</a></p>
         <small><a href="http://twitter.github.com/bootstrap/index.html" target="_blank">Twitter Bootstrap</a> &middot; Provider icons by <a href="https://github.com/paulrobertlloyd/socialmediaicons/" target="_blank">Paul Robert Lloyd</a></small></p>
         </div>
       </footer>

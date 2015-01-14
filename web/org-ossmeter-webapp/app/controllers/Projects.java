@@ -10,7 +10,12 @@ import models.QualityModel;
 import models.ProjectImport;
 
 import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.VcsRepository;
 import org.ossmeter.repository.model.vcs.svn.SvnRepository;
+import org.ossmeter.repository.model.vcs.git.GitRepository;
+import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
+import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
+
 
 import play.*;
 import play.mvc.*;
@@ -27,7 +32,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
@@ -38,6 +43,7 @@ import auth.MongoAuthenticator;
 
 import static play.data.Form.*;
 
+@With(LogAction.class)
 public class Projects extends Controller {
 	
 	private static final String jsonUrl = play.Play.application().configuration().getString("ossmeter.api");
@@ -95,12 +101,9 @@ public class Projects extends Controller {
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result projects() {
 		try {
-		    List<Project> projectList = getProjects();
+			// TODO: This should be featured projects - taken from the DB.
+		    List<Project> projectList = new ArrayList<>();
 		    return ok(views.html.projects.projects.render(projectList, MongoAuthenticator.getStatistics()));
-		} catch (ConnectException e) {
-			e.printStackTrace();
-			flash(Application.FLASH_ERROR_KEY, "Unable to connect to the OSSMETER API."); //TODO move to Messages.
-			return ok(views.html.index.render());
 		} catch (Exception e) {
 			e.printStackTrace();
 			flash(Application.FLASH_ERROR_KEY, "An unexpected error has occurred. We are looking into it.");//TODO move to Messages.
@@ -171,94 +174,66 @@ public class Projects extends Controller {
 		return ok(views.html.projects.form.render(form(Project.class), form(ProjectImport.class)));
 	}
 	
-	
-	//jimi
-	public static Result javascriptRoutes() {
-	    response().setContentType("text/javascript");
-	    return ok(
-	        Routes.javascriptRouter("myJsRoutes",
-	            routes.javascript.Projects.addProject()
-	        )
-	    );
-	}
-	
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result createProject() {
+		// Project project = new Project();
+		// project.setName("hello");
+
+		// project.getVcsRepositories().add(new SvnRepository());
+		// project.getVcsRepositories().add(new GitRepository());
+
+		// Form<Project> form = form(Project.class);
+		// form.fill(project);
+
+		// FIXME: Cannot get the form working with POJOs. Just translate
+		// Jimi's JSON into a Project object and send it.
+		// return ok(views.html.projects.createProject.render(form));
 		return ok(views.html.projects.addProject.render());
 	}
-	
-	@BodyParser.Of(value = BodyParser.Text.class, maxLength = 1000 * 1024)
-	public static Result addProject(String projectJson) {
-		
-		System.out.println(projectJson);
-		
-//		Logger.debug(request().getQueryString("data").toString());
-//		
-//		DynamicForm postData = Form.form().bindFromRequest();
-//    	
-//		Project project = createProject(postData);
-    	
-    	/*
-    	
-    	ObjectNode comm = Json.newObject();
-    	comm.put("name", "nntp");
-    	comm.put("url", "http://nntp");
-    	ObjectNode comm1 = Json.newObject();
-    	comm1.put("name", "nntp");
-    	comm1.put("url", "http://nntp.newsgroup");
-    	ArrayList<Object> comms = new ArrayList<Object>();
-    	comms.add(comm);
-    	comms.add(comm1);
-    	
-    	ObjectNode bts = Json.newObject();
-    	bts.put("url", "http://");
-    	
-    	ObjectNode vcs = Json.newObject();
-    	vcs.put("name", "bitbucket");
-    	vcs.put("url", "http://bitbucket.org");
-    	
-    	ObjectNode vcs_1 = Json.newObject();
-    	vcs_1.put("name", "svn");
-    	vcs_1.put("url", "http://svn.org");
-    	
-    	ObjectNode project = Json.newObject();
-    
-    	
-    	//Form<Project> filledForm = projectForm.bindFromRequest();
 
-	    	//Project.create(filledForm.get());
-	    	project.put("status", "OK");
-	    	project.put("name", postData.get("name"));
-	    	project.put("description", postData.get("proj_desc"));
-	    	project.put("bts", bts);
-	    	project.put("vcs", vcs);*/
-	    	
-	 
-	    //return ok(request().body().toString());
-	    return ok("Project created.");
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
+	public static Result postCreateProject() {
 		
-	}
-	
-	@BodyParser.Of(value = BodyParser.Json.class, maxLength = 1000 * 1024)
-	public static Result addProject() {
-		
-		Logger.debug(request().body().toString());
+		ObjectMapper mapper = new ObjectMapper();
 		JsonNode json = request().body().asJson();
+
+
 		System.out.println(json);
-		
-		return ok(json);
-	}
+
 	
-	public static Project createProject(DynamicForm postData) {
-		Project project = new Project();
-		project.setShortName(postData.get("proj_name"));
-		project.setHomePage(postData.get("homepage"));
-		project.setDescription(postData.get("proj_desc"));
-		
-		project.getVcsRepositories().add(createSvnRepository(postData));
-		
-		return project;
-	}
+		final Promise<Result> resultPromise = WS.url(play.Play.application().configuration().getString("ossmeter.api") + "/projects/create").post(json.toString())
+			.map(new Function<WSResponse, Result>() {
+				public Result apply(WSResponse response) {
+					// JsonNode node = response.asJson();
+
+
+					return ok();
+					// if (node.has("status") && "error".equals(node.get("status").asText())) {
+					// 	flash(Application.FLASH_ERROR_KEY, "Invalid URL.");
+					// 	return badRequest(views.html.projects.form.render(form(Project.class), form));
+					// }
+
+					// // TODO check for errors, etc.
+					// ObjectMapper mapper = new ObjectMapper();
+
+					// try {
+					// 	Project project = mapper.readValue(node.toString(), Project.class);
+     //                    // project.id = node.get("shortName").asLong();
+     //                    // project.name = node.get("name").asText();
+     //                    // project.shortName = node.get("shortName").asText();
+     //                    // project.url = node.get("url").asText();
+     //                    // project.desc = node.get("desc").asText();
+
+					// 	return redirect(routes.Projects.view(project.getShortName()));//views.html.projects.view_item.render(project));
+					// 	// return view(project.shortName);
+					// } catch (Exception e) {
+					// 	e.printStackTrace(); //FIXME: handle better
+					// 	return internalServerError(e.getMessage());
+					// }
+				}
+			});
+		return resultPromise.get(120000);	
+	}	
 	
 	public static SvnRepository createSvnRepository(DynamicForm postData) {
 		SvnRepository svnRepos = new SvnRepository();
@@ -317,55 +292,5 @@ public class Projects extends Controller {
 					}
 				});
 		return resultPromise.get(120000);	
-	}
-	
-	public static Result save() {
-		Form<Project> form = form(Project.class).bindFromRequest();
-		if (form.hasErrors()) {
-			flash("error", "Invalid details.");
-	        return badRequest(views.html.projects.form.render(form, form(ProjectImport.class)));
-	    } else {
-			Project project = form.get();
-
-			// TODO
-
-			// project.save();
-			// flash.success("Project successfully created!");
-	    }
-	    return redirect(routes.Projects.projects());
-	}
-	
-	public static Result edit(Long id) {
-		// TODO FIXME
-
-		// Form<Project> form = form(Project.class).fill(models.Project.find.byId(id));
-		// return ok(views.html.projects.form_edit.render(form));
-		return redirect(routes.Projects.projects());
-	}
-	
-	public static Result update(Long id) {
-		// TODO FIXME
-		// Form<Project> form = form(Project.class).bindFromRequest();
-		// if (form.hasErrors()) {
-	 //        return badRequest(views.html.projects.form.render(form, form(ProjectImport.class)));
-	 //    } else {
-		// 	Project project = form.get();
-		// 	project.id = id;
-		// 	project.update();
-		// 	// flash.success("Project successfully updated!");
-	 //    }
-		return redirect(routes.Projects.projects());
-	}
-	
-	public static Result delete_confirmation(Long id) {
-		return ok(views.html.projects.confirmation.render(id));
-	}
-
-	public static Result delete(Long id) {
-		// TODO FIXME
-		// Project project = models.Project.find.byId(id);
-		// project.delete();
-		// flash.success("Project successfully deleted!");
-		return redirect(routes.Projects.projects());
 	}
 }

@@ -142,7 +142,6 @@ public class RascalManager {
 		ModuleEnvironment moduleRoot = new ModuleEnvironment("******ossmeter******", heap);
 
 		OssmeterLogger log = (OssmeterLogger) OssmeterLogger.getLogger("Rascal console");
-		log.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 		LoggerWriter stderr = new LoggerWriter(true, log);
 		LoggerWriter stdout = new LoggerWriter(false, log);
 		

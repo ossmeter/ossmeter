@@ -39,9 +39,8 @@
         <a href="javascript:void(0);" onclick="window.location.href = jsRoutes.controllers.Signup.forgotPassword($('#email').val() || null).absoluteURL();">@Messages("ossmeter.login.forgot.password")</a>
     	}
     </div>
-    <div class="col-md-4">
+    @*<div class="col-md-4">
       @Messages("ossmeter.login.oauth")
-      @* Display list of available providers *@
       @_providerPartial(skipCurrent=false)
       @providerAvailable("basic") { available: Boolean =>
           @if(available) {
@@ -49,7 +48,7 @@
               <a href="@com.feth.play.module.pa.controllers.routes.Authenticate.authenticate("basic")">@Messages("ossmeter.login.basic")</a>
           }
       }
-    </div>
+    </div>*@
   </div>
 </div>
 </section>

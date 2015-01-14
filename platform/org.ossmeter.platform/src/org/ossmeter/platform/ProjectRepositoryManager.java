@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.ossmeter.platform;
 
+import java.util.Iterator;
+
+import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectRepository;
 
 import com.mongodb.DB;
@@ -41,6 +44,7 @@ public class ProjectRepositoryManager {
 	}
 	
 	public boolean exists(String projectName){
+		//FIXME: Not a strong enough test
 		if(projectRepository.getProjects().findOneByName(projectName) !=null) return true;
 		return false;
 	}
@@ -48,5 +52,24 @@ public class ProjectRepositoryManager {
 	public void reset() {
 		mongo.dropDatabase(projectsDatabaseName);
 		init();
+	}
+	
+	public String generateUniqueId(Project project) {
+		String desired = project.getName().replaceAll("[^a-zA-Z]+","");
+		
+		Iterator<Project> it = projectRepository.getProjects().findByName(project.getName()).iterator();
+		if (!it.hasNext()){
+			return desired;
+		} else {
+			int last = 0;
+			while (it.hasNext()) {
+				Project alt = it.next();
+				if (alt.getShortName().contains("-")) {
+					int id = Integer.valueOf(alt.getShortName().split("-")[1]);
+					if (id > last) last = id;
+				}
+			}
+			return desired + "-" + (last+1);
+		}
 	}
 }

@@ -58,7 +58,7 @@ public abstract class AbstractApiResource extends ServerResource {
 		platform = new Platform(mongo);
 
 		// Delegate to resource
-		PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
+		PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor()); //FIXME: This _cannot_ stay here. A new one will get added on EVERY API call.
 		Representation rep = doRepresent();
 		
 		mongo.close();

@@ -113,7 +113,6 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		this.needsPrev = hasParameter(PREVIOUS_PARAM);
 		
 		this.logger = (OssmeterLogger) OssmeterLogger.getLogger("RascalMetricProvider (" + friendlyName + ")");
-		this.logger.addConsoleAppender(OssmeterLogger.DEFAULT_PATTERN);
 		
 		assert function instanceof RascalFunction;
 	}

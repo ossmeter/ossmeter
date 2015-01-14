@@ -94,65 +94,67 @@ public class MongoAuthenticator {
 		message.setSizeY(1);
 		message.setRow(1); // Stupid gridster is 1-based
 		message.setCol(1);
+		message.setTitle("Welcome!");
+		message.setBody("<p>Thanks for signing up for OSSMETER!</p>");
 		user.getGrid().add(message);
 
-		// DEBUG - examples only (we could leave them here though, to show the user what it would look like)
-		Notification not = new Notification();
-		not.setSizeX(1);
-		not.setSizeY(1);
-		not.setRow(1);
-		not.setCol(1);
+		// // DEBUG - examples only (we could leave them here though, to show the user what it would look like)
+		// Notification not = new Notification();
+		// not.setSizeX(1);
+		// not.setSizeY(1);
+		// not.setRow(1);
+		// not.setCol(1);
 
-		Project p = new Project();
-		p.setId("epsilon");
-		p.setName("epsilon");
-		not.setProject(p);
-		Metric m = new Metric();
-		m.setId("bugs");
-		m.setName("bugs");
-		not.setMetric(m);
+		// Project p = new Project();
+		// p.setId("epsilon");
+		// p.setName("epsilon");
+		// not.setProject(p);
+		// Metric m = new Metric();
+		// m.setId("bugs");
+		// m.setName("bugs");
+		// not.setMetric(m);
 
-		not.setThreshold(30.0);
-		not.setAboveThreshold(true);
-		user.getGrid().add(not);
+		// not.setThreshold(30.0);
+		// not.setAboveThreshold(true);
+		// user.getGrid().add(not);
 
-		PlotGridEntry pge = new PlotGridEntry();
-		pge.setSizeX(2);
-		pge.setSizeY(1);
-		pge.setRow(1);
-		pge.setCol(1);
-		pge.setMetric(m);
-		pge.setProject(p);
-		user.getGrid().add(pge);
+		// PlotGridEntry pge = new PlotGridEntry();
+		// pge.setSizeX(2);
+		// pge.setSizeY(1);
+		// pge.setRow(1);
+		// pge.setCol(1);
+		// pge.setMetric(m);
+		// pge.setProject(p);
+		// user.getGrid().add(pge);
 
-		SparkGridEntry spark = new SparkGridEntry();
-		spark.setSizeX(1);
-		spark.setSizeY(1);
-		spark.setRow(1);
-		spark.setCol(1);
-		spark.setMetric(m);
-		spark.setProject(p);
-		// spark.setLastValue(-1);
-		user.getGrid().add(spark);
+		// SparkGridEntry spark = new SparkGridEntry();
+		// spark.setSizeX(1);
+		// spark.setSizeY(1);
+		// spark.setRow(1);
+		// spark.setCol(1);
+		// spark.setMetric(m);
+		// spark.setProject(p);
+		// // spark.setLastValue(-1);
+		// user.getGrid().add(spark);
 
 
-		EventGroup ev = new EventGroup();
-		ev.setName("JDK");
-		ev.setSizeX(1);
-		ev.setSizeY(1);
-		ev.setRow(1);
-		ev.setCol(1);
-		user.getGrid().add(ev);
+		// EventGroup ev = new EventGroup();
+		// ev.setName("JDK");
+		// ev.setSizeX(1);
+		// ev.setSizeY(1);
+		// ev.setRow(1);
+		// ev.setCol(1);
+		// user.getGrid().add(ev);
 
-		Event e = new Event();
-		e.setName("JDK 1.4 Release");
-		e.setDate(new Date(2010, 9, 1));
-		ev.getEvents().add(e);
+		// Event e = new Event();
+		// e.setName("JDK 1.4 Release");
+		// e.setDate(new Date(2010, 9, 1));
+		// ev.getEvents().add(e);
 
-		Event e1 = new Event();
-		e1.setName("JDK 1.5 Release");
-		e1.setDate(new Date(2013,11, 24));
-		ev.getEvents().add(e1);
+		// Event e1 = new Event();
+		// e1.setName("JDK 1.5 Release");
+		// e1.setDate(new Date(2013,11, 24));
+		// ev.getEvents().add(e1);
 
 
 		LinkedAccount acc = new LinkedAccount();
@@ -255,12 +257,19 @@ public class MongoAuthenticator {
 				throw new RuntimeException("Account not enabled for password usage.");				
 			}
 		}
+
+		// This isn't enough to dirty the object (Pongo bug), so we dirty the email too
 		account.setProviderUserId(authUser.getHashedPassword());
+		user.setEmail(user.getEmail());
 
 		users.getUsers().sync();
 		db.getMongo().close();
 
 		return user;
+	}
+
+	public static void resetUserPassword(final MyUsernamePasswordAuthUser authUser) {
+		changeUserPassword(authUser, false);
 	}
 
 	public static List<User> findAllUsers() {
@@ -288,41 +297,6 @@ public class MongoAuthenticator {
 			users.getUsers().sync();
 		}
 		db.getMongo().close();
-	}
-
-	public static User resetUserPassword(final MyUsernamePasswordAuthUser authUser) {
-		
-
-		changeUserPassword(authUser, false);
-
-		LinkedAccount account = null;
-
-		DB db = getUsersDb();
-		Users users = new Users(db);
-		User user = users.getUsers().findOneByEmail(authUser.getEmail());
-
-		for (LinkedAccount acc : user.getLinkedAccounts()) {
-			if (acc.getProviderKey().equals(authUser.getProvider())) {
-				account = acc;
-				break;
-			}
-		}
-
-		if (account == null) {
-			account = new LinkedAccount();
-			account.setProviderUserId(authUser.getHashedPassword());
-			account.setProviderKey(authUser.getProvider());
-			user.getLinkedAccounts().add(account);
-
-		} else {
-			db.getMongo().close();
-			throw new RuntimeException("Account not enabled for password usage.");
-		}
-
-		users.getUsers().sync();
-		db.getMongo().close();
-
-		return user;
 	}
 
 	/* 
@@ -456,6 +430,25 @@ public class MongoAuthenticator {
 		db.getMongo().close();
  	}
 
+ 	public static void deleteGridObject(final User user, final String id) {
+ 		DB db = getUsersDb();
+		Users users = new Users(db);
+
+		User u = users.getUsers().findOneByEmail(user.getEmail());
+		GridEntry toDel = null;
+
+		for (GridEntry g : u.getGrid()) {
+			if (id.equals(g.getUid())) {
+				toDel = g;
+				break;
+			}
+		}
+		u.getGrid().remove(toDel);
+		
+		users.getUsers().sync();
+		db.getMongo().close();
+ 	}
+
  	public static Notification findNotification(User u, String projectId, String metricId) {
  		DB db = getUsersDb();
 		Users users = new Users(db);
@@ -501,6 +494,29 @@ public class MongoAuthenticator {
 
 		users.getUsers().sync();
 		db.getMongo().close();
+ 	}
+
+
+ 	public static EventGroup getEventGroupById(User u, String id) {
+ 		DB db = getUsersDb();
+		Users users = new Users(db);
+
+		User user = users.getUsers().findOneByEmail(u.getEmail());
+		EventGroup toReturn = null;
+
+		for (GridEntry g : user.getGrid()) {
+			if (g instanceof EventGroup) {
+				EventGroup gg = (EventGroup)g;
+				if (id.equals(gg.getUid())) {
+					toReturn = gg;
+					break;
+				}
+			}
+		}
+
+		db.getMongo().close();
+
+		return toReturn;
  	}
 
  	public static void updateNotification(User u, String projectId, String metricId, double threshold, boolean aboveThreshold) {

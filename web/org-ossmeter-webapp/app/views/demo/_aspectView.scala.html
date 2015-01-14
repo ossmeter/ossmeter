@@ -1,0 +1,11 @@
+@(project: org.ossmeter.repository.model.Project, qualityModel : QualityModel, aspect : QualityAspect, summary : Boolean, parents : List[QualityAspect])
+
+@import scala._
+
+@for(attribute <- aspect.attributes) {
+    @_attributeView(project, qualityModel, attribute, List.concat(parents, List(aspect)), summary)
+}
+
+@for(a <- aspect.aspects) {
+    @_aspectView(project, qualityModel, a, summary, List.concat(parents, List(aspect)))
+}

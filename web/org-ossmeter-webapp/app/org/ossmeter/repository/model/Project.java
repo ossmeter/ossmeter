@@ -36,8 +36,8 @@ import org.ossmeter.platform.factoids.*;
 public class Project extends NamedElement {
 
 	protected List<VcsRepository> vcsRepositories = new ArrayList<VcsRepository>();
-	protected List<CommunicationChannel> communicationChannels;
-	protected List<BugTrackingSystem> bugTrackingSystems;
+	protected List<CommunicationChannel> communicationChannels = new ArrayList<CommunicationChannel>();
+	protected List<BugTrackingSystem> bugTrackingSystems = new ArrayList<BugTrackingSystem>();
 	protected List<Person> persons;
 	protected List<License> licenses;
 	protected List<MetricProvider> metricProviderData;
@@ -46,6 +46,7 @@ public class Project extends NamedElement {
 	protected String description;
 	protected int year;
 	protected boolean active;
+	protected boolean analysed;
 	protected String lastExecuted;
 	protected Project parent;
 	protected String homePage;
@@ -61,6 +62,9 @@ public class Project extends NamedElement {
 	}
 	public boolean getActive() {
 		return active;
+	}
+	public boolean getAnalysed() {
+		return analysed;
 	}
 	public String getLastExecuted() {
 		return lastExecuted;

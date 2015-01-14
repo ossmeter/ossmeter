@@ -5,22 +5,25 @@
 
 
 @main(Messages("ossmeter.index.title")) {
-<h1>Users</h1>
-@if(!users.isEmpty()){
-<div class="control-group">  
-@subjectPresentOr() {
-          	@defining(Application.getLocalUser(session())) { user =>
-  	<a class="btn btn-success" href="@routes.Application.signup()">Signup new user</a>
-}}{<!--  Print nothing -->}
-    <div class="container show-top-margin separate-rows tall-rows">  
-      @for(user <- users) {
-      	<div class="user row show-grid">      		
-      		<div class="col-md-9"><a href="@routes.Users.view(user.getEmail())">@user.getName()</a> <span class="mail">@user.getEmail()</span></div>      		
+<section>
+  <div class="container box">
+      <div class="row col-md-12">
+        <h1>Users</h1>
+        @if(!users.isEmpty()){
+        <div class="control-group">  
+          	@*<!-- <a class="btn btn-success" href="@routes.Application.signup()">Signup new user</a> -->*@
+            <div class="container show-top-margin separate-rows tall-rows">  
+              @for(user <- users) {
+              	<div class="user row show-grid">      		
+              		<div class="col-md-9"><a href="@routes.Users.view(user.getEmail())">@user.getEmail()</a></div>      		
+                </div>
+              }
+            </div>
         </div>
-      }
+        }else{
+        	<div class="">No users found</div>
+        }
     </div>
-</div>
-}else{
-	<div class="">No users found</div>
-}
+  </div>
+</section>
 }

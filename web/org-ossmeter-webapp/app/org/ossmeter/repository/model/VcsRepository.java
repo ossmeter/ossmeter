@@ -51,4 +51,8 @@ public abstract class VcsRepository extends NamedElement {
 	public List<Person> getPersons() {
 		return persons;
 	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
 }
