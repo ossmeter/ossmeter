@@ -24,8 +24,8 @@ import Includes;
 import org::ossmeter::metricprovider::MetricProvider;
 
 @memo
-private M3 systemM3WithStdLib(rel[Language, loc, M3] m3s) {
-	return addPredefinedDeclarations(systemM3(m3s));
+private M3 systemM3WithStdLib(rel[Language, loc, M3] m3s, ProjectDelta delta = ProjectDelta::\empty()) {
+	return addPredefinedDeclarations(systemM3(m3s, delta = delta));
 }
 
 
@@ -33,9 +33,9 @@ private M3 systemM3WithStdLib(rel[Language, loc, M3] m3s) {
 @doc{This histogram shows to how many source code artefacts a name can point in PHP code. The more declarations a single name can point to the more "dynamic" the code is and the harder it is to predict what happens at run-time. A low precision for static name resolution indicates the project is hard to change and perhaps also hard to understand.}
 @friendlyName{Static PHP type resolution histogram}
 @appliesTo{php()}
-map[int, int] getTypeNameResolutionHistogram(rel[Language, loc, M3] m3s = {})
+map[int, int] getTypeNameResolutionHistogram(rel[Language, loc, M3] m3s = {}, ProjectDelta delta = ProjectDelta::\empty())
 {
-	M3 m3 = systemM3WithStdLib(m3s);
+	M3 m3 = systemM3WithStdLib(m3s, delta = delta);
 
 	m3@uses = { <l, n> | <l, n> <- m3@uses, n.scheme in ["php+class", "php+interface", "php+trait"] };
 
@@ -48,9 +48,9 @@ map[int, int] getTypeNameResolutionHistogram(rel[Language, loc, M3] m3s = {})
 @doc{This histogram shows to how many method definitions a call can point in PHP code. The more declarations a single name can point to the more "dynamic" the code is and the harder it is to predict what happens at run-time. A low precision for static name resolution indicates the project is hard to change and perhaps also hard to understand.}
 @friendlyName{Static PHP method name resolution histogram}
 @appliesTo{php()}
-map[int, int] getMethodNameResolutionHistogram(rel[Language, loc, M3] m3s = {})
+map[int, int] getMethodNameResolutionHistogram(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {})
 {
-	M3 m3 = composeM3s(m3s); // m3 before resolution
+	M3 m3 = composeM3s(m3s, delta.date); // m3 before resolution
 
 	calls = resolveMethodCallsAndFieldAccesses(m3)[1];
 
@@ -62,9 +62,9 @@ map[int, int] getMethodNameResolutionHistogram(rel[Language, loc, M3] m3s = {})
 @doc{This histogram shows to how many field declarations the usage sites (references) can point in PHP code. The more declarations a single name can point to the more "dynamic" the code is and the harder it is to predict what happens at run-time. A low precision for static name resolution indicates the project is hard to change and perhaps also hard to understand.}
 @friendlyName{Static PHP field name resolution histogram}
 @appliesTo{php()}
-map[int, int] getFieldNameResolutionHistogram(rel[Language, loc, M3] m3s = {})
+map[int, int] getFieldNameResolutionHistogram(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {})
 {
-	M3 m3 = composeM3s(m3s); // m3 before resolution
+	M3 m3 = composeM3s(m3s, delta.date); // m3 before resolution
 
 	accesses = resolveMethodCallsAndFieldAccesses(m3)[2];
 

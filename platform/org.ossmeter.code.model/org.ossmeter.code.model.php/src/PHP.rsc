@@ -21,6 +21,7 @@ import IO;
 import Message;
 import Relation;
 import Map;
+import DateTime;
 
 @M3Extractor{php()}
 @memo
@@ -92,9 +93,9 @@ public rel[loc, System] getSystems(rel[Language, loc, M3] m3s, rel[Language, loc
 
 
 @memo
-public M3 composeM3s(rel[Language, loc, M3] m3s) {
+public M3 composeM3s(rel[Language, loc, M3] m3s, datetime d) {
 	phpM3s = range(m3s[php()]);
-	projectLoc = |php+project:///|;
+	projectLoc = |php+project:///| + printDate(d, "YYYYMMdd");
 	if (phpM3s == {}) {
 		throw undefined("No PHP M3 models available", projectLoc);
 	}
@@ -115,8 +116,8 @@ public tuple[M3 m3, rel[loc, loc] callResolution, rel[loc, loc] fieldAccessResol
 }
 
 @memo
-public M3 systemM3(rel[Language, loc, M3] m3s) {
-	M3 m3 = composeM3s(m3s);
+public M3 systemM3(rel[Language, loc, M3] m3s, ProjectDelta delta = ProjectDelta::\empty()) {
+	M3 m3 = composeM3s(m3s, delta.date);
 	m3 = resolveMethodCallsAndFieldAccesses(m3)[0];
 	return m3;
 }
