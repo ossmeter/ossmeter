@@ -166,9 +166,9 @@ set[loc] findClassFiles(set[loc] checkouts) {
 
 
 @memo
-public M3 systemM3(rel[Language, loc, M3] m3s) {
+public M3 systemM3(rel[Language, loc, M3] m3s, ProjectDelta delta = ProjectDelta::\empty()) {
   javaM3s = range(m3s[java()]);
-  projectLoc = |java+tmp:///|;
+  projectLoc = |java+tmp:///|+printDate(delta.date, "YYYYMMdd");
   if (javaM3s == {}) {
     throw undefined("No Java M3s available", projectLoc);
   }

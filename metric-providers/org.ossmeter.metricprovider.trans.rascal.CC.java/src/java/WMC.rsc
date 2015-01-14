@@ -19,6 +19,7 @@ import ValueIO;
 import org::ossmeter::metricprovider::MetricProvider;
 import org::ossmeter::metricprovider::ProjectDelta;
 import CC;
+import OOJava;
 
 
 @metric{WMCJava}
@@ -38,14 +39,14 @@ map[loc class, int wmcCount] getWMC(
 {
 	map[loc, int] result = prev;
 	set[loc] declarations = { * m@declarations<0> | <java(), _, m> <- m3s };
-	
+	map[loc, set[loc]] declMap = (m : {} | m <- declarations);
 	changed = getChangedFilesInWorkingCopyFolders(delta, workingCopies);
 	
 	for (file <- changed, m3 <- m3s[java(), file]) {
-	   result += (cl : (0 | it + methodCC[m]?0 | m <- m3@containment[cl], isMethod(m)) | <cl, _> <- m3@containment, isClass(cl));
+	   result += (cl : (0 | it + methodCC[m]?0 | m <- allMethodsMap(m3)[cl]) | cl <- allTypes(m3), isClass(cl));
 	}
 
-	result = domainR(result, declarations); // remove entries for any removed declarations
+	 result = result - declMap; // remove entries for any removed declarations
 	 
 	return result;
 }
@@ -66,12 +67,13 @@ map[loc, int] getCC(ProjectDelta delta = ProjectDelta::\empty(),
   changed = getChangedFilesInWorkingCopyFolders(delta, workingCopies);
   
   set[loc] declarations = { * m@declarations<0> | <java(), _, m> <- m3s };
+  map[loc, set[loc]] declMap = (m : {} | m <- declarations);
   
   for (file <- changed, ast <- asts[java(), file]) {
     result += (d@decl : countCC(d) | /Declaration d := ast, d is method || d is constructor);
   }
   
-  result = domainR(result, declarations); // remove entries for any removed declarations
+  result = result - declMap; // remove entries for any removed declarations
   
   return result;
 }

@@ -80,8 +80,8 @@ private map[loc, set[loc]] methodFieldAccesses(M3 m) = toMap(m@accesses);
 @friendlyName{Abstractness (PHP)}
 @appliesTo{php()}
 @historic
-real A_PHP(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+real A_PHP(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 	
 	types = allTypes(m3);
 	
@@ -95,8 +95,8 @@ real A_PHP(rel[Language, loc, M3] m3s = {}) {
 @friendlyName{Reuse ratio (PHP)}
 @appliesTo{php()}
 @historic
-real RR_PHP(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+real RR_PHP(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 
 	return RR(superTypes(m3), allTypes(m3));
 }
@@ -106,16 +106,16 @@ real RR_PHP(rel[Language, loc, M3] m3s = {}) {
 @friendlyName{Specialization ratio (PHP)}
 @appliesTo{php()}
 @historic
-real SR_PHP(rel[Language, loc, M3] m3s = {}) {
-	return SR(superTypes(systemM3(m3s)));
+real SR_PHP(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	return SR(superTypes(systemM3(m3s, delta = delta)));
 }
 
 @metric{DIT-PHP}
 @doc{Depth of inheritance tree (PHP)}
 @friendlyName{Depth of inheritance tree (PHP)}
 @appliesTo{php()}
-map[loc, int] DIT_PHP(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+map[loc, int] DIT_PHP(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 	
 	return DIT(superTypes(m3), allTypes(m3));
 }
@@ -124,8 +124,8 @@ map[loc, int] DIT_PHP(rel[Language, loc, M3] m3s = {}) {
 @doc{Number of children (PHP)}
 @friendlyName{Number of children (PHP)}
 @appliesTo{php()}
-map[loc, int] NOC_PHP(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+map[loc, int] NOC_PHP(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 	
 	return NOC(superTypes(m3), allTypes(m3));
 }
@@ -134,8 +134,8 @@ map[loc, int] NOC_PHP(rel[Language, loc, M3] m3s = {}) {
 @doc{Coupling between objects (PHP)}
 @friendlyName{Coupling between objects (PHP)}
 @appliesTo{php()}
-map[loc, int] CBO_PHP(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+map[loc, int] CBO_PHP(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 	
 	return CBO(typeDependencies(m3), allTypes(m3));
 }
@@ -179,8 +179,8 @@ map[loc, int] MPC_PHP(rel[Language, loc, AST] asts = {}) {
 @friendlyName{Coupling factor (PHP)}
 @appliesTo{php()}
 @historic
-real CF_PHP(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+real CF_PHP(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 	return CF(typeDependencies(m3), superTypes(m3), allTypes(m3));
 }
 
@@ -188,8 +188,8 @@ real CF_PHP(rel[Language, loc, M3] m3s = {}) {
 @doc{Afferent coupling (PHP)}
 @friendlyName{Afferent coupling (PHP)}
 @appliesTo{php()}
-map[loc, int] Ca_PHP(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+map[loc, int] Ca_PHP(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 	return Ca(packageTypes(m3), typeDependencies(m3));
 }
 
@@ -197,8 +197,8 @@ map[loc, int] Ca_PHP(rel[Language, loc, M3] m3s = {}) {
 @doc{Efferent coupling (PHP)}
 @friendlyName{Efferent coupling (PHP)}
 @appliesTo{php()}
-map[loc, int] Ce_PHP(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+map[loc, int] Ce_PHP(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 	return Ce(packageTypes(m3), typeDependencies(m3));
 }
 
@@ -226,8 +226,8 @@ map[loc, int] RFC_PHP(rel[Language, loc, M3] m3s = {}) {
 @doc{Method inheritance factor (PHP)}
 @friendlyName{Method inheritance factor (PHP)}
 @appliesTo{php()}
-map[loc, real] MIF_PHP(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+map[loc, real] MIF_PHP(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 	
 	inheritableMethods = { <t, m> | <t, m> <- allMethods(m3), {\private(), \abstract()} & m3@modifiers[m] == {} };
 	
@@ -238,8 +238,8 @@ map[loc, real] MIF_PHP(rel[Language, loc, M3] m3s = {}) {
 @doc{Attribute inheritance factor (PHP)}
 @friendlyName{Attribute inheritance factor (PHP)}
 @appliesTo{php()}
-map[loc, real] AIF_PHP(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+map[loc, real] AIF_PHP(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 	
 	publicAndProtectedFields = { <t, f> | <t, f> <- allFields(m3), \private() notin m3@modifiers[f] };
 	
@@ -277,8 +277,8 @@ private real hidingFactor(M3 m3, rel[loc, loc] members) {
 @friendlyName{Method hiding factor (PHP)}
 @appliesTo{php()}
 @historic
-real MHF_PHP(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+real MHF_PHP(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 	return hidingFactor(m3, allMethods(m3));
 }
 
@@ -287,8 +287,8 @@ real MHF_PHP(rel[Language, loc, M3] m3s = {}) {
 @friendlyName{Attribute hiding factor (PHP)}
 @appliesTo{php()}
 @historic
-real AHF_PHP(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+real AHF_PHP(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 	return hidingFactor(m3, allFields(m3));
 }
 
@@ -297,8 +297,8 @@ real AHF_PHP(rel[Language, loc, M3] m3s = {}) {
 @friendlyName{Polymorphism factor (PHP)}
 @appliesTo{php()}
 @historic
-real PF_PHP(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+real PF_PHP(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 
 	return PF(superTypes(m3), methodOverrides(m3), overridableMethods(m3), allTypes(m3));
 }
@@ -307,8 +307,8 @@ real PF_PHP(rel[Language, loc, M3] m3s = {}) {
 @doc{Lack of cohesion in methods (PHP)}
 @friendlyName{Lack of cohesion in methods (PHP)}
 @appliesTo{php()}
-map[loc, int] LCOM_PHP(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+map[loc, int] LCOM_PHP(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 	return LCOM(methodFieldAccesses(m3), allMethodsMap(m3), allFieldsMap(m3), allTypes(m3));
 }
 
@@ -317,8 +317,8 @@ map[loc, int] LCOM_PHP(rel[Language, loc, M3] m3s = {}) {
 @doc{Lack of cohesion in methods 4 (PHP)}
 @friendlyName{Lack of cohesion in methods 4 (PHP)}
 @appliesTo{php()}
-map[loc, int] LCOM4_PHP(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+map[loc, int] LCOM4_PHP(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 	return LCOM4(methodMethodCalls(m3), methodFieldAccesses(m3), allMethodsMap(m3), allFieldsMap(m3), allTypes(m3));
 }
 
@@ -326,8 +326,8 @@ map[loc, int] LCOM4_PHP(rel[Language, loc, M3] m3s = {}) {
 @doc{Tight class cohesion (PHP)}
 @friendlyName{Tight class cohesion (PHP)}
 @appliesTo{php()}
-map[loc, real] TCC_PHP(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+map[loc, real] TCC_PHP(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 	return TCC(allMethodsMap(m3), allFieldsMap(m3), methodMethodCalls(m3), methodFieldAccesses(m3), allTypes(m3));
 }
 
@@ -335,8 +335,8 @@ map[loc, real] TCC_PHP(rel[Language, loc, M3] m3s = {}) {
 @doc{Loose class cohesion (PHP)}
 @friendlyName{Loose class cohesion (PHP)}
 @appliesTo{php()}
-map[loc, real] LCC_PHP(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+map[loc, real] LCC_PHP(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 	return LCC(allMethodsMap(m3), allFieldsMap(m3), methodMethodCalls(m3), methodFieldAccesses(m3), allTypes(m3));
 }
 
@@ -344,8 +344,8 @@ map[loc, real] LCC_PHP(rel[Language, loc, M3] m3s = {}) {
 @doc{Number of methods (PHP)}
 @friendlyName{Number of methods (PHP)}
 @appliesTo{php()}
-map[loc, int] NOM_PHP(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+map[loc, int] NOM_PHP(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 	return NOM(allMethodsMap(m3), allTypes(m3));
 }
 
@@ -353,8 +353,8 @@ map[loc, int] NOM_PHP(rel[Language, loc, M3] m3s = {}) {
 @doc{Number of attributes (PHP)}
 @friendlyName{Number of attributes (PHP)}
 @appliesTo{php()}
-map[loc, int] NOA_PHP(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+map[loc, int] NOA_PHP(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 	return NOA(allFieldsMap(m3), allTypes(m3));
 }
 

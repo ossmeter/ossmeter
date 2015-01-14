@@ -34,6 +34,8 @@ import analysis::graphs::Graph;
 import org::ossmeter::metricprovider::MetricProvider;
 import Prelude;
 
+@memo
+map[loc, set[loc]] containmentMap(M3 m) = toMap(m@containment);
 
 @memo
 set[loc] enums(M3 m) = { e | e <- m@declarations<name>, e.scheme == "java+enum" };
@@ -42,49 +44,58 @@ set[loc] enums(M3 m) = { e | e <- m@declarations<name>, e.scheme == "java+enum" 
 set[loc] anonymousClasses(M3 m) = { e | e <- m@declarations<name>, e.scheme == "java+anonymousClass" };
 
 @memo
-private set[loc] allTypes(M3 m) = classes(m) + interfaces(m) + enums(m) + anonymousClasses(m);
+set[loc] allTypes(M3 m) = classes(m) + interfaces(m) + enums(m) + anonymousClasses(m);
 
 @memo
-private rel[loc, loc] superTypes(M3 m) = m@extends + m@implements;
+rel[loc, loc] superTypes(M3 m) = m@extends + m@implements;
 
 @memo
-private rel[loc, loc] typeDependencies(M3 m3) = typeDependencies(superTypes(m3), m3@methodInvocation, m3@fieldAccess, typeSymbolsToTypes(m3@types), domainR(m3@containment+, allTypes(m3)), allTypes(m3));
+rel[loc, loc] typeDependencies(M3 m3) = typeDependencies(superTypes(m3), m3@methodInvocation, m3@fieldAccess, typeSymbolsToTypes(m3@types), domainR(m3@containment+, allTypes(m3)), allTypes(m3));
 
 @memo
-private rel[loc, loc] allMethods(M3 m3) = { <t, m> | t <- allTypes(m3), m <- m3@containment[t], isMethod(m) };
+rel[loc, loc] allMethods(M3 m3) = { <t, m> | t <- allTypes(m3), m <- (containmentMap(m3))[t] ? {}, isMethod(m) };
 
 @memo
-private map[loc, set[loc]] allMethodsMap(M3 m3) = ( t : { m | m <- m3@containment[t], isMethod(m) } | t <- allTypes(m3) );
+map[loc, set[loc]] allMethodsMap(M3 m3) = ( t : { m | m <- (containmentMap(m3))[t]? {}, isMethod(m) } | t <- allTypes(m3) );
 
 @memo
-private rel[loc, loc] allFields(M3 m3) = { <t, f> | t <- allTypes(m3), f <- m3@containment[t], isField(f) };
+rel[loc, loc] allFields(M3 m3) = { <t, f> | t <- allTypes(m3), f <- (containmentMap(m3))[t]? {}, isField(f) };
 
 @memo
-private map[loc, set[loc]] allFieldsMap(M3 m3) = ( t : { f | f <- m3@containment[t], isField(f) } | t <- allTypes(m3) );
+map[loc, set[loc]] allFieldsMap(M3 m3) = ( t : { f | f <- (containmentMap(m3))[t]? {}, isField(f) } | t <- allTypes(m3) );
 
 @memo
-private map[loc, set[loc]] methodFieldAccesses(M3 m) = domainR(toMap(m@fieldAccess), methods(m));
+map[loc, set[loc]] emptyMethodsMap(M3 m) = (me:{} | me <- methods(m));
 
 @memo
-private map[loc, set[loc]] methodMethodCalls(M3 m) = domainR(toMap(m@methodInvocation), methods(m));
+map[loc, set[loc]] methodFieldAccesses(M3 m) = toMap(m@fieldAccess) - emptyMethodsMap(m);
 
 @memo
-private rel[loc, loc] packageTypes(M3 m3) = { <p, t> | <p, t> <- m3@containment+, isPackage(p), isClass(t) || isInterface(t) || t.scheme == "java+enum" };
+map[loc, set[loc]] methodMethodCalls(M3 m) = toMap(m@methodInvocation) - emptyMethodsMap(m);
 
 @memo
-private rel[loc, loc] overridableMethods(M3 m3) = { <p, m> | <p, m> <- allMethods(m3), \private() notin m3@modifiers[m] };
+rel[loc, loc] transitiveContainment(M3 m) = m@containment+;
+
+@memo
+rel[loc, loc] packageTypes(M3 m3) = { <p, t> | <p, t> <- transitiveContainment(m3), isPackage(p), isClass(t) || isInterface(t) || t.scheme == "java+enum" };
+
+@memo
+map[loc, set[Modifier]] modifiersMap(M3 m) = toMap(m@modifiers);
+
+@memo
+rel[loc, loc] overridableMethods(M3 m3) = { <p, m> | <p, m> <- allMethods(m3), ({\private(), \final(), \static()} & (modifiersMap(m3))[m]? {}) == {} };
 
 @metric{A-Java}
 @doc{Abstractness (Java)}
 @friendlyName{Abstractness (Java)}
 @appliesTo{java()}
 @historic
-real A_Java(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+real A_Java(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
   
   types = allTypes(m3);
   
-  abstractTypes = { t | t <- types, \abstract() in m3@modifiers[t] };
+  abstractTypes = { t | t <- types, \abstract() in ((modifiersMap(m3))[t]?{}) };
   
   return A(abstractTypes, types);
 }
@@ -94,8 +105,8 @@ real A_Java(rel[Language, loc, M3] m3s = {}) {
 @friendlyName{Reuse ratio (Java)}
 @appliesTo{java()}
 @historic
-real RR_Java(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+real RR_Java(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 
   return RR(superTypes(m3), allTypes(m3));
 }
@@ -105,16 +116,16 @@ real RR_Java(rel[Language, loc, M3] m3s = {}) {
 @friendlyName{Specialization ratio (Java)}
 @appliesTo{java()}
 @historic
-real SR_Java(rel[Language, loc, M3] m3s = {}) {
-	return SR(superTypes(systemM3(m3s)));
+real SR_Java(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	return SR(superTypes(systemM3(m3s, delta = delta)));
 }
 
 @metric{DIT-Java}
 @doc{Depth of inheritance tree (Java)}
 @friendlyName{Depth of inheritance tree (Java)}
 @appliesTo{java()}
-map[loc, int] DIT_Java(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+map[loc, int] DIT_Java(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
   
   return DIT(superTypes(m3), allTypes(m3));
 }
@@ -123,40 +134,29 @@ map[loc, int] DIT_Java(rel[Language, loc, M3] m3s = {}) {
 @doc{Number of children (Java)}
 @friendlyName{Number of children (Java)}
 @appliesTo{java()}
-map[loc, int] NOC_Java(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+map[loc, int] NOC_Java(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
   
   return NOC(superTypes(m3), allTypes(m3));
 }
 
 private rel[loc, loc] typeSymbolsToTypes(rel[loc, TypeSymbol] typs) {
-  rel[loc, loc] result = {};
-  visit (typs) {
-    case <loc entity, \class(loc decl, _)>: {
-      result += { <entity, decl> };
-    }
-    case <loc entity, \interface(loc decl, _)> : {
-      result += { <entity, decl> };
-    }
-    case <loc entity, \enum(loc decl)> : {
-      result += { <entity, decl> };
-    }
-    case <loc entity, \method(_, _, TypeSymbol returnType, _)> : {
-      result += typeSymbolsToTypes({<entity, returnType>});
-    }
-    case <loc entity, \object()> : {
-      result +=  {<entity,  |java+class:///java/lang/Object|>};
-    }
-  }
-  return result;
+  loc getDecl(TypeSymbol t) {
+    if (t is method) return getDecl(t.returnType);
+    if (t has decl)  return t.decl;
+    if (t is object) return |java+class:///java/lang/Object|;
+    return |unknown:///|; // should not happen but we include it for robustness' sake 
+  } 
+  
+  return { <en, getDecl(t)> | <en,t> <- typs};
 }
 
 @metric{CBO-Java}
 @doc{Coupling between objects (Java)}
 @friendlyName{Coupling between objects (Java)}
 @appliesTo{java()}
-map[loc, int] CBO_Java(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+map[loc, int] CBO_Java(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 	
 	return CBO(typeDependencies(m3), allTypes(m3));
 }
@@ -207,8 +207,8 @@ map[loc, int] MPC_Java(rel[Language, loc, AST] asts = {}) {
 @friendlyName{Coupling factor (Java)}
 @appliesTo{java()}
 @historic
-real CF_Java(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+real CF_Java(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
   return CF(typeDependencies(m3), superTypes(m3), allTypes(m3));
 }
 
@@ -216,8 +216,8 @@ real CF_Java(rel[Language, loc, M3] m3s = {}) {
 @doc{Afferent coupling (Java)}
 @friendlyName{Afferent coupling (Java)}
 @appliesTo{java()}
-map[loc, int] Ca_Java(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+map[loc, int] Ca_Java(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
   return Ca(packageTypes(m3), typeDependencies(m3));
 }
 
@@ -225,8 +225,8 @@ map[loc, int] Ca_Java(rel[Language, loc, M3] m3s = {}) {
 @doc{Efferent coupling (Java)}
 @friendlyName{Efferent coupling (Java)}
 @appliesTo{java()}
-map[loc, int] Ce_Java(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+map[loc, int] Ce_Java(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
   return Ce(packageTypes(m3), typeDependencies(m3));
 }
 
@@ -254,11 +254,11 @@ map[loc, int] RFC_Java(rel[Language, loc, M3] m3s = {}) {
 @doc{Method inheritance factor (Java)}
 @friendlyName{Method inheritance factor (Java)}
 @appliesTo{java()}
-map[loc, real] MIF_Java(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+map[loc, real] MIF_Java(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 
 	// TODO package visibility?	
-	inheritableMethods = { <t, m> | <t, m> <- allMethods(m3), {\private(), \abstract()} & m3@modifiers[m] == {} };
+	inheritableMethods = { <t, m> | <t, m> <- allMethods(m3), ({\private(), \abstract()} & (modifiersMap(m3))[m]?{}) == {} };
 	
 	return MIF(allMethodsMap(m3), inheritableMethods, m3@extends, classes(m3));
 }
@@ -267,11 +267,11 @@ map[loc, real] MIF_Java(rel[Language, loc, M3] m3s = {}) {
 @doc{Attribute inheritance factor (Java)}
 @friendlyName{Attribute inheritance factor (Java)}
 @appliesTo{java()}
-map[loc, real] AIF_Java(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+map[loc, real] AIF_Java(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 
 	// TODO package visibility?	
-	publicAndProtectedFields = { <t, f> | <t, f> <- allFields(m3), \private() notin m3@modifiers[f] };
+	publicAndProtectedFields = { <t, f> | <t, f> <- allFields(m3), \private() notin ((modifiersMap(m3))[f]?{}) };
 	
 	return MIF(allFieldsMap(m3), publicAndProtectedFields, superTypes(m3), allTypes(m3));
 }
@@ -285,7 +285,7 @@ private real hidingFactor(M3 m3, rel[loc, loc] members) {
 	rel[loc, loc] packageVisibleMembers = {};
 	
 	for (<t, m> <- members) {
-		mods = m3@modifiers[m];
+		mods = (modifiersMap(m3))[m]?{};
 		if (\private() in mods) {
 			; // ignored
 		} else if (\protected() in mods) {
@@ -314,8 +314,8 @@ private real hidingFactor(M3 m3, rel[loc, loc] members) {
 @friendlyName{Method hiding factor (Java)}
 @appliesTo{java()}
 @historic
-real MHF_Java(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+real MHF_Java(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 	return hidingFactor(m3, allMethods(m3));
 }
 
@@ -324,8 +324,8 @@ real MHF_Java(rel[Language, loc, M3] m3s = {}) {
 @friendlyName{Attribute hiding factor (Java)}
 @appliesTo{java()}
 @historic
-real AHF_Java(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+real AHF_Java(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 	return hidingFactor(m3, allFields(m3));
 }
 
@@ -344,8 +344,8 @@ real PF_Java(rel[Language, loc, M3] m3s = {}) {
 @doc{Lack of cohesion in methods (Java)}
 @friendlyName{Lack of cohesion in methods (Java)}
 @appliesTo{java()}
-map[loc, int] LCOM_Java(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+map[loc, int] LCOM_Java(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 	return LCOM(methodFieldAccesses(m3), allMethodsMap(m3), allFieldsMap(m3), allTypes(m3));
 }
 
@@ -353,8 +353,8 @@ map[loc, int] LCOM_Java(rel[Language, loc, M3] m3s = {}) {
 @doc{Lack of cohesion in methods 4 (Java)}
 @friendlyName{Lack of cohesion in methods 4 (Java)}
 @appliesTo{java()}
-map[loc, int] LCOM4_Java(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+map[loc, int] LCOM4_Java(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 	return LCOM4(methodMethodCalls(m3), methodFieldAccesses(m3), allMethodsMap(m3), allFieldsMap(m3), allTypes(m3));
 }
 
@@ -362,8 +362,8 @@ map[loc, int] LCOM4_Java(rel[Language, loc, M3] m3s = {}) {
 @doc{Tight class cohesion (Java)}
 @friendlyName{Tight class cohesion (Java)}
 @appliesTo{java()}
-map[loc, real] TCC_Java(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+map[loc, real] TCC_Java(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 	return TCC(allMethodsMap(m3), allFieldsMap(m3), methodMethodCalls(m3), methodFieldAccesses(m3), allTypes(m3));
 }
 
@@ -371,8 +371,8 @@ map[loc, real] TCC_Java(rel[Language, loc, M3] m3s = {}) {
 @doc{Loose class cohesion (Java)}
 @friendlyName{Loose class cohesion (Java)}
 @appliesTo{java()}
-map[loc, real] LCC_Java(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+map[loc, real] LCC_Java(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 	return LCC(allMethodsMap(m3), allFieldsMap(m3), methodMethodCalls(m3), methodFieldAccesses(m3), allTypes(m3));
 }
 
@@ -381,8 +381,8 @@ map[loc, real] LCC_Java(rel[Language, loc, M3] m3s = {}) {
 @doc{Number of methods (Java)}
 @friendlyName{Number of methods (Java)}
 @appliesTo{java()}
-map[loc, int] NOM_Java(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+map[loc, int] NOM_Java(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 	return NOM(allMethodsMap(m3), allTypes(m3));
 }
 
@@ -390,8 +390,8 @@ map[loc, int] NOM_Java(rel[Language, loc, M3] m3s = {}) {
 @doc{Number of attributes (Java)}
 @friendlyName{Number of attributes (Java)}
 @appliesTo{java()}
-map[loc, int] NOA_Java(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+map[loc, int] NOA_Java(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
+	M3 m3 = systemM3(m3s, delta = delta);
 	return NOA(allFieldsMap(m3), allTypes(m3));
 }
 
