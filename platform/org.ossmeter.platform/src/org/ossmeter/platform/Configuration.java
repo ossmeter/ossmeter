@@ -10,16 +10,19 @@
  *******************************************************************************/
 package org.ossmeter.platform;
 
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.UUID;
 
 import com.mongodb.Mongo;
 import com.mongodb.ServerAddress;
 
 public class Configuration {
 
+	public static String IDENTIFIER = "identifier";
 	public static String LOCAL_STORAGE = "storage_path";
 	public static String MAVEN_EXECUTABLE= "maven_executable";
 	public static String MONGO_HOSTS= "mongo_hosts";
@@ -42,6 +45,18 @@ public class Configuration {
 	
 	public String getProperty(String property, String defaultValue) {
 		return properties.getProperty(property, defaultValue);
+	}
+	
+	public String getSlaveIdentifier() {
+		String id = this.properties.getProperty(IDENTIFIER);
+		if (id == null) {
+			try {
+				id = InetAddress.getLocalHost().getHostName();
+			} catch (UnknownHostException e1) {
+				id = UUID.randomUUID().toString();
+			}
+		}
+		return id;
 	}
 	
 	public Mongo getMongoConnection() throws UnknownHostException {
