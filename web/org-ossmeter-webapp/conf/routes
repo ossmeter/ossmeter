@@ -10,8 +10,13 @@ GET		/admin/requests/offer		controllers.Admin.offerInvite(email:String)
 GET		/admin/requests/delete		controllers.Admin.deleteInvite(email:String)
 GET     /admin/users                controllers.Users.users()
 GET     /admin/users/:id            controllers.Users.view(id:String)
-GET     /admin/users/:id/delete      controllers.Users.delete_confirmation(id: String)
-POST   /admin/users/:id/delete      controllers.Users.delete(id: String)
+GET     /admin/users/:id/delete     controllers.Users.delete_confirmation(id: String)
+POST   	/admin/users/:id/delete     controllers.Users.delete(id: String)
+GET 	/admin/users/:id/usage		controllers.Admin.getUsagePlot(id : String)
+GET 	/admin/status 				controllers.Admin.status()
+GET 	/admin/api/*path			controllers.Admin.adminApi(path : String)
+GET     /assets/javascripts/adminroutes    controllers.Admin.jsRoutes
+
 
 # Invite Acceptance
 GET		/register					controllers.Invitation.acceptInvitation(key : String)

@@ -5,25 +5,86 @@
 
 
 @main(Messages("ossmeter.index.title")) {
+@admin._nav()
 <section>
   <div class="container box">
       <div class="row col-md-12">
-        <h1>Users</h1>
+        <h2>Users</h2>
         @if(!users.isEmpty()){
-        <div class="control-group">  
-          	@*<!-- <a class="btn btn-success" href="@routes.Application.signup()">Signup new user</a> -->*@
-            <div class="container show-top-margin separate-rows tall-rows">  
-              @for(user <- users) {
-              	<div class="user row show-grid">      		
-              		<div class="col-md-9"><a href="@routes.Users.view(user.getEmail())">@user.getEmail()</a></div>      		
-                </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Activity (last 30 days)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(user <- users) {
+                <tr>
+                    <td><a href="@routes.Users.view(user.getEmail())">@user.getEmail()</a></td>
+                    <td>
+                        <div id="activityplot@users.indexOf(user)" class="activityplot"></div>
+                    </td>
+                </tr>
               }
-            </div>
-        </div>
+            </tbody>
+        </table>
         }else{
-        	<div class="">No users found</div>
+        <div class="">No users found</div>
         }
     </div>
   </div>
 </section>
+
+<script src="@routes.Admin.jsRoutes" defer="defer"></script>
+<script type="text/javascript">
+
+function drawUser(email, container) {
+
+    var url = "@routes.Admin.getUsagePlot("placeholder")".replace("placeholder", email);
+
+    $.getJSON(url, function(vis) {
+        // Group data
+        var aggregated = d3.nest() 
+            .key(function(d){ return d[vis.x]; })
+            .rollup(function(d) { return d.length; })
+            .entries(vis.datatable);
+
+        aggregated.forEach(function (d) {
+            d[vis.x] = d.key;
+            d[vis.y] = d.values;
+        })
+        vis.datatable = aggregated;
+
+        // Pad dataset if required
+        var today = new Date();
+        var thirtyAgo = new Date(new Date().setDate(today.getDate()-30));
+        var format = d3.time.format("%Y-%m-%d");
+
+        if (vis.datatable.length === 0 || format.parse(vis.datatable[0].Date).getTime() > thirtyAgo.getTime()){
+            vis.datatable.unshift({"Date" : format(thirtyAgo), "Quantity":0});
+        }
+        if (vis.datatable.length === 0 || format.parse(vis.datatable[vis.datatable.length-1].Date).getTime() < today.getTime()){
+           vis.datatable.push({"Date" : format(today), "Quantity":0});
+        }
+
+        chart = new metvis.Chart(container, vis);
+        chart.height = 100;
+        chart.width = 800;
+        chart.margin.top=10;
+        chart.margin.bottom=10;
+        chart.dateFormat = "%Y-%m-%d";
+        // chart.axis.yTicks = 3;
+        chart.draw();
+    });
+}
+
+$(function() {
+    @for(user <- users) {
+        drawUser("@user.getEmail()", "#activityplot@users.indexOf(user)");
+    }
+})
+    
+</script>
+<script type="text/javascript" src="@routes.Assets.at("js/d3.v3.min.js")"></script>
 }

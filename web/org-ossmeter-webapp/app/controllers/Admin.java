@@ -15,6 +15,11 @@ import play.mvc.Http.Session;
 import play.mvc.Result;
 import play.mvc.Http.Request;
 
+import metvis.*;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import views.html.*;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
@@ -24,6 +29,16 @@ import com.mongodb.Mongo;
 import com.mongodb.DB;
 
 import org.apache.commons.mail.*;
+
+import play.libs.ws.*;
+import play.libs.F.Function;
+import play.libs.F.Promise;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeType;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class Admin extends Controller {
 
@@ -59,6 +74,11 @@ public class Admin extends Controller {
         }
 
 		return ok(views.html.admin.requests.render(invites));
+	}
+
+	@Restrict(@Group(MongoAuthenticator.ADMIN_ROLE))
+	public static Result status() {
+		return ok(views.html.admin.status.render());
 	}
 
 	@Restrict(@Group(MongoAuthenticator.ADMIN_ROLE))
@@ -125,5 +145,91 @@ public class Admin extends Controller {
 
 		flash(Application.FLASH_MESSAGE_KEY, "Invite deleted.");
 		return redirect(routes.Admin.requests());
+	}
+
+	@Restrict(@Group(MongoAuthenticator.ADMIN_ROLE))
+	public static Result getUsagePlot(String email) {
+		DB db = MongoAuthenticator.getUsersDb();
+        Users users = new Users(db);
+
+        Iterable<Log> logs = users.getLogs().findByUser(email);
+
+        // TODO: map to MetVis
+        String result = "{\"status\" : \"unimplemented\"}";
+        ObjectMapper mapper = new ObjectMapper();
+
+		final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		final DateFormat dtf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+
+        ObjectNode vis = mapper.createObjectNode();
+        vis.put("id", "user-stats");
+        vis.put("name", "User stats for " + email);
+        vis.put("description", "The activity of the user " + email);
+        vis.put("type", "BarChart");
+        vis.put("timeSeries", true);
+        vis.put("x", "Date");
+        vis.put("y", "Quantity");
+
+        ArrayNode data = mapper.createArrayNode();
+        vis.put("datatable", data);
+
+        for (Log log : users.getLogs().findByUser(email)) {
+        	ObjectNode entry = mapper.createObjectNode();
+        	entry.put("Date",  df.format(log.getDate()));
+        	entry.put("Datetime",  dtf.format(log.getDate()));
+        	entry.put("Quantity", 1);
+        	entry.put("URI", log.getUri());
+        	entry.put("User", log.getUser());
+        	data.add(entry);
+        }	
+
+        //Chart line = new Chart(null);
+        //MetricVisualisation vis = new MetricVisualisation(chart, spec, vis);
+
+        db.getMongo().close();
+        return ok(vis.toString()).as("application/json");
+	}
+
+	@Restrict(@Group(MongoAuthenticator.ADMIN_ROLE))
+	public static Result adminApi(String path) {
+
+		if (!path.startsWith("/")){
+			path = "/" + path;
+		}
+		String url = play.Play.application().configuration().getString("ossmeter.adminapi") + path; 
+
+		Promise<Result> promise = WS.url(url).get().map(
+		    new Function<WSResponse, Result>() {
+		        public Result apply(WSResponse response) {
+		        	List<String> contentTypes = response.getAllHeaders().get("Content-Type");
+		        	if (contentTypes.size() > 0) {
+		        		String type = contentTypes.get(0);
+		        		if (type.contains("application/json")) {
+		        			return ok(response.asJson());
+		        		} else if(type.equals("image/png")) {
+		        			return ok(response.getBodyAsStream());
+		        		} else {
+		        			System.err.println("Unrecognised Content-Type.");
+			        		return ok();	
+		        		}
+		        	} else {
+		        		System.err.println("No Content-Type set on response.");
+		        		return ok();
+		        	}
+		        }
+		    }
+		);
+
+		return promise.get(120000);
+	}
+
+	public static Result jsRoutes() {
+		return ok(
+				Routes.javascriptRouter("adminJSRoutes",
+					controllers.routes.javascript.Admin.getUsagePlot(),
+					controllers.routes.javascript.Admin.adminApi()
+					)
+				)
+				.as("text/javascript");
 	}
 }
