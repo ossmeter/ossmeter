@@ -49,10 +49,13 @@ public class Projects extends AbstractApiResource {
 			
 			node.put("id", project.get("shortName").toString());
 			node.put("name", project.get("name").toString());
-			node.put("lastExecuted", (String)project.get("executionInformation.lastExecuted"));
-			node.put("analysed", (Boolean)project.get("executionInformation.analysed"));
-			node.put("inErrorState", (Boolean)project.get("executionInformation.inErrorState"));
-			node.put("monitor", (Boolean)project.get("executionInformation.monitor"));
+			
+			BasicDBObject ei = (BasicDBObject)project.get("executionInformation");
+			
+			node.put("lastExecuted", (String)ei.get("lastExecuted"));
+			node.put("analysed", (Boolean)ei.get("analysed"));
+			node.put("inErrorState", (Boolean)ei.get("inErrorState"));
+			node.put("monitor", (Boolean)ei.get("monitor"));
 			
 			res.add(node);
 		}

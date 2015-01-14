@@ -25,8 +25,7 @@ public class AdminApplication extends Application {
 		Directory directory =  new Directory(getContext(), ROOT_URI);
 
 		router.attach("/", AdminIndex.class);
-		router.attach("/status/server", StatusServer.class);
-		router.attach("/status/projects", StatusProjects.class);
+		router.attach("/status/{what}", Status.class);
 		router.attach("/projects/{view}", Projects.class);
 		
 		router.attach("/performance/projects", ProjectListAnalysis.class);
