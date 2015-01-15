@@ -327,10 +327,10 @@ table.spark {
 }
 
 .activityplot rect {
-    fill:#eee;
+    fill:#ddd;
 }
 .activityplot rect:hover {
-    fill:#ddd;
+    fill:#ccc;
 }
 .activityplot .axis line {
     stroke:#eee;
