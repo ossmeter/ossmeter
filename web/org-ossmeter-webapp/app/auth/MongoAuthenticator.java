@@ -9,6 +9,7 @@ import com.feth.play.module.pa.user.AuthUserIdentity;
 import com.feth.play.module.pa.user.EmailIdentity;
 
 import com.mongodb.Mongo;
+import com.mongodb.ServerAddress;
 import com.mongodb.DBCollection;
 import com.mongodb.DB;
 import com.mongodb.DBCursor;
@@ -612,15 +613,30 @@ public class MongoAuthenticator {
  	}
 
 	// May want to be more public? Or in its own class. This is just auth.
+	// May also want to cache the addresses to avoid reading the conf every time.
 	public static DB getUsersDb() {
-		try {
-			String host = play.Play.application().configuration().getString("mongo.default.host");
-			if (host == null) host = "localhost";
-			
-			Integer port = play.Play.application().configuration().getInt("mongo.default.port");
-			if (port == null) port = 27017;
 
-			Mongo mongo = new Mongo(host, port);	
+		try {
+			Mongo mongo = null;
+			String replica = play.Play.application().configuration().getString("mongo.replica");
+			if (replica == null) {
+				String host = play.Play.application().configuration().getString("mongo.default.host");
+				if (host == null) host = "localhost";
+				
+				Integer port = play.Play.application().configuration().getInt("mongo.default.port");
+				if (port == null) port = 27017;
+
+				mongo = new Mongo(host, port);
+			} else {
+				List<ServerAddress> addresses = new ArrayList<>();
+				String[] hosts = replica.split(",");
+				for (String host : hosts) {
+					String[] s = host.split(":");
+					addresses.add(new ServerAddress(s[0], Integer.valueOf(s[1])));
+				}
+
+				mongo = new Mongo(addresses);
+			}
 			return mongo.getDB("users");
 		} catch (Exception e) {
 			e.printStackTrace();
