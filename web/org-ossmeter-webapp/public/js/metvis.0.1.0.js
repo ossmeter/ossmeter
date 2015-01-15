@@ -71,8 +71,12 @@ var metvis = {
 		self.yScale = null;
 		// Ticks
 		self.axis = {};
-		self.axis.yTicks = 10;
-		self.axis.xTicks = 10;
+		self.axis.y = {};
+		self.axis.y.ticks = 10;
+		self.axis.y.tickLabels = true;
+		self.axis.x = {};
+		self.axis.x.ticks = 10;
+		self.axis.x.tickLabels = true;
 		// The legend
 		self.legend = {};
 		// The margin
@@ -94,7 +98,6 @@ var metvis = {
 		self.height = $(container).height(); 
 		// Show hover - set to false if you want to turn off interactivity
 		self.interactive = false;
-
 		this.draw = function() {
 			"use strict";
 			if (self._drawn) {
@@ -163,11 +166,19 @@ var metvis = {
 	        	self._drawSeries(self.series[s], self.colors(s));
 			}
 
-			var xAxis = self._createAxis(self.xScale, "bottom", self.axis.xTicks); 	// TODO infer #ticks?
-			var yAxis = self._createAxis(self.yScale, "left", self.axis.yTicks); 	// TODO infer #ticks
-			
+			var xAxis = self._createAxis(self.xScale, "bottom", self.axis.x.ticks); 	// TODO infer #ticks?
+			var yAxis = self._createAxis(self.yScale, "left", self.axis.y.ticks); 	// TODO infer #ticks
+
 			if (self.vis.timeSeries) {
 				xAxis.tickFormat(self.dateAxisFormat);
+			}
+
+			// Remove the labels if requested. FIXME: Must be a more elegant solution
+			if (self.axis.x.tickLabels) {
+				xAxis.tickFormat('');	
+			}
+			if (self.axis.y.tickLabels) {
+				yAxis.tickFormat('');	
 			}
 
 			// Add the X Axis: TODO generalise
@@ -180,6 +191,8 @@ var metvis = {
 	        self.svg.append("g")
 	            .attr("class", "y axis")
 	            .call(yAxis);//self.axes[1]);
+
+
 
 	        // Draw annotations
 	        self.svg.append("g")
@@ -243,46 +256,49 @@ var metvis = {
 
 			if (self.interactive) {
 				self.svg.call(self.zoom);
-			
+				
+				if (self.vis.type === "BarChart") {
 
-			    // To do: multiple series???
-			    var focusPoint = self.svg .append("g").style("display", "none");
-			    focusPoint.append("circle")
-			    	.style("fill", self.colors)
-			    	.style("stroke", "lightsteelblue")
-			    	.attr("r", 4);
+				} else {
+				    // // To do: multiple series???
+				    // var focusPoint = self.svg .append("g").style("display", "none");
+				    // focusPoint.append("circle")
+				    // 	.style("fill", self.colors)
+				    // 	.style("stroke", "lightsteelblue")
+				    // 	.attr("r", 4);
 
-			    var rect = self.svg.append("rect")
-			    	.attr("width", self.width)
-			    	.attr("height", self.height)
-			    	.style("fill", "none")
-			    	.style("pointer-events", "all")
-			    	.on("mouseover", function() { focusPoint.style("display",null); })
-			    	.on("mouseout", function() { focusPoint.style("display","none"); })
-			    	.on("mousemove", function() {
-			    		var date = self.xScale.invert(d3.mouse(this)[0]);
+				    // var rect = self.svg.append("rect")
+				    // 	.attr("width", self.width)
+				    // 	.attr("height", self.height)
+				    // 	.style("fill", "none")
+				    // 	.style("pointer-events", "all")
+				    // 	.on("mouseover", function() { focusPoint.style("display",null); })
+				    // 	.on("mouseout", function() { focusPoint.style("display","none"); })
+				    // 	.on("mousemove", function() {
+				    // 		var date = self.xScale.invert(d3.mouse(this)[0]);
 
-			    		var _x = d3.mouse(this)[0];
-			    		var _y = d3.mouse(this)[1];
+				    // 		var _x = d3.mouse(this)[0];
+				    // 		var _y = d3.mouse(this)[1];
 
-			    		var bisect = d3.bisector(function(d) { return d[self.vis.x]; }).right;
-			    		var index = bisect(self.vis.datatable, date);
-			    		if (index != 0) index--;
-
-
+				    // 		var bisect = d3.bisector(function(d) { return d[self.vis.x]; }).right;
+				    // 		var index = bisect(self.vis.datatable, date);
+				    // 		if (index != 0) index--;
 
 
-			    		// var x0 = self.xScale.invert(d3.mouse(this)[0]),
-			    		// 	i = bisect(self.vis.datatable, date, 1)
-			    		// 	d0 = self.vis.datatable[i-1],
-			    		// 	d1 = self.vis.datatable[i],
-			    		// 	d = x0 - d0.date > d1.date - x0 ? d1 : d0;
 
-			    		focusPoint.select("circle")
-			    			.attr("cx", self.xScale(self.vis.datatable[index][self.vis.x]))
-			    			.attr("cy", self.yScale(self.vis.datatable[index][self.vis.y]))
 
-			    	});
+				    // 		// var x0 = self.xScale.invert(d3.mouse(this)[0]),
+				    // 		// 	i = bisect(self.vis.datatable, date, 1)
+				    // 		// 	d0 = self.vis.datatable[i-1],
+				    // 		// 	d1 = self.vis.datatable[i],
+				    // 		// 	d = x0 - d0.date > d1.date - x0 ? d1 : d0;
+
+				    // 		focusPoint.select("circle")
+				    // 			.attr("cx", self.xScale(self.vis.datatable[index][self.vis.x]))
+				    // 			.attr("cy", self.yScale(self.vis.datatable[index][self.vis.y]))
+
+				    // 	});
+			    }
 		    }
 		} // end ossplots.chart._draw
 
@@ -340,44 +356,60 @@ var metvis = {
 				}
 				
 
-				self.svg.selectAll("rect")
+				var bar = self.svg.selectAll("rect")
 		            .data(s.vis.datatable)
 		            .enter()
 		            .append("rect")
-		            .attr("x", function(d){
-		                return self.xScale(d[s.vis.x]) - (barWidth/2);
-		            })
-		            .attr("y", function (d) {
-		            	if (d[s.vis.y] < 0) {
-							return self.yScale(0);// Negative values need drawing from 0
-		            	} else {
-			                return self.yScale(d[s.vis.y]);
-			            }
-		            })
-		            .attr("width", function (d) {
-		            	if (s.vis.categorical) {
-		            		return self.xScale.rangeBand();
-		            	} else {
-		            		return barWidth;
-		        		}
-		        	})	
-		            .attr("height", function (d) {
-		            	if (d[s.vis.y] < 0) {
-		            		return Math.abs(self.yScale(0) - self.yScale(d[s.vis.y]));
-		            	} else {
-							return self.height - self.yScale(d[s.vis.y]);
-		            	}		                
-		            })
-		            .attr("fill", function (d) {
-		            	if (d[s.vis.y] < 0) {
-		            		return "red";
-		            	}
-		            	return col;
-		            })
-		            .attr("opacity", 0.7)
-		            .attr("title", function(d) {
-		                return d[s.vis.x];
-		            })
+			            .attr("x", function(d){
+			            	if (vis.timeSeries) return self.xScale(d[s.vis.x]) - (barWidth/2);
+			                return self.xScale(d[s.vis.x]);
+			            })
+			            .attr("y", function (d) {
+			            	if (d[s.vis.y] < 0) {
+								return self.yScale(0);// Negative values need drawing from 0
+			            	} else {
+				                return self.yScale(d[s.vis.y]);
+				            }
+			            })
+			            .attr("width", function (d) {
+			            	if (s.vis.categorical) {
+			            		return self.xScale.rangeBand();
+			            	} else {
+			            		return barWidth;
+			        		}
+			        	})	
+			            .attr("height", function (d) {
+			            	if (d[s.vis.y] < 0) {
+			            		return Math.abs(self.yScale(0) - self.yScale(d[s.vis.y]));
+			            	} else {
+								return self.height - self.yScale(d[s.vis.y]);
+			            	}		                
+			            })
+			            .attr("fill", function (d) {
+			            	if (d[s.vis.y] < 0) {
+			            		return "red";
+			            	}
+			            	return col;
+			            })
+			            .attr("opacity", 0.7)
+			            .attr("title", function(d) {
+			                return d[s.vis.x];
+			            })
+
+	            if (self.interactive) {
+	            	bar.on("mouseover", function (e) { 
+	            		var msg = e[vis.x]+ ": " + e[vis.y];
+	            		var txt = self.svg.append("text")
+	            			.text(msg)
+	            			.attr("x", self.width/2)
+	            			.attr("y", self.height+self.margin.bottom-10)
+	            			.attr("class", "metvis data-hover-label")
+	            			.style("text-anchor", "middle");
+	            	}).on("mouseout", function(e) {
+	            		self.svg.select(".metvis.data-hover-label").remove();
+	            	})
+	            }
+
 			} else if (s.vis.type === "ScatterChart") {
 				self.svg.append("g")
 					.selectAll("circle")

@@ -16,14 +16,25 @@
                 <tr>
                     <th>User</th>
                     <th>Activity (last 30 days)</th>
+                    <th>Behaviour</th>
                 </tr>
             </thead>
             <tbody>
                 @for(user <- users) {
                 <tr>
-                    <td><a href="@routes.Users.view(user.getEmail())">@user.getEmail()</a></td>
+                    <td>
+                        <a href="@routes.Users.view(user.getEmail())">@user.getEmail()</a> <br />
+                        Joined: @user.getJoinDate() <br/>
+                        <span class="label label-primary"><span class="glyphicon glyphicon-flash"> @user.getGrid().count(_.isInstanceOf[model.SparkGridEntry])</span></span> 
+                        <span class="label label-primary"><span class="glyphicon glyphicon-stats"> @user.getGrid().count(_.isInstanceOf[model.PlotGridEntry])</span></span> 
+                        <span class="label label-primary"><span class="glyphicon glyphicon-bell"> @user.getGrid().count(_.isInstanceOf[model.Notification])</span></span> 
+                        <span class="label label-primary"><span class="glyphicon glyphicon-calendar"> @user.getGrid().count(_.isInstanceOf[model.EventGroup])</span></span> 
+                    </td>
                     <td>
                         <div id="activityplot@users.indexOf(user)" class="activityplot"></div>
+                    </td>
+                    <td>
+                        <div id="behaviour@users.indexOf(user)" class="activityplot"></div>
                     </td>
                 </tr>
               }
@@ -44,7 +55,38 @@ function drawUser(email, container) {
     var url = "@routes.Admin.getUsagePlot("placeholder")".replace("placeholder", email);
 
     $.getJSON(url, function(vis) {
-        // Group data
+
+        // Create page view histogram
+        var pageHistogram = d3.nest() 
+            .key(function(d){ return d["URI"]; })
+            .rollup(function(d) { return d.length; })
+            .entries(vis.datatable)
+            .filter(function(d) { return d.values > 2 });
+        
+        pageHistogram.sort(function(a,b) {
+            return b.values - a.values;
+        });
+        
+        var hist = {
+            type : "BarChart",
+            datatable : pageHistogram,
+            timeSeries : false,
+            categorical : true,
+            x : "key",
+            y : "values"
+        }
+        var histChart = new metvis.Chart(container.replace("activityplot", "behaviour"), hist);
+        histChart.height = 120;
+        histChart.width = 400;
+        histChart.margin.top=10;
+        histChart.margin.left=10;
+        // histChart.margin.bottom=10;
+        histChart.interactive = true;
+        histChart.axis.x.tickLabels = false;
+        histChart.axis.y.tickLabels = false;
+        histChart.draw();
+
+        // Create page views by day
         var aggregated = d3.nest() 
             .key(function(d){ return d[vis.x]; })
             .rollup(function(d) { return d.length; })
@@ -54,6 +96,7 @@ function drawUser(email, container) {
             d[vis.x] = d.key;
             d[vis.y] = d.values;
         })
+
         vis.datatable = aggregated;
 
         // Pad dataset if required
@@ -70,11 +113,11 @@ function drawUser(email, container) {
 
         chart = new metvis.Chart(container, vis);
         chart.height = 100;
-        chart.width = 800;
+        chart.width = 400;
         chart.margin.top=10;
+        chart.margin.left=10;
         chart.margin.bottom=10;
         chart.dateFormat = "%Y-%m-%d";
-        // chart.axis.yTicks = 3;
         chart.draw();
     });
 }
