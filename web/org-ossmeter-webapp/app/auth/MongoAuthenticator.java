@@ -1,5 +1,7 @@
 package auth;
 
+import play.Logger;
+
 import java.util.*;
 
 import com.feth.play.module.pa.providers.password.UsernamePasswordAuthUser;
@@ -619,6 +621,7 @@ public class MongoAuthenticator {
 		try {
 			Mongo mongo = null;
 			String replica = play.Play.application().configuration().getString("mongo.replica");
+			
 			if (replica == null) {
 				String host = play.Play.application().configuration().getString("mongo.default.host");
 				if (host == null) host = "localhost";
@@ -640,6 +643,7 @@ public class MongoAuthenticator {
 			return mongo.getDB("users");
 		} catch (Exception e) {
 			e.printStackTrace();
+			Logger.error("Error connecting to Mongo", e);
 			return null;
 		}
 	}
