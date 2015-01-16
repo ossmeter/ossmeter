@@ -26,6 +26,7 @@ GET 	/admin/news 				controllers.News.adminIndex()
 GET 	/admin/news/ 				controllers.News.adminIndex()
 POST 	/admin/news/new 			controllers.News.createItem()
 GET 	/admin/news/delete/:id 			controllers.News.deleteItem(id : String)
+GET 	/admin/news/update/:id/:status 			controllers.News.changeStatus(id : String, status : String)
 
 # Invite Acceptance
 GET		/register					controllers.Invitation.acceptInvitation(key : String)

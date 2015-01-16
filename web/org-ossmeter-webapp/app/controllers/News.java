@@ -53,8 +53,14 @@ public class News extends Controller {
 		List<NewsItem> news = new ArrayList<>();
         Iterator<NewsItem> it = users.getNews().iterator();
         while (it.hasNext()) {
-        	news.add(it.next());
+        	NewsItem n = it.next();
+        	if (n.getStatus().equals(NewsItemStatus.PUBLISHED)) {
+	        	news.add(n);
+        	}
         }
+
+        db.getMongo().close();
+
 		return ok(views.html.news.index.render(news));
 	}
 
@@ -69,6 +75,8 @@ public class News extends Controller {
         while (it.hasNext()) {
         	news.add(it.next());
         }
+        
+        db.getMongo().close();
 
 		return ok(views.html.admin.news.render(news, NEWS_ITEM_FORM));
 	}
@@ -109,5 +117,43 @@ public class News extends Controller {
 
 		flash(Application.FLASH_MESSAGE_KEY, "News item deleted.");
 		return redirect(routes.News.adminIndex());
+	}
+
+	@Restrict(@Group(MongoAuthenticator.ADMIN_ROLE))
+	public static Result changeStatus(String id, String status) {
+		DB db = MongoAuthenticator.getUsersDb();
+        Users users = new Users(db);
+
+        NewsItem news = users.getNews().findOneById(id);
+
+        if (news != null) {
+        	try {
+	        	NewsItemStatus st = NewsItemStatus.valueOf(status);
+	        	news.setStatus(st);
+		        users.getNews().sync();
+	        } catch (Exception e) {
+	        	flash(Application.FLASH_ERROR_KEY, "Attempt to update to an invalid status: " + status);
+	        }
+        }
+
+        db.getMongo().close();
+
+		flash(Application.FLASH_MESSAGE_KEY, "News item updated.");
+		return redirect(routes.News.adminIndex());
+	}
+
+	public static List<NewsItem> getLatestNews(int count) {
+		DB db = MongoAuthenticator.getUsersDb();
+        Users users = new Users(db);
+
+		List<NewsItem> news = new ArrayList<>();
+        Iterator<NewsItem> it = users.getNews().iterator();
+        while (it.hasNext() && news.size() < count) {
+        	NewsItem n = it.next();
+        	if (n.getStatus().equals(NewsItemStatus.PUBLISHED)) news.add(n);
+        }
+        
+        db.getMongo().close();
+        return news;
 	}
 }

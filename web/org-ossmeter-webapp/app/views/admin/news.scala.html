@@ -51,7 +51,12 @@
         				</td>
         				<td>@n.getStatus()</td>
         				<td>
-        					<a href="@routes.News.deleteItem(n.getId())">Delete</a>
+        					<a href="@routes.News.deleteItem(n.getId())">Delete</a> 
+        					@if(n.getStatus() == model.NewsItemStatus.PUBLISHED) {
+        					<a href="@routes.News.changeStatus(n.getId(), model.NewsItemStatus.DRAFT.toString())">Unpublish</a> 
+        					}else{
+        					<a href="@routes.News.changeStatus(n.getId(), model.NewsItemStatus.PUBLISHED.toString())">Publish</a>
+        					}
         				</td>
         			</tr>
         			}

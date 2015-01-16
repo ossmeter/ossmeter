@@ -47,6 +47,7 @@
                   <li class="@("active".when(nav == "")) hvr-underline-from-center"><a href="@routes.Application.index()">@Messages("ossmeter.navigation.home")</a></li>
                   <li class="@("active".when(nav == "projects")) hvr-underline-from-center"><a href="@routes.Projects.projects()">@Messages("ossmeter.navigation.projects")</a></li>
                   <li class="@("active".when(nav == "")) hvr-underline-from-center"><a href="@routes.Application.compare()">@Messages("ossmeter.navigation.compare")</a></li>
+                  <li class="@("active".when(nav == "")) hvr-underline-from-center"><a href="@routes.News.index()">News</a></li>
                   <!-- <li class="@("active".when(nav == ""))"><a href="#">API</a></li> -->
                   @restrict(la(as("admin"))) {
                     <li class="@("active".when(nav == "admin")) hvr-underline-from-center"><a href="@routes.Admin.index()">@Messages("ossmeter.navigation.admin")</a></li>

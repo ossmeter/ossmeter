@@ -68,6 +68,7 @@ public class DemoApplication extends Controller {
 		}
 	}
 
+//http://stackoverflow.com/questions/153716/verify-email-in-java
 	private static final Pattern rfc2822 = Pattern.compile(
         "^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$"
 		);
