@@ -257,14 +257,12 @@ public class Admin extends Controller {
 		    return badRequest(views.html.users.users.render(userList));
         }
 
-        int index = -1;
         for (Role r : u.getRoles()) {
         	if (r.getName().equals(MongoAuthenticator.ADMIN_ROLE)) {
 				u.getRoles().remove(r);
         		break;
         	}
         }
-        // u.getRoles().remove(index);
 		users.getUsers().sync();
 
         db.getMongo().close();	
