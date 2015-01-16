@@ -223,6 +223,54 @@ public class Admin extends Controller {
 		return promise.get(120000);
 	}
 
+	@Restrict(@Group(MongoAuthenticator.ADMIN_ROLE))
+	public static Result makeAdmin(String email) {
+		DB db = MongoAuthenticator.getUsersDb();
+        Users users = new Users(db);
+
+        User u = users.getUsers().findOneByEmail(email);
+
+        if (u == null) {
+        	flash(Application.FLASH_ERROR_KEY, "That doesn't appear to be a valid user!");
+        	return redirect(routes.Users.users());
+        }
+
+        Role r = new Role();
+        r.setName(MongoAuthenticator.ADMIN_ROLE);
+        u.getRoles().add(r);
+        users.getUsers().sync();
+
+        db.getMongo().close();
+        return redirect(routes.Users.users());
+	}
+
+	@Restrict(@Group(MongoAuthenticator.ADMIN_ROLE))
+	public static Result revokeAdmin(String email) {
+		DB db = MongoAuthenticator.getUsersDb();
+        Users users = new Users(db);
+
+        User u = users.getUsers().findOneByEmail(email);
+
+        if (u == null) {
+        	flash(Application.FLASH_ERROR_KEY, "That doesn't appear to be a valid user!");
+        	List<User> userList = MongoAuthenticator.findAllUsers();
+		    return badRequest(views.html.users.users.render(userList));
+        }
+
+        int index = -1;
+        for (Role r : u.getRoles()) {
+        	if (r.getName().equals(MongoAuthenticator.ADMIN_ROLE)) {
+				u.getRoles().remove(r);
+        		break;
+        	}
+        }
+        // u.getRoles().remove(index);
+		users.getUsers().sync();
+
+        db.getMongo().close();	
+        return redirect(routes.Users.users());
+	}
+
 	public static Result jsRoutes() {
 		return ok(
 				Routes.javascriptRouter("adminJSRoutes",

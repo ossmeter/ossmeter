@@ -14,6 +14,8 @@ GET     /admin/users/:id/delete     controllers.Users.delete_confirmation(id: St
 POST   	/admin/users/:id/delete     controllers.Users.delete(id: String)
 GET 	/admin/users/:id/usage		controllers.Admin.getUsagePlot(id : String)
 GET 	/admin/status 				controllers.Admin.status()
+GET 	/admin/permission/grant		controllers.Admin.makeAdmin(email : String)
+GET 	/admin/permission/revoke	controllers.Admin.revokeAdmin(email : String)
 GET 	/admin/api/*path			controllers.Admin.adminApi(path : String)
 GET     /assets/javascripts/adminroutes    controllers.Admin.jsRoutes
 

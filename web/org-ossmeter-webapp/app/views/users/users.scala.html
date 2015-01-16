@@ -29,6 +29,12 @@
                         <span class="label label-primary"><span class="glyphicon glyphicon-stats"> @user.getGrid().count(_.isInstanceOf[model.PlotGridEntry])</span></span> 
                         <span class="label label-primary"><span class="glyphicon glyphicon-bell"> @user.getGrid().count(_.isInstanceOf[model.Notification])</span></span> 
                         <span class="label label-primary"><span class="glyphicon glyphicon-calendar"> @user.getGrid().count(_.isInstanceOf[model.EventGroup])</span></span> 
+                        <br/>
+                        @if(user.getRoles().count(_.getName()=="admin") > 0){
+                        <span class="label label-info"> Admin</span><br/> <a href="@routes.Admin.revokeAdmin(user.getEmail())">Revoke Administrator</a>
+                        }else{
+                        <a href="@routes.Admin.makeAdmin(user.getEmail())">Make Administrator</a>
+                        }
                     </td>
                     <td>
                         <div id="activityplot@users.indexOf(user)" class="activityplot"></div>
