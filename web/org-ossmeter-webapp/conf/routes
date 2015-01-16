@@ -19,6 +19,13 @@ GET 	/admin/permission/revoke	controllers.Admin.revokeAdmin(email : String)
 GET 	/admin/api/*path			controllers.Admin.adminApi(path : String)
 GET     /assets/javascripts/adminroutes    controllers.Admin.jsRoutes
 
+# News
+GET 	/news 						controllers.News.index()
+GET 	/news/						controllers.News.index()
+GET 	/admin/news 				controllers.News.adminIndex()
+GET 	/admin/news/ 				controllers.News.adminIndex()
+POST 	/admin/news/new 			controllers.News.createItem()
+GET 	/admin/news/delete/:id 			controllers.News.deleteItem(id : String)
 
 # Invite Acceptance
 GET		/register					controllers.Invitation.acceptInvitation(key : String)
