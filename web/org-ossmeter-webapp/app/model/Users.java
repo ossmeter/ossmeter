@@ -18,7 +18,7 @@ public class Users extends PongoDB {
 	protected StatisticsCollection statistics = null;
 	protected TagCollection tags = null;
 	protected LogCollection logs = null;
-	
+	protected MailingListItemCollection mailingList = null;
 	
 	
 	public InvitationRequestCollection getInvites() {
@@ -48,6 +48,10 @@ public class Users extends PongoDB {
 	public LogCollection getLogs() {
 		return logs;
 	}
+
+	public MailingListItemCollection getMailingList() {
+		return mailingList;
+	}
 	
 	
 	@Override
@@ -67,5 +71,7 @@ public class Users extends PongoDB {
 		pongoCollections.add(tags);
 		logs = new LogCollection(db.getCollection("logs"));
 		pongoCollections.add(logs);
+		mailingList = new MailingListItemCollection(db.getCollection("mailingList"));
+		pongoCollections.add(mailingList);
 	}
 }

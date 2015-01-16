@@ -85,13 +85,17 @@
     </nav>
 
 	    @if(flash.contains(Application.FLASH_ERROR_KEY)) {
-	      <div class="alert alert-danger">
-	      	@flash().get(Application.FLASH_ERROR_KEY)
+	      <div class="alert alert-danger center">
+          <div class="container">
+	      	  @flash().get(Application.FLASH_ERROR_KEY)
+          </div>
 	      </div>
 	    }
 	    @if(flash.contains(Application.FLASH_MESSAGE_KEY)) {
-	      <div class="alert alert-success">
-	      	@flash().get(Application.FLASH_MESSAGE_KEY)
+	      <div class="alert alert-success center">
+          <div class="container">
+	      	  @flash().get(Application.FLASH_MESSAGE_KEY)
+          </div>
 	      </div>
 	    }
 		@content

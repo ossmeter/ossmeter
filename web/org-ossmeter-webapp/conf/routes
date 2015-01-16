@@ -36,6 +36,7 @@ GET     /assets/javascripts/routes    controllers.Application.jsRoutes
 # Demo
 GET		/demo 						controllers.DemoApplication.index
 GET		/demo/						controllers.DemoApplication.index
+POST	/demo/mailingList			controllers.DemoApplication.addToMailingList
 GET		/demo/compare 				controllers.DemoApplication.compare	
 GET		/demo/compare/ 				controllers.DemoApplication.compare
 GET		/demo/projects/:id 			controllers.DemoApplication.viewProject(id : String, summary : Boolean = true)
