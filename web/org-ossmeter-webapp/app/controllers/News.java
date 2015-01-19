@@ -15,8 +15,6 @@ import play.mvc.Http.Session;
 import play.mvc.Result;
 import play.mvc.Http.Request;
 
-import metvis.*;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
