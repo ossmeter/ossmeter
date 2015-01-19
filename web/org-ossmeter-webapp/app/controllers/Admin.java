@@ -100,24 +100,24 @@ public class Admin extends Controller {
 	        HtmlEmail e = new HtmlEmail();
 			e.addTo(email);
 			// e.addTo("jamesrobertwilliams@gmail.com");
-			e.setFrom("ossmeter@gmail.com", "OSSMETER");
+			e.setFrom(play.Play.application().configuration().getString("smtp.user"), "OSSMETER");
 			e.setSubject("OSSMETER Invitation");
+			e.setHtmlMsg(views.html.account.email.invitation.render(play.Play.application().configuration().getString("application.domain"), 
+				routes.Invitation.acceptInvitation(inv.getToken()).toString()).body());
+			e.setTextMsg(views.txt.account.email.invitation.render(play.Play.application().configuration().getString("application.domain"), 
+				routes.Invitation.acceptInvitation(inv.getToken()).toString()).body());
 
-			e.setHtmlMsg("<html><h1>Your OSSMETER.com invitation is here</h1>"+
-				"<p>Thanks for your interest in OSSMETER. Please click the link below to accept your invitation into the OSSMETER beta phase and start playing :)</p>"+
-				"<p><a href=\"http://www.ossmeter.com" + routes.Invitation.acceptInvitation(inv.getToken()) + "\">http://www.ossmeter.com"+routes.Invitation.acceptInvitation(inv.getToken())+"</a></p>" +
-				"<p>Thanks!</p>" + 
-				"</html>");
-			e.setTextMsg("sd");
-			
-			e.setHostName("smtp.gmail.com");
-			e.setSmtpPort(587);
-			e.setAuthentication("ossmeter@gmail.com", "ossmeter112358");
-			e.setStartTLSEnabled(true);
+			e.setHostName(play.Play.application().configuration().getString("smtp.host"));
+			e.setSmtpPort(play.Play.application().configuration().getInt("smtp.port"));
+			e.setAuthentication(play.Play.application().configuration().getString("smtp.user"), play.Play.application().configuration().getString("smtp.password"));
+			e.setStartTLSEnabled(play.Play.application().configuration().getBoolean("smtp.ssl"));
 			
 			e.send();
 		} catch (Exception e) {
-			e.printStackTrace();
+			play.Logger.error("Unable to send invite.", e);
+			db.getMongo().close();
+			flash(Application.FLASH_ERROR_KEY, "Unable to send invite. " + e.getMessage());
+			return redirect(routes.Admin.requests());
 		}
 
         inv.setStatus("SENT");
