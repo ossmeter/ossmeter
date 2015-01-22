@@ -409,6 +409,8 @@ public class GitHubImporter {
 				repository.getBugTrackingSystems().add(bt);
 			}
 			else bt = (GitHubBugTracker) repository.getBugTrackingSystems().get(0);
+
+			/*
 			try{
 				List<GitHubIssue> issues = getIssuesInAProject(platform, projectId);
 				platform.getProjectRepositoryManager().getProjectRepository().sync();
@@ -418,7 +420,7 @@ public class GitHubImporter {
 			}
 			catch(Exception e)
 			{
-				logger.debug("Unable to load collaborators for this project");
+				logger.debug("Unable to load issues for this project");
 			}
 			repository.getBugTrackingSystems().add(bt);
 			
@@ -430,7 +432,7 @@ public class GitHubImporter {
 			}
 			catch(Exception e)
 			{
-				logger.debug("Unable to load collaborators for this project");
+				logger.debug("Unable to load contents for this project");
 			}
 			
 			try{
@@ -441,10 +443,10 @@ public class GitHubImporter {
 			}
 			catch(Exception e)
 			{
-				logger.debug("Unable to load collaborators for this project");
+				logger.debug("Unable to load downloads for this project");
 			}
 			
-			
+			*/
 			lastImportedId = new Integer(currentRepo.get("id").toString());
 			ImportData importData = null;
 			if (platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().size() == 0)
