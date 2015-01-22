@@ -35,6 +35,7 @@ public class ProjectImportResource extends ServerResource {
 	@Post("json")
 	public Representation importProject(Representation entity) {
 		
+		Mongo mongo = null;
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 			ObjectNode obj = (ObjectNode)mapper.readTree(entity.getText());
@@ -43,7 +44,6 @@ public class ProjectImportResource extends ServerResource {
 
 			url = url.replace("\"", "");
 			
-			Mongo mongo;
 			try {
 				mongo = Configuration.getInstance().getMongoConnection();
 			} catch (UnknownHostException e1) {
@@ -89,6 +89,8 @@ public class ProjectImportResource extends ServerResource {
 			rep.setMediaType(MediaType.APPLICATION_JSON);
 			getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 			return rep;
+		} finally {
+			if (mongo != null) mongo.close();
 		}
 	}
 	

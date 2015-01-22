@@ -36,8 +36,8 @@ import org.ossmeter.platform.factoids.*;
 public class Project extends NamedElement {
 
 	protected List<VcsRepository> vcsRepositories = new ArrayList<VcsRepository>();
-	protected List<CommunicationChannel> communicationChannels;
-	protected List<BugTrackingSystem> bugTrackingSystems;
+	protected List<CommunicationChannel> communicationChannels = new ArrayList<CommunicationChannel>();
+	protected List<BugTrackingSystem> bugTrackingSystems = new ArrayList<BugTrackingSystem>();
 	protected List<Person> persons;
 	protected List<License> licenses;
 	protected List<MetricProvider> metricProviderData;

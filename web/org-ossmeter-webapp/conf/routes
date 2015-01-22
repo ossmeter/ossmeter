@@ -10,8 +10,23 @@ GET		/admin/requests/offer		controllers.Admin.offerInvite(email:String)
 GET		/admin/requests/delete		controllers.Admin.deleteInvite(email:String)
 GET     /admin/users                controllers.Users.users()
 GET     /admin/users/:id            controllers.Users.view(id:String)
-GET    /admin/users/:id/delete      controllers.Users.delete_confirmation(id: String)
-POST   /admin/users/:id/delete      controllers.Users.delete(id: String)
+GET     /admin/users/:id/delete     controllers.Users.delete_confirmation(id: String)
+POST   	/admin/users/:id/delete     controllers.Users.delete(id: String)
+GET 	/admin/users/:id/usage		controllers.Admin.getUsagePlot(id : String)
+GET 	/admin/status 				controllers.Admin.status()
+GET 	/admin/permission/grant		controllers.Admin.makeAdmin(email : String)
+GET 	/admin/permission/revoke	controllers.Admin.revokeAdmin(email : String)
+GET 	/admin/api/*path			controllers.Admin.adminApi(path : String)
+GET     /assets/javascripts/adminroutes    controllers.Admin.jsRoutes
+
+# News
+GET 	/news 						controllers.News.index()
+GET 	/news/						controllers.News.index()
+GET 	/admin/news 				controllers.News.adminIndex()
+GET 	/admin/news/ 				controllers.News.adminIndex()
+POST 	/admin/news/new 			controllers.News.createItem()
+GET 	/admin/news/delete/:id 			controllers.News.deleteItem(id : String)
+GET 	/admin/news/update/:id/:status 			controllers.News.changeStatus(id : String, status : String)
 
 # Invite Acceptance
 GET		/register					controllers.Invitation.acceptInvitation(key : String)
@@ -31,6 +46,7 @@ GET     /assets/javascripts/routes    controllers.Application.jsRoutes
 # Demo
 GET		/demo 						controllers.DemoApplication.index
 GET		/demo/						controllers.DemoApplication.index
+POST	/demo/mailingList			controllers.DemoApplication.addToMailingList
 GET		/demo/compare 				controllers.DemoApplication.compare	
 GET		/demo/compare/ 				controllers.DemoApplication.compare
 GET		/demo/projects/:id 			controllers.DemoApplication.viewProject(id : String, summary : Boolean = true)
@@ -44,7 +60,9 @@ GET		/demo/projects/:id/detail/ 	controllers.DemoApplication.viewProject(id : St
 GET     /profile                    controllers.Application.profile
 GET		/profile/notification		controllers.Application.profileNotification(projectid: String, projectName : String, metricid : String, metricName : String)
 POST	/profile/notification		controllers.Account.createNotification
+GET	/profile/grid/delete/:id	controllers.Account.deleteGridObject(id:String)
 GET		/profile/eventgroup			controllers.Account.loadEventGroupForm
+GET		/profile/eventgroup/:id		controllers.Account.editEventGroup(id : String)
 POST	/profile/eventgroup			controllers.Account.createEventGroup
 GET		/profile/event				controllers.Application.profileEvent
 POST	/profile/event				controllers.Account.createEvent
@@ -59,9 +77,10 @@ POST    /login                      controllers.Application.doLogin
 GET     /logout                     com.feth.play.module.pa.controllers.Authenticate.logout
 GET     /authenticate/:provider     com.feth.play.module.pa.controllers.Authenticate.authenticate(provider: String)
 
-GET     /signup                		controllers.Application.signup()
-GET     /signup/                	controllers.Application.signup()
-POST    /signup                     controllers.Application.doSignup
+# Standard signup currently disabled
+#GET     /signup                	controllers.Application.signup()
+#GET     /signup/                	controllers.Application.signup()
+POST    /signup                    controllers.Application.doSignup
 
 GET     /accounts/unverified        controllers.Signup.unverified
 GET     /authenticate/:provider/denied     controllers.Signup.oAuthDenied(provider: String)
@@ -97,10 +116,10 @@ POST    /login/password/forgot     	controllers.Signup.doForgotPassword
 GET     /projects                  	controllers.Projects.projects()
 # Create
 GET     /projects/new               controllers.Projects.create()
-POST    /projects/new               controllers.Projects.save()
+#POST    /projects/new               controllers.Projects.save()
 GET     /projects/add               controllers.Projects.createProject()
-POST    /projects/add               controllers.Projects.addProject()
-GET     /javascriptRoutes     		controllers.Projects.javascriptRoutes
+POST    /projects/add               controllers.Projects.postCreateProject()
+#GET     /javascriptRoutes     		controllers.Projects.javascriptRoutes
 # Import
 POST    /projects/import            controllers.Projects.importProject()
 

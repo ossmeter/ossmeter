@@ -18,6 +18,7 @@ import play.data.validation.Constraints.Required;
 import play.i18n.Messages;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.With;
 import providers.MyUsernamePasswordAuthProvider;
 import providers.MyUsernamePasswordAuthUser;
 import views.html.account.*;
@@ -31,6 +32,7 @@ import static play.data.Form.form;
 
 import auth.MongoAuthenticator;
 
+@With(LogAction.class)
 public class Account extends Controller {
 
 	@SubjectPresent
@@ -48,6 +50,20 @@ public class Account extends Controller {
 		System.out.println("Looks like it worked!" + request().getQueryString("projectid") + " " + request().getQueryString("metricid"));
 		
 		return ok("");
+	}
+
+	@SubjectPresent
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
+	public static Result deleteGridObject(String id) {
+		User user = Application.getLocalUser(session());
+
+		if (user == null) {
+			// Not logged in
+			return ok("Sorry, you need to be logged in to do that.");
+		}
+
+		MongoAuthenticator.deleteGridObject(user, id);
+		return redirect(routes.Application.profile());
 	}
 
 	@SubjectPresent
@@ -310,7 +326,19 @@ public class Account extends Controller {
 		Form<EventGroup> form = form(EventGroup.class);
 
 		return ok(views.html.account._eventGroupForm.render(form));
-	}	
+	}
+
+	@SubjectPresent
+	public static Result editEventGroup(String id) {
+
+		final User user = Application.getLocalUser(session());
+		EventGroup eg = MongoAuthenticator.getEventGroupById(user, id);
+
+		Form<EventGroup> form = form(EventGroup.class);
+		form.fill(eg);
+
+		return ok(views.html.account._eventGroupForm.render(form));
+	}
 
 	@SubjectPresent
 	public static Result createEventGroup() {

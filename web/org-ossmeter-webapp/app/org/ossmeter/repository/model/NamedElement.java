@@ -51,5 +51,9 @@ public abstract class NamedElement extends Object {
 	public String getName() {
 		return name;
 	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 	
 }

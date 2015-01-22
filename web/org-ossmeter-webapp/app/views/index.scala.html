@@ -1,3 +1,4 @@
+@(news : List[model.NewsItem])
 
 @main(Messages("ossmeter.index.title")) {
       <!-- Main hero unit for a primary marketing message or call to action -->
@@ -106,10 +107,10 @@ $(function () {
                     </ul>
                 </div>
                 <div class="col-md-4">
-                    <h2>Create an Account</h2>
-                    <!-- <p>Having an account with OSSMETER enables you to add your own projects to be monitored, and gives you ability to set up triggers that notify you when a particular metric of interest reaches a certain threshold. </p> -->
-                    <p>We are currently accepting users on an invite-only basis. If you have received an invite, click the button below. If not, you are still able to browse and compare the projects, but won't be able to add new projects or set up notifications.</p>
-                    <button type="button" class="btn btn-default form-control">Accept Invite</button>
+                    <h2>Latest News</h2>
+                    @for(n <- news){
+                    <p><a href="@routes.News.index()">@n.getTitle()</a><br/>@n.getDate()</p>
+                    }
                 </div>
             </div>
         </div>

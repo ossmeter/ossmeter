@@ -8,6 +8,7 @@ import model.Users;
 
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.With;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.data.validation.Constraints;
@@ -19,6 +20,7 @@ import auth.MongoAuthenticator;
 import com.mongodb.Mongo;
 import com.mongodb.DB;
 
+@With(LogAction.class)
 public class Invitation extends Controller{
 
     private static Form<InvitationRequest> invitationForm = Form.form(InvitationRequest.class);

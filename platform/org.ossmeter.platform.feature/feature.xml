@@ -233,12 +233,6 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.core.runtime.compatibility.auth"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.jsoup"
          download-size="0"
          install-size="0"
@@ -1566,14 +1560,14 @@
          unpack="false"/>
 
    <plugin
-         id="org.ossmeter.platform.communicationchannel"
+         id="org.ossmeter.platform.communicationchannel.sourceforge"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
    <plugin
-         id="org.ossmeter.platform.communicationchannel.sourceforge"
+         id="org.ossmeter.platform.communicationchannel"
          download-size="0"
          install-size="0"
          version="0.0.0"

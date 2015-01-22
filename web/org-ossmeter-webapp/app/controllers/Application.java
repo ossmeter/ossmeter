@@ -40,6 +40,7 @@ import auth.MongoAuthenticator;
 import com.mongodb.Mongo;
 import com.mongodb.DB;
 
+@With(LogAction.class)
 public class Application extends Controller {
 
 	public static final String FLASH_MESSAGE_KEY = "message";
@@ -51,7 +52,11 @@ public class Application extends Controller {
 	public static Result index() {
 		final User localUser = getLocalUser(session());
 		if (localUser == null) return ok(landing.render());
-		else return ok(index.render());
+		else {
+
+
+			return ok(index.render(News.getLatestNews(3)));
+		}
 	}
 
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
@@ -91,7 +96,8 @@ public class Application extends Controller {
 						controllers.routes.javascript.Application.profileNotification(),
 						controllers.routes.javascript.Account.createNotification(),
 						controllers.routes.javascript.Account.updateGridLocations(),
-						controllers.routes.javascript.Account.loadEventGroupForm()
+						controllers.routes.javascript.Account.loadEventGroupForm(),
+						controllers.routes.javascript.Projects.createProject()
 						)
 				)
 				.as("text/javascript");

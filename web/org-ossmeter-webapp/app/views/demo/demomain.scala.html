@@ -17,8 +17,8 @@
     <link rel="icon" type="image/png" href="@routes.Assets.at("icons/favicon.png")">
 
     <!-- Styles -->    
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,400,300,800' rel='stylesheet' type='text/css'>
-    <link href="http://fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,400,300,800' rel='stylesheet' type='text/css'>
+    <link href="//fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet" type="text/css">
     <link href="@routes.Assets.at("css/bootstrap.min.css")" rel="stylesheet">
     <link href="@routes.Assets.at("css/jquery.gridster.min.css")" rel="stylesheet">
     <link href="@routes.Assets.at("css/jquery-ui.min.css")" rel="stylesheet">
@@ -59,13 +59,17 @@
     </nav>
 
 	    @if(flash.contains(Application.FLASH_ERROR_KEY)) {
-	      <div class="alert alert-danger">
+	      <div class="alert alert-danger center">
+          <div class="container">
 	      	@flash().get(Application.FLASH_ERROR_KEY)
+          </div>
 	      </div>
 	    }
 	    @if(flash.contains(Application.FLASH_MESSAGE_KEY)) {
-	      <div class="alert alert-success">
-	      	@flash().get(Application.FLASH_MESSAGE_KEY)
+	      <div class="alert alert-success center">
+          <div class="container">
+	      	  @flash().get(Application.FLASH_MESSAGE_KEY)
+          </div>
 	      </div>
 	    }
 		@content
@@ -111,8 +115,8 @@
             <strong>Twitter:</strong> <a href="https://www.twitter.com/ossmeter">@@ossmeter</a></p>
           </div>
         </div>
-        <p>&copy; 2014 OSSMETER. Licensed under the Eclipse Public License, Version 1.0. View details <a href="https://www.eclipse.org/legal/epl-v10.html">here</a>.</p>
-        <p>
+        <p>&copy; 2015 OSSMETER. Licensed under the Eclipse Public License, Version 1.0. View details <a href="https://www.eclipse.org/legal/epl-v10.html">here</a>.</p>
+        <p>Hosted by <a href="http://www.york.ac.uk">The University of York</a>. <a href="http://www.york.ac.uk/about/legal-statements/">Disclaimer</a></p>
         <small><a href="http://twitter.github.com/bootstrap/index.html" target="_blank">Twitter Bootstrap</a> &middot; Provider icons by <a href="https://github.com/paulrobertlloyd/socialmediaicons/" target="_blank">Paul Robert Lloyd</a></small></p>
         </div>
       </footer>
@@ -122,12 +126,12 @@
 	<script src="@routes.Application.jsRoutes" defer="defer"></script>
     <!-- IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <script type="text/javascript">
     function getApi() {
       // return "@routes.Application.api("").absoluteURL()";
-      return "@play.Play.application().configuration().getString("ossmeter.api")";
+      return "/api/";//"@play.Play.application().configuration().getString("ossmeter.api")";
     }
     </script>
   </body>

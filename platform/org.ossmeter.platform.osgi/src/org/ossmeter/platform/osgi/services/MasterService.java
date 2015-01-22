@@ -61,7 +61,7 @@ public class MasterService implements IMasterService {
 							if (next.getExecutionInformation().getMonitor() && !currentlyExecuting.contains(next.getShortName())) {
 								projects.add(next.getShortName());
 							}
-							if (projects.size() >= 3) break;
+							if (projects.size() >= 1) break;
 						}
 						
 						SchedulingInformation worker = null;

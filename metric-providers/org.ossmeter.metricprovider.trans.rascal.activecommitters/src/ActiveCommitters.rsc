@@ -283,7 +283,6 @@ real giniCommittersOverFile(ProjectDelta delta = \empty(), map[loc,int] perFile 
 @friendlyName{Number of committers per file}
 @appliesTo{generic()}
 @uses= ("committersPerFile": "perFile")
-@historic{}
 map[loc file, int numberOfCommitters] countCommittersPerFile(ProjectDelta delta = \empty(), rel[loc file, str person] perFile = {}) {
   return (f : size(perFile[f]) | f <- domain(perFile));
 }

@@ -1,5 +1,7 @@
 package auth;
 
+import play.Logger;
+
 import java.util.*;
 
 import com.feth.play.module.pa.providers.password.UsernamePasswordAuthUser;
@@ -9,6 +11,7 @@ import com.feth.play.module.pa.user.AuthUserIdentity;
 import com.feth.play.module.pa.user.EmailIdentity;
 
 import com.mongodb.Mongo;
+import com.mongodb.ServerAddress;
 import com.mongodb.DBCollection;
 import com.mongodb.DB;
 import com.mongodb.DBCursor;
@@ -94,6 +97,8 @@ public class MongoAuthenticator {
 		message.setSizeY(1);
 		message.setRow(1); // Stupid gridster is 1-based
 		message.setCol(1);
+		message.setTitle("Welcome!");
+		message.setBody("<p>Thanks for signing up for OSSMETER!</p>");
 		user.getGrid().add(message);
 
 		// // DEBUG - examples only (we could leave them here though, to show the user what it would look like)
@@ -255,12 +260,19 @@ public class MongoAuthenticator {
 				throw new RuntimeException("Account not enabled for password usage.");				
 			}
 		}
+
+		// This isn't enough to dirty the object (Pongo bug), so we dirty the email too
 		account.setProviderUserId(authUser.getHashedPassword());
+		user.setEmail(user.getEmail());
 
 		users.getUsers().sync();
 		db.getMongo().close();
 
 		return user;
+	}
+
+	public static void resetUserPassword(final MyUsernamePasswordAuthUser authUser) {
+		changeUserPassword(authUser, false);
 	}
 
 	public static List<User> findAllUsers() {
@@ -288,41 +300,6 @@ public class MongoAuthenticator {
 			users.getUsers().sync();
 		}
 		db.getMongo().close();
-	}
-
-	public static User resetUserPassword(final MyUsernamePasswordAuthUser authUser) {
-		
-
-		changeUserPassword(authUser, false);
-
-		LinkedAccount account = null;
-
-		DB db = getUsersDb();
-		Users users = new Users(db);
-		User user = users.getUsers().findOneByEmail(authUser.getEmail());
-
-		for (LinkedAccount acc : user.getLinkedAccounts()) {
-			if (acc.getProviderKey().equals(authUser.getProvider())) {
-				account = acc;
-				break;
-			}
-		}
-
-		if (account == null) {
-			account = new LinkedAccount();
-			account.setProviderUserId(authUser.getHashedPassword());
-			account.setProviderKey(authUser.getProvider());
-			user.getLinkedAccounts().add(account);
-
-		} else {
-			db.getMongo().close();
-			throw new RuntimeException("Account not enabled for password usage.");
-		}
-
-		users.getUsers().sync();
-		db.getMongo().close();
-
-		return user;
 	}
 
 	/* 
@@ -456,6 +433,25 @@ public class MongoAuthenticator {
 		db.getMongo().close();
  	}
 
+ 	public static void deleteGridObject(final User user, final String id) {
+ 		DB db = getUsersDb();
+		Users users = new Users(db);
+
+		User u = users.getUsers().findOneByEmail(user.getEmail());
+		GridEntry toDel = null;
+
+		for (GridEntry g : u.getGrid()) {
+			if (id.equals(g.getUid())) {
+				toDel = g;
+				break;
+			}
+		}
+		u.getGrid().remove(toDel);
+		
+		users.getUsers().sync();
+		db.getMongo().close();
+ 	}
+
  	public static Notification findNotification(User u, String projectId, String metricId) {
  		DB db = getUsersDb();
 		Users users = new Users(db);
@@ -501,6 +497,29 @@ public class MongoAuthenticator {
 
 		users.getUsers().sync();
 		db.getMongo().close();
+ 	}
+
+
+ 	public static EventGroup getEventGroupById(User u, String id) {
+ 		DB db = getUsersDb();
+		Users users = new Users(db);
+
+		User user = users.getUsers().findOneByEmail(u.getEmail());
+		EventGroup toReturn = null;
+
+		for (GridEntry g : user.getGrid()) {
+			if (g instanceof EventGroup) {
+				EventGroup gg = (EventGroup)g;
+				if (id.equals(gg.getUid())) {
+					toReturn = gg;
+					break;
+				}
+			}
+		}
+
+		db.getMongo().close();
+
+		return toReturn;
  	}
 
  	public static void updateNotification(User u, String projectId, String metricId, double threshold, boolean aboveThreshold) {
@@ -596,18 +615,35 @@ public class MongoAuthenticator {
  	}
 
 	// May want to be more public? Or in its own class. This is just auth.
+	// May also want to cache the addresses to avoid reading the conf every time.
 	public static DB getUsersDb() {
-		try {
-			String host = play.Play.application().configuration().getString("mongo.default.host");
-			if (host == null) host = "localhost";
-			
-			Integer port = play.Play.application().configuration().getInt("mongo.default.port");
-			if (port == null) port = 27017;
 
-			Mongo mongo = new Mongo(host, port);	
+		try {
+			Mongo mongo = null;
+			String replica = play.Play.application().configuration().getString("mongo.replica");
+			
+			if (replica == null) {
+				String host = play.Play.application().configuration().getString("mongo.default.host");
+				if (host == null) host = "localhost";
+				
+				Integer port = play.Play.application().configuration().getInt("mongo.default.port");
+				if (port == null) port = 27017;
+
+				mongo = new Mongo(host, port);
+			} else {
+				List<ServerAddress> addresses = new ArrayList<>();
+				String[] hosts = replica.split(",");
+				for (String host : hosts) {
+					String[] s = host.split(":");
+					addresses.add(new ServerAddress(s[0], Integer.valueOf(s[1])));
+				}
+
+				mongo = new Mongo(addresses);
+			}
 			return mongo.getDB("users");
 		} catch (Exception e) {
 			e.printStackTrace();
+			Logger.error("Error connecting to Mongo", e);
 			return null;
 		}
 	}

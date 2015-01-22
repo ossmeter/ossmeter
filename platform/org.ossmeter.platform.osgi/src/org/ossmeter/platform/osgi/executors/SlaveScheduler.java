@@ -10,12 +10,10 @@
  *******************************************************************************/
 package org.ossmeter.platform.osgi.executors;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
+import org.ossmeter.platform.Configuration;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.SchedulingInformation;
@@ -61,15 +59,7 @@ public class SlaveScheduler {
 	}
 
 	public void run() {
-		
-		String id = UUID.randomUUID().toString();
-		try {
-			id = InetAddress.getLocalHost().getHostName();
-		} catch (UnknownHostException e1) {
-			e1.printStackTrace();
-		}
-		
-		final String identifier = id;
+		final String identifier = Configuration.getInstance().getSlaveIdentifier();
 		
 		heartbeat = new Thread() {
 			@Override
@@ -119,6 +109,7 @@ public class SlaveScheduler {
 							exe.run();
 						}
 						
+						// Update that database to accept new jobs
 						job = platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().findOneByWorkerIdentifier(identifier);
 						job.getCurrentLoad().clear();
 						platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().sync();

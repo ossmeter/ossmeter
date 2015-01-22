@@ -55,6 +55,7 @@ map[loc, list[str]] getChangedItemsPerRepository(ProjectDelta delta) {
   return result;
 }
 
+@memo
 set[VcsCommitItem] checkSanity(list[VcsCommitItem] items) {
   set[VcsCommitItem] result = {};
   for (VcsCommitItem item <- items) {
