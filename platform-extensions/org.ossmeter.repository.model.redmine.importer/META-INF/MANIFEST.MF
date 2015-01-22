@@ -14,7 +14,8 @@ Require-Bundle: org.ossmeter.repository.model.redmine,
  com.googlecode.pongo.runtime,
  org.ossmeter.platform,
  org.ossmeter.repository.model,
- org.apache.log4j.1.2.17
+ org.apache.log4j.1.2.17,
+ org.ossmeter.repository.model.importer;bundle-version="1.0.0"
 Export-Package: org.ossmeter.repository.model.redmine.importer
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 

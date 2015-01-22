@@ -23,6 +23,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+
+
+
+
+
+
+
 //import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -35,12 +42,10 @@ import org.ossmeter.repository.model.Person;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.Role;
 import org.ossmeter.repository.model.redmine.*; 
-
-//import com.mongodb.Mongo;
-
+import org.ossmeter.repository.model.importer.IImporter;
 import org.ossmeter.repository.model.importer.exception.*;
 
-public class RedmineImporter {
+public class RedmineImporter implements IImporter {
 	private String token;
 	private String baseRepo;
 	private String username;
@@ -79,7 +84,7 @@ public class RedmineImporter {
 			return false;
 		}
 	}
-
+	@Override
 	public void importAll(Platform platform ) throws RepoInfoNotFound 
 	{
 		if (baseRepo == null || token == null || username == null || password == null)
@@ -115,7 +120,7 @@ public class RedmineImporter {
 			}
 		}
 	}
-	
+	@Override
 	public void importProjects(Platform platform, int numberOfProjects ) throws RepoInfoNotFound 
 	{
 		if (baseRepo == null || token == null || username == null || password == null)
@@ -153,7 +158,7 @@ public class RedmineImporter {
 			}
 		}
 	}
-	
+	@Override
 	public RedmineProject importProject(String projectId, Platform platform) throws RepoInfoNotFound 
 	{	
 		
@@ -252,7 +257,7 @@ public class RedmineImporter {
 		
 		
 	}
-	
+
 	public RedmineProject importProject(String projectId, Platform platform, 
 			String baseRepo, String password, String username, String token) throws RepoInfoNotFound 
 	{	
@@ -580,7 +585,7 @@ public class RedmineImporter {
 		return result;
 	}
 
-	
+	@Override
 	public boolean isProjectInDB(String projectId, Platform platform)
 	{
 		try 
@@ -610,11 +615,12 @@ public class RedmineImporter {
 	{
 		return isProjectInDB(getProjectIdFromUrl(url), platform);
 	}
-	
+	@Override
 	public RedmineProject importProjectByUrl(String url, Platform platform) throws RepoInfoNotFound, WrongUrlException
 	{
 		return importProject(getProjectIdFromUrl(url), platform);
 	}
+	
 	public RedmineProject importProjectByUrl(String url, Platform platform, String baseRepo, String token, String username, String password) throws RepoInfoNotFound, WrongUrlException
 	{
 		return importProject(getProjectIdFromUrl(url), platform, baseRepo, password, username, token);

@@ -22,6 +22,7 @@ import org.ossmeter.repository.model.Person;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.Role;
 import org.ossmeter.repository.model.cc.wiki.Wiki;
+import org.ossmeter.repository.model.importer.IImporter;
 import org.ossmeter.repository.model.importer.exception.WrongUrlException;
 import org.ossmeter.repository.model.sourceforge.*;
 
@@ -35,9 +36,11 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
 import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 import org.ossmeter.repository.model.vcs.git.GitRepository;
 import org.jsoup.select.*;
@@ -52,7 +55,7 @@ import org.xml.sax.SAXException;
 
 
 
-public class SourceforgeProjectImporter {
+public class SourceforgeProjectImporter implements IImporter {
 	protected OssmeterLogger logger;
 	private HashMap<String,String> am = new HashMap<String,String>();;
 	public SourceforgeProjectImporter()
@@ -72,7 +75,7 @@ public class SourceforgeProjectImporter {
 		return sb.toString();
 	}
 	
-	
+	@Override
 	public void importAll(Platform platform) {
 		
 		org.jsoup.nodes.Document doc;
@@ -170,7 +173,7 @@ public class SourceforgeProjectImporter {
 			}
 		}
 	}
-	
+	@Override
 	public void importProjects(Platform platform, int numberOfProjects) {
 		
 		org.jsoup.nodes.Document doc;
@@ -290,7 +293,7 @@ public class SourceforgeProjectImporter {
 		String text = sb.toString();
 		return text;
 	}
-	
+	@Override
 	public SourceForgeProject importProject(String projectId, Platform platform) throws WrongUrlException  {
 		
 		Boolean projectToBeUpdated = false;
@@ -812,6 +815,7 @@ public class SourceforgeProjectImporter {
 		
 		return hasRole;
 	}
+	@Override
 	public boolean isProjectInDB(String projectId, Platform platform)
 	{
 		try 
@@ -836,12 +840,12 @@ public class SourceforgeProjectImporter {
 			return false;
 		}
 	}
-	
+	@Override
 	public boolean isProjectInDBByUrl(String url, Platform platform) throws WrongUrlException
 	{
 		return isProjectInDB(getProjectIdFromUrl(url),platform);
 	}
-	
+	@Override
 	public SourceForgeProject importProjectByUrl(String url, Platform platform) throws WrongUrlException
 	{
 		return importProject(getProjectIdFromUrl(url), platform);
