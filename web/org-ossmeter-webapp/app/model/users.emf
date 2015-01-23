@@ -9,6 +9,32 @@ class Users {
 	val Statistics[*] statistics;
 	val Tag[*] tags;
 	val Log[*] logs;
+	val MailingListItem[*] mailingList;
+	val NewsItem[*] news;
+}
+
+enum NewsItemType {
+	ANNOUNCEMENT; ALERT;
+}
+enum NewsItemStatus {
+	DRAFT; PENDING;
+}
+
+class NewsItem {
+	attr String title;
+	attr String body;
+	@searchable
+	attr Date date;
+	@searchable
+	attr NewsItemType newsType;
+	@searchable
+	attr NewsItemStatus status;
+}
+
+class MailingListItem {
+	@searchable
+	attr String email;
+	attr Date date;
 }
 
 class Log {

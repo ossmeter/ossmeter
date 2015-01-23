@@ -64,9 +64,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import org.ossmeter.repository.model.importer.IImporter;
 
-
-public class EclipseProjectImporter {
+public class EclipseProjectImporter implements IImporter{
 	protected OssmeterLogger logger;
 	public EclipseProjectImporter(){
 		logger = (OssmeterLogger) OssmeterLogger.getLogger("importer.eclipse ");
@@ -104,6 +104,7 @@ public class EclipseProjectImporter {
 	 * @param  platform Ossmeter Platform object
 	 */
 	@SuppressWarnings("rawtypes")
+	@Override
 	public void importAll(Platform platform) 
 	{		
 		try {
@@ -140,6 +141,7 @@ public class EclipseProjectImporter {
 	}
 	
 	@SuppressWarnings("rawtypes")
+	@Override
 	public void importProjects(Platform platform, int numberfOfProjects) 
 	{		
 		try {
@@ -178,7 +180,7 @@ public class EclipseProjectImporter {
 		logger.info("Importer has finished!");
 	}
 	
-
+	@Override
 	public EclipseProject importProject(String projectId, Platform platform) throws ProjectUnknownException{
 			
 		
@@ -957,12 +959,12 @@ public class EclipseProjectImporter {
 		else 
 			throw new WrongUrlException();
 	}
-	
+	@Override
 	public EclipseProject importProjectByUrl(String url, Platform platform) throws WrongUrlException, ProjectUnknownException
 	{
 		return importProject(getProjectIdFromUrl(url), platform);
 	}
-	
+	@Override
 	public boolean isProjectInDBByUrl(String url, Platform platform) throws WrongUrlException, ProjectUnknownException, MalformedURLException, IOException
 	{
 		return isProjectInDB(getProjectIdFromUrl(url),platform);
@@ -997,7 +999,7 @@ public class EclipseProjectImporter {
 			return false;
 		}
 	}
-	
+	@Override
 	public boolean isProjectInDB(String projectId, Platform platform) throws ProjectUnknownException, MalformedURLException, IOException
 	{
 		Iterable<Project> pl = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(projectId);

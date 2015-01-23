@@ -107,7 +107,7 @@ public class Projects extends Controller {
 		} catch (Exception e) {
 			e.printStackTrace();
 			flash(Application.FLASH_ERROR_KEY, "An unexpected error has occurred. We are looking into it.");//TODO move to Messages.
-			return ok(views.html.index.render());
+			return redirect(routes.Application.index());
 		}
 	}
 	
@@ -119,7 +119,7 @@ public class Projects extends Controller {
 		Project project = getProject(id);
 		if (project == null) {
 			flash(Application.FLASH_ERROR_KEY, "An unexpected error has occurred. We are looking into it.");//TODO move to Messages.
-			return ok(views.html.index.render());
+			return redirect(routes.Application.index());
 		}
 
 		QualityModel qualityModel = Application.getQualityModelById(qm);
@@ -143,7 +143,7 @@ public class Projects extends Controller {
 
 		if (project == null) {
 			flash(Application.FLASH_ERROR_KEY, "An unexpected error has occurred. We are looking into it.");//TODO move to Messages.
-			return ok(views.html.index.render());
+			return redirect(routes.Application.index());
 		}
 
 		QualityModel qm = Application.getQualityModelById(qmId);

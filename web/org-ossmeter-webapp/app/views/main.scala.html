@@ -17,8 +17,8 @@
     <link rel="icon" type="image/png" href="@routes.Assets.at("icons/favicon.png")">
 
     <!-- Styles -->    
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,400,300,800' rel='stylesheet' type='text/css'>
-    <link href="http://fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,400,300,800' rel='stylesheet' type='text/css'>
+    <link href="//fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet" type="text/css">
     <link href="@routes.Assets.at("css/bootstrap.min.css")" rel="stylesheet">
     <link href="@routes.Assets.at("css/jquery.gridster.min.css")" rel="stylesheet">
     <link href="@routes.Assets.at("css/jquery-ui.min.css")" rel="stylesheet">
@@ -44,12 +44,13 @@
           </div>
           <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                  <li class="@("active".when(nav == ""))"><a href="@routes.Application.index()">@Messages("ossmeter.navigation.home")</a></li>
-                  <li class="@("active".when(nav == "projects"))"><a href="@routes.Projects.projects()">@Messages("ossmeter.navigation.projects")</a></li>
-                  <li class="@("active".when(nav == ""))"><a href="@routes.Application.compare()">@Messages("ossmeter.navigation.compare")</a></li>
+                  <li class="@("active".when(nav == "")) hvr-underline-from-center"><a href="@routes.Application.index()">@Messages("ossmeter.navigation.home")</a></li>
+                  <li class="@("active".when(nav == "projects")) hvr-underline-from-center"><a href="@routes.Projects.projects()">@Messages("ossmeter.navigation.projects")</a></li>
+                  <li class="@("active".when(nav == "")) hvr-underline-from-center"><a href="@routes.Application.compare()">@Messages("ossmeter.navigation.compare")</a></li>
+                  <li class="@("active".when(nav == "")) hvr-underline-from-center"><a href="@routes.News.index()">News</a></li>
                   <!-- <li class="@("active".when(nav == ""))"><a href="#">API</a></li> -->
                   @restrict(la(as("admin"))) {
-                    <li class="@("active".when(nav == "admin"))"><a href="@routes.Admin.index()">@Messages("ossmeter.navigation.admin")</a></li>
+                    <li class="@("active".when(nav == "admin")) hvr-underline-from-center"><a href="@routes.Admin.index()">@Messages("ossmeter.navigation.admin")</a></li>
                   }
                   @*@subjectPresent() {
                     
@@ -85,13 +86,17 @@
     </nav>
 
 	    @if(flash.contains(Application.FLASH_ERROR_KEY)) {
-	      <div class="alert alert-danger">
-	      	@flash().get(Application.FLASH_ERROR_KEY)
+	      <div class="alert alert-danger center">
+          <div class="container">
+	      	  @flash().get(Application.FLASH_ERROR_KEY)
+          </div>
 	      </div>
 	    }
 	    @if(flash.contains(Application.FLASH_MESSAGE_KEY)) {
-	      <div class="alert alert-success">
-	      	@flash().get(Application.FLASH_MESSAGE_KEY)
+	      <div class="alert alert-success center">
+          <div class="container">
+	      	  @flash().get(Application.FLASH_MESSAGE_KEY)
+          </div>
 	      </div>
 	    }
 		@content
@@ -149,11 +154,11 @@
 	<script src="@routes.Application.jsRoutes" defer="defer"></script>
     <!-- IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <script type="text/javascript">
     function getApi() {
-      return "@routes.Application.api("").absoluteURL()";
+      return "/api/";//"@routes.Application.api("").absoluteURL()";
     }
     </script>
   </body>

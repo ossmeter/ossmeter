@@ -28,13 +28,14 @@ import org.ossmeter.repository.model.VcsRepository;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.ossmeter.repository.model.googlecode.*;
+import org.ossmeter.repository.model.importer.IImporter;
 import org.ossmeter.repository.model.importer.exception.WrongUrlException;
 import org.ossmeter.repository.model.vcs.git.GitRepository;
 import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.platform.logging.OssmeterLogger;
 
-public class GoogleCodeImporter {
+public class GoogleCodeImporter implements IImporter{
 	
 	
 	protected OssmeterLogger logger;
@@ -45,6 +46,7 @@ public class GoogleCodeImporter {
 	{
 		logger = (OssmeterLogger) OssmeterLogger.getLogger("importer.GoogleCode");
 	}
+	@Override
 	public GoogleCodeProject importProject(String projectId, Platform platform) throws WrongUrlException 
 	{
 		org.jsoup.nodes.Document doc;
@@ -567,7 +569,7 @@ public class GoogleCodeImporter {
 		
 		return result;
 	}
-	
+	@Override
 	public void importAll(Platform platform) 
 	{	
 		List<GoogleCodeProject> result = new ArrayList<GoogleCodeProject>();
@@ -609,7 +611,7 @@ public class GoogleCodeImporter {
 			logger.error("Google code importer error for retirve project list" + e1.getMessage());
 		}
 	}
-	
+	@Override
 	public void importProjects(Platform platform, int numberOfProjects) 
 	{	
 		List<GoogleCodeProject> result = new ArrayList<GoogleCodeProject>();
@@ -718,7 +720,7 @@ public class GoogleCodeImporter {
 		}
 		return result;
 	}
-	
+	@Override
 	public boolean isProjectInDB(String projectId, Platform platform)
 	{
 		try 
@@ -743,12 +745,12 @@ public class GoogleCodeImporter {
 			return false;
 		}
 	}
-	
+	@Override
 	public boolean isProjectInDBByUrl(String url, Platform platform) throws WrongUrlException
 	{
 		return isProjectInDB(getProjectIdFromUrl(url), platform);
 	}
-	
+	@Override
 	public GoogleCodeProject importProjectByUrl(String url, Platform platform) throws WrongUrlException
 	{
 		return importProject(getProjectIdFromUrl(url), platform);

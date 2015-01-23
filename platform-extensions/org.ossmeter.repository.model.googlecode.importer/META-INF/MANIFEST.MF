@@ -16,7 +16,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.platform,
  org.ossmeter.repository.model.importer.exception,
  org.apache.log4j.1.2.17,
- org.ossmeter.repository.model
+ org.ossmeter.repository.model,
+ org.ossmeter.repository.model.importer;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.repository.model.googlecode.importer

@@ -1,10 +1,11 @@
 @(invites : List[model.InvitationRequest])
 
 @main(Messages("ossmeter.navigation.admin"), "admin") {
+@_nav()
 <section>
 	<div class="container box">
 	    <div class="row col-md-12">
-		    <h1>Invite Requests</h1>
+		    <h2>Invite Requests</h2>
 	    </div>
 	    <div class="row col-md-12">
 		    <table class="table">
@@ -29,4 +30,5 @@
 		</div>
    </div>
 </section>
+<script src="@routes.Admin.jsRoutes" defer="defer"></script>
 }

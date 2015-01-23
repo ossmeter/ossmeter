@@ -52,7 +52,11 @@ public class Application extends Controller {
 	public static Result index() {
 		final User localUser = getLocalUser(session());
 		if (localUser == null) return ok(landing.render());
-		else return ok(index.render());
+		else {
+
+
+			return ok(index.render(News.getLatestNews(3)));
+		}
 	}
 
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))

@@ -1,4 +1,4 @@
-
+@(form : Form[model.MailingListItem])
 
 @demomain("OSSMETER Demo") {
     <section>
@@ -9,8 +9,15 @@
 	                <p>Thanks for your interest in OSSMETER! Unfortunately, we're still ironing out some bugs and letting our industrial partners stress test the system. You can leave us your email below to be notified when we open up to the public. In the meantime, please browse the small selection of projects below to get a taste of what OSSMETER has to offer. </p>
 
 	                <p>Want to be notified of OSSMETER news? <br/><small>This will be minimal, no spam, and we won't share your email address with anyone.</small></p>
-	                <input type="email" class="form-control" placeholder="Your email address"/>
-	                <button type="button" class="btn btn-primary">Submit</button>
+
+                    @helper.form(routes.DemoApplication.addToMailingList) {
+                    <div class="input-group submit">
+	                   <input type="email" id="email" name="email" class="form-control" placeholder="Your email address"/>
+                       <div class="input-group-btn">
+	                       <button class="btn btn-default search_btn">Submit</button>
+                        </div>
+                    </div>
+                    }
                 </div>
 	            <div class="col-md-4 center">
 	                <img src="@routes.Assets.at("img/demo/smiley.png")" />

@@ -44,13 +44,14 @@ import org.ossmeter.repository.model.github.GitHubDownload;
 import org.ossmeter.repository.model.github.GitHubIssue;
 import org.ossmeter.repository.model.github.GitHubRepository;
 import org.ossmeter.repository.model.github.GitHubUser;
+import org.ossmeter.repository.model.importer.IImporter;
 import org.ossmeter.repository.model.importer.exception.WrongUrlException;
 import org.ossmeter.repository.model.vcs.git.GitRepository;
 import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 
 
 
-public class GitHubImporter {
+public class GitHubImporter implements IImporter{
 
 	private String authToken;
 	private String authString;
@@ -153,7 +154,7 @@ public class GitHubImporter {
 		return sb.toString();
 	}
 
-	
+	@Override
 	public void importAll(Platform platform){
 	
 		int lastImportedId = 0;
@@ -203,7 +204,7 @@ public class GitHubImporter {
 				while (iter.hasNext()) {
 					JSONObject entry = (JSONObject) iter.next();		
 					try {
-						GitHubRepository repository = importRepository((String) entry.get("full_name"), platform);
+						GitHubRepository repository = importProject((String) entry.get("full_name"), platform);
 					} catch (WrongUrlException e) {
 						logger.error("Wrong project id");
 					}
@@ -216,7 +217,7 @@ public class GitHubImporter {
 			}
 		}
 	}
-	
+	@Override
 	public void importProjects(Platform platform, int numberOfProjects) throws WrongUrlException{
 		int lastImportedId = 1;
 		BufferedReader rd = null;
@@ -269,7 +270,7 @@ public class GitHubImporter {
 					while (iter.hasNext()) {
 						JSONObject entry = (JSONObject) iter.next();		
 						try {
-							GitHubRepository repository = importRepository((String) entry.get("full_name"), platform);
+							GitHubRepository repository = importProject((String) entry.get("full_name"), platform);
 						} catch (WrongUrlException e) {
 							logger.error("Wrong project id");
 						}
@@ -295,8 +296,8 @@ public class GitHubImporter {
 	}
 	
 	
-
-	public GitHubRepository importRepository(String projectId, Platform platform) throws WrongUrlException {
+	@Override
+	public GitHubRepository importProject(String projectId, Platform platform) throws WrongUrlException {
 		try 
 		{
 			
@@ -409,6 +410,8 @@ public class GitHubImporter {
 				repository.getBugTrackingSystems().add(bt);
 			}
 			else bt = (GitHubBugTracker) repository.getBugTrackingSystems().get(0);
+
+			/*
 			try{
 				List<GitHubIssue> issues = getIssuesInAProject(platform, projectId);
 				platform.getProjectRepositoryManager().getProjectRepository().sync();
@@ -418,7 +421,7 @@ public class GitHubImporter {
 			}
 			catch(Exception e)
 			{
-				logger.debug("Unable to load collaborators for this project");
+				logger.debug("Unable to load issues for this project");
 			}
 			repository.getBugTrackingSystems().add(bt);
 			
@@ -430,7 +433,7 @@ public class GitHubImporter {
 			}
 			catch(Exception e)
 			{
-				logger.debug("Unable to load collaborators for this project");
+				logger.debug("Unable to load contents for this project");
 			}
 			
 			try{
@@ -441,10 +444,10 @@ public class GitHubImporter {
 			}
 			catch(Exception e)
 			{
-				logger.debug("Unable to load collaborators for this project");
+				logger.debug("Unable to load downloads for this project");
 			}
 			
-			
+			*/
 			lastImportedId = new Integer(currentRepo.get("id").toString());
 			ImportData importData = null;
 			if (platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().size() == 0)
@@ -469,7 +472,7 @@ public class GitHubImporter {
 			{
 				logger.error("API rate limit exceeded. Waiting to restart the importing..." + e1.getMessage());
 				waitApiRate();
-				return importRepository(projectId, platform);
+				return importProject(projectId, platform);
 			}
 			else
 			{
@@ -776,12 +779,14 @@ public class GitHubImporter {
 		}
 		else return null;
 	}
+	@Override
 	public GitHubRepository importProjectByUrl(String url, Platform platform) throws WrongUrlException {
 		String s = getProjectIdFromUrl(url);
 		if (s == null)
 			throw new WrongUrlException();
-		return importRepository(s, platform);
+		return importProject(s, platform);
 	}
+	@Override
 	public boolean isProjectInDB(String projectId, Platform platform)
 	{	
 		Iterable<Project> projects = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(projectId);		
@@ -796,6 +801,7 @@ public class GitHubImporter {
 		}
 		return false;
 	}
+	@Override
 	public boolean isProjectInDBByUrl(String url, Platform platform)
 	{
 		return isProjectInDB(getProjectIdFromUrl(url), platform);

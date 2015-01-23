@@ -30,3 +30,7 @@
 .nav>li>a {
 	text-transform: uppercase;
 }
+
+.nav>li>a:hover, .nav>li>a:focus {
+	background:none;
+}
