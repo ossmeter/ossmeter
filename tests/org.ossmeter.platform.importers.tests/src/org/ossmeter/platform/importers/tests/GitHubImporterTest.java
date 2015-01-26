@@ -49,7 +49,7 @@ public class GitHubImporterTest {
 		// TODO: should we throw a InvalidUrlException instead of returning null? 
 		assertNotNull( im.importProjectByUrl("https://github.com/facebook/react", platform));
 //		assertNull( im.importProjectByUrl(null, platform)); // This will fail
-		assertNotNull( im.importRepository("facebook/react", platform));
+		assertNotNull( im.importProject("facebook/react", platform));
 //		assertNull( im.importRepository(null, platform)); // This will fail
 	}
 
@@ -84,7 +84,7 @@ public class GitHubImporterTest {
 		
 			assertNull( im.importProjectByUrl("", platform));
 			//assertNull( im.importProjectByUrl(null, platform)); // This will fail
-			assertNull( im.importRepository("", platform));
+			assertNull( im.importProject("", platform));
 			//assertNull( im.importRepository(null, platform)); // This will fail
 		
 	}

@@ -7,3 +7,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: com.damnhandy.uri.template,
  com.ning.http.client,
  org.slf4j
+Bundle-ClassPath: lib/async-http-client-1.7.12.jar,
+ lib/handy-uri-templates-1.1.7.jar,
+ lib/slf4j-api-1.7.2.jar,
+ lib/slf4j-simple-1.7.2.jar
