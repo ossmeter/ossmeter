@@ -6,11 +6,13 @@
 <section>
     <div class="container box">
         <div class="row">    
-            <ol class="breadcrumb projectbreadcrumb">
-            @for(p <- parents) {
-                <li>@p.name</li>
-            }
-            </ol>
+            <div class="col-md-12">
+                <ol class="breadcrumb projectbreadcrumb">
+                @for(p <- parents) {
+                    <li>@p.name</li>
+                }
+                </ol>
+            </div>
         </div>
         @if(summary) {
             @_attributeSummaryView(project, qualityModel, attribute)

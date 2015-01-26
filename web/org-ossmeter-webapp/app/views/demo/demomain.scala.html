@@ -47,12 +47,12 @@
                   <li class="@("active".when(nav == ""))"><a href="@routes.DemoApplication.index()">@Messages("ossmeter.navigation.home")</a></li>
                   <li class="@("active".when(nav == ""))"><a href="@routes.DemoApplication.compare()">@Messages("ossmeter.navigation.compare")</a></li>
             </ul>
-          <div class="btn-group pull-right">
+          <!-- <div class="btn-group pull-right"> -->
             <ul class="nav navbar-nav navbar-right">
                   <li class="@("active".when(nav == "invitation"))"><a href="@routes.Invitation.requestInvitation()">@Messages("ossmeter.navigation.invitation")</a></li>
                   <li><a href="@routes.Application.login()" class="@("disabled".when(nav == "login"))">@Messages("ossmeter.navigation.login")</a></li>
               </ul>
-            </div><!--/.pull-right -->
+            <!-- </div>/.pull-right  -->
           </div> <!-- navbar-collapse-->
         
         </div><!--  container clearfix -->
@@ -73,30 +73,6 @@
 	      </div>
 	    }
 		@content
-
-<nav id="compare-bar" class="navbar navbar-default navbar-fixed-bottom comparison" style="display:none" role="navigation">
-  <div class="container">
-    
-    
-    <div class="row">
-        <div class="col-md-2">
-        <span class="pull-left glyphicon glyphicon-remove" style="cursor:pointer" onclick="closeCompareBar()">&nbsp;close</span>
-          <h3>To compare:</h3>
-          <a href="@routes.Application.compare" class="btn btn-default">Compare Now</a>
-        </div>
-        <div class="col-md-8">
-          <div class="row" id="compare-bar-projects"></div>          
-        </div>
-        <div class="col-md-2 small">
-          <div class="panel panel-default">
-            <div class="panel-body" id="compare-bar-hint">
-              <strong>Tip:</strong> You can compare up to five projects at any time. Click the compare button when you're ready to compare.
-              </div>
-          </div>
-        </div>
-    </div>
-  </div>
-</nav>
 
     <footer>
       <div class="container box blank">

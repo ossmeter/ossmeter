@@ -102,7 +102,7 @@ public class DemoApplication extends Controller {
 
 			db.getMongo().close();
 
-			return redirect(routes.DemoApplication.index());
+			return redirect(routes.Application.index());
 		}
 	}
 }

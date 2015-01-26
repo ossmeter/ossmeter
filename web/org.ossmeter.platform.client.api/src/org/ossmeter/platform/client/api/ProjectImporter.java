@@ -61,7 +61,7 @@ public class ProjectImporter {
 			
 			GitHubImporter importer = new GitHubImporter();//"f280531cd5712b6cbff971b7610155cecc134b02"); //FIXME Temporary token
 			try {
-				p = importer.importRepository(uName+"/" + pName, Platform.getInstance());
+				p = importer.importProject(uName+"/" + pName, Platform.getInstance());
 			} catch (WrongUrlException e) {
 				e.printStackTrace(); // FIXME better handling
 				return null;
