@@ -40,6 +40,7 @@ import be.objectify.deadbolt.java.actions.Restrict;
 import java.net.ConnectException;
 
 import auth.MongoAuthenticator;
+import com.mongodb.DB;
 
 import static play.data.Form.*;
 
@@ -101,8 +102,15 @@ public class Projects extends Controller {
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result projects() {
 		try {
-			// TODO: This should be featured projects - taken from the DB.
-		    List<Project> projectList = new ArrayList<>();
+			// TODO: This should be limited
+		    List<model.Project> projectList = new ArrayList<>();
+		    DB db = MongoAuthenticator.getUsersDb();
+            model.Users users = new model.Users(db);
+           	for (model.Project p : users.getProjects().findAnalysed()) {
+           		projectList.add(p);
+           	}
+			db.getMongo().close();
+
 		    return ok(views.html.projects.projects.render(projectList, MongoAuthenticator.getStatistics()));
 		} catch (Exception e) {
 			e.printStackTrace();

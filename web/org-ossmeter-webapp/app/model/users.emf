@@ -58,6 +58,8 @@ class Project {
 	@searchable
 	attr String name;
 	val Tag[*] tags;
+	@searchable
+	attr boolean analysed;
 }
 
 class Tag {

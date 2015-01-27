@@ -44,6 +44,9 @@ public class ProjectCollection extends PongoCollection<Project> {
 		return project;
 	}
 	
+	public Iterable<Project> findAnalysed() {
+		return new IteratorIterable<Project>(new PongoCursorIterator<Project>(this, dbCollection.find(new BasicDBObject("analysed", true))));
+	}
 
 	public long countByName(String q) {
 		return dbCollection.count(new BasicDBObject("name", q + ""));

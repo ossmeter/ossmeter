@@ -1,4 +1,4 @@
-@(featuredProjects: List[org.ossmeter.repository.model.Project], statistics : model.Statistics)
+@(featuredProjects: List[model.Project], statistics : model.Statistics)
 
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
@@ -78,11 +78,12 @@
 		<div class="col-md-6">
 		    <h2>Featured Projects</h2>	
 		    <ul class="projects">
-		    	<li>
-		            <div class="row">
-		        		<!-- <div class="col-md-2">
-		        			<img style="max-width:100%" src="@routes.Assets.at("img/tmp/epsilon.png")" />
-	        			</div> -->
+				@for(p <- featuredProjects) {
+                <li><a href="@routes.Projects.view(p.getId())">@p.getName()</a></li>
+               }		            
+               <!-- 
+                <li>
+                    <div class="row">
 	        			<div class="col-md-12">
 		            		<h3><a href="@routes.Projects.view("modeling-mmt-atl")">ATL</a></h3>
 		            		<small>ATL (ATL Transformation Language) is a model transformation language and toolkit. In the field of Model-Driven Engineering (MDE), ATL provides ways to produce a set of target models from a set of source models. Developed on top of the Eclipse platform, the ATL Integrated Environnement (IDE) provides a number of standard development tools (syntax highlighting, debugger, etc.) that aims to ease development of ATL transformations.</small>
@@ -92,9 +93,6 @@
 		        </li>
 		        <li>
 		            <div class="row">
-		        		<!-- <div class="col-md-2">
-		        			<img style="max-width:100%" src="@routes.Assets.at("img/osslogo.png")" />
-	        			</div> -->
 	        			<div class="col-md-12">
 		            		<h3><a href="@routes.Projects.view("modeling-graphiti")">Graphiti</a></h3>
 		            		<small>The goal of Graphiti is to support the fast and easy creation of graphical tools, which can display and edit underlying domain models using a tool-defined graphical notation</small>
@@ -104,16 +102,13 @@
 		        </li>
 		        <li>
 		        	<div class="row">
-		        		<!-- <div class="col-md-2">
-		        			<img style="max-width:100%" src="https://code.google.com/p/pongo/logo?cct=1362146193" />
-	        			</div> -->
 	        			<div class="col-md-10">
 		            		<h3><a href="@routes.Projects.view("modeling-incquery")">EMF-IncQuery</a></h3>
 		            		<small>EMF-IncQuery is a framework for defining declarative queries over EMF models, and executing them efficiently without manual coding.</small>
 		            		<small><a href="@routes.Projects.view("modeling-incquery")">Learn more</a></small>
 	            		</div>
             		</div>
-		        </li>
+		        </li> -->
 		    </ul>
 		</div>
 		<div class="col-md-6">

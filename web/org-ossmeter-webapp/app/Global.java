@@ -150,14 +150,20 @@ public class Global extends GlobalSettings {
 											String pId = node.get("shortName").asText();
 											
 											// Add if it doesn't exist
-											if (users.getProjects().findOneByIdentifier(pId) == null){
-												Project proj = new Project();
+											Project proj = users.getProjects().findOneByIdentifier(pId);
+											if (proj == null){
+												proj = new Project();
 												proj.setId(pId);
 												proj.setName(node.get("name").asText());
 
-												users.getProjects().add(proj);
-												users.getProjects().sync();
+												users.getProjects().add(proj);	
 											}
+											if (node.has("analysed")) {
+												proj.setAnalysed(node.get("analysed").asBoolean());
+											} else {
+												proj.setAnalysed(false);
+											}
+											users.getProjects().sync();
 
 											// Now do info source stats
 											vcs += ((ArrayNode)node.get("vcsRepositories")).size();

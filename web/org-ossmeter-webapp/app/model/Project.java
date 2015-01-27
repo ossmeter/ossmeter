@@ -20,8 +20,8 @@ public class Project extends Pongo {
 	
 	public static StringQueryProducer ID = new StringQueryProducer("id"); 
 	public static StringQueryProducer NAME = new StringQueryProducer("name"); 
-	
-	
+	public static StringQueryProducer ANALYSED = new StringQueryProducer("analysed");
+
 	public String getId() {
 		return parseString(dbObject.get("id")+"", "");
 	}
@@ -49,5 +49,14 @@ public class Project extends Pongo {
 		return tags;
 	}
 	
+	public boolean getAnalysed() {
+		return parseBoolean(dbObject.get("analysed")+"", false);
+	}
+
+	public Project setAnalysed(boolean analysed) {
+		dbObject.put("analysed", analysed);
+		notifyChanged();
+		return this;
+	}
 	
 }

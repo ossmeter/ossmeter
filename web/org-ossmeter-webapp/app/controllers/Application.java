@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.io.File;
 import java.util.List;
+import java.util.ArrayList;
 
 import model.*;
 import models.*;
@@ -53,9 +54,17 @@ public class Application extends Controller {
 		final User localUser = getLocalUser(session());
 		if (localUser == null) return ok(landing.render());
 		else {
+			// FIXME This needs amending once lots of projects are analysed...
+			List<Project> featured = new ArrayList<>();
 
+			DB db = MongoAuthenticator.getUsersDb();
+            Users users = new Users(db);
+           	for (Project p : users.getProjects().findAnalysed()) {
+           		featured.add(p);
+           	}
+			db.getMongo().close();
 
-			return ok(index.render(News.getLatestNews(3)));
+			return ok(index.render(News.getLatestNews(3), featured));
 		}
 	}
 
