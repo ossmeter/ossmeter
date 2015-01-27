@@ -46,7 +46,7 @@ map[loc class, int wmcCount] getWMC(
 	   result += (cl : (0 | it + methodCC[m]?0 | m <- allMethodsMap(m3)[cl]) | cl <- allTypes(m3), isClass(cl));
 	}
 
-	 result = result - declMap; // remove entries for any removed declarations
+	 result = result - (prev - declMap); // remove entries for any removed declarations
 	 
 	return result;
 }
@@ -73,7 +73,7 @@ map[loc, int] getCC(ProjectDelta delta = ProjectDelta::\empty(),
     result += (d@decl : countCC(d) | /Declaration d := ast, d is method || d is constructor);
   }
   
-  result = result - declMap; // remove entries for any removed declarations
+  result = result - (prev - declMap); // remove entries for any removed declarations
   
   return result;
 }
