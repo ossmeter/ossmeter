@@ -407,6 +407,7 @@ public class GitHubImporter implements IImporter{
 			if (repository.getBugTrackingSystems().isEmpty())
 			{
 				bt = new GitHubBugTracker();
+				bt.setUrl("https://api.github.com/repos/" + projectId + "/issues");
 				repository.getBugTrackingSystems().add(bt);
 			}
 			else bt = (GitHubBugTracker) repository.getBugTrackingSystems().get(0);
