@@ -102,7 +102,7 @@ public class GitHubImporterProvider implements ITransientMetricProvider{
 		GitHubImporter epi = new GitHubImporter();
 		Platform platform = Platform.getInstance();
 		try{
-			ep = epi.importRepository( ((GitHubRepository)project).getFull_name(), platform);
+			ep = epi.importProject( ((GitHubRepository)project).getFull_name(), platform);
 			if (ep == null)
 			{
 				if(project.getExecutionInformation() == null)
