@@ -112,6 +112,7 @@ public class SlaveScheduler {
 						// Update that database to accept new jobs
 						job = platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().findOneByWorkerIdentifier(identifier);
 						job.getCurrentLoad().clear();
+						job.setWorkerIdentifier(job.getWorkerIdentifier()); // FIXME: We have to force dirtying
 						platform.getProjectRepositoryManager().getProjectRepository().getSchedulingInformation().sync();
 					}
 					try {
