@@ -13,7 +13,7 @@ package org.ossmeter.platform.admin;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
-import org.restlet.engine.header.Header;
+import org.restlet.data.Header;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 import org.restlet.util.Series;
