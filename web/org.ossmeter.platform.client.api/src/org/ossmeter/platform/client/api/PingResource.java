@@ -18,6 +18,6 @@ public class PingResource extends AbstractApiResource {
 	
 	public Representation doRepresent() {
 		getResponse().setStatus(new Status(200));
-		return Util.createJsonRepresentation("{'status':200, 'message' : 'hello :)'}");
+		return Util.createJsonRepresentation("{\"status\":200, \"message\" : \"hello :)\"}");
 	}
 }

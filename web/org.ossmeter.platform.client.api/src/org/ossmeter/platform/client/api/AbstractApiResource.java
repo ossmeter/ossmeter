@@ -14,8 +14,8 @@ import java.net.UnknownHostException;
 
 import org.ossmeter.platform.Configuration;
 import org.ossmeter.platform.Platform;
+import org.restlet.data.Header;
 import org.restlet.data.Status;
-import org.restlet.engine.header.Header;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
