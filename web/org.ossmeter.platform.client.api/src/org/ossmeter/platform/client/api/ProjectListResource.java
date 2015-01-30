@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.mongodb.Mongo;
 
 public class ProjectListResource extends AbstractApiResource {
 
@@ -45,9 +46,10 @@ public class ProjectListResource extends AbstractApiResource {
         if (_size != null && !"".equals(_size) && isInteger(_size)) {
         	pageSize = Integer.valueOf(_size); 
         }
-        
+        Mongo mongo = null;
         try {
-			platform = new Platform(Configuration.getInstance().getMongoConnection());
+        	mongo = Configuration.getInstance().getMongoConnection();
+			platform = new Platform(mongo);
 		} catch (UnknownHostException e1) {
 			e1.printStackTrace();
 			ObjectNode m = mapper.createObjectNode();
@@ -83,6 +85,7 @@ public class ProjectListResource extends AbstractApiResource {
         }
         
         cursor.close();
+        mongo.close();
         
         StringRepresentation resp = new StringRepresentation(projects.toString());
 		resp.setMediaType(MediaType.APPLICATION_JSON);

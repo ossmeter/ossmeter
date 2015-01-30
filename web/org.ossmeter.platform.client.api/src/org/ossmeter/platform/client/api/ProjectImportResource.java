@@ -81,6 +81,8 @@ public class ProjectImportResource extends ServerResource {
 			StringRepresentation rep = new StringRepresentation(p.getDbObject().toString());
 			rep.setMediaType(MediaType.APPLICATION_JSON);
 			getResponse().setStatus(Status.SUCCESS_CREATED);
+			
+			mongo.close();
 			return rep;
 
 		} catch (IOException e) {
