@@ -447,7 +447,7 @@ function compareProjects() {
 
 function getOneYearAgoDateString() {
 	var d = new Date();
-	return (d.getFullYear()-1) + "" + (d.getMonth()+1) + "" + d.getDate();
+	return (d.getFullYear()-1) + "" + ("0" + (d.getMonth()+1)).slice(-2) + "" + ("0" + d.getDate()).slice(-2);
 }
 
 /*
