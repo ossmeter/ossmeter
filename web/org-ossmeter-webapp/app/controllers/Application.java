@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.io.File;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 
 import model.*;
 import models.*;
@@ -150,6 +150,16 @@ public class Application extends Controller {
 			path = "/" + path;
 		}
 		String url = play.Play.application().configuration().getString("ossmeter.api") + path; 
+
+		// Re-create the query string
+		if (request().queryString().size() > 0) {
+			url += "?";
+
+			for (Map.Entry<String,String[]> entry : request().queryString().entrySet()) {
+	            String key = entry.getKey();
+	            url += key + "=" + request().getQueryString(key) + "&";
+	        }
+	    }
 
 		Promise<Result> promise = WS.url(url).get().map(
 		    new Function<WSResponse, Result>() {
