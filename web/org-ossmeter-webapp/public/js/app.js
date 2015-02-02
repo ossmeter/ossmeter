@@ -232,7 +232,7 @@ function drawPlot(container, projectid, metricid) {
 
 	(function(cont) {
 		$.getJSON(getApi() + "/projects/p/" + projectid + "/m/" + metricid, function(vis) {
-			if (vis.datatable.length > 0) {
+			if (vis.datatable && vis.datatable.length > 0) {
 				var chart = new metvis.Chart(jq(cont), vis);
 				chart.height = 150;
 				chart.draw();
@@ -280,15 +280,16 @@ function drawSparkTable(config) {
 
 	            // Check for errors - TODO: handle better
                 if (data.status === "error") {
-                    console.log("Unable to load sparky '" + data.request.metricId + "': " + data.msg);
                     // console.log(data);
+                    console.log("Unable to load sparky '" + data.request.metricId + "': " + data.msg);
+                    
                     if (config.drawNonSparkable) {
 
                     	// console.log("unsparking")
                     	// var unspark = new Unsparkable(data.request.project, data.request.metricId);
                     	// config.unsparkableViewModel.unsparks.push(unspark);
 
-                    	drawPlot(config.drawNonSparkableContainer, data.request.project, data.request.metricId)
+                    	drawPlot(config.drawNonSparkableContainer, data.request.projectId, data.request.metricId)
                     }
                     continue; 
                 }
