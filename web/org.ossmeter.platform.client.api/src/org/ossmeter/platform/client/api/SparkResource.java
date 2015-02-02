@@ -99,8 +99,8 @@ public class SparkResource extends AbstractApiResource {
 			}
 			
 			MetricVisualisationExtensionPointManager manager = MetricVisualisationExtensionPointManager.getInstance();
-			Map<String, MetricVisualisation> registeredVisualisations = manager.getRegisteredVisualisations();
-			System.out.println("registered visualisations: " + registeredVisualisations.keySet());
+			manager.getRegisteredVisualisations();
+			//System.out.println("registered visualisations: " + registeredVisualisations.keySet());
 			MetricVisualisation vis = manager.findVisualisationById(metricId);
 			
 			if (vis == null) {
@@ -122,9 +122,17 @@ public class SparkResource extends AbstractApiResource {
 					SparkCache.getSparkCache().putSpark(uuid, sparky);
 					sparkData.put("spark", "/spark/"+uuid);
 				}
-				sparkData.put("metricId", metricId);
-				sparkData.put("projectId", projectId);
 				
+				if (sparkData.has("status") && "error".equals(sparkData.get("status").asText())) {
+					ObjectNode n = mapper.createObjectNode();
+					n.put("metricId", metricId);
+					n.put("projectId", projectId);
+					sparkData.put("request", n);
+				} else {
+					// FIXME: Tidy this up. Make JSON consistent
+					sparkData.put("metricId", metricId);
+					sparkData.put("projectId", projectId);
+				}
 				// And add to the return list
 				sparks.add(sparkData);		
 			} catch (ParseException e) {
@@ -164,7 +172,7 @@ public class SparkResource extends AbstractApiResource {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode r = mapper.createObjectNode();
 		
-		r.put("project", projectName);
+		r.put("projectId", projectName);
 		r.put("metricId", metricId);
 		
 		return r;
