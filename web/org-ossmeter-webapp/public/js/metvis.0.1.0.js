@@ -174,12 +174,12 @@ var metvis = {
 			}
 
 			// Remove the labels if requested. FIXME: Must be a more elegant solution
-			if (self.axis.x.tickLabels) {
-				xAxis.tickFormat('');	
-			}
-			if (self.axis.y.tickLabels) {
-				yAxis.tickFormat('');	
-			}
+			// if (self.axis.x.tickLabels) {
+			// 	xAxis.tickFormat('');	
+			// }
+			// if (self.axis.y.tickLabels) {
+			// 	yAxis.tickFormat('');	
+			// }
 
 			// Add the X Axis: TODO generalise
 	        self.svg.append("g")

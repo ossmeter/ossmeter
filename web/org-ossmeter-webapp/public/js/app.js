@@ -235,6 +235,10 @@ function drawPlot(container, projectid, metricid) {
 			if (vis.datatable && vis.datatable.length > 0) {
 				var chart = new metvis.Chart(jq(cont), vis);
 				chart.height = 150;
+				chart.axis.x.tickLabels = true;
+		        chart.axis.y.tickLabels = true;
+		        chart.axis.y.ticks = 3;
+		        chart.axis.x.ticks = 5;
 				chart.draw();
 				//TODO:legend
 
