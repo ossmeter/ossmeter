@@ -61,6 +61,7 @@ class Project {
 	@searchable
 	attr boolean analysed;
 	attr String description;
+	attr String createdBy;
 }
 
 class Tag {

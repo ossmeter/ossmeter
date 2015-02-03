@@ -394,6 +394,22 @@ public class MongoAuthenticator {
 		db.getMongo().close();
  	}
 
+ 	public static void assignProjectToUser(final User user, final model.Project project) {
+ 		DB db = getUsersDb();
+		Users users = new Users(db);
+
+		// Insert project
+		users.getProjects().add(project);
+		users.getProjects().sync();
+
+		User u = users.getUsers().findOneByEmail(user.getEmail());
+
+		u.getOwns().add(project);
+		u.setEmail(u.getEmail()); // Force dirtying
+
+		users.getUsers().sync();
+		db.getMongo().close();
+ 	}
 
  	public static void updateGridLocations(final User user, final ArrayNode loc) {
  		DB db = getUsersDb();

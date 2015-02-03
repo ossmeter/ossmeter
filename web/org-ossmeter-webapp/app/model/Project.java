@@ -18,12 +18,14 @@ public class Project extends Pongo {
 		NAME.setOwningType("model.Project");
 		DESCRIPTION.setOwningType("model.Project");
 		ANALYSED.setOwningType("model.Project");
+		CREATEDBY.setOwningType("model.Project");
 	}
 	
 	public static StringQueryProducer ID = new StringQueryProducer("id"); 
 	public static StringQueryProducer NAME = new StringQueryProducer("name"); 
 	public static StringQueryProducer DESCRIPTION = new StringQueryProducer("description"); 
 	public static StringQueryProducer ANALYSED = new StringQueryProducer("analysed");
+	public static StringQueryProducer CREATEDBY = new StringQueryProducer("createdBy"); 
 
 	public String getId() {
 		return parseString(dbObject.get("id")+"", "");
@@ -50,6 +52,15 @@ public class Project extends Pongo {
 
 	public Project setDescription(String description) {
 		dbObject.put("description", description);
+		notifyChanged();
+		return this;
+	}
+	public String getCreatedBy() {
+		return parseString(dbObject.get("createdBy")+"", "");
+	}
+	
+	public Project setCreatedBy(String createdBy) {
+		dbObject.put("createdBy", createdBy);
 		notifyChanged();
 		return this;
 	}

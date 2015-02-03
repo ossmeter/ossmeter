@@ -41,6 +41,9 @@ public abstract class BugTrackingSystem extends Object {
 	public String getUrl() {
 		return url;
 	}
+	public void setUrl(String url) {
+		this.url = url;
+	}
 	
 	public List<Person> getPersons() {
 		return persons;

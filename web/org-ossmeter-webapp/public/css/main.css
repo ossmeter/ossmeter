@@ -342,6 +342,10 @@ table.spark {
     display:none;
 }
 
+ul.pagination {
+    margin:0;
+}
+
 
 
 /*!

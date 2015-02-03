@@ -4,18 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.HashMap;
 
 import models.QualityAspect;
 import models.QualityModel;
 import models.ProjectImport;
 
-import org.ossmeter.repository.model.Project;
-import org.ossmeter.repository.model.VcsRepository;
+import org.ossmeter.repository.model.*;
 import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 import org.ossmeter.repository.model.vcs.git.GitRepository;
 import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
 import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
-
+import org.ossmeter.repository.model.redmine.*;
+import org.ossmeter.repository.model.sourceforge.*;
+import org.ossmeter.repository.model.github.*;
+import org.ossmeter.repository.model.eclipse.*;
 
 import play.*;
 import play.mvc.*;
@@ -138,8 +141,6 @@ public class Projects extends Controller {
 
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result view(String id) {
-		
-		Logger.debug("Trying to view " + id);
 		return viewAspect(id, Application.INFO_SOURCE_MODEL, Application.INFO_SOURCE_MODEL, true);
 	}
 	
@@ -184,6 +185,7 @@ public class Projects extends Controller {
 	
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result createProject() {
+
 		// Project project = new Project();
 		// project.setName("hello");
 
@@ -196,48 +198,148 @@ public class Projects extends Controller {
 		// FIXME: Cannot get the form working with POJOs. Just translate
 		// Jimi's JSON into a Project object and send it.
 		// return ok(views.html.projects.createProject.render(form));
-		return ok(views.html.projects.addProject.render());
+		return ok(views.html.projects.addProjectNew.render(new DynamicForm()));
 	}
 
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result postCreateProject() {
-		
+
+		// TODO: Do a quick lookup to check that the project hasn't 
+		// already been registered
+
+		final DynamicForm form = form().bindFromRequest();
+
 		ObjectMapper mapper = new ObjectMapper();
-		JsonNode json = request().body().asJson();
+		ObjectNode project = mapper.createObjectNode();
+		project.put("name", form.get("name"));
+		project.put("description", form.get("description"));
+		project.put("homepage", form.get("homepage"));
 
+		ArrayNode repos = mapper.createArrayNode();
+		ArrayNode btss = mapper.createArrayNode();
+		ArrayNode ccs = mapper.createArrayNode();
 
-		System.out.println(json);
+		project.put("vcs", repos);
+		project.put("communication_channels", ccs);
+		project.put("bts", btss);
 
+		// FIXME: Horribly hacky (Play seemingly can't handle the fact that VcsRepository is abstract - not 
+		// sure how to tell it to use the _type field to select the class to instantiate)
+		for (String key : form.data().keySet()) {
+			System.out.println(key + "->" + form.data().get(key));
+			if (key.startsWith("vcsRepositories[")) {
+				ObjectNode repo = mapper.createObjectNode();
+
+				System.out.println(key.split("\\[")[1]);
+				int id = Integer.valueOf(key.split("\\[")[1].substring(0, 1));
+
+				// Only check types. Assume all other fields exist
+				if (key.contains("]._type")) {
+					String rType = form.data().get(key);
+					if ("GIT".equals(rType)) {
+						repo.put("type", "git");
+					} else if("SVN".equals(rType)) {
+						repo.put("type", "svn");
+					} else {
+						// FIXME: This is an error
+						System.err.println("Unexpected repo type: " + rType);
+						continue;
+					}
+
+					System.out.println("vcsRepositories["+id+"].url");
+					repo.put("url", form.data().get("vcsRepositories["+id+"].url"));
+					repos.add(repo);
+				} 
+			} else if (key.startsWith("communicationChannels[")) {
+				int id = Integer.valueOf(key.split("\\[")[1].substring(0, 1));
+				ObjectNode cc = mapper.createObjectNode();
+
+				// Only check types. Assume all other fields exist
+				if (key.contains("]._type")) {
+					String cType = form.data().get(key);
+					if ("NNTP".equals(cType)) {
+						cc.put("type", "nntp");
+						cc.put("name", "NNTP");
+					} else {
+						// FIXME: This is an error
+						System.err.println("Unexpected cc type: " + cType);
+						continue;						
+					}
+
+					// Common properties
+					cc.put("url", form.data().get("communicationChannels["+id+"].url"));
+					ccs.add(cc);
+				}
+
+			} else if (key.startsWith("bugTrackingSystems[")) {
+				int id = Integer.valueOf(key.split("\\[")[1].substring(0, 1));
+				ObjectNode bts = mapper.createObjectNode();
+
+				if (key.contains("]._type")) {
+					String bType = form.data().get(key);
+					if ("BUGZILLA".equals(bType)) {
+						bts.put("type", "bugzilla");
+						bts.put("product", form.data().get("bugTrackingSystems["+id+"].product"));
+						bts.put("component", form.data().get("bugTrackingSystems["+id+"].component"));
+					// } else if ("JIRA".equals(bType)) {
+					// 	JiraBugTrackingSystem b = new JiraBugTrackingSystem();
+					// 	b.setProject(form.data().get("bugTrackingSystems["+id+"].project"));
+					// 	bts = b;
+					} else if ("SOURCEFORGE".equals(bType)) {
+						bts.put("type", "sourceforge");
+					} else if ("REDMINE".equals(bType)) {
+						bts.put("type", "redmine");
+						bts.put("name", form.data().get("bugTrackingSystems["+id+"].name"));
+						bts.put("project", form.data().get("bugTrackingSystems["+id+"].project"));
+					} else {
+						// FIXME: This is an error
+						System.err.println("Unexpected bts type: " + bType);
+						continue;							
+					}
+
+					// Common properties
+					bts.put("url", form.data().get("bugTrackingSystems["+id+"].url"));
+					btss.add(bts);
+				}
+			}
+		}
+
+		System.out.println(project.toString());
 	
-		final Promise<Result> resultPromise = WS.url(play.Play.application().configuration().getString("ossmeter.api") + "/projects/create").post(json.toString())
+		final Promise<Result> resultPromise = WS.url(play.Play.application().configuration().getString("ossmeter.api") + "/projects/create").post(project.toString())
 			.map(new Function<WSResponse, Result>() {
 				public Result apply(WSResponse response) {
-					// JsonNode node = response.asJson();
+					if (response.getStatus() == 400) {
+						flash(Application.FLASH_ERROR_KEY, "Looks like there's been a problem. TODO: add error message here");
+						return badRequest(views.html.projects.addProjectNew.render(form));
+					} else if (response.getStatus() == 500) {
+						flash(Application.FLASH_ERROR_KEY, "Looks like there's been a problem with our servers. We're looking into it.");
+						return badRequest(views.html.projects.addProjectNew.render(form));
+					}
 
+                	try {
+                		// Attack the project to the user
+						final model.User localUser = Application.getLocalUser(session());
+						
+						// Get response
+						JsonNode json = response.asJson();	
 
-					return ok();
-					// if (node.has("status") && "error".equals(node.get("status").asText())) {
-					// 	flash(Application.FLASH_ERROR_KEY, "Invalid URL.");
-					// 	return badRequest(views.html.projects.form.render(form(Project.class), form));
-					// }
+						ObjectMapper mapper = new ObjectMapper();
+                    	Project project = mapper.readValue(json.toString(), Project.class);
+                    	
+                    	model.Project mProject = new model.Project();
+                    	mProject.setName(project.getName());
+                    	mProject.setId(project.getShortName());
+                    	mProject.setDescription(project.getDescription());
+                    	mProject.setCreatedBy(localUser.getEmail());
 
-					// // TODO check for errors, etc.
-					// ObjectMapper mapper = new ObjectMapper();
+                    	MongoAuthenticator.assignProjectToUser(localUser, mProject);
+                    } catch (Exception e) {
+                    	e.printStackTrace();
+                    }
 
-					// try {
-					// 	Project project = mapper.readValue(node.toString(), Project.class);
-     //                    // project.id = node.get("shortName").asLong();
-     //                    // project.name = node.get("name").asText();
-     //                    // project.shortName = node.get("shortName").asText();
-     //                    // project.url = node.get("url").asText();
-     //                    // project.desc = node.get("desc").asText();
-
-					// 	return redirect(routes.Projects.view(project.getShortName()));//views.html.projects.view_item.render(project));
-					// 	// return view(project.shortName);
-					// } catch (Exception e) {
-					// 	e.printStackTrace(); //FIXME: handle better
-					// 	return internalServerError(e.getMessage());
-					// }
+					flash(Application.FLASH_MESSAGE_KEY, "Success! Your project has been registered. Check again in a few days to see the analysis.");
+					return redirect(routes.Projects.projects());
 				}
 			});
 		return resultPromise.get(120000);	

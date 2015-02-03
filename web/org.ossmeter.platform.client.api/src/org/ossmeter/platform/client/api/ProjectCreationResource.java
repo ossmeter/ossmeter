@@ -15,10 +15,14 @@ import java.net.UnknownHostException;
 
 import org.ossmeter.platform.Configuration;
 import org.ossmeter.platform.Platform;
+import org.ossmeter.repository.model.BugTrackingSystem;
+import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.VcsRepository;
 import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
 import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
+import org.ossmeter.repository.model.redmine.RedmineBugIssueTracker;
+import org.ossmeter.repository.model.sourceforge.SourceForgeBugTrackingSystem;
 import org.ossmeter.repository.model.vcs.git.GitRepository;
 import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 import org.restlet.data.MediaType;
@@ -98,22 +102,49 @@ public class ProjectCreationResource extends ServerResource {
 				} else if (vcs.get("type").asText().equals("svn")) {
 					repo = new GitRepository();
 				}
-				repo.setName(vcs.get("name").asText());
+//				repo.setName(vcs.get("name").asText());
 				repo.setUrl(vcs.get("url").asText());
 				project.getVcsRepositories().add(repo);
 			}
 			for (JsonNode cc : (ArrayNode)json.get("communication_channels")) {
-				NntpNewsGroup newsgroup = new NntpNewsGroup();
-				newsgroup.setName(cc.get("name").asText());
-				newsgroup.setUrl(cc.get("url").asText());
-				project.getCommunicationChannels().add(newsgroup);
+				CommunicationChannel channel = null;
+				switch (cc.get("type").asText()) {
+					case "nntp":
+						NntpNewsGroup newsgroup = new NntpNewsGroup();
+						newsgroup.setName(cc.get("name").asText());
+						newsgroup.setUrl(cc.get("url").asText());
+						channel = newsgroup;
+						break;
+					default:
+						continue;
+				}
+				project.getCommunicationChannels().add(channel);
 			}
 			for (JsonNode bts : (ArrayNode)json.get("bts")) {
-				Bugzilla bugs = new Bugzilla();
-				bugs.setProduct(bts.get("product").asText());
-				bugs.setUrl(bts.get("url").asText());
-				bugs.setComponent(bts.get("component").asText());
-				project.getBugTrackingSystems().add(bugs);
+				BugTrackingSystem buggy = null;
+				switch (bts.get("type").asText()) {
+					case "bugzilla":
+						Bugzilla bugs = new Bugzilla();
+						bugs.setProduct(bts.get("product").asText());
+						bugs.setComponent(bts.get("component").asText());
+						buggy = bugs;
+						break;
+					case "sourceforge":
+						SourceForgeBugTrackingSystem sf = new SourceForgeBugTrackingSystem();
+						buggy = sf;
+						break;
+					case "redmine":
+						RedmineBugIssueTracker red = new RedmineBugIssueTracker();
+						red.setProject(bts.get("project").asText());
+						red.setName(bts.get("name").asText());
+						buggy = red;
+						break;
+					default:
+						continue;
+
+				}
+				buggy.setUrl(bts.get("url").asText());
+				project.getBugTrackingSystems().add(buggy);
 			}	// TODO: Validate all channels.
 
 			
@@ -125,21 +156,23 @@ public class ProjectCreationResource extends ServerResource {
 				return Util.generateErrorMessageRepresentation(generateRequestJson(mapper, null), "The API was unable to connect to the database.");
 			}
 			Platform platform = new Platform(mongo);
-			project.setShortName(platform.getProjectRepositoryManager().generateUniqueId(project));
+			String shortName = platform.getProjectRepositoryManager().generateUniqueId(project);
+			project.setShortName(shortName);
 			
 			// TODO: Check it doesn't already exist - how?
 			System.out.println("Adding new project");
 			platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
 			platform.getProjectRepositoryManager().getProjectRepository().getProjects().sync();
 			
-			StringRepresentation rep = new StringRepresentation("{'status':'success'}");
-			rep.setMediaType(MediaType.APPLICATION_JSON);
+			// Query it for returning
+			project = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByShortName(shortName);
+			
 			getResponse().setStatus(Status.SUCCESS_CREATED);
-			return rep;
+			return new StringRepresentation(project.getDbObject().toString());
 
 		} catch (IOException e) {
 			e.printStackTrace(); // TODO
-			StringRepresentation rep = new StringRepresentation("");
+			StringRepresentation rep = new StringRepresentation("{\"status\":\"error\", \"message\" : \""+e.getMessage()+"\"}");
 			rep.setMediaType(MediaType.APPLICATION_JSON);
 			getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
 			return rep;

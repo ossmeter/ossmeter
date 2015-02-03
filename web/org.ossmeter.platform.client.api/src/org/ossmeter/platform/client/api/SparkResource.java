@@ -12,7 +12,6 @@ package org.ossmeter.platform.client.api;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Map;
 import java.util.UUID;
 
 import org.ossmeter.platform.Date;
@@ -42,7 +41,7 @@ public class SparkResource extends AbstractApiResource {
 		if (sd != null) {
 			JsonNode obj;
 			try {
-				System.out.println("SD: "+ sd);
+//				System.out.println("SD: "+ sd);
 				obj = mapper.readTree(sd);
 				return Util.createJsonRepresentation(obj);
 			} catch (Exception e) {
@@ -59,14 +58,15 @@ public class SparkResource extends AbstractApiResource {
 		String projectId = (String) getRequest().getAttributes().get("projectid");
 		String metric = (String) getRequest().getAttributes().get("metricid");
 
+		String agg = getQueryValue("agg");
+		String start = getQueryValue("startDate");
+		String end = getQueryValue("endDate");
+
 		String[] metrics = metric.split("\\+");
 		System.err.println("metrics to get: " + metrics);
 		ArrayNode sparks = mapper.createArrayNode();
 		for (String metricId : metrics) {
 			
-			String agg = getQueryValue("agg");
-			String start = getQueryValue("startDate");
-			String end = getQueryValue("endDate");
 			
 			QueryBuilder builder = QueryBuilder.start();
 			if (agg != null && agg != "") {

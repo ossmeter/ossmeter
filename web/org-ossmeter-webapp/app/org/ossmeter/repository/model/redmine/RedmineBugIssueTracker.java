@@ -31,10 +31,22 @@ import org.ossmeter.platform.factoids.*;
 public class RedmineBugIssueTracker extends BugTrackingSystem {
 
 	protected List<RedmineIssue> issues;
-	protected String name;
+	protected String name, project;
 	
 	public String getName() {
 		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getProject() {
+		return project;
+	}
+
+	public void setProject(String project) {
+		this.project = project;
 	}
 	
 	public List<RedmineIssue> getIssues() {
