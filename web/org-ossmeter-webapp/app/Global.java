@@ -110,26 +110,11 @@ public class Global extends GlobalSettings {
 					System.out.println("scheduled task is running :)");
 
 					try {
-						// String host = play.Play.application().configuration().getString("mongo.default.host");
-
-						// System.out.println("host: " + host);
-						// if (host == null) host = "localhost";
-						// Integer port = play.Play.application().configuration().getInt("mongo.default.port");
-						
-						// System.out.println("port: " + port);
-
-						// if (port == null) port = 27017;
-
-						// final Mongo mongo = new Mongo(host, port);
-
-						// DB db = mongo.getDB("users");
-						
-
 						final DB db = MongoAuthenticator.getUsersDb();
 						final Users users = new Users(db);
 
 						// Iterate all projects TODO:Paging
-						Promise<List<Project>> projects = WS.url("http://localhost:8182/projects?size=300").get().map( 
+						Promise<List<Project>> projects = WS.url(play.Play.application().configuration().getString("ossmeter.api") + "/projects?size=300").get().map( 
 							new Function<WSResponse, List<Project>>() {
 
 								public List<Project> apply(WSResponse response) {
@@ -155,14 +140,16 @@ public class Global extends GlobalSettings {
 												proj = new Project();
 												proj.setId(pId);
 												proj.setName(node.get("name").asText());
-
 												users.getProjects().add(proj);	
 											}
+
+											// Update details
 											if (node.has("analysed")) {
 												proj.setAnalysed(node.get("analysed").asBoolean());
 											} else {
 												proj.setAnalysed(false);
 											}
+											if (node.has("analysed")) proj.setDescription(node.get("description").asText());
 											users.getProjects().sync();
 
 											// Now do info source stats

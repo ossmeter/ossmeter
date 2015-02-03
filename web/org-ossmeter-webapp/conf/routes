@@ -35,7 +35,7 @@ GET		/register					controllers.Invitation.acceptInvitation(key : String)
 GET		/api/*path					controllers.Application.api(path : String)
 
 # Search
-GET 	/search 					controllers.Application.search(query : String)
+GET 	/search 					controllers.Application.search(q : String ?= "")
 GET		/autocomplete				controllers.Application.autocomplete(query : String)
 
 # Home page

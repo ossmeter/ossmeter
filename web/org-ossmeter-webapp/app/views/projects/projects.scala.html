@@ -68,7 +68,14 @@
   		close: function() {
     		$( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
   		}
-	})
+	});
+	var submit = function() {
+       window.location.href = "search?q=" + $(".txt_search").val(); 
+    }
+    $(".txt_search").keyup(function(e){
+        if (e.keyCode == 13) submit();
+    });
+    $("#search_btn").click(submit);
 });
 </script>
 

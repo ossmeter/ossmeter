@@ -16,10 +16,13 @@ public class Project extends Pongo {
 		dbObject.put("tags", new BasicDBList());
 		ID.setOwningType("model.Project");
 		NAME.setOwningType("model.Project");
+		DESCRIPTION.setOwningType("model.Project");
+		ANALYSED.setOwningType("model.Project");
 	}
 	
 	public static StringQueryProducer ID = new StringQueryProducer("id"); 
 	public static StringQueryProducer NAME = new StringQueryProducer("name"); 
+	public static StringQueryProducer DESCRIPTION = new StringQueryProducer("description"); 
 	public static StringQueryProducer ANALYSED = new StringQueryProducer("analysed");
 
 	public String getId() {
@@ -41,7 +44,16 @@ public class Project extends Pongo {
 		return this;
 	}
 	
-	
+	public String getDescription() {
+		return parseString(dbObject.get("description")+"", "");
+	}
+
+	public Project setDescription(String description) {
+		dbObject.put("description", description);
+		notifyChanged();
+		return this;
+	}
+
 	public List<Tag> getTags() {
 		if (tags == null) {
 			tags = new PongoList<Tag>(this, "tags", true);

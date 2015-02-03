@@ -67,6 +67,7 @@ public class MongoAuthenticator {
 		// Turn query into regex
 		String regex = "^" + query + ".*";
 		BasicDBObject obj = new BasicDBObject("name", java.util.regex.Pattern.compile(regex, java.util.regex.Pattern.CASE_INSENSITIVE));
+		obj.put("analysed", true);
 
 		// Pongo doesn't support regexs yet, so we're using the Java driver
 		DB db = getUsersDb();

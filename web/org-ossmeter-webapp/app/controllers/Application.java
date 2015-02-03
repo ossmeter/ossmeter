@@ -87,8 +87,15 @@ public class Application extends Controller {
 	}
 
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
-	public static Result search(String query) {
-		return null;
+	public static Result search(String q) {
+
+		List<model.Project> projects = null;
+
+		if (!"".equals(q)) {
+			projects = MongoAuthenticator.autocomplete(q);
+		}
+
+		return ok(views.html.search.render(projects));
 	}
 
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
