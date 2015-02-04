@@ -24,9 +24,9 @@
 		    		<tr>
 		    			<td>@i.getEmail()</td>
 		    			<td>@i.getStatus()</td>
-		    			<td>@i.getRequestedAt().format("dd MMM yyyy (HH:mm)")</td>
-		    			<td>@i.getOfferedAt().format("dd MMM yyyy (HH:mm)")</td>
-		    			<td>@i.getAcceptedAt().format("dd MMM yyyy (HH:mm)")</td>
+		    			<td>@if(i.getRequestedAt()!=null){@i.getRequestedAt().format("dd MMM yyyy (HH:mm)")}</td>
+		    			<td>@if(i.getOfferedAt()!=null){@i.getOfferedAt().format("dd MMM yyyy (HH:mm)")}</td>
+		    			<td>@if(i.getAcceptedAt()!=null){@i.getAcceptedAt().format("dd MMM yyyy (HH:mm)")}</td>
 		    			<td><a href="@routes.Admin.offerInvite(i.getEmail())">Make offer</a> | <a href="@routes.Admin.deleteInvite(i.getEmail())">Delete</a></td>
 		    		</tr>
 		    		}
