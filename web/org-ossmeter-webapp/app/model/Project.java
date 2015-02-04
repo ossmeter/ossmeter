@@ -19,12 +19,14 @@ public class Project extends Pongo {
 		DESCRIPTION.setOwningType("model.Project");
 		ANALYSED.setOwningType("model.Project");
 		CREATEDBY.setOwningType("model.Project");
+		STARS.setOwningType("model.Project");
 	}
 	
 	public static StringQueryProducer ID = new StringQueryProducer("id"); 
 	public static StringQueryProducer NAME = new StringQueryProducer("name"); 
 	public static StringQueryProducer DESCRIPTION = new StringQueryProducer("description"); 
 	public static StringQueryProducer ANALYSED = new StringQueryProducer("analysed");
+	public static NumericalQueryProducer STARS = new NumericalQueryProducer("stars");
 	public static StringQueryProducer CREATEDBY = new StringQueryProducer("createdBy"); 
 
 	public String getId() {
@@ -46,6 +48,15 @@ public class Project extends Pongo {
 		return this;
 	}
 	
+	public int getStars() {
+		return parseInteger(dbObject.get("stars")+"", 0);
+	}
+	public Project setStars(int stars) {
+		dbObject.put("stars", stars);
+		notifyChanged();
+		return this;
+	}
+
 	public String getDescription() {
 		return parseString(dbObject.get("description")+"", "");
 	}

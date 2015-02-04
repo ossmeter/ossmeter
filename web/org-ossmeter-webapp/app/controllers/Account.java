@@ -341,6 +341,22 @@ public class Account extends Controller {
 	}
 
 	@SubjectPresent
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
+	public static Result starProject(String projectId) {
+		final User user = Application.getLocalUser(session());
+		MongoAuthenticator.starProject(user, projectId);
+		return ok(); //TODO: probably want to some checking of the result
+	}
+
+	@SubjectPresent
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
+	public static Result unstarProject(String projectId) {
+		final User user = Application.getLocalUser(session());
+		MongoAuthenticator.unstarProject(user, projectId);
+		return ok(); //TODO: probably want to some checking of the result
+	}
+
+	@SubjectPresent
 	public static Result createEventGroup() {
 		// this is the currently logged in user
 		final User user = Application.getLocalUser(session());

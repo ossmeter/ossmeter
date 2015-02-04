@@ -113,6 +113,8 @@ public class Application extends Controller {
 						controllers.routes.javascript.Account.createNotification(),
 						controllers.routes.javascript.Account.updateGridLocations(),
 						controllers.routes.javascript.Account.loadEventGroupForm(),
+						controllers.routes.javascript.Account.starProject(),
+						controllers.routes.javascript.Account.unstarProject(),
 						controllers.routes.javascript.Projects.createProject()
 						)
 				)

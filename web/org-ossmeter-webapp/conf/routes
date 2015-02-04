@@ -68,6 +68,8 @@ GET		/profile/event				controllers.Application.profileEvent
 POST	/profile/event				controllers.Account.createEvent
 POST    /profile/spark              controllers.Account.watchSpark(projectid:String, metricid:String, projectName:String, metricName:String)
 POST    /profile/updategrid         controllers.Account.updateGridLocations(loc : String)
+POST 	/project/star 				controllers.Account.starProject(projectId : String)
+POST 	/project/unstar 				controllers.Account.unstarProject(projectId : String)
 
 
 # User accounts login/auth routes

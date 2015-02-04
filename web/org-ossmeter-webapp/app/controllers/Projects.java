@@ -133,10 +133,12 @@ public class Projects extends Controller {
 			return redirect(routes.Application.index());
 		}
 
+		model.Project iProject = MongoAuthenticator.findProjectById(project.getShortName());
+
 		QualityModel qualityModel = Application.getQualityModelById(qm);
 		if (qualityModel == null) qualityModel = Application.getInformationSourceModel();
 
-		return ok(views.html.projects.view_project.render(project, qualityModel, summary));
+		return ok(views.html.projects.view_project.render(project, iProject, qualityModel, summary));
 	}
 
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
@@ -155,13 +157,15 @@ public class Projects extends Controller {
 			return redirect(routes.Application.index());
 		}
 
+		model.Project iProject = MongoAuthenticator.findProjectById(project.getShortName());
+
 		QualityModel qm = Application.getQualityModelById(qmId);
 		if (qm == null) qm = Application.getInformationSourceModel();
 
 		// Lookup aspect
 		QualityAspect aspect = findAspect(qm, aspectId);
 
-		return ok(views.html.projects.view_project.render(project, qm, summary));
+		return ok(views.html.projects.view_project.render(project, iProject, qm, summary));
 	}
 
 	protected static QualityAspect findAspect(QualityAspect aspect, String aspectId) {

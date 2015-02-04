@@ -1,4 +1,7 @@
-@(project: org.ossmeter.repository.model.Project)
+@(project: org.ossmeter.repository.model.Project, iProject: model.Project)
+
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
 
 @import org.ossmeter.repository.model._
 @import org.ossmeter.repository.model.bts.bugzilla._
@@ -32,12 +35,18 @@
     		        </ol>
     	        </div>
     	        <div class="col-md-6" style="text-align:right">
-    	           	<!-- <ol class="breadcrumb projectbreadcrumb">
-    	           		<li class="active">
-    	           			<a href="#"><button type="button" class="btn btn-primary btn-xs">Star <span class="badge">42</span></button></a>
-    				  	</li>
-    		            <li><a href="#">Settings</a></li>
-    		        </ol> -->
+                    <ol class="breadcrumb projectbreadcrumb pull-right">
+                        @subjectPresentOr() {
+                            @defining(Application.getLocalUser(session())) { user =>
+                            <button id="btn_star" class="btn btn-default btn-xs" type="button" data-selected="@if(user.getWatching().exists(_.getId() == iProject.getId())){true}else{false}">
+                                <span id="star_span" class="glyphicon glyphicon-star@if(user.getWatching().exists(_.getId() == iProject.getId())){}else{-empty}"></span> Star <span id="stars" class="badge">@iProject.getStars()</span>
+                            </button>
+                        }}{
+                            <button class="btn btn-primary btn-xs" type="button">
+                              <span id="star_span" class="glyphicon glyphicon-star-empty"></span> Star <span id="stars" class="badge">4</span>
+                            </button>
+                        }
+                    </ol>
     	        </div>
     	    </div>	
     		<div class="row">
@@ -70,3 +79,34 @@
     </div>
 </section>
 
+<script type="text/javascript">
+
+    $(function() {
+        $("#btn_star").click(function() {
+            if ($("#btn_star").data("selected")) {
+                jsRoutes.controllers.Account.unstarProject("@iProject.getId()").ajax().success(function(result) {
+                    // Update the number and button
+                    $("#stars").text(+($("#stars").text()) - 1);
+                    $("#star_span").removeClass("glyphicon-star");
+                    $("#star_span").addClass("glyphicon-star-empty");
+                    $("#btn_star").data("selected", false);
+                }).error(function(result) {
+                    console.log("Error, unable to unstar project.");
+                });
+            } else {
+                jsRoutes.controllers.Account.starProject("@iProject.getId()").ajax().success(function(result) {
+                    // Update the number and button
+                    $("#stars").text(+($("#stars").text()) + 1);
+                    $("#star_span").removeClass("glyphicon-star-empty");
+                    $("#star_span").addClass("glyphicon-star");
+                    $("#btn_star").data("selected", true);
+                }).error(function(result) {
+                    console.log("Error, unable to star project.");
+                });
+            }
+            
+        });
+    })
+    
+    
+</script>

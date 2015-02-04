@@ -60,7 +60,9 @@ public class DemoApplication extends Controller {
 				return ok(views.html.demo.index.render(MAILING_LIST_FORM));
 			}
 
-			return ok(views.html.demo.view_project.render(project, Application.getInformationSourceModel(), summary));
+			model.Project iProject = MongoAuthenticator.findProjectById(project.getShortName());
+
+			return ok(views.html.demo.view_project.render(project, iProject, Application.getInformationSourceModel(), summary));
 
 		} else {
 			flash(Application.FLASH_ERROR_KEY, "Invalid project identifier.");

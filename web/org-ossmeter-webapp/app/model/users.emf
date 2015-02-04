@@ -62,6 +62,7 @@ class Project {
 	attr boolean analysed;
 	attr String description;
 	attr String createdBy;
+	attr int stars;
 }
 
 class Tag {

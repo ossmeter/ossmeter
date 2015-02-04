@@ -1,4 +1,4 @@
-@(project: org.ossmeter.repository.model.Project, qualityModel : QualityModel, isSummary : Boolean)
+@(project: org.ossmeter.repository.model.Project, iProject: model.Project, qualityModel : QualityModel, isSummary : Boolean)
 
 @import scala._
 
@@ -46,7 +46,7 @@ case other => {}}}}}{ }
 });
 </script>
 
-@_projectMetaData(project)
+@_projectMetaData(project, iProject)
 
 @if(project.getAnalysed()) {
 

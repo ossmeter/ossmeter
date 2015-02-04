@@ -362,6 +362,63 @@ public class MongoAuthenticator {
 		return p;
  	}
 
+ 	public static void starProject(User user, String projectId) {
+ 		DB db = getUsersDb();
+		Users users = new Users(db);
+
+		User u = users.getUsers().findOneByEmail(user.getEmail());
+		Project p = users.getProjects().findOneByIdentifier(projectId);
+
+		boolean alreadyStarred = false;
+		for (Project proj : u.getWatching()) {
+			if (proj.getId().equals(p.getId())) {
+				alreadyStarred = true;
+				break;
+			}
+		}
+		if(!alreadyStarred) {
+			// This has to happen first otherwise the increment only gets saved in the user's document
+			p.setStars(p.getStars() + 1);
+			users.getProjects().sync();
+
+			p = users.getProjects().findOneByIdentifier(projectId);
+			System.out.println("starred: " + p.getStars());
+			u.getWatching().add(p);
+			u.setEmail(u.getEmail()); // Force dirtying
+			users.getUsers().sync();
+		}
+
+		db.getMongo().close();
+ 	}
+
+ 	public static void unstarProject(User user, String projectId) {
+ 		DB db = getUsersDb();
+		Users users = new Users(db);
+
+		User u = users.getUsers().findOneByEmail(user.getEmail());
+		Project p = users.getProjects().findOneByIdentifier(projectId);
+
+		Project toRemove = null;
+		for (Project proj : u.getWatching()) {
+			if (proj.getId().equals(p.getId())) {
+				toRemove = proj;
+				break;
+			}
+		}
+
+		if (toRemove != null) {
+			u.getWatching().remove(toRemove);
+			p.setStars(p.getStars() - 1);
+			System.out.println("unstarred: " + p.getStars());
+			u.setEmail(u.getEmail()); // Force dirtying
+		}
+
+		users.getUsers().sync();
+		users.getProjects().sync();
+
+		db.getMongo().close();
+ 	}
+
  	private static User findUser(Users users, final AuthUserIdentity identity) {
  		User user = null;
 		if (identity instanceof UsernamePasswordAuthUser) {

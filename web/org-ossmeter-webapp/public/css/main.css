@@ -346,7 +346,9 @@ ul.pagination {
     margin:0;
 }
 
-
+.badge {
+    font-weight:normal;
+}
 
 /*!
  * Hover.css (http://ianlunn.github.io/Hover/)
