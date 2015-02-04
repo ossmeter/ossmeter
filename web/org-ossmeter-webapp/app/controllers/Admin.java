@@ -1,8 +1,6 @@
 package controllers;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 
 import model.*;
 import model.Users;
@@ -25,6 +23,8 @@ import be.objectify.deadbolt.java.actions.Restrict;
 import auth.MongoAuthenticator;
 import com.mongodb.Mongo;
 import com.mongodb.DB;
+import com.mongodb.DBObject;
+import com.mongodb.BasicDBObject;
 
 import org.apache.commons.mail.*;
 
@@ -181,8 +181,117 @@ public class Admin extends Controller {
         	data.add(entry);
         }	
 
-        //Chart line = new Chart(null);
-        //MetricVisualisation vis = new MetricVisualisation(chart, spec, vis);
+        db.getMongo().close();
+        return ok(vis.toString()).as("application/json");
+	}
+
+	/**
+	*
+	*	@param type: either ALL, ANON, REGISTERED
+	*/
+	@Restrict(@Group(MongoAuthenticator.ADMIN_ROLE))
+	public static Result getPageViewPlot(String type) {
+		DB db = MongoAuthenticator.getUsersDb();
+        Users users = new Users(db);
+
+        ObjectMapper mapper = new ObjectMapper();
+
+		final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		final DateFormat dtf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+
+        ObjectNode vis = mapper.createObjectNode();
+        vis.put("id", "page-views");
+        vis.put("name", "Page Views");
+        vis.put("description", "The page views over time");
+        vis.put("type", "BarChart");
+        vis.put("timeSeries", true);
+        vis.put("x", "Date");
+        vis.put("y", "Quantity");
+
+        ArrayNode data = mapper.createArrayNode();
+        vis.put("datatable", data);
+
+        DBObject query = new BasicDBObject();
+
+        for (Log log : users.getLogs()) {
+
+        	if (type.equals("ANON") && !log.getUser().equals("anonymous")) continue;
+        	if (type.equals("REGISTERED") && log.getUser().equals("anonymous")) continue;
+
+        	ObjectNode entry = mapper.createObjectNode();
+        	entry.put("Date",  df.format(log.getDate()));
+        	entry.put("Datetime",  dtf.format(log.getDate()));
+        	entry.put("Quantity", 1);
+        	entry.put("URI", log.getUri());
+        	entry.put("User", log.getUser());
+        	data.add(entry);
+        }	
+
+        db.getMongo().close();
+        return ok(vis.toString()).as("application/json");
+	}
+	@Restrict(@Group(MongoAuthenticator.ADMIN_ROLE))
+	public static Result getPageViewStats() {
+		DB db = MongoAuthenticator.getUsersDb();
+        Users users = new Users(db);
+
+        ObjectMapper mapper = new ObjectMapper();
+
+		final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		final DateFormat dtf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+
+        ObjectNode vis = mapper.createObjectNode();
+        vis.put("id", "page-view-stats");
+        vis.put("name", "Page View Statistics");
+        vis.put("type", "Table");
+
+        ArrayNode data = mapper.createArrayNode();
+        vis.put("datatable", data);
+
+        Date today = new Date();
+        Calendar cal = Calendar.getInstance();
+		cal.setTime(today);
+		cal.add(Calendar.DATE, -30);
+		Date dateBefore30Days = cal.getTime();
+
+		cal.setTime(today);
+		cal.add(Calendar.DATE, -365);
+		Date dateBefore365Days = cal.getTime();
+
+		cal.setTime(today);
+		cal.add(Calendar.DATE, -1);
+		Date dateBefore1Day = cal.getTime();
+
+        long total = users.getLogs().getDbCollection().count();
+        long anon = users.getLogs().getDbCollection().count(new BasicDBObject("user", "anonymous"));
+        long lastday = users.getLogs().getDbCollection().count(new BasicDBObject("date", new BasicDBObject("$gte", dateBefore1Day)));
+        long last30days = users.getLogs().getDbCollection().count(new BasicDBObject("date", new BasicDBObject("$gte", dateBefore30Days)));
+        long last12months = users.getLogs().getDbCollection().count(new BasicDBObject("date", new BasicDBObject("$gte", dateBefore365Days)));
+
+        ObjectNode s = mapper.createObjectNode();
+        s.put("Stat", "Total Page Views");
+        s.put("Value", total);
+        data.add(s);
+
+        s = mapper.createObjectNode();
+        s.put("Stat", "Anonymous Page Views");
+        s.put("Value", anon);
+        data.add(s);
+
+        s = mapper.createObjectNode();
+        s.put("Stat", "Last Day");
+        s.put("Value", lastday);
+        data.add(s);
+
+        s = mapper.createObjectNode();
+        s.put("Stat", "Last 30 Days");
+        s.put("Value", last30days);
+        data.add(s);
+
+        s = mapper.createObjectNode();
+        s.put("Stat", "Last 12 Months");
+        s.put("Value", last12months);
+        data.add(s);
 
         db.getMongo().close();
         return ok(vis.toString()).as("application/json");
@@ -271,6 +380,8 @@ public class Admin extends Controller {
 		return ok(
 				Routes.javascriptRouter("adminJSRoutes",
 					controllers.routes.javascript.Admin.getUsagePlot(),
+					controllers.routes.javascript.Admin.getPageViewStats(),
+					controllers.routes.javascript.Admin.getPageViewPlot(),
 					controllers.routes.javascript.Admin.adminApi()
 					)
 				)

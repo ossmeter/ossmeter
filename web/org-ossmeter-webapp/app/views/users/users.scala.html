@@ -6,6 +6,23 @@
 
 @main(Messages("ossmeter.index.title")) {
 @admin._nav()
+
+<section>
+    <div class="container box">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Activity</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div id="activityTbl" class="col-md-3">
+
+            </div>
+            <div id="activity" class="col-md-9"></div>
+        </div>
+    </div>
+</section>
+
 <section>
   <div class="container box">
       <div class="row col-md-12">
@@ -128,7 +145,79 @@ function drawUser(email, container) {
     });
 }
 
+function drawActivityPlot() {
+    adminJSRoutes.controllers.Admin.getPageViewPlot("ALL").ajax().success(function(vis) {
+            // Create page views by day
+            var aggregated = d3.nest() 
+                .key(function(d){ return d[vis.x]; })
+                // .key(function(d){ if (d.user == "anonymous") return "anonymous" else return "registered"; })
+                .rollup(function(d) { return d.length; })
+                .entries(vis.datatable);
+
+            aggregated.forEach(function (d) {
+                d[vis.x] = d.key;
+                d[vis.y] = d.values;
+            })
+
+            vis.datatable = aggregated;
+
+            var chart = new metvis.Chart("#activity", vis);
+            chart.height = 250;
+            chart.width = $("#activity").width();
+            chart.axis.y.ticks = 3;
+            chart.margin.top=10;
+            // chart.margin.left=10;
+            // chart.margin.bottom=10;
+            chart.dateFormat = "%Y-%m-%d";
+            chart.draw();
+
+            an = new metvis.Annotation("X", "2015-02-02", "Beta Phase Begins")
+            chart.addAnnotation(an);
+
+            adminJSRoutes.controllers.Admin.getPageViewPlot("ANON").ajax().success(function(vis2) {
+                // Create page views by day
+                var aggregated = d3.nest() 
+                    .key(function(d){ return d[vis2.x]; })
+                    // .key(function(d){ if (d.user == "anonymous") return "anonymous" else return "registered"; })
+                    .rollup(function(d) { return d.length; })
+                    .entries(vis2.datatable);
+
+                aggregated.forEach(function (d) {
+                    d[vis2.x] = d.key;
+                    d[vis2.y] = d.values;
+                })
+
+                vis2.type = "LineChart";
+                vis2.datatable = aggregated;
+
+                chart.addVis(vis2);
+                console.log("added vis2:")
+                console.log(vis2);
+            }).error(function(result) {
+                console.log("Error." + result);
+            });
+        }).error(function(result) {
+            console.log("Error." + result);
+        });
+}
+
+function drawActivityTable() {
+    adminJSRoutes.controllers.Admin.getPageViewStats().ajax()
+        .success(function(vis) {
+        var table = new metvis.Table("#activityTbl", vis);
+        table.draw();
+
+        $("#activityTbl > table").addClass("table");
+
+    }).error(function(error) {
+        console.log("Error." + error);
+    });
+}
+
 $(function() {
+    drawActivityPlot();
+    drawActivityTable();
+
     @for(user <- users) {
         drawUser("@user.getEmail()", "#activityplot@users.indexOf(user)");
     }
