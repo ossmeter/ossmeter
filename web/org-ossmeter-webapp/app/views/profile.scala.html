@@ -1,4 +1,4 @@
-@(localUser: model.User = null)
+@(user: model.User = null)
 
 @import model._
 @import com.feth.play.module.pa.views.html._
@@ -20,16 +20,16 @@
         </div>
         <div class="col-md-3">
             <p>
-            @localUser.getEmail()
+            @user.getEmail()
                 <i>
-                @if(!localUser.getEmailValidated() && localUser.getEmail()) {
+                @if(!user.getEmailValidated() && user.getEmail()) {
                   (<a href="@routes.Account.verifyEmail">unverified - click to verify</a>)
                 } else {
                   (verified)
                 }</i>
             <br/><a href="@routes.Account.changePassword">Change password</a>
             <br />
-            @* @defining(localUser.getProviders()) { providers =>
+            @* @defining(user.getProviders()) { providers =>
                 @if(providers.size() > 0) {
                     @if(providers.size() ==1) {
                         @Messages("ossmeter.profile.providers_one")
@@ -56,6 +56,53 @@
     </p>
 </div>
 </section>
+
+<section>
+    <div class="container box">
+        <!-- <div class="row">
+            <div class="col-md-12">
+                <h2>Summary</h2>
+            </div>
+        </div> -->
+        <div class="row">
+            <div class="col-md-4">
+                <h3>About You</h3>
+                Email: @user.getEmail() <br />
+                <a href="@routes.Account.changePassword">Change password</a> <br/>
+                Joined: @user.getJoinDate() <br/>
+                <span class="label label-primary"><span class="glyphicon glyphicon-flash"> @user.getGrid().count(_.isInstanceOf[model.SparkGridEntry])</span></span> 
+                <span class="label label-primary"><span class="glyphicon glyphicon-stats"> @user.getGrid().count(_.isInstanceOf[model.PlotGridEntry])</span></span> 
+                <span class="label label-primary"><span class="glyphicon glyphicon-bell"> @user.getGrid().count(_.isInstanceOf[model.Notification])</span></span> 
+                <span class="label label-primary"><span class="glyphicon glyphicon-calendar"> @user.getGrid().count(_.isInstanceOf[model.EventGroup])</span></span> 
+            </div>  
+            <div class="col-md-4">
+                <h3>Projects You Own</h3>
+                @if(user.getOwns().size() > 0){
+                <ul>
+                    @for(p <- user.getOwns()) {
+                    <li><a href="@routes.Projects.view(p.getId())">@p.getName()</a></li>
+                    }
+                </ul>
+                }else{
+                <p>You haven't registered any projects with the system.</p>
+                }
+            </div>
+            <div class="col-md-4">
+                <h3>Starred Projects</h3>
+                @if(user.getWatching().size() > 0){
+                <ul>
+                    @for(p <- user.getWatching()) {
+                    <li><a href="@routes.Projects.view(p.getId())">@p.getName()</a></li>
+                    }
+                </ul>
+                }else{
+                <p>You haven't starred any projects yet.</p>
+                }
+            </div>          
+        </div>
+    </div>
+</section>
+
 <section>
 <div class="container box">
     <div class="row">
@@ -78,7 +125,7 @@
         })
         </script>
 
-       @* @if(localUser.getNotifications().size() > 0) {
+       @* @if(user.getNotifications().size() > 0) {
             <table class="table">
                 <thead>
                     <tr>
@@ -90,7 +137,7 @@
                     </tr>
                 </thead>
                 <tbody>
-            @for(n <- localUser.getNotifications()) {
+            @for(n <- user.getNotifications()) {
                 <tr> <!-- TODO: Will want to present the project and metric name, not ID. -->
                     <td>@n.getProject().getId()</td>
                     <td>@n.getMetric().getId</td>
@@ -116,10 +163,10 @@
         <div class="col-md-6">
 
 @*        <h2>Configure EventGroups</h2>
-        @if(localUser.eventGroups.size() > 0) {
+        @if(user.eventGroups.size() > 0) {
             <a href="@routes.Application.profileEventGroup">Create</a>
             <ul>
-            @for(gr <- localUser.eventGroups) {
+            @for(gr <- user.eventGroups) {
                 <li><p>
                 <label class="form-label" name="eventGroup" value=@gr>@gr.name</label> 
                 @if(gr.events.size() > 0) {
@@ -147,7 +194,7 @@
 
 <div class="gridster">
     <ul>
-    @for(g <- localUser.getGrid()) {
+    @for(g <- user.getGrid()) {
         <li class="box gridentry" data-row="@g.getRow()" data-col="@g.getCol()" data-sizex="@g.getSizeX()" data-sizey="@g.getSizeY()" id="@g.getId()">
             @g match {
                 case n : Message => {
