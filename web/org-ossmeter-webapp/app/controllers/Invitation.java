@@ -1,6 +1,7 @@
 package controllers;
 
 import java.util.UUID;
+import java.util.Date;
 
 import views.html.*;
 import model.InvitationRequest;
@@ -56,6 +57,7 @@ public class Invitation extends Controller{
             // Generate token and store
             invitation.setToken(UUID.randomUUID().toString());
             invitation.setStatus("NOT SENT");
+            invitation.setRequestedAt(new Date());
             users.getInvites().add(invitation);
 
             users.getInvites().sync();
@@ -70,13 +72,17 @@ public class Invitation extends Controller{
         return ok(views.html.invitation.render(invitationForm));
     }
 
+    /**
+     * Called when the user clicks the link in their email. Perhaps badly named.
+     *
+     */
     public static Result acceptInvitation(String key) {
         DB db = MongoAuthenticator.getUsersDb();
         Users users = new Users(db);
 
         InvitationRequest inv = users.getInvites().findOneByToken(key);
 
-        if (inv == null) {
+        if (inv == null || inv.getStatus().equals("ACCEPTED")) {
             db.getMongo().close();
             flash(Application.FLASH_ERROR_KEY, "Sorry, that registration token wasn't valid. If you think this is a mistake, please get in touch.");
             return redirect(routes.Application.index());
@@ -88,5 +94,22 @@ public class Invitation extends Controller{
         form.fill(inv);
 
         return ok(signup.render(form));
+    }
+
+    /**
+     * This is called by Application.java when someone signs up. I
+     */
+    public static void userRegistered(String email) {
+        DB db = MongoAuthenticator.getUsersDb();
+        Users users = new Users(db);
+
+        InvitationRequest inv = users.getInvites().findOneByEmail(email);
+
+        if (inv != null) {
+            inv.setAcceptedAt(new Date());
+            inv.setStatus("ACCEPTED");
+            users.getInvites().sync();
+        }
+        db.getMongo().close();
     }
 }

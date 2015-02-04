@@ -81,7 +81,6 @@ public class Admin extends Controller {
 
 	@Restrict(@Group(MongoAuthenticator.ADMIN_ROLE))
 	public static Result offerInvite(String email) {
-		System.out.println(email);
 
 		DB db = MongoAuthenticator.getUsersDb();
         Users users = new Users(db);
@@ -119,6 +118,7 @@ public class Admin extends Controller {
 		}
 
         inv.setStatus("SENT");
+        inv.setOfferedAt(new Date());
         users.getInvites().sync();
         db.getMongo().close();
 

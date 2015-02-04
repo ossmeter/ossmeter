@@ -277,6 +277,7 @@ public class Application extends Controller {
 			// Everything was filled
 			// do something with your part of the form before handling the user
 			// signup
+			Invitation.userRegistered(filledForm.get().getEmail());
 			return UsernamePasswordAuthProvider.handleSignup(ctx());
 		}
 	}

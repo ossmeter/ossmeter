@@ -50,6 +50,9 @@ class InvitationRequest {
 	@searchable
 	attr String token;
 	attr String status;
+	attr Date requestedAt;
+	attr Date offeredAt;
+	attr Date acceptedAt;
 }
 
 class Project {
