@@ -322,7 +322,7 @@ public class Projects extends Controller {
 					}
 
                 	try {
-                		// Attack the project to the user
+                		// Attach the project to the user
 						final model.User localUser = Application.getLocalUser(session());
 						
 						// Get response
@@ -392,12 +392,24 @@ public class Projects extends Controller {
 						ObjectMapper mapper = new ObjectMapper();
 
 						try {
+							// Attach the project to the user
+							final model.User localUser = Application.getLocalUser(session());
+						
 							Project project = mapper.readValue(node.toString(), Project.class);
 	                        // project.id = node.get("shortName").asLong();
 	                        // project.name = node.get("name").asText();
 	                        // project.shortName = node.get("shortName").asText();
 	                        // project.url = node.get("url").asText();
 	                        // project.desc = node.get("desc").asText();
+
+							model.Project mProject = new model.Project();
+		                	mProject.setName(project.getName());
+		                	mProject.setId(project.getShortName());
+		                	mProject.setDescription(project.getDescription());
+		                	mProject.setCreatedBy(localUser.getEmail());
+
+		                	// Insert (only if it doesn't exist already)
+							MongoAuthenticator.assignProjectToUser(localUser, mProject);
 
 							return redirect(routes.Projects.view(project.getShortName()));//views.html.projects.view_item.render(project));
 							// return view(project.shortName);
