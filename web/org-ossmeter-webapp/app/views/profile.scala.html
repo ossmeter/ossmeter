@@ -74,6 +74,9 @@
                 <span class="label label-primary"><span class="glyphicon glyphicon-stats"> @user.getGrid().count(_.isInstanceOf[model.PlotGridEntry])</span></span> 
                 <span class="label label-primary"><span class="glyphicon glyphicon-bell"> @user.getGrid().count(_.isInstanceOf[model.Notification])</span></span> 
                 <span class="label label-primary"><span class="glyphicon glyphicon-calendar"> @user.getGrid().count(_.isInstanceOf[model.EventGroup])</span></span> 
+                <span class="label label-primary"><span class="glyphicon glyphicon-cloud-upload"> @user.getOwns().size()</span></span> 
+                <span class="label label-primary"><span class="glyphicon glyphicon-star"> @user.getWatching().size()</span></span> 
+                <br/>
             </div>  
             <div class="col-md-4">
                 <h3>Projects You Own</h3>

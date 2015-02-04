@@ -47,6 +47,9 @@
                         <span class="label label-primary"><span class="glyphicon glyphicon-bell"> @user.getGrid().count(_.isInstanceOf[model.Notification])</span></span> 
                         <span class="label label-primary"><span class="glyphicon glyphicon-calendar"> @user.getGrid().count(_.isInstanceOf[model.EventGroup])</span></span> 
                         <br/>
+                        <span class="label label-primary"><span class="glyphicon glyphicon-cloud-upload"> @user.getOwns().size()</span></span> 
+                        <span class="label label-primary"><span class="glyphicon glyphicon-star"> @user.getWatching().size()</span></span> 
+                        <br/>
                         @if(user.getRoles().count(_.getName()=="admin") > 0){
                         <span class="label label-info"> Admin</span><br/> <a href="@routes.Admin.revokeAdmin(user.getEmail())">Revoke Administrator</a>
                         }else{
@@ -99,7 +102,7 @@ function drawUser(email, container) {
             y : "values"
         }
         var histChart = new metvis.Chart(container.replace("activityplot", "behaviour"), hist);
-        histChart.height = 120;
+        histChart.height = 140;
         histChart.width = 400;
         histChart.margin.top=10;
         histChart.margin.left=10;
@@ -135,7 +138,7 @@ function drawUser(email, container) {
         }
 
         chart = new metvis.Chart(container, vis);
-        chart.height = 100;
+        chart.height = 120;
         chart.width = 400;
         chart.margin.top=10;
         chart.margin.left=10;
