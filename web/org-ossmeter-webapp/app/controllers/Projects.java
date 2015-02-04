@@ -377,8 +377,10 @@ public class Projects extends Controller {
 
 						JsonNode node = response.asJson();
 
+						System.out.println(node);
+
 						if (node.has("status") && "error".equals(node.get("status").asText())) {
-							flash(Application.FLASH_ERROR_KEY, "Invalid URL.");
+							flash(Application.FLASH_ERROR_KEY, node.get("msg").asText());
 							return badRequest(views.html.projects.form.render(form(Project.class), form));
 						}
 

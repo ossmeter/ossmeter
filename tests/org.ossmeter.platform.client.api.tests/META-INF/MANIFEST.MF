@@ -10,4 +10,6 @@ Require-Bundle: org.ossmeter.platform.client.api,
  org.ossmeter.repository.model,
  org.junit,
  org.restlet,
- org.jackson.all
+ org.jackson.all,
+ org.ossmeter.repository.model.importer;bundle-version="1.0.0",
+ org.ossmeter.repository.model.importer.exception;bundle-version="1.0.0"

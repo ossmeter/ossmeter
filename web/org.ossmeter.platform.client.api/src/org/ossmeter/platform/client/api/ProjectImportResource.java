@@ -16,6 +16,7 @@ import java.net.UnknownHostException;
 import org.ossmeter.platform.Configuration;
 import org.ossmeter.platform.Platform;
 import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.importer.exception.WrongUrlException;
 import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
@@ -55,12 +56,23 @@ public class ProjectImportResource extends ServerResource {
 			
 			ProjectImporter importer = new ProjectImporter();
 			
-			Project p = importer.importProject(url, platform);
+			Project p;
+			try {
+				p = importer.importProject(url, platform);
+			} catch (WrongUrlException e) {
+				ObjectNode msg = mapper.createObjectNode();
+				msg.put("status", "error");
+				msg.put("msg", "Invalid URL."); 
+				StringRepresentation rep = new StringRepresentation(msg.toString());
+				rep.setMediaType(MediaType.APPLICATION_JSON);
+				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+				return rep;
+			}
 			
 			if (p == null) {
 				ObjectNode msg = mapper.createObjectNode();
 				msg.put("status", "error");
-				msg.put("msg", "Unable to import project."); // FIXME inc reason
+				msg.put("msg", "Unable to import project.");
 				StringRepresentation rep = new StringRepresentation(msg.toString());
 				rep.setMediaType(MediaType.APPLICATION_JSON);
 				getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);

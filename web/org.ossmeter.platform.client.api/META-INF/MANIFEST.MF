@@ -24,7 +24,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.repository.model.redmine;bundle-version="1.0.0",
  org.ossmeter.repository.model.sourceforge;bundle-version="0.1.0",
  org.ossmeter.repository.model.vcs.git;bundle-version="1.0.0",
- org.ossmeter.repository.model.vcs.svn;bundle-version="1.0.0"
+ org.ossmeter.repository.model.vcs.svn;bundle-version="1.0.0",
+ org.ossmeter.repository.model.sourceforge.importer;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.platform.client.api

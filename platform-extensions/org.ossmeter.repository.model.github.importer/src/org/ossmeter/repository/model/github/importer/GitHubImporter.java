@@ -343,14 +343,13 @@ public class GitHubImporter implements IImporter{
 				repository.setDescription(appDescription);
 
 			repository.setFull_name(projectId);
-			repository.setShortName(projectId);
 			repository.setName(currentRepo.get("name").toString());
 
 			if ((isNotNull(currentRepo,"private")))					
 				repository.set_private(new Boolean(currentRepo.get("private").toString()));
 
 			repository.setFull_name(projectId);
-			repository.setShortName(projectId);
+//			repository.setShortName(projectId);
 			repository.setName(currentRepo.get("name").toString());
 
 			if ((isNotNull(currentRepo,"private")))					
@@ -461,8 +460,11 @@ public class GitHubImporter implements IImporter{
 			platform.getProjectRepositoryManager().getProjectRepository().getGitHubImportData().first().setLastImportedProject(String.valueOf(lastImportedId));
 			platform.getProjectRepositoryManager().getProjectRepository().sync();
 			if (!projectToBeUpdated) {
+				repository.setShortName(platform.getProjectRepositoryManager().generateUniqueId(repository));
 				platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(repository);
 			}
+			
+			
 			
 			platform.getProjectRepositoryManager().getProjectRepository().sync();	
 			logger.info("Project has been importerd");

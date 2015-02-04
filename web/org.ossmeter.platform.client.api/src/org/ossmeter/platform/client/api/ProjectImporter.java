@@ -15,12 +15,13 @@ import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.eclipse.importer.EclipseProjectImporter;
 import org.ossmeter.repository.model.github.importer.GitHubImporter;
 import org.ossmeter.repository.model.importer.exception.WrongUrlException;
+import org.ossmeter.repository.model.sourceforge.importer.SourceforgeProjectImporter;
 
 public class ProjectImporter {
 
 	
 //	TODO: This should be smarter and return helpful error messages
-	public Project importProject(String url, Platform platform) {
+	public Project importProject(String url, Platform platform) throws WrongUrlException {
 		Project p = null;
 		
 		url = url.replace("http://", "");
@@ -64,7 +65,15 @@ public class ProjectImporter {
 				p = importer.importProject(uName+"/" + pName, Platform.getInstance());
 			} catch (WrongUrlException e) {
 				e.printStackTrace(); // FIXME better handling
-				return null;
+				throw e;
+			}
+		} else if(url.contains("sourceforge.net")) {
+			SourceforgeProjectImporter importer = new SourceforgeProjectImporter();
+			try {
+				p = importer.importProjectByUrl(url, platform);
+			} catch (WrongUrlException e) {
+				e.printStackTrace();
+				throw e;
 			}
 		}
 		

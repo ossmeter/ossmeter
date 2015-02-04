@@ -768,6 +768,7 @@ public class SourceforgeProjectImporter implements IImporter {
 			logger.info("Project " + projectId + " is imported");
 		} catch (Exception e){
 			logger.error("Project: " + projectId + " unknow error during import data.");
+			return null;
 		}
 		
 	

@@ -38,7 +38,7 @@ public class TestProjectImporter extends TestAbstractResource {
 	}
 	
 	@Test
-	public void testEclipse() {
+	public void testEclipse() throws Exception {
 		ProjectImporter importer = new ProjectImporter();
 		Project p = importer.importProject("https://projects.eclipse.org/projects/modeling.epsilon", platform);
 		
@@ -50,7 +50,7 @@ public class TestProjectImporter extends TestAbstractResource {
 	}
 	
 	@Test
-	public void testGitHub() {
+	public void testGitHub() throws Exception {
 		ProjectImporter importer = new ProjectImporter();
 		Project p = importer.importProject("https://github.com/jrwilliams/gif-hook", platform);
 		
