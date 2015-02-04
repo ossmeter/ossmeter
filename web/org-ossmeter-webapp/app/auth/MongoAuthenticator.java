@@ -382,7 +382,6 @@ public class MongoAuthenticator {
 			users.getProjects().sync();
 
 			p = users.getProjects().findOneByIdentifier(projectId);
-			System.out.println("starred: " + p.getStars());
 			u.getWatching().add(p);
 			u.setEmail(u.getEmail()); // Force dirtying
 			users.getUsers().sync();
@@ -409,7 +408,6 @@ public class MongoAuthenticator {
 		if (toRemove != null) {
 			u.getWatching().remove(toRemove);
 			p.setStars(p.getStars() - 1);
-			System.out.println("unstarred: " + p.getStars());
 			u.setEmail(u.getEmail()); // Force dirtying
 		}
 
