@@ -55,7 +55,7 @@ public class GitHubImporterTest {
 
 	@Test	
 	public void testImportByUrlAndUpdate() throws WrongUrlException {
-		GitHubRepository project = im.importProjectByUrl("https://github.com/facebook/react", platform);
+		GitHubRepository project = im.importProjectByUrl("https://github.com/Igalia/libreplan", platform);
 		
 		String pr = project.getDbObject().toString();
 		
