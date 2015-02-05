@@ -4,6 +4,30 @@
 <section>
 	<div class="container box">
 	    <div class="row col-md-12">
+		    <h2>Projects In Error</h2>
+		</div>
+		<div class="row col-md-12">
+		    <table class="table" id="tblprojectserror">
+		    	<thead>
+		    		<tr>
+		    			<th>ID</th>
+		    			<th>Name</th>
+		    			<th>Last Executed</th>
+		    			<th>In Error State</th>
+		    			<th>Analysed</th>
+		    			<th>Monitor</th>
+		    		</tr>
+		    	</thead>
+		    	<tbody >
+		    		
+		    	</tbody>
+		    </table>
+		</div>
+   </div>
+</section>
+<section>
+	<div class="container box">
+	    <div class="row col-md-12">
 		    <h2>Error Messages</h2>
 		    <div id="err_tbl"></div>
 		</div>
@@ -21,6 +45,21 @@
 			var tbl = metvis.Table("#err_tbl", vis);
 			tbl.draw();
 			$("#err_tbl > table").addClass("table");
+		});
+		$.getJSON("@routes.Admin.adminApi("projects/error")", function(data) {
+			console.log(data);
+			$.each(data, function(project) {
+				project = data[project];
+
+				var tr = $('<tr>');
+				tr.append($('<td>').text(project.id));
+				tr.append($('<td>').text(project.name));
+				tr.append($('<td>').text(project.lastExecuted));
+				tr.append($('<td>').text(project.inErrorState));
+				tr.append($('<td>').text(project.analysed));
+				tr.append($('<td>').text(project.monitor));
+				$("#tblprojectserror").find('tbody').append(tr);
+			});
 		});
 	})
 </script>
