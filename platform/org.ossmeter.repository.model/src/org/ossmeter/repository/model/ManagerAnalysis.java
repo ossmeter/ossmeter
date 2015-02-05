@@ -6,44 +6,47 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Davide Di Ruscio - Implementation.
+ *    Davide Di Ruscio - Implementation,
+ *    Juri Di Rocco - Implementation.
  *******************************************************************************/
 package org.ossmeter.repository.model;
 
+import com.mongodb.*;
 import java.util.*;
 import com.googlecode.pongo.runtime.*;
 import com.googlecode.pongo.runtime.querying.*;
 
+// protected region custom-imports on begin
+// protected region custom-imports end
 
 public class ManagerAnalysis extends Pongo {
 	
+	
 	// protected region custom-fields-and-methods on begin
-	public static ManagerAnalysis create(String manager, String method, String project, Date analysis, Date execution){
+	public static ManagerAnalysis create(String manager, String method, String project, Date analysis, Date execution) {
 		ManagerAnalysis m = new ManagerAnalysis();
 		m.setManager(manager);
 		m.setMethod(method);
 		m.setProjectId(project);
 		m.setAnalysisDate(analysis);
 		m.setExecutionDate(execution);
-		
+
 		return m;
 	}
 	// protected region custom-fields-and-methods end
 	
-	
-	
 	public ManagerAnalysis() { 
 		super();
-		MANAGER.setOwningType("org.ossmeter.repository.model.MetricAnalysis");
-		METHOD.setOwningType("org.ossmeter.repository.model.MetricAnalysis");
-		PROJECTID.setOwningType("org.ossmeter.repository.model.MetricAnalysis");
-		ANALYSISDATE.setOwningType("org.ossmeter.repository.model.MetricAnalysis");
-		EXECUTIONDATE.setOwningType("org.ossmeter.repository.model.MetricAnalysis");
-		MILLISTAKEN.setOwningType("org.ossmeter.repository.model.MetricAnalysis");
+		MANAGER.setOwningType("org.ossmeter.repository.model.ManagerAnalysis");
+		METHOD.setOwningType("org.ossmeter.repository.model.ManagerAnalysis");
+		PROJECTID.setOwningType("org.ossmeter.repository.model.ManagerAnalysis");
+		ANALYSISDATE.setOwningType("org.ossmeter.repository.model.ManagerAnalysis");
+		EXECUTIONDATE.setOwningType("org.ossmeter.repository.model.ManagerAnalysis");
+		MILLISTAKEN.setOwningType("org.ossmeter.repository.model.ManagerAnalysis");
 	}
 	
 	public static StringQueryProducer MANAGER = new StringQueryProducer("manager"); 
-	public static StringQueryProducer METHOD = new StringQueryProducer("method");
+	public static StringQueryProducer METHOD = new StringQueryProducer("method"); 
 	public static StringQueryProducer PROJECTID = new StringQueryProducer("projectId"); 
 	public static StringQueryProducer ANALYSISDATE = new StringQueryProducer("analysisDate"); 
 	public static StringQueryProducer EXECUTIONDATE = new StringQueryProducer("executionDate"); 

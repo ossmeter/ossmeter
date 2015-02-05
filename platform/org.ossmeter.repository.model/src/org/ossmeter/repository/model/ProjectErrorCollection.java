@@ -15,28 +15,28 @@ import com.googlecode.pongo.runtime.*;
 import java.util.*;
 import com.mongodb.*;
 
-public class ManagerAnalysisCollection extends PongoCollection<ManagerAnalysis> {
+public class ProjectErrorCollection extends PongoCollection<ProjectError> {
 	
-	public ManagerAnalysisCollection(DBCollection dbCollection) {
+	public ProjectErrorCollection(DBCollection dbCollection) {
 		super(dbCollection);
 	}
 	
-	public Iterable<ManagerAnalysis> findById(String id) {
-		return new IteratorIterable<ManagerAnalysis>(new PongoCursorIterator<ManagerAnalysis>(this, dbCollection.find(new BasicDBObject("_id", id))));
+	public Iterable<ProjectError> findById(String id) {
+		return new IteratorIterable<ProjectError>(new PongoCursorIterator<ProjectError>(this, dbCollection.find(new BasicDBObject("_id", id))));
 	}
 	
 	
 	@Override
-	public Iterator<ManagerAnalysis> iterator() {
-		return new PongoCursorIterator<ManagerAnalysis>(this, dbCollection.find());
+	public Iterator<ProjectError> iterator() {
+		return new PongoCursorIterator<ProjectError>(this, dbCollection.find());
 	}
 	
-	public void add(ManagerAnalysis managerAnalysis) {
-		super.add(managerAnalysis);
+	public void add(ProjectError projectError) {
+		super.add(projectError);
 	}
 	
-	public void remove(ManagerAnalysis managerAnalysis) {
-		super.remove(managerAnalysis);
+	public void remove(ProjectError projectError) {
+		super.remove(projectError);
 	}
 	
 }

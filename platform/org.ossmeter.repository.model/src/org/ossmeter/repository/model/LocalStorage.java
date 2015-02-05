@@ -11,8 +11,8 @@
  *******************************************************************************/
 package org.ossmeter.repository.model;
 
-import com.googlecode.pongo.runtime.*;
-import com.googlecode.pongo.runtime.querying.*;
+import com.googlecode.pongo.runtime.Pongo;
+import com.googlecode.pongo.runtime.querying.StringQueryProducer;
 
 // protected region custom-imports on begin
 // protected region custom-imports end

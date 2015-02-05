@@ -11,7 +11,7 @@
  *******************************************************************************/
 package org.ossmeter.repository.model;
 
-import com.googlecode.pongo.runtime.querying.*;
+import com.googlecode.pongo.runtime.querying.StringQueryProducer;
 
 
 public class Company extends NamedElement {

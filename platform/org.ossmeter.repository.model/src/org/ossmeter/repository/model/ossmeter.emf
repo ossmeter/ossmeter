@@ -14,8 +14,21 @@ class ProjectRepository extends NamedElement {
   val MetricAnalysis[*] metricAnalysis;
   val ManagerAnalysis[*] managerAnalysis;
   val Company[*] companies;
+  val ProjectError[*] errors;
 }
 
+@customize
+class ProjectError {
+	attr Date date;
+	attr String dateForError;
+	attr String projectId;
+	attr String projectName;
+	attr String workerIdentifier;
+	attr String clazz;
+	attr String stackTrace;
+}
+
+@customize
 class ManagerAnalysis {
 	attr String manager;
 	attr String method;
@@ -59,7 +72,7 @@ class Project extends NamedElement {
   attr String description;
   attr int year;
   attr boolean active = true;
-  attr String lastExecuted;
+  attr String homePage;
   ref Project parent;
   val VcsRepository[*] vcsRepositories;
   val CommunicationChannel[*] communicationChannels;
@@ -68,7 +81,6 @@ class Project extends NamedElement {
   ref License[*] licenses;
   val MetricProvider[*] metricProviderData;
   val ProjectExecutionInformation executionInformation;
-  attr String homePage;
   ref Company[*] companies;
 }
 
@@ -79,7 +91,8 @@ class MetricProviderExecution {
   attr String lastExecuted = "-1";
 }
 
-class ProjectExecutionInformation {
+class ProjectExecutionInformation { 
+  attr boolean analysed = false;
   attr String lastExecuted;
   attr boolean monitor = true;
   attr boolean inErrorState = false;

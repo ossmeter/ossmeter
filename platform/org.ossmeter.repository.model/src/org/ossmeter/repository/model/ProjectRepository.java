@@ -33,6 +33,7 @@ public class ProjectRepository extends PongoDB {
 	protected MetricAnalysisCollection metricAnalysis = null;
 	protected ManagerAnalysisCollection managerAnalysis = null;
 	protected CompanyCollection companies = null;
+	protected ProjectErrorCollection errors = null;
 	
 	
 	
@@ -71,13 +72,17 @@ public class ProjectRepository extends PongoDB {
 	public MetricAnalysisCollection getMetricAnalysis() {
 		return metricAnalysis;
 	}
-
+	
 	public ManagerAnalysisCollection getManagerAnalysis() {
 		return managerAnalysis;
 	}
 	
 	public CompanyCollection getCompanies() {
 		return companies;
+	}
+	
+	public ProjectErrorCollection getErrors() {
+		return errors;
 	}
 	
 	
@@ -106,5 +111,7 @@ public class ProjectRepository extends PongoDB {
 		pongoCollections.add(managerAnalysis);
 		companies = new CompanyCollection(db.getCollection("companies"));
 		pongoCollections.add(companies);
+		errors = new ProjectErrorCollection(db.getCollection("errors"));
+		pongoCollections.add(errors);
 	}
 }
