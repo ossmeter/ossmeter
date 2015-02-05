@@ -24,6 +24,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.ossmeter.platform.AbstractFactoidMetricProvider;
+import org.ossmeter.platform.Configuration;
 import org.ossmeter.platform.Date;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.Platform;
@@ -34,6 +35,7 @@ import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.LocalStorage;
 import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.ProjectError;
 import org.ossmeter.repository.model.ProjectExecutionInformation;
 import org.ossmeter.repository.model.VcsRepository;
 
@@ -120,11 +122,17 @@ public class ProjectExecutor implements Runnable {
 			logger.info("Date: " + date + ", project: " + project.getName());
 			
 			ProjectDelta delta = new ProjectDelta(project, date, platform);
-			boolean createdOk = delta.create();
-
-			if (!createdOk) {
+			
+			try {
+				delta.create();
+			} catch (Exception e) {
 				project.getExecutionInformation().setInErrorState(true);
 				platform.getProjectRepositoryManager().getProjectRepository().sync();
+				
+				// Log in DB
+				ProjectError error = ProjectError.create(date.toString(), "ProjectExecutor: Delta creation", project.getShortName(), project.getName(), e, Configuration.getInstance().getSlaveIdentifier());
+				platform.getProjectRepositoryManager().getProjectRepository().getErrors().add(error);
+				platform.getProjectRepositoryManager().getProjectRepository().getErrors().sync();
 				
 				logger.error("Project delta creation failed. Aborting.");
 				return;
@@ -174,8 +182,8 @@ public class ProjectExecutor implements Runnable {
 			
 		}
 		
-		if (!project.getExecutionInformation().getInErrorState() && !project.getAnalysed()) {
-			project.setAnalysed(true);
+		if (!project.getExecutionInformation().getInErrorState() && !project.getExecutionInformation().getAnalysed()) {
+			project.getExecutionInformation().setAnalysed(true);
 		}
 		
 		logger.info("Project execution complete. In error state: " + project.getExecutionInformation().getInErrorState());

@@ -34,6 +34,7 @@ import org.ossmeter.repository.model.MetricAnalysis;
 import org.ossmeter.repository.model.MetricProviderExecution;
 import org.ossmeter.repository.model.MetricProviderType;
 import org.ossmeter.repository.model.Project;
+import org.ossmeter.repository.model.ProjectError;
 
 import com.mongodb.Mongo;
 
@@ -124,7 +125,6 @@ public class MetricListExecutor implements Runnable {
 
 			// Now execute
 			try {
-				
 				if (m.appliesTo(project)) {
 					if (m instanceof ITransientMetricProvider) {
 						((ITransientMetricProvider) m).measure(project, delta, ((ITransientMetricProvider) m).adapt(platform.getMetricsRepository(project).getDb()));
@@ -150,6 +150,12 @@ public class MetricListExecutor implements Runnable {
 				logger.error("Exception thrown during metric provider execution ("+m.getShortIdentifier()+").", e);
 				project.getExecutionInformation().setInErrorState(true);
 				platform.getProjectRepositoryManager().getProjectRepository().sync();
+				
+				// Log in DB
+				ProjectError error = ProjectError.create(date.toString(), "MetricListExecutor", projectId, project.getName(), e, Configuration.getInstance().getSlaveIdentifier());
+				platform.getProjectRepositoryManager().getProjectRepository().getErrors().add(error);
+				platform.getProjectRepositoryManager().getProjectRepository().getErrors().sync();
+				
 				break;
 			}
 			

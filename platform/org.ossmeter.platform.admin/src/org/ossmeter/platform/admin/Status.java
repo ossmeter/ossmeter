@@ -59,7 +59,7 @@ public class Status extends AbstractApiResource {
 		} else if("projects".equals(what)) {
 			DBCollection col = mongo.getDB("ossmeter").getCollection("projects");
 			
-			BasicDBObject analysedQuery = new BasicDBObject("executionInformation.analysed", true);
+			BasicDBObject analysedQuery = new BasicDBObject("analysed", true);
 			BasicDBObject inErrorQuery = new BasicDBObject("executionInformation.inErrorState", true);
 			
 			long numProjects = col.count();
@@ -82,6 +82,23 @@ public class Status extends AbstractApiResource {
 				if (rss != null) node.put("isMaster", rss.isMaster(sa));
 				res.add(node);
 			}
+			return Util.createJsonRepresentation(res);
+		} else if ("error".equals(what)) {
+			DBCollection col = mongo.getDB("ossmeter").getCollection("errors");
+			ArrayNode res = mapper.createArrayNode();
+			
+			for (DBObject o : col.find()) {
+				ObjectNode n = mapper.createObjectNode();
+				n.put("date", o.get("date").toString());
+				n.put("dateForError", o.get("dateForError").toString());
+				n.put("clazz", o.get("clazz").toString());
+				n.put("projectId", o.get("projectId").toString());
+				n.put("projectName", o.get("projectName").toString());
+				n.put("stackTrace", o.get("stackTrace").toString());
+				n.put("workerIdentifier", o.get("workerIdentifier").toString());
+				res.add(n);
+			}
+			
 			return Util.createJsonRepresentation(res);
 		}
 		

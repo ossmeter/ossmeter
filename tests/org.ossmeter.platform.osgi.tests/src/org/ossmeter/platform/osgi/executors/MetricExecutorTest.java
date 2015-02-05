@@ -41,7 +41,7 @@ public class MetricExecutorTest {
 		Project project = new Project();
 		project.setName("debug-project");
 		String startDate = new Date().addDays(-2).toString();
-		project.setLastExecuted(startDate);
+		project.getExecutionInformation().setLastExecuted(startDate);
 		
 		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
 		platform.getProjectRepositoryManager().getProjectRepository().getProjects().sync();
@@ -67,13 +67,13 @@ public class MetricExecutorTest {
 		assertEquals(1,platform.getMetricProviderManager().getMetricProviders().size());
 		
 		Project project = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByName("debug-project");
-		String startDate = project.getLastExecuted();
+		String startDate = project.getExecutionInformation().getLastExecuted();
 
 		ProjectExecutor pe = new ProjectExecutor(platform, project);
 		pe.run();
 		
 		assertTrue(project.getExecutionInformation().getInErrorState());
-		assertEquals(startDate, project.getLastExecuted());
+		assertEquals(startDate, project.getExecutionInformation().getLastExecuted());
 		
 		// 
 	}

@@ -9,5 +9,6 @@ Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.repository.model
 Require-Bundle: org.eclipse.core.runtime,
- com.googlecode.pongo.runtime
+ com.googlecode.pongo.runtime,
+ org.apache.commons.lang3
 Bundle-ActivationPolicy: lazy

@@ -37,9 +37,10 @@ public class ProjectSyncTest {
 		
 		
 		ProjectDelta delta = new ProjectDelta(project, date, platform);
-		boolean createdOk = delta.create();
 		
-		if (!createdOk) {
+		try {
+			delta.create();
+		} catch (Exception e) {
 			project.getExecutionInformation().setInErrorState(true);
 			platform.getProjectRepositoryManager().getProjectRepository().sync();
 			

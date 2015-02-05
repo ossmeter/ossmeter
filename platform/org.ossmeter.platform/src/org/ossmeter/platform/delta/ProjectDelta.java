@@ -55,7 +55,7 @@ public class ProjectDelta {
 	// I.e. if just one info source throws an exception, can we still execute metrics
 	// for the others? I think not. Next time we run the project we'll re-create
 	// some deltas unnecessarily.
-	public boolean create() {
+	public void create() throws Exception{
 		try {
 			long startVcsDelta = System.currentTimeMillis();
 			vcsDelta = new VcsProjectDelta(project, date, vcsManager);
@@ -72,9 +72,8 @@ public class ProjectDelta {
 			
 		} catch (Exception e) {
 			logger.error("Delta creation failed.", e);
-			return false;
+			throw e;
 		}
-		return true;
 	}
 	
 	public Date getDate() {

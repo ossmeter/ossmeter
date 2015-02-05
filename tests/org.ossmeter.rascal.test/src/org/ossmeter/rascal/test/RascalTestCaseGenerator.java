@@ -147,49 +147,54 @@ public class RascalTestCaseGenerator implements IApplication  {
 						moreDatesAvailable |= dateIterator.hasNext();
 						
 						ProjectDelta delta = new ProjectDelta(project, date, platform);
-						if (delta.create() && !delta.getVcsDelta().getRepoDeltas().isEmpty()) {
-							System.out.println("\nProject: " + project.getShortName() + ", date: " + date);
-							
-							File dir = new File(testDataDir, project.getName() + "/" + encode(repoURL) + "/" + date.toString());
-							dir.mkdirs();
-							
-							MetricListExecutor ex = new MetricListExecutor(project.getShortName(), delta, date);
-							ex.setMetricList(metricProviders);
-							ex.run();
-							
-							IValue rascalDelta = RascalMetricProvider.computeDelta(project, delta, manager, logger);
-							IValue rascalASTs = RascalMetricProvider.computeAsts(project, delta, manager, logger);
-							IValue rascalM3s = RascalMetricProvider.computeM3(project, delta, manager, logger);
-							
-							handleNewValue(new File(dir, "delta.bin"), rascalDelta, deltaTypes, eval, logger);
-							handleNewValue(new File(dir, "asts.bin"), rascalASTs, extractedTypes, eval, logger);
-							handleNewValue(new File(dir, "m3s.bin"), rascalM3s, extractedTypes, eval, logger);
-							
-							for (IMetricProvider mp : metricProviders) {
-								IValue result = null;
+						try {
+							delta.create();	
+							if (!delta.getVcsDelta().getRepoDeltas().isEmpty()) {
+								System.out.println("\nProject: " + project.getShortName() + ", date: " + date);
 								
-								if (mp instanceof RascalMetricProvider) {
-									result = ((RascalMetricProvider) mp).getMetricResult(project, mp, manager);
-								}
-								else if (mp instanceof RascalMetricHistoryWrapper) {
-									// ignore because its automatically derived
-								}
-								else if (mp instanceof RascalFactoidProvider) {
-									RascalFactoidProvider rfp = (RascalFactoidProvider) mp;
-									result = rfp.getMeasuredFactoid(rfp.adapt(platform.getMetricsRepository(project).getDb()), eval.getValueFactory());								
-								} 
-								else {
-									logger.warn("Unknown metric provider: " + mp.getIdentifier());
-									continue;
+								File dir = new File(testDataDir, project.getName() + "/" + encode(repoURL) + "/" + date.toString());
+								dir.mkdirs();
+								
+								MetricListExecutor ex = new MetricListExecutor(project.getShortName(), delta, date);
+								ex.setMetricList(metricProviders);
+								ex.run();
+								
+								IValue rascalDelta = RascalMetricProvider.computeDelta(project, delta, manager, logger);
+								IValue rascalASTs = RascalMetricProvider.computeAsts(project, delta, manager, logger);
+								IValue rascalM3s = RascalMetricProvider.computeM3(project, delta, manager, logger);
+								
+								handleNewValue(new File(dir, "delta.bin"), rascalDelta, deltaTypes, eval, logger);
+								handleNewValue(new File(dir, "asts.bin"), rascalASTs, extractedTypes, eval, logger);
+								handleNewValue(new File(dir, "m3s.bin"), rascalM3s, extractedTypes, eval, logger);
+								
+								for (IMetricProvider mp : metricProviders) {
+									IValue result = null;
+									
+									if (mp instanceof RascalMetricProvider) {
+										result = ((RascalMetricProvider) mp).getMetricResult(project, mp, manager);
+									}
+									else if (mp instanceof RascalMetricHistoryWrapper) {
+										// ignore because its automatically derived
+									}
+									else if (mp instanceof RascalFactoidProvider) {
+										RascalFactoidProvider rfp = (RascalFactoidProvider) mp;
+										result = rfp.getMeasuredFactoid(rfp.adapt(platform.getMetricsRepository(project).getDb()), eval.getValueFactory());								
+									} 
+									else {
+										logger.warn("Unknown metric provider: " + mp.getIdentifier());
+										continue;
+									}
+									
+									System.out.println(mp.getFriendlyName());
+									System.out.println("" + result);
+									
+									handleNewValue(new File(dir, mp.getIdentifier()), result, null, eval, logger);
 								}
 								
-								System.out.println(mp.getFriendlyName());
-								System.out.println("" + result);
-								
-								handleNewValue(new File(dir, mp.getIdentifier()), result, null, eval, logger);
+								deltasProcessed.put(repoURL, deltasProcessed.get(repoURL) + 1);
 							}
+						} catch (Exception e) {
 							
-							deltasProcessed.put(repoURL, deltasProcessed.get(repoURL) + 1);
 						}
 					}
 				}
