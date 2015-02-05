@@ -80,6 +80,11 @@ public class Admin extends Controller {
 	}
 
 	@Restrict(@Group(MongoAuthenticator.ADMIN_ROLE))
+	public static Result errors() {
+		return ok(views.html.admin.errors.render());
+	}
+
+	@Restrict(@Group(MongoAuthenticator.ADMIN_ROLE))
 	public static Result offerInvite(String email) {
 
 		DB db = MongoAuthenticator.getUsersDb();
@@ -183,6 +188,22 @@ public class Admin extends Controller {
 
         db.getMongo().close();
         return ok(vis.toString()).as("application/json");
+	}
+
+	@Restrict(@Group(MongoAuthenticator.ADMIN_ROLE))
+	public static Result viewMailingList() {
+		DB db = MongoAuthenticator.getUsersDb();
+        Users users = new Users(db);
+
+        List<MailingListItem> members = new ArrayList<MailingListItem>();
+
+        for (MailingListItem m : users.getMailingList()) {
+        	members.add(m);
+        }
+
+        db.getMongo().close();
+
+        return ok(views.html.admin.mailinglist.render(members));
 	}
 
 	/**

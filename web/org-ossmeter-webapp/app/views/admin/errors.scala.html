@@ -1,0 +1,27 @@
+
+@main(Messages("ossmeter.navigation.admin"), "admin") {
+@_nav()
+<section>
+	<div class="container box">
+	    <div class="row col-md-12">
+		    <h2>Error Messages</h2>
+		    <div id="err_tbl"></div>
+		</div>
+	</div>
+</section>
+
+<script src="@routes.Admin.jsRoutes" defer="defer"></script>
+<script type="text/javascript">
+	$(function() {
+		$.getJSON("@routes.Admin.adminApi("status/error")", function(data) {
+			var vis = {};
+			vis.type="Table";
+			vis.datatable = data;
+			console.log(data);
+			var tbl = metvis.Table("#err_tbl", vis);
+			tbl.draw();
+			$("#err_tbl > table").addClass("table");
+		});
+	})
+</script>
+}

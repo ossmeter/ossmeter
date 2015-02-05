@@ -30,7 +30,8 @@
       </div>
     }
       <!-- Main hero unit for a primary marketing message or call to action -->
-      <div class="container" style="margin-top:150px;margin-bottom:150px;">
+      <section>
+      <div class="container box" style="padding-top:150px;padding-bottom:150px;">
         <div class="row">
             <div class="col-md-12 center">
                 <img src="@routes.Assets.at("img/osslogo_large.png")" alt="OSSMETER logo" style="max-width: 100%" />  
@@ -41,7 +42,7 @@
             <div class="col-md-6 col-md-offset-3 center">
                 <a href="@routes.Application.login()" class="btn btn-lg btn-primary" type="button">Sign In*</a>
                 @*<a href="@routes.DemoApplication.index()" class="btn btn-lg btn-primary" type="button">Demo</a>*@
-                <p><small>*We are currently in a closed beta phase.<p> 
+                <p><small>*We are currently in a closed beta phase.</p> 
                 <p>We'll very shortly be releasing a demo for you to play with. If you'd like to be notified about when this demo will be available, just add your email below. Any communication from us will be minimal, no spam, and we won't share your email address with anyone.</small></p>
             </div>
         </div>
@@ -64,7 +65,7 @@
             </div>
         </div>
       </div> <!-- container -->
-
+</section>
     <div class="banner">
         <div class="container blank">
             <div class="row">
@@ -91,6 +92,62 @@
             </div>
         </div>
     </div>
+
+    <section>
+        <div class="container box">
+            <div class="row">
+                <div class="col-md-8">
+                    <h1>Discover</h1>
+                    <p>OSSMETER monitors the source code, issue trackers, and communication channels of open-source software (OSS). It's goal is to help you make decisions. If you're looking to adopt a particular OSS project, you can take a look at the metrics for the project to check whether your requirements will be met. E.g. if you care about having questions answered quickly, OSSMETER will tell you the average response time on the communication channels. If you're a member of an OSS project you can find out which aspects of your project are doing well and which could maybe do with a bit of improvement. </p>
+                </div>
+                <div class="col-md-4">
+                    <img src="@routes.Assets.at("img/demo/atl.png")"  style="width:100%; max-width:350px" />
+                </div>
+            </div>
+            <div class="row">
+
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="container box">
+            <div class="row">
+                <div class="col-md-8">
+                    <h1>Compare</h1>
+                    <p>When adopting OSS, there can be many projects that do similar jobs, and understanding which would be the best fit for you is a big challenge. To help with this selection process, we allow users to compare selected projects on the metrics that matter to them.</p>
+                </div>
+                <div class="col-md-4">
+                    <img src="@routes.Assets.at("img/demo/compare.png")"  style="width:100%; max-width:350px" />
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="container box">
+            <div class="row">
+                <div class="col-md-8">
+                    <h1>Adopt</h1>
+                    <p></p>
+                </div>
+                <div class="col-md-4">
+                    <img src="@routes.Assets.at("img/star.png")"  style="width:100%; max-width:350px" />
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="container box">
+            <div class="row">
+                <div class="col-md-8">
+                    <h1>Monitor</h1>
+                    <p>Users have a personal dashboard - a place for you to keep track of the projects and metrics that matter the most to you. You can set up alerts for specific metrics in order to be notified when that metric exceeds or falls below a given threshold. This can help you migrate away from a project if its quality begins to decline, or if you're a developer, help you find areas for improvement.</p>
+                </div>
+                <div class="col-md-4">
+                    <img src="@routes.Assets.at("img/grids.png")"  style="width:100%; max-width:350px" />
+                </div>
+            </div>
+        </div>
+    </section>
 
     @*<section>
         <div class="container box">
