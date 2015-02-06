@@ -20,7 +20,8 @@ public class Users extends PongoDB {
 	protected LogCollection logs = null;
 	protected MailingListItemCollection mailingList = null;
 	protected NewsItemCollection news = null;
-	
+	protected ErrorCollection errors = null;
+
 	public InvitationRequestCollection getInvites() {
 		return invites;
 	}
@@ -56,6 +57,9 @@ public class Users extends PongoDB {
 	public NewsItemCollection getNews() {
 		return news;
 	}	
+	public ErrorCollection getErrors() {
+		return errors;
+	}	
 	
 	@Override
 	public void setDb(DB db) {
@@ -78,5 +82,7 @@ public class Users extends PongoDB {
 		pongoCollections.add(mailingList);
 		news = new NewsItemCollection(db.getCollection("news"));
 		pongoCollections.add(news);
+		errors = new ErrorCollection(db.getCollection("errors"));
+		pongoCollections.add(errors);
 	}
 }

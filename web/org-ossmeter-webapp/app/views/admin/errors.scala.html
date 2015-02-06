@@ -28,8 +28,16 @@
 <section>
 	<div class="container box">
 	    <div class="row col-md-12">
-		    <h2>Error Messages</h2>
-		    <div id="err_tbl"></div>
+		    <h2>Web App Error Messages</h2>
+		    <div id="web_err_tbl"></div>
+		</div>
+	</div>
+</section>
+<section>
+	<div class="container box">
+	    <div class="row col-md-12">
+		    <h2>Platform Error Messages</h2>
+		    <div id="platform_err_tbl"></div>
 		</div>
 	</div>
 </section>
@@ -37,14 +45,24 @@
 <script src="@routes.Admin.jsRoutes" defer="defer"></script>
 <script type="text/javascript">
 	$(function() {
+		adminJSRoutes.controllers.Admin.getWebAppErrors().ajax().success(function(data) {
+                    var vis = {};
+					vis.type="Table";
+					vis.datatable = data;
+					var tbl = metvis.Table("#web_err_tbl", vis);
+					tbl.draw();
+					$("#web_err_tbl > table").addClass("table");
+                }).error(function(result) {
+                    console.log("Error:" + result);
+                });
+
 		$.getJSON("@routes.Admin.adminApi("status/error")", function(data) {
 			var vis = {};
 			vis.type="Table";
 			vis.datatable = data;
-			console.log(data);
-			var tbl = metvis.Table("#err_tbl", vis);
+			var tbl = metvis.Table("#platform_err_tbl", vis);
 			tbl.draw();
-			$("#err_tbl > table").addClass("table");
+			$("#platform_err_tbl > table").addClass("table");
 		});
 		$.getJSON("@routes.Admin.adminApi("projects/error")", function(data) {
 			console.log(data);

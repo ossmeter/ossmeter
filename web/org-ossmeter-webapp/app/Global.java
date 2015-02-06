@@ -13,6 +13,7 @@ import auth.MongoAuthenticator;
 
 import java.lang.reflect.Method;
 
+import play.mvc.*;
 import play.Application;
 import play.GlobalSettings;
 import play.mvc.Result;
@@ -32,7 +33,13 @@ import play.mvc.Result;
 import static play.libs.F.Function;
 import static play.libs.F.Promise;
 
+import play.mvc.Http.*;
+import static play.mvc.Results.*;
+
 import model.*;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import com.mongodb.Mongo;
 import com.mongodb.DBCollection;
@@ -191,5 +198,37 @@ public class Global extends GlobalSettings {
 			},
 			Akka.system().dispatcher()
 			);
+	}
+
+	@Override
+	public Promise<Result> onError(RequestHeader request, Throwable t) {
+		DB db = MongoAuthenticator.getUsersDb();
+    	Users users = new Users(db);
+
+    	model.Error e = new model.Error();
+    	e.setDate(new java.util.Date());
+    	e.setUri(request.uri());
+    	e.setRemoteAddress(request.remoteAddress());
+    	e.setMethod(request.method());
+
+    	StringWriter sw = new StringWriter();
+    	PrintWriter pw = new PrintWriter(sw);
+    	t.printStackTrace(pw);
+    	e.setMessage(sw.toString());
+
+    	users.getErrors().add(e);
+    	users.getErrors().sync();
+    	db.getMongo().close();
+
+		return Promise.<Result>pure(
+			internalServerError(views.html.error.render())
+		);
+	}
+
+	@Override
+	public Promise<Result> onHandlerNotFound(RequestHeader request) {
+		return Promise.<Result>pure(
+			notFound(views.html.notFound404.render())
+		);
 	}
 }

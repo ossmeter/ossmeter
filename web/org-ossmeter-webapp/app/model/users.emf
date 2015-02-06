@@ -11,6 +11,7 @@ class Users {
 	val Log[*] logs;
 	val MailingListItem[*] mailingList;
 	val NewsItem[*] news;
+	val Error[*] errors;
 }
 
 enum NewsItemType {
@@ -18,6 +19,15 @@ enum NewsItemType {
 }
 enum NewsItemStatus {
 	DRAFT; PENDING;
+}
+
+class Error {
+	@searchable
+	attr Date date;
+	attr String uri;
+	attr String remoteAddress;
+	attr String method;
+	attr String message;
 }
 
 class NewsItem {

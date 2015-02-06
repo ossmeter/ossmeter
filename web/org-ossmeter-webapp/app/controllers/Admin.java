@@ -151,6 +151,28 @@ public class Admin extends Controller {
 	}
 
 	@Restrict(@Group(MongoAuthenticator.ADMIN_ROLE))
+	public static Result getWebAppErrors() {
+		DB db = MongoAuthenticator.getUsersDb();
+        Users users = new Users(db);
+
+		final DateFormat dtf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        
+        ObjectMapper mapper = new ObjectMapper();
+        ArrayNode res = mapper.createArrayNode();
+        for (model.Error e :  users.getErrors()){
+        	ObjectNode entry = mapper.createObjectNode();
+        	entry.put("Date", dtf.format(e.getDate()));
+        	entry.put("URI", e.getUri());
+        	entry.put("Method", e.getMethod());
+        	entry.put("Remote Address", e.getRemoteAddress());
+        	entry.put("Message", e.getMessage());
+        	res.add(entry);
+        }
+        db.getMongo().close();
+        return ok(res.toString()).as("application/json");
+	}
+
+	@Restrict(@Group(MongoAuthenticator.ADMIN_ROLE))
 	public static Result getUsagePlot(String email) {
 		DB db = MongoAuthenticator.getUsersDb();
         Users users = new Users(db);
@@ -403,7 +425,8 @@ public class Admin extends Controller {
 					controllers.routes.javascript.Admin.getUsagePlot(),
 					controllers.routes.javascript.Admin.getPageViewStats(),
 					controllers.routes.javascript.Admin.getPageViewPlot(),
-					controllers.routes.javascript.Admin.adminApi()
+					controllers.routes.javascript.Admin.adminApi(),
+					controllers.routes.javascript.Admin.getWebAppErrors()
 					)
 				)
 				.as("text/javascript");
