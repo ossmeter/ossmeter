@@ -27,27 +27,15 @@ public class ProjectExecutionInformation extends Pongo {
 		super();
 		dbObject.put("storage", new LocalStorage().getDbObject());
 		dbObject.put("metricProviderData", new BasicDBList());
-		ANALYSED.setOwningType("org.ossmeter.repository.model.ProjectExecutionInformation");
 		LASTEXECUTED.setOwningType("org.ossmeter.repository.model.ProjectExecutionInformation");
 		MONITOR.setOwningType("org.ossmeter.repository.model.ProjectExecutionInformation");
 		INERRORSTATE.setOwningType("org.ossmeter.repository.model.ProjectExecutionInformation");
 	}
 	
-	public static StringQueryProducer ANALYSED = new StringQueryProducer("analysed"); 
 	public static StringQueryProducer LASTEXECUTED = new StringQueryProducer("lastExecuted"); 
 	public static StringQueryProducer MONITOR = new StringQueryProducer("monitor"); 
 	public static StringQueryProducer INERRORSTATE = new StringQueryProducer("inErrorState"); 
 	
-	
-	public boolean getAnalysed() {
-		return parseBoolean(dbObject.get("analysed")+"", false);
-	}
-	
-	public ProjectExecutionInformation setAnalysed(boolean analysed) {
-		dbObject.put("analysed", analysed);
-		notifyChanged();
-		return this;
-	}
 	public String getLastExecuted() {
 		return parseString(dbObject.get("lastExecuted")+"", "");
 	}

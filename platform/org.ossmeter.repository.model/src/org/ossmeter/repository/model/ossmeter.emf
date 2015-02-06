@@ -73,6 +73,7 @@ class Project extends NamedElement {
   attr int year;
   attr boolean active = true;
   attr String homePage;
+  attr boolean analysed = false;
   ref Project parent;
   val VcsRepository[*] vcsRepositories;
   val CommunicationChannel[*] communicationChannels;
@@ -92,7 +93,6 @@ class MetricProviderExecution {
 }
 
 class ProjectExecutionInformation { 
-  attr boolean analysed = false;
   attr String lastExecuted;
   attr boolean monitor = true;
   attr boolean inErrorState = false;

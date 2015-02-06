@@ -12,7 +12,9 @@
 package org.ossmeter.repository.model;
 
 import com.mongodb.*;
+
 import java.util.*;
+
 import com.googlecode.pongo.runtime.*;
 import com.googlecode.pongo.runtime.querying.*;
 
@@ -48,8 +50,10 @@ public class Project extends NamedElement {
 		YEAR.setOwningType("org.ossmeter.repository.model.Project");
 		ACTIVE.setOwningType("org.ossmeter.repository.model.Project");
 		HOMEPAGE.setOwningType("org.ossmeter.repository.model.Project");
+		ANALYSED.setOwningType("org.ossmeter.repository.model.Project");
 	}
 	
+	public static StringQueryProducer ANALYSED = new StringQueryProducer("analysed"); 
 	public static StringQueryProducer NAME = new StringQueryProducer("name"); 
 	public static StringQueryProducer SHORTNAME = new StringQueryProducer("shortName"); 
 	public static StringQueryProducer DESCRIPTION = new StringQueryProducer("description"); 
@@ -57,7 +61,16 @@ public class Project extends NamedElement {
 	public static StringQueryProducer ACTIVE = new StringQueryProducer("active"); 
 	public static StringQueryProducer HOMEPAGE = new StringQueryProducer("homePage"); 
 	
+
+	public boolean getAnalysed() {
+		return parseBoolean(dbObject.get("analysed")+"", false);
+	}
 	
+	public Project setAnalysed(boolean analysed) {
+		dbObject.put("analysed", analysed);
+		notifyChanged();
+		return this;
+	}
 	public String getShortName() {
 		return parseString(dbObject.get("shortName")+"", "");
 	}

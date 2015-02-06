@@ -182,8 +182,8 @@ public class ProjectExecutor implements Runnable {
 			
 		}
 		
-		if (!project.getExecutionInformation().getInErrorState() && !project.getExecutionInformation().getAnalysed()) {
-			project.getExecutionInformation().setAnalysed(true);
+		if (!project.getExecutionInformation().getInErrorState() && !project.getAnalysed()) {
+			project.setAnalysed(true);
 		}
 		
 		logger.info("Project execution complete. In error state: " + project.getExecutionInformation().getInErrorState());
