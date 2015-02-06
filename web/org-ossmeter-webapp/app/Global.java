@@ -149,7 +149,7 @@ public class Global extends GlobalSettings {
 											} else {
 												proj.setAnalysed(false);
 											}
-											if (node.has("analysed")) proj.setDescription(node.get("description").asText());
+											if (node.has("description")) proj.setDescription(node.get("description").asText());
 											users.getProjects().sync();
 
 											// Now do info source stats
