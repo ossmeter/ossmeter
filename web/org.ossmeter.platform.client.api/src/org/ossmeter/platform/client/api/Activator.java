@@ -9,51 +9,41 @@
  *******************************************************************************/
 package org.ossmeter.platform.client.api;
 
-import java.util.List;
-
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkEvent;
-import org.osgi.framework.FrameworkListener;
+import org.osgi.framework.ServiceEvent;
+import org.osgi.framework.ServiceListener;
+import org.ossmeter.platform.osgi.services.ApiStartServiceToken;
 import org.restlet.Application;
 import org.restlet.Component;
 import org.restlet.Server;
 import org.restlet.data.Protocol;
-import org.restlet.engine.Engine;
-import org.restlet.engine.connector.ConnectorHelper;
 
 public class Activator implements BundleActivator {
 
     private Component component;
 
     public void start(BundleContext context) throws Exception {
-//    	context.addFrameworkListener(new FrameworkListener() {
-//			@Override
-//			public void frameworkEvent(FrameworkEvent event) {
-//				System.err.println(event);
-//				if (event.getType() == FrameworkEvent.STARTED) {
-//					
-//					List<ConnectorHelper<Server>> servers = Engine.getInstance().getRegisteredServers();
-//					System.out.println("Server connectors - "+servers.size());
-//					for (ConnectorHelper<Server> connectorHelper : servers) {
-//					    System.out.println("connector = "+connectorHelper.getClass());
-//					}
-//					
-//				}
-//			}
-//		});	
-    	component = new Component();
-    	
-    	Server server = new Server(Protocol.HTTP, 8182);
-    	component.getServers().add(server);
-    	
-    	final Application app = new ApiApplication();
-    	component.getDefaultHost().attachDefault(app);
-    	try {
-    		component.start();
-    	} catch (Exception e) {
-    		e.printStackTrace();
-    	}
+		context.addServiceListener(new ServiceListener() {
+					
+			@Override
+			public void serviceChanged(ServiceEvent event) {
+				if (event.getType() == ServiceEvent.REGISTERED){
+			    	component = new Component();
+			    	
+			    	Server server = new Server(Protocol.HTTP, 8182);
+			    	component.getServers().add(server);
+			    	
+			    	final Application app = new ApiApplication();
+			    	component.getDefaultHost().attachDefault(app);
+			    	try {
+			    		component.start();
+			    	} catch (Exception e) {
+			    		e.printStackTrace();
+			    	}
+				}
+			}
+		}, "(objectclass=" + ApiStartServiceToken.class.getName() +")");
     }
 
     public void stop(BundleContext context) throws Exception {

@@ -22,10 +22,9 @@ import org.osgi.framework.ServiceRegistration;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 import org.ossmeter.platform.Configuration;
-import org.ossmeter.platform.admin.ProjectListAnalysis;
-import org.ossmeter.platform.client.api.ProjectResource;
 import org.ossmeter.platform.logging.OssmeterLogger;
 import org.ossmeter.platform.osgi.executors.SlaveScheduler;
+import org.ossmeter.platform.osgi.services.ApiStartServiceToken;
 import org.ossmeter.platform.osgi.services.IWorkerService;
 import org.ossmeter.platform.osgi.services.MasterService;
 
@@ -86,8 +85,7 @@ public class OssmeterApplication implements IApplication, ServiceTrackerCustomiz
 		
 		// Start web servers
 		if (apiServer) {
-			new ProjectResource();
-			new ProjectListAnalysis();
+			Activator.getContext().registerService(ApiStartServiceToken.class, new ApiStartServiceToken(), null);
 		}
 
 		// Now, rest.
