@@ -63,11 +63,11 @@ public class MongoAuthenticator {
 		return stats;
 	}
 
-	public static List<Project> autocomplete(String query) {
+	public static List<Project> autocomplete(String query, boolean analysedOnly) {
 		// Turn query into regex
 		String regex = "^" + query + ".*";
 		BasicDBObject obj = new BasicDBObject("name", java.util.regex.Pattern.compile(regex, java.util.regex.Pattern.CASE_INSENSITIVE));
-		obj.put("analysed", true);
+		if (analysedOnly) obj.put("analysed", true);
 
 		// Pongo doesn't support regexs yet, so we're using the Java driver
 		DB db = getUsersDb();

@@ -95,7 +95,7 @@ $(function () {
 		source: function(request, response) {
 			console.log("making request")
 			console.log(request)
-			jsRoutes.controllers.Application.autocomplete(request.term).ajax()
+			jsRoutes.controllers.Application.autocomplete(request.term, true).ajax()
 				.success(function(result) {
 					console.log("success: " + result);
 					response($.map(result, function(item) {

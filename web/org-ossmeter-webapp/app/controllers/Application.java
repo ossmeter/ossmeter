@@ -69,8 +69,8 @@ public class Application extends Controller {
 	}
 
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
-	public static Result autocomplete(String query) {
-		List<model.Project> projects = MongoAuthenticator.autocomplete(query);
+	public static Result autocomplete(String query, boolean analysedOnly) {
+		List<model.Project> projects = MongoAuthenticator.autocomplete(query, analysedOnly);
 
 		ObjectMapper mapper = new ObjectMapper();
 
@@ -92,7 +92,7 @@ public class Application extends Controller {
 		List<model.Project> projects = null;
 
 		if (!"".equals(q)) {
-			projects = MongoAuthenticator.autocomplete(q);
+			projects = MongoAuthenticator.autocomplete(q, false);
 		}
 
 		return ok(views.html.search.render(projects));

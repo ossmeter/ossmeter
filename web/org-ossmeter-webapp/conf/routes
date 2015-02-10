@@ -41,7 +41,7 @@ GET		/api/*path					controllers.Application.api(path : String)
 
 # Search
 GET 	/search 					controllers.Application.search(q : String ?= "")
-GET		/autocomplete				controllers.Application.autocomplete(query : String)
+GET		/autocomplete				controllers.Application.autocomplete(query : String, analysedOnly : Boolean)
 
 # Home page
 GET     /                           controllers.Application.index
