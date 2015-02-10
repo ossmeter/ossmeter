@@ -59,6 +59,12 @@ public class EclipseImporterTest {
 		
 	}
 	@Test
+	public void testImportProjectByUrl() throws WrongUrlException, ProjectUnknownException
+	{
+		Project project = im.importProjectByUrl("https://projects.eclipse.org/projects/modeling.mdt.modisco", platform);
+		assertNotNull(project);
+	}
+	@Test
 	public void eclipseValidInput() throws WrongUrlException, ProjectUnknownException {
 		// Prints " API rate limit exceeded." message.
 		// TODO: should we throw a InvalidUrlException instead of returning null? 
