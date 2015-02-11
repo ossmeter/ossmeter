@@ -346,9 +346,11 @@ public class Admin extends Controller {
 		if (!path.startsWith("/")){
 			path = "/" + path;
 		}
-		String url = play.Play.application().configuration().getString("ossmeter.adminapi") + path; 
+		String url = play.Play.application().configuration().getString("ossmeter.adminapi.path") + path; 
+		String username = play.Play.application().configuration().getString("ossmeter.adminapi.username"); 
+		String password = play.Play.application().configuration().getString("ossmeter.adminapi.password"); 
 
-		Promise<Result> promise = WS.url(url).get().map(
+		Promise<Result> promise = WS.url(url).setAuth(username, password, WSAuthScheme.BASIC).get().map(
 		    new Function<WSResponse, Result>() {
 		        public Result apply(WSResponse response) {
 		        	List<String> contentTypes = response.getAllHeaders().get("Content-Type");
@@ -360,6 +362,7 @@ public class Admin extends Controller {
 		        			return ok(response.getBodyAsStream());
 		        		} else {
 		        			System.err.println("Unrecognised Content-Type.");
+		        			System.err.println(response);
 			        		return ok();	
 		        		}
 		        	} else {
