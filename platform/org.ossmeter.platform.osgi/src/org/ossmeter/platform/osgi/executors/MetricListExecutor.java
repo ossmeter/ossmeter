@@ -152,7 +152,7 @@ public class MetricListExecutor implements Runnable {
 				platform.getProjectRepositoryManager().getProjectRepository().sync();
 				
 				// Log in DB
-				ProjectError error = ProjectError.create(date.toString(), "MetricListExecutor", projectId, project.getName(), e, Configuration.getInstance().getSlaveIdentifier());
+				ProjectError error = ProjectError.create(date.toString(), "MetricListExecutor: " + m.getIdentifier(), projectId, project.getName(), e, Configuration.getInstance().getSlaveIdentifier());
 				platform.getProjectRepositoryManager().getProjectRepository().getErrors().add(error);
 				platform.getProjectRepositoryManager().getProjectRepository().getErrors().sync();
 				
