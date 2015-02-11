@@ -441,9 +441,11 @@ public class EclipseProjectImporter implements IImporter{
 			platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
 			}
 		} catch (ParserConfigurationException | SAXException | IOException e) {
+			e.printStackTrace();
 			logger.error("Unable to import " + projectId + "project.");
 			return null;
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.error("Unable to import " + projectId + "project.");
 			return null;
 		}
