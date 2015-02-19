@@ -121,14 +121,16 @@ public class EclipseProjectImporter implements IImporter{
 			if (iter.hasNext())
 				jsonAr = (Map.Entry) iter.next(); 
 			
-			Object o =jsonAr.getValue();
+			
 			Iterator iter2 = ((JSONObject)jsonAr.getValue()).entrySet().iterator();
 			
 			while (iter2.hasNext()) {
 				Map.Entry entry = (Map.Entry) iter2.next();
-				EclipseProject pi = (EclipseProject)platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByShortName((String) entry.getKey());
+				platform.getProjectRepositoryManager().
+					getProjectRepository().getProjects().
+						findOneByShortName((String) entry.getKey());
 				try {
-					EclipseProject project = importProjectFromImportAll((String) entry.getKey(), platform);
+					importProjectFromImportAll((String) entry.getKey(), platform);
 				} catch (ProjectUnknownException e) {
 					e.printStackTrace();
 				}
@@ -158,14 +160,15 @@ public class EclipseProjectImporter implements IImporter{
 			if (iter.hasNext())
 				jsonAr = (Map.Entry) iter.next(); 
 			
-			Object o =jsonAr.getValue();
 			Iterator iter2 = ((JSONObject)jsonAr.getValue()).entrySet().iterator();
 			int MAX_ITERATION = 0;
 			while (iter2.hasNext() &&
 					 MAX_ITERATION <= numberfOfProjects) 
 			{
 				Map.Entry entry = (Map.Entry) iter2.next();
-				EclipseProject pi = (EclipseProject)platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByShortName((String) entry.getKey());
+				platform.getProjectRepositoryManager().
+					getProjectRepository().getProjects().
+						findOneByShortName((String) entry.getKey());
 				try {
 					importProjectFromImportAll((String) entry.getKey(), platform);
 				} catch (ProjectUnknownException e) {
@@ -185,8 +188,7 @@ public class EclipseProjectImporter implements IImporter{
 			
 		
 		String URL_PROJECT = "http://projects.eclipse.org/projects/"+ projectId.replaceAll("-", "\\.");
-		String html = null;
-		XML xml = null;
+		//XML xml = null;
 		
 		Iterable<Project> pl = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(projectId);
 		Iterator<Project> iprojects = pl.iterator();
@@ -208,10 +210,7 @@ public class EclipseProjectImporter implements IImporter{
 		//Retrieving data by parsing the Web page of the project
 		//This is necessary to retrieve metadata not available in JSON
 		try {
-			html = getRawHtml(URL_PROJECT);
-			xml = new XML(html);
-			Document xmlDoc = xml.getDOM();
-			List<String> eclipsePlatformNames = getPlatforms(xmlDoc, projectId.replaceAll("-", "\\."));
+			List<String> eclipsePlatformNames = getPlatforms(URL_PROJECT, projectId.replaceAll("-", "\\."));
 			String platformName;
 			
 			
@@ -440,8 +439,7 @@ public class EclipseProjectImporter implements IImporter{
 			if (!projectToBeUpdated) {
 			platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
 			}
-		} catch (ParserConfigurationException | SAXException | IOException e) {
-			e.printStackTrace();
+		} catch (IOException e) {
 			logger.error("Unable to import " + projectId + "project.");
 			return null;
 		} catch (Exception e) {
@@ -458,8 +456,6 @@ public class EclipseProjectImporter implements IImporter{
 	private EclipseProject importProjectFromImportAll(String projectId, Platform platform) throws ProjectUnknownException, MalformedURLException, IOException{
 		
 		String URL_PROJECT = "http://projects.eclipse.org/projects/"+ projectId.replaceAll("-", "\\.");
-		String html = null;
-		XML xml = null;
 		
 		Iterable<Project> pl = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(projectId.replaceAll("\\.", "-"));
 		Iterator<Project> iprojects = pl.iterator();
@@ -481,12 +477,10 @@ public class EclipseProjectImporter implements IImporter{
 		//Retrieving data by parsing the Web page of the project
 		//This is necessary to retrieve metadata not available in JSON
 		try {
-			html = getRawHtml(URL_PROJECT);
-			xml = new XML(html);
-			Document xmlDoc = xml.getDOM();
+			
 			String platformName;
 			
-			List<String> eclipsePlatformNames = getPlatforms(xmlDoc, projectId);
+			List<String> eclipsePlatformNames = getPlatforms(URL_PROJECT, projectId);
 			Iterator it  = (Iterator) eclipsePlatformNames.iterator();
 			
 			if (projectToBeUpdated) {
@@ -705,7 +699,7 @@ public class EclipseProjectImporter implements IImporter{
 			if (!projectToBeUpdated) {
 			platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(project);
 			}
-		} catch (ParserConfigurationException | SAXException | IOException e) {
+		} catch (IOException e) {
 			logger.error("Unable to import " + projectId + "project.");
 			return null;
 		} catch (Exception e) {
@@ -723,12 +717,8 @@ public class EclipseProjectImporter implements IImporter{
 	{
 		ArrayList<Company> result = new ArrayList<Company>(); 
 		org.jsoup.nodes.Document doc;
-		org.jsoup.nodes.Element content;
-		Integer numPagesToBeScanned;
-		String url = null;	
-		List<String> toRetry = new ArrayList<String>();
+		
 		String URL_PROJECT = "https://projects.eclipse.org/projects/"+ projectShortName +"/who";
-		url = URL_PROJECT;
 		try {
 			doc = Jsoup.connect(URL_PROJECT).timeout(10000).get();
 			Element first = doc.getElementById("block-system-main").
@@ -767,12 +757,7 @@ public class EclipseProjectImporter implements IImporter{
 	{
 		ArrayList<NntpNewsGroup> result = new ArrayList<NntpNewsGroup>(); 
 		org.jsoup.nodes.Document doc;
-		org.jsoup.nodes.Element content;
-		Integer numPagesToBeScanned;
-		String url = null;	
-		List<String> toRetry = new ArrayList<String>();
 		String URL_PROJECT = "https://projects.eclipse.org/projects/"+ projectShortName +"/contact";
-		url = URL_PROJECT;
 		try {
 			doc = Jsoup.connect(URL_PROJECT).timeout(10000).get();
 			
@@ -830,7 +815,6 @@ public class EclipseProjectImporter implements IImporter{
 	{
 		List<Person> result = new ArrayList<Person>();
 		org.jsoup.nodes.Document doc;
-		org.jsoup.nodes.Element content;	
 		String URL_PROJECT = "http://projects.eclipse.org/projects/" + projectId + "/who";	
 		
 		try 
@@ -878,25 +862,21 @@ public class EclipseProjectImporter implements IImporter{
 		return result;
 	}
 
-	private List<String> getPlatforms(Node xml, String projectId) {
+	private List<String> getPlatforms(String url, String projectId) {
 		List<String> result = new ArrayList<>();
-		
-		String xPathPattern = "//*[@id=\"block-summary-block-summary-block\"]/div/div/div[1]/a";
-		XPathFactory xFactory = XPathFactory.newInstance();
-		XPath xpath = xFactory.newXPath();
 		try {
-			XPathExpression expr = xpath.compile(xPathPattern);
-			Object evaluated = expr.evaluate(xml, XPathConstants.NODESET);
-			NodeList nodes = (NodeList) evaluated;
-			ArrayList<Element> elements = new ArrayList<Element>();
-			for (int i = 0; i < nodes.getLength(); i++) {
-				Node node = nodes.item(i);
-				if (node.getNodeType() != Node.ELEMENT_NODE)
-					continue;
-				result.add(node.getFirstChild().getNodeValue());
+			
+			org.jsoup.nodes.Document doc = Jsoup.connect(url).timeout(10000).get();
+			Element first = doc.getElementById("block-summary-block-summary-block");
+			Element els = first.getElementsByTag("div").first();
+			Element el = els.getElementsByTag("div").first().getElementsByTag("div").get(1);
+			for (Element element : el.getElementsByTag("a")) {
+				result.add(element.text());
 			}
 
-		} catch (XPathExpressionException e) {
+		} catch (IOException e) {
+			logger.error("Unable to import Eclipse project's platform for " + projectId);
+		} catch (Exception e) {
 			logger.error("Unable to import Eclipse project's platform for " + projectId);
 		}
 		return result;
@@ -917,34 +897,13 @@ public class EclipseProjectImporter implements IImporter{
 	 * @throws WrongUrlException 
 	 * @throws Exception
 	 */
-	private String getRawHtml(String projectURL) throws WrongUrlException  {
-		URL url;
-		try {
-			url = new URL(projectURL);
-		
-			URLConnection con = url.openConnection();
-			BufferedReader rd = new BufferedReader(new InputStreamReader(
-					con.getInputStream()));
-			String line;
-			StringBuilder sb = new StringBuilder();
-			while ((line = rd.readLine()) != null) {
-				sb.append(line + "\n");
-			}
-			rd.close();
-			String text = sb.toString();
-			return text;
-		} catch (IOException e) {
-			throw new WrongUrlException();
-		}
-	}
-
+	
 	private String getProjectIdFromUrl(String url) throws WrongUrlException
 	{
 		
 		url = url.replace("http://", "");
 		url = url.replace("https://", "");
 		url = url.replace("www.", "");
-		WrongUrlException q;
 		if (url.startsWith("projects.eclipse.org") ){//|| url.startsWith("eclipse.org")) {
 			
 			url = url.replace("projects/", "");
@@ -1007,8 +966,6 @@ public class EclipseProjectImporter implements IImporter{
 		Iterable<Project> pl = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(projectId);
 		Iterator<Project> iprojects = pl.iterator();
 		Project projectTemp = null;
-		EclipseProject project = new EclipseProject();
-		Boolean projectToBeUpdated = false;
 		while (iprojects.hasNext()) {
 			projectTemp = iprojects.next();
 			if (projectTemp instanceof EclipseProject) {
