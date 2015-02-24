@@ -1,4 +1,4 @@
-@(project: org.ossmeter.repository.model.Project, iProject: model.Project, qualityModel : QualityModel, isSummary : Boolean)
+@(project: org.ossmeter.repository.model.Project, iProject: model.Project, qualityModel : model.QualityModel, isSummary : Boolean)
 
 @import scala._
 
@@ -54,7 +54,7 @@ case other => {}}}}}{ }
         @_largePlot()
     }
 
-    @_aspectView(project, qualityModel, qualityModel, isSummary, List(qualityModel))
+    @_aspectView(project, qualityModel, qualityModel, isSummary, List())
 
 <div class="modal fade" id="exampleModal">
   <div class="modal-dialog">

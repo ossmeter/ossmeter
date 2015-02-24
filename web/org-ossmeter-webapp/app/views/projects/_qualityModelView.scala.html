@@ -1,30 +1,30 @@
-@(project: org.ossmeter.repository.model.Project, qualityModel : QualityModel, selected : QualityElement, summary : Boolean)
+@(project: org.ossmeter.repository.model.Project, qualityModel : model.QualityModel, selected : model.QualityElement, summary : Boolean)
 
-@drawAspect(aspect: QualityAspect) = {
+@drawAspect(aspect: model.QualityAspect) = {
 	<li>
 	@if(selected == aspect) { 
-		<strong>@aspect.name</strong> 
+		<strong>@aspect.getName()</strong> 
 	} else {
-		@*<a href="@routes.Projects.viewAspect(project.getShortName(), qualityModel.id, aspect.id, summary)">@aspect.name</a>*@	
+		@*<a href="@routes.Projects.viewAspect(project.getShortName(), qualityModel.getIdentifier(), aspect.getIdentifier(), summary)">@aspect.getName()</a>*@	
 	}
 		<ul>
-	@for(a <- aspect.aspects) {
+	@for(a <- aspect.getAspects()) {
 		@drawAspect(a)
 	}
-	@for(a <- aspect.attributes) {
+	@for(a <- aspect.getAttributes()) {
 		@drawAttribute(a)
 	}
 		</ul>
 	</li>
 }
 
-@drawAttribute(attribute : QualityAttribute) = {
-	<li>@attribute.name <span class="label label-info">@attribute.factoids.size() factoids</span> <span class="label label-info">@attribute.metrics.size() metrics</span> 
+@drawAttribute(attribute : model.QualityAttribute) = {
+	<li>@attribute.name <span class="label label-info">@attribute.getFactoids().size() factoids</span> <span class="label label-info">@attribute.getMetrics().size() metrics</span> 
 		<ul>
-@*	@for(f <- attribute.factoids) {
-		<li><span class="label label-info">@attribute.factoids.size() factoids</span> @f</li>
+@*	@for(f <- attribute.getFactoids()) {
+		<li><span class="label label-info">@attribute.getFactoids().size() factoids</span> @f</li>
 	}
-	@for(m <- attribute.metrics) {
+	@for(m <- attribute.getMetrics()) {
 		<li><span class="label label-info">Metric</span> @m</li>
 	}
 *@

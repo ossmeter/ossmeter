@@ -11,11 +11,13 @@ import com.feth.play.module.pa.user.AuthUserIdentity;
 import com.feth.play.module.pa.user.EmailIdentity;
 
 import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
 import com.mongodb.DBCollection;
 import com.mongodb.DB;
 import com.mongodb.DBCursor;
 import com.mongodb.BasicDBObject;
+import com.mongodb.MongoCredential;
 
 import model.Users;
 import model.User;
@@ -33,6 +35,8 @@ import model.EventGroup;
 import model.Event;
 import model.GridEntry;
 import model.Statistics;
+import model.QualityModel;
+import model.*;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -686,6 +690,128 @@ public class MongoAuthenticator {
 		db.getMongo().close();
  	}
 
+ 	public static void updateUserQualityModelSelection(User u, String id) {
+ 		DB db = getUsersDb();
+		Users users = new Users(db);
+
+		User user = users.getUsers().findOneByEmail(u.getEmail());
+
+		user.setSelectedQualityModel(id);
+
+		users.getUsers().sync();
+		db.getMongo().close();
+ 	}
+
+ 	public static QualityModel getPlatformQualityModel(String id) {
+ 		DB db = getUsersDb();
+		Users users = new Users(db);
+
+		QualityModel qm = users.getQualityModels().findOneByIdentifier(id);
+
+		db.getMongo().close();
+
+		return qm;
+ 	}
+
+ 	public static void insertOrUpdateUserQualityModel(User u, String json) {
+ 		DB db = getUsersDb();
+		Users users = new Users(db);
+
+		User user = users.getUsers().findOneByEmail(u.getEmail());
+
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			QualityModel qm2 = mapper.readValue(json, QualityModel.class);
+			
+			QualityModel qm = new QualityModel();
+			copyOverAspect(qm2, qm);
+			qm.setName("User Quality Model");
+			qm.setJson(json);
+			qm.setIdentifier("custom");
+			user.setQualityModel(qm);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
+		}
+		
+		users.getUsers().sync();
+
+		db.getMongo().close();
+ 	}
+
+ 	public static void insertOrUpdateAdminQualityModel(String id, String json) {
+ 		DB db = getUsersDb();
+		Users users = new Users(db);
+
+		QualityModel qm = users.getQualityModels().findOneByIdentifier(id);
+
+		if (qm != null) {
+			users.getQualityModels().remove(qm);
+		}
+
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			QualityModel qm2 = mapper.readValue(json, QualityModel.class);
+			
+			qm = new QualityModel();
+			copyOverAspect(qm2, qm);
+			if (id.equals("info")) qm.setName("Information Sources");
+			else qm.setName("Quality Model");
+			qm.setJson(json);
+			qm.setIdentifier(id);
+			users.getQualityModels().add(qm);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
+		}
+		
+		users.getQualityModels().sync();
+
+		db.getMongo().close();
+ 	}
+
+
+ 	private static void copyOverAspect(QualityAspect source, QualityAspect target) {
+ 		target.setName(source.getName());
+ 		target.setIdentifier(source.getIdentifier());
+
+ 		for (QualityAspect asp : source.getAspects()) {
+ 			QualityAspect copy = new QualityAspect();
+ 			copyOverAspect(asp, copy);
+ 			target.getAspects().add(copy);
+ 		}
+
+ 		for (QualityAttribute attr : source.getAttributes()) {
+ 			QualityAttribute copy = new QualityAttribute();
+ 			copyOverAttribute(attr, copy);
+ 			target.getAttributes().add(copy);
+ 		}
+ 	}
+
+ 	private static void copyOverAttribute(QualityAttribute source, QualityAttribute target) {
+ 		target.setName(source.getName());
+ 		target.setIdentifier(source.getIdentifier());
+ 		target.setDescription(source.getDescription());
+
+ 		System.out.println("attribute: " + source.getName());
+ 		for (QualityMetric metric : source.getMetrics()) {
+ 			QualityMetric copy = new QualityMetric();
+ 			copyOverMetric(metric, copy);
+ 			target.getMetrics().add(copy);
+ 		}
+
+ 		for (QualityMetric factoid : source.getFactoids()) {
+ 			QualityMetric copy = new QualityMetric();
+ 			copyOverMetric(factoid, copy);
+ 			target.getFactoids().add(copy);
+ 		}
+ 	}
+
+ 	private static void copyOverMetric(QualityMetric source, QualityMetric target) {
+ 		target.setName(source.getName());
+ 		target.setIdentifier(source.getIdentifier());
+ 	}
+
 	// May want to be more public? Or in its own class. This is just auth.
 	// May also want to cache the addresses to avoid reading the conf every time.
 	public static DB getUsersDb() {
@@ -693,7 +819,16 @@ public class MongoAuthenticator {
 		try {
 			Mongo mongo = null;
 			String replica = play.Play.application().configuration().getString("mongo.replica");
+			boolean useAuth = play.Play.application().configuration().getBoolean("mongo.use_authentication");
+			String username = play.Play.application().configuration().getString("mongo.username");
+			String password = play.Play.application().configuration().getString("mongo.password");
 			
+			// MongoCredential credential = null;
+
+			// if (useAuth) {
+			// 	credential = MongoCredential.createCredential(username, "users", password.toCharArray());
+			// }
+
 			if (replica == null) {
 				String host = play.Play.application().configuration().getString("mongo.default.host");
 				if (host == null) host = "localhost";
@@ -701,7 +836,12 @@ public class MongoAuthenticator {
 				Integer port = play.Play.application().configuration().getInt("mongo.default.port");
 				if (port == null) port = 27017;
 
-				mongo = new Mongo(host, port);
+				// if (useAuth) {
+				// 	System.out.println("using auth");
+				// 	mongo = new MongoClient(new ServerAddress(host, port), Arrays.asList(credential));
+				// } else {
+					mongo = new Mongo(host, port);
+				// }
 			} else {
 				List<ServerAddress> addresses = new ArrayList<>();
 				String[] hosts = replica.split(",");

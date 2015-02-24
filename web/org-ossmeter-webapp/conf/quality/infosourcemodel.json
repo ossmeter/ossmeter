@@ -1,291 +1,348 @@
 {
-	"id": "channels",
+	"identifier": "channels",
 	"name": "Channels",
 	"aspects": [],
 	"attributes": [
 		{
+			"identifier":"channels-sourcecode",
 			"name": "Source Code",
 			"factoids": [
-				"trans.rascal.LOC.codeSize",
-				"trans.rascal.OO.java.Coupling-Java",
-				"rascal.testability.java.JavaUnitTestCoverage",
-				"trans.rascal.activecommitters.developmentTeamStability",
-				"rascal.generic.churn.commitSize",
-				"rascal.generic.churn.commitLocality"
+				{
+					"identifier" : "trans.rascal.LOC.codeSize",
+					"name" : "Code size"
+				},{
+					"identifier" : "trans.rascal.OO.java.Coupling-Java",
+					"name" : "Java coupling"
+				},{
+					"identifier" : "rascal.testability.java.JavaUnitTestCoverage",
+					"name" : "Java unit test coverage"
+				},{
+					"identifier" : "trans.rascal.activecommitters.developmentTeamStability",
+					"name" : "Development team stability"
+				},{
+					"identifier" : "rascal.generic.churn.commitSize",
+					"name" : "Commit frequency and size"
+				},{
+					"identifier" : "rascal.generic.churn.commitLocality",
+					"name" : "Commit locality"
+				}
 			],
 			"metrics": [
 				{
 					"name" : "Percentage of commits have happened during weekends",
-					"id" : "percentageOfWeekendCommitsTimeLine"
+					"identifier" : "percentageOfWeekendCommitsTimeLine"
 				},{
 					"name": "Commits",
-					"id": "commitsovertimeline"
+					"identifier": "commitsovertimeline"
 				},{
 					"name" : "Number of commits (per developer)",
-					"id" : "commitsPerDeveloperTimeLine"
+					"identifier" : "commitsPerDeveloperTimeLine"
 				},{
 					"name": "Number of active committers (2 weeks)",
-					"id": "numberOfActiveCommittersTimeLine"
+					"identifier": "numberOfActiveCommittersTimeLine"
 				},{
 					"name": "Number of active committers (1 year)",
-					"id": "numberOfActiveCommittersLongTermTimeLine"
+					"identifier": "numberOfActiveCommittersLongTermTimeLine"
 				},{
 					"name": "Lines of code (per language)",
-					"id": "locPerLanguageTimeLine"
+					"identifier": "locPerLanguageTimeLine"
 				},{
 					"name": "LOC over files over time",
-					"id": "LOCoverfilesovertime"
+					"identifier": "LOCoverfilesovertime"
 				},{
 					"name": "Coupling Between Objects (Java)",
-					"id": "CBOJavaQuartilesHistoric"
+					"identifier": "CBOJavaQuartilesHistoric"
 				},{
 					"name": "Unit test coverage (all methods)",
-					"id": "testCoverageHistoric"
+					"identifier": "testCoverageHistoric"
 				},{
 					"name": "Number of test methods",
-					"id": "numTestsHistoric"
+					"identifier": "numTestsHistoric"
 				},{
 					"name": "Core committers",
-					"id": "coreCommittersChurnBar"
+					"identifier": "coreCommittersChurnBar"
 				},{
 					"name": "Churn (per committer)",
-					"id": "churnPerCommitterTimeLine"
+					"identifier": "churnPerCommitterTimeLine"
 				}
-			],
-			"detail": "src"
+			]
 		},
 		{
+			"identifier":"channels-communicationchannels",
 			"name": "Communication Channels",
 			"factoids": [
-				"org.ossmeter.factoid.newsgroups.channelusage.NewsgroupsChannelUsageFactoid",
-				"org.ossmeter.factoid.newsgroups.emotion.NewsgroupsChannelEmotionFactoid",
-				"org.ossmeter.factoid.newsgroups.hourly.NewsgroupsChannelHourlyFactoid",
-				"org.ossmeter.factoid.newsgroups.responsetime.NewsgroupsChannelResponseTimeFactoid",
-				"org.ossmeter.factoid.newsgroups.sentiment.NewsgroupsChannelSentimentFactoid",
-				"org.ossmeter.factoid.newsgroups.severity.NewsgroupsChannelSeverityFactoid",
-				"org.ossmeter.factoid.newsgroups.size.NewsgroupsChannelSizeFactoid",
-				"org.ossmeter.factoid.newsgroups.status.NewsgroupsChannelStatusFactoid",
-				"org.ossmeter.factoid.newsgroups.threadlength.NewsgroupsChannelThreadLengthFactoid",
-				"org.ossmeter.factoid.newsgroups.users.NewsgroupsChannelUsersFactoid",
-				"org.ossmeter.factoid.newsgroups.weekly.NewsgroupsChannelWeeklyFactoid"
+				{
+					"identifier" : "org.ossmeter.factoid.newsgroups.channelusage.NewsgroupsChannelUsageFactoid",
+					"name" : "Newsgroup Channel Usage"
+				},{
+					"identifier" : "org.ossmeter.factoid.newsgroups.emotion.NewsgroupsChannelEmotionFactoid",
+					"name" : "Newsgroup Channel Emotion"
+				},{
+					"identifier" : "org.ossmeter.factoid.newsgroups.hourly.NewsgroupsChannelHourlyFactoid",
+					"name" : "Newsgroup Channel Hourly"
+				},{
+					"identifier" : "org.ossmeter.factoid.newsgroups.responsetime.NewsgroupsChannelResponseTimeFactoid",
+					"name" : "Newsgroup Channel Response Time"
+				},{
+					"identifier" : "org.ossmeter.factoid.newsgroups.sentiment.NewsgroupsChannelSentimentFactoid",
+					"name" : "Newsgroup Channel Sentiment"
+				},{
+					"identifier" : "org.ossmeter.factoid.newsgroups.severity.NewsgroupsChannelSeverityFactoid",
+					"name" : "Newsgroup Channel Severity"
+				},{
+					"identifier" : "org.ossmeter.factoid.newsgroups.size.NewsgroupsChannelSizeFactoid",
+					"name" : "Newsgroup Channel Size"
+				},{
+					"identifier" : "org.ossmeter.factoid.newsgroups.status.NewsgroupsChannelStatusFactoid",
+					"name" : "Newsgroup Channel Status"
+				},{
+					"identifier" : "org.ossmeter.factoid.newsgroups.threadlength.NewsgroupsChannelThreadLengthFactoid",
+					"name" : "Newsgroup Channel Thread Length"
+				},{
+					"identifier" : "org.ossmeter.factoid.newsgroups.users.NewsgroupsChannelUsersFactoid",
+					"name" : "Newsgroup Channel Users"
+				},{
+					"identifier" : "org.ossmeter.factoid.newsgroups.weekly.NewsgroupsChannelWeeklyFactoid" ,
+					"name" : "Newsgroup Channel Weekly"
+				}
 			],
 			"metrics": [
 				{
 					"name": "Active Users",
-					"id": "newsgroups.activeusers"
+					"identifier": "newsgroups.activeusers"
 				},
 				{
 					"name": "New Users",
-					"id": "newsgroups.newUsers"
+					"identifier": "newsgroups.newUsers"
 				},
 				{
 					"name": "New Users (Cumulative)",
-					"id": "newsgroups.cumulativeNewUsers"
+					"identifier": "newsgroups.cumulativeNewUsers"
 				},
 				{
 					"name": "Articles",
-					"id": "newsgroups.articles"
+					"identifier": "newsgroups.articles"
 				},
 				{
 					"name": "Articles (Cumulative)",
-					"id": "newsgroups.cumulativeArticles"
+					"identifier": "newsgroups.cumulativeArticles"
 				},
 				{
 					"name": "Requests",
-					"id": "newsgroups.requests"
+					"identifier": "newsgroups.requests"
 				},
 				{
 					"name": "Requests (Cumulative)",
-					"id": "newsgroups.cumulativerequests"
+					"identifier": "newsgroups.cumulativerequests"
 				},
 				{
 					"name": "Replies",
-					"id": "newsgroups.replies"
+					"identifier": "newsgroups.replies"
 				},
 				{
 					"name": "Replies (Cumulative)",
-					"id": "newsgroups.cumulativereplies"
+					"identifier": "newsgroups.cumulativereplies"
 				},
 				{
 					"name": "Average Sentiment",
-					"id": "newsgroups.averageSentiment"
+					"identifier": "newsgroups.averageSentiment"
 				},
 				{
 					"name": "Average Sentiment At the Beginning of Threads",
-					"id": "newsgroups.sentimentAtThreadBeggining"
+					"identifier": "newsgroups.sentimentAtThreadBeggining"
 				},
 				{
 					"name": "Requests Per User",
-					"id": "newsgroups.requests-useraverage"
+					"identifier": "newsgroups.requests-useraverage"
 				},
 				{
 					"name": "New Threads (Cumulative)",
-					"id": "newsgroups.cumulativeNewThreads"
+					"identifier": "newsgroups.cumulativeNewThreads"
 				},
 				{
 					"name": "Articles, Requests and Replies Per Thread",
-					"id": "newsgroups.requestsreplies-threadaverage"
+					"identifier": "newsgroups.requestsreplies-threadaverage"
 				},
 				{
 					"name": "Articles, Requests and Replies Per User",
-					"id": "newsgroups.requestsreplies-useraverage"
+					"identifier": "newsgroups.requestsreplies-useraverage"
 				},
 				{
 					"name": "Threads",
-					"id": "newsgroups.threads"
+					"identifier": "newsgroups.threads"
 				},
 				{
 					"name": "New Threads",
-					"id": "newsgroups.newThreads"
+					"identifier": "newsgroups.newThreads"
 				},
 				{
 					"name": "Replies Per Thread",
-					"id": "newsgroups.replies-threadaverage"
+					"identifier": "newsgroups.replies-threadaverage"
 				},
 				{
 					"name": "Users",
-					"id": "newsgroups.users"
+					"identifier": "newsgroups.users"
 				},
 				{
 					"name": "Replies Per User",
-					"id": "newsgroups.replies-useraverage"
+					"identifier": "newsgroups.replies-useraverage"
 				},
 				{
 					"name": "Requests Per Thread",
-					"id": "newsgroups.requests-threadaverage"
+					"identifier": "newsgroups.requests-threadaverage"
 				},
 				{
 					"name": "Inactive Users",
-					"id": "newsgroups.inactiveusers"
+					"identifier": "newsgroups.inactiveusers"
 				},
 				{
 					"name": "Average Response Time per Thread (ms)",
-					"id": "newsgroups.averageResponseTime-threads"
+					"identifier": "newsgroups.averageResponseTime-threads"
 				},
 				{
 					"name": "Average Response Time (ms)",
-					"id": "newsgroups.averageResponseTime"
+					"identifier": "newsgroups.averageResponseTime"
 				},
 				{
 					"name": "Requests and Replies (Cumulative)",
-					"id": "newsgroups.cumulativerequestsreplies"
+					"identifier": "newsgroups.cumulativerequestsreplies"
 				},
 				{
 					"name": "Average Sentiment At the End of Threads",
-					"id": "newsgroups.sentimentAtThreadEnd"
+					"identifier": "newsgroups.sentimentAtThreadEnd"
 				},
 				{
 					"name": "Unanswered Threads",
-					"id": "newsgroups.unansweredThreads"
+					"identifier": "newsgroups.unansweredThreads"
 				},
 				{
 					"name": "Users, Active Users and Inactive Users",
-					"id": "newsgroups.activeinactiveusers"
+					"identifier": "newsgroups.activeinactiveusers"
 				},
 				{
 					"name": "Average Response Time (Cumulative) (ms)",
-					"id": "newsgroups.cumulativeAverageResponseTime"
+					"identifier": "newsgroups.cumulativeAverageResponseTime"
 				},
 				{
 					"name": "Requests and Replies",
-					"id": "newsgroups.requestsreplies"
+					"identifier": "newsgroups.requestsreplies"
 				},
 				{
 					"name": " Average Response Time per Thread (Cumulative) (ms)",
-					"id": "newsgroups.cumulativeAverageResponseTime-threads"
+					"identifier": "newsgroups.cumulativeAverageResponseTime-threads"
 				},
 				{
 					"name": "Articles Per Thread",
-					"id": "newsgroups.articles-threadaverage"
+					"identifier": "newsgroups.articles-threadaverage"
 				}
-			],
-			"detail": "cc"
+			]
 		},
 		{
-			"name": "Bug Tracking Systems",
+			"identifier":"channels-issuetrackingsystems",
+			"name": "Issue Tracking Systems",
 			"factoids": [
-				"org.ossmeter.factoid.bugs.emotion.BugsChannelEmotionFactoid",
-				"org.ossmeter.factoid.bugs.hourly.BugsChannelHourlyFactoid",
-				"org.ossmeter.factoid.bugs.responsetime.BugsChannelResponseTimeFactoid",
-				"org.ossmeter.factoid.bugs.sentiment.BugsChannelSentimentFactoid",
-				"org.ossmeter.factoid.bugs.severity.BugsChannelSeverityFactoid",
-				"org.ossmeter.factoid.bugs.size.BugsChannelSizeFactoid",
-				"org.ossmeter.factoid.bugs.status.BugsChannelStatusFactoid",
-				"org.ossmeter.factoid.bugs.threadlength.BugsChannelThreadLengthFactoid",
-				"org.ossmeter.factoid.bugs.users.BugsChannelUsersFactoid",
-				"org.ossmeter.factoid.bugs.weekly.BugsChannelWeeklyFactoid"
+				{
+					"identifier": "org.ossmeter.factoid.bugs.emotion.BugsChannelEmotionFactoid",
+					"name": "Bug Channel Emotion"
+				},{
+					"identifier": "org.ossmeter.factoid.bugs.hourly.BugsChannelHourlyFactoid",
+					"name": "Bug Channel Hourly"
+				},{
+					"identifier": "org.ossmeter.factoid.bugs.responsetime.BugsChannelResponseTimeFactoid",
+					"name": "Bug Channel Response Time"
+				},{
+					"identifier": "org.ossmeter.factoid.bugs.sentiment.BugsChannelSentimentFactoid",
+					"name": "Bug Channel Sentiment"
+				},{
+					"identifier": "org.ossmeter.factoid.bugs.severity.BugsChannelSeverityFactoid",
+					"name": "Bug Channel Severity"
+				},{
+					"identifier": "org.ossmeter.factoid.bugs.size.BugsChannelSizeFactoid",
+					"name": "Bug Channel Size"
+				},{
+					"identifier": "org.ossmeter.factoid.bugs.status.BugsChannelStatusFactoid",
+					"name": "Bug Channel Status"
+				},{
+					"identifier": "org.ossmeter.factoid.bugs.threadlength.BugsChannelThreadLengthFactoid",
+					"name": "Bug Channel Thread Length"
+				},{
+					"identifier": "org.ossmeter.factoid.bugs.users.BugsChannelUsersFactoid",
+					"name": "Bug Channel Users"
+				},{
+					"identifier": "org.ossmeter.factoid.bugs.weekly.BugsChannelWeeklyFactoid",
+					"name": "Bug Channel Weekly"
+				}
 			],
 			"metrics": [
 				{
 					"name": "Bugs",
-					"id": "bugs.bugs"
+					"identifier": "bugs.bugs"
 				},
 				{
 					"name": "Fixed Bugs",
-					"id": "bugs.fixedBugs"
+					"identifier": "bugs.fixedBugs"
 				},
 				{
 					"name": "Resolved or Closed Bugs",
-					"id": "bugs.resolvedClosedBugs"
+					"identifier": "bugs.resolvedClosedBugs"
 				},
 				{
 					"name": "Non-Resolved or Closed Bugs",
-					"id": "bugs.nonResolvedClosedBugs"
+					"identifier": "bugs.nonResolvedClosedBugs"
 				},
 				{
 					"name": "Comments",
-					"id": "bugs.comments"
+					"identifier": "bugs.comments"
 				},
 				{
 					"name": "Comments (Cumulative)",
-					"id": "bugs.cumulativeComments"
+					"identifier": "bugs.cumulativeComments"
 				},
 				{
 					"name": "Patches",
-					"id": "bugs.patches"
+					"identifier": "bugs.patches"
 				},
 				{
 					"name": "Patches (Cumulative)",
-					"id": "bugs.cumulativePatches"
+					"identifier": "bugs.cumulativePatches"
 				},
 				{
 					"name": "Average Sentiment",
-					"id": "bugs.averageSentiment"
+					"identifier": "bugs.averageSentiment"
 				},
 				{
 					"name": "Won't-Fix Bugs",
-					"id": "bugs.wontFixBugs"
+					"identifier": "bugs.wontFixBugs"
 				},
 				{
 					"name": "Bug Open Time in relation to the Number of Bugs",
-					"id": "bugs.bugOpenTime-bugs"
+					"identifier": "bugs.bugOpenTime-bugs"
 				},
 				{
 					"name": "Works-For-Me Bugs",
-					"id": "bugs.worksForMeBugs"
+					"identifier": "bugs.worksForMeBugs"
 				},
 				{
 					"name": "Works-For-Me Bugs",
-					"id": "bugs.worksForMeBugs"
+					"identifier": "bugs.worksForMeBugs"
 				},
 				{
 					"name": "Average Sentiment At Thread Beginning",
-					"id": "bugs.sentimentAtThreadBeggining"
+					"identifier": "bugs.sentimentAtThreadBeggining"
 				},
 				{
 					"name": "Bug Open Time",
-					"id": "bugs.bugOpenTime"
+					"identifier": "bugs.bugOpenTime"
 				},
 				{
 					"name": "Average Sentiment At Thread End",
-					"id": "bugs.sentimentAtThreadEnd"
+					"identifier": "bugs.sentimentAtThreadEnd"
 				},
 				{
 					"name": "Invalid Bugs",
-					"id": "bugs.invalidBugs"
+					"identifier": "bugs.invalidBugs"
 				}
-			],
-			"detail": "bts"
+			]
 		}
 	]
 }

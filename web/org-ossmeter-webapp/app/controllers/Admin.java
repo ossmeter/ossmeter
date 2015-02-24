@@ -1,12 +1,15 @@
 package controllers;
 
 import java.util.*;
+import java.io.*;
 
 import model.*;
 import model.Users;
 import models.*;
+import model.QualityModel;
 import play.Routes;
 import play.data.Form;
+import play.data.DynamicForm;
 import play.mvc.*;
 import play.mvc.Http.Response;
 import play.mvc.Http.Session;
@@ -422,6 +425,73 @@ public class Admin extends Controller {
         return redirect(routes.Users.users());
 	}
 
+	@Restrict(@Group(MongoAuthenticator.ADMIN_ROLE))
+	public static Result qualityModels() {
+		
+        return ok(views.html.admin.qualityModels.render());
+	}
+
+	public static String readFile(File f) {
+		
+	    try {
+	    	BufferedReader br = new BufferedReader(new FileReader(f));
+	        StringBuilder sb = new StringBuilder();
+	        String line = br.readLine();
+
+	        while (line != null) {
+	            sb.append(line);
+	            sb.append("\n");
+	            line = br.readLine();
+	        }
+	        br.close();
+	        return sb.toString();
+	    } catch (Exception e) {
+	    	e.printStackTrace();
+	    }
+	    return null;
+	}
+
+	@Restrict(@Group(MongoAuthenticator.ADMIN_ROLE))
+	public static Result editQualityModel(String id) {
+		// Lookup QM
+		QualityModel qm = MongoAuthenticator.getPlatformQualityModel(id);
+		
+		//System.out.println(qm.getIdentifier() + " " + id);
+
+		if (qm == null) {
+			// File f = play.Play.application().getFile("conf/quality/qualitymodel.json");
+			// String c = readFile(f);
+			// MongoAuthenticator.insertOrUpdateAdminQualityModel("quality", c);
+
+			flash(Application.FLASH_ERROR_KEY, "No quality model with that ID");
+			return badRequest(views.html.admin.qualityModels.render());
+		}
+		return ok(views.html.admin.editQualityModel.render(qm));
+	}
+
+	@Restrict(@Group(MongoAuthenticator.ADMIN_ROLE))
+	public static Result saveQualityModel(String id) {
+		// // Lookup QM
+		// QualityModel qm = MongoAuthenticator.getPlatformQualityModel(id);
+		
+		// //System.out.println(qm.getIdentifier() + " " + id);
+
+		// if (qm == null) {
+		// File f = play.Play.application().getFile("conf/quality/infosourcemodel.json");
+		// String c = readFile(f);
+		// MongoAuthenticator.insertOrUpdateAdminQualityModel("info", c);
+
+		// 	flash(Application.FLASH_ERROR_KEY, "No quality model with that ID");
+		// 	return badRequest(views.html.admin.qualityModels.render());
+		// }
+
+		DynamicForm form = Form.form().bindFromRequest();
+
+		MongoAuthenticator.insertOrUpdateAdminQualityModel(id, form.get("json"));
+
+		return ok();
+	}
+
 	public static Result jsRoutes() {
 		return ok(
 				Routes.javascriptRouter("adminJSRoutes",
@@ -429,7 +499,8 @@ public class Admin extends Controller {
 					controllers.routes.javascript.Admin.getPageViewStats(),
 					controllers.routes.javascript.Admin.getPageViewPlot(),
 					controllers.routes.javascript.Admin.adminApi(),
-					controllers.routes.javascript.Admin.getWebAppErrors()
+					controllers.routes.javascript.Admin.getWebAppErrors(),
+					controllers.routes.javascript.Admin.saveQualityModel()
 					)
 				)
 				.as("text/javascript");

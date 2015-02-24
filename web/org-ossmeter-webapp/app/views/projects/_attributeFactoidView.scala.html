@@ -5,7 +5,7 @@
     @param attribute       The quality attribute
 *@
 
-@(project: org.ossmeter.repository.model.Project, qualityModel : QualityModel, attribute : QualityAttribute)
+@(project: org.ossmeter.repository.model.Project, qualityModel : model.QualityModel, attribute : model.QualityAttribute)
 
 @import scala._
 
@@ -37,7 +37,7 @@
     </div>
 <script type="text/javascript">
     $(function() {
-        $.getJSON(getApi() + "/projects/p/@project.getShortName()/f/@attribute.factoids.mkString("+")", function (result) {
+        $.getJSON(getApi() + "/projects/p/@project.getShortName()/f/@attribute.getFactoids().map(x=> x.getIdentifier()).mkString("+")", function (result) {
             $("#factoids-@attributeId").empty();
 
             var config = {

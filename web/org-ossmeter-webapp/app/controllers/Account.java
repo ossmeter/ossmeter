@@ -37,6 +37,58 @@ public class Account extends Controller {
 
 	@SubjectPresent
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
+	public static Result updateQualityModelSelection(String id) {
+		User user = Application.getLocalUser(session());
+
+		if (user == null) {
+			// Not logged in
+			return badRequest("Sorry, you need to be logged in to do that.");
+		}
+
+		// TODO this is hardcoded due to time constraints, but really
+		// should be more general to allow multiple QMs
+		if (id.equals("info") || id.equals("quality") || id.equals("custom")) {
+
+			MongoAuthenticator.updateUserQualityModelSelection(user, id);
+
+			return ok();
+		} else {
+			return badRequest("Invalid quality model ID");
+		}		
+	}
+
+	@SubjectPresent
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
+	public static Result editQualityModel() {
+		User user = Application.getLocalUser(session());
+
+		if (user == null) {
+			// Not logged in
+			return badRequest("Sorry, you need to be logged in to do that.");
+		}
+
+		return ok(views.html.account.editQualityModel.render(user.getQualityModel()));
+	}
+
+	@SubjectPresent
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
+	public static Result saveQualityModel() {
+		User user = Application.getLocalUser(session());
+
+		if (user == null) {
+			// Not logged in
+			return badRequest("Sorry, you need to be logged in to do that.");
+		}
+
+		DynamicForm form = Form.form().bindFromRequest();
+		MongoAuthenticator.insertOrUpdateUserQualityModel(user, form.get("json"));
+
+		return ok();
+	}
+
+
+	@SubjectPresent
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result watchSpark(String projectid, String metricid, String projectName, String metricName) {
 		User user = Application.getLocalUser(session());
 
