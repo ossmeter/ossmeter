@@ -6,8 +6,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.HashMap;
 
-import models.QualityAspect;
-import models.QualityModel;
+import model.QualityAspect;
+import model.QualityModel;
+import model.User;
 import models.ProjectImport;
 
 import org.ossmeter.repository.model.*;
@@ -122,65 +123,96 @@ public class Projects extends Controller {
 		}
 	}
 	
-	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
-	public static Result viewTmp(String id, String qm, boolean summary) {
+	// @Restrict(@Group(MongoAuthenticator.USER_ROLE))
+	// public static Result viewTmp(String id, String qm, boolean summary) {
 
-		System.err.println("selected qm:" + qm);
+	// 	System.err.println("selected qm:" + qm);
 
-		Project project = getProject(id);
-		if (project == null) {
-			flash(Application.FLASH_ERROR_KEY, "An unexpected error has occurred. We are looking into it.");//TODO move to Messages.
-			return redirect(routes.Application.index());
-		}
+	// 	Project project = getProject(id);
+	// 	if (project == null) {
+	// 		flash(Application.FLASH_ERROR_KEY, "An unexpected error has occurred. We are looking into it.");//TODO move to Messages.
+	// 		return redirect(routes.Application.index());
+	// 	}
 
-		model.Project iProject = MongoAuthenticator.findProjectById(project.getShortName());
+	// 	model.Project iProject = MongoAuthenticator.findProjectById(project.getShortName());
 
-		QualityModel qualityModel = Application.getQualityModelById(qm);
-		if (qualityModel == null) qualityModel = Application.getInformationSourceModel();
+	// 	QualityModel qualityModel = Application.getQualityModelById(qm);
+	// 	if (qualityModel == null) qualityModel = Application.getInformationSourceModel();
 
-		return ok(views.html.projects.view_project.render(project, iProject, qualityModel, summary));
-	}
+	// 	return ok(views.html.projects.view_project.render(project, iProject, qualityModel, summary));
+	// }
 
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result view(String id) {
-		return viewAspect(id, Application.INFO_SOURCE_MODEL, Application.INFO_SOURCE_MODEL, true);
+		return view(id, true);
 	}
-	
+
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
-	public static Result viewAspect(String projectId, String qmId, String aspectId, boolean summary) {
-		if (aspectId.equals("null")) aspectId = qmId; // Workaround for routing issue
+	public static Result viewDetail(String id) {
+		return view(id, false);
+	}
 
-		Project project = getProject(projectId);
+	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
+	public static Result view(String id, boolean summary) {
+		QualityModel qm = null;
 
-		if (project == null) {
-			flash(Application.FLASH_ERROR_KEY, "An unexpected error has occurred. We are looking into it.");//TODO move to Messages.
-			return redirect(routes.Application.index());
+		User user = Application.getLocalUser(session());
+		if (user == null || user.getSelectedQualityModel() == null) {
+			qm = MongoAuthenticator.getPlatformQualityModel("info");
+		} else {
+			String selected = user.getSelectedQualityModel();
+			
+			if (selected.equals("info") || selected.equals("quality")) {
+				qm = MongoAuthenticator.getPlatformQualityModel(selected);
+			} else if(selected.equals("custom")) {	
+				qm = user.getQualityModel();	
+			} else {
+				qm = MongoAuthenticator.getPlatformQualityModel("info");
+			}
 		}
+
+		Project project = getProject(id);
 
 		model.Project iProject = MongoAuthenticator.findProjectById(project.getShortName());
 
-		QualityModel qm = Application.getQualityModelById(qmId);
-		if (qm == null) qm = Application.getInformationSourceModel();
-
-		// Lookup aspect
-		QualityAspect aspect = findAspect(qm, aspectId);
-
 		return ok(views.html.projects.view_project.render(project, iProject, qm, summary));
 	}
+	
+	// @Restrict(@Group(MongoAuthenticator.USER_ROLE))
+	// public static Result viewAspect(String projectId, String qmId, String aspectId, boolean summary) {
+	// 	if (aspectId.equals("null")) aspectId = qmId; // Workaround for routing issue
 
-	protected static QualityAspect findAspect(QualityAspect aspect, String aspectId) {
+	// 	Project project = getProject(projectId);
 
-		if (aspect.id.equals(aspectId)) {
-			return aspect;
-		}
+	// 	if (project == null) {
+	// 		flash(Application.FLASH_ERROR_KEY, "An unexpected error has occurred. We are looking into it.");//TODO move to Messages.
+	// 		return redirect(routes.Application.index());
+	// 	}
 
-		for (QualityAspect a : aspect.aspects) {
-			QualityAspect as = findAspect(a, aspectId);
-			if (as != null) return as;
-		}
+	// 	model.Project iProject = MongoAuthenticator.findProjectById(project.getShortName());
 
-		return null;
-	}
+	// 	QualityModel qm = Application.getQualityModelById(qmId);
+	// 	if (qm == null) qm = Application.getInformationSourceModel();
+
+	// 	// Lookup aspect
+	// 	// QualityAspect aspect = findAspect(qm, aspectId);
+
+	// 	return ok(views.html.projects.view_project.render(project, iProject, qm, summary));
+	// }
+
+	// protected static QualityAspect findAspect(QualityAspect aspect, String aspectId) {
+
+	// 	if (aspect.id.equals(aspectId)) {
+	// 		return aspect;
+	// 	}
+
+	// 	for (QualityAspect a : aspect.aspects) {
+	// 		QualityAspect as = findAspect(a, aspectId);
+	// 		if (as != null) return as;
+	// 	}
+
+	// 	return null;
+	// }
 	
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result create() {

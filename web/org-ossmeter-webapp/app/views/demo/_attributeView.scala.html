@@ -1,5 +1,5 @@
 
-@(project: org.ossmeter.repository.model.Project, qualityModel : QualityModel, attribute : QualityAttribute, parents : List[QualityAspect], summary : Boolean)
+@(project: org.ossmeter.repository.model.Project, qualityModel : model.QualityModel, attribute : model.QualityAttribute, parents : List[model.QualityAspect], summary : Boolean)
 
 @import scala._
 
@@ -8,7 +8,7 @@
         <div class="row">    
             <ol class="breadcrumb projectbreadcrumb">
             @for(p <- parents) {
-                <li>@p.name</li>
+                <li>@p.getName()</li>
             }
             </ol>
         </div>

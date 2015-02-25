@@ -12,6 +12,7 @@ class Users {
 	val MailingListItem[*] mailingList;
 	val NewsItem[*] news;
 	val Error[*] errors;
+	val QualityModel[*] qualityModels
 }
 
 enum NewsItemType {
@@ -19,6 +20,32 @@ enum NewsItemType {
 }
 enum NewsItemStatus {
 	DRAFT; PENDING;
+}
+
+abstract class QualityElement {
+	@searchable
+	attr String identifier;
+	attr String name;
+}
+
+class QualityModel extends QualityAspect {
+	attr String json;
+}
+
+class QualityAspect extends QualityElement {
+	val QualityAttribute[*] attributes;
+	val QualityAspect[*] aspects;
+}
+
+class QualityAttribute extends QualityElement {
+	attr String description;
+	attr String detail;
+	val QualityMetric[*] factoids;
+	val QualityMetric[*] metrics;
+}
+
+class QualityMetric extends QualityElement {
+
 }
 
 class Error {
@@ -145,6 +172,9 @@ class User {
 	//val Notification[*] notifications;
 	//val Event[*] events;
 	val GridEntry[*] grid;
+
+	attr String selectedQualityModel;
+	val QualityModel qualityModel;
 }
 
 @customize

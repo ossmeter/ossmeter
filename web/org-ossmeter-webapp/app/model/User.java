@@ -16,6 +16,7 @@ public class User extends Pongo implements Subject {
 	protected List<Project> watching = null;
 	protected List<Project> owns = null;
 	protected List<GridEntry> grid = null;
+	protected QualityModel qualityModel = null;
 	
 	// protected region custom-fields-and-methods on begin
 	// public Date getLastLogin() {
@@ -54,6 +55,7 @@ public class User extends Pongo implements Subject {
 		dbObject.put("watching", new BasicDBList());
 		dbObject.put("owns", new BasicDBList());
 		dbObject.put("grid", new BasicDBList());
+		dbObject.put("qualityModel", new QualityModel().getDbObject());
 		EMAIL.setOwningType("model.User");
 		NAME.setOwningType("model.User");
 		COMPANY.setOwningType("model.User");
@@ -65,6 +67,7 @@ public class User extends Pongo implements Subject {
 	
 	public static StringQueryProducer EMAIL = new StringQueryProducer("email"); 
 	public static StringQueryProducer NAME = new StringQueryProducer("name"); 
+	public static StringQueryProducer SELECTEDQUALITYMODEL = new StringQueryProducer("selectedQualityModel"); 
 	public static StringQueryProducer COMPANY = new StringQueryProducer("company"); 
 	public static StringQueryProducer COUNTRY = new StringQueryProducer("country"); 
 	public static StringQueryProducer EMAILVALIDATED = new StringQueryProducer("emailValidated"); 
@@ -78,6 +81,15 @@ public class User extends Pongo implements Subject {
 	
 	public User setEmail(String email) {
 		dbObject.put("email", email);
+		notifyChanged();
+		return this;
+	}
+	public String getSelectedQualityModel() {
+		return parseString(dbObject.get("selectedQualityModel")+"", "");
+	}
+	
+	public User setSelectedQualityModel(String selectedQualityModel) {
+		dbObject.put("selectedQualityModel", selectedQualityModel);
 		notifyChanged();
 		return this;
 	}
@@ -174,5 +186,24 @@ public class User extends Pongo implements Subject {
 		return grid;
 	}
 	
-	
+	public QualityModel getQualityModel() {
+		if (qualityModel == null && dbObject.containsField("qualityModel")) {
+			qualityModel = (QualityModel) PongoFactory.getInstance().createPongo((DBObject) dbObject.get("qualityModel"));
+			qualityModel.setContainer(this);
+		}
+		return qualityModel;
+	}
+	public User setQualityModel(QualityModel qualityModel) {
+		if (this.qualityModel != qualityModel) {
+			if (qualityModel == null) {
+				dbObject.removeField("qualityModel");
+			}
+			else {
+				dbObject.put("qualityModel", qualityModel.getDbObject());
+			}
+			this.qualityModel = qualityModel;
+			notifyChanged();
+		}
+		return this;
+	}
 }

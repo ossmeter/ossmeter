@@ -1,17 +1,18 @@
-@(qualityModel : QualityModel)
+@(qualityModel : model.QualityModel)
 
+@import model._
 
 @printAttributes(aspect : QualityAspect) = {
-	@for(attr <- qualityModel.attributes) {
-	qa = new QualityAttribute("@attr.name.replaceAll(" ", "")", "@attr.name", [
-		@for(m <- attr.metrics) {
-		new Metric("@m.id", "@m.name", false),
+	@for(attr <- qualityModel.getAttributes) {
+	qa = new QualityAttribute("@attr.getName().replaceAll(" ", "")", "@attr.getName()", [
+		@for(m <- attr.getMetrics()) {
+		new Metric("@m.getIdentifier()", "@m.getName()", false),
 		}
 	]);
 	vm.qualityAttributes.push(qa);
 	}
 
-	@for(asp <- aspect.aspects) {
+	@for(asp <- aspect.getAspects()) {
 		@printAttributes(asp)
 	}
 }
@@ -95,7 +96,7 @@ $(function () {
 		source: function(request, response) {
 			console.log("making request")
 			console.log(request)
-			jsRoutes.controllers.Application.autocomplete(request.term).ajax()
+			jsRoutes.controllers.Application.autocomplete(request.term, true).ajax()
 				.success(function(result) {
 					console.log("success: " + result);
 					response($.map(result, function(item) {

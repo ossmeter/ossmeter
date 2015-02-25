@@ -12,7 +12,7 @@ val appDependencies = Seq(
   "com.feth"      %% "play-authenticate" % "0.6.5-SNAPSHOT",
   "postgresql"    %  "postgresql"        % "9.1-901-1.jdbc4",
   "mysql"         % "mysql-connector-java" % "5.1.18",
-  "org.mongodb"   % "mongo-java-driver" % "2.7.3",
+  "org.mongodb"   % "mongo-java-driver" % "2.13.0",
   javaCore,
   cache,
   javaWs,

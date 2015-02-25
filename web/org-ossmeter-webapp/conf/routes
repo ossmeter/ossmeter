@@ -21,8 +21,12 @@ GET 	/admin/errors 				controllers.Admin.errors()
 GET 	/admin/errors/webapp		controllers.Admin.getWebAppErrors()
 GET 	/admin/permission/grant		controllers.Admin.makeAdmin(email : String)
 GET 	/admin/permission/revoke	controllers.Admin.revokeAdmin(email : String)
+GET 	/admin/qualitymodels 		controllers.Admin.qualityModels()
+GET 	/admin/qualitymodels/edit 	controllers.Admin.editQualityModel(id : String)
+POST 	/admin/qualitymodels/save 	controllers.Admin.saveQualityModel(id : String)
 GET 	/admin/api/*path			controllers.Admin.adminApi(path : String)
 GET     /assets/javascripts/adminroutes    controllers.Admin.jsRoutes
+
 
 # News
 GET 	/news 						controllers.News.index()
@@ -41,7 +45,7 @@ GET		/api/*path					controllers.Application.api(path : String)
 
 # Search
 GET 	/search 					controllers.Application.search(q : String ?= "")
-GET		/autocomplete				controllers.Application.autocomplete(query : String)
+GET		/autocomplete				controllers.Application.autocomplete(query : String, analysedOnly : Boolean)
 
 # Home page
 GET     /                           controllers.Application.index
@@ -63,6 +67,9 @@ GET		/demo/projects/:id/detail/ 	controllers.DemoApplication.viewProject(id : St
 
 # User Profile
 GET     /profile                    controllers.Application.profile
+GET     /profile/qualitymodel       controllers.Account.editQualityModel
+POST     /profile/qualitymodel       controllers.Account.saveQualityModel
+POST     /profile/qualitymodelselection       controllers.Account.updateQualityModelSelection(id : String)
 GET		/profile/notification		controllers.Application.profileNotification(projectid: String, projectName : String, metricid : String, metricName : String)
 POST	/profile/notification		controllers.Account.createNotification
 GET	/profile/grid/delete/:id	controllers.Account.deleteGridObject(id:String)
@@ -133,10 +140,10 @@ POST    /projects/import            controllers.Projects.importProject()
 # Read/View
 GET		/projects/:id				controllers.Projects.view(id:String)
 GET		/projects/:id/				controllers.Projects.view(id:String)
-GET		/projects/:id/summary		controllers.Projects.viewTmp(id:String, qm : String ?= "channels", summary : Boolean = true)
-GET		/projects/:id/summary/		controllers.Projects.viewTmp(id:String, qm : String ?= "channels", summary : Boolean = true)
-GET		/projects/:id/detail		controllers.Projects.viewTmp(id:String, qm : String ?= "channels", summary : Boolean = false)
-GET		/projects/:id/detail/		controllers.Projects.viewTmp(id:String, qm : String ?= "channels", summary : Boolean = false)
+GET		/projects/:id/summary		controllers.Projects.view(id:String)
+GET		/projects/:id/summary/		controllers.Projects.view(id:String)
+GET		/projects/:id/detail		controllers.Projects.viewDetail(id:String)
+GET		/projects/:id/detail/		controllers.Projects.viewDetail(id:String)
 
 # Update/Edit
 # GET 	/projects/:id/edit 			controllers.Projects.edit(id:Long)

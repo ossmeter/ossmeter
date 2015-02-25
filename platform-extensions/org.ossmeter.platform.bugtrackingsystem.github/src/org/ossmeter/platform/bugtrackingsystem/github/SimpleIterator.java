@@ -28,8 +28,12 @@ public class SimpleIterator<T> implements Iterator<T> {
 		if ( itemIterator != null && itemIterator.hasNext() ) {
 			return itemIterator.hasNext();
 		} else if ( pageIterator.hasNext() ) {
-			itemIterator =  pageIterator.next().iterator();
-			return itemIterator.hasNext();
+			try {
+				itemIterator =  pageIterator.next().iterator();
+				return itemIterator.hasNext();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 		return false;

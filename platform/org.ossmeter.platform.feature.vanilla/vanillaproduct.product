@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?pde version="3.5"?>
+
+<product name="org.ossmeter.platform.vanilla" uid="org.ossmeter.platform.vanilla" id="org.ossmeter.platform.osgi.org_ossmeter_platform_vanilla" application="ossmeter.workerservice" useFeatures="true" includeLaunchers="true">
+
+   <configIni use="default">
+   </configIni>
+
+   <launcherArgs>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
+   </launcherArgs>
+
+   <plugins>
+   </plugins>
+
+   <features>
+      <feature id="org.ossmeter.platform.feature.vanilla"/>
+   </features>
+
+
+</product>

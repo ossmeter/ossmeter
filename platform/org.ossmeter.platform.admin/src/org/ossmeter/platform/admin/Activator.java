@@ -12,9 +12,16 @@ package org.ossmeter.platform.admin;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceEvent;
+import org.osgi.framework.ServiceListener;
+import org.ossmeter.platform.Configuration;
+import org.ossmeter.platform.osgi.services.ApiStartServiceToken;
 import org.restlet.Application;
 import org.restlet.Component;
+import org.restlet.data.ChallengeScheme;
 import org.restlet.data.Protocol;
+import org.restlet.security.ChallengeAuthenticator;
+import org.restlet.security.MapVerifier;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -27,14 +34,46 @@ public class Activator implements BundleActivator{
 	private Component component;
 	
 	public void start(BundleContext context) throws Exception {
-		component = new Component();
-		component.getServers().add(Protocol.HTTP, 8183);
-		component.getClients().add(Protocol.FILE);
 		
-		Application application = new AdminApplication();
+		System.err.println("Starting Admin bundle");
 		
-		component.getDefaultHost().attachDefault(application);
-		component.start();
+		context.addServiceListener(new ServiceListener() {
+			
+			@Override
+			public void serviceChanged(ServiceEvent event) {
+				System.err.println(event);
+				if (event.getType() == ServiceEvent.REGISTERED){
+					Application application = new AdminApplication();
+
+					component = new Component();
+					component.getServers().add(Protocol.HTTP, 8183);
+					component.getClients().add(Protocol.FILE);
+
+					boolean useAuth = Boolean.valueOf(Configuration.getInstance().getProperty("adminapi.use_authentication", "false"));
+					
+					if (useAuth) {
+						String username = Configuration.getInstance().getProperty("adminapi.username", null);
+						String password = Configuration.getInstance().getProperty("adminapi.password", null);
+						
+						ChallengeAuthenticator guard = new ChallengeAuthenticator(null, ChallengeScheme.HTTP_BASIC, "myRealm");
+						MapVerifier verifier = new MapVerifier();
+						verifier.getLocalSecrets().put(username, password.toCharArray());
+						guard.setVerifier(verifier);
+						guard.setNext(application);
+						
+						component.getDefaultHost().attachDefault(guard);
+					} else {
+						component.getDefaultHost().attachDefault(application);
+					}
+					
+					try {
+						component.start();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}, "(objectclass=" + ApiStartServiceToken.class.getName() +")");
 	}
 
 	public void stop(BundleContext context) throws Exception {

@@ -5,17 +5,17 @@
     @param attribute       The quality attribute
 *@
 
-@(project: org.ossmeter.repository.model.Project, qualityModel : QualityModel, attribute : QualityAttribute)
+@(project: org.ossmeter.repository.model.Project, qualityModel : model.QualityModel, attribute : model.QualityAttribute)
 
 @import scala._
 
 @attributeId = @{ 
-    attribute.name.replaceAll(" ", "");
+    attribute.getName().replaceAll(" ", "");
 }
 
     <div class="row" data-toggle="collapse" data-target="#div-attr-@attributeId" aria-expanded="true" aria-controls="div-attr-@attributeId">
         <div class="col-md-12">
-            <h2 class="marginless">@attribute.name</h2>
+            <h2 class="marginless">@attribute.getName()</h2>
         </div>
     </div>
     <div id="div-attr-@attributeId">
@@ -56,7 +56,7 @@
                 sparktable : "sparklines-table-12months-@attributeId",
                 projectid : "@project.getShortName()",
                 projectname : "@project.getName()",
-                metriclist : "@attribute.metrics.map(x=>x.id).mkString("+")",
+                metriclist : "@attribute.getMetrics().map(x=>x.getIdentifier()).mkString("+")",
                 querystring : "startDate=" + getOneYearAgoDateString(),
                 toolkittable : "sparklines-table-toolkit-@attributeId",
                 drawName : true,
@@ -68,7 +68,7 @@
                 sparktable : "sparklines-table-alltime-@attributeId",
                 projectid : "@project.getShortName()",
                 projectname : "@project.getName()",
-                metriclist : "@attribute.metrics.map(x=>x.id).mkString("+")",
+                metriclist : "@attribute.getMetrics().map(x=>x.getIdentifier()).mkString("+")",
             };
 
             drawSparkTable(twelveMth);

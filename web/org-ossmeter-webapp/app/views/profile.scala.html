@@ -76,6 +76,27 @@
                 <span class="label label-primary"><span class="glyphicon glyphicon-calendar"> @user.getGrid().count(_.isInstanceOf[model.EventGroup])</span></span> 
                 <span class="label label-primary"><span class="glyphicon glyphicon-cloud-upload"> @user.getOwns().size()</span></span> 
                 <span class="label label-primary"><span class="glyphicon glyphicon-star"> @user.getWatching().size()</span></span> 
+            
+                <p>Quality Model:</p>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="qmRadio" id="optionsRadios1" value="info" @if("info".equals(user.getSelectedQualityModel())){checked}>
+                    Information Sources
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="qmRadio" id="optionsRadios2" value="quality" @if("quality".equals(user.getSelectedQualityModel())){checked}>
+                    Quality Attributes
+                  </label>
+                </div>
+                <div class="radio @if(user.getQualityModel() == null){disabled}">
+                  <label>
+                    <input type="radio" name="qmRadio" id="optionsRadios3" value="custom" @if(user.getQualityModel() == null){disabled} @if("custom".equals(user.getSelectedQualityModel())){checked}>
+                    Custom
+                  </label>
+                  <a class="btn btn-default" href="@routes.Account.editQualityModel">@if(user.getQualityModel() == null){Create}else{Edit}</a>
+                </div>
             </div>  
             <div class="col-md-4">
                 <h3>Projects You Own</h3>
@@ -397,6 +418,19 @@
 <script type="text/javascript">
     var grid;
     $(function(){ 
+        $("input[name='qmRadio']").change(function() {
+            var choice = $("input[name='qmRadio']:checked").val();
+
+            jsRoutes.controllers.Account.updateQualityModelSelection(choice).ajax()
+                .success(function(result){
+                    console.log("Updated QM selection.")
+                })
+                .error(function(error){
+                    console.log("Error updating QM selection:") 
+                    console.log(error);
+                });
+        })
+
         grid = $(".gridster ul").gridster({
             widget_margins: [10, 10],
             widget_base_dimensions: [140, 180],

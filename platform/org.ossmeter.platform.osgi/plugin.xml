@@ -30,4 +30,16 @@
     <class name="org.ossmeter.platform.osgi.errors.ProjectErrors"/>
     <class name="org.ossmeter.platform.osgi.errors.ProjectError"/>
   </extension>
+<extension
+      id="org_ossmeter_platform_vanilla"
+      point="org.eclipse.core.runtime.products">
+   <product
+         application="ossmeter.workerservice"
+         name="org.ossmeter.platform.vanilla">
+      <property
+            name="appName"
+            value="org.ossmeter.platform.vanilla">
+      </property>
+   </product>
+</extension>
 </plugin>

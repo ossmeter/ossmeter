@@ -5,7 +5,7 @@
     @param attribute       The quality attribute
 *@
 
-@(project: org.ossmeter.repository.model.Project, qualityModel : QualityModel, attribute : QualityAttribute)
+@(project: org.ossmeter.repository.model.Project, qualityModel : model.QualityModel, attribute : model.QualityAttribute)
 
 @import scala._
 
@@ -20,11 +20,11 @@
 @import org.ossmeter.repository.model.github._
 
 @attributeId = @{ 
-    attribute.name.replaceAll(" ", "");
+    attribute.getName().replaceAll(" ", "");
 }
 
 @metricIds = {
-    attribute.metrics.take(10).map(x=> x.id)
+    attribute.getMetrics().take(10).map(x=> x.getIdentifier())
 }
 
 
@@ -33,12 +33,13 @@
 
     <div class="row">
         <ul class="nav nav-tabs" role="tablist">
-            <li class="disabled col-md-4"><h2 class="marginless">@attribute.name</h2></li>
+            <li class="disabled col-md-4"><h2 class="marginless">@attribute.getName()</h2></li>
             <li class="active"><a href="#factoids-@attributeId" role="tab" data-toggle="tab">Factoids</a></li>
             <li class=""><a href="#sparklines-@attributeId" role="tab" data-toggle="tab" id="sparklines-@attributeId-tab">Sparklines</a></li>
-            @if(attribute.detail != "none") {
+   @*         @if(attribute.detail != "none") {
             <li class=""><a href="#details-@attributeId" role="tab" data-toggle="tab">Details</a></li>
             }
+    *@
         </ul>
     </div>
     <div class="row">
@@ -52,7 +53,7 @@
                 </div>
                 <script type="text/javascript">
                     $(function() {
-                        $.getJSON(getApi() + "/projects/p/@project.getShortName()/f/@attribute.factoids.take(5).mkString("+")", function (result) {
+                        $.getJSON(getApi() + "/projects/p/@project.getShortName()/f/@attribute.getFactoids().take(5).map(x=> x.getIdentifier()).mkString("+")", function (result) {
                             $("#factoids-@attributeId").empty();
 
                             for (var r in result) {
@@ -84,7 +85,7 @@
                     </table>
                     <script type="text/javascript">
                         $('#sparklines-@attributeId-tab').one('click', function(e) {
-                            $.getJSON(getApi() + "/projects/p/@project.getShortName()/s/@attribute.metrics.take(10).map(x=> x.id).mkString("+")", function (result) {
+                            $.getJSON(getApi() + "/projects/p/@project.getShortName()/s/@attribute.getMetrics().take(10).map(x=> x.getIdentifier()).mkString("+")", function (result) {
 
                                 console.log(Object.prototype.toString.call( result ));
 
@@ -141,7 +142,7 @@
                     </script>
                 </div>
 
-                @if(attribute.detail != "none") {
+    @*            @if(attribute.detail != "none") {
                 <div class="tab-pane fade" id="details-@attributeId">
                     @attribute.detail match {
                         case "src" => {
@@ -240,13 +241,14 @@
                     }
                 }
                 </div>
+    *@
             </div>
             <!-- @*<a class="btn btn-default form-control" href="@routes.Projects.viewAspect(project.getShortName(), qualityModel.id, attributeId, true)">View in depth @attribute.name.toLowerCase() metrics</a>*@ -->
         </div>  
     </div>    
     <div class="row">
         <div class="col-md-4">
-            <a class="btn btn-default form-control" href="@routes.Projects.viewTmp(project.getShortName(), qualityModel.id, false)">View metrics in depth</a>
+            <a class="btn btn-default form-control" href="@routes.Projects.viewDetail(project.getShortName())">View metrics in depth</a>
         </div>
     </div>
     

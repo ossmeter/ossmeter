@@ -21,6 +21,7 @@ public class Users extends PongoDB {
 	protected MailingListItemCollection mailingList = null;
 	protected NewsItemCollection news = null;
 	protected ErrorCollection errors = null;
+	protected QualityModelCollection qualityModels = null;
 
 	public InvitationRequestCollection getInvites() {
 		return invites;
@@ -28,6 +29,10 @@ public class Users extends PongoDB {
 	
 	public UserCollection getUsers() {
 		return users;
+	}
+
+	public QualityModelCollection getQualityModels() {
+		return qualityModels;
 	}
 	
 	public TokenCollection getTokens() {
@@ -84,5 +89,7 @@ public class Users extends PongoDB {
 		pongoCollections.add(news);
 		errors = new ErrorCollection(db.getCollection("errors"));
 		pongoCollections.add(errors);
+		qualityModels = new QualityModelCollection(db.getCollection("qualityModels"));
+		pongoCollections.add(qualityModels);
 	}
 }
