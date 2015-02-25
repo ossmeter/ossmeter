@@ -98,9 +98,9 @@ public class ProjectCreationResource extends ServerResource {
 			for (JsonNode vcs : (ArrayNode)json.get("vcs")) {
 				VcsRepository repo = null;
 				if (vcs.get("type").asText().equals("git")) {
-					repo = new SvnRepository();
-				} else if (vcs.get("type").asText().equals("svn")) {
 					repo = new GitRepository();
+				} else if (vcs.get("type").asText().equals("svn")) {
+					repo = new SvnRepository();
 				}
 //				repo.setName(vcs.get("name").asText());
 				repo.setUrl(vcs.get("url").asText());
