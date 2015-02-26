@@ -363,7 +363,12 @@ public class SeverityClassificationTransMetricProvider  implements ITransientMet
 		classifierMessage.setBugId(comment.getBugId());
 		classifierMessage.setCommentId(comment.getCommentId());
 		classifierMessage.setSubject(bugSubject);
-		classifierMessage.setText(comment.getText());
+		
+		if (comment.getText() == null) {
+			classifierMessage.setText("");			
+		} else {
+			classifierMessage.setText(comment.getText());
+		}
         return classifierMessage;
 	}
 

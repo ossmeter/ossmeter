@@ -103,6 +103,7 @@ public class RedmineManager implements
 		Iterable<RedmineIssue> issues = issueCache.getItemsAfterDate(day);
 
 		RedmineBugTrackingSystemDelta delta = new RedmineBugTrackingSystemDelta();
+		delta.setBugTrackingSystem(bugTracker);
 		for (RedmineIssue issue : issues) {
 
 			if (DateUtils.isSameDay(issue.getCreationTime(), day)) {
@@ -175,26 +176,33 @@ public class RedmineManager implements
 	public static void main(String[] args) throws Exception {
 		RedmineManager manager = new RedmineManager();
 		RedmineBugIssueTracker bugTracker = new RedmineBugIssueTracker();
-		bugTracker.setUrl("http://www.redmine.org/");
-		bugTracker.setProject("redmine");
+		bugTracker.setUrl("http://forge.modelio.org");
+		bugTracker.setProject("utp");
 		Date firstDate = manager.getFirstDate(null, bugTracker);
 		System.out.println("FIRST DATE: " + firstDate); // Should be 2007-02-24
 		System.out.println();
-
-		RedmineIssue issue = new RedmineIssue();
-		issue.setBugId("285");
-		System.out.println(manager.getContents(null, bugTracker, issue));
-		System.out.println();
-
-		RedmineComment comment = new RedmineComment();
-		comment.setBugId("277");
-		comment.setCommentId("597");
-		System.out.println(manager.getContents(null, bugTracker, comment));
-		System.out.println();
-
-		BugTrackingSystemDelta delta = manager.getDelta(null, bugTracker, new Date(
-				"20140714"));
-		System.out.println(delta.getUpdatedBugs().size());
+		
+		BugTrackingSystemDelta delta = manager.getDelta(null, bugTracker, firstDate);
+		
+		for (BugTrackingSystemBug bug : delta.getNewBugs()) {
+			System.out.println(bug.getBugId());
+			System.out.println("\""+manager.getContents(null, bugTracker, bug)+"\"");
+		}
+		
+//		RedmineIssue issue = new RedmineIssue();
+//		issue.setBugId("285");
+//		System.out.println(manager.getContents(null, bugTracker, issue));
+//		System.out.println();
+//
+//		RedmineComment comment = new RedmineComment();
+//		comment.setBugId("277");
+//		comment.setCommentId("597");
+//		System.out.println(manager.getContents(null, bugTracker, comment));
+//		System.out.println();
+//
+//		delta = manager.getDelta(null, bugTracker, new Date(
+//				"20140714"));
+//		System.out.println(delta.getUpdatedBugs().size());
 
 		manager.shutdown();
 	}

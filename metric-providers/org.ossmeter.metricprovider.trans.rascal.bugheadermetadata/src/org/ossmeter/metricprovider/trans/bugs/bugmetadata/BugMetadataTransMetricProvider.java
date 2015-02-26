@@ -174,7 +174,11 @@ public class BugMetadataTransMetricProvider implements ITransientMetricProvider<
 		instance.setCommentId(comment.getCommentId());
 		instance.setPositionFromThreadBeginning(positionFromThreadBeginning);
 //		instance.setPositionFromThreadEnd(positionFromThreadEnd);
-		instance.setText(comment.getText());
+		if (comment.getText() == null) {
+			instance.setText("");
+		} else {
+			instance.setText(comment.getText());
+		}
 		return instance;
 	}
 

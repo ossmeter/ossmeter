@@ -15,4 +15,5 @@ Export-Package: org.apache.http.impl.nio.client,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.apache.httpcomponents.httpcorenio,
  org.apache.httpcomponents.httpcore,
- org.apache.commons.logging
+ org.apache.commons.logging,
+ org.apache.httpcomponents.httpclient

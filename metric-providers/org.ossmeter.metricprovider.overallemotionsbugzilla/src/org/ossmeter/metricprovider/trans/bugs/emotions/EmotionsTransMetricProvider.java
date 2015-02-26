@@ -101,7 +101,12 @@ public class EmotionsTransMetricProvider implements ITransientMetricProvider<Bug
 				instance.setBugTrackerId(bugTracker.getOSSMeterId());
 				instance.setBugId(comment.getBugId());
 				instance.setCommentId(comment.getCommentId());
-				instance.setText(comment.getText());
+				
+				if (comment.getText() == null) {
+					instance.setText("");
+				} else {
+					instance.setText(comment.getText());
+				}
 				
 				String[] emotionalDimensions = EmotionalDimensions.getDimensions(instance).split(",");
 				

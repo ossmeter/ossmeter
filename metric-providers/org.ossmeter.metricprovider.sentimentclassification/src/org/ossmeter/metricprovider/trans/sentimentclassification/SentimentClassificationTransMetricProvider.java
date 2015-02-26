@@ -188,7 +188,13 @@ public class SentimentClassificationTransMetricProvider  implements ITransientMe
         classificationInstance.setBugTrackerId(bugTracker.getOSSMeterId());
         classificationInstance.setBugId(comment.getBugId());
         classificationInstance.setCommentId(comment.getCommentId());
-        classificationInstance.setText(comment.getText());
+        
+        if (comment.getText() == null) {
+        	classificationInstance.setText("");
+        } else {
+        	classificationInstance.setText(comment.getText());
+        }
+        
         return classificationInstance;
 	}
 
