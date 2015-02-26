@@ -1,0 +1,7 @@
+textarea {
+	font-family:'Inconsolata',monospace;
+}
+
+#tdata {
+	overflow-x:scroll;
+}

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>All Metrics</title>
+
+    <link href="bootstrap.min.css" type="text/css" rel="stylesheet"/>
+    <link href="main.css" type="text/css" rel="stylesheet"/>
+    <link href="metvis.0.1.0.min.css" rel="stylesheet">
+
+    <script src="jquery-1.9.1.js"></script>
+    <script src="d3.v3.min.js"></script>
+    <script src="metvis.0.1.0.js"></script>
+
+</head>
+<body class="container-fluid">
+	<h1>MetVis: Visualise all metrics</h1>
+	<p><strong>Prerequisites:</strong> The client API needs to be running on localhost:8182.</p>
+	<p><strong>Instructions:</strong> Type the "shortName" field of the project you want to visualise the metrics for. Click the "Do it" button. This will invoke <code>localhost:8182/metrics</code> to get the list of metric visualisations registered with the platform. For each of the registered visualisations, it will try to request and draw those metrics for the project your specified in the text box. For instructions on how to specify your metric visualisations, see the OSSMETER GitHub wiki.</p>
+	<div class="row">
+		<div class="col-md-10">
+			<input type="text" placeholder="Enter project id, e.g. modeling-mmt-atl" class="form-control" id="txt_project" value="modeling-mmt-atl"/>
+		</div>
+		<div class="col-md-2">
+			<button type="button" class="btn btn-primary form-control" id="btn_go">Do it</button>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default" id="row_log" style="max-height:100px; overflow:scroll"></div>
+		</div>
+	</div>
+	<div class="row" id="row_metrics"></div>
+
+
+	<script>
+		$(function() {
+			"use strict";
+
+			$("#btn_go").click(function() {
+				$("#row_log").empty();
+				var projectid = $("#txt_project").val();
+				
+				// Validate
+				$.getJSON("http://localhost:8182/projects/p/" + projectid, function (project) {	
+					$("#row_log").append("<li>Project ID is valid. Loading metrics.</li>");
+					loadMetrics(projectid);
+				}).fail(function(err) {
+					$("#row_log").append("<li>Unable to load project. Check the ID or check the database connection.</li>");
+				});
+
+				
+			});
+		});
+
+		function loadMetrics(project) {
+			"use strict";
+
+			$.getJSON("http://localhost:8182/metrics", function(metrics) {
+				for (var m in metrics) {
+
+					var metricId = metrics[m].id;
+
+					if (typeof metricId === "undefined") {
+						metricId = metrics[m].nicename;
+						continue;
+					}
+
+					if (typeof metricId === "undefined") {
+						$("#row_log").append("<li>Unable to identify metric " + metrics[m] + "</li>");
+						continue;
+					}
+
+					$("#row_log").append("<li>Loading metric " + metricId + "</li>");
+					$.getJSON("http://localhost:8182/projects/p/" + project + "/m/" + metricId, function(vis) {
+						drawVis(vis);
+					}).fail(function(err) {
+						var str = '<div class="col-md-4 panel panel-default">';
+						str = str + '<p class="lead">Unable to parse response</p>';
+						str = str + '<span class="label label-danger">Fail</span>' + JSON.stringify(err, null, "  ") ;
+						$("#row_metrics").append(str);
+					});
+					// break;
+				}
+			});
+		}
+
+		function drawVis(vis) {
+			"use strict";
+			var str = '<div class="col-md-4 panel panel-default">';
+			if (vis.status === "error") {
+				str = str + '<span class="label label-danger">Fail</span><p>Unable to load metric. Reason:</p>';
+				str = str + '<p>' + vis.request.metric + '</p>';
+				str = str + '<p>' + vis.message + '</p>';
+			} else {
+				var container = "vis-"+vis.id.replace(/\./g,'');
+				str = str + '<p class="lead">' + vis.id + '</p>';
+
+				str = str + '<ul><li>Type: ' + vis.type + '</li>';
+				str = str + '<li>X: ' + vis.x + '</li>';
+				str = str + '<li>Y: ' + vis.y + '</li>';
+				str = str + '<li>Series: ' + vis.series + '</li>';
+				str = str + '<li>#Data points: ' + vis.datatable.length + '</li></ul>';
+
+				str = str + '<div id="' + container + '"></div' 
+				str = str + '</div>' 
+				$("#row_metrics").append(str);
+
+				var chart = new metvis.Chart("#" + container, vis);
+				chart.height = 200;
+				chart.draw();
+			}			
+		}
+ 	</script>
+
+</body>
+</html>
