@@ -12,11 +12,15 @@
 package org.ossmeter.platform.importers.tests;
 
 import static org.junit.Assert.*;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.ossmeter.metricprovider.trans.importer.github.GitHubImporterProvider;
 import org.ossmeter.platform.Platform;
+import org.ossmeter.platform.delta.bugtrackingsystem.ExtensionPointBugTrackingSystemManager;
+import org.ossmeter.platform.delta.bugtrackingsystem.PlatformBugTrackingSystemManager;
+import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.github.GitHubRepository;
 import org.ossmeter.repository.model.github.importer.GitHubImporter;
@@ -54,27 +58,14 @@ public class GitHubImporterTest {
 	}
 
 	@Test	
-	public void testImportByUrlAndUpdate() throws WrongUrlException {
+	public void testImportByUrlAndUpdate() throws Exception {
 		GitHubRepository project = im.importProjectByUrl("https://github.com/Igalia/libreplan", platform);
+		assertNotNull(project);
+		PlatformBugTrackingSystemManager manager = new ExtensionPointBugTrackingSystemManager(platform);
+		for (BugTrackingSystem bts : project.getBugTrackingSystems()) {
+		    manager.getFirstDate(null, bts);
+		}
 		
-		String pr = project.getDbObject().toString();
-		
-		// Currently not working
-//		assertEquals(1, project.getVcsRepositories().size());
-		
-		// Now update
-		GitHubImporterProvider mp = new GitHubImporterProvider();
-		PongoDB db = mp.adapt(platform.getMetricsRepository(project).getDb());
-		mp.measure(project, null, db);
-		
-		Project p = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByName(project.getName());
-		
-		// Check the update had no effect
-		assertEquals(pr, p.getDbObject().toString());
-		
-		// Clean up
-		platform.getProjectRepositoryManager().getProjectRepository().getProjects().remove(project);
-		platform.getProjectRepositoryManager().getProjectRepository().getProjects().sync();
 	}
 	
 	@Test(expected = WrongUrlException.class)
@@ -85,6 +76,7 @@ public class GitHubImporterTest {
 			assertNull( im.importProjectByUrl("", platform));
 			//assertNull( im.importProjectByUrl(null, platform)); // This will fail
 			assertNull( im.importProject("", platform));
+			
 			//assertNull( im.importRepository(null, platform)); // This will fail
 		
 	}
