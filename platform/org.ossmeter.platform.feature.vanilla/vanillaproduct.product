@@ -7,8 +7,19 @@
    </configIni>
 
    <launcherArgs>
+      <programArgs>-apiServer</programArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgsMac>
    </launcherArgs>
+
+   <launcher>
+      <solaris/>
+      <win useIco="false">
+         <bmp/>
+      </win>
+   </launcher>
+
+   <vm>
+   </vm>
 
    <plugins>
    </plugins>
@@ -17,5 +28,11 @@
       <feature id="org.ossmeter.platform.feature.vanilla"/>
    </features>
 
+   <configurations>
+      <plugin id="org.ossmeter.platform.admin" autoStart="true" startLevel="0" />
+      <plugin id="org.ossmeter.platform.client.api" autoStart="true" startLevel="0" />
+      <plugin id="org.restlet" autoStart="true" startLevel="0" />
+      <plugin id="org.restlet.ext.jetty" autoStart="true" startLevel="0" />
+   </configurations>
 
 </product>
