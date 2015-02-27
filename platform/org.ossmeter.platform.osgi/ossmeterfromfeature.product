@@ -32,9 +32,10 @@
 
    <configurations>
       <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="1" />
+      <plugin id="org.ossmeter.platform.admin" autoStart="true" startLevel="0" />
+      <plugin id="org.ossmeter.platform.client.api" autoStart="true" startLevel="0" />
       <plugin id="org.restlet" autoStart="true" startLevel="0" />
       <plugin id="org.restlet.ext.jetty" autoStart="true" startLevel="0" />
-      <plugin id="org.restlet.ext.servlet" autoStart="true" startLevel="0" />
    </configurations>
 
 </product>
