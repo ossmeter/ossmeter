@@ -389,7 +389,7 @@ public class GitHubImporter implements IImporter{
 				repository.setSvn_url(currentRepo.get("svn_url").toString());
 				SvnRepository svn = new SvnRepository();
 				svn.setUrl(currentRepo.get("svn_url").toString());
-				repository.getVcsRepositories().add(svn);
+//				repository.getVcsRepositories().add(svn);
 			}
 			repository.setSize(new Integer(currentRepo.get("size").toString()));
 			try{
