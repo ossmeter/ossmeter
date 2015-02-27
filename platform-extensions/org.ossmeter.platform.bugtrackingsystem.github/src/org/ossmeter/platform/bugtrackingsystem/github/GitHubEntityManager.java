@@ -52,6 +52,7 @@ class GitHubEntityManager {
 		ghComment.setCreator(processUser(comment.getUser()));
 		ghComment.setUpdatedAt(comment.getUpdatedAt());
 		ghComment.setUrl(comment.getUrl());
+		ghComment.setText(comment.getBody());
 
 		return ghComment;
 	}
@@ -67,6 +68,7 @@ class GitHubEntityManager {
 		ghIssue.setNumComments(issue.getComments());
 		ghIssue.setStatus(issue.getState());
 		ghIssue.setTitle(issue.getTitle());
+		ghIssue.setSummary(issue.getTitle());
 		ghIssue.setUpdatedTime(issue.getUpdatedAt());
 		ghIssue.setUrl(issue.getUrl());
 		ghIssue.setHtmlUrl(issue.getHtmlUrl());

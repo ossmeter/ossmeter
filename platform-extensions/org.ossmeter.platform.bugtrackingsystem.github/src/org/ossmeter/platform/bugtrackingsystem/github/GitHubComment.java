@@ -37,8 +37,6 @@ public class GitHubComment extends BugTrackingSystemComment {
         this.url = url;
     }
 
- 
-
     public static long getSerialversionuid() {
         return serialVersionUID;
     }

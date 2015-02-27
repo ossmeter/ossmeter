@@ -14,7 +14,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.ossmeter.metricprovider.trans.sentimentclassification,
  org.ossmeter.platform.visualisation,
  org.ossmeter.metricprovider.trans.requestreplyclassification,
- org.ossmeter.repository.model
+ org.ossmeter.repository.model,
+ org.ossmeter.platform.bugtrackingsystem.github
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.metricprovider.trans.bugs.bugmetadata,
