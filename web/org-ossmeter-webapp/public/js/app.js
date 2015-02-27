@@ -224,7 +224,7 @@ function getIndexOfNotification(project, metric) {
 function drawPlot(container, projectid, metricid) {
 
 	var unsparkId = 'unspark-'+projectid+metricid;
-	var str = '<div class="col-md-4 box">'
+	var str = '<div class="col-md-6 box">'
 		+ '<div class="row" id="legend-'+unsparkId+'"></div>'
 		+ '<div class="row" id="'+unsparkId+'"></div>'
 		+'</div>';
@@ -235,6 +235,7 @@ function drawPlot(container, projectid, metricid) {
 			if (vis.datatable && vis.datatable.length > 0) {
 				var chart = new metvis.Chart(jq(cont), vis);
 				chart.height = 150;
+				chart.margin.top = 10;
 				chart.axis.x.tickLabels = true;
 		        chart.axis.y.tickLabels = true;
 		        chart.axis.y.ticks = 3;

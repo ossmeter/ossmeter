@@ -19,7 +19,7 @@
 }
 
 @drawAttribute(attribute : model.QualityAttribute) = {
-	<li>@attribute.name <span class="label label-info">@attribute.getFactoids().size() factoids</span> <span class="label label-info">@attribute.getMetrics().size() metrics</span> 
+	<li>@attribute.getName() <span class="label label-info">@attribute.getFactoids().size() factoids</span> <span class="label label-info">@attribute.getMetrics().size() metrics</span> 
 		<ul>
 @*	@for(f <- attribute.getFactoids()) {
 		<li><span class="label label-info">@attribute.getFactoids().size() factoids</span> @f</li>
