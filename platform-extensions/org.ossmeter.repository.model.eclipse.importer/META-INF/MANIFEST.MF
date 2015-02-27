@@ -19,7 +19,7 @@ Require-Bundle: org.ossmeter.repository.model.eclipse,
  org.ossmeter.repository.model.vcs.cvs,
  org.ossmeter.repository.model,
  org.apache.log4j.1.2.17,
- org.ossmeter.repository.model.importer;bundle-version="1.0.0"
+ org.ossmeter.repository.model.importer
 Export-Package: org.ossmeter.repository.model.eclipse.importer
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy

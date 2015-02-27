@@ -33,6 +33,7 @@ import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.ITransientMetricProvider;
 import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.platform.bugtrackingsystem.bugzilla.BugzillaBug;
+import org.ossmeter.platform.bugtrackingsystem.github.GitHubIssue;
 import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.platform.delta.bugtrackingsystem.BugTrackingSystemBug;
 import org.ossmeter.platform.delta.bugtrackingsystem.BugTrackingSystemComment;
@@ -201,6 +202,10 @@ public class BugMetadataTransMetricProvider implements ITransientMetricProvider<
 			BugzillaBug bugzillaBug = (BugzillaBug) bug; 
 			if (bugzillaBug.getLastClosed()!=null)
 				bugData.setLastClosedTime(bugzillaBug.getLastClosed().toString());
+		} else if (bug instanceof GitHubIssue) {
+			GitHubIssue issue = (GitHubIssue) bug; 
+			if (issue.getClosedTime()!=null)
+				bugData.setLastClosedTime(issue.getClosedTime().toString());
 		} else {
 			System.err.println("Error! Bug is not covered!");
 		}

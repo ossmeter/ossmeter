@@ -8,15 +8,11 @@ Require-Bundle: org.ossmeter.repository.model.github,
  com.googlecode.pongo.runtime,
  org.ossmeter.platform,
  org.ossmeter.repository.model.importerdependencies,
- org.ossmeter.repository.model.importer.exception,
  org.ossmeter.repository.model.vcs.git,
  org.ossmeter.repository.model.vcs.svn,
- org.ossmeter.repository.model.importer.exception,
- org.ossmeter.repository.model.importer.exception,
- org.ossmeter.repository.model.importer.exception,
- org.ossmeter.repository.model.importer.exception,
  org.ossmeter.repository.model,
  org.apache.log4j.1.2.17,
- org.ossmeter.repository.model.importer;bundle-version="1.0.0"
+ org.ossmeter.repository.model.importer,
+ org.ossmeter.repository.model.importer.exception
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 

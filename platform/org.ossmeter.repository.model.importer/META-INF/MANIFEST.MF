@@ -1,12 +1,12 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Importer
-Bundle-SymbolicName: org.ossmeter.repository.model.importer
+Bundle-SymbolicName: org.ossmeter.repository.model.importer;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.ossmeter.repository.model.importer.Activator
 Require-Bundle: org.eclipse.core.runtime,
- org.ossmeter.platform;bundle-version="1.0.0",
- org.ossmeter.repository.model.importer.exception;bundle-version="1.0.0",
- org.ossmeter.repository.model;bundle-version="1.0.0"
+ org.ossmeter.platform,
+ org.ossmeter.repository.model.importer.exception,
+ org.ossmeter.repository.model
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.repository.model.importer

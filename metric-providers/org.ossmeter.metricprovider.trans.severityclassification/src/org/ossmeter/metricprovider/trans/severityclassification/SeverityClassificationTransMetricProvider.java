@@ -108,8 +108,9 @@ public class SeverityClassificationTransMetricProvider  implements ITransientMet
 			BugTrackingSystem bugTracker = bugTrackingSystemDelta.getBugTrackingSystem();
 			Map<String, String> bugIdsNoSeverity2Subject = new HashMap<String, String>();
 			for (BugTrackingSystemBug bug: bugTrackingSystemDelta.getNewBugs()) {
-				if ( (bug.getSeverity()==null) || (bug.getSeverity().equals("")) )
+				if ( (bug.getSeverity()==null) || (bug.getSeverity().equals("")) ) {
 					bugIdsNoSeverity2Subject.put(bug.getBugId(), bug.getSummary());
+				}
 				else {
 					BugTrackerBugsData bugData = findBugTrackerBug(db, bugTracker, bug.getBugId());
 					if (bugData == null) {
@@ -220,21 +221,30 @@ public class SeverityClassificationTransMetricProvider  implements ITransientMet
 			
 			BugTrackingSystem bugTracker = bugTrackingSystemDelta.getBugTrackingSystem();
 			
+			Set<String> bugIdSet = new HashSet<String>(); 
+			for (BugTrackingSystemComment comment: bugTrackingSystemDelta.getComments()) {
+				bugIdSet.add(comment.getBugId());
+			}
+				
 			for (BugTrackingSystemBug bug: bugTrackingSystemDelta.getNewBugs()) {
-				if ( (bug.getSeverity()==null) || (bug.getSeverity().equals("")) ) {
-					BugTrackerBugsData bugTrackerBugsData = 
-							prepareBugTrackerBugsData(classifier, bugTracker, bug);
-					db.getBugTrackerBugs().add(bugTrackerBugsData);
-					db.sync();
+				if (bugIdSet.contains(bug.getBugId())) {
+					if ( (bug.getSeverity()==null) || (bug.getSeverity().equals("")) ) {
+						BugTrackerBugsData bugTrackerBugsData = 
+								prepareBugTrackerBugsData(classifier, bugTracker, bug);
+						db.getBugTrackerBugs().add(bugTrackerBugsData);
+						db.sync();
+					}
 				}
 			}
 			
 			for (BugTrackingSystemBug bug: bugTrackingSystemDelta.getUpdatedBugs()) {
-				if ( (bug.getSeverity()==null) || (bug.getSeverity().equals("")) ) {
-					BugTrackerBugsData bugTrackerBugsData = 
-							prepareBugTrackerBugsData(classifier, bugTracker, bug);
-					db.getBugTrackerBugs().add(bugTrackerBugsData);
-					db.sync();
+				if (bugIdSet.contains(bug.getBugId())) {
+					if ( (bug.getSeverity()==null) || (bug.getSeverity().equals("")) ) {
+						BugTrackerBugsData bugTrackerBugsData = 
+								prepareBugTrackerBugsData(classifier, bugTracker, bug);
+						db.getBugTrackerBugs().add(bugTrackerBugsData);
+						db.sync();
+					}
 				}
 			}
 			db.sync();
