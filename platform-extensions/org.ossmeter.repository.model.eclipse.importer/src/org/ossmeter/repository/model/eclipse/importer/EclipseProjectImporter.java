@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -25,13 +26,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -55,15 +49,10 @@ import org.ossmeter.repository.model.eclipse.Documentation;
 import org.ossmeter.repository.model.eclipse.EclipsePlatform;
 import org.ossmeter.repository.model.eclipse.EclipseProject;
 import org.ossmeter.repository.model.eclipse.MailingList;
-import org.ossmeter.repository.model.eclipse.importer.util.XML;
 import org.ossmeter.repository.model.vcs.cvs.CvsRepository;
 import org.ossmeter.repository.model.vcs.git.GitRepository;
 import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 import org.ossmeter.repository.model.importer.exception.*;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 import org.ossmeter.repository.model.importer.IImporter;
 
 public class EclipseProjectImporter implements IImporter{
@@ -253,13 +242,13 @@ public class EclipseProjectImporter implements IImporter{
 			if ((isNotNull(currentProg,"description")))
 				project.setDescription(((JSONObject)((JSONArray)currentProg.get("description")).get(0)).get("value").toString());
 		
-			if ((isNotNull(currentProg,"parent_project"))){
-				String parentProjectName = ((JSONObject)((JSONArray)currentProg.get("parent_project")).get(0)).get("id").toString();
-				if (parentProjectName != null) {
-					project.setParent(importProjectFromImportAll(parentProjectName, platform));
-					logger.info("The project " + parentProjectName + " is parent of " + project.getShortName());
-				}				    
-			}		
+//			if ((isNotNull(currentProg,"parent_project"))){
+//				String parentProjectName = ((JSONObject)((JSONArray)currentProg.get("parent_project")).get(0)).get("id").toString();
+//				if (parentProjectName != null) {
+//					project.setParent(importProjectFromImportAll(parentProjectName, platform));
+//					logger.info("The project " + parentProjectName + " is parent of " + project.getShortName());
+//				}				    
+//			}		
 			
 			if ((isNotNull(currentProg,"download_url")))
 					project.setDownloadsUrl(((JSONObject)((JSONArray)currentProg.get("download_url")).get(0)).get("url").toString());
@@ -413,21 +402,39 @@ public class EclipseProjectImporter implements IImporter{
 					VcsRepository repository = null;
 					if (((String)entry.get("type")).equals("git")  || ((String)entry.get("type")).equals("github")) {
 						repository = new GitRepository();
-					} else if (((String)entry.get("type")).equals("svn")) {
+						if (!((String)entry.get("path")).startsWith("/") && ((String)entry.get("type")).equals("github"))
+							repository.setUrl((String)entry.get("path"));
+						if (((String)entry.get("path")).startsWith("/") && ((String)entry.get("type")).equals("git"))
+							repository.setUrl("http://git.eclipse.org" + (String)entry.get("path"));
+					} 
+					else if (((String)entry.get("type")).equals("svn") && ((String)entry.get("path")).startsWith("/")) {
 						repository = new SvnRepository();
-					} else if (((String)entry.get("type")).equals("cvs")) {
+						String svnUrl = "http://dev.eclipse.org/" + (String)entry.get("path");
+						
+						int svnTest = getResponseCode(svnUrl);
+						if (svnTest == 200)
+							repository.setUrl((String)entry.get("path"));
+						if (svnTest != 200) {
+							String [] splitString = projectId.split("\\.");
+							String gitUrl = null;
+							if (splitString != null && splitString.length>0) {
+								String shortName = splitString[splitString.length-1];
+								gitUrl = "https://git.eclipse.org/c/www.eclipse.org/"+ shortName +".git";
+							}
+							int gitTest = getResponseCode(gitUrl);
+								if (gitTest == 200)  {
+									repository = new GitRepository();
+									repository.setUrl(gitUrl);
+								}
+							}
+					} 
+					else if (((String)entry.get("type")).equals("cvs")) {
 						repository = new CvsRepository();
 					}
-				if (repository != null) {
-					repository.setName((String)entry.get("name"));
-					if (!((String)entry.get("path")).startsWith("/") && ((String)entry.get("type")).equals("github"))
-						repository.setUrl((String)entry.get("path"));
-					if (((String)entry.get("path")).startsWith("/") && ((String)entry.get("type")).equals("git"))
-						repository.setUrl("http://git.eclipse.org" + (String)entry.get("path"));
-					if (((String)entry.get("path")).startsWith("/") && ((String)entry.get("type")).equals("svn"))
-						repository.setUrl("http://dev.eclipse.org/" + (String)entry.get("path"));
-				}
-				project.getVcsRepositories().add(repository);
+					if (repository != null) {
+						repository.setName((String)entry.get("name"));
+					}
+					project.getVcsRepositories().add(repository);
 				}
 			}
 			// END Management of VcsRepositories
@@ -452,6 +459,15 @@ public class EclipseProjectImporter implements IImporter{
 		return project;
 		
 	}
+	
+	public static int getResponseCode(String urlString) throws MalformedURLException, IOException {
+	    URL u = new URL(urlString); 
+	    HttpURLConnection huc =  (HttpURLConnection)  u.openConnection(); 
+	    huc.setRequestMethod("GET"); 
+	    huc.connect(); 
+	    return huc.getResponseCode();
+	}
+	
 	
 	private EclipseProject importProjectFromImportAll(String projectId, Platform platform) throws ProjectUnknownException, MalformedURLException, IOException{
 		
