@@ -338,6 +338,7 @@ public class GitHubImporter implements IImporter{
 			}
 			if(!projectToBeUpdated)
 				repository = new GitHubRepository();
+			else repository.getVcsRepositories().clear();
 			String appDescription = (String)currentRepo.get("description");
 			if (appDescription != null)					
 				repository.setDescription(appDescription);
@@ -402,21 +403,19 @@ public class GitHubImporter implements IImporter{
 			{
 				logger.debug("Unable to load collaborators for this project");
 			}
-			GitHubBugTracker bt;
-			if (repository.getBugTrackingSystems().isEmpty())
+			repository.getBugTrackingSystems().clear();
+			if (projectId.split("/").length == 2)
 			{
-				if (projectId.split("/").length == 2)
-				{
-					bt = new GitHubBugTracker();
-					bt.setUrl("https://api.github.com/repos/" + projectId + "/issues");
-					String user = projectId.split("/")[0];
-					String repo = projectId.split("/")[1];
-					bt.setUser(user);
-					bt.setRepository(repo);
-					repository.getBugTrackingSystems().add(bt);
-				}
+				GitHubBugTracker bt;
+				bt = new GitHubBugTracker();
+				bt.setUrl("https://api.github.com/repos/" + projectId + "/issues");
+				String user = projectId.split("/")[0];
+				String repo = projectId.split("/")[1];
+				bt.setUser(user);
+				bt.setRepository(repo);
+				repository.getBugTrackingSystems().add(bt);
 			}
-			else bt = (GitHubBugTracker) repository.getBugTrackingSystems().get(0);
+			
 
 			/*
 			try{
