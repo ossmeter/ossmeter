@@ -232,7 +232,7 @@ public class EclipseProjectImporter implements IImporter{
 			JSONObject obj2=(JSONObject)JSONValue.parse(jsonText);
 			JSONObject currentProg = (JSONObject)((JSONObject)obj2.get("projects")).get(projectId.replaceAll("-", "\\."));
 			
-			project.setShortName(projectId.replaceAll("\\.", "-"));
+			project.setShortName(projectId);
 			if ((isNotNullObj(currentProg,"title")))
 				project.setName(currentProg.get("title").toString());
 			logger.info("---> Retrieving metadata of " + project.getShortName());
@@ -404,8 +404,21 @@ public class EclipseProjectImporter implements IImporter{
 						repository = new GitRepository();
 						if (!((String)entry.get("path")).startsWith("/") && ((String)entry.get("type")).equals("github"))
 							repository.setUrl((String)entry.get("path"));
-						if (((String)entry.get("path")).startsWith("/") && ((String)entry.get("type")).equals("git"))
-							repository.setUrl("http://git.eclipse.org" + (String)entry.get("path"));
+						if (((String)entry.get("path")).startsWith("/") && ((String)entry.get("type")).equals("git")) {
+							String gitUrl = "http://git.eclipse.org" + (String)entry.get("path");
+							int gitTest = getResponseCode(gitUrl);
+							if (gitTest != 200){
+								gitUrl = gitUrl.replace("http", "https");
+								gitUrl = gitUrl.replace("gitroot", "r");
+								if (gitUrl.endsWith("git"))
+									gitUrl = gitUrl.substring(0, gitUrl.length()-4);
+								gitTest = getResponseCode(gitUrl); 
+								repository.setUrl(gitUrl);
+								
+							}
+							else repository.setUrl(gitUrl);
+							
+						}
 					} 
 					else if (((String)entry.get("type")).equals("svn") && ((String)entry.get("path")).startsWith("/")) {
 						repository = new SvnRepository();
@@ -460,7 +473,7 @@ public class EclipseProjectImporter implements IImporter{
 		
 	}
 	
-	public static int getResponseCode(String urlString) throws MalformedURLException, IOException {
+	private static int getResponseCode(String urlString) throws MalformedURLException, IOException {
 	    URL u = new URL(urlString); 
 	    HttpURLConnection huc =  (HttpURLConnection)  u.openConnection(); 
 	    huc.setRequestMethod("GET"); 
