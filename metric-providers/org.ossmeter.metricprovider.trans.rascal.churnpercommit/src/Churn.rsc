@@ -241,6 +241,6 @@ Factoid commitLocality(rel[datetime day, map[loc, int] files] filesPerCommit = {
 @appliesTo{generic()}
 @uses = ("churnPerCommitter" : "committerChurn")
 map[str, int] coreCommittersChurn(map[str, int] prev = (), map[str, int] committerChurn = ()) 
-  = prev + (author : prev[author]?0 + committerChurn[author] | author <- committerChurn);
+  = prev + (author : (prev[author]?0) + committerChurn[author] | author <- committerChurn);
   
   
