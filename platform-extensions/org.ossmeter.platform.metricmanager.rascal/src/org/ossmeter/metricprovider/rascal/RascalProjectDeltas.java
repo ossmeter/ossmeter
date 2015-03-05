@@ -82,7 +82,14 @@ public class RascalProjectDeltas {
   }
   
   private IDateTime convert(Date date) {
-	return values.datetime(date.toJavaDate().getTime());
+	long time = date.toJavaDate().getTime();
+	
+	if (time != 0L) {
+		return values.datetime(time);
+	}
+	else {
+		throw new RuntimeException("VcsDelta produces epoch time (0L) unexpectedly");
+	}
   }
   
   private IConstructor convert(Project project) {
