@@ -28,6 +28,10 @@ public real giniCCOverMethods(map[loc, int] methodCC) {
     throw undefined("Not enough data available.", |tmp:///|);
   }
   
+  if (sum(distCCOverMethods<1>) == 0) {
+    return 1.0; // completely honest distribution of nothing over everything.
+  }
+  
   return round(gini([<x, distCCOverMethods[x]> | x <- distCCOverMethods]), 0.01);
 }
 

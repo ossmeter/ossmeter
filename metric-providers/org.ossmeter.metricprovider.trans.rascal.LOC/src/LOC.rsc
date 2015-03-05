@@ -34,6 +34,9 @@ real giniLOC(map[loc, int] locs) {
   if (size(dist) < 2) {
   	throw undefined("Not enough LOC data available.", |tmp:///|);
   }
+  if (sum(dist<1>) == 0) {
+    return 1.0; // completely honest distribution of nothing over everything.
+  }
   return round(gini([<x, dist[x]> | x <- dist]), 0.01);
 }
 
