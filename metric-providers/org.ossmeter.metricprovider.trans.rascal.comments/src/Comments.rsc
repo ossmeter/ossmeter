@@ -301,7 +301,7 @@ Factoid commentPercentage(map[str, int] locPerLanguage = (), map[str, int] comme
   	stars = three();
   }
   
-  txt = "The percentage of lines containing comments over all measured languages is <totalPercentage>%. Headers and commented out code are not included in this measure.";
+  txt = "The percentage of lines containing comments over all measured languages is <round(totalPercentage,0.01)>%. Headers and commented out code are not included in this measure.";
 
   languagePercentage = ( l : round(100 * commentLinesPerLanguage[l] / toReal(locPerLanguage[l]), 0.01) | l <- languages ); 
 
@@ -424,17 +424,17 @@ Factoid headerUse(list[int] headerCounts = [], real headerPercentage = -1.0) {
 			stars += 1;
 		}
 		
-		highestSimilarity = max(headerCounts) / sum(headerCounts);
+		highestSimilarity = (max(headerCounts) * 1.00) / sum(headerCounts);
 		
 		if (highestSimilarity > 0.8) {
 			stars += 1;
 		}
 		
-		message = "The percentage of files with a header is <headerPercentage>%." +
-			"The largest group of similar headers spans <highestSimilarity>% of the files.";
+		message = "The percentage of files with a header is <round(headerPercentage,0.01)>%." +
+			"The largest group of similar headers spans <round(highestSimilarity,0.01)>% of the files.";
 	}
 	else if (headerPercentage > 0.0) {
-		message = "Only <headerPercentage>% of the files contain a header.";
+		message = "Only <round(headerPercentage,0.01)>% of the files contain a header.";
 	}
 	else {
 		message = "No headers found.";

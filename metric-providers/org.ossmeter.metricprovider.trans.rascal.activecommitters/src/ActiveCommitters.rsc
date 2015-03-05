@@ -248,7 +248,7 @@ Factoid developmentTeamExperience(
   }
   else {
     txt = "The number of experienced committers working for the project in the last 6 months is <numExperiencedCommitters>.";
-    txt += " Their average overall number of commits is <mean([commitsPerDeveloper[d] | d <- experiencedCommittersInLastHalfYear])>.";
+    txt += " Their average overall number of commits is <round(mean([commitsPerDeveloper[d] | d <- experiencedCommittersInLastHalfYear]),0.01)>.";
   }
 
   if (size(committersInLastHalfYear) == numExperiencedCommitters) {
