@@ -14,6 +14,7 @@ import util::ValueUI;
 import util::Math;
 import analysis::graphs::Graph;
 extend lang::java::m3::Core;
+import lang::java::m3::AST;
 import JUnit4;
 import Java;
 import org::ossmeter::metricprovider::MetricProvider;
@@ -91,12 +92,16 @@ private rel[loc, loc] getImplicitContainment(M3 m) {
   decls = m@declarations<0>;
   nameSet = toMap(m@names<1,0>);
   cMap = containmentMap(m);
-  for (cl <- decls, cl.scheme == "java+class" || cl.scheme == "java+anonymousClass" || cl.scheme == "java+enum") {
+  for (cl <- decls, cl.scheme == "java+class" || cl.scheme == "java+anonymousClass" || cl.scheme == "java+enum", \abstract() notin m@modifiers[cl]) {
     allMeths = { candidate | candidate <- cMap[cl]?{}, isMethod(candidate) };
     
     if (!any(meth <- allMeths, meth.scheme == "java+constructor")) {
       possibleNames = nameSet[cl]? {};
-      assert(size(possibleNames) <= 1) : "Found more than one simple name entry for qualified name <cl>: <possibleNames>";
+      if(size(possibleNames) > 1) {
+        println("Found more than one simple name entry for qualified name <cl>: <possibleNames>");
+        println("Picking the closest match");
+        possibleNames = { split("/", cl.path)[-1] };
+      }
       className = isEmpty(possibleNames) ? "" : getOneFrom(possibleNames);
       defaultConstructorLOC = (cl+"<className>()")[scheme="java+constructor"];
       implicitContainment += <cl, defaultConstructorLOC>;
