@@ -407,7 +407,7 @@ public class EclipseProjectImporter implements IImporter{
 						if (((String)entry.get("path")).startsWith("/") && ((String)entry.get("type")).equals("git")) {
 							String gitUrl = "http://git.eclipse.org" + (String)entry.get("path");
 							int gitTest = getResponseCode(gitUrl);
-							if (gitTest != 200){
+							if (gitTest == 200){
 								gitUrl = gitUrl.replace("http", "https");
 								gitUrl = gitUrl.replace("gitroot", "r");
 								if (gitUrl.endsWith("git"))
