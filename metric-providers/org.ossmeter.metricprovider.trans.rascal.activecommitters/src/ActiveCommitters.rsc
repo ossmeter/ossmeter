@@ -272,6 +272,9 @@ real giniCommittersOverFile(ProjectDelta delta = \empty(), map[loc,int] perFile 
   map[int, int] distCommitterOverFile = distribution(committersOverFile);
   
   if (size(distCommitterOverFile) > 0) {
+    if (sum(distCommitterOverFile<1>) == 0) {
+      return 1.0; // completely honest distribution of nothing over everything.
+    }
     return round(gini([<0,0>]+[<x, distCommitterOverFile[x]> | x <- distCommitterOverFile]), 0.01);
   }
 

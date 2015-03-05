@@ -71,7 +71,12 @@ void enterDeclaration(Declaration decl){
 void updateCheckState(str checkName, value delta){
 	//println("updateCheckState: <checkName>, <delta>");
 	states = checkStates[checkName];
-	checkStates[checkName][0] = checkState(states[0].src, checkStateDescriptors[checkName].update(states[0].current, delta));
+	newState = checkState(states[0].src, checkStateDescriptors[checkName].update(states[0].current, delta));
+
+	if (states != [])
+	  checkStates[checkName][0] = newState;
+	else
+	  checkStates[checkName] = [newState]; 
 }
 
 list[Message] leaveDeclaration(Declaration decl){
