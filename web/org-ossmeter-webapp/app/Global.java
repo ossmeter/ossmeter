@@ -1,57 +1,40 @@
-import java.util.Arrays;
-import java.util.*;
+import static play.mvc.Results.internalServerError;
+import static play.mvc.Results.notFound;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import model.Project;
+import model.Statistics;
+import model.Users;
+import play.Application;
+import play.GlobalSettings;
+import play.libs.Akka;
+import play.libs.F.Function;
+import play.libs.F.Promise;
+import play.libs.ws.WS;
+import play.libs.ws.WSResponse;
+import play.mvc.Call;
+import play.mvc.Http.RequestHeader;
+import play.mvc.Result;
+import scala.concurrent.duration.Duration;
+import auth.MongoAuthenticator;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.feth.play.module.pa.PlayAuthenticate;
 import com.feth.play.module.pa.PlayAuthenticate.Resolver;
 import com.feth.play.module.pa.exceptions.AccessDeniedException;
 import com.feth.play.module.pa.exceptions.AuthException;
+import com.mongodb.DB;
 
 import controllers.routes;
-import controllers.Admin;
-
-import auth.MongoAuthenticator;
-
-import java.lang.reflect.Method;
-
-import play.mvc.*;
-import play.Application;
-import play.GlobalSettings;
-import play.mvc.Result;
-import play.mvc.Action;
-import play.mvc.Call;
-import play.mvc.Http.Request;
-import play.mvc.Http.Context;
-import play.libs.Akka;
-import akka.actor.*;
-import java.util.concurrent.TimeUnit;
-import scala.concurrent.duration.Duration;
-
-import play.libs.ws.*;
-import play.libs.F.Function;
-import play.libs.F.Promise;
-import play.mvc.Result;
-import static play.libs.F.Function;
-import static play.libs.F.Promise;
-
-import play.mvc.Http.*;
-import static play.mvc.Results.*;
-
-import model.*;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
-import com.mongodb.Mongo;
-import com.mongodb.DBCollection;
-import com.mongodb.DB;
-import com.mongodb.DBCursor;
-import com.mongodb.BasicDBObject;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.TypeFactory;
 
 public class Global extends GlobalSettings {
 

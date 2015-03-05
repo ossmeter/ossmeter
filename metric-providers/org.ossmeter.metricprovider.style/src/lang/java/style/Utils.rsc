@@ -35,7 +35,7 @@ str getTypeName(TypeSymbol tp){
 	}
 }
 
-str getTypeName(loc s) = s.path == "" ? "unresolved" : s.path[1..];
+str getTypeName(loc s) = (s.path == "" || s.path == "/") ? "unresolved" : s.path[1..];
 
 bool isBooleanExpression(Expression e: \infix(_, str operator, _)) = operator in {"&&", "&", "||", "|", "^"};
 bool isBooleanExpression(Expression e: \prefix("!", _)) = true;
