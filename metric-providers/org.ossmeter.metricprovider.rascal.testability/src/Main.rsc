@@ -19,6 +19,7 @@ import JUnit4;
 import Java;
 import org::ossmeter::metricprovider::MetricProvider;
 import OOJava;
+import String;
 
 
 @metric{TestCoverage}
