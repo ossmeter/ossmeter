@@ -9,6 +9,7 @@ module CC
 
 import Map;
 import List;
+import Set;
 
 import analysis::statistics::Frequency;
 import analysis::statistics::Inference;
