@@ -549,7 +549,7 @@ set[str] matchingLicenses(rel[Language, loc, AST] asts = {}) {
 @doc{In principle it is expected for the files in a project to share the same license. The license text in the header of each file may differ slightly due to different copyright years and or lists of contributors. We find out how many different types of header files are used and if the distribution is flat or focused on a single distribution. The difference is between  a clear and simple license for the entire project or a confusing licensing scheme with possible juridical consequences.}
 @friendlyName{Consistency of header use}
 @appliesTo{generic()}
-@uses{("headerCounts": "headerCounts", "headerPercentage": "headerPercentage")}
+@uses{("headerCounts": "headerCounts", "headerPercentage": "headerPercentage", "matchingLicenses":"matchingLicenses")}
 Factoid headerUse(list[int] headerCounts = [], real headerPercentage = -1.0, set[str] matchingLicenses = {}) {
 
 	if (headerCounts == [] || headerPercentage == -1.0) {
