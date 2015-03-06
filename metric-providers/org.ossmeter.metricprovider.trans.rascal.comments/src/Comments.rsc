@@ -16,7 +16,117 @@ import Prelude;
 import util::Math;
 import analysis::graphs::Graph;
 import Split;
+import Set;
+import Map;
 
+private map[str name, str header] licenses =
+  ("GPLv2"
+  : "Copyright (C) YEAR AUTHOR
+    'This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
+    '
+    'This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+    '
+    'You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+    ",
+   "LGPL" 
+    : "Copyright (C) YEAR OWNER 
+      'This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version.
+      '
+      'This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+      '
+      'You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+      ",
+    "BSD-2" 
+    : "Copyright (c) YEAR, OWNER
+      'All rights reserved.
+      '
+      'Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+      '
+      '1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+      '
+      '2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+      '
+      'THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+      ",
+    "BSD-3" 
+    : "Copyright (c) YEAR, OWNER
+      'All rights reserved.
+      '
+      'Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+      '
+      '1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+      '
+      '2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+      '
+      '3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+      '
+      'THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+      ",
+    "GPL-3" 
+    : "one line to give the program\'s name and a brief idea of what it does.
+      'Copyright (C) YEAR AUTHOR
+      '
+      'This program is free software: you can redistribute it and/or modify
+      'it under the terms of the GNU General Public License as published by
+      'the Free Software Foundation, either version 3 of the License, or
+      '(at your option) any later version.
+      '
+      'This program is distributed in the hope that it will be useful,
+      'but WITHOUT ANY WARRANTY; without even the implied warranty of
+      'MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+      'GNU General Public License for more details.
+      '
+      'You should have received a copy of the GNU General Public License
+     ' along with this program.  If not, see \<http://www.gnu.org/licenses/\>.",
+    "Apache" 
+    : "Copyright YEAR OWNER
+      '
+      'Licensed under the Apache License, Version 2.0 (the \"License\");
+      'you may not use this file except in compliance with the License.
+      'You may obtain a copy of the License at
+      '
+      'http://www.apache.org/licenses/LICENSE-2.0
+      '
+      'Unless required by applicable law or agreed to in writing, software
+      'distributed under the License is distributed on an \"AS IS\" BASIS,
+      'WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+      'See the License for the specific language governing permissions and
+      'limitations under the License.
+      ",
+    "MIT" 
+    : "The MIT License (MIT)
+      '
+      'Copyright (c) YEAR COPYRIGHTHOLDERS
+      '
+      'Permission is hereby granted, free of charge, to any person obtaining a copy
+      'of this software and associated documentation files (the \"Software\"), to deal
+      'in the Software without restriction, including without limitation the rights
+      'to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+      'copies of the Software, and to permit persons to whom the Software is
+      'furnished to do so, subject to the following conditions:
+      '
+      'The above copyright notice and this permission notice shall be included in
+      'all copies or substantial portions of the Software.
+      '
+      'THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+      'IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+      'FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+      'AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+      'LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+      'OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+      'THE SOFTWARE.
+      ",
+    "EPL" 
+    : "Copyright (c) YEAR OWNER
+      'All rights reserved. This program and the accompanying materials
+      'are made available under the terms of the Eclipse Public License 
+      'which accompanies this distribution, and is available at
+      'http://www.eclipse.org/legal/epl-v10.html
+      ",
+    "Mozilla" : "This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain one at http://mozilla.org/MPL/2.0/."
+  );
+  
+  
 data CommentStats
   = stats(int linesWithComment, int headerStart, int headerSize, int commentedOutCodeLines)
   | unknown()
@@ -301,7 +411,7 @@ Factoid commentPercentage(map[str, int] locPerLanguage = (), map[str, int] comme
   	stars = three();
   }
   
-  txt = "The percentage of lines containing comments over all measured languages is <totalPercentage>%. Headers and commented out code are not included in this measure.";
+  txt = "The percentage of lines containing comments over all measured languages is <round(totalPercentage,0.01)>%. Headers and commented out code are not included in this measure.";
 
   languagePercentage = ( l : round(100 * commentLinesPerLanguage[l] / toReal(locPerLanguage[l]), 0.01) | l <- languages ); 
 
@@ -402,13 +512,45 @@ list[int] headerCounts(rel[Language, loc, AST] asts = {}) {
 	return headerHistogram;
 }
 
+@metric{matchingLicenses}
+@doc{We match against a list of known licenses to find out which are used in the current project}
+@friendlyName{Used licenses (from selected list of known licenses)}
+@appliesTo{generic()}
+set[str] matchingLicenses(rel[Language, loc, AST] asts = {}) {
+    licenseHeaders = (name : extractHeader(split("\n",l),size(l), 0) | name <- licenses, l := licenses[name]);
+	map[loc, Header] headersPerFile = extractHeaders(asts);
+	
+	headers = range(headersPerFile);
+	
+	map[loc file, str license] matches = ();
+	
+	for (f <- headers) {
+	  bestScore = 0;
+	  bestLicense = "";
+	   
+	  for (l <- licenses) {
+	    score = size(licenses[l] & headers[f]) * 1.0 / size(licenses[l]);
+	    
+	    // at least 80% of the header should match
+	    if (score > 0.8, bestScore < score) {
+	      bestScore = score;
+	      bestLicense = l;
+	    }
+	  }
+	  
+	  matches[f] = bestLicense;
+	}
+	
+	return matches<license> - {""};
+}
+
 
 @metric{headerUse}
 @doc{In principle it is expected for the files in a project to share the same license. The license text in the header of each file may differ slightly due to different copyright years and or lists of contributors. We find out how many different types of header files are used and if the distribution is flat or focused on a single distribution. The difference is between  a clear and simple license for the entire project or a confusing licensing scheme with possible juridical consequences.}
 @friendlyName{Consistency of header use}
 @appliesTo{generic()}
-@uses{("headerCounts": "headerCounts", "headerPercentage": "headerPercentage")}
-Factoid headerUse(list[int] headerCounts = [], real headerPercentage = -1.0) {
+@uses{("headerCounts": "headerCounts", "headerPercentage": "headerPercentage", "matchingLicenses":"matchingLicenses")}
+Factoid headerUse(list[int] headerCounts = [], real headerPercentage = -1.0, set[str] matchingLicenses = {}) {
 
 	if (headerCounts == [] || headerPercentage == -1.0) {
 		throw undefined("Not enough header data available", |tmp:///|);
@@ -424,21 +566,29 @@ Factoid headerUse(list[int] headerCounts = [], real headerPercentage = -1.0) {
 			stars += 1;
 		}
 		
-		highestSimilarity = max(headerCounts) / sum(headerCounts);
+		highestSimilarity = (max(headerCounts) * 1.00) / sum(headerCounts);
 		
 		if (highestSimilarity > 0.8) {
 			stars += 1;
 		}
 		
-		message = "The percentage of files with a header is <headerPercentage>%." +
-			"The largest group of similar headers spans <highestSimilarity>% of the files.";
+		message = "The percentage of files with a header is <round(headerPercentage,0.01)>%." +
+			"The largest group of similar headers spans <round(highestSimilarity,0.01)>% of the files.";
 	}
 	else if (headerPercentage > 0.0) {
-		message = "Only <headerPercentage>% of the files contain a header.";
+		message = "Only <round(headerPercentage,0.01)>% of the files contain a header.";
 	}
 	else {
 		message = "No headers found.";
 	}
+	
+	message = "<message>
+	          '<if (size(matchingLicenses) == 1, l <- matchingLicenses) {>Only found files with the <l> license header were found.<}>
+	          '<if (size(matchingLicenses) > 1) {>Files with the following license headers types were found:
+	          '<for (l <- matchingLicenses) {>   * <l>
+	          '<}>
+	          '<}> (These matching licenses were tested against a known collection of <size(licenses)> header texts.)
+	          ";  
 	
 	return factoid(message, starLookup[stars]);	
 }

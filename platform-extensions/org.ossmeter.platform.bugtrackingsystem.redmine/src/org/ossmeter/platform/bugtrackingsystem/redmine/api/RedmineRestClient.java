@@ -86,9 +86,19 @@ public class RedmineRestClient {
 		password = "PASSWORD_NOT_NEEDED";
 	}
 
-	// TODO think we don't need the created clauses in here, for our caching purposes.
 	public Iterator<RedmineIssue> getIssues(String projectIdOrName, Date after,
 			Date before) throws UnirestException {
+		try {
+			return getIssues(projectIdOrName, after, before, false);
+		}
+		catch (Exception ex) {
+			return getIssues(projectIdOrName, after, before, true);
+		}
+	}
+	
+	// TODO think we don't need the created clauses in here, for our caching purposes.
+	public Iterator<RedmineIssue> getIssues(String projectIdOrName, Date after,
+			Date before, boolean alternativeDateFormat) throws UnirestException {
 
 		Map<String, String> filter = new HashMap<String, String>();
 
@@ -99,19 +109,20 @@ public class RedmineRestClient {
 		filter.put("status_id", "*");
 
 		String dateString = null;
+		
 		if (null != after && null != before) {
-			String afterString = RedmineConstants.DATE_FORMATTER
-					.print(new DateTime(after));
-			String beforeString = RedmineConstants.DATE_FORMATTER
-					.print(new DateTime(before));
+			String afterString = RedmineConstants.getDateFormatter(alternativeDateFormat).
+					print(new DateTime(after));
+			String beforeString = RedmineConstants.getDateFormatter(alternativeDateFormat).
+					print(new DateTime(before));
 			dateString = "><" + afterString + '|' + beforeString;
 		} else if (null != after) {
-			String afterString = RedmineConstants.DATE_FORMATTER
-					.print(new DateTime(after));
+			String afterString = RedmineConstants.getDateFormatter(alternativeDateFormat).
+					print(new DateTime(after));
 			dateString = ">=" + afterString;
 		} else if (before != null) {
-			String beforeString = RedmineConstants.DATE_FORMATTER
-					.print(new DateTime(before));
+			String beforeString = RedmineConstants.getDateFormatter(alternativeDateFormat).
+					print(new DateTime(before));
 			dateString = "<=" + beforeString;
 		}
 
@@ -136,7 +147,7 @@ public class RedmineRestClient {
 			for (Integer id : ids) {
 				issueIds.add(id);
 			}
-
+			
 			return new RedmineIssueIterator(this, issueIds.iterator());
 
 		} else {

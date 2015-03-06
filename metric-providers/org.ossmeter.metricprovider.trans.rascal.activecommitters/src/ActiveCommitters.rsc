@@ -86,6 +86,15 @@ set[str] developmentTeam(set[str] prev = {}, set[str] committersToday = {}) {
   return prev + committersToday;
 }
 
+@metric{developmentDomainNames}
+@doc{Lists the domain names of email addresses of developers if such information is present.}
+@friendlyName{Development team domain names}
+@uses = ("developmentTeam" : "developmentTeam")
+@appliesTo{generic()}
+set[str] developmentDomainNames(set[str] developmentTeam = {}) {
+  return {domain | /^[^@]*@<domain:.*>$/ <- developmentTeam};
+}
+
 @metric{sizeOfDevelopmentTeam}
 @doc{How many people have ever contributed code to this project?}
 @friendlyName{Size of development team}
@@ -248,7 +257,7 @@ Factoid developmentTeamExperience(
   }
   else {
     txt = "The number of experienced committers working for the project in the last 6 months is <numExperiencedCommitters>.";
-    txt += " Their average overall number of commits is <mean([commitsPerDeveloper[d] | d <- experiencedCommittersInLastHalfYear])>.";
+    txt += " Their average overall number of commits is <round(mean([commitsPerDeveloper[d] | d <- experiencedCommittersInLastHalfYear]),0.01)>.";
   }
 
   if (size(committersInLastHalfYear) == numExperiencedCommitters) {

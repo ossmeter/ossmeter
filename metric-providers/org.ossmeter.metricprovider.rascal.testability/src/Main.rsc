@@ -18,7 +18,6 @@ import lang::java::m3::AST;
 import JUnit4;
 import Java;
 import org::ossmeter::metricprovider::MetricProvider;
-import OOJava;
 import String;
 
 
@@ -92,7 +91,7 @@ private rel[loc, loc] getImplicitContainment(M3 m) {
   rel[loc, loc] implicitContainment = {};
   decls = m@declarations<0>;
   nameSet = toMap(m@names<1,0>);
-  cMap = containmentMap(m);
+  cMap = toMap(m@containment);
   for (cl <- decls, cl.scheme == "java+class" || cl.scheme == "java+anonymousClass" || cl.scheme == "java+enum", \abstract() notin m@modifiers[cl]) {
     allMeths = { candidate | candidate <- cMap[cl]?{}, isMethod(candidate) };
     
@@ -124,7 +123,7 @@ real percentageOfTestedPublicMethods(ProjectDelta delta = ProjectDelta::\empty()
   supportTestMethods = getJUnit4SetupMethods(m);
   interfaceMethods = { meth | <entity, meth> <- m@containment, isMethod(meth), isInterface(entity) };
   declarations = {meth | meth <- m@declarations<0>, isMethod(meth) } - interfaceMethods - onlyTestMethods - supportTestMethods;
-  mMap = modifiersMap(m);
+  mMap = toMap(m@modifiers);
   allPublicMethods = { meth | meth <- declarations, \public() in (mMap[meth]?{}) };
   directlyCalledFromTestMethods = domainR(m@methodInvocation, onlyTestMethods);
   pbSet = directlyCalledFromTestMethods + (directlyCalledFromTestMethods o m@methodOverrides<1,0>);
@@ -169,7 +168,7 @@ Factoid JavaUnitTestCoverage(real testOverPublicMethods = -1.0, real testCoverag
     stars = 4;
   }
 
-  txt = "The percentage of methods covered by unit tests is estimated at <testCoverage>%. <expect>. The estimated coverage of public methods is <testOverPublicMethods>%";
+  txt = "The percentage of methods covered by unit tests is estimated at <round(testCoverage, 0.01)>%. <expect>. The estimated coverage of public methods is <round(testOverPublicMethods, 0.01)>%";
   
   return factoid(txt, starLookup[stars]); 
 }
