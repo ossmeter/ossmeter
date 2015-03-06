@@ -308,7 +308,7 @@ map[str, int] commentedOutCodePerLanguage(rel[Language, loc, AST] asts = {}, map
 }
 
 
-@metric{percentageCommentedOutCode}
+//@metric{percentageCommentedOutCode}
 @doc{Commented-out code, in large quantities, is a contra-indicator for quality being a sign of experimental code or avoiding the use of a version control system.}
 @friendlyName{Percentage of commented out code}
 @appliesTo{generic()}
@@ -368,7 +368,7 @@ map[str, int] commentLinesPerLanguage(rel[Language, loc, AST] asts = {},
 }
 
 
-@metric{commentPercentage}
+//@metric{commentPercentage}
 @doc{The balance between comments and code indicates understandability. Too many comments are often not maintained and may lead to confusion, not enough means the code lacks documentation explaining its intent.}
 @friendlyName{Percentage of lines with comments (excluding headers)}
 @appliesTo{generic()}
@@ -517,20 +517,16 @@ list[int] headerCounts(rel[Language, loc, AST] asts = {}) {
 @friendlyName{Used licenses (from selected list of known licenses)}
 @appliesTo{generic()}
 set[str] matchingLicenses(rel[Language, loc, AST] asts = {}) {
-    licenseHeaders = (name : extractHeader(split("\n",l),size(l), 0) | name <- licenses, l := licenses[name]);
+  licenseHeaders = (name : extractHeader(inputList, size(inputList), 0) | name <- licenses, l := licenses[name], inputList := split("\n",l));
 	map[loc, Header] headersPerFile = extractHeaders(asts);
-	
-	headers = range(headersPerFile);
-	
 	map[loc file, str license] matches = ();
 	
-	for (f <- headers) {
+	for (f <- headersPerFile) {
 	  bestScore = 0;
 	  bestLicense = "";
 	   
-	  for (l <- licenses) {
-	    score = size(licenses[l] & headers[f]) * 1.0 / size(licenses[l]);
-	    
+	  for (l <- licenseHeaders) {
+	    score = size(licenseHeaders[l] & headersPerFile[f]) * 1.0 / size(licenseHeaders[l]);
 	    // at least 80% of the header should match
 	    if (score > 0.8, bestScore < score) {
 	      bestScore = score;
@@ -541,7 +537,7 @@ set[str] matchingLicenses(rel[Language, loc, AST] asts = {}) {
 	  matches[f] = bestLicense;
 	}
 	
-	return matches<license> - {""};
+	return (matches<license> - {""});
 }
 
 
@@ -573,7 +569,7 @@ Factoid headerUse(list[int] headerCounts = [], real headerPercentage = -1.0, set
 		}
 		
 		message = "The percentage of files with a header is <round(headerPercentage,0.01)>%." +
-			"The largest group of similar headers spans <round(highestSimilarity,0.01)>% of the files.";
+			"The largest group of similar headers spans <round(highestSimilarity*100.0,0.01)>% of the files.";
 	}
 	else if (headerPercentage > 0.0) {
 		message = "Only <round(headerPercentage,0.01)>% of the files contain a header.";
