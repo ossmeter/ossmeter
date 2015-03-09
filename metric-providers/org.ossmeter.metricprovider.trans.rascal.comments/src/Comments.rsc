@@ -308,7 +308,7 @@ map[str, int] commentedOutCodePerLanguage(rel[Language, loc, AST] asts = {}, map
 }
 
 
-//@metric{percentageCommentedOutCode}
+@metric{percentageCommentedOutCode}
 @doc{Commented-out code, in large quantities, is a contra-indicator for quality being a sign of experimental code or avoiding the use of a version control system.}
 @friendlyName{Percentage of commented out code}
 @appliesTo{generic()}
@@ -368,7 +368,7 @@ map[str, int] commentLinesPerLanguage(rel[Language, loc, AST] asts = {},
 }
 
 
-//@metric{commentPercentage}
+@metric{commentPercentage}
 @doc{The balance between comments and code indicates understandability. Too many comments are often not maintained and may lead to confusion, not enough means the code lacks documentation explaining its intent.}
 @friendlyName{Percentage of lines with comments (excluding headers)}
 @appliesTo{generic()}
