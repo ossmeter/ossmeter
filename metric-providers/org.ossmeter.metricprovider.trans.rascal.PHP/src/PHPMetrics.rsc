@@ -222,7 +222,7 @@ Factoid staticNameResolutionFactoid(
   totalUnresolved = 0;
   totalAmbiguous = 0;
   
-  txt = "The percentages of unresolved and ambiguous names for the following categories are respectively:\n";
+  txt = "The percentages of unresolved and ambiguous names (lower is better) for the following categories are respectively:\n";
   
   for (<m, n> <- [<typeNames, "Type names">, <methodNames, "Method names">, <fieldNames, "Field names">, <includes, "Included files">]) {
     if (m == ()) {
