@@ -17,6 +17,7 @@ import analysis::statistics::SimpleRegression;
 import analysis::statistics::Descriptive;
 import analysis::statistics::Frequency;
 import analysis::statistics::Inference;
+import util::Math;
 
 
 @metric{churnPerCommit}
@@ -111,8 +112,8 @@ Factoid commitSize(rel[datetime, int] ratioHistory = {}, int ratio = 0) {
   ratioSlope = historicalSlope(ratioHistory, 6);
   ratioMedian = historicalMedian(ratioHistory, 6);
 
-   msg = "In the last two weeks the average size of a commit was <ratio>, this is <if (ratio > ratioMedian) {>more<}else{>less<}>
-         'than the normal <ratioMedian> in the last six months. The trend is <slopeText(ratioSlope, "going down", "stable", "going up")>.";
+   msg = "In the last two weeks the average size of a commit (total lines added/deleted) was <ratio>, this is <if (ratio > ratioMedian) {>more<}else{>less<}>
+         'than the normal <round(ratioMedian)> in the last six months. <slopeText(ratioSlope, "Commits are getting smaller (which is a good thing)", "Commit size is stable", "Commits are getting larger")>.";
   
   // TODO: the magic constants are not well tested here
   if (ratio < 500) {
@@ -140,8 +141,8 @@ Factoid churnVolume(rel[datetime, int] churnHistory = {}, int churn = 0) {
   churnSlope = historicalSlope(churnHistory, 6); 
   churnMedian = historicalMedian(churnHistory, 6);
   
-  msg = "In the last two weeks the churn was <churn>, this is <if (churn > churnMedian) {>more<}else{>less<}>
-        'than the normal <churnMedian> in the last six months. The trend is <slopeText(churnSlope, "going down", "stable", "going up")>.";
+  msg = "In the last two weeks the churn (total lines added and deleted) was <churn>. This is <if (churn > churnMedian) {>more<}else{>less<}>
+        'than the median <round(churnMedian)> in the last six months. Activity is <slopeText(churnSlope, "slowing down", "stable", "speeding up")>.";
   
   if (churn > 0) {
     if (churnMedian < 100) {
@@ -222,10 +223,10 @@ Factoid commitLocality(rel[datetime day, map[loc, int] files] filesPerCommit = {
    med = median(counts);
    
    if (med <= 1) {
-     return factoid("Commits are usually local to a single file.", \four());
+     return factoid("Commits are usually local to a single file (which is a good thing).", \four());
    }
    else if (med <= 5) {
-     return factoid("Commits are usually local to a small group of files.", \three());
+     return factoid("Commits are usually local to a small group of files (which is a good thing).", \three());
    }
    else if (med <= 10) {
      return factoid("Commits usually include between 5 and 10 files.", \two());

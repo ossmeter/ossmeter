@@ -63,7 +63,7 @@ map[str, int] locPerLanguage(rel[Language, loc, AST] asts = {}, map[loc, int] ge
   
   // first count LOC of files with extracted ASTs
   for (<l, f, a> <- asts, l != generic(), f in genericLoc) {
-    result["<getName(l)>"]?0 += genericLoc[f];
+    result["<getLanguageName(l)>"]?0 += genericLoc[f];
     filesWithLanguageDetected += {f};
   }
   
@@ -107,7 +107,7 @@ Factoid codeSize(
 
   mainLang = sorted[0];
 
-  txt = "The total size of the code base is <totalSize> physical lines of code. The main development language of the project is <mainLang[0]>, with <mainLang[1]> physical lines of code.";
+  txt = "The total size of the code base is <totalSize> lines. The main development language of the project is <mainLang[0]>, with <mainLang[1]> lines.";
   if (size(sorted) > 1) {
     otherTxt = intercalate(", ", ["<l[0]> (<l[1]>)" | l <- sorted[1..]]);
   
@@ -115,7 +115,20 @@ Factoid codeSize(
   }
   
   if (projectAge > 0) {
-  	txt += " The age of the code base is <projectAge> days.";
+    years = projectAge / 365;
+    daysLeft = (projectAge % 365);
+    months = floor(daysLeft / 30.42);
+    daysLeft = daysLeft - round(months * 30.42);
+
+    if (years > 1) {
+      txt += " The age of the code base is <years> years and <months> months.";
+    }
+    else if (months > 1) {
+      txt += " The age of the code base is <months> months and <daysLeft> days.";
+    }
+    else {
+      txt += " The age of the code base is <daysLeft> days.";
+    }
   }
 
   if (numberOfActiveCommittersLongTerm > 0) {

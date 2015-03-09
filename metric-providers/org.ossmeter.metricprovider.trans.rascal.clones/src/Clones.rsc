@@ -140,7 +140,7 @@ map[str, int] cloneLOCPerLanguage(rel[Language, loc, AST] asts = {}) {
             }
           }
 
-          result["<getName(lang)>"]?0 += size(linesInClones);
+          result["<getLanguageName(lang)>"]?0 += size(linesInClones);
         }
       }
     }
@@ -192,7 +192,7 @@ Factoid cloneCode(map[str, int] locPerLanguage = (), map[str, int] cloneLOCPerLa
     stars = two();
   }
 
-  txt = "The measured percentage of source code in Type I clones larger than 6 lines is <totalClonePercentage>%.";
+  txt = "The measured percentage of source code in Type I (verbatim) clones larger than 6 lines is <totalClonePercentage>% (less is better).";
   if (size(sorted) > 1) {
     otherTxt = intercalate(", ", ["<l[0]>: <l[1]>%" | l <- sorted]);
   

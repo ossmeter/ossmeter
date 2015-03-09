@@ -18,6 +18,7 @@ import analysis::graphs::Graph;
 import Split;
 import Set;
 import Map;
+import Generic;
 
 private map[str name, str header] licenses =
   ("GPLv2"
@@ -302,7 +303,7 @@ much source code comments are actually commented out code. Commented out code is
 map[str, int] commentedOutCodePerLanguage(rel[Language, loc, AST] asts = {}, map[loc, int] commentedOutCode = ()) {
   map[str, int] result = ();
   for (<l, f, a> <- asts, l != generic(), f in commentedOutCode) {
-    result["<getName(l)>"]?0 += commentedOutCode[f];
+    result["<getLanguageName(l)>"]?0 += commentedOutCode[f];
   }
   return result;
 }
@@ -337,7 +338,7 @@ Factoid percentageCommentedOutCode(map[str, int] locPerLanguage = (), map[str, i
     stars = three();
   }
   
-  txt = "The percentage of commented out code over all measured languages is <totalPercentage>%.";
+  txt = "The percentage of commented out code over all code files is <totalPercentage>%.";
 
   languagePercentage = ( l : round(100 * commentedOutCodePerLanguage[l] / toReal(locPerLanguage[l]), 0.01) | l <- languages ); 
 
@@ -362,7 +363,7 @@ map[str, int] commentLinesPerLanguage(rel[Language, loc, AST] asts = {},
                                       map[loc, int] commentedOutCode = ()) {
   map[str, int] result = ();
   for (<l, f, a> <- asts, l != generic(), f in commentLOC) {
-    result["<getName(l)>"]?0 += commentLOC[f] - (headerLOC[f]?0) - (commentedOutCode[f]?0);
+    result["<getLanguageName(l)>"]?0 += commentLOC[f] - (headerLOC[f]?0) - (commentedOutCode[f]?0);
   }
   return result;
 }
@@ -569,7 +570,7 @@ Factoid headerUse(list[int] headerCounts = [], real headerPercentage = -1.0, set
 		}
 		
 		message = "The percentage of files with a header is <round(headerPercentage,0.01)>%." +
-			"The largest group of similar headers spans <round(highestSimilarity*100.0,0.01)>% of the files.";
+			"The most common header appears in <round(highestSimilarity*100.0,0.01)>% of the files.";
 	}
 	else if (headerPercentage > 0.0) {
 		message = "Only <round(headerPercentage,0.01)>% of the files contain a header.";

@@ -110,3 +110,18 @@ str estimateLanguageByFileExtension(loc filename)
 {
   return getLanguageExtensions()[toLowerCase(filename.extension)]?"";
 }
+
+str getLanguageName(Language l)
+{
+	n = getName(l);
+	
+	if (size(n) > 0)
+	{
+		if (size(n) == 1)
+		{
+			return toUpperCase(n);
+		}
+		return toUpperCase(n[0]) + n[1..];
+	}
+	return n;
+}

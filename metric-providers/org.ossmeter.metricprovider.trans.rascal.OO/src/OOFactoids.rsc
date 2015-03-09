@@ -59,10 +59,12 @@ Factoid Coupling(
 		throw undefined("No CBO data", |file:///|);
 	}
 	
-	numClassesWithBadCoupling = ( 0 | it + 1 | c <- cbo, cbo[c] > 14 );
-	
 	// CBO > 14 is too high according to:
 	// Houari A. Sahraoui, Robert Godin, Thierry Miceli: Can Metrics Help Bridging the Gap Between the Improvement of OO Design Quality and Its Automation?
+	
+	threshold = 14;
+	
+	numClassesWithBadCoupling = ( 0 | it + 1 | c <- cbo, cbo[c] > threshold );
 	
 	badPercentage = round(numClassesWithBadCoupling * 100.0 / size(cbo), 0.01);
 	
@@ -78,7 +80,7 @@ Factoid Coupling(
 		stars = three();
 	}
 
-	txt = "The percentage of <language> classes with problematic coupling is <badPercentage>%."; 
+	txt = "The percentage of <language> classes with problematic coupling (higher than <threshold>) is <badPercentage>%."; 
 
 	return factoid(txt, stars);
 }
@@ -110,7 +112,7 @@ Factoid Cohesion(
 		stars = three();
 	}
 
-	txt = "The percentage of <language> classes with problematic cohesion is <badPercentage>%."; 
+	txt = "The percentage of <language> classes with problematic cohesion (higher than 1) is <badPercentage>%."; 
 
 	return factoid(txt, stars);
 }

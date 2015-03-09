@@ -179,43 +179,42 @@ real spreadOfUnderstandabilityIssues(rel[Language, loc, M3] m3s = {}, Table styl
       ,"filesWithErrorProneness":"filesWithErrorProneness"
       ,"filesWithErrorProneness.historic":"filesWithErrorPronenessHistory"
       )
-@doc{Explains what the impact of error prone style violations is for the project. This metric makes sense if there are more than 5 files in a project and can
-be compared between projects as well. If problems are widespread this may be a quality contra-indicator, while a localized problem could be easily fixed.}
-@friendlyName{Spread of style violations over files}
-@appliesTo{java()}      
+@doc{Explains what the impact of error prone style violations is for the project. If problems are widespread this may be a quality contra-indicator, while a localized problem could be easily fixed.}
+@friendlyName{Error proneness}
+@appliesTo{java()}
 Factoid errorProneFactoid( real spreadOfErrorProneness  = 0.0
                          , int filesWithErrorProneness  = 0
                          , rel[datetime, int] fileWithErrorPronenessHistory = {}
                          ) 
-  = genericFactoid("error prone", spread=spreadOfErrorProneness, files=filesWithErrorProneness, history=fileWithErrorPronenessHistory);
+  = genericFactoid("error prone code (e.g. complex expressions, deep nesting)", spread=spreadOfErrorProneness, files=filesWithErrorProneness, history=fileWithErrorPronenessHistory);
 
 @metric{inefficientStringsFactoid}
 @uses=("spreadOfInefficiencies":"spreadOfInefficiencies" 
       ,"filesWithInefficiencies":"filesWithInefficiencies"
       ,"filesWithInefficiencies.historic":"filesWithInefficienciesHistory"
       )
-@doc{Explains what the impact of style violations is for the project.}
-@friendlyName{Spread of style violations over files}
+@doc{Explains what the impact of inefficient string management is for the project. If problems are widespread this may be a quality contra-indicator, while a localized problem could be easily fixed.}
+@friendlyName{Inefficient string management}
 @appliesTo{java()}      
 Factoid inefficientStringsFactoid( real spreadOfInefficiencies  = 0.0
                                , int filesWithInefficiencies  = 0
                                , rel[datetime, int] filesWithInefficienciesHistory = {}
                          ) 
-  = genericFactoid("inefficient string usage", spread=spreadOfInefficiencies, files=filesWithInefficiencies, history=filesWithInefficienciesHistory);
+  = genericFactoid("inefficient string usage code", spread=spreadOfInefficiencies, files=filesWithInefficiencies, history=filesWithInefficienciesHistory);
 
 @metric{understandabilityFactoid}
 @uses=("spreadOfUnderstandabilityIssues":"spreadOfUnderstandabilityIssues"
       ,"filesWithUnderstandabilityIssues":"filesWithUnderstandabilityIssues"
       ,"filesWithUnderstandabilityIssues.historic":"filesWithUnderstandabilityIssuesHistory"
       )
-@doc{Explains what the impact of style violations is for the project.}
-@friendlyName{Spread of style violations over files}
+@doc{Explains what the impact of code understandability style violations is for the project. If problems are widespread this may be a quality contra-indicator, while a localized problem could be easily fixed.}
+@friendlyName{Code understandability}
 @appliesTo{java()}      
 Factoid understandabilityFactoid( real spreadOfUnderstandabilityIssues  = 0.0
                                , int filesWithUnderstandabilityIssues  = 0
                                , rel[datetime, int] filesWithUnderstandabilityIssuesHistory = {}
                          ) 
-  = genericFactoid("hard to read", spread=spreadOfUnderstandabilityIssues, files=filesWithUnderstandabilityIssues, history=filesWithUnderstandabilityIssuesHistory);
+  = genericFactoid("hard to understand code (e.g. not following naming conventions, large methods)", spread=spreadOfUnderstandabilityIssues, files=filesWithUnderstandabilityIssues, history=filesWithUnderstandabilityIssuesHistory);
 
 
 private Factoid genericFactoid(str category
@@ -235,9 +234,9 @@ private Factoid genericFactoid(str category
    }
                            
    switch (<spread > 0.5, spread < 0.2,  spread == 0.0>) {
-     case <_,_,true> : return factoid("Currently, there is no <category> code in this project <expect1>.", \four());
-     case <_,true,_> : return factoid("Currently, <category> code is localized to a minor part of the project <expect2>.", \three());
-     case <true,_,_> : return factoid("Currently, <category> code practices are widely spread throughout the project <expect1>.", \one());
-     default         : return factoid("Currently, there is a some small amount of <category> code spread through a small part of the project <expect2>.", \two());
+     case <_,_,true> : return factoid("Currently, there is no <category> in this project <expect1>.", \four());
+     case <_,true,_> : return factoid("Currently, <category> is localized to a minor part of the project <expect2>.", \three());
+     case <true,_,_> : return factoid("Currently, <category> is widely spread throughout the project <expect1>.", \one());
+     default         : return factoid("Currently, there is a some small amount of <category> spread through a small part of the project <expect2>.", \two());
    }
 }

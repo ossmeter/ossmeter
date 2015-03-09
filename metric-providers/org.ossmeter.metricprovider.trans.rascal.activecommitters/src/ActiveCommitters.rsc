@@ -192,8 +192,8 @@ Factoid developmentTeamStability(rel[datetime day, int active] history = {}, int
   
   txt = "<team>
         'The total number of developers who have worked on this project ever is <totalDevs>.
-        'The maximum number of active developers for this project during its lifetime is <maxDevs>,
-        'and in the last two weeks there were <activeDevs> people actively developing, as compared to 
+        'The maximum number of active developers for this project during its lifetime is <maxDevs>.
+        'In the last two weeks there were <activeDevs> people actively developing, 
         '<longTermActive> in the last twelve months.";
         
   return factoid(txt, stability);
@@ -253,7 +253,7 @@ Factoid developmentTeamExperience(
   }
   else if (stars == 2) {
     txt = "There was only one experienced committer working for the project in the last 6 months.";
-    txt += " Overall, he/she contributed <commitsPerDeveloper[getOneFrom(experiencedCommittersInLastHalfYear)]> commits.";
+    txt += " Overall, they contributed <commitsPerDeveloper[getOneFrom(experiencedCommittersInLastHalfYear)]> commits.";
   }
   else {
     txt = "The number of experienced committers working for the project in the last 6 months is <numExperiencedCommitters>.";
