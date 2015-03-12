@@ -443,6 +443,11 @@ private Header extractHeader(list[str] lines, int headerSize, int headerStart) {
 	return { trim(l) | l <- lines[headerStart..(headerStart + headerSize)], /.*[a-zA-Z].*/ := l, !contains(l, "@")};
 }
 
+private Header extractHeaderWords(list[str] lines, int headerSize, int headerStart) {
+	return { word | l <- lines[headerStart..(headerStart + headerSize)], /.*[a-zA-Z].*/ := l, !contains(l, "@"), /<word:\w+>/ := l};
+}
+
+
 @memo
 private map[loc, Header] extractHeaders(rel[Language, loc, AST] asts) {
 	map[loc, Header] headers = ();
@@ -518,8 +523,11 @@ list[int] headerCounts(rel[Language, loc, AST] asts = {}) {
 @friendlyName{Used licenses (from selected list of known licenses)}
 @appliesTo{generic()}
 set[str] matchingLicenses(rel[Language, loc, AST] asts = {}) {
-  licenseHeaders = (name : extractHeader(inputList, size(inputList), 0) | name <- licenses, l := licenses[name], inputList := split("\n",l));
+    licenseHeaders = (name : extractHeaderWords(inputList, size(inputList), 0) | name <- licenses, l := licenses[name], inputList := split("\n",l));
 	map[loc, Header] headersPerFile = extractHeaders(asts);
+	
+	// split lines into words
+	headersPerFile = ( f : {word | l <- headersPerFile[f], /<word:\w+>/ := l} | f <- headersPerFile);
 	map[loc file, str license] matches = ();
 	
 	for (f <- headersPerFile) {
