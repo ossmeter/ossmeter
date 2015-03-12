@@ -1,52 +1,36 @@
 package controllers;
 
+import static play.data.Form.form;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.HashMap;
 
-import model.QualityAspect;
 import model.QualityModel;
 import model.User;
 import models.ProjectImport;
 
-import org.ossmeter.repository.model.*;
+import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.vcs.svn.SvnRepository;
-import org.ossmeter.repository.model.vcs.git.GitRepository;
-import org.ossmeter.repository.model.bts.bugzilla.Bugzilla;
-import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
-import org.ossmeter.repository.model.redmine.*;
-import org.ossmeter.repository.model.sourceforge.*;
-import org.ossmeter.repository.model.github.*;
-import org.ossmeter.repository.model.eclipse.*;
 
-import play.*;
-import play.mvc.*;
-import play.data.*;
-import play.data.validation.ValidationError;
-import play.libs.Json;
-import play.libs.ws.*;
+import play.data.DynamicForm;
+import play.data.Form;
 import play.libs.F.Function;
 import play.libs.F.Promise;
-import views.html.index;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.fasterxml.jackson.core.JsonProcessingException;
-
+import play.libs.ws.WS;
+import play.libs.ws.WSResponse;
+import play.mvc.Controller;
+import play.mvc.Result;
+import play.mvc.With;
+import auth.MongoAuthenticator;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 
-import java.net.ConnectException;
-
-import auth.MongoAuthenticator;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.mongodb.DB;
-
-import static play.data.Form.*;
 
 @With(LogAction.class)
 public class Projects extends Controller {
@@ -107,15 +91,24 @@ public class Projects extends Controller {
 	public static Result projects() {
 		try {
 			// TODO: This should be limited
+			
 		    List<model.Project> projectList = new ArrayList<>();
 		    DB db = MongoAuthenticator.getUsersDb();
             model.Users users = new model.Users(db);
-           	for (model.Project p : users.getProjects().findAnalysed()) {
+
+        	for (model.Project p : users.getProjects().findAnalysed()) {
            		projectList.add(p);
            	}
+      
 			db.getMongo().close();
-
-		    return ok(views.html.projects.projects.render(projectList, MongoAuthenticator.getStatistics()));
+	
+			
+			if(projectList.size() >0){
+		    	return ok(views.html.projects.projects.render(projectList, MongoAuthenticator.getStatistics()));
+			}
+			else{
+				return ok(views.html.projects.projects.render(null, MongoAuthenticator.getStatistics()));
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			flash(Application.FLASH_ERROR_KEY, "An unexpected error has occurred. We are looking into it.");//TODO move to Messages.
