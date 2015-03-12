@@ -91,24 +91,35 @@ public class Projects extends Controller {
 	public static Result projects() {
 		try {
 			// TODO: This should be limited
-			
-		    List<model.Project> projectList = new ArrayList<>();
+			User user = Application.getLocalUser(session());
+			List<model.Project> analysedProjects = new ArrayList<>();
+			List<model.Project> otherProjects = new ArrayList<>();
 		    DB db = MongoAuthenticator.getUsersDb();
             model.Users users = new model.Users(db);
+            List<String> roles = new ArrayList<String>();
+            
+            //This is ugly. Needs fixing.
+            for(model.Role role : user.getRoles()){
+            	roles.add(role.getName());
+            }
+            
+            if(roles.contains(MongoAuthenticator.ADMIN_ROLE)){
+            	for (model.Project p : users.getProjects()) {
+            		if(p.getAnalysed() == false){
+            			otherProjects.add(p);
+            		}
+               	}
+            }
 
         	for (model.Project p : users.getProjects().findAnalysed()) {
-           		projectList.add(p);
+        		analysedProjects.add(p);
            	}
-      
-			db.getMongo().close();
-	
 			
-			if(projectList.size() >0){
-		    	return ok(views.html.projects.projects.render(projectList, MongoAuthenticator.getStatistics()));
-			}
-			else{
-				return ok(views.html.projects.projects.render(null, MongoAuthenticator.getStatistics()));
-			}
+	      
+			db.getMongo().close();
+
+		    return ok(views.html.projects.projects.render(analysedProjects, otherProjects,MongoAuthenticator.getStatistics()));
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			flash(Application.FLASH_ERROR_KEY, "An unexpected error has occurred. We are looking into it.");//TODO move to Messages.

@@ -1,4 +1,4 @@
-@(featuredProjects: List[model.Project], statistics : model.Statistics)
+@(featuredProjects: List[model.Project], otherProjects : List[model.Project], statistics : model.Statistics)
 
 @import be.objectify.deadbolt.java.views.html._
 @import be.objectify.deadbolt.core.utils.TemplateUtils._
@@ -79,17 +79,27 @@
 });
 </script>
 
-@if(featuredProjects != null) {
+@if(featuredProjects.size() > 0 || otherProjects.size() >0) {
 <section class="foo">
 	<div class="container box">
 	<div class="row">
 		<div class="col-md-6">
+		@if(featuredProjects.size() > 0) {
 		    <h2>Analysed Projects</h2>	
 		    <ul class="projects">
 				@for(p <- featuredProjects) {
                 <li><a href="@routes.Projects.view(p.getId())">@p.getName()</a></li>
                }
 		    </ul>
+		 }
+		 @if(otherProjects.size() > 0) {
+		    <h2>Other Projects</h2>	
+		    <ul class="projects">
+				@for(p <- otherProjects) {
+                <li><a href="@routes.Projects.view(p.getId())">@p.getName()</a></li>
+               }
+		    </ul>
+		 }
 		</div>
 		<div class="col-md-6">
 		    <div class="row">
