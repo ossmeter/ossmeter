@@ -819,10 +819,10 @@ public class MongoAuthenticator {
 		try {
 			Mongo mongo = null;
 			String replica = play.Play.application().configuration().getString("mongo.replica");
-			boolean useAuth = play.Play.application().configuration().getBoolean("mongo.use_authentication");
-			String username = play.Play.application().configuration().getString("mongo.username");
-			String password = play.Play.application().configuration().getString("mongo.password");
-			
+//			boolean useAuth = play.Play.application().configuration().getBoolean("mongo.use_authentication");
+//			String username = play.Play.application().configuration().getString("mongo.username");
+//			String password = play.Play.application().configuration().getString("mongo.password");
+//			
 			// MongoCredential credential = null;
 
 			// if (useAuth) {
