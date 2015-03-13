@@ -61,9 +61,9 @@
     	        @project match {
     	        	case proj : EclipseProject => {
                         <p>Forge: Eclipse</p>
-    	        		@if(proj.getPlatforms().length > 0) {
+    	        		<!--@if(proj.getPlatforms().length > 0) {
                         <p>Platforms: @proj.getPlatforms()</p>
-                        }
+                        }-->
                         @if(proj.getReleases().length > 0) {
                         <p>Releases: @proj.getReleases()</p>
                         }
