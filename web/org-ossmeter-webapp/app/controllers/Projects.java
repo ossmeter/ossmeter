@@ -96,14 +96,8 @@ public class Projects extends Controller {
 			List<model.Project> otherProjects = new ArrayList<>();
 		    DB db = MongoAuthenticator.getUsersDb();
             model.Users users = new model.Users(db);
-            List<String> roles = new ArrayList<String>();
             
-            //This is ugly. Needs fixing.
-            for(model.Role role : user.getRoles()){
-            	roles.add(role.getName());
-            }
-            
-            if(roles.contains(MongoAuthenticator.ADMIN_ROLE)){
+            if(user.isAdmin()){
             	for (model.Project p : users.getProjects()) {
             		if(p.getAnalysed() == false){
             			otherProjects.add(p);

@@ -1,10 +1,13 @@
 package model;
 
 import com.mongodb.*;
+
 import java.util.*;
+
 import com.googlecode.pongo.runtime.*;
 import com.googlecode.pongo.runtime.querying.*;
 
+import auth.MongoAuthenticator;
 // protected region custom-imports on begin
 import be.objectify.deadbolt.core.models.Subject;
 
@@ -205,5 +208,17 @@ public class User extends Pongo implements Subject {
 			notifyChanged();
 		}
 		return this;
+	}
+	
+	public boolean isAdmin() {
+		List<String> roles = new ArrayList<String>();	
+		for(model.Role role : getRoles()){
+        	roles.add(role.getName());
+        }
+		
+		if(roles.contains(MongoAuthenticator.ADMIN_ROLE)) 
+			return true;
+		else 
+			return false;
 	}
 }
