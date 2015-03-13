@@ -1,4 +1,4 @@
-@(project: org.ossmeter.repository.model.Project, iProject: model.Project, qualityModel : model.QualityModel, isSummary : Boolean)
+@(project: org.ossmeter.repository.model.Project, iProject: model.Project, qualityModel : model.QualityModel, isSummary : Boolean, isAdmin: Boolean)
 
 @import scala._
 
@@ -48,14 +48,15 @@ case other => {}}}}}{ }
 
 @_projectMetaData(project, iProject)
 
-@if(iProject.getAnalysed()) {
+@if(iProject.getAnalysed() || isAdmin) {
 
     @if(!isSummary) {
         @_largePlot()
     }
 
-    @_aspectView(project, qualityModel, qualityModel, isSummary, List())
-
+  
+  @_aspectView(project, qualityModel, qualityModel, isSummary, List())
+  
 <div class="modal fade" id="exampleModal">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -107,7 +108,7 @@ case other => {}}}}}{ }
                     }
                 }
             });
-</script>
+</script> 
 
 <script type="text/javascript" src="@routes.Assets.at("js/d3.v3.min.js")"></script>
 <script type="text/javascript" src="@routes.Assets.at("js/RadarChart.js")"></script>

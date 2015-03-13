@@ -153,13 +153,12 @@ public class Projects extends Controller {
 	@Restrict(@Group(MongoAuthenticator.USER_ROLE))
 	public static Result view(String id, boolean summary) {
 		QualityModel qm = null;
-
 		User user = Application.getLocalUser(session());
+		
 		if (user == null || user.getSelectedQualityModel() == null) {
 			qm = MongoAuthenticator.getPlatformQualityModel("info");
 		} else {
 			String selected = user.getSelectedQualityModel();
-			
 			if (selected.equals("info") || selected.equals("quality")) {
 				qm = MongoAuthenticator.getPlatformQualityModel(selected);
 			} else if(selected.equals("custom")) {	
@@ -168,12 +167,13 @@ public class Projects extends Controller {
 				qm = MongoAuthenticator.getPlatformQualityModel("info");
 			}
 		}
-
+		
 		Project project = getProject(id);
+		boolean isAdmin = true;
 
 		model.Project iProject = MongoAuthenticator.findProjectById(project.getShortName());
 
-		return ok(views.html.projects.view_project.render(project, iProject, qm, summary));
+		return ok(views.html.projects.view_project.render(project, iProject, qm, summary, isAdmin));
 	}
 	
 	// @Restrict(@Group(MongoAuthenticator.USER_ROLE))
