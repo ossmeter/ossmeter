@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.ossmeter.factoid.newsgroups.weekly;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
 
@@ -73,19 +74,19 @@ public class NewsgroupsChannelWeeklyFactoid extends AbstractFactoidMetricProvide
 
 		float uniformPercentageOfComments = ( (float) 100 ) / 7;
 		float maxPercentageOfArticles = 0,
-			  minPercentageOfArticles = 0,
-			  weekDaysSum = 0,
-			  weekEndSum = 0;
+			  minPercentageOfArticles = 101;
+		String maxPercentageDay = "",
+			   minPercentageDay = "";
 		
 		for (DayArticles dayArticles: dailyRequestsRepliesTransMetric.getDayArticles()) {
-			if ( dayArticles.getPercentageOfArticles() > maxPercentageOfArticles )
+			if ( dayArticles.getPercentageOfArticles() > maxPercentageOfArticles ) {
 				maxPercentageOfArticles = dayArticles.getPercentageOfArticles();
-			if ( dayArticles.getPercentageOfArticles() < minPercentageOfArticles )
+				maxPercentageDay = dayArticles.getName();
+			}
+			if ( dayArticles.getPercentageOfArticles() < minPercentageOfArticles ) {
 				minPercentageOfArticles = dayArticles.getPercentageOfArticles(); 
-			if ( dayArticles.getName().equals("Saturday") || dayArticles.getName().equals("Sunday") )
-				weekEndSum += dayArticles.getPercentageOfArticles();
-			else
-				weekDaysSum += dayArticles.getPercentageOfArticles();
+				minPercentageDay = dayArticles.getName();
+			}
 		}
 		
 		if ( maxPercentageOfArticles < 2 * uniformPercentageOfComments ) {
@@ -99,18 +100,31 @@ public class NewsgroupsChannelWeeklyFactoid extends AbstractFactoidMetricProvide
 		}
 
 		StringBuffer stringBuffer = new StringBuffer();
-		
-		stringBuffer.append("The number of articles, requests or replies, ");
-		if ( maxPercentageOfArticles - minPercentageOfArticles < uniformPercentageOfComments )
-			stringBuffer.append("does not depend");
-		else
-			stringBuffer.append("largely depends");
-		stringBuffer.append(" on the day of the week.\nThere is");
-		if ( Math.abs( ( weekDaysSum / 5 ) - ( weekEndSum / 2 ) ) < uniformPercentageOfComments ) 
-			stringBuffer.append(" no ");
-		else
-			stringBuffer.append(" ");
-		stringBuffer.append("significant difference between the number of comments during working days and weekends.\n");
+		DecimalFormat decimalFormat = new DecimalFormat("#.##");
+
+		stringBuffer.append("The busiest day of the week is ");
+		stringBuffer.append(maxPercentageDay);
+		stringBuffer.append(" (");
+		stringBuffer.append(decimalFormat.format(maxPercentageOfArticles));
+		stringBuffer.append("% of articles), while the least busy day is ");
+		stringBuffer.append(minPercentageDay);
+		stringBuffer.append(" (");
+		stringBuffer.append(decimalFormat.format(minPercentageOfArticles));
+		stringBuffer.append("%) (");
+		boolean first = true;
+		for (DayArticles dayArticles: dailyRequestsRepliesTransMetric.getDayArticles()) {
+			if ( (!dayArticles.getName().equals(maxPercentageDay)) &&
+				 (!dayArticles.getName().equals(minPercentageDay)) ) {
+				if (!first)
+					stringBuffer.append(", ");
+				stringBuffer.append(dayArticles.getName());
+				stringBuffer.append(": ");
+				stringBuffer.append(decimalFormat.format(dayArticles.getPercentageOfArticles()));
+				stringBuffer.append("%");
+				first = false;
+			}
+		}
+		stringBuffer.append(").\n");
 
 		factoid.setFactoid(stringBuffer.toString());
 	

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.ossmeter.factoid.newsgroups.severity;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
 
@@ -140,23 +141,26 @@ public class NewsgroupsChannelSeverityFactoid extends AbstractFactoidMetricProvi
 		}
 		
 		StringBuffer stringBuffer = new StringBuffer();
-		
-		stringBuffer.append("There are ");
+		DecimalFormat decimalFormat = new DecimalFormat("#.##");
+
+		stringBuffer.append("Over the lifetime of the project there have been ");
 		if ( seriousBugsPercentage > 50 ) {
-			stringBuffer.append("many");
 			factoid.setStars(StarRating.ONE);
+			stringBuffer.append("many");
 		} else if ( seriousBugsPercentage > 25 ) {
-			stringBuffer.append("not so many");
 			factoid.setStars(StarRating.TWO);
+			stringBuffer.append("not so many");
 		} else if ( seriousBugsPercentage > 12.5 ) {
-			stringBuffer.append("few");
 			factoid.setStars(StarRating.THREE);
+			stringBuffer.append("few");
 		} else {
-			stringBuffer.append("very few");
 			factoid.setStars(StarRating.FOUR);
+			stringBuffer.append("very few");
 		}
-		stringBuffer.append(" newsgroup threads that report serious (i.e. major," +
-							" critical and blocker) software problems.\n");
+		stringBuffer.append(" (");
+		stringBuffer.append(decimalFormat.format(seriousBugsPercentage));
+		stringBuffer.append(" %) newsgroup threads that report serious (i.e. major," +
+							" critical and blocker) software defects.\n");
 		
 		int // numberOfRTBugs = getNumberOfResponseTimeBugs(severityResponseTimeList),
 			numberOfRTBlockerBugs = getNumberOfSeverityResponseTimeBugs(severityResponseTimeList, "blocker"),
@@ -193,31 +197,27 @@ public class NewsgroupsChannelSeverityFactoid extends AbstractFactoidMetricProvi
 			dayMilliSeconds = 3 * eightHoursMilliSeconds,
 			weekMilliSeconds = 7 * dayMilliSeconds;
 
-		stringBuffer.append("The response time for these threads is ");
-		if ( responseTimeSeriousBugs < eightHoursMilliSeconds )
-			stringBuffer.append("very quick");
-		else if ( responseTimeSeriousBugs < dayMilliSeconds )
-			stringBuffer.append("quick");
-		else if ( responseTimeSeriousBugs < weekMilliSeconds )
-			stringBuffer.append("not so quick");
-		else
-			stringBuffer.append("quite slow");
-		stringBuffer.append(".\n");
-		
-		stringBuffer.append("On average threads about serious issues are addressed ");
-		if ( Math.abs( responseTimeSeriousBugs - responseTimeNonSeriousBugs ) < eightHoursMilliSeconds )
-			stringBuffer.append("equally");
-		else if ( responseTimeSeriousBugs > responseTimeNonSeriousBugs )
-			stringBuffer.append("more");
-		else 
-			stringBuffer.append("less");
-		stringBuffer.append(" quickly ");
-		if ( Math.abs( responseTimeSeriousBugs - responseTimeNonSeriousBugs ) < eightHoursMilliSeconds )
-			stringBuffer.append("to");
-		else
-			stringBuffer.append("than");
-		stringBuffer.append(" threads about less important issues.\n");
-		
+		if ( (responseTimeSeriousBugs > 0) && (responseTimeNonSeriousBugs > 0 ) ) {
+			stringBuffer.append("These threads typically receive a response ");
+			if ( responseTimeSeriousBugs < eightHoursMilliSeconds )
+				stringBuffer.append("very quickly (within 8 hours).\n");
+			else if ( responseTimeSeriousBugs < dayMilliSeconds )
+				stringBuffer.append("quickly (within a day).\n");
+			else if ( responseTimeSeriousBugs < weekMilliSeconds )
+				stringBuffer.append("not so quickly (within a week).\n");
+			else
+				stringBuffer.append("quite slowly (in more than a week).\n");
+			
+			stringBuffer.append("On average, threads about serious issues are addressed ");
+			if ( Math.abs( responseTimeSeriousBugs - responseTimeNonSeriousBugs ) < eightHoursMilliSeconds )
+				stringBuffer.append("equally quickly to");
+			else if ( responseTimeSeriousBugs > responseTimeNonSeriousBugs )
+				stringBuffer.append("more quickly than");
+			else 
+				stringBuffer.append("less quickly than");
+			stringBuffer.append(" threads about less serious issues.\n");
+		}
+
 		int // numberOfSentBugs = getNumberOfSentimentBugs(severitySentimentList),
 			numberOfSentBlockerBugs = getNumberOfSeveritySentimentBugs(severitySentimentList, "blocker"),
 			numberOfSentCriticalBugs = getNumberOfSeveritySentimentBugs(severitySentimentList, "critical"),
@@ -251,26 +251,30 @@ public class NewsgroupsChannelSeverityFactoid extends AbstractFactoidMetricProvi
 				 	  ( numberOfSentMinorBugs * sentimentMinorBugs ) + 
 				 	  ( numberOfSentTrivialBugs * sentimentTrivialBugs ) ) / numberOfSentNonSeriousBugs;
 					
-		stringBuffer.append("On average, users express ");
-		if ( Math.abs( sentimentSeriousBugs - sentimentNonSeriousBugs ) < 0.1 )
-			stringBuffer.append("equally positive");
-		else if ( sentimentSeriousBugs > sentimentNonSeriousBugs )
-			stringBuffer.append("more positive");
-		else
-			stringBuffer.append("more negative");
-		stringBuffer.append(" sentiments about how serious issues are being resolved " +
-							"than how all other issues are being resolved.\n");
-		
-		stringBuffer.append("There are ");
-		if ( enhancementBugsPercentage > 50 )
-			stringBuffer.append("many");
-		else if ( enhancementBugsPercentage > 25 )
-			stringBuffer.append("not so many");
-		else if ( enhancementBugsPercentage > 12.5 )
-			stringBuffer.append("few");
-		else
-			stringBuffer.append("very few");
-		stringBuffer.append(" threads that propose or ask for new features. ");
+			if ( (numberOfSentSeriousBugs > 0) && (numberOfSentNonSeriousBugs >0 ) ) {
+				stringBuffer.append("On average, users express ");
+				if ( Math.abs( sentimentSeriousBugs - sentimentNonSeriousBugs ) < 0.1 )
+					stringBuffer.append("equally positive");
+				else if ( sentimentSeriousBugs > sentimentNonSeriousBugs )
+					stringBuffer.append("more positive");
+				else
+					stringBuffer.append("more negative");
+				stringBuffer.append(" sentiments about how serious issues are being resolved " +
+									"than how all other issues are being resolved.\n");
+			}
+
+			stringBuffer.append("There have been ");
+			if ( enhancementBugsPercentage > 50 )
+				stringBuffer.append("many");
+			else if ( enhancementBugsPercentage > 25 )
+				stringBuffer.append("not so many");
+			else if ( enhancementBugsPercentage > 12.5 )
+				stringBuffer.append("few");
+			else
+				stringBuffer.append("very few");
+			stringBuffer.append(" (");
+			stringBuffer.append(decimalFormat.format(enhancementBugsPercentage));
+			stringBuffer.append(" %) enhancement requests.");
 
 		factoid.setFactoid(stringBuffer.toString());
 

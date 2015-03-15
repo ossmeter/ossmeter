@@ -126,38 +126,17 @@ public class NewsgroupsChannelSizeFactoid extends AbstractFactoidMetricProvider{
 		
 		StringBuffer stringBuffer = new StringBuffer();
 		
-		stringBuffer.append("The project is associated with ");
-		stringBuffer.append(project.getCommunicationChannels().size());
-		if (project.getCommunicationChannels().size()==1)
-			stringBuffer.append(" communication channel.\n");
-		else
-			stringBuffer.append(" communication channels.\n");
-			
+		int articles = 0, threads = 0;
 		for (String tracker: sortByKeys(trackerArticles)) {
-			
-			int articles = trackerArticles.get(tracker);
-			int threads = trackerNewThreads.get(tracker);
-
-			stringBuffer.append("Newsgroup ");
-			stringBuffer.append(tracker);
-			stringBuffer.append(" is of ");
-			
-			if ( (articles > 10 * threshold) || (threads > threshold) ) {
-				stringBuffer.append("very large");
-			} else if ( (2 * articles > 10 * threshold) || (2 * threads > threshold) ) {
-				stringBuffer.append("large");
-			} else if ( (4 * articles > 10 * threshold) || (4 * threads > threshold) ) {
-				stringBuffer.append("medium");
-			} else
-				stringBuffer.append("small");
-			stringBuffer.append(" size. It contains ");
-			stringBuffer.append(threads);
-			stringBuffer.append(" threads and ");
-			stringBuffer.append(articles);
-			stringBuffer.append(" articles, in total.\n");
-		
+			articles += trackerArticles.get(tracker);
+			threads += trackerNewThreads.get(tracker);
 		}
-		
+		stringBuffer.append("The newsgroups of the project contain ");
+		stringBuffer.append(threads);
+		stringBuffer.append(" threads and ");
+		stringBuffer.append(articles);
+		stringBuffer.append(" articles, in total.\n");
+
 		factoid.setFactoid(stringBuffer.toString());
 
 	}
@@ -182,9 +161,9 @@ public class NewsgroupsChannelSizeFactoid extends AbstractFactoidMetricProvider{
 			NewsgroupsNewThreadsHistoricMetric commentsPongo = (NewsgroupsNewThreadsHistoricMetric) pongo;
 			for (org.ossmeter.metricprovider.historic.newsgroups.newthreads.model.DailyNewsgroupData 
 					newsgroupData: commentsPongo.getNewsgroups()) {
-				int comments = newsgroupData.getCumulativeNumberOfNewThreads();
-				trackerNewThreads.put(newsgroupData.getNewsgroupName(), comments);
-				sum += comments;
+				int threads = newsgroupData.getCumulativeNumberOfNewThreads();
+				trackerNewThreads.put(newsgroupData.getNewsgroupName(), threads);
+				sum += threads;
 			}
 		}
 		return sum;

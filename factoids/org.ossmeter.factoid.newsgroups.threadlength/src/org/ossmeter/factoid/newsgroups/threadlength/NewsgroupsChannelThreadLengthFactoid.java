@@ -92,16 +92,12 @@ public class NewsgroupsChannelThreadLengthFactoid extends AbstractFactoidMetricP
 //		}
 		List<Pongo> threadsList = threadsProvider.getHistoricalMeasurements(context, project, start, end);
 		
-		float averageComments = 0,
-			  averageRequests = 0,
-			  averageReplies = 0;
+		float averageComments = 0;
 
 		if ( threadsList.size() > 0 ) {
 			NewsgroupsThreadsHistoricMetric bugsPongo = 
 					(NewsgroupsThreadsHistoricMetric) threadsList.get(threadsList.size() - 1);
 			averageComments = bugsPongo.getAverageArticlesPerThread();
-			averageRequests = bugsPongo.getAverageRequestsPerThread();
-			averageReplies = bugsPongo.getAverageRepliesPerThread();
 		}
 
 		if ( (averageComments > 0 ) && (averageComments < 5 ) ) {
@@ -117,7 +113,7 @@ public class NewsgroupsChannelThreadLengthFactoid extends AbstractFactoidMetricP
 		StringBuffer stringBuffer = new StringBuffer();
 		DecimalFormat decimalFormat = new DecimalFormat("#.##");
 		
-		stringBuffer.append("Threaded discussions tend to be ");
+		stringBuffer.append("Discussions tend to be ");
 		if ( (averageComments > 0 ) && (averageComments < 5 ) ) {
 			stringBuffer.append("very short");
 		} else if ( (averageComments > 0 ) && ( averageComments < 10 ) ) {
@@ -127,13 +123,9 @@ public class NewsgroupsChannelThreadLengthFactoid extends AbstractFactoidMetricP
 		} else {
 			stringBuffer.append("long");
 		}
-		stringBuffer.append(", approximately ");
+		stringBuffer.append(", containing approximately ");
 		stringBuffer.append( decimalFormat.format(averageComments));
-		stringBuffer.append(" articles.\nIn particular, a thread contains approximately ");
-		stringBuffer.append( decimalFormat.format(averageRequests));
-		stringBuffer.append(" requests and ");
-		stringBuffer.append( decimalFormat.format(averageReplies));
-		stringBuffer.append(" replies.\n");
+		stringBuffer.append(" articles.\n");
 
 		factoid.setFactoid(stringBuffer.toString());
 

@@ -118,38 +118,37 @@ public class NewsgroupsChannelResponseTimeFactoid extends AbstractFactoidMetricP
 		
 		StringBuffer stringBuffer = new StringBuffer();
 		
-		stringBuffer.append("Considering the whole duration of the project, " +
-							"requests receive a first response ");
+		stringBuffer.append("Over the lifetime of the project, " +
+							"requests have received a first response ");
 		if ( cumulativeAvgResponseTime < eightHoursMilliSeconds ) {
-			stringBuffer.append("very");
+			stringBuffer.append("very quickly (in less than 8 hours).\n");
 		} else if ( cumulativeAvgResponseTime < dayMilliSeconds ) {
-			stringBuffer.append("");
+			stringBuffer.append("quickly (in less than a day).\n");
 		} else if ( cumulativeAvgResponseTime < weekMilliSeconds ) {
-			stringBuffer.append("fairly");
+			stringBuffer.append("fairly quickly (in less than a week).\n");
 		} else
-			stringBuffer.append("not so");
-		stringBuffer.append(" quickly.\n");
-
+			stringBuffer.append("not so quickly (in more than a week).\n");
+		
 		if (yearlyAvgResponseTime > 0) {
-			stringBuffer.append("Lately, requests receive a first response ");
-			if ( yearlyAvgResponseTime < eightHoursMilliSeconds ) {
-				stringBuffer.append("very");
-			} else if ( yearlyAvgResponseTime < dayMilliSeconds ) {
-				stringBuffer.append("");
-			} else if ( yearlyAvgResponseTime < weekMilliSeconds ) {
-				stringBuffer.append("fairly");
-			} else
-				stringBuffer.append("not so");
-			stringBuffer.append(" quickly.\n");
 			
-			stringBuffer.append("Response speed is lately ");
+			stringBuffer.append("Over the last year, requests receive a first response ");
+			if ( yearlyAvgResponseTime < eightHoursMilliSeconds ) {
+				stringBuffer.append("very quickly (in less than 8 hours).\n");
+			} else if ( yearlyAvgResponseTime < dayMilliSeconds ) {
+				stringBuffer.append("quickly (in less than a day).\n");
+			} else if ( yearlyAvgResponseTime < weekMilliSeconds ) {
+				stringBuffer.append("fairly quickly (in less than a week).\n");
+			} else
+				stringBuffer.append("not so quickly (in more than a week).\n");
+			
+			stringBuffer.append("Response speed has ");
 			if ( Math.abs(cumulativeAvgResponseTime-yearlyAvgResponseTime) < eightHoursMilliSeconds )
-				stringBuffer.append("approximately equal");
+				stringBuffer.append("not changed");
 			else if ( cumulativeAvgResponseTime > yearlyAvgResponseTime )
-				stringBuffer.append("better");
+				stringBuffer.append("improved");
 			else 
-				stringBuffer.append("worse");
-			stringBuffer.append(" than the overall average for the project.\n");
+				stringBuffer.append("deteriorated");
+			stringBuffer.append(" over the last 12 months.\n");
 		}
 		
 		factoid.setFactoid(stringBuffer.toString());

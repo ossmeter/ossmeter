@@ -45,7 +45,7 @@ public class BugsChannelSeverityFactoid extends AbstractFactoidMetricProvider{
 
 	@Override
 	public String getFriendlyName() {
-		return "Bug Channel Severity";
+		return "Bug Tracker Severity";
 		// This method will NOT be removed in a later version.
 	}
 
@@ -135,8 +135,9 @@ public class BugsChannelSeverityFactoid extends AbstractFactoidMetricProvider{
 			  enhancementBugsPercentage = ( (float) 100 * (numberOfEnhancementBugs) ) / numberOfBugs;
 		
 		StringBuffer stringBuffer = new StringBuffer();
+		DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
-		stringBuffer.append("There are ");
+		stringBuffer.append("Over the lifetime of the project there have been ");
 		if ( seriousBugsPercentage > 50 ) {
 			factoid.setStars(StarRating.ONE);
 			stringBuffer.append("many");
@@ -150,8 +151,10 @@ public class BugsChannelSeverityFactoid extends AbstractFactoidMetricProvider{
 			factoid.setStars(StarRating.FOUR);
 			stringBuffer.append("very few");
 		}
-		stringBuffer.append(" bugs that report serious (i.e. major," +
-							" critical and blocker) software problems.\n");
+		stringBuffer.append(" (");
+		stringBuffer.append(decimalFormat.format(seriousBugsPercentage));
+		stringBuffer.append(" %) bugs that report serious (i.e. major," +
+							" critical and blocker) software defects.\n");
 		
 		int // numberOfRTBugs = getNumberOfResponseTimeBugs(severityResponseTimeList),
 			numberOfRTBlockerBugs = getNumberOfSeverityResponseTimeBugs(severityResponseTimeList, "blocker"),
@@ -189,31 +192,27 @@ public class BugsChannelSeverityFactoid extends AbstractFactoidMetricProvider{
 		int eightHoursMilliSeconds = 8 * 60 * 60 * 1000, 
 			dayMilliSeconds = 3 * eightHoursMilliSeconds,
 			weekMilliSeconds = 7 * dayMilliSeconds;
-		
-		stringBuffer.append("These bugs receive a response ");
-		if ( responseTimeSeriousBugs < eightHoursMilliSeconds )
-			stringBuffer.append("very quickly");
-		else if ( responseTimeSeriousBugs < dayMilliSeconds )
-			stringBuffer.append("quickly");
-		else if ( responseTimeSeriousBugs < weekMilliSeconds )
-			stringBuffer.append("not so quickly");
-		else
-			stringBuffer.append("quite slowly");
-		stringBuffer.append(".\n");
 
-		stringBuffer.append("On average, bugs about serious issues are addressed ");
-		if ( Math.abs( responseTimeSeriousBugs - responseTimeNonSeriousBugs ) < eightHoursMilliSeconds )
-			stringBuffer.append("equally");
-		else if ( responseTimeSeriousBugs > responseTimeNonSeriousBugs )
-			stringBuffer.append("more");
-		else 
-			stringBuffer.append("less");
-		stringBuffer.append(" quickly ");
-		if ( Math.abs( responseTimeSeriousBugs - responseTimeNonSeriousBugs ) < eightHoursMilliSeconds )
-			stringBuffer.append("to");
-		else
-			stringBuffer.append("than");
-		stringBuffer.append(" bugs about less important issues.\n");
+		if ( (responseTimeSeriousBugs > 0) && (responseTimeNonSeriousBugs > 0 ) ) {
+			stringBuffer.append("These bugs typically receive a response ");
+			if ( responseTimeSeriousBugs < eightHoursMilliSeconds )
+				stringBuffer.append("very quickly (within 8 hours).\n");
+			else if ( responseTimeSeriousBugs < dayMilliSeconds )
+				stringBuffer.append("quickly (within a day).\n");
+			else if ( responseTimeSeriousBugs < weekMilliSeconds )
+				stringBuffer.append("not so quickly (within a week).\n");
+			else
+				stringBuffer.append("quite slowly (in more than a week).\n");
+			
+			stringBuffer.append("On average, bugs about serious issues are addressed ");
+			if ( Math.abs( responseTimeSeriousBugs - responseTimeNonSeriousBugs ) < eightHoursMilliSeconds )
+				stringBuffer.append("equally quickly to");
+			else if ( responseTimeSeriousBugs > responseTimeNonSeriousBugs )
+				stringBuffer.append("more quickly than");
+			else 
+				stringBuffer.append("less quickly than");
+			stringBuffer.append(" bugs about less serious issues.\n");
+		}
 		
 		int // numberOfSentBugs = getNumberOfSentimentBugs(severitySentimentList),
 			numberOfSentBlockerBugs = getNumberOfSeveritySentimentBugs(severitySentimentList, "blocker"),
@@ -267,22 +266,22 @@ public class BugsChannelSeverityFactoid extends AbstractFactoidMetricProvider{
 		
 		if ( numberOfStatusEnhancementBugs > 0 )
 			percentageOfStatusEnhancementFixedBugs = ( (float) 100 * numberOfStatusEnhancementFixedBugs ) / numberOfStatusEnhancementBugs;
-
-		DecimalFormat decimalFormat = new DecimalFormat("#.##");
 		
-		stringBuffer.append("On average, users express ");
-		if ( Math.abs( sentimentSeriousBugs - sentimentNonSeriousBugs ) < 0.1 )
-			stringBuffer.append("equally positive");
-		else if ( sentimentSeriousBugs > sentimentNonSeriousBugs )
-			stringBuffer.append("more positive");
-		else
-			stringBuffer.append("more negative");
-		stringBuffer.append(" sentiments about how serious issues are being resolved " +
-							"than how all other issues are being resolved.\n");
+		if ( (numberOfSentSeriousBugs > 0) && (numberOfSentNonSeriousBugs >0 ) ) {
+			stringBuffer.append("On average, users express ");
+			if ( Math.abs( sentimentSeriousBugs - sentimentNonSeriousBugs ) < 0.1 )
+				stringBuffer.append("equally positive");
+			else if ( sentimentSeriousBugs > sentimentNonSeriousBugs )
+				stringBuffer.append("more positive");
+			else
+				stringBuffer.append("more negative");
+			stringBuffer.append(" sentiments about how serious issues are being resolved " +
+								"than how all other issues are being resolved.\n");
+		}
 		stringBuffer.append(decimalFormat.format(percentageOfStatusSeriousFixedBugs));
-		stringBuffer.append(" % of important bugs were fixed.\n");
+		stringBuffer.append(" % of serious bugs were fixed.\n");
 
-		stringBuffer.append("There are ");
+		stringBuffer.append("There have been ");
 		if ( enhancementBugsPercentage > 50 )
 			stringBuffer.append("many");
 		else if ( enhancementBugsPercentage > 25 )
@@ -291,8 +290,9 @@ public class BugsChannelSeverityFactoid extends AbstractFactoidMetricProvider{
 			stringBuffer.append("few");
 		else
 			stringBuffer.append("very few");
-		stringBuffer.append(" bugs that propose or ask for new features, of which ");
-		
+		stringBuffer.append(" (");
+		stringBuffer.append(decimalFormat.format(enhancementBugsPercentage));
+		stringBuffer.append(" %) enhancement requests, of which ");
 		stringBuffer.append(decimalFormat.format(percentageOfStatusEnhancementFixedBugs));
 		stringBuffer.append(" % were fixed.\n");
 

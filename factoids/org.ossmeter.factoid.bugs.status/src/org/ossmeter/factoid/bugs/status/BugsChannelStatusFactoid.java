@@ -37,7 +37,7 @@ public class BugsChannelStatusFactoid extends AbstractFactoidMetricProvider{
 
 	@Override
 	public String getFriendlyName() {
-		return "Bug Channel Status";
+		return "Bug Tracker Status";
 		// This method will NOT be removed in a later version.
 	}
 
@@ -109,23 +109,22 @@ public class BugsChannelStatusFactoid extends AbstractFactoidMetricProvider{
 			  percentageOfInvalidBugs = ( (float) 100 * numberOfInvalidBugs ) / numberOfBugs,
 			  percentageOfDuplicateBugs = ( (float) 100 * numberOfDuplicateBugs ) / numberOfBugs;
 		
-		stringBuffer.append("On average, bugs are resolved ");
 		if (percentageOfResolvedBugs > 75 ) {
-			stringBuffer.append("excellent");
+			stringBuffer.append("Nearly all");
 			factoid.setStars(StarRating.FOUR);
 		}
 		else if (percentageOfResolvedBugs > 50 ) {
-			stringBuffer.append("well");
+			stringBuffer.append("Most");
 			factoid.setStars(StarRating.THREE);
 		}
 		else if (percentageOfResolvedBugs > 25 ) {
-			stringBuffer.append("almost well");
+			stringBuffer.append("Few");
 			factoid.setStars(StarRating.TWO);
 		} else {
-			stringBuffer.append("inadequately");
+			stringBuffer.append("Very few");
 			factoid.setStars(StarRating.ONE);
 		}
-		stringBuffer.append(".\n");
+		stringBuffer.append(" bugs are resolved.\n");
 		
 		stringBuffer.append("In a total of ");
 		stringBuffer.append(numberOfBugs);

@@ -35,7 +35,7 @@ public class BugsChannelEmotionFactoid extends AbstractFactoidMetricProvider{
 
 	@Override
 	public String getFriendlyName() {
-		return "Bug Channel Emotion";
+		return "Bug Tracker Emotion";
 		// This method will NOT be removed in a later version.
 	}
 
@@ -72,13 +72,9 @@ public class BugsChannelEmotionFactoid extends AbstractFactoidMetricProvider{
 		float positiveEmotionPercentageSum = 0,
 			  negativeEmotionPercentageSum = 0,
 			  mostCommonPositivePercentage = 0,
-			  mostCommonNegativePercentage = 0,
-			  leastCommonPositivePercentage = 100,
-			  leastCommonNegativePercentage = 100;
+			  mostCommonNegativePercentage = 0;
 		String mostCommonPositive = "",
-			   mostCommonNegative = "",
-			   leastCommonPositive = "",
-			   leastCommonNegative = "";
+			   mostCommonNegative = "";
 		for (EmotionDimension dimension: emotionsTransMetric.getDimensions()) {
 			if ( ( dimension.getEmotionLabel().equals("anger") )
 			  || ( dimension.getEmotionLabel().equals("sadness") )
@@ -89,19 +85,11 @@ public class BugsChannelEmotionFactoid extends AbstractFactoidMetricProvider{
 					mostCommonNegativePercentage = dimension.getCumulativePercentage();
 					mostCommonNegative = dimension.getEmotionLabel();
 				}
-				if ( leastCommonNegativePercentage > dimension.getCumulativePercentage() ) {
-					leastCommonNegativePercentage = dimension.getCumulativePercentage();
-					leastCommonNegative = dimension.getEmotionLabel();
-				}
 			} else {
 				positiveEmotionPercentageSum += dimension.getCumulativePercentage();
 				if ( mostCommonPositivePercentage < dimension.getCumulativePercentage() ) {
 					mostCommonPositivePercentage = dimension.getCumulativePercentage();
 					mostCommonPositive = dimension.getEmotionLabel();
-				}
-				if ( leastCommonPositivePercentage > dimension.getCumulativePercentage() ) {
-					leastCommonPositivePercentage = dimension.getCumulativePercentage();
-					leastCommonPositive = dimension.getEmotionLabel();
 				}
 			}
 		}
@@ -121,44 +109,17 @@ public class BugsChannelEmotionFactoid extends AbstractFactoidMetricProvider{
 			factoid.setStars(StarRating.ONE);
 		}
 		
-		stringBuffer.append("There are ");
-		if  ( positiveEmotionPercentage > 80 )
-			stringBuffer.append("many");
-		else if ( positiveEmotionPercentage > 65 )
-			stringBuffer.append("not so many");
-		else if ( positiveEmotionPercentage > 50 )
-			stringBuffer.append("few");
-		else if ( positiveEmotionPercentage > 35 )
-			stringBuffer.append("very few");
-		stringBuffer.append(" comments that express positive emotions, while there are ");
-		if  ( negativeEmotionPercentage > 80 )
-			stringBuffer.append("many");
-		else if ( negativeEmotionPercentage > 65 )
-			stringBuffer.append("not so many");
-		else if ( negativeEmotionPercentage > 50 )
-			stringBuffer.append("few");
-		else if ( negativeEmotionPercentage > 35 )
-			stringBuffer.append("very few");
-		stringBuffer.append(" comments that express negative emotions.\n");
-		
-		stringBuffer.append("The most and least common negative emotions are ");
+		stringBuffer.append(decimalFormat.format(positiveEmotionPercentage));
+		stringBuffer.append(" % of comments and postings express positive emotions, while ");
+		stringBuffer.append(decimalFormat.format(negativeEmotionPercentage));
+		stringBuffer.append(" % express negative emotions. ");
+		stringBuffer.append("A comment or posting can express both positive and negative emotions at the same time.\n");
+
+		stringBuffer.append("The most common negative emotion is ");
 		stringBuffer.append(mostCommonNegative);
-		stringBuffer.append(" (");
-		stringBuffer.append(decimalFormat.format(mostCommonNegativePercentage));
-		stringBuffer.append(" %) and ");
-		stringBuffer.append(leastCommonNegative);
-		stringBuffer.append(" (");
-		stringBuffer.append(decimalFormat.format(leastCommonNegativePercentage));
-		stringBuffer.append(" %)");
-		stringBuffer.append(", while the most and least common positive emotions are ");
+		stringBuffer.append(", while the most common positive emotions is ");
 		stringBuffer.append(mostCommonPositive);
-		stringBuffer.append(" (");
-		stringBuffer.append(decimalFormat.format(mostCommonPositivePercentage));
-		stringBuffer.append(" %) and ");
-		stringBuffer.append(leastCommonPositive);
-		stringBuffer.append(" (");
-		stringBuffer.append(decimalFormat.format(leastCommonPositivePercentage));
-		stringBuffer.append(" %).\n");
+		stringBuffer.append(".\n");
 		
 		factoid.setFactoid(stringBuffer.toString());
 	}

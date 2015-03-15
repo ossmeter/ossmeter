@@ -17,7 +17,6 @@ import java.util.List;
 import org.ossmeter.metricprovider.historic.newsgroups.threads.ThreadsHistoricMetricProvider;
 import org.ossmeter.metricprovider.historic.newsgroups.threads.model.NewsgroupsThreadsHistoricMetric;
 import org.ossmeter.metricprovider.historic.newsgroups.users.UsersHistoricMetricProvider;
-import org.ossmeter.metricprovider.historic.newsgroups.users.model.DailyNewsgroupData;
 import org.ossmeter.metricprovider.historic.newsgroups.users.model.NewsgroupsUsersHistoricMetric;
 import org.ossmeter.platform.AbstractFactoidMetricProvider;
 import org.ossmeter.platform.Date;
@@ -115,14 +114,14 @@ public class NewsgroupsChannelUsersFactoid extends AbstractFactoidMetricProvider
 		if (currentUsers>0)
 			currentActivePercentage = ( (float) 100 * currentActiveUsers ) / currentUsers; 
 
-		stringBuffer.append("The community of the project contains ");
+		stringBuffer.append("Over the lifetime of the project ");
 		stringBuffer.append(currentUsers);
 		stringBuffer.append(" users, of which currently ");
 		stringBuffer.append(currentActiveUsers);
 		stringBuffer.append(" are active (");
 		stringBuffer.append(decimalFormat.format(currentActivePercentage));
-		stringBuffer.append(" %).\n");
-		stringBuffer.append("Each user has contributed approximately ");
+		stringBuffer.append(" %) have posted.\n");
+		stringBuffer.append("Each user has contributed on average ");
 		stringBuffer.append(decimalFormat.format(getMessagesPerUser(threadList)));
 		stringBuffer.append(" messages, "); 
 		stringBuffer.append(decimalFormat.format(getMessagesPerRequests(threadList)));
@@ -135,16 +134,16 @@ public class NewsgroupsChannelUsersFactoid extends AbstractFactoidMetricProvider
 			  dailyNumberOfNewUsersInTheLastYear = getDailyNumberOfNewUsersInDuration(usersYearList),
 			  dailyNumberOfActiveUsersInTheLastYear = getDailyNumberOfActiveUsersInDuration(usersYearList);
 		
-		stringBuffer.append("There are approximately "); 
+		stringBuffer.append("On average, there are "); 
 		stringBuffer.append(decimalFormat.format(dailyNumberOfNewUsersInTheLastMonth));
-		stringBuffer.append(" new users per day in the last month, while approximately ");
+		stringBuffer.append(" new users per day in the last month, while ");
 		stringBuffer.append(decimalFormat.format(dailyNumberOfActiveUsersInTheLastMonth));
 		stringBuffer.append(" users are active.\n");
-		stringBuffer.append("In the last year, there are "); 
+		stringBuffer.append("In the last year, there have been "); 
 		stringBuffer.append(decimalFormat.format(dailyNumberOfNewUsersInTheLastYear));
-		stringBuffer.append(" new users per day, ");
+		stringBuffer.append(" new and ");
 		stringBuffer.append(decimalFormat.format(dailyNumberOfActiveUsersInTheLastYear));
-		stringBuffer.append(" of which are active.\n"); 
+		stringBuffer.append(" active users per day.\n"); 
 		
 		float newUsersThreshold = 0.25f,
 			  activeUsersThreshold = 2.5f;
@@ -168,25 +167,6 @@ public class NewsgroupsChannelUsersFactoid extends AbstractFactoidMetricProvider
 			factoid.setStars(StarRating.ONE);
 		}
 
-		if ( usersMonthList.size() > 0 ) {
-			NewsgroupsUsersHistoricMetric usersPongo = 
-					(NewsgroupsUsersHistoricMetric) usersMonthList.get(usersMonthList.size()-1);
-			for (DailyNewsgroupData dailyNewsgroupData: usersPongo.getNewsgroups()) {
-				int numberOfUsers = dailyNewsgroupData.getNumberOfUsers(),
-					numberOfActiveUsers = dailyNewsgroupData.getNumberOfActiveUsers();
-				float percentageOfActiveUsers = ( (float) 100 * numberOfActiveUsers ) / numberOfUsers;
-				stringBuffer.append("Newsgroup ");
-				stringBuffer.append(dailyNewsgroupData.getNewsgroupName());
-				stringBuffer.append(" hosts ");
-				stringBuffer.append(numberOfUsers);
-				stringBuffer.append(" users, of which ");
-				stringBuffer.append(numberOfActiveUsers);
-				stringBuffer.append(" are currently active (");
-				stringBuffer.append(decimalFormat.format(percentageOfActiveUsers));
-				stringBuffer.append(" %).\n");
-			}
-		}
-	
 		factoid.setFactoid(stringBuffer.toString());
 
 	}

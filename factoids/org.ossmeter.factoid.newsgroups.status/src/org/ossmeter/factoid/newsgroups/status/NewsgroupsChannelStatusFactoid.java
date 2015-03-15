@@ -25,7 +25,6 @@ import org.ossmeter.platform.Date;
 import org.ossmeter.platform.IMetricProvider;
 import org.ossmeter.platform.delta.ProjectDelta;
 import org.ossmeter.platform.factoids.Factoid;
-import org.ossmeter.platform.factoids.StarRating;
 import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
@@ -139,7 +138,7 @@ public class NewsgroupsChannelStatusFactoid extends AbstractFactoidMetricProvide
 			percentageOfRepliesPerDay = ( (float) 100 * numberOfRepliesPerDay ) / numberOfArticlesPerDay;
 		}
 
-		stringBuffer.append("The project's newsgroup hosts ");
+		stringBuffer.append("The project's newsgroup contains ");
 		stringBuffer.append(numberOfRequests);
 		stringBuffer.append(" requests (");
 		stringBuffer.append(decimalFormat.format(percentageOfRequests));
@@ -147,27 +146,9 @@ public class NewsgroupsChannelStatusFactoid extends AbstractFactoidMetricProvide
 		stringBuffer.append(numberOfReplies);
 		stringBuffer.append(" replies (");
 		stringBuffer.append(decimalFormat.format(percentageOfReplies));
-		stringBuffer.append(" %), showing that requests are on average replied ");
-		if ( percentageOfReplies > 75 ) {
-			stringBuffer.append("excellent");
-			factoid.setStars(StarRating.FOUR);
-		}
-		else if ( percentageOfReplies > 50 ) {
-			stringBuffer.append("well");
-			factoid.setStars(StarRating.THREE);
-		}
-		else if ( percentageOfReplies > 25 ) {
-			stringBuffer.append("fairly well");
-			factoid.setStars(StarRating.TWO);
-		}
-		else {
-			stringBuffer.append("inadequately");
-			factoid.setStars(StarRating.ONE);
-		}
+		stringBuffer.append(" %).\n");
 		
-		stringBuffer.append(".\n");
-		
-		stringBuffer.append("In total ");
+		stringBuffer.append("In total, ");
 		stringBuffer.append(numberOfUnsweredThreads);
 		stringBuffer.append(" threads are unanswered.\n");
 		

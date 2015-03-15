@@ -14,8 +14,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import org.ossmeter.metricprovider.historic.bugs.comments.CommentsHistoricMetricProvider;
 import org.ossmeter.metricprovider.historic.bugs.comments.model.BugsCommentsHistoricMetric;
@@ -45,7 +43,7 @@ public class BugsChannelUsageFactoid extends AbstractFactoidMetricProvider{
 
 	@Override
 	public String getFriendlyName() {
-		return "Bug Channel Usage";
+		return "Bug Tracker Usage";
 		// This method will NOT be removed in a later version.
 	}
 
@@ -132,49 +130,14 @@ public class BugsChannelUsageFactoid extends AbstractFactoidMetricProvider{
 		
 
 		StringBuffer stringBuffer = new StringBuffer();
-		
-		stringBuffer.append("The project is associated with ");
-		stringBuffer.append(project.getBugTrackingSystems().size());
-		stringBuffer.append(" bug tracking ");
-		
-		if (project.getBugTrackingSystems().size()==1)
-			stringBuffer.append("system.\nIn the last year, it has ");
-		else
-			stringBuffer.append("systems.\nIn the last year, they have ");
-			
-		if ( (numberOfBugs > workingDaysInAYear) || (numberOfComments > workingDaysInAYear) ) {
-			stringBuffer.append("received high ");
-		} else if ( (2 * numberOfBugs > workingDaysInAYear) || (2 * numberOfComments > workingDaysInAYear) ) {
-			stringBuffer.append("received much ");
-		} else if ( (4 * numberOfBugs > workingDaysInAYear) || (4 * numberOfComments > workingDaysInAYear) ) {
-			stringBuffer.append("received some ");
-		} else
-			stringBuffer.append("not received much ");
-		stringBuffer.append("attention.\n");
 
+		stringBuffer.append("Over the last year, ");
 		stringBuffer.append(numberOfBugs);
 		stringBuffer.append(" new bugs, ");
 		stringBuffer.append(numberOfComments);
 		stringBuffer.append(" new comments and ");
 		stringBuffer.append(numberOfPatches);
 		stringBuffer.append(" new patches have been posted, in total.\n");
-
-		for (String tracker: sortByKeys(trackerBugs)) {
-			stringBuffer.append(trackerBugs.get(tracker));
-			stringBuffer.append(" new bugs, ");
-			int commentFrequency = 0;
-			if (trackerComments.containsKey(tracker))
-				commentFrequency = trackerComments.get(tracker);
-			stringBuffer.append(commentFrequency);
-			stringBuffer.append(" new comments and ");
-			int patchFrequency = 0;
-			if (trackerPatches.containsKey(tracker))
-				patchFrequency = trackerPatches.get(tracker);
-			stringBuffer.append(patchFrequency);
-			stringBuffer.append(" new patches have been posted to bug tracking system ");
-			stringBuffer.append(tracker);
-			stringBuffer.append(".\n");
-		}
 
 		end = new Date();
 		start = (new Date()).addDays(-30);
@@ -192,33 +155,13 @@ public class BugsChannelUsageFactoid extends AbstractFactoidMetricProvider{
 		numberOfPatches = parsePatchesPongos(patchesList, trackerPatches);
 
 		
-		stringBuffer.append("In the last month, ");
+		stringBuffer.append("Over the last month, ");
 		stringBuffer.append(numberOfBugs);
 		stringBuffer.append(" new bugs, ");
 		stringBuffer.append(numberOfComments);
 		stringBuffer.append(" new comments and ");
 		stringBuffer.append(numberOfPatches);
-		if (trackerBugs.size()==1)
-			stringBuffer.append(" new patches have been posted to the bug tracker of the project.\n");
-		else
-			stringBuffer.append(" new patches have been posted to the bug trackers of the project.\n");
-
-		for (String tracker: sortByKeys(trackerBugs)) {
-			stringBuffer.append(trackerBugs.get(tracker));
-			stringBuffer.append(" new bugs, ");
-			int commentFrequency = 0;
-			if (trackerComments.containsKey(tracker))
-				commentFrequency = trackerComments.get(tracker);
-			stringBuffer.append(commentFrequency);
-			stringBuffer.append(" new comments and ");
-			int patchFrequency = 0;
-			if (trackerPatches.containsKey(tracker))
-				patchFrequency = trackerPatches.get(tracker);
-			stringBuffer.append(patchFrequency);
-			stringBuffer.append(" new patches have been posted to bug tracking system ");
-			stringBuffer.append(tracker);
-			stringBuffer.append(".\n");
-		}
+		stringBuffer.append(" new patches have been posted.\n");
 
 		factoid.setFactoid(stringBuffer.toString());
 
@@ -276,11 +219,6 @@ public class BugsChannelUsageFactoid extends AbstractFactoidMetricProvider{
 			}
 		}
 		return sumOfPatches;
-	}
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private SortedSet<String> sortByKeys(Map<String, ?> map) {
-		return new TreeSet(map.keySet());
 	}
 
 }

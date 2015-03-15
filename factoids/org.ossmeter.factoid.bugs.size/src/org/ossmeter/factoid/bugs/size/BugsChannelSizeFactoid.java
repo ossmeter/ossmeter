@@ -45,7 +45,7 @@ public class BugsChannelSizeFactoid extends AbstractFactoidMetricProvider{
 
 	@Override
 	public String getFriendlyName() {
-		return "Bug Channel Size";
+		return "Bug Tracker Size";
 		// This method will NOT be removed in a later version.
 	}
 
@@ -136,42 +136,20 @@ public class BugsChannelSizeFactoid extends AbstractFactoidMetricProvider{
 		
 		StringBuffer stringBuffer = new StringBuffer();
 		
-		stringBuffer.append("The project is associated with ");
-		stringBuffer.append(project.getBugTrackingSystems().size());
-		stringBuffer.append(" bug tracking ");
-		
-		if (project.getBugTrackingSystems().size()==1)
-			stringBuffer.append("system.\n");
-		else
-			stringBuffer.append("systems.\n");
-			
+		int bugs = 0, comments = 0, patches = 0;
 		for (String tracker: sortByKeys(trackerBugs)) {
-			
-			int bugs = trackerBugs.get(tracker);
-			int comments = trackerComments.get(tracker);
-			int patches = trackerPatches.get(tracker);
-
-			stringBuffer.append("Bug tracking system ");
-			stringBuffer.append(tracker);
-			stringBuffer.append(" is of ");
-			
-			if ( (bugs > threshold) || (comments > 10 * threshold) || (patches > threshold) ) {
-				stringBuffer.append("very large");
-			} else if ( (2 * bugs > threshold) || (2 * comments > 10 * threshold) || (2 * patches > threshold) ) {
-				stringBuffer.append("large");
-			} else if ( (4 * bugs > threshold) || (4 * comments > 10 * threshold) || (4 * patches > threshold) ) {
-				stringBuffer.append("medium");
-			} else
-				stringBuffer.append("small");
-			stringBuffer.append(" size. It contains ");
-			stringBuffer.append(bugs);
-			stringBuffer.append(" bugs, ");
-			stringBuffer.append(comments);
-			stringBuffer.append(" comments and ");
-			stringBuffer.append(patches);
-			stringBuffer.append(" patches, in total.\n");
-		
+			bugs += trackerBugs.get(tracker);
+			comments += trackerComments.get(tracker);
+			patches += trackerPatches.get(tracker);
 		}
+		
+		stringBuffer.append("The bug trackers of the project contain ");
+		stringBuffer.append(bugs);
+		stringBuffer.append(" bugs, ");
+		stringBuffer.append(comments);
+		stringBuffer.append(" comments and ");
+		stringBuffer.append(patches);
+		stringBuffer.append(" patches, in total.\n");
 		
 		factoid.setFactoid(stringBuffer.toString());
 

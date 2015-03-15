@@ -116,13 +116,7 @@ public class NewsgroupsChannelSentimentFactoid extends AbstractFactoidMetricProv
 		StringBuffer stringBuffer = new StringBuffer();
 		DecimalFormat decimalFormat = new DecimalFormat("#.##");
 		
-		stringBuffer.append("The average sentimental polarity measured on all articles is ");
-		stringBuffer.append(decimalFormat.format(averageSentiment));
-		stringBuffer.append(".\nThe measurement lies in the range [-1,1], where -1 designates " +
-							"entirely negative sentiment while 1 designates entirely positive " +
-							"sentiment. The middle of the range, designates neutral sentiment.\n");
-
-		stringBuffer.append("The average sentimental polarity in all newsgroups " +
+		stringBuffer.append("The average sentimental polarity in all bug-tracking systems " +
 							"associated with the project is ");
 		if ( averageSentiment > 0.3 )
 			stringBuffer.append("positive");
@@ -130,29 +124,32 @@ public class NewsgroupsChannelSentimentFactoid extends AbstractFactoidMetricProv
 			stringBuffer.append("weakly positive");
 		else if ( averageSentiment > -0.15 )
 			stringBuffer.append("neutral");
-		if ( averageSentiment < -0.3 )
+		else if ( averageSentiment > -0.3 )
 			stringBuffer.append("weakly negative");
 		else 
 			stringBuffer.append("negative");
-		stringBuffer.append(".\n");
+		stringBuffer.append(" (");
+		stringBuffer.append(decimalFormat.format(averageSentiment));
+		stringBuffer.append(" with -1 designating entirely negative sentiment " +
+				"and 1 designating entirely positive sentiment).\n");
 		
-		stringBuffer.append("In the beginning of threads, the average sentiment score is ");
+		stringBuffer.append("At the beginning of threads, the average sentiment score is ");
 		stringBuffer.append(decimalFormat.format(sentimentAtThreadBeggining));
 		stringBuffer.append(", while at the end of threads it is ");
 		stringBuffer.append(decimalFormat.format(sentimentAtThreadEnd));
-		stringBuffer.append(", showing that users are ");
+		stringBuffer.append(", showing that users ");
 		if ( Math.abs( sentimentAtThreadBeggining - sentimentAtThreadEnd ) < 0.15 ) 
-			stringBuffer.append("equally happy");
+			stringBuffer.append("have similar feelings");
 		else if ( sentimentAtThreadBeggining < sentimentAtThreadEnd )
-			stringBuffer.append("happier");
+			stringBuffer.append("are happier");
 		else
-			stringBuffer.append("unhappier");
+			stringBuffer.append("are unhappier");
 		stringBuffer.append(" at the end of a discussion ");
 		if ( Math.abs( sentimentAtThreadBeggining - sentimentAtThreadEnd ) < 0.15 )
 			stringBuffer.append("as");
 		else
 			stringBuffer.append("than");
-		stringBuffer.append(" in the beginning of it.\n");
+		stringBuffer.append(" at the beginning of it.\n");
 
 		factoid.setFactoid(stringBuffer.toString());
 

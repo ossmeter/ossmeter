@@ -14,8 +14,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import org.ossmeter.metricprovider.historic.newsgroups.articles.ArticlesHistoricMetricProvider;
 import org.ossmeter.metricprovider.historic.newsgroups.articles.model.DailyNewsgroupData;
@@ -127,41 +125,11 @@ public class NewsgroupsChannelUsageFactoid extends AbstractFactoidMetricProvider
 
 		StringBuffer stringBuffer = new StringBuffer();
 		
-		stringBuffer.append("The project is associated with ");
-		stringBuffer.append(project.getCommunicationChannels().size());
-		stringBuffer.append(" communication ");
-		
-		if (project.getCommunicationChannels().size()==1)
-			stringBuffer.append("channel.\nIn the last year, it has ");
-		else
-			stringBuffer.append("channels.\nIn the last year, they have ");
-			
-		if ( (numberOfArticles > workingDaysInAYear) || (numberOfThreads > workingDaysInAYear) ) {
-			stringBuffer.append("received high ");
-		} else if ( (2 * numberOfArticles > workingDaysInAYear) || (2 * numberOfThreads > workingDaysInAYear) ) {
-			stringBuffer.append("received much ");
-		} else if ( (4 * numberOfArticles > workingDaysInAYear) || (4 * numberOfThreads > workingDaysInAYear) ) {
-			stringBuffer.append("received some ");
-		} else
-			stringBuffer.append("not received much ");
-		stringBuffer.append("attention.\n");
-
+		stringBuffer.append("Over the last year, ");
 		stringBuffer.append(numberOfArticles);
 		stringBuffer.append(" new articles and ");
 		stringBuffer.append(numberOfThreads);
-		stringBuffer.append(" new threads, in total.\n");
-
-		for (String tracker: sortByKeys(newsgroupArticles)) {
-			stringBuffer.append(newsgroupArticles.get(tracker));
-			stringBuffer.append(" new articles and ");
-			int commentFrequency = 0;
-			if (newsgroupThreads.containsKey(tracker))
-				commentFrequency = newsgroupThreads.get(tracker);
-			stringBuffer.append(commentFrequency);
-			stringBuffer.append(" new threads have been posted to communication channel ");
-			stringBuffer.append(tracker);
-			stringBuffer.append(".\n");
-		}
+		stringBuffer.append(" new threads have been posted in total.\n");
 
 		end = new Date();
 		start = (new Date()).addDays(-30);
@@ -174,26 +142,11 @@ public class NewsgroupsChannelUsageFactoid extends AbstractFactoidMetricProvider
 		newsgroupThreads = new HashMap<String, Integer>();
 		numberOfThreads = parseThreadsPongos(threadsList, newsgroupThreads);
 		
-		stringBuffer.append("In the last month, ");
+		stringBuffer.append("Over the last month, ");
 		stringBuffer.append(numberOfArticles);
 		stringBuffer.append(" new bugs and ");
 		stringBuffer.append(numberOfThreads);
-		if (newsgroupArticles.size()==1)
-			stringBuffer.append(" new patches have been posted to the bug tracker of the project.\n");
-		else
-			stringBuffer.append(" new patches have been posted to the bug trackers of the project.\n");
-
-		for (String tracker: sortByKeys(newsgroupArticles)) {
-			stringBuffer.append(newsgroupArticles.get(tracker));
-			stringBuffer.append(" new bugs and ");
-			int commentFrequency = 0;
-			if (newsgroupThreads.containsKey(tracker))
-				commentFrequency = newsgroupThreads.get(tracker);
-			stringBuffer.append(commentFrequency);
-			stringBuffer.append(" new comments have been posted to communication channel ");
-			stringBuffer.append(tracker);
-			stringBuffer.append(".\n");
-		}
+		stringBuffer.append(" new threads have been posted.\n");
 
 		factoid.setFactoid(stringBuffer.toString());
 
@@ -236,9 +189,4 @@ public class NewsgroupsChannelUsageFactoid extends AbstractFactoidMetricProvider
 		return sumOfThreads;
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private SortedSet<String> sortByKeys(Map<String, ?> map) {
-		return new TreeSet(map.keySet());
-	}
-
 }

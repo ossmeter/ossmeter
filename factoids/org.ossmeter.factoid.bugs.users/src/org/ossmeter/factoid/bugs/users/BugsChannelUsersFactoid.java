@@ -18,7 +18,6 @@ import org.ossmeter.metricprovider.historic.bugs.bugs.BugsHistoricMetricProvider
 import org.ossmeter.metricprovider.historic.bugs.bugs.model.BugsBugsHistoricMetric;
 import org.ossmeter.metricprovider.historic.bugs.users.UsersHistoricMetricProvider;
 import org.ossmeter.metricprovider.historic.bugs.users.model.BugsUsersHistoricMetric;
-import org.ossmeter.metricprovider.historic.bugs.users.model.DailyBugTrackingData;
 import org.ossmeter.platform.AbstractFactoidMetricProvider;
 import org.ossmeter.platform.Date;
 import org.ossmeter.platform.IMetricProvider;
@@ -40,7 +39,7 @@ public class BugsChannelUsersFactoid extends AbstractFactoidMetricProvider{
 
 	@Override
 	public String getFriendlyName() {
-		return "Bug Channel Users";
+		return "Bug Tracker Users";
 		// This method will NOT be removed in a later version.
 	}
 
@@ -108,14 +107,14 @@ public class BugsChannelUsersFactoid extends AbstractFactoidMetricProvider{
 			currentActiveUsers = getCurrentNumberOfActiveUsers(usersMonthList);
 		float currentActivePercentage = ( (float) 100 * currentActiveUsers ) / currentUsers; 
 
-		stringBuffer.append("The community of the project contains ");
+		stringBuffer.append("Over the lifetime of the project ");
 		stringBuffer.append(currentUsers);
 		stringBuffer.append(" users, of which currently ");
 		stringBuffer.append(currentActiveUsers);
 		stringBuffer.append(" are active (");
 		stringBuffer.append(decimalFormat.format(currentActivePercentage));
-		stringBuffer.append(" %).\n");
-		stringBuffer.append("Each user has contributed approximately ");
+		stringBuffer.append(" %), have reported or commented on bugs.\n");
+		stringBuffer.append("Each user has contributed on average ");
 		stringBuffer.append(decimalFormat.format(getMessagesPerUser(bugList)));
 		stringBuffer.append(" messages, "); 
 		stringBuffer.append(decimalFormat.format(getMessagesPerRequests(bugList)));
@@ -128,16 +127,16 @@ public class BugsChannelUsersFactoid extends AbstractFactoidMetricProvider{
 			  dailyNumberOfNewUsersInTheLastYear = getDailyNumberOfNewUsersInDuration(usersYearList),
 			  dailyNumberOfActiveUsersInTheLastYear = getDailyNumberOfActiveUsersInDuration(usersYearList);
 		
-		stringBuffer.append("There are approximately "); 
+		stringBuffer.append("On average, there are "); 
 		stringBuffer.append(decimalFormat.format(dailyNumberOfNewUsersInTheLastMonth));
-		stringBuffer.append(" new users per day in the last month, while approximately ");
+		stringBuffer.append(" new users per day in the last month, while ");
 		stringBuffer.append(decimalFormat.format(dailyNumberOfActiveUsersInTheLastMonth));
 		stringBuffer.append(" users are active.\n");
-		stringBuffer.append("In the last year, there are "); 
+		stringBuffer.append("In the last year, there have been "); 
 		stringBuffer.append(decimalFormat.format(dailyNumberOfNewUsersInTheLastYear));
-		stringBuffer.append(" new users per day, ");
+		stringBuffer.append(" new and ");
 		stringBuffer.append(decimalFormat.format(dailyNumberOfActiveUsersInTheLastYear));
-		stringBuffer.append(" of which are active.\n"); 
+		stringBuffer.append(" active users per day.\n"); 
 		
 		float newUsersThreshold = 0.25f,
 			  activeUsersThreshold = 2.5f;
@@ -161,26 +160,6 @@ public class BugsChannelUsersFactoid extends AbstractFactoidMetricProvider{
 			factoid.setStars(StarRating.ONE);
 		}
 
-		if ( usersMonthList.size() > 0 ) {
-			BugsUsersHistoricMetric usersPongo = 
-					(BugsUsersHistoricMetric) usersMonthList.get(usersMonthList.size()-1);
-			int trackerNo = 1;
-			for (DailyBugTrackingData dailyTrackerData: usersPongo.getBugTrackers()) {
-				int numberOfUsers = dailyTrackerData.getNumberOfUsers(),
-					numberOfActiveUsers = dailyTrackerData.getNumberOfActiveUsers();
-				float percentageOfActiveUsers = ( (float) 100 * numberOfActiveUsers ) / numberOfUsers;
-				stringBuffer.append("Tracker no. ");
-				stringBuffer.append(trackerNo++);
-				stringBuffer.append(" hosts ");
-				stringBuffer.append(numberOfUsers);
-				stringBuffer.append(" users, of which ");
-				stringBuffer.append(numberOfActiveUsers);
-				stringBuffer.append(" are currently active (");
-				stringBuffer.append(decimalFormat.format(percentageOfActiveUsers));
-				stringBuffer.append(" %).\n");
-			}
-		}
-	
 		factoid.setFactoid(stringBuffer.toString());
 
 	}

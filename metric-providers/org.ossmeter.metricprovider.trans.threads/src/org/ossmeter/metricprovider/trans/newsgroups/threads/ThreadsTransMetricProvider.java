@@ -105,26 +105,28 @@ public class ThreadsTransMetricProvider implements ITransientMetricProvider<News
 			CommunicationChannel communicationChannel = communicationChannelDelta.getCommunicationChannel();
 			
 			if (communicationChannelDelta.getArticles().size() > 0) {
+				if (!(communicationChannel instanceof NntpNewsGroup)) continue;
+				NntpNewsGroup newsgroup = (NntpNewsGroup) communicationChannel;
+				
 				Map<Integer, String> previousClassAssignments = new HashMap<Integer, String>();
 				
 				List<Article> articles = new ArrayList<Article>();
 				for (ThreadData threadData: db.getThreads()) {
 					for (ArticleData articleData: threadData.getArticles()) {
-						previousClassAssignments.put(articleData.getArticleNumber(), articleData.getContentClass());
-						articles.add(prepareArticle(articleData));
-						Set<Integer> articleIds = null;
-						if (articleIdsPerNewsgroup.containsKey(articleData.getNewsgroupName()))
-							articleIds = articleIdsPerNewsgroup.get(articleData.getNewsgroupName());
-						else {
-							articleIds = new HashSet<Integer>();
-							articleIdsPerNewsgroup.put(articleData.getNewsgroupName(), articleIds);
+						if (articleData.getNewsgroupName().equals(newsgroup.getNewsGroupName())) {
+							previousClassAssignments.put(articleData.getArticleNumber(), articleData.getContentClass());
+							articles.add(prepareArticle(articleData));
+							Set<Integer> articleIds = null;
+							if (articleIdsPerNewsgroup.containsKey(articleData.getNewsgroupName()))
+								articleIds = articleIdsPerNewsgroup.get(articleData.getNewsgroupName());
+							else {
+								articleIds = new HashSet<Integer>();
+								articleIdsPerNewsgroup.put(articleData.getNewsgroupName(), articleIds);
+							}
+							articleIds.add(articleData.getArticleNumber());
 						}
-						articleIds.add(articleData.getArticleNumber());
 					}
 				}
-				
-				if (!(communicationChannel instanceof NntpNewsGroup)) continue;
-				NntpNewsGroup newsgroup = (NntpNewsGroup) communicationChannel;
 				
 				Map<Integer, ClassificationInstance> instanceIndex = new HashMap<Integer, ClassificationInstance>();
 				for (CommunicationChannelArticle deltaArticle :communicationChannelDelta.getArticles()) {

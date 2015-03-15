@@ -34,7 +34,7 @@ public class BugsChannelHourlyFactoid extends AbstractFactoidMetricProvider{
 
 	@Override
 	public String getFriendlyName() {
-		return "Bug Channel Hourly";
+		return "Bug Tracker Hourly";
 		// This method will NOT be removed in a later version.
 	}
 
