@@ -12,7 +12,6 @@
 package org.ossmeter.repository.model.sourceforge.importer;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -43,8 +42,10 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.ossmeter.repository.model.vcs.svn.SvnRepository;
 import org.ossmeter.repository.model.vcs.git.GitRepository;
+import org.jsoup.nodes.Node;
 import org.jsoup.select.*;
 import org.jsoup.*;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.ossmeter.platform.Platform;
@@ -57,7 +58,6 @@ import org.xml.sax.SAXException;
 
 public class SourceforgeProjectImporter implements IImporter {
 	protected OssmeterLogger logger;
-	private HashMap<String,String> am = new HashMap<String,String>();;
 	public SourceforgeProjectImporter()
 	{
 		logger = (OssmeterLogger) OssmeterLogger.getLogger("importer.sourceforge");
@@ -128,7 +128,7 @@ public class SourceforgeProjectImporter implements IImporter {
 							url = e.get(i).getElementsByAttributeValue("itemprop", "url").first().attr("href");
 							count++;
 							logger.info("--> (" + count + ") " + url);
-							SourceForgeProject project = importProject(url.split("/")[2], platform);
+							importProject(url.split("/")[2], platform);
 							lastImportedProject = new String(j + "/" + i);
 							platform.getProjectRepositoryManager().getProjectRepository().getSfImportData().first().setLastImportedProject(lastImportedProject);
 							platform.getProjectRepositoryManager().getProjectRepository().sync();
@@ -160,10 +160,9 @@ public class SourceforgeProjectImporter implements IImporter {
 			while (it.hasNext()) {
 				el = (String) it.next();
 				logger.info(el);
-				SourceForgeProject project = null;
 				if ((platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByName(el.split("/")[2])) != null) {
 					try {
-						project = importProject(el.split("/")[2], platform);
+						importProject(el.split("/")[2], platform);
 					} catch (WrongUrlException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -226,7 +225,7 @@ public class SourceforgeProjectImporter implements IImporter {
 							url = e.get(i).getElementsByAttributeValue("itemprop", "url").first().attr("href");
 							count++;
 							logger.info("--> (" + count + ") " + url);
-							SourceForgeProject project = importProject(url.split("/")[2], platform);
+							importProject(url.split("/")[2], platform);
 							lastImportedProject = new String(j + "/" + i);
 							platform.getProjectRepositoryManager().getProjectRepository().getSfImportData().first().setLastImportedProject(lastImportedProject);
 							platform.getProjectRepositoryManager().getProjectRepository().sync();
@@ -264,10 +263,10 @@ public class SourceforgeProjectImporter implements IImporter {
 			while (it.hasNext()) {
 				el = (String) it.next();
 				logger.info(el);
-				SourceForgeProject project = null;
+				
 				if ((platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByName(el.split("/")[2])) != null) {
 					try {
-						project = importProject(el.split("/")[2], platform);
+						importProject(el.split("/")[2], platform);
 					} catch (WrongUrlException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -277,22 +276,7 @@ public class SourceforgeProjectImporter implements IImporter {
 			}
 		}
 	}
-	
-	
-	private String getXml(String projectURL) throws Exception {
-		URL url = new URL(projectURL);
-		URLConnection con = url.openConnection();
-		BufferedReader rd = new BufferedReader(new InputStreamReader(
-				con.getInputStream()));
-		String line;
-		StringBuilder sb = new StringBuilder();
-		while ((line = rd.readLine()) != null) {
-			sb.append(line + "\n");
-		}
-		rd.close();
-		String text = sb.toString();
-		return text;
-	}
+
 	@Override
 	public SourceForgeProject importProject(String projectId, Platform platform) throws WrongUrlException  {
 		
@@ -320,6 +304,21 @@ public class SourceforgeProjectImporter implements IImporter {
 		if (!projectToBeUpdated)  {
 			project = new SourceForgeProject();
 		}
+		else {
+			// Clear containments to be updated
+						project.getOs().clear();
+						project.getTopics().clear();
+						project.getProgramminLanguages().clear();
+						project.getAudiences().clear();
+						project.getEnvironments().clear();
+						project.getCategories().clear();
+						project.getFeatureRequests().clear();
+						project.getPatches().clear();
+						project.getFeatureRequests().clear();
+						project.getBugs().clear();		
+						project.getCommunicationChannels().clear();
+						project.getVcsRepositories().clear();
+		}
 		try {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance(); 
 			DocumentBuilder db = null;
@@ -333,7 +332,7 @@ public class SourceforgeProjectImporter implements IImporter {
 				throw new WrongUrlException();
 			}
 			doc.getDocumentElement().normalize();
-			doc.getElementById("creation_date");
+			/*Si puo' eliminare*/doc.getElementById("creation_date");
 			Element nList = (Element)doc.getElementsByTagName("Project").item(0);	
 			project.setShortName(projectId); 
 			String app = getXMLNodeValue(nList,"name");
@@ -345,6 +344,7 @@ public class SourceforgeProjectImporter implements IImporter {
 			app = getXMLNodeValue(nList,"sf:private");
 			project.set_private(Integer.parseInt(app));
 			project.setShortDesc(getXMLNodeValue(nList,"shortdesc"));
+			
 //	###########################################################
 //			//percentile & ranking not present in xml format	#
 //																#
@@ -362,42 +362,34 @@ public class SourceforgeProjectImporter implements IImporter {
 			{
 				logger.info("Retrive value for key: download-page trhows an exception.");
 			}	
-				
-			InputStream isJSON = null;
-			String jsonText = null;
+			
+			/////Use JSON resource///////////
 			try {
+				InputStream isJSON = null;
+				String jsonText = null;
 				isJSON = new URL("https://sourceforge.net/rest/p/" + projectId).openStream();
 				BufferedReader rdJSON = new BufferedReader(new InputStreamReader(isJSON, Charset.forName("UTF-8")));	
 				jsonText = readAll(rdJSON);
+				JSONObject currentProg=(JSONObject)JSONValue.parse(jsonText);
+				project.setSupportPage((String)currentProg.get("preferred_support_url"));
+				project.setSummary((String)currentProg.get("summary"));
+				project.setHomePage((String)currentProg.get("external_homepage"));
+				JSONObject categories = ((JSONObject)currentProg.get("categories"));
+				if (categories != null) {
+				JSONArray topics = (JSONArray)categories.get("topic");
+					for (Object object : topics) {
+						Topic topic  = new Topic();
+						topic.setName(((JSONObject)object).get("fullname").toString());
+						project.getTopics().add(topic);
+					}
+				}
+				
+				
 			} catch (MalformedURLException e1) {
 				throw new WrongUrlException();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				throw new WrongUrlException();
 			}
-			JSONObject currentProg=(JSONObject)JSONValue.parse(jsonText);
-			project.setSupportPage((String)currentProg.get("preferred_support_url"));
-			project.setSummary((String)currentProg.get("summary"));
-			project.setHomePage((String)currentProg.get("external_homepage"));
-			
-		
-			// Clear containments to be updated
-			project.getOs().clear();
-			project.getTopics().clear();
-			project.getProgramminLanguages().clear();
-			project.getAudiences().clear();
-			project.getEnvironments().clear();
-			project.getCategories().clear();
-			project.getFeatureRequests().clear();
-			project.getPatches().clear();
-			project.getFeatureRequests().clear();
-			project.getBugs().clear();		
-			project.getCommunicationChannels().clear();
-			project.getVcsRepositories().clear();	
-	
-			platform.getProjectRepositoryManager().getProjectRepository().sync();	
-			
-			
 //			// BEGIN Management of Operating Systems
 			NodeList nl = nList.getElementsByTagName("os");			
 			
@@ -415,22 +407,7 @@ public class SourceforgeProjectImporter implements IImporter {
 				}
 			} 
 			// END Management of Operating Systems 
-
-			
-//#########################################################################			
-//			// BEGIN Management of Topics
-//			if ((isNotNull(currentProg,"topics"))){			
-//				JSONArray topics = (JSONArray)currentProg.get("topics");
-//				Topic topic = null;
-//				for (int i=0; i < topics.size(); i++){					
-//					topic = new Topic();
-//					topic.setName(topics.get(i).toString());
-//					project.getTopics().add(topic);
-//				}
-//			}
-//			// END Management of Topics
-//##########################################################################
-			
+		
 //			BEGIN Management of Programming Languages
 			nl = nList.getElementsByTagName("programming-language");
 			for (int i=0; i < nl.getLength(); i++){					
@@ -484,18 +461,6 @@ public class SourceforgeProjectImporter implements IImporter {
 			}
 			// END Management of Environments			
 		    
-//			// BEGIN Management of Categories
-//		    nl = nList.getElementsByTagName("category");
-//			if ((isNotNull(currentProg,"categories"))){			
-//				JSONArray categories = (JSONArray)currentProg.get("categories");
-//			    Category category = null;
-//			    for (int i=0; i < categories.size(); i++){					
-//					category = new Category();
-//					category.setName(categories.get(i).toString());
-//					project.getCategories().add(category);
-//				}
-//		    }
-//			// END Management of Categories	
 			
 			String type = null;
 			nl = nList.getElementsByTagName("sf:feature");
@@ -521,13 +486,13 @@ public class SourceforgeProjectImporter implements IImporter {
 							tracker.setLocation(s);
 							project.getPatches().add(tracker);
 						}
-			    		else if (type.equals("Support Requests"))
+			    		else if (type.contains("Support"))
 						{
-							FeatureRequest tracker = new FeatureRequest();
+							SupportRequest tracker = new SupportRequest();
 							tracker.setName(type);
 							String s = nl.item(i).getFirstChild().getLastChild().getAttributes().item(0).getNodeValue();
 							tracker.setLocation(s);
-							project.getFeatureRequests().add(tracker);
+							project.getSupportRequests().add(tracker);
 						}
 			    		else if (type.equals("Bugs"))
 						{
@@ -538,16 +503,17 @@ public class SourceforgeProjectImporter implements IImporter {
 							project.getBugs().add(tracker);
 						}
 			    		
-			    		else if (type.equals("Discussion"))
+			    		else if (type.toLowerCase().equals("discussion"))
 						{
 							Discussion discussion = new Discussion();
 							
 							String s = nl.item(i).getFirstChild().getLastChild().getAttributes().item(0).getNodeValue();
 							discussion.setUrl(s);
-							discussion.setNonProcessable(true);
+							discussion.setNonProcessable(false);
 							project.getDiscussion().add(discussion);
+							project.getCommunicationChannels().add(discussion);
 						}
-			    		else if (type.equals("Donations"))
+			    		else if (type.toLowerCase().equals("donations"))
 						{
 							Donation donation = new Donation();
 							
@@ -604,6 +570,35 @@ public class SourceforgeProjectImporter implements IImporter {
 							}
 						
 						}
+			    		else if (type.toLowerCase().equals("code"))
+						{
+							org.jsoup.nodes.Document doc2;
+							
+							String URL_PROJECT = nl.item(i).getFirstChild().getLastChild().getAttributes().item(0).getNodeValue();
+							doc2 = Jsoup.connect(URL_PROJECT).timeout(10000).get();
+							org.jsoup.nodes.Element content = doc2.getElementById("access_urls");
+							if(content!=null) {
+								org.jsoup.nodes.Element element = (org.jsoup.nodes.Element) content.getElementsByTag("a").first();
+								String urlSVN = ((Node) element).attr("data-url");
+								if (urlSVN != null) {
+									if(urlSVN.startsWith("git clone "))	{
+										GitRepository repository = new GitRepository();
+										repository.setName(type + "_" +projectId);
+										urlSVN = urlSVN.replace("git clone ", "");
+										repository.setUrl(urlSVN);
+										project.getVcsRepositories().add(repository);
+									}
+									if(urlSVN.startsWith("svn checkout ")) {
+										urlSVN = urlSVN.replace("svn checkout ", "");
+										SvnRepository repository = new SvnRepository();
+										repository.setName(type + "_" +projectId);
+										repository.setUrl(urlSVN);
+										project.getVcsRepositories().add(repository);
+									}
+								}
+							}
+						
+						}
 						
 					}	
 					
@@ -638,23 +633,6 @@ public class SourceforgeProjectImporter implements IImporter {
 				
 			}
 			// END Management of CommunicationsChannels		
-//			
-//			// BEGIN Management of VCS
-//			if (isNotNull(currentProg,"SVNRepository"))
-//			{
-//				SvnRepository repository = new SvnRepository();
-//				repository.setBrowse(((String)((JSONObject)currentProg.get("SVNRepository")).get("browse")));
-//				repository.setUrl(((String)((JSONObject)currentProg.get("SVNRepository")).get("location")));
-//				project.getVcsRepositories().add(repository);
-//			}
-//			if (isNotNull(currentProg,"CVSRepository"))
-//			{
-//				CvsRepository repository = new CvsRepository();
-//				repository.setBrowse(((String)((JSONObject)currentProg.get("CVSRepository")).get("browse")));
-//				repository.setUrl(((String)((JSONObject)currentProg.get("CVSRepository")).get("anon-root")));
-//				project.getVcsRepositories().add(repository);
-//			}
-//			// END Management of VCS
 			
 			// BEGIN Management of Licenses
 		    nl = nList.getElementsByTagName("license");
@@ -696,11 +674,10 @@ public class SourceforgeProjectImporter implements IImporter {
 		    	
 		    	try
 		    	{
-		    		String name = "";
-		    		name = nl.item(i).getFirstChild().getNodeValue();
-		    		Person maintainer = platform.getProjectRepositoryManager().
-		    				getProjectRepository().getPersons().findOneByName(
-		    						nl.item(i).getFirstChild().getFirstChild().getFirstChild().getNodeValue());
+		    	String name = "";
+		    		name = nl.item(i).getFirstChild().getFirstChild().getFirstChild().getNodeValue();
+		    			Person maintainer = platform.getProjectRepositoryManager().
+		    				getProjectRepository().getPersons().findOneByName(name);
 		    		if ((maintainer != null) & !checkRole(maintainer, role) )
 		    		{
 						maintainer.getRoles().add(role);
@@ -737,8 +714,8 @@ public class SourceforgeProjectImporter implements IImporter {
 		    	try
 		    	{
 		    		String name = "";
-		    		name = nl.item(i).getFirstChild().getNodeValue();
-		    		Person developer = platform.getProjectRepositoryManager().getProjectRepository().getPersons().findOneByName(nl.item(i).getFirstChild().getFirstChild().getFirstChild().getNodeValue());
+		    		name = nl.item(i).getFirstChild().getFirstChild().getFirstChild().getNodeValue();
+		    		Person developer = platform.getProjectRepositoryManager().getProjectRepository().getPersons().findOneByName(name);
 		    		if ((developer != null) & !checkRole(developer, role) )
 		    		{
 						developer.getRoles().add(role);
