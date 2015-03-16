@@ -498,7 +498,16 @@ function drawSpiderChart(container, factoids, config) {
 			case "TWO": stars = 2; break;
 		}
 
-		var ax = { axis: factoids[f].name, value: stars } ;
+        var factoid_name;
+        if(factoids[f].name.length > 15 && factoids[f].name.split(" ").length > 2) {
+            var label_terms = factoids[f].name.split(" ");
+            factoid_name = "..." +  label_terms[label_terms.length-2] + " " + label_terms[label_terms.length-1];
+        }
+        else {
+            factoid_name = factoids[f].name;
+        }
+
+		var ax = { axis: factoid_name, value: stars } ;
 		d.push(ax);
 	}
 
