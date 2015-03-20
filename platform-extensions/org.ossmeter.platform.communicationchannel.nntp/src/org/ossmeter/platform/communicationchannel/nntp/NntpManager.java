@@ -36,7 +36,7 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 	@Override
 	public CommunicationChannelDelta getDelta(DB db, NntpNewsGroup newsgroup, Date date) throws Exception {
 		NNTPClient nntpClient = NntpUtil.connectToNntpServer(newsgroup);
-
+		
 		NewsgroupInfo newsgroupInfo = NntpUtil.selectNewsgroup(nntpClient, newsgroup);
 		int lastArticle = newsgroupInfo.getLastArticle();
 
@@ -50,13 +50,15 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 		int lastArticleChecked = Integer.parseInt(lac);
 		if (lastArticleChecked<0) lastArticleChecked = newsgroupInfo.getFirstArticle();
 
-		// FIXME: certain eclipse newsgroups return 0 for both FirstArticle and LastArticle which causes exceptions
-		if (lastArticleChecked == 0) return null;
-		
-		
 		CommunicationChannelDelta delta = new CommunicationChannelDelta();
 		delta.setNewsgroup(newsgroup);
 
+		// FIXME: certain eclipse newsgroups return 0 for both FirstArticle and LastArticle which causes exceptions
+		if (lastArticleChecked == 0) {
+			nntpClient.disconnect(); 
+			return null;
+		}
+		
 		int retrievalStep = RETRIEVAL_STEP;
 		Boolean dayCompleted = false;
 		while (!dayCompleted) {
@@ -126,7 +128,7 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 		}
 		nntpClient.disconnect(); 
 		newsgroup.setLastArticleChecked(lastArticleChecked+"");
-		System.out.println("delta ("+date.toString()+") contains:\t"+
+		System.out.println("delta ("+newsgroup.getNewsGroupName() + " on " + date.toString()+") contains:\t"+
 								delta.getArticles().size() + " nntp articles");
 		
 		return delta;
@@ -139,7 +141,7 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 		int firstArticleNumber = newsgroupInfo.getFirstArticle();
 		
 		if (firstArticleNumber == 0) {
-			return null; // This is to deal with message-less newsgroups.
+			return new Date(); // This is to deal with message-less newsgroups.
 		}
 				
 		Reader reader = nntpClient.retrieveArticle(firstArticleNumber);
@@ -149,15 +151,10 @@ public class NntpManager implements ICommunicationChannelManager<NntpNewsGroup> 
 			if (firstArticleNumber >= newsgroupInfo.getLastArticle()) break;
 		}
 		
-		
-		
 		ArticleHeader articleHeader = new ArticleHeader(reader);
 //		Article article = NntpUtil.getArticleInfo(nntpClient, articleId);
 		nntpClient.disconnect();
 //		String date = article.getDate();
-		
-		
-		
 		return new Date(NntpUtil.parseDate(articleHeader.getDate().trim()));
 	}
 
