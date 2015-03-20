@@ -176,7 +176,8 @@ public class EclipseProjectImporter implements IImporter{
 	public EclipseProject importProject(String projectId, Platform platform) throws ProjectUnknownException{
 			
 		
-		String URL_PROJECT = "http://projects.eclipse.org/projects/"+ projectId.replaceAll("-", "\\.");
+		String HTML_URL_PROJECT = "http://projects.eclipse.org/projects/"+ projectId.replaceAll("-", "\\.");
+		String JSON_URL_PROJECT = "http://projects.eclipse.org/json/project/" + projectId.replaceAll("-", "\\.");
 		//XML xml = null;
 		
 		Iterable<Project> pl = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findByShortName(projectId);
@@ -199,7 +200,7 @@ public class EclipseProjectImporter implements IImporter{
 		//Retrieving data by parsing the Web page of the project
 		//This is necessary to retrieve metadata not available in JSON
 		try {
-			List<String> eclipsePlatformNames = getPlatforms(URL_PROJECT, projectId.replaceAll("-", "\\."));
+			List<String> eclipsePlatformNames = getPlatforms(HTML_URL_PROJECT, projectId.replaceAll("-", "\\."));
 			String platformName;
 			
 			
@@ -217,8 +218,8 @@ public class EclipseProjectImporter implements IImporter{
 				project.getPlatforms().add(eclipsePlatform);
 				platform.getProjectRepositoryManager().getProjectRepository().sync();	
 			}
-			URL projectUrl = new URL("http://projects.eclipse.org/json/project/" + projectId.replaceAll("-", "\\."));
-			URLConnection conn = projectUrl.openConnection();
+			URL JSON_URL = new URL(JSON_URL_PROJECT);
+			URLConnection conn = JSON_URL.openConnection();
 			String sorry = conn.getHeaderField("STATUS");
 			
 			if (sorry !=null && sorry.startsWith("404"))
@@ -245,7 +246,7 @@ public class EclipseProjectImporter implements IImporter{
 			if ((isNotNull(currentProg,"parent_project"))){
 				String parentProjectName = ((JSONObject)((JSONArray)currentProg.get("parent_project")).get(0)).get("id").toString();
 				if (parentProjectName != null) {
-					project.setParent(importProjectFromImportAll(parentProjectName, platform));
+					project.setParent(importProject(parentProjectName, platform));
 					logger.info("The project " + parentProjectName + " is parent of " + project.getShortName());
 				}				    
 			}		
@@ -266,7 +267,7 @@ public class EclipseProjectImporter implements IImporter{
 				project.setState(((JSONObject)((JSONArray)currentProg.get("state")).get(0)).get("value").toString());		
 
 			
-		// BEGIN Management of Communication Channels 		
+			// BEGIN Management of Communication Channels 		
 			if (projectToBeUpdated) {
 				project.getCommunicationChannels().clear();
 				platform.getProjectRepositoryManager().getProjectRepository().sync();	
@@ -332,9 +333,10 @@ public class EclipseProjectImporter implements IImporter{
 			}
 			
 			for (NntpNewsGroup cc : getNntpNewsGroup(projectId.replaceAll("-", "\\."))) {
-				project.getCommunicationChannels().add(cc);
+				if (cc.getNewsGroupName().endsWith(projectId))
+					project.getCommunicationChannels().add(cc);
 			}
-			
+			///REMOVE COMMUNICATION CHANNEL FROM PARENTE
 			for (Company cc : getCompany(projectId.replaceAll("-", "\\."), platform)) {
 				project.getCompanies().add(cc);
 			}
@@ -402,12 +404,13 @@ public class EclipseProjectImporter implements IImporter{
 					VcsRepository repository = null;
 					if (((String)entry.get("type")).equals("git")  || ((String)entry.get("type")).equals("github")) {
 						repository = new GitRepository();
-						if (!((String)entry.get("path")).startsWith("/") && ((String)entry.get("type")).equals("github"))
-							repository.setUrl((String)entry.get("path"));
-						if (((String)entry.get("path")).startsWith("/") && ((String)entry.get("type")).equals("git")) {
-							String gitUrl = "http://git.eclipse.org" + (String)entry.get("path");
+						if (((String)entry.get("type")).equals("github"))
+							repository.setUrl((String)entry.get("url"));
+						if (((String)entry.get("type")).equals("git")) {
+							String gitUrl = (String)entry.get("url");
 							int gitTest = getResponseCode(gitUrl);
-							if (gitTest == 200){
+							if (gitTest != 200){
+								gitUrl = "http://git.eclipse.org" + (String)entry.get("path");
 								gitUrl = gitUrl.replace("http", "https");
 								gitUrl = gitUrl.replace("gitroot", "r");
 								if (gitUrl.endsWith("git"))
@@ -532,7 +535,7 @@ public class EclipseProjectImporter implements IImporter{
 			JSONObject obj=(JSONObject)JSONValue.parse(jsonText);
 			JSONObject currentProg = (JSONObject)((JSONObject)obj.get("projects")).get(projectId.replaceAll("-", "\\."));
 			
-			project.setShortName(projectId.replaceAll("\\.", "-"));
+			project.setShortName(projectId);
 			if ((isNotNullObj(currentProg,"title")))
 				project.setName(currentProg.get("title").toString());
 			logger.info("---> Retrieving metadata of " + project.getShortName());
