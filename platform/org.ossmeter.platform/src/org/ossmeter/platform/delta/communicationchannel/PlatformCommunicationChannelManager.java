@@ -20,6 +20,7 @@ import org.ossmeter.platform.cache.communicationchannel.ICommunicationChannelCon
 import org.ossmeter.platform.cache.communicationchannel.ICommunicationChannelDeltaCache;
 import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.ManagerAnalysis;
+import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
 
 import com.mongodb.DB;
 
@@ -76,7 +77,14 @@ public abstract class PlatformCommunicationChannelManager implements ICommunicat
 	
 	@Override
 	public CommunicationChannelDelta getDelta(DB db, CommunicationChannel communicationChannel, Date date)  throws Exception {
-		CommunicationChannelDelta cache = getDeltaCache().getCachedDelta(communicationChannel.getUrl(), date);
+		CommunicationChannelDelta cache;
+		if (communicationChannel instanceof NntpNewsGroup) {
+			NntpNewsGroup nntpNewsGroup = (NntpNewsGroup) communicationChannel;
+			cache = getDeltaCache().getCachedDelta(nntpNewsGroup.getUrl() + "/" + nntpNewsGroup.getNewsGroupName(), date);
+		}
+		else
+			cache = getDeltaCache().getCachedDelta(communicationChannel.getUrl(), date);
+		
 		if (cache != null) {
 			System.err.println("CommunicationChannelDelta CACHE HIT!");
 			return cache;
@@ -98,7 +106,14 @@ public abstract class PlatformCommunicationChannelManager implements ICommunicat
 			platform.getProjectRepositoryManager().getProjectRepository().getManagerAnalysis().sync();
 
 			// Cache it
-			getDeltaCache().putDelta(communicationChannel.getUrl(), date, delta);
+			if (delta!=null) {
+				if (communicationChannel instanceof NntpNewsGroup) {
+					NntpNewsGroup nntpNewsGroup = (NntpNewsGroup) communicationChannel;
+					getDeltaCache().putDelta(nntpNewsGroup.getUrl() + "/" + nntpNewsGroup.getNewsGroupName(), date, delta);
+				}
+				else
+					getDeltaCache().putDelta(communicationChannel.getUrl(), date, delta);
+			}
 			return delta;
 		}
 		return null;
