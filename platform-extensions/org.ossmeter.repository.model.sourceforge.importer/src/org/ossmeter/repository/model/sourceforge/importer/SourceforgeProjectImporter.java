@@ -508,6 +508,7 @@ public class SourceforgeProjectImporter implements IImporter {
 							Discussion discussion = new Discussion();
 							
 							String s = nl.item(i).getFirstChild().getLastChild().getAttributes().item(0).getNodeValue();
+							s = s.replace("sourceforge.net/p/", "sourceforge.net/rest/p/");
 							discussion.setUrl(s);
 							discussion.setNonProcessable(false);
 							project.getDiscussion().add(discussion);
