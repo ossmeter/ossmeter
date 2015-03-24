@@ -18,6 +18,7 @@
 @import org.ossmeter.repository.model.vcs.git._
 @import org.ossmeter.repository.model.eclipse._
 @import org.ossmeter.repository.model.github._
+@import play.api.libs.json.Json
 
 @attributeId = @{ 
     attribute.getName().replaceAll(" ", "");
@@ -27,19 +28,15 @@
     attribute.getMetrics().take(10).map(x=> x.getIdentifier())
 }
 
-
 @* @_attributeFactoidRadarView(project, qualityModel, attribute) *@
 
-
     <div class="row">
+    	
         <ul class="nav nav-tabs" role="tablist">
             <li class="disabled col-md-4"><h2 class="marginless">@attribute.getName()</h2></li>
-            <li class="active"><a href="#factoids-@attributeId" role="tab" data-toggle="tab">Factoids</a></li>
+            <li class="active"><a href="#factoids-@attributeId" role="tab" data-toggle="tab">Summary</a></li>
             <li class=""><a href="#sparklines-@attributeId" role="tab" data-toggle="tab" id="sparklines-@attributeId-tab">Sparklines</a></li>
-   @*         @if(attribute.detail != "none") {
-            <li class=""><a href="#details-@attributeId" role="tab" data-toggle="tab">Details</a></li>
-            }
-    *@
+    		<li class=""><a href="#factoidsDetailed-@attributeId" role="tab" data-toggle="tab" id="factoidsDetailed-@attributeId-tab">Factoids</a></li>
         </ul>
     </div>
     <div class="row">
@@ -55,29 +52,43 @@
                     $(function() {
                         $.getJSON(getApi() + "/projects/p/@project.getShortName()/f/@attribute.getFactoids().take(5).map(x=> x.getIdentifier()).mkString("+")", function (result) {
                             $("#factoids-@attributeId").empty();
-
-                            for (var r in result) {
-                                var f = result[r];
-                                if (f.factoid) {
-                                    var _s = "<p><strong>" + f.name + "</strong><br/>";
-                                    _s = _s + f.factoid + "</p>"
-                                    $("#factoids-@attributeId").append(_s)
-                                }
-                            }
-                            var config = {
-                                w: 150,
-                                h: 150,
-                                maxValue: 4,
-                                levels: 4,
-                                ExtraWidthX:200
-                            };
-                            drawSpiderChart("#spider-@attributeId", result, config);
+                            
+	                            for (var r in result) {
+	                                var f = result[r];
+	                                if (f.factoid && f.status != 'undefined') {
+	                                    var _s = "<p><strong>" + f.name + "</strong><br/>";
+	                                    _s = _s + f.factoid + "</p>"
+	                                    $("#factoids-@attributeId").append(_s)
+	                                }	                                
+	                            }
+	                            var config = {
+	                                w: 150,
+	                                h: 150,
+	                                maxValue: 4,
+	                                levels: 4,
+	                                ExtraWidthX:200
+	                            };
+	                        	
+	                            //Hide container if three or more attributes return an error
+	                            var counter = 0;
+	                            for (var i = 0; i < result.length; i++) {
+	                            	if(result[i].status == 'error'){
+	                            		counter +=1;
+	                            	}
+	                            }
+	                            
+	                           
+	                            if(counter >2){
+	                        		$('.@attribute.getName().replaceAll(" ", "")').hide();
+	                            }
+                            	drawSpiderChart("#spider-@attributeId", result, config);
                         }).fail(function(err) {
                             $("#factoids-@attributeId").empty();
                             $("#factoids-@attributeId").append("<p>Unable to load factoids: " + JSON.parse(err.responseText).msg + "</p>");
                         });
                     });
                 </script>
+                
                 <div class="tab-pane fade" id="sparklines-@attributeId">
                     <table class="table spark" id="sparklines-table-@attributeId">
                         <thead></thead>
@@ -141,8 +152,33 @@
 
                     </script>
                 </div>
+				
+				<div class="tab-pane fade" id="factoidsDetailed-@attributeId">  
+              
+                </div>
+                <script type="text/javascript">
+                    $(function() {
+                        $.getJSON(getApi() + "/projects/p/@project.getShortName()/f/@attribute.getFactoids().map(x=> x.getIdentifier()).mkString("+")", function (result) {
+                            $("#factoidsDetailed-@attributeId").empty();
 
-    @*            @if(attribute.detail != "none") {
+                            for (var r in result) {
+                                var f = result[r];
+                                if (f.factoid) {
+                                    var _s = "<p><strong>" + f.name + "</strong><br/>";
+                                    _s = _s + f.factoid + "</p>"
+                                    $("#factoidsDetailed-@attributeId").append(_s)
+                                }
+                            }
+                        }).fail(function(err) {
+                            $("#factoidsDetailed-@attributeId").empty();
+                            $("#factoidsDetailed-@attributeId").append("<p>Unable to load factoids: " + JSON.parse(err.responseText).msg + "</p>");
+                        });
+                    });
+                </script>
+			
+
+
+    @*          @if(attribute.detail != "none") {
                 <div class="tab-pane fade" id="details-@attributeId">
                     @attribute.detail match {
                         case "src" => {
