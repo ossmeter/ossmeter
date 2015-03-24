@@ -169,8 +169,11 @@ public class Projects extends Controller {
 		}
 		
 		Project project = getProject(id);
-		boolean isAdmin = true;
-
+		boolean isAdmin = false;
+		if(user.isAdmin()){
+			isAdmin = true;
+		}
+		
 		model.Project iProject = MongoAuthenticator.findProjectById(project.getShortName());
 
 		return ok(views.html.projects.view_project.render(project, iProject, qm, summary, isAdmin));
