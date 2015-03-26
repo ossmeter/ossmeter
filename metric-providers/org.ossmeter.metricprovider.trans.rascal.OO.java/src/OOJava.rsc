@@ -245,8 +245,8 @@ map[loc, real] I_Java(map[loc, int] ce = (), map[loc, int] ca = ()) {
 @doc{Response for class (Java)}
 @friendlyName{Response for class (Java)}
 @appliesTo{java()}
-map[loc, int] RFC_Java(rel[Language, loc, M3] m3s = {}) {
-  M3 m3 = systemM3(m3s);
+map[loc, int] RFC_Java(rel[Language, loc, M3] m3s = {}, ProjectDelta delta = ProjectDelta::\empty()) {
+  M3 m3 = systemM3(m3s,delta=delta);
   return RFC(m3@methodInvocation, allMethodsMap(m3), allTypes(m3));
 }
 
@@ -334,8 +334,8 @@ real AHF_Java(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3
 @friendlyName{Polymorphism factor (Java)}
 @appliesTo{java()}
 @historic
-real PF_Java(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+real PF_Java(rel[Language, loc, M3] m3s = {}, ProjectDelta delta = ProjectDelta::\empty()) {
+	M3 m3 = systemM3(m3s,delta=delta);
 
 	return PF(superTypes(m3), m3@methodOverrides, overridableMethods(m3), allTypes(m3));
 }

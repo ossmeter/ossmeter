@@ -217,8 +217,8 @@ map[loc, real] I_PHP(map[loc, int] ce = (), map[loc, int] ca = ()) {
 @doc{Response for class (PHP)}
 @friendlyName{Response for class (PHP)}
 @appliesTo{php()}
-map[loc, int] RFC_PHP(rel[Language, loc, M3] m3s = {}) {
-	M3 m3 = systemM3(m3s);
+map[loc, int] RFC_PHP(rel[Language, loc, M3] m3s = {}, ProjectDelta delta = ProjectDelta::\empty()) {
+	M3 m3 = systemM3(m3s,delta=delta);
 	return RFC(m3@calls, allMethodsMap(m3), allTypes(m3));
 }
 
