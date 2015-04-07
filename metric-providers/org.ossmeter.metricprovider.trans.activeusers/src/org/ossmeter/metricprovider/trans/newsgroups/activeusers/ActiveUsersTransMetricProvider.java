@@ -32,6 +32,7 @@ import org.ossmeter.platform.delta.communicationchannel.PlatformCommunicationCha
 import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
+import org.ossmeter.repository.model.sourceforge.Discussion;
 
 import com.mongodb.DB;
 
@@ -54,6 +55,7 @@ public class ActiveUsersTransMetricProvider implements ITransientMetricProvider<
 	public boolean appliesTo(Project project) {
 		for (CommunicationChannel communicationChannel: project.getCommunicationChannels()) {
 			if (communicationChannel instanceof NntpNewsGroup) return true;
+			if (communicationChannel instanceof Discussion) return true;
 		}
 		return false;
 	}
@@ -88,12 +90,17 @@ public class ActiveUsersTransMetricProvider implements ITransientMetricProvider<
 
 		for ( CommunicationChannelDelta communicationChannelDelta: delta.getCommunicationChannelSystemDeltas()) {
 			CommunicationChannel communicationChannel = communicationChannelDelta.getCommunicationChannel();
-			if (!(communicationChannel instanceof NntpNewsGroup)) continue;
-			NntpNewsGroup newsgroup = (NntpNewsGroup) communicationChannel;
-			 NewsgroupData newsgroupData = db.getNewsgroups().findOneByNewsgroupName(newsgroup.getNewsGroupName());
+			String communicationChannelName;
+			if (!(communicationChannel instanceof NntpNewsGroup))
+				communicationChannelName = communicationChannel.getUrl();
+			else {
+				NntpNewsGroup newsgroup = (NntpNewsGroup) communicationChannel;
+				communicationChannelName = newsgroup.getNewsGroupName();
+			}
+			NewsgroupData newsgroupData = db.getNewsgroups().findOneByNewsgroupName(communicationChannelName);
 			if (newsgroupData == null) {
 				newsgroupData = new NewsgroupData();
-				newsgroupData.setNewsgroupName(newsgroup.getNewsGroupName());
+				newsgroupData.setNewsgroupName(communicationChannelName);
 				newsgroupData.setPreviousUsers(0);
 				newsgroupData.setDays(1);
 				db.getNewsgroups().add(newsgroupData);
@@ -105,7 +112,7 @@ public class ActiveUsersTransMetricProvider implements ITransientMetricProvider<
 			List<CommunicationChannelArticle> articles = communicationChannelDelta.getArticles();
 			for (CommunicationChannelArticle article: articles) {
 				Iterable<User> usersIt = db.getUsers().
-						find(User.NEWSGROUPNAME.eq(newsgroup.getNewsGroupName()), 
+						find(User.NEWSGROUPNAME.eq(communicationChannelName), 
 								User.USERID.eq(article.getUser()));
 				User user = null;
 				for (User u:  usersIt) {
@@ -113,11 +120,11 @@ public class ActiveUsersTransMetricProvider implements ITransientMetricProvider<
 				}
 				if (user == null) {
 					user = new User();
-					user.setNewsgroupName(newsgroup.getNewsGroupName());
+					user.setNewsgroupName(communicationChannelName);
 					user.setUserId(article.getUser());
 					user.setLastActivityDate(article.getDate().toString());
 					user.setArticles(1);
-					String requestReplyClass = getRequestReplyClass(usedClassifier, newsgroup, article);
+					String requestReplyClass = getRequestReplyClass(usedClassifier, communicationChannelName, article);
 					if (requestReplyClass.equals("Reply"))
 						user.setReplies(1);
 					else if (requestReplyClass.equals("Request"))
@@ -130,7 +137,7 @@ public class ActiveUsersTransMetricProvider implements ITransientMetricProvider<
 					if (articleDate.compareTo(userDate)==1)
 						user.setLastActivityDate(article.getDate().toString());
 					user.setArticles(user.getArticles()+1);
-					String requestReplyClass = getRequestReplyClass(usedClassifier, newsgroup, article);
+					String requestReplyClass = getRequestReplyClass(usedClassifier, communicationChannelName, article);
 					if (requestReplyClass.equals("Reply"))
 						user.setReplies(user.getReplies()+1);
 					else if (requestReplyClass.equals("Request"))
@@ -139,7 +146,7 @@ public class ActiveUsersTransMetricProvider implements ITransientMetricProvider<
 				db.sync();
 			}
 			
-			Iterable<User> usersIt = db.getUsers().findByNewsgroupName(newsgroup.getNewsGroupName());
+			Iterable<User> usersIt = db.getUsers().findByNewsgroupName(communicationChannelName);
 			int users = 0,
 				activeUsers = 0,
 				inactiveUsers = 0;
@@ -165,9 +172,9 @@ public class ActiveUsersTransMetricProvider implements ITransientMetricProvider<
 	}
 
 	private String getRequestReplyClass(RequestReplyClassificationTransMetric usedClassifier, 
-			NntpNewsGroup newsgroup, CommunicationChannelArticle article) {
+			String communicationChannelName, CommunicationChannelArticle article) {
 		Iterable<NewsgroupArticles> newsgroupArticlesIt = usedClassifier.getNewsgroupArticles().
-				find(NewsgroupArticles.NEWSGROUPNAME.eq(newsgroup.getNewsGroupName()), 
+				find(NewsgroupArticles.NEWSGROUPNAME.eq(communicationChannelName), 
 						NewsgroupArticles.ARTICLENUMBER.eq(article.getArticleNumber()));
 		NewsgroupArticles newsgroupArticleData = null;
 		for (NewsgroupArticles art:  newsgroupArticlesIt) {
@@ -176,7 +183,7 @@ public class ActiveUsersTransMetricProvider implements ITransientMetricProvider<
 		if (newsgroupArticleData == null) {
 			System.err.println("Active users metric -\t" + 
 					"there is no classification for article: " + article.getArticleNumber() +
-					"\t of newsgroup: " + newsgroup.getNewsGroupName());
+					"\t of newsgroup: " + communicationChannelName);
 //			System.exit(-1);
 		} else
 			return newsgroupArticleData.getClassificationResult();

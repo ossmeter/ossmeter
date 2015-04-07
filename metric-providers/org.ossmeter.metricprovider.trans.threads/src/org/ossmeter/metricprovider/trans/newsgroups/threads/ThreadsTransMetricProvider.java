@@ -37,6 +37,7 @@ import org.ossmeter.platform.delta.communicationchannel.PlatformCommunicationCha
 import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
+import org.ossmeter.repository.model.sourceforge.Discussion;
 
 import com.mongodb.DB;
 
@@ -53,6 +54,7 @@ public class ThreadsTransMetricProvider implements ITransientMetricProvider<News
 	public boolean appliesTo(Project project) {
 		for (CommunicationChannel communicationChannel: project.getCommunicationChannels()) {
 			if (communicationChannel instanceof NntpNewsGroup) return true;
+			if (communicationChannel instanceof Discussion) return true;
 		}
 		return false;
 	}
@@ -105,15 +107,20 @@ public class ThreadsTransMetricProvider implements ITransientMetricProvider<News
 			CommunicationChannel communicationChannel = communicationChannelDelta.getCommunicationChannel();
 			
 			if (communicationChannelDelta.getArticles().size() > 0) {
-				if (!(communicationChannel instanceof NntpNewsGroup)) continue;
-				NntpNewsGroup newsgroup = (NntpNewsGroup) communicationChannel;
+				String communicationChannelName;
+				if (!(communicationChannel instanceof NntpNewsGroup))
+					communicationChannelName = communicationChannel.getUrl();
+				else {
+					NntpNewsGroup newsgroup = (NntpNewsGroup) communicationChannel;
+					communicationChannelName = newsgroup.getNewsGroupName();
+				}
 				
 				Map<Integer, String> previousClassAssignments = new HashMap<Integer, String>();
 				
 				List<Article> articles = new ArrayList<Article>();
 				for (ThreadData threadData: db.getThreads()) {
 					for (ArticleData articleData: threadData.getArticles()) {
-						if (articleData.getNewsgroupName().equals(newsgroup.getNewsGroupName())) {
+						if (articleData.getNewsgroupName().equals(communicationChannelName)) {
 							previousClassAssignments.put(articleData.getArticleNumber(), articleData.getContentClass());
 							articles.add(prepareArticle(articleData));
 							Set<Integer> articleIds = null;
@@ -132,13 +139,14 @@ public class ThreadsTransMetricProvider implements ITransientMetricProvider<News
 				for (CommunicationChannelArticle deltaArticle :communicationChannelDelta.getArticles()) {
 
 					Boolean articleExists = false;
-					if (articleIdsPerNewsgroup.containsKey(newsgroup.getNewsGroupName())
-						&& articleIdsPerNewsgroup.get(newsgroup.getNewsGroupName()).contains(deltaArticle.getArticleNumber()))
+					if (articleIdsPerNewsgroup.containsKey(communicationChannelName)
+						&& articleIdsPerNewsgroup.get(communicationChannelName).contains(deltaArticle.getArticleNumber()))
 						articleExists = true;
 					
 					if (!articleExists) {
 						articles.add(prepareArticle(deltaArticle));
-						ClassificationInstance instance = prepareClassificationInstance(newsgroup, deltaArticle);
+						ClassificationInstance instance = 
+								prepareClassificationInstance(communicationChannelName, deltaArticle);
 						instanceIndex.put(instance.getArticleNumber(), instance);
 					}
 				}
@@ -173,15 +181,15 @@ public class ThreadsTransMetricProvider implements ITransientMetricProvider<News
 					threadData.setThreadId(index);
 					for (Article article: list) {
 						threadData.getArticles().add(
-								prepareArticleData(article, newsgroup, classifier, 
+								prepareArticleData(article, communicationChannelName, classifier, 
 												   previousClassAssignments, instanceIndex));
 						
-						if (threadsPerNewsgroup.containsKey(newsgroup.getNewsGroupName()))
-							threadsPerNewsgroup.get(newsgroup.getNewsGroupName()).add(index);
+						if (threadsPerNewsgroup.containsKey(communicationChannelName))
+							threadsPerNewsgroup.get(communicationChannelName).add(index);
 						else {
 							Set<Integer> threadSet = new HashSet<Integer>();
 							threadSet.add(index);
-							threadsPerNewsgroup.put(newsgroup.getNewsGroupName(), threadSet);
+							threadsPerNewsgroup.put(communicationChannelName, threadSet);
 						}
 					}
 					db.getThreads().add(threadData);
@@ -210,10 +218,10 @@ public class ThreadsTransMetricProvider implements ITransientMetricProvider<News
 	}
 
 	private ClassificationInstance prepareClassificationInstance(
-			NntpNewsGroup newsgroup, CommunicationChannelArticle deltaArticle) {
+			String communicationChannelName, CommunicationChannelArticle deltaArticle) {
 		ClassificationInstance instance = new ClassificationInstance(); 
 		instance.setArticleNumber(deltaArticle.getArticleNumber());
-		instance.setNewsgroupName(newsgroup.getNewsGroupName());
+		instance.setNewsgroupName(communicationChannelName);
 		instance.setSubject(deltaArticle.getSubject());
 		instance.setText(deltaArticle.getText());
 		return instance;
@@ -234,10 +242,11 @@ public class ThreadsTransMetricProvider implements ITransientMetricProvider<News
 	}
 
 	@SuppressWarnings("deprecation")
-	private ArticleData prepareArticleData(Article article, NntpNewsGroup newsgroup, Classifier classifier, 
+	private ArticleData prepareArticleData(Article article, 
+					String communicationChannelName, Classifier classifier, 
 					Map<Integer, String> previousClassAssignments, Map<Integer, ClassificationInstance> instanceIndex) {
 		ArticleData articleData = new ArticleData();
-		articleData.setNewsgroupName(newsgroup.getNewsGroupName());
+		articleData.setNewsgroupName(communicationChannelName);
 		articleData.setArticleId(article.getArticleId());
 		articleData.setArticleNumber(article.getArticleNumber());
 		articleData.setDate(article.getDate());

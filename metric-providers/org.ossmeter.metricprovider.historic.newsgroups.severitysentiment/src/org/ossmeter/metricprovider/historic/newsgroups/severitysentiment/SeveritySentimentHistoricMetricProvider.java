@@ -29,6 +29,7 @@ import org.ossmeter.platform.MetricProviderContext;
 import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
+import org.ossmeter.repository.model.sourceforge.Discussion;
 
 import com.googlecode.pongo.runtime.Pongo;
 
@@ -51,8 +52,9 @@ public class SeveritySentimentHistoricMetricProvider extends AbstractHistoricalM
 	
 	@Override
 	public boolean appliesTo(Project project) {
-		for (CommunicationChannel communicationchannel: project.getCommunicationChannels()) {
-			if (communicationchannel instanceof NntpNewsGroup) return true;
+		for (CommunicationChannel communicationChannel: project.getCommunicationChannels()) {
+			if (communicationChannel instanceof NntpNewsGroup) return true;
+			if (communicationChannel instanceof Discussion) return true;
 		}
 		return false;
 	}

@@ -46,6 +46,7 @@ import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
+import org.ossmeter.repository.model.sourceforge.Discussion;
 
 import com.mongodb.DB;
 
@@ -64,6 +65,7 @@ public class TopicsTransMetricProvider  implements ITransientMetricProvider<Topi
 	public boolean appliesTo(Project project) {
 		for (CommunicationChannel communicationChannel: project.getCommunicationChannels()) {
 			if (communicationChannel instanceof NntpNewsGroup) return true;
+			if (communicationChannel instanceof Discussion) return true;
 		}
 		return !project.getBugTrackingSystems().isEmpty();	   
 	}
@@ -125,12 +127,14 @@ public class TopicsTransMetricProvider  implements ITransientMetricProvider<Topi
 			NewsgroupTopic newsgroupTopic = new NewsgroupTopic();
 			db.getNewsgroupTopics().add(newsgroupTopic);
 			CommunicationChannel communicationChannel = ccpDelta.getCommunicationChannel();
-			if (!(communicationChannel instanceof NntpNewsGroup)) 
-				newsgroupTopic.setNewsgroupName(ccpDelta.getCommunicationChannel().getUrl());
+			String communicationChannelName;
+			if (!(communicationChannel instanceof NntpNewsGroup))
+				communicationChannelName = ccpDelta.getCommunicationChannel().getUrl();
 			else {
 				NntpNewsGroup newsgroup = (NntpNewsGroup) communicationChannel;
-				newsgroupTopic.setNewsgroupName(newsgroup.getNewsGroupName());
+				communicationChannelName = newsgroup.getNewsGroupName();
 			}
+			newsgroupTopic.setNewsgroupName(communicationChannelName);
 			newsgroupTopic.setLabel(cluster.getLabel());
 			newsgroupTopic.setNumberOfDocuments(cluster.getAllDocuments().size());
 		}
@@ -190,22 +194,27 @@ public class TopicsTransMetricProvider  implements ITransientMetricProvider<Topi
 	
 	private void processNewsgroups(Project project, CommunicationChannelDelta ccpDelta, TopicsTransMetric db) {
 		CommunicationChannel communicationChannel = ccpDelta.getCommunicationChannel();
-		if ((communicationChannel instanceof NntpNewsGroup)) {
+		String communicationChannelName;
+		if (!(communicationChannel instanceof NntpNewsGroup))
+			communicationChannelName = ccpDelta.getCommunicationChannel().getUrl();
+		else {
 			NntpNewsGroup newsgroup = (NntpNewsGroup) communicationChannel;
-			for (CommunicationChannelArticle article: ccpDelta.getArticles()) {
-				NewsgroupArticlesData newsgroupArticlesData = findNewsgroupArticle(db, newsgroup, article);
-				if (newsgroupArticlesData == null) {
-					newsgroupArticlesData = new NewsgroupArticlesData();
-					newsgroupArticlesData.setNewsgroupName(newsgroup.getNewsGroupName());
-					newsgroupArticlesData.setArticleNumber(article.getArticleNumber());
-					newsgroupArticlesData.setDate(new Date(article.getDate()).toString());
-					newsgroupArticlesData.setSubject(article.getSubject());
-					newsgroupArticlesData.setText(article.getText());
-					db.getNewsgroupArticles().add(newsgroupArticlesData);
-				} 
-			}
-			db.sync();
+			communicationChannelName = newsgroup.getNewsGroupName();
 		}
+		for (CommunicationChannelArticle article: ccpDelta.getArticles()) {
+			NewsgroupArticlesData newsgroupArticlesData = 
+					findNewsgroupArticle(db, communicationChannelName, article);
+			if (newsgroupArticlesData == null) {
+				newsgroupArticlesData = new NewsgroupArticlesData();
+				newsgroupArticlesData.setNewsgroupName(communicationChannelName);
+				newsgroupArticlesData.setArticleNumber(article.getArticleNumber());
+				newsgroupArticlesData.setDate(new Date(article.getDate()).toString());
+				newsgroupArticlesData.setSubject(article.getSubject());
+				newsgroupArticlesData.setText(article.getText());
+				db.getNewsgroupArticles().add(newsgroupArticlesData);
+			} 
+		}
+		db.sync();
 	}
 
 	private void processBugTrackers(Project project,
@@ -280,11 +289,11 @@ public class TopicsTransMetricProvider  implements ITransientMetricProvider<Topi
 	
 
 	private NewsgroupArticlesData findNewsgroupArticle(TopicsTransMetric db, 
-									NntpNewsGroup newsgroup, CommunicationChannelArticle article) {
+									String communicationChannelName, CommunicationChannelArticle article) {
 		NewsgroupArticlesData newsgroupArticlesData = null;
 		Iterable<NewsgroupArticlesData> newsgroupArticlesDataIt = 
 				db.getNewsgroupArticles().
-						find(NewsgroupArticlesData.NEWSGROUPNAME.eq(newsgroup.getNewsGroupName()), 
+						find(NewsgroupArticlesData.NEWSGROUPNAME.eq(communicationChannelName), 
 								NewsgroupArticlesData.ARTICLENUMBER.eq(article.getArticleNumber()));
 		for (NewsgroupArticlesData nad:  newsgroupArticlesDataIt) {
 			newsgroupArticlesData = nad;

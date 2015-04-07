@@ -31,6 +31,7 @@ import org.ossmeter.platform.delta.communicationchannel.PlatformCommunicationCha
 import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
+import org.ossmeter.repository.model.sourceforge.Discussion;
 
 import com.mongodb.DB;
 
@@ -52,6 +53,7 @@ NewsgroupsDailyRequestsRepliesTransMetric>{
 	public boolean appliesTo(Project project) {
 		for (CommunicationChannel communicationChannel: project.getCommunicationChannels()) {
 			if (communicationChannel instanceof NntpNewsGroup) return true;
+			if (communicationChannel instanceof Discussion) return true;
 		}
 		return false;
 	}
@@ -102,9 +104,14 @@ NewsgroupsDailyRequestsRepliesTransMetric>{
 
 		for ( CommunicationChannelDelta communicationChannelDelta: delta.getCommunicationChannelSystemDeltas()) {
 			CommunicationChannel communicationChannel = communicationChannelDelta.getCommunicationChannel();
-			if (!(communicationChannel instanceof NntpNewsGroup)) continue;
-			NntpNewsGroup newsgroup = (NntpNewsGroup) communicationChannel;
-			
+			String communicationChannelName;
+			if (!(communicationChannel instanceof NntpNewsGroup))
+				communicationChannelName = communicationChannel.getUrl();
+			else {
+				NntpNewsGroup newsgroup = (NntpNewsGroup) communicationChannel;
+				communicationChannelName = newsgroup.getNewsGroupName();
+			}
+
 			List<CommunicationChannelArticle> articles = communicationChannelDelta.getArticles();
 			for (CommunicationChannelArticle article: articles) {
 
@@ -116,7 +123,8 @@ NewsgroupsDailyRequestsRepliesTransMetric>{
 
 				DayArticles dayArticles = db.getDayArticles().findOneByName(dayName);
 				dayArticles.setNumberOfArticles(dayArticles.getNumberOfArticles()+1);
-				String requestReplyClass = getRequestReplyClass(usedClassifier, newsgroup, article);
+				String requestReplyClass = 
+						getRequestReplyClass(usedClassifier, communicationChannelName, article);
 				if (requestReplyClass.equals("Request"))
 					dayArticles.setNumberOfRequests(dayArticles.getNumberOfRequests()+1);
 				else if (requestReplyClass.equals("Reply"))
@@ -164,9 +172,9 @@ NewsgroupsDailyRequestsRepliesTransMetric>{
 	}
 
 	private String getRequestReplyClass(RequestReplyClassificationTransMetric usedClassifier, 
-											NntpNewsGroup newsgroup, CommunicationChannelArticle article) {
+							String communicationChannelName, CommunicationChannelArticle article) {
 		Iterable<NewsgroupArticles> newsgroupArticlesIt = usedClassifier.getNewsgroupArticles().
-				find(NewsgroupArticles.NEWSGROUPNAME.eq(newsgroup.getNewsGroupName()), 
+				find(NewsgroupArticles.NEWSGROUPNAME.eq(communicationChannelName), 
 						NewsgroupArticles.ARTICLENUMBER.eq(article.getArticleNumber()));
 		NewsgroupArticles newsgroupArticleData = null;
 		for (NewsgroupArticles art:  newsgroupArticlesIt) {
@@ -175,7 +183,7 @@ NewsgroupsDailyRequestsRepliesTransMetric>{
 		if (newsgroupArticleData == null) {
 			System.err.println("Newsgroups - Daily Requests Replies -\t" + 
 					"there is no classification for article: " + article.getArticleNumber() +
-					"\t of newsgroup: " + newsgroup.getNewsGroupName());
+					"\t of newsgroup: " + communicationChannelName);
 //			System.exit(-1);
 		} else
 			return newsgroupArticleData.getClassificationResult();

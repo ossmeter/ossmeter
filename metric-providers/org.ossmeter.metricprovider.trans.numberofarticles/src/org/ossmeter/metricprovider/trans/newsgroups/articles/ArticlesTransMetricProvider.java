@@ -25,6 +25,7 @@ import org.ossmeter.platform.delta.communicationchannel.PlatformCommunicationCha
 import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
+import org.ossmeter.repository.model.sourceforge.Discussion;
 
 import com.mongodb.DB;
 
@@ -56,6 +57,7 @@ public class ArticlesTransMetricProvider implements ITransientMetricProvider<New
 	public boolean appliesTo(Project project) {
 		for (CommunicationChannel communicationChannel: project.getCommunicationChannels()) {
 			if (communicationChannel instanceof NntpNewsGroup) return true;
+			if (communicationChannel instanceof Discussion) return true;
 		}
 		return false;
 	}
@@ -82,21 +84,28 @@ public class ArticlesTransMetricProvider implements ITransientMetricProvider<New
 
 	@Override
 	public void measure(Project project, ProjectDelta projectDelta, NewsgroupsArticlesTransMetric db) {
-		 CommunicationChannelProjectDelta delta = projectDelta.getCommunicationChannelDelta();
+		System.err.println("ArticleTransMetric started!");
+		CommunicationChannelProjectDelta delta = projectDelta.getCommunicationChannelDelta();
 		for ( CommunicationChannelDelta communicationChannelDelta: delta.getCommunicationChannelSystemDeltas()) {
 			CommunicationChannel communicationChannel = communicationChannelDelta.getCommunicationChannel();
-			if (!(communicationChannel instanceof NntpNewsGroup)) continue;
-			NntpNewsGroup newsgroup = (NntpNewsGroup) communicationChannel;
-			NewsgroupData newsgroupData = db.getNewsgroups().findOneByNewsgroupName(newsgroup.getNewsGroupName());
+			String communicationChannelName;
+			if (!(communicationChannel instanceof NntpNewsGroup))
+				communicationChannelName = communicationChannel.getUrl();
+			else {
+				NntpNewsGroup newsgroup = (NntpNewsGroup) communicationChannel;
+				communicationChannelName = newsgroup.getNewsGroupName();
+			}
+			NewsgroupData newsgroupData = db.getNewsgroups().findOneByNewsgroupName(communicationChannelName);
 			if (newsgroupData == null) {
 				newsgroupData = new NewsgroupData();
-				newsgroupData.setNewsgroupName(newsgroup.getNewsGroupName());
+				newsgroupData.setNewsgroupName(communicationChannelName);
 				db.getNewsgroups().add(newsgroupData);
 			} 
 			int articles = communicationChannelDelta.getArticles().size();
 			newsgroupData.setNumberOfArticles(articles);
 			int cumulativeArticles = newsgroupData.getCumulativeNumberOfArticles();
 			newsgroupData.setCumulativeNumberOfArticles(cumulativeArticles + articles);
+			System.err.println("ArticleTransMetric just stored " + articles + " (" + cumulativeArticles +  ") articles");
 			db.sync();
 		}
 	}

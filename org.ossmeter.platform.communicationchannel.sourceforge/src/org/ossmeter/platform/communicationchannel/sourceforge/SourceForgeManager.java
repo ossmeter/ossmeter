@@ -71,24 +71,25 @@ public class SourceForgeManager implements
 	}
 
 	@Override
-	public CommunicationChannelDelta getDelta(DB db, Discussion communicationChannel, Date date) throws Exception {
+	public CommunicationChannelDelta getDelta(DB db, Discussion discussion, Date date) throws Exception {
 
 		java.util.Date day = date.toJavaDate();
 
-		Cache<SourceForgeArticle, String> articleCache = articleCaches.getCache(communicationChannel, true);
+		Cache<SourceForgeArticle, String> articleCache = articleCaches.getCache(discussion, true);
 		Iterable<SourceForgeArticle> articles = articleCache.getItemsAfterDate(day);
 
 		SourceForgeCommunicationChannelDelta delta = new SourceForgeCommunicationChannelDelta();
+		delta.setNewsgroup(discussion);
 		for (SourceForgeArticle article : articles) {
-
 			java.util.Date articleDate = article.getDate();
 			if (article.getUpdateDate() != null)
 				articleDate = article.getUpdateDate();
 			if (DateUtils.isSameDay(articleDate, day)) {
+				article.setText(getContents(db, discussion, article));
 				delta.getArticles().add(article);
 			}
 		}
-
+		System.err.println("Delta for date " + date + " contains " + delta.getArticles().size());
 		return delta;
 	}
 
@@ -100,15 +101,16 @@ public class SourceForgeManager implements
 
 		Date firstDate = null;
 		for (SourceForgeArticle article : articles) {
-			java.util.Date articleJaveDate = article.getDate();
+			java.util.Date articleJavaDate = article.getDate();
 			if (article.getUpdateDate() != null)
-				articleJaveDate = article.getUpdateDate();
-			Date articleDate = new Date(articleJaveDate);
+				articleJavaDate = article.getUpdateDate();
+			Date articleDate = new Date(articleJavaDate);
 			if ( ( firstDate == null ) 
 					|| ( firstDate.compareTo(articleDate) > 0 ) ) {
 				firstDate = articleDate;
 			}
 		}
+		System.err.println("Sourceforge " + communicationChannel.getUrl() + " firstdate " + firstDate);
 		return firstDate;
 	}
 
@@ -143,8 +145,8 @@ public class SourceForgeManager implements
 //		communicationChannel.setUrl("http://sourceforge.net/rest/p/assimp/discussion/");
 		communicationChannel.setUrl("http://sourceforge.net/rest/p/gimponosx/discussion/");
 
-//		System.out.println("\nmanager.getFirstDate(null, communicationChannel) : " +
-//							manager.getFirstDate(null, communicationChannel));
+		System.out.println("\nmanager.getFirstDate(null, communicationChannel) : " +
+							manager.getFirstDate(null, communicationChannel));
 
 		SourceForgeCommunicationChannelDelta delta = 
 				(SourceForgeCommunicationChannelDelta) manager.getDelta(null, communicationChannel, 

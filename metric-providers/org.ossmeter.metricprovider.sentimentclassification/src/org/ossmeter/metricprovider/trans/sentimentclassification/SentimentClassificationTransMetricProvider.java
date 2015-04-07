@@ -33,6 +33,7 @@ import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.cc.nntp.NntpNewsGroup;
+import org.ossmeter.repository.model.sourceforge.Discussion;
 import org.ossmeter.sentimentclassifier.opennlptartarus.libsvm.ClassificationInstance;
 import org.ossmeter.sentimentclassifier.opennlptartarus.libsvm.Classifier;
 import org.ossmeter.sentimentclassifier.opennlptartarus.libsvm.EmotionalDimensions;
@@ -53,6 +54,7 @@ public class SentimentClassificationTransMetricProvider  implements ITransientMe
 	public boolean appliesTo(Project project) {
 		for (CommunicationChannel communicationChannel: project.getCommunicationChannels()) {
 			if (communicationChannel instanceof NntpNewsGroup) return true;
+			if (communicationChannel instanceof Discussion) return true;
 		}
 		return !project.getBugTrackingSystems().isEmpty();	   
 	}
@@ -111,17 +113,24 @@ public class SentimentClassificationTransMetricProvider  implements ITransientMe
 		CommunicationChannelProjectDelta ccpDelta = projectDelta.getCommunicationChannelDelta();
 		for ( CommunicationChannelDelta communicationChannelDelta: ccpDelta.getCommunicationChannelSystemDeltas()) {
 			CommunicationChannel communicationChannel = communicationChannelDelta.getCommunicationChannel();
-			if (!(communicationChannel instanceof NntpNewsGroup)) continue;
-			NntpNewsGroup newsgroup = (NntpNewsGroup) communicationChannel;
+			String communicationChannelName;
+			if (!(communicationChannel instanceof NntpNewsGroup))
+				communicationChannelName = communicationChannel.getUrl();
+			else {
+				NntpNewsGroup newsgroup = (NntpNewsGroup) communicationChannel;
+				communicationChannelName = newsgroup.getNewsGroupName();
+			}
 			for (CommunicationChannelArticle article: communicationChannelDelta.getArticles()) {
-				NewsgroupArticlesData newsgroupArticlesData = findNewsgroupArticle(db, newsgroup, article);
+				NewsgroupArticlesData newsgroupArticlesData = 
+						findNewsgroupArticle(db, communicationChannelName, article);
 				if (newsgroupArticlesData == null) {
 					newsgroupArticlesData = new NewsgroupArticlesData();
-					newsgroupArticlesData.setNewsGroupName(newsgroup.getNewsGroupName());
+					newsgroupArticlesData.setNewsGroupName(communicationChannelName);
 					newsgroupArticlesData.setArticleNumber(article.getArticleNumber());
 					db.getNewsgroupArticles().add(newsgroupArticlesData);
 				} 
-				ClassificationInstance classificationInstance = prepareNewsgroupArticleInstance(newsgroup, article);
+				ClassificationInstance classificationInstance = 
+						prepareNewsgroupArticleInstance(communicationChannelName, article);
 				classifier.add(classificationInstance);
 			}
 			db.sync();
@@ -138,8 +147,10 @@ public class SentimentClassificationTransMetricProvider  implements ITransientMe
 		for (BugTrackingSystemDelta bugTrackingSystemDelta : btspDelta.getBugTrackingSystemDeltas()) {
 			BugTrackingSystem bugTracker = bugTrackingSystemDelta.getBugTrackingSystem();
 			for (BugTrackingSystemComment comment: bugTrackingSystemDelta.getComments()) {
-				BugTrackerCommentsData bugTrackerCommentsData = findBugTrackerComment(db, bugTracker, comment);
-				ClassificationInstance classificationInstance = prepareBugTrackerCommentInstance(bugTracker, comment);
+				BugTrackerCommentsData bugTrackerCommentsData = 
+						findBugTrackerComment(db, bugTracker, comment);
+				ClassificationInstance classificationInstance = 
+						prepareBugTrackerCommentInstance(bugTracker, comment);
 				String classificationResult = classifier.getClassificationResult(classificationInstance);
 				bugTrackerCommentsData.setClassificationResult(classificationResult);
 				String emotionalDimensions = EmotionalDimensions.getDimensions(classificationInstance);
@@ -153,11 +164,18 @@ public class SentimentClassificationTransMetricProvider  implements ITransientMe
 
 		for ( CommunicationChannelDelta communicationChannelDelta: ccpDelta.getCommunicationChannelSystemDeltas()) {
 			CommunicationChannel communicationChannel = communicationChannelDelta.getCommunicationChannel();
-			if (!(communicationChannel instanceof NntpNewsGroup)) continue;
-			NntpNewsGroup newsgroup = (NntpNewsGroup) communicationChannel;
+			String communicationChannelName;
+			if (!(communicationChannel instanceof NntpNewsGroup))
+				communicationChannelName = communicationChannel.getUrl();
+			else {
+				NntpNewsGroup newsgroup = (NntpNewsGroup) communicationChannel;
+				communicationChannelName = newsgroup.getNewsGroupName();
+			}
 			for (CommunicationChannelArticle article: communicationChannelDelta.getArticles()) {
-				NewsgroupArticlesData newsgroupArticlesData = findNewsgroupArticle(db, newsgroup, article);
-				ClassificationInstance classificationInstance = prepareNewsgroupArticleInstance(newsgroup, article);
+				NewsgroupArticlesData newsgroupArticlesData = 
+						findNewsgroupArticle(db, communicationChannelName, article);
+				ClassificationInstance classificationInstance = 
+						prepareNewsgroupArticleInstance(communicationChannelName, article);
 				String classificationResult = classifier.getClassificationResult(classificationInstance);
 				newsgroupArticlesData.setClassificationResult(classificationResult);
 				String emotionalDimensions = EmotionalDimensions.getDimensions(classificationInstance);
@@ -198,9 +216,10 @@ public class SentimentClassificationTransMetricProvider  implements ITransientMe
         return classificationInstance;
 	}
 
-	private ClassificationInstance prepareNewsgroupArticleInstance(NntpNewsGroup newsgroup, CommunicationChannelArticle article) {
+	private ClassificationInstance prepareNewsgroupArticleInstance(
+			String communicationChannelName, CommunicationChannelArticle article) {
     	ClassificationInstance classificationInstance = new ClassificationInstance();
-        classificationInstance.setNewsgroupName(newsgroup.getNewsGroupName());
+        classificationInstance.setNewsgroupName(communicationChannelName);
         classificationInstance.setArticleNumber(article.getArticleNumber());
         classificationInstance.setSubject(article.getSubject());
         classificationInstance.setText(article.getText());
@@ -223,11 +242,11 @@ public class SentimentClassificationTransMetricProvider  implements ITransientMe
 	
 
 	private NewsgroupArticlesData findNewsgroupArticle(SentimentClassificationTransMetric db, 
-									NntpNewsGroup newsgroup, CommunicationChannelArticle article) {
+							String communicationChannelName, CommunicationChannelArticle article) {
 		NewsgroupArticlesData newsgroupArticlesData = null;
 		Iterable<NewsgroupArticlesData> newsgroupArticlesDataIt = 
 				db.getNewsgroupArticles().
-						find(NewsgroupArticlesData.NEWSGROUPNAME.eq(newsgroup.getNewsGroupName()), 
+						find(NewsgroupArticlesData.NEWSGROUPNAME.eq(communicationChannelName), 
 								NewsgroupArticlesData.ARTICLENUMBER.eq(article.getArticleNumber()));
 		for (NewsgroupArticlesData nad:  newsgroupArticlesDataIt) {
 			newsgroupArticlesData = nad;
@@ -241,7 +260,6 @@ public class SentimentClassificationTransMetricProvider  implements ITransientMe
 
 	@Override
 	public String getShortIdentifier() {
-		// TODO Auto-generated method stub
 		return "requestreplyclassification";
 	}
 

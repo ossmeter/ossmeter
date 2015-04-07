@@ -37,17 +37,17 @@ public class SourceForgeArticleDeserialiser extends ExtendedJsonDeserialiser<Sou
         JsonNode attachmentsNode = node.path("attachments");
         SourceForgeAttachment[] attachments = oc.treeToValue(attachmentsNode, SourceForgeAttachment[].class);
         
-        SourceForgeArticle comment = new SourceForgeArticle();
-        comment.setArticleNumber(articleNumber++);
-        comment.setSubject(getText(node, "subject"));
-        comment.setText(getText(node, "text"));
-        comment.setUser(getText(node,"author"));
-        comment.setAttachments(attachments);
-        comment.setArticleId(getText(node, "slug"));
-        comment.setDate(getDate(node, SourceForgeConstants.RESPONSE_DATE_FORMATTER, "timestamp"));
-        comment.setUpdateDate(getDate(node, SourceForgeConstants.RESPONSE_DATE_FORMATTER, "last_edited"));
-        
-        return comment;
+        SourceForgeArticle article = new SourceForgeArticle();
+        article.setArticleNumber(articleNumber++);
+        article.setSubject(getText(node, "subject"));
+        article.setText(getText(node, "text"));
+        article.setUser(getText(node,"author"));
+        article.setAttachments(attachments);
+        article.setArticleId(getText(node, "slug"));
+        article.setDate(getDate(node, SourceForgeConstants.RESPONSE_DATE_FORMATTER, "timestamp"));
+        article.setUpdateDate(getDate(node, SourceForgeConstants.RESPONSE_DATE_FORMATTER, "last_edited"));
+        article.setReferences(new String[0]);
+        return article;
     }
 
 }

@@ -13,7 +13,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.apache.commons.lang,
  org.ossmeter.platform.visualisation,
  com.googlecode.pongo.runtime,
- org.ossmeter.repository.model
+ org.ossmeter.repository.model,
+ org.ossmeter.repository.model.sourceforge
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.ossmeter.metricprovider.trans.requestreplyclassification,
