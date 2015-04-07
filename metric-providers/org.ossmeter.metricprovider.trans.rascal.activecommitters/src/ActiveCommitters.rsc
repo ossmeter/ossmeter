@@ -35,7 +35,7 @@ set[str] committersToday(ProjectDelta delta = \empty()) {
 @doc{Who have been active today?}
 @friendlyName{Active committers}
 @appliesTo{generic()}
-set[str] committersToday(ProjectDelta delta = \empty()) {
+set[str] committersEmailsToday(ProjectDelta delta = \empty()) {
   return {co.email | /VcsCommit co := delta};
 }
 
@@ -110,7 +110,7 @@ set[str] developmentTeamEmails(set[str] prev = {}, set[str] committersEmailsToda
 @uses = ("developmentTeamEmails" : "developmentTeamEmails")
 @appliesTo{generic()}
 set[str] developmentDomainNames(set[str] developmentTeamEmails = {}) {
-  return {domain | /^[^@]*@<domain:.*>$/ <- developmentTeam};
+  return {domain | /^[^@]*@<domain:.*>$/ <- developmentTeamEmails};
 }
 
 @metric{sizeOfDevelopmentTeam}
