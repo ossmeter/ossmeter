@@ -31,6 +31,14 @@ set[str] committersToday(ProjectDelta delta = \empty()) {
   return {co.author | /VcsCommit co := delta};
 }
 
+@metric{committersEmailsToday}
+@doc{Who have been active today?}
+@friendlyName{Active committers}
+@appliesTo{generic()}
+set[str] committersToday(ProjectDelta delta = \empty()) {
+  return {co.email | /VcsCommit co := delta};
+}
+
 @metric{firstLastCommitDatesPerDeveloper}
 @doc{Collects per developer the first and last dates on which he or she contributed code. This basic metric is used downstream for other metrics, but
 it is also used to drill down on the membership of specific individuals of the development team.} 
@@ -86,12 +94,22 @@ set[str] developmentTeam(set[str] prev = {}, set[str] committersToday = {}) {
   return prev + committersToday;
 }
 
+@metric{developmentTeamEmails}
+@doc{Lists the names of people who have been contributing code at least once in the history of the project.}
+@friendlyName{Development team}
+@uses = ("committersEmailsToday" : "committersEmailsToday")
+@appliesTo{generic()}
+set[str] developmentTeamEmails(set[str] prev = {}, set[str] committersEmailsToday = {}) {
+  return prev + committersToday;
+}
+
+
 @metric{developmentDomainNames}
 @doc{Lists the domain names of email addresses of developers if such information is present.}
 @friendlyName{Development team domain names}
-@uses = ("developmentTeam" : "developmentTeam")
+@uses = ("developmentTeamEmails" : "developmentTeamEmails")
 @appliesTo{generic()}
-set[str] developmentDomainNames(set[str] developmentTeam = {}) {
+set[str] developmentDomainNames(set[str] developmentTeamEmails = {}) {
   return {domain | /^[^@]*@<domain:.*>$/ <- developmentTeam};
 }
 
