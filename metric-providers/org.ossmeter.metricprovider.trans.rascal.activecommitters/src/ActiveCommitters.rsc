@@ -100,7 +100,7 @@ set[str] developmentTeam(set[str] prev = {}, set[str] committersToday = {}) {
 @uses = ("committersEmailsToday" : "committersEmailsToday")
 @appliesTo{generic()}
 set[str] developmentTeamEmails(set[str] prev = {}, set[str] committersEmailsToday = {}) {
-  return prev + committersToday;
+  return prev + committersEmailsToday;
 }
 
 
