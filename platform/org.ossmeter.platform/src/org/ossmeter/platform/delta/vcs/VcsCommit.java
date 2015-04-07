@@ -24,6 +24,7 @@ public class VcsCommit implements Serializable{
 
 	protected Date date;
 	protected String author;
+	protected String authorEmail;
 	protected String message;
 	protected List<VcsCommitItem> items = new ArrayList<VcsCommitItem>();
 	protected VcsRepositoryDelta repositoryDelta;
@@ -39,6 +40,14 @@ public class VcsCommit implements Serializable{
 	
 	public String getRevision() {
 		return revision;
+	}
+	
+	public void setAuthorEmail(String authorEmail) {
+		this.authorEmail = authorEmail;
+	}
+	
+	public String getAuthorEmail() {
+		return authorEmail;
 	}
 	
 	public void setRevision(String revision) {

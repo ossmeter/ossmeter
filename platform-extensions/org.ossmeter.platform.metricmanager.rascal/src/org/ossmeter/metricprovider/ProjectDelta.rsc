@@ -26,7 +26,7 @@ data VcsRepositoryDelta
   ;
   
 data VcsCommit
-  = vcsCommit(datetime date, str author, str message, list[VcsCommitItem] items, str revision)
+  = vcsCommit(datetime date, str author, str email, str message, list[VcsCommitItem] items, str revision)
   ;
   
 data VcsCommitItem

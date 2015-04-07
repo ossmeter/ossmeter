@@ -70,6 +70,7 @@ public class SvnManager extends AbstractVcsManager {
 				VcsCommit commit = new VcsCommit();
 				
 				commit.setAuthor(svnLogEntry.getAuthor());
+				commit.setAuthorEmail(svnLogEntry.getAuthor());
 				commit.setMessage(svnLogEntry.getMessage());
 				commit.setRevision(svnLogEntry.getRevision() + "");
 				commit.setDelta(delta);

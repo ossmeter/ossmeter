@@ -139,6 +139,7 @@ public class RascalProjectDeltas {
 		
 	children.add(values.datetime(commit.getJavaDate().getTime()));
 	children.add(convert(commit.getAuthor()));
+	children.add(convert(commit.getAuthorEmail()));
 	children.add(convert(commit.getMessage()));
 	children.add(convert(commit.getItems()));
 	children.add(convert(commit.getRevision()));
