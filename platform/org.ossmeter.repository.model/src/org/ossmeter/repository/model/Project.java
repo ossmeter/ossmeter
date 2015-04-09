@@ -1,20 +1,7 @@
-/*******************************************************************************
- * Copyright (c) 2014 OSSMETER Partners.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *    Davide Di Ruscio - Implementation,
- *    Juri Di Rocco - Implementation.
- *******************************************************************************/
 package org.ossmeter.repository.model;
 
 import com.mongodb.*;
-
 import java.util.*;
-
 import com.googlecode.pongo.runtime.*;
 import com.googlecode.pongo.runtime.querying.*;
 
@@ -53,24 +40,15 @@ public class Project extends NamedElement {
 		ANALYSED.setOwningType("org.ossmeter.repository.model.Project");
 	}
 	
-	public static StringQueryProducer ANALYSED = new StringQueryProducer("analysed"); 
 	public static StringQueryProducer NAME = new StringQueryProducer("name"); 
 	public static StringQueryProducer SHORTNAME = new StringQueryProducer("shortName"); 
 	public static StringQueryProducer DESCRIPTION = new StringQueryProducer("description"); 
 	public static NumericalQueryProducer YEAR = new NumericalQueryProducer("year");
 	public static StringQueryProducer ACTIVE = new StringQueryProducer("active"); 
 	public static StringQueryProducer HOMEPAGE = new StringQueryProducer("homePage"); 
+	public static StringQueryProducer ANALYSED = new StringQueryProducer("analysed"); 
 	
-
-	public boolean getAnalysed() {
-		return parseBoolean(dbObject.get("analysed")+"", false);
-	}
 	
-	public Project setAnalysed(boolean analysed) {
-		dbObject.put("analysed", analysed);
-		notifyChanged();
-		return this;
-	}
 	public String getShortName() {
 		return parseString(dbObject.get("shortName")+"", "");
 	}
@@ -116,6 +94,15 @@ public class Project extends NamedElement {
 		notifyChanged();
 		return this;
 	}
+	public boolean getAnalysed() {
+		return parseBoolean(dbObject.get("analysed")+"", false);
+	}
+	
+	public Project setAnalysed(boolean analysed) {
+		dbObject.put("analysed", analysed);
+		notifyChanged();
+		return this;
+	}
 	
 	
 	public List<VcsRepository> getVcsRepositories() {
@@ -156,7 +143,7 @@ public class Project extends NamedElement {
 	}
 	public List<Company> getCompanies() {
 		if (companies == null) {
-			companies = new PongoList<Company>(this, "companies", false);
+			companies = new PongoList<Company>(this, "companies", true);
 		}
 		return companies;
 	}

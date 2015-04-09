@@ -1,14 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 2014 OSSMETER Partners.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *    Davide Di Ruscio - Implementation,
- *    Juri Di Rocco - Implementation.
- *******************************************************************************/
 package org.ossmeter.repository.model;
 
 import com.mongodb.*;
@@ -35,6 +24,7 @@ public class ProjectExecutionInformation extends Pongo {
 	public static StringQueryProducer LASTEXECUTED = new StringQueryProducer("lastExecuted"); 
 	public static StringQueryProducer MONITOR = new StringQueryProducer("monitor"); 
 	public static StringQueryProducer INERRORSTATE = new StringQueryProducer("inErrorState"); 
+	
 	
 	public String getLastExecuted() {
 		return parseString(dbObject.get("lastExecuted")+"", "");

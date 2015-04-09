@@ -82,7 +82,7 @@ class Project extends NamedElement {
   ref License[*] licenses;
   val MetricProvider[*] metricProviderData;
   val ProjectExecutionInformation executionInformation;
-  ref Company[*] companies;
+  val Company[*] companies;
 }
 
 class MetricProviderExecution {

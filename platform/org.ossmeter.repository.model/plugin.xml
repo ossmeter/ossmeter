@@ -14,6 +14,8 @@
 
 
 
+
+
 <extension point="com.googlecode.pongo.runtime.osgi">
     <class name="org.ossmeter.repository.model.ProjectRepository"/>
     <class name="org.ossmeter.repository.model.ProjectError"/>

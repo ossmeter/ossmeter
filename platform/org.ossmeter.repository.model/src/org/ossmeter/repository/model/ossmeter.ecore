@@ -124,6 +124,9 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="homePage">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="analysed" defaultValueLiteral="false">
+      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="//Project"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="vcsRepositories" upperBound="-1" eType="//VcsRepository" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="communicationChannels" upperBound="-1" eType="//CommunicationChannel" containment="true"/>
@@ -132,7 +135,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="licenses" upperBound="-1" eType="//License"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="metricProviderData" upperBound="-1" eType="//MetricProvider" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="executionInformation" eType="//ProjectExecutionInformation" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="companies" upperBound="-1" eType="//Company"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="companies" upperBound="-1" eType="//Company" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MetricProviderExecution">
     <eStructuralFeatures xsi:type="ecore:EReference" name="metricProvider" eType="//MetricProvider"/>
@@ -145,9 +148,6 @@
     </eStructuralFeatures>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ProjectExecutionInformation">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="analysed" defaultValueLiteral="false">
-      <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastExecuted">
       <eType xsi:type="ecore:EDataType" href="http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     </eStructuralFeatures>
