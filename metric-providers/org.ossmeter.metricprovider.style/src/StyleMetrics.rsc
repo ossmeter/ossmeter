@@ -227,7 +227,7 @@ private Factoid genericFactoid(str category
    expect1 = "";
    expect2 = "";
                             
-   switch (<sl < 0.1, -0.1 >= sl && sl <= 0.1, sl > 0.1>) {
+   switch (<sl < -0.1, -0.1 >= sl && sl <= 0.1, sl > 0.1>) {
      case <true   , _      , _     > : { expect1 = "and its getting worse in the last six months"; expect2 = "but issues have been spreading in the last six months"; }
      case <_      , true   , _     > : { expect1 = "and this situation is stable"; expect2 = "but the situation is stable"; }
      case <_      , _      , true  > : { expect1 = "but the situation is improving over the last six months"; expect2 = "and the situaton has been improving in the last six months"; }
