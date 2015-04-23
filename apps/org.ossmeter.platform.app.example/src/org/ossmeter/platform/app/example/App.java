@@ -16,13 +16,13 @@ import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.ossmeter.platform.Date;
 import org.ossmeter.platform.Platform;
-import org.ossmeter.platform.app.example.util.ProjectCreationUtil;
 import org.ossmeter.platform.delta.NoManagerFoundException;
 import org.ossmeter.repository.model.BugTrackingSystem;
 import org.ossmeter.repository.model.CommunicationChannel;
 import org.ossmeter.repository.model.Project;
 import org.ossmeter.repository.model.ProjectRepository;
 import org.ossmeter.repository.model.VcsRepository;
+import org.ossmeter.repository.model.eclipse.importer.EclipseProjectImporter;
 
 import com.googlecode.pongo.runtime.PongoFactory;
 import com.googlecode.pongo.runtime.osgi.OsgiPongoFactoryContributor;
@@ -37,14 +37,13 @@ public class App implements IApplication {
 		PongoFactory.getInstance().getContributors().add(new OsgiPongoFactoryContributor());
 		Platform platform = new Platform(mongo);
 		
-//		Project pongo = ProjectCreationUtil.createSvnProject("pongo", "http://pongo.googlecode.com/svn/trunk");
+//		Project pdb = ProjectCreationUtil.createSvnProject("Epsilon", "http://dev.eclipse.org/svnroot/modeling/org.eclipse.epsilon/");
 //		platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(pongo);
 		
 //		Project pdb = ProjectCreationUtil.createProjectWithNewsGroup("xText", "news.eclipse.org", "eclipse.modeling.tmf", true, "exquisitus", "flinder1f7", 80, 10000);
 //		Project pdb = ProjectCreationUtil.createProjectWithNewsGroup("epsilon", "news.eclipse.org", "eclipse.epsilon", true, "exquisitus", "flinder1f7", 80, 10000);
 //		Project pdb = ProjectCreationUtil.createProjectWithNewsGroup("thunderbird", "news.mozilla.org", "mozilla.support.thunderbird", false, null, null, 80, 10000);
 //		Project pdb = ProjectCreationUtil.createProjectWithNewsGroup("eclipsePlatform", "news.eclipse.org", "eclipse.platform", true, "exquisitus", "flinder1f7", 80, 10000);
-  	//	Project pdb = ProjectCreationUtil.createProjectWithNewsGroup("BIRT", "news.eclipse.org", "eclipse.birt", true, "exquisitus", "flinder1f7", 80, 10000);
 //		Project pdb = ProjectCreationUtil.createProjectWithNewsGroup("SiriusForum", "news.eclipse.org", "eclipse.sirius", true, "exquisitus", "flinder1f7", 80, 10000);
 //		Project pdb = ProjectCreationUtil.createProjectWithNewsGroup("toolsEmf", "news.eclipse.org", "eclipse.tools.emf", true, "exquisitus", "flinder1f7", 80, 10000);
 //		Project pdb = ProjectCreationUtil.createProjectWithNewsGroup("Log4J", "news.gmane.org", "gmane.comp.jakarta.log4j.user", false, null, null, 119, 10000);
@@ -70,10 +69,15 @@ public class App implements IApplication {
 		
 //		Project pdb = ProjectCreationUtil.createProjectWithBugTrackingSystem("epsilon", "https://bugs.eclipse.org/bugs/xmlrpc.cgi", "epsilon", null);
 //		Project pdb = ProjectCreationUtil.createGitProject("rascal", "file:///Users/jurgenv/Workspaces/Rascal/rascal");
+		//Project pdb = ProjectCreationUtil.createGitProject("PDBValues", "file:///home/basten/devel/workspace/pdb.values/");
 
+		EclipseProjectImporter im = new EclipseProjectImporter();
+		//im.importProjectByUrl("https://projects.eclipse.org/projects/modeling.ecp", platform);
+		im.importProjectByUrl("https://projects.eclipse.org/projects/modeling.emf.emf", platform);
+		
 	//	pdb.getExecutionInformation().setMonitor(true);
 		
-	//	platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(pdb);
+		//platform.getProjectRepositoryManager().getProjectRepository().getProjects().add(pdb);
 		platform.getProjectRepositoryManager().getProjectRepository().sync();
 		
 		System.err.println(platform.getBugTrackingSystemManager().getBugTrackingSystemManagers());

@@ -109,14 +109,14 @@ public rel[loc, loc] typeDependencies(
 
 
 @doc{
-	Coupling Factor
+	Coupling Factor (typeDependencies should not include inheritance related coupling)
 }
-public real CF(rel[loc, loc] typeDependencies, rel[loc, loc] superTypes, set[loc] allTypes) {
+public real CF(rel[loc, loc] typeDependencies, set[loc] allTypes) {
 	numTypes = size(allTypes);
 	
 	numDependencies = size(typeDependencies + invert(typeDependencies));
 	
-	numPossibleDependencies = (numTypes * (numTypes - 1) - 2 * size(superTypes+)); // excluding inheritance
+	numPossibleDependencies = numTypes * (numTypes - 1);
 
 	if (numPossibleDependencies > 0) {
 		return round(numDependencies / toReal(numPossibleDependencies), 0.01);

@@ -209,7 +209,8 @@ map[loc, int] MPC_Java(rel[Language, loc, AST] asts = {}) {
 @historic
 real CF_Java(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s, delta = delta);
-  return CF(typeDependencies(m3), superTypes(m3), allTypes(m3));
+  typeDependenciesNoInherits = typeDependencies({}, m3@methodInvocation, m3@fieldAccess, typeSymbolsToTypes(m3@types), domainR(m3@containment+, allTypes(m3)), allTypes(m3));
+  return CF(typeDependenciesNoInherits, allTypes(m3));
 }
 
 @metric{Ca-Java}

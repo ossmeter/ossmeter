@@ -54,6 +54,7 @@ import org.rascalmpl.interpreter.result.AbstractFunction;
 import org.rascalmpl.interpreter.result.RascalFunction;
 import org.rascalmpl.interpreter.result.Result;
 import org.rascalmpl.interpreter.staticErrors.StaticError;
+import org.rascalmpl.interpreter.staticErrors.UnexpectedKeywordArgumentType;
 import org.rascalmpl.interpreter.utils.LimitedResultWriter;
 import org.rascalmpl.interpreter.utils.LimitedResultWriter.IOLimitReachedException;
 
@@ -297,8 +298,11 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 				filterNullParameters(params);
 				
 				// measurement is included in the sync block to avoid sharing evaluators between metrics
+				
+				logger.info("Calling " + metricId);
 				//logger.info("calling measurement function");
 				//logger.info("with parameters: " + params);
+				
 				Result<IValue> result = function.call(new Type[] { }, new IValue[] { }, params);
 
 				logResult(result);
@@ -320,13 +324,13 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 			logger.error("unexpected exception while measuring", e);
 			throw new RuntimeException("Metric failed due to missing working copy", e);
 		} catch (StaticError e) {
-			logger.error("a static error in a Rascal function was detected", e);
+			logger.error("a static error in a Rascal function was detected in metric: " + metricId, e);
 			throw e;
 		} catch (MatchFailed e) {
-			logger.error("a Rascal function was called with illegal arguments", e);
+			logger.error("a Rascal function was called with illegal arguments in metric: " + metricId, e);
 			throw e;
 		} catch (IOException e) {
-			throw new RuntimeException("Metric failed for unknown reasons", e);
+			throw new RuntimeException("Metric " + metricId + " failed for unknown reasons", e);
 		}
 	}
 

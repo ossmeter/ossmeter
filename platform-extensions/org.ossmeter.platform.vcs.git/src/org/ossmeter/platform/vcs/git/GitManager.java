@@ -59,6 +59,9 @@ public class GitManager extends AbstractVcsManager {
 				headId = ref.getObjectId().getName();
 			}
 		}
+		
+		git.close();
+		
 		return headId;
 	}
 
@@ -170,6 +173,9 @@ public class GitManager extends AbstractVcsManager {
 		    }
 		}
 		
+		repo.close();
+		git.close();
+		
 		return vcsDelta;
 	}
 
@@ -228,6 +234,9 @@ public class GitManager extends AbstractVcsManager {
 			}
 		}
 		
+		repo.close();
+		git.close();
+		
 		return revision;
 	}
 
@@ -254,6 +263,9 @@ public class GitManager extends AbstractVcsManager {
 //		System.out.println(oneIndex);
 //		System.out.println(twoIndex);
 //		System.out.println(revisions);
+		
+		repo.close();
+		git.close();
 		
 		// Because the revision list is reversed, we compare two to one instead of the other way around
 		return twoIndex.compareTo(oneIndex);
@@ -288,6 +300,8 @@ public class GitManager extends AbstractVcsManager {
 			}
 		}
 		
+		repo.close();
+		git.close();
 		
 		return revisions.toArray(new String[revisions.size()]);
 	}
@@ -310,6 +324,9 @@ public class GitManager extends AbstractVcsManager {
 			}
 		}
 		
+		repo.close();
+		git.close();
+
 		return date;
 	}
 

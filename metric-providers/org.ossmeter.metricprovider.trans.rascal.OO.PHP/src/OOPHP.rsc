@@ -181,7 +181,8 @@ map[loc, int] MPC_PHP(rel[Language, loc, AST] asts = {}) {
 @historic
 real CF_PHP(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s, delta = delta);
-	return CF(typeDependencies(m3), superTypes(m3), allTypes(m3));
+  typeDependenciesNoInherits = typeDependencies({}, m3@calls, m3@accesses, {}, domainR(m3@containment+, allTypes(m3)), allTypes(m3));
+  return CF(typeDependenciesNoInherits, allTypes(m3));
 }
 
 @metric{Ca-PHP}
