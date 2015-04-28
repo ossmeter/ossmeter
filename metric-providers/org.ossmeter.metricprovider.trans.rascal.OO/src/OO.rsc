@@ -105,7 +105,7 @@ public rel[loc, loc] typeDependencies(
   dependencies += superTypes+; // include ancestor types
 
   dependencies = carrierR(dependencies, allTypes); // remove unknown types
-  dependencies -= ident(typeDependencies); // remove self references
+  dependencies -= ident(allTypes); // remove self references
 
   return dependencies;
 }
