@@ -95,15 +95,18 @@ public rel[loc, loc] typeDependencies(
   rel[loc subtype, loc supertype] superTypes,
   rel[loc caller, loc callee] methodCalls,
   rel[loc method, loc attribute] attributeAccesses,
-  rel[loc object, loc \type] objectTypes, // variables, fields, parameters, exceptions, etc.
-  rel[loc \type, loc object] typeMembers, // variables, fields, parameters, exceptions, methods, inner classes
+  rel[loc ent, loc \type] entityTypeDependencies, // entities are variables, fields, parameters, exceptions, methods, etc.
+  rel[loc \type, loc ent] typeMembers, // entities are variables, fields, parameters, exceptions, methods, inner classes (!)
   set[loc] allTypes) {
   
   dependencies = typeMembers o (methodCalls + attributeAccesses) o invert(typeMembers); // uses of members of other types
-  dependencies += typeMembers o objectTypes;     // include types of variables, fields, parameters, etc
+  dependencies += typeMembers o entityTypeDependencies;     // include types of variables, fields, parameters, etc
   dependencies += rangeR(typeMembers, allTypes); // include inner classes etc.
   dependencies += superTypes+; // include ancestor types
-  
+
+  dependencies = carrierR(dependencies, allTypes); // remove unknown types
+  dependencies -= ident(typeDependencies); // remove self references
+
   return dependencies;
 }
 
@@ -117,7 +120,7 @@ public real CF(rel[loc, loc] typeDependencies, set[loc] allTypes) {
 	numDependencies = size(typeDependencies + invert(typeDependencies));
 	
 	numPossibleDependencies = numTypes * (numTypes - 1);
-
+	
 	if (numPossibleDependencies > 0) {
 		return round(numDependencies / toReal(numPossibleDependencies), 0.01);
 	}

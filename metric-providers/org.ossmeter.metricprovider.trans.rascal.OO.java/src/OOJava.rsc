@@ -50,7 +50,7 @@ set[loc] allTypes(M3 m) = classes(m) + interfaces(m) + enums(m) + anonymousClass
 rel[loc, loc] superTypes(M3 m) = m@extends + m@implements;
 
 @memo
-rel[loc, loc] typeDependencies(M3 m3) = typeDependencies(superTypes(m3), m3@methodInvocation, m3@fieldAccess, typeSymbolsToTypes(m3@types), domainR(m3@containment+, allTypes(m3)), allTypes(m3));
+rel[loc, loc] typeDependencies(M3 m3) = typeDependencies(superTypes(m3), m3@methodInvocation, m3@fieldAccess, typeSymbolsToTypeDependencies(m3@types), domainR(m3@containment+, allTypes(m3)), allTypes(m3));
 
 @memo
 rel[loc, loc] allMethods(M3 m3) = { <t, m> | t <- allTypes(m3), m <- (containmentMap(m3))[t] ? {}, isMethod(m) };
@@ -76,8 +76,10 @@ map[loc, set[loc]] methodMethodCalls(M3 m) = toMap(m@methodInvocation) - emptyMe
 @memo
 rel[loc, loc] transitiveContainment(M3 m) = m@containment+;
 
+bool isType(loc l) = isClass(l) || isInterface(l) || l.scheme == "java+enum" || l.scheme == "java+anonymousClass";
+
 @memo
-rel[loc, loc] packageTypes(M3 m3) = { <p, t> | <p, t> <- transitiveContainment(m3), isPackage(p), isClass(t) || isInterface(t) || t.scheme == "java+enum" };
+rel[loc, loc] packageTypes(M3 m3) = { <p, t> | <p, t> <- transitiveContainment(m3), isPackage(p), isType(t) };
 
 @memo
 map[loc, set[Modifier]] modifiersMap(M3 m) = toMap(m@modifiers);
@@ -140,15 +142,8 @@ map[loc, int] NOC_Java(ProjectDelta delta = ProjectDelta::\empty(), rel[Language
   return NOC(superTypes(m3), allTypes(m3));
 }
 
-private rel[loc, loc] typeSymbolsToTypes(rel[loc, TypeSymbol] typs) {
-  loc getDecl(TypeSymbol t) {
-    if (t is method) return getDecl(t.returnType);
-    if (t has decl)  return t.decl;
-    if (t is object) return |java+class:///java/lang/Object|;
-    return |unknown:///|; // should not happen but we include it for robustness' sake 
-  } 
-  
-  return { <en, getDecl(t)> | <en,t> <- typs};
+private rel[loc, loc] typeSymbolsToTypeDependencies(rel[loc, TypeSymbol] typs) {
+  return { *({l} * { t2.decl | /TypeSymbol t2 := t, t2 has decl, isType(t2.decl) }) |  <l, t> <- typs };
 }
 
 @metric{CBO-Java}
@@ -209,7 +204,7 @@ map[loc, int] MPC_Java(rel[Language, loc, AST] asts = {}) {
 @historic
 real CF_Java(ProjectDelta delta = ProjectDelta::\empty(), rel[Language, loc, M3] m3s = {}) {
 	M3 m3 = systemM3(m3s, delta = delta);
-  typeDependenciesNoInherits = typeDependencies({}, m3@methodInvocation, m3@fieldAccess, typeSymbolsToTypes(m3@types), domainR(m3@containment+, allTypes(m3)), allTypes(m3));
+  typeDependenciesNoInherits = typeDependencies({}, m3@methodInvocation, m3@fieldAccess, typeSymbolsToTypeDependencies(m3@types), domainR(m3@containment+, allTypes(m3)), allTypes(m3));
   return CF(typeDependenciesNoInherits, allTypes(m3));
 }
 
