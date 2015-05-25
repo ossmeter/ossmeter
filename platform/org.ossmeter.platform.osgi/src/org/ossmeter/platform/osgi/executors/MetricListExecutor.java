@@ -80,6 +80,9 @@ public class MetricListExecutor implements Runnable {
 
 		Project project = platform.getProjectRepositoryManager().getProjectRepository().getProjects().findOneByShortName(projectId);
 		
+		int transientMetric =0;
+		int historicMetric =0;
+
 		for (IMetricProvider m : metrics) {
 			
 			m.setMetricProviderContext(new MetricProviderContext(platform, OssmeterLoggerFactory.getInstance().makeNewLoggerInstance(m.getIdentifier())));
@@ -87,8 +90,16 @@ public class MetricListExecutor implements Runnable {
 			
 			// We need to check that it hasn't already been excuted for this date
 			// e.g. in cases where a different MP 
+			
+			
 			MetricProviderType type = MetricProviderType.TRANSIENT;
-			if (m instanceof IHistoricalMetricProvider) type = MetricProviderType.HISTORIC;
+			if (m instanceof IHistoricalMetricProvider) {
+				type = MetricProviderType.HISTORIC;
+				historicMetric++;
+			}
+			else {
+				transientMetric++;
+			}
 			
 			MetricProviderExecution mpd = getProjectModelMetricProvider(project, m);
 			if (mpd == null) {
@@ -162,7 +173,6 @@ public class MetricListExecutor implements Runnable {
 			mAnal.setMillisTaken(now() - start);
 			platform.getProjectRepositoryManager().getProjectRepository().getMetricAnalysis().sync();
 		}
-		
 		mongo.close();
 	}
 

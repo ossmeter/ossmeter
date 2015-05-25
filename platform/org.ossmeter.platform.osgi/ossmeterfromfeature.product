@@ -7,7 +7,7 @@
    </configIni>
 
    <launcherArgs>
-      <programArgs>-master -slave -apiServer
+      <programArgs>-apiServer
       </programArgs>
       <vmArgsLin>-Xmx8g
       </vmArgsLin>
