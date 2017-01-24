@@ -11,5 +11,18 @@
             <run class="org.ossmeter.rascal.test.RascalTestCaseGenerator"/>
       </application>
    </extension>
+   <extension
+         id="mweApp"
+         name="OssMeter MWE App"
+         point="org.eclipse.core.runtime.applications">
+      <application
+            cardinality="singleton-global"
+            thread="main"
+            visible="true">
+         <run
+               class="org.ossmeter.rascal.test.MWEApplication">
+         </run>
+      </application>
+   </extension>
 
 </plugin>

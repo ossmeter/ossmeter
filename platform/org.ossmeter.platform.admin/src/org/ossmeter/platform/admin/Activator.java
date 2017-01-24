@@ -77,7 +77,8 @@ public class Activator implements BundleActivator{
 	}
 
 	public void stop(BundleContext context) throws Exception {
-		component.stop();
+		if (component != null)
+			component.stop();
 	}
 
 }

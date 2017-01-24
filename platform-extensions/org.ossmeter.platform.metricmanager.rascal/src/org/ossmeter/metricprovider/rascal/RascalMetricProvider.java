@@ -16,6 +16,7 @@ import static org.ossmeter.metricprovider.rascal.RascalToPongo.toPongo;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -54,11 +55,11 @@ import org.rascalmpl.interpreter.result.AbstractFunction;
 import org.rascalmpl.interpreter.result.RascalFunction;
 import org.rascalmpl.interpreter.result.Result;
 import org.rascalmpl.interpreter.staticErrors.StaticError;
-import org.rascalmpl.interpreter.staticErrors.UnexpectedKeywordArgumentType;
 import org.rascalmpl.interpreter.utils.LimitedResultWriter;
 import org.rascalmpl.interpreter.utils.LimitedResultWriter.IOLimitReachedException;
 
 import com.mongodb.DB;
+import com.mongodb.Mongo;
 
 public class RascalMetricProvider implements ITransientMetricProvider<RascalMetrics> {
 	private static final String SCRATCH_FOLDERS_PARAM = "scratchFolders";
@@ -362,10 +363,23 @@ public class RascalMetricProvider implements ITransientMetricProvider<RascalMetr
 		if (context == null) {
 			return null;
 		}
-		DB db = context.getProjectDB(project);
-		RascalMetrics rascalMetrics = new RascalMetrics(db, provider.getIdentifier());
-		
-		return PongoToRascal.toValue(rascalMetrics, type, provider instanceof RascalMetricHistoryWrapper);
+		// FIXME: For some reason, the following code
+		// returns "This database has been closed" after
+		// some time.
+		// Quick and very dirty fix: re-open the DB from
+		// scratch.
+		//DB db = context.getProjectDB(project);
+		Mongo mongo;
+		try {
+			mongo = new Mongo();
+			DB db = mongo.getDB(project.getName());
+			RascalMetrics rascalMetrics = new RascalMetrics(db, provider.getIdentifier());
+			return PongoToRascal.toValue(rascalMetrics, type, provider instanceof RascalMetricHistoryWrapper);
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	public Type getReturnType() {
