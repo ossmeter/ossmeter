@@ -57,7 +57,7 @@ private System getSystem(loc root) {
 
 
 private M3 getSystemStructureM3(loc root) {
-	M3 m3 = createEmptyM3(|php+system://<root.path>|);
+	M3 m3 = createEmptyM3(|php+system:///| + root.path);
 	
 	for (file <- getSystem(root)) {
 		m3@containment[root] += file;
